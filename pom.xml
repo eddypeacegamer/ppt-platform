@@ -8,6 +8,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>ppt-models</module>
+		<module>ppt-rules</module>
 		<module>ppt-services</module>
 	</modules>
 	<properties>
