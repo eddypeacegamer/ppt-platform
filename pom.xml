@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.business.unknow</groupId>
-	<artifactId>ppt-platform</artifactId>
+	<artifactId>invoice-manager-platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>ppt-models</module>
-		<module>ppt-rules</module>
-		<module>ppt-services</module>
+		<module>invoice-manager-models</module>
+		<module>invoice-manager-rules</module>
+		<module>invoice-manager-services</module>
 	</modules>
 	<properties>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
