@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.RoleDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.RoleService;
 
 import io.swagger.annotations.Api;
@@ -22,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/roles")
-@Api(value = "PingController", produces = "application/json")
+@Api(value = "RoleController", produces = "application/json")
 public class RoleController {
 
 	@Autowired
@@ -35,8 +36,8 @@ public class RoleController {
 	}
 
 	@GetMapping("/{name}")
-	@ApiOperation(value = "Get all role.")
-	public ResponseEntity<RoleDto> getRolesByName(@PathVariable String name) {
+	@ApiOperation(value = "Get role by id.")
+	public ResponseEntity<RoleDto> getRolesByName(@PathVariable String name) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getRoleByName(name), HttpStatus.OK);
 	}
 

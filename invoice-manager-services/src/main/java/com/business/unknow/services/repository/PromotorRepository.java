@@ -11,5 +11,6 @@ public interface PromotorRepository extends CrudRepository<Promotor, Integer> {
 
 	public List<Promotor> findAll();
 	public Optional<Promotor> findByName(String name);
+	
 
 }

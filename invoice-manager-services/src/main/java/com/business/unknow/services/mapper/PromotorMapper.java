@@ -14,11 +14,11 @@ import com.business.unknow.services.entities.Promotor;
 @Mapper
 public interface PromotorMapper {
 
-	PromotorDto getRoleDtoFromentity(Promotor entity);
+	PromotorDto getPromotortoFromentity(Promotor entity);
 
-	Promotor getEntityFromRoleDto(PromotorDto dto);
+	Promotor getEntityFromPromotorDto(PromotorDto dto);
 
-	List<PromotorDto> getRoleDtosFromEntities(List<Promotor> entities);
+	List<PromotorDto> getPromotorDtosFromEntities(List<Promotor> entities);
 
-	List<Promotor> getEntitiesFromRoleDtos(List<PromotorDto> dto);
+	List<Promotor> getEntitiesFromPromotorDtos(List<PromotorDto> dto);
 }

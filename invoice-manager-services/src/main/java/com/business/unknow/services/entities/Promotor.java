@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,7 +25,7 @@ public class Promotor implements Serializable {
 	private Integer id;
 
 	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
 
 	@Basic(optional = false)
