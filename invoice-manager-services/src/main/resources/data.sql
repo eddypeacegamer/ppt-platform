@@ -1,4 +1,10 @@
 ----------------
+---CATALOGOS
+----------------
+
+
+
+----------------
 ---ROLE
 ----------------
 insert into role(id_role,name) values(1,'admin');
