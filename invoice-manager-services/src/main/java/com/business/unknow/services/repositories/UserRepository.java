@@ -1,4 +1,4 @@
-package com.business.unknow.services.repository;
+package com.business.unknow.services.repositories;
 
 import java.util.List;
 import java.util.Optional;

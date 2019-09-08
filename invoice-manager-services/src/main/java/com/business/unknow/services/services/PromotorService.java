@@ -11,7 +11,7 @@ import com.business.unknow.model.PromotorDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Promotor;
 import com.business.unknow.services.mapper.PromotorMapper;
-import com.business.unknow.services.repository.PromotorRepository;
+import com.business.unknow.services.repositories.PromotorRepository;
 
 @Service
 public class PromotorService {

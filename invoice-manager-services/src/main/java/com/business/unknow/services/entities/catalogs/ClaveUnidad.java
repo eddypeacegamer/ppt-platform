@@ -1,24 +1,22 @@
-/**
- * 
- */
-package com.business.unknow.model.catalogos;
+package com.business.unknow.services.entities.catalogs;
 
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-/**
- * @author ralfdemoledor
- *
- */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClaveUnidadDto implements Serializable {
-
-	private static final long serialVersionUID = 2485025222885106558L;
+@Entity
+@Table(name = "CLAVE_UNIDAD")
+public class ClaveUnidad {
 	
+	@Id
+	@Column(name = "CLAVE")
 	private String clave;
+	@Column(name = "TIPO")
 	private String tipo;
+	@Column(name = "DESCRIPCION")
 	private String descripcion;
+	@Column(name = "NOMBRE")
 	private String nombre;
 	public String getClave() {
 		return clave;
@@ -46,8 +44,7 @@ public class ClaveUnidadDto implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "ClaveUnidadDto [clave=" + clave + ", tipo=" + tipo + ", descripcion=" + descripcion + ", nombre="
-				+ nombre + "]";
+		return "ClaveUnidad [clave=" + clave + ", tipo=" + tipo + ", descripcion=" + descripcion + ", nombre=" + nombre
+				+ "]";
 	}
-
 }

@@ -10,7 +10,7 @@ import com.business.unknow.model.CatProductoServicioDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.CatProductoServicio;
 import com.business.unknow.services.mapper.CatProductoServicioMapper;
-import com.business.unknow.services.repository.CatProductoServicioRepository;
+import com.business.unknow.services.repositories.CatProductoServicioRepository;
 
 @Service
 public class CatProductoServicioService {

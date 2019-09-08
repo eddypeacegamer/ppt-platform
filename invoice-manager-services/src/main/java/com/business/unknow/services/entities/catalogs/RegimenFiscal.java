@@ -1,21 +1,27 @@
-package com.business.unknow.model.catalogos;
+package com.business.unknow.services.entities.catalogs;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import com.business.unknow.model.Constants;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegimenFiscalDto implements Serializable{
 
-	private static final long serialVersionUID = -6301363194780882965L;
+@Entity
+@Table(name = "REGIMEN_FISCAL")
+public class RegimenFiscal {
+	
+	@Id
+	@Column(name = "CLAVE")
 	private Integer clave;
+	@Column(name = "DESCRIPCION")
 	private String descripcion;
+	@Column(name = "P_FISICA")
 	private boolean pFisica;
+	@Column(name = "P_MORAL")
 	private boolean pMoral;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	@Column(name = "INICIO_VIGENCIA")
 	private Date inicioVigencia;
 	public Integer getClave() {
 		return clave;
@@ -49,9 +55,8 @@ public class RegimenFiscalDto implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "RegimenFiscalDto [clave=" + clave + ", descripcion=" + descripcion + ", pFisica=" + pFisica
-				+ ", pMoral=" + pMoral + ", inicioVigencia=" + inicioVigencia + "]";
+		return "RegimenFiscal [clave=" + clave + ", descripcion=" + descripcion + ", pFisica=" + pFisica + ", pMoral="
+				+ pMoral + ", inicioVigencia=" + inicioVigencia + "]";
 	}
-	
-	
+
 }

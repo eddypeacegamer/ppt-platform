@@ -11,7 +11,7 @@ import com.business.unknow.model.RoleDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Role;
 import com.business.unknow.services.mapper.RoleMapper;
-import com.business.unknow.services.repository.RoleRepository;
+import com.business.unknow.services.repositories.RoleRepository;
 
 /**
  * @author tta000a

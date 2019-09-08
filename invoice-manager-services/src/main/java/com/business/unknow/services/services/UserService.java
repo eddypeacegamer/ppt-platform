@@ -10,7 +10,7 @@ import com.business.unknow.model.UserDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.User;
 import com.business.unknow.services.mapper.UserMapper;
-import com.business.unknow.services.repository.UserRepository;
+import com.business.unknow.services.repositories.UserRepository;
 
 @Service
 public class UserService {
