@@ -14,22 +14,22 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "promotor")
+@Table(name = "PROMOTORES")
 public class Promotor implements Serializable {
 
 	private static final long serialVersionUID = 8102757944306156478L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_promotor")
+	@Column(name = "ID_PROMOTOR")
 	private Integer id;
 
-	@JoinColumn(name = "id_user", referencedColumnName = "id_user")
+	@JoinColumn(name = "id_user", referencedColumnName = "ID_USER")
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private User user;
 
 	@Basic(optional = false)
-	@Column(name = "name", unique = true)
+	@Column(name = "NOMBRE", unique = true)
 	private String name;
 
 	public Integer getId() {

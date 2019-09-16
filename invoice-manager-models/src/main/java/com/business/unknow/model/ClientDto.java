@@ -7,32 +7,20 @@ public class ClientDto implements Serializable {
 	private static final long serialVersionUID = 4951260411762447946L;
 
 	private Integer id;
-
 	private String name;
-
 	private String rfc;
-
 	private String razonSocial;
-
 	private String email;
-
 	private String calle;
-
 	private String colonia;
-
 	private String estado;
-
 	private String coo;
-
 	private String noInterior;
-
 	private String noExterior;
-
 	private String municipio;
-
 	private String pais;
-
 	private String codigoPostal;
+	private Boolean activo;
 
 	public Integer getId() {
 		return id;
@@ -146,12 +134,20 @@ public class ClientDto implements Serializable {
 		this.codigoPostal = codigoPostal;
 	}
 
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
 	@Override
 	public String toString() {
 		return "ClientDto [id=" + id + ", name=" + name + ", rfc=" + rfc + ", razonSocial=" + razonSocial + ", email="
 				+ email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado + ", coo=" + coo
 				+ ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio=" + municipio + ", pais="
-				+ pais + ", codigoPostal=" + codigoPostal + "]";
+				+ pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo + "]";
 	}
 
 }

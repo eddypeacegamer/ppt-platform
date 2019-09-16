@@ -1,3 +1,107 @@
+
+----------------
+---ROLE
+----------------
+CREATE TABLE IF NOT EXISTS ROLES(
+  ID_ROLE INT(11) NOT NULL AUTO_INCREMENT,
+  NOMBRE VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (ID_ROLE)
+);
+
+----------------
+---USER
+----------------
+CREATE TABLE IF NOT EXISTS USERS (
+  ID_USER INT(11) NOT NULL AUTO_INCREMENT,
+  CORREO VARCHAR(50) NOT NULL,
+  PW VARCHAR(50) NOT NULL ,
+  NOMBRE VARCHAR(50) NOT NULL ,
+  ID_ROLE INT(11) NOT NULL,
+  PRIMARY KEY (ID_USER),
+  CONSTRAINT FK_USER_ID_ROLE
+    FOREIGN KEY (ID_ROLE)
+    REFERENCES ROLES (ID_ROLE)
+);
+
+----------------
+---PROMOTOR
+----------------
+CREATE TABLE IF NOT EXISTS PROMOTORES (
+  ID_PROMOTOR INT(11) NOT NULL AUTO_INCREMENT,
+  NOMBRE VARCHAR(50) NOT NULL,
+  ID_USER INT(11) NOT NULL,
+  PRIMARY KEY (ID_PROMOTOR),
+  CONSTRAINT FK_PROMOTOR_ID_USER
+    FOREIGN KEY (ID_USER)
+    REFERENCES USERS (ID_USER)
+);
+
+----------------
+---EMPRESAS
+----------------
+CREATE TABLE IF NOT EXISTS EMPRESAS (
+  ID_EMPRESA INT(11) NOT NULL AUTO_INCREMENT,
+  NOMBRE VARCHAR(100) NOT NULL,
+  GIRO VARCHAR(50) NOT NULL,
+  LINEA VARCHAR(50) NOT NULL,
+  TELEFONO VARCHAR(14),
+  RAZON_SOCIAL VARCHAR(100) NOT NULL,
+  REGIMEN_FISCAL VARCHAR(100) NOT NULL,
+  CURP VARCHAR(50) NOT NULL,
+  CALLE VARCHAR(200) NOT NULL,
+  NO_EXTERIOR VARCHAR(100) NOT NULL,
+  NO_INTERIOR VARCHAR(100) NOT NULL,
+  MUNICIPIO VARCHAR(50) NOT NULL,
+  LOCALIDAD VARCHAR(50) NOT NULL,
+  ESTADO VARCHAR(50) NOT NULL,
+  CP VARCHAR(50) NOT NULL,
+  REFERENCIA VARCHAR(200) NOT NULL,
+  CORREO VARCHAR(100) NOT NULL,
+  WEB VARCHAR(15),
+  CONTACTO_ADMIN VARCHAR(50) ,
+  SUCURSAL VARCHAR(50) ,
+  LUGAR_EXPEDICION VARCHAR(100) ,
+  COLONIA VARCHAR(50) ,
+  LOGOTIPO BLOB NOT NULL,
+  LLAVE_PRIVADA BLOB NOT NULL,
+  CERTIFICADO_DIGITAL BLOB NOT NULL,
+  PW VARCHAR(50) ,
+  ENCABEZADO VARCHAR(250) ,
+  PIE_DE_PAGINA VARCHAR(250) ,
+  ACTIVO TINYINT(1),
+  FECHA_CREACION TIMESTAMP,
+  FECHA_ACTUALIZACION TIMESTAMP,
+  PRIMARY KEY (ID_EMPRESA)
+);
+
+----------------
+---CLIENT
+----------------
+CREATE TABLE IF NOT EXISTS CLIENTES (
+  ID_CLIENT INT(11) NOT NULL AUTO_INCREMENT,
+  ID_EMPRESA INT(11) NOT NULL,
+  NOMBRE VARCHAR(50) NOT NULL,
+  RFC VARCHAR(50) NOT NULL,
+  RAZON_SOCIAL VARCHAR(50) NOT NULL,
+  CORREO VARCHAR(50) NOT NULL,
+  CALLE VARCHAR(50) NOT NULL,
+  COLONIA VARCHAR(50) NOT NULL,
+  ESTADO VARCHAR(50) NOT NULL,
+  COO VARCHAR(50) NOT NULL,
+  NO_INTERIOR VARCHAR(50) NOT NULL,
+  NO_EXTERIOR VARCHAR(50) NOT NULL,
+  MUNICIPIO VARCHAR(50) NOT NULL,
+  PAIS VARCHAR(50) NOT NULL,
+  CODIGO_POSTAL VARCHAR(50) NOT NULL,
+  ACTIVO TINYINT(1),
+  FECHA_CREACION TIMESTAMP,
+  FECHA_ACTUALIZACION TIMESTAMP,
+  PRIMARY KEY (RFC),
+  CONSTRAINT FK_EMPRESA_CLIENTE
+    FOREIGN KEY (ID_EMPRESA)
+    REFERENCES EMPRESAS(ID_EMPRESA)
+);
+
 ----------------
 ---CATALOGOS
 ----------------
@@ -32,96 +136,10 @@ CREATE TABLE IF NOT EXISTS CLAVE_PROD_SERV(
 	INICIO_VIGENCIA TIMESTAMP
 );
 
-
-----------------
----ROLE
-----------------
-CREATE TABLE IF NOT EXISTS `role` (
-  `id_role` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL UNIQUE,
-  PRIMARY KEY (`id_role`)
+CREATE TABLE IF NOT EXISTS STATUS_FACTURAS(
+	ID_STATUS_FACTURA INT(10) NOT NULL UNIQUE,
+	STATUS_EVENTO VARCHAR(100) NOT NULL,
+  STATUS_PAGO VARCHAR(100) NOT NULL,
+	FECHA_CREACION TIMESTAMP,
+  FECHA_ACTUALIZACION TIMESTAMP
 );
-
-----------------
----USER
-----------------
-CREATE TABLE IF NOT EXISTS `user` (
-  `id_user` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(50) NOT NULL,
-  `pw` varchar(50) NOT NULL ,
-  `name` varchar(50) NOT NULL ,
-  `id_role` int(11) NOT NULL,
-  PRIMARY KEY (`id_user`),
-  CONSTRAINT `fk_user_id_role`
-    FOREIGN KEY (`id_role`)
-    REFERENCES `role` (`id_role`)
-);
-
-----------------
----PROMOTOR
-----------------
-CREATE TABLE IF NOT EXISTS `promotor` (
-  `id_promotor` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `id_user` int(11) NOT NULL,
-  PRIMARY KEY (`id_promotor`),
-  CONSTRAINT `fk_promotor_id_user`
-    FOREIGN KEY (`id_user`)
-    REFERENCES `user` (`id_user`)
-);
-
-----------------
----CLIENT
-----------------
-CREATE TABLE IF NOT EXISTS `client` (
-  `id_client` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `rfc` varchar(50) NOT NULL,
-  `razon_social` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `calle` varchar(50) NOT NULL,
-  `colonia` varchar(50) NOT NULL,
-  `estado` varchar(50) NOT NULL,
-  `coo` varchar(50) NOT NULL,
-  `no_interior` varchar(50) NOT NULL,
-  `no_exterior` varchar(50) NOT NULL,
-  `municipio` varchar(50) NOT NULL,
-  `pais` varchar(50) NOT NULL,
-  `codigo_postal` varchar(50) NOT NULL,
-  PRIMARY KEY (`rfc`),
-);
-
-CREATE TABLE IF NOT EXISTS `cat_producto_servicio` (
-  `id_producto_servicio` int(11) NOT NULL AUTO_INCREMENT,
-  `id_parent` int(11) ,
-  `value` varchar(250) NOT NULL,
-  PRIMARY KEY (`value`),
-);
-
-----------------
----INVOICE STATUS
-----------------
-/*CREATE TABLE IF NOT EXISTS `invoice_status` (
-  `id_invoice_status` int(11) NOT NULL AUTO_INCREMENT,
-  `event_status` varchar(50) NOT NULL,
-  `pay_status` varchar(50) NOT NULL,
-  PRIMARY KEY (`id_invoice_status`,`event_status`,`pay_status`),
-);
-
-----------------
----INVOICE CDFI
-----------------
-CREATE TABLE IF NOT EXISTS `invoice_cdfi` (
-  `id_invoice_cffi` int(11) NOT NULL AUTO_INCREMENT,
-  `id_client` int(11) NOT NULL,
-  `id_invoice_status` int(11) NOT NULL,
-  `amount` float(11) NOT NULL,
-  PRIMARY KEY (`id_invoice_cffi`),
-  CONSTRAINT `fk_invoice_cdfi_id_client`
-    FOREIGN KEY (`id_client`)
-    REFERENCES `client` (`id_client`),
-  CONSTRAINT `fk_invoice_cdfi_id_invoice_status`
-    FOREIGN KEY (`id_invoice_status`)
-    REFERENCES `invoice_status` (`id_invoice_status`)
-
-);*/

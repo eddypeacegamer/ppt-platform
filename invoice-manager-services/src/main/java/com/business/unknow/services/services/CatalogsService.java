@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.catalogs.RegimenFiscalDto;
+import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
+import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.mapper.CatalogsMapper;
 import com.business.unknow.services.repositories.catalogs.ClaveProductoServicioRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
+import com.business.unknow.services.repositories.catalogs.StatusFacturaRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 
 /**
@@ -40,6 +43,9 @@ public class CatalogsService {
 
 	@Autowired
 	private UsoCfdiRepository usoCfdiRepo;
+	
+	@Autowired
+	private StatusFacturaRepository statusFacturaRepo;
 
 	@Autowired
 	private CatalogsMapper mapper;
@@ -49,17 +55,27 @@ public class CatalogsService {
 		return new PageImpl<ClaveProductoServicioDto>(mapper.getClaveProdServDtosFromEntities(result.getContent()),
 				result.getPageable(), result.getTotalElements());
 	}
-	
-	public List<ClaveUnidadDto> getAllClaveUnidad(){
+
+	public Page<ClaveUnidadDto> getAllClaveUnidad(int page, int size) {
+		Page<ClaveUnidad> result = unidadRepo.findAll(PageRequest.of(page, size));
+		return new PageImpl<ClaveUnidadDto>(mapper.getClaveUnidadDtosFromEntities(result.getContent()),
+				result.getPageable(), result.getTotalElements());
+	}
+
+	public List<ClaveUnidadDto> getAllClaveUnidad() {
 		return mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll());
 	}
-	
-	public List<RegimenFiscalDto> getAllRegimenFiscal(){
+
+	public List<RegimenFiscalDto> getAllRegimenFiscal() {
 		return mapper.getRegimenFiscalDtosFromEntities(regimenFiscalRepo.findAll());
 	}
-	
-	public List<UsoCfdiDto> getAllUsoCfdi(){
+
+	public List<UsoCfdiDto> getAllUsoCfdi() {
 		return mapper.getUsoCfdiDtosFromEntities(usoCfdiRepo.findAll());
+	}
+	
+	public List<StatusFacturaDto> getAllStatusFactura() {
+		return mapper.getStatusFacturaDtosFromEntities(statusFacturaRepo.findAll());
 	}
 
 }

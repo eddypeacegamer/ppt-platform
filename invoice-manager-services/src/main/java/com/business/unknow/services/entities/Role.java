@@ -15,18 +15,18 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "role")
+@Table(name = "ROLES")
 public class Role implements Serializable {
 
 	private static final long serialVersionUID = -2562827192729375750L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_role")
+	@Column(name = "ID_ROLE")
 	private Integer id;
 
 	@Basic(optional = false)
-	@Column(name = "name", unique = true)
+	@Column(name = "NOMBRE", unique = true)
 	private String name;
 
 	public Integer getId() {

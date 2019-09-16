@@ -14,30 +14,30 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "USERS")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 5310702474972292849L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_user")
+	@Column(name = "ID_USER")
 	private Integer id;
 
-	@JoinColumn(name = "id_role", referencedColumnName = "id_role")
+	@JoinColumn(name = "ID_ROLE", referencedColumnName = "ID_ROLE")
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Role role;
 
 	@Basic(optional = false)
-	@Column(name = "email", unique = true)
+	@Column(name = "CORREO", unique = true)
 	private String email;
 
 	@Basic(optional = false)
-	@Column(name = "pw", unique = true)
+	@Column(name = "PW", unique = true)
 	private String pw;
 
 	@Basic(optional = false)
-	@Column(name = "name", unique = true)
+	@Column(name = "NOMBRE", unique = true)
 	private String name;
 
 	public Integer getId() {

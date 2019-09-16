@@ -5,73 +5,84 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "client")
+@Table(name = "CLIENTES")
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = -491025321146807933L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_client")
+	@Column(name = "ID_CLIENT")
 	private Integer id;
+	
+	@JoinColumn(name = "ID_EMPRESA", referencedColumnName = "ID_EMPRESA")
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	private Empresa empresa;
 
 	@Basic(optional = false)
-	@Column(name = "name", unique = true)
+	@Column(name = "NOMBRE")
 	private String name;
 
 	@Basic(optional = false)
-	@Column(name = "rfc", unique = true)
+	@Column(name = "RFC")
 	private String rfc;
 
 	@Basic(optional = false)
-	@Column(name = "razon_social", unique = true)
+	@Column(name = "RAZON_SOCIAL")
 	private String razonSocial;
 
 	@Basic(optional = false)
-	@Column(name = "email", unique = true)
+	@Column(name = "CORREO")
 	private String email;
 
 	@Basic(optional = false)
-	@Column(name = "calle", unique = true)
+	@Column(name = "CALLE")
 	private String calle;
 
 	@Basic(optional = false)
-	@Column(name = "colonia", unique = true)
+	@Column(name = "COLONIA")
 	private String colonia;
 
 	@Basic(optional = false)
-	@Column(name = "estado", unique = true)
+	@Column(name = "ESTADO")
 	private String estado;
 
 	@Basic(optional = false)
-	@Column(name = "coo", unique = true)
+	@Column(name = "COO")
 	private String coo;
 
 	@Basic(optional = false)
-	@Column(name = "no_interior", unique = true)
+	@Column(name = "NO_INTERIOR")
 	private String noInterior;
 
 	@Basic(optional = false)
-	@Column(name = "no_exterior", unique = true)
+	@Column(name = "NO_EXTERIOR")
 	private String noExterior;
 
 	@Basic(optional = false)
-	@Column(name = "municipio", unique = true)
+	@Column(name = "MUNICIPIO")
 	private String municipio;
 
 	@Basic(optional = false)
-	@Column(name = "pais", unique = true)
+	@Column(name = "PAIS")
 	private String pais;
 
 	@Basic(optional = false)
-	@Column(name = "codigo_postal", unique = true)
+	@Column(name = "CODIGO_POSTAL")
 	private String codigoPostal;
+
+	@Basic(optional = false)
+	@Column(name = "ACTIVO")
+	private Boolean activo;
 
 	public Integer getId() {
 		return id;
@@ -185,12 +196,20 @@ public class Client implements Serializable {
 		this.codigoPostal = codigoPostal;
 	}
 
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
 	@Override
 	public String toString() {
 		return "Client [id=" + id + ", name=" + name + ", rfc=" + rfc + ", razonSocial=" + razonSocial + ", email="
 				+ email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado + ", coo=" + coo
 				+ ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio=" + municipio + ", pais="
-				+ pais + ", codigoPostal=" + codigoPostal + "]";
+				+ pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo + "]";
 	}
 
 }
