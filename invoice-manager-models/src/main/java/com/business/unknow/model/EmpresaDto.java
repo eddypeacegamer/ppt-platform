@@ -39,7 +39,7 @@ public class EmpresaDto {
 	private String pw;
 	private String encabezado;
 	private String piePagina;
-	private Boolean activa;
+	private Boolean activo;
 
 	public Integer getId() {
 		return id;
@@ -265,12 +265,12 @@ public class EmpresaDto {
 		this.piePagina = piePagina;
 	}
 
-	public Boolean getActiva() {
-		return activa;
+	public Boolean getActivo() {
+		return activo;
 	}
 
-	public void setActiva(Boolean activa) {
-		this.activa = activa;
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 
 	@Override
@@ -283,7 +283,7 @@ public class EmpresaDto {
 				+ ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion + ", colonia=" + colonia
 				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
 				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
-				+ ", piePagina=" + piePagina + ", activa=" + activa + "]";
+				+ ", piePagina=" + piePagina + ", activo=" + activo + "]";
 	}
 
 }

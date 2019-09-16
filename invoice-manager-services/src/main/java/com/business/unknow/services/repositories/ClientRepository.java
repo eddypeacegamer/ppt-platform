@@ -13,6 +13,9 @@ import com.business.unknow.services.entities.Client;
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 	
 	public Optional<Client> findByRfc(String rfc);
+	
 	@Query(value = "select e from Client e where e.empresa.name =:empresa")
 	public Page<Client> findAllByEmpresaName(@Param("empresa") String empresa,Pageable pageable);
+	
+	public Page<Client> findAll(Pageable pageable);
 }

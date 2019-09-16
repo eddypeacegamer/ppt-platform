@@ -29,17 +29,26 @@ public class ClientController {
 	@Autowired
 	private ClientService service;
 
-	@GetMapping("clients/{rfc}")
+	@GetMapping("/clients/{rfc}")
 	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<ClientDto> getClientByRfc(@PathVariable String rfc) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getClientByRfc(rfc), HttpStatus.OK);
 	}
 
+	
 	@GetMapping("empresas/{empresa}/clients")
 	@ApiOperation(value = "Get all client by promotor name and name.")
-	public ResponseEntity<Page<ClientDto>> getClients(@PathVariable String empresa,@RequestParam(name = "page", defaultValue = "1") int page,
+	public ResponseEntity<Page<ClientDto>> getClients(@PathVariable String empresa,
+			@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name = "size", defaultValue = "15") int size) {
-		return new ResponseEntity<>(service.getAllClients(empresa,page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getAllClientsByEmpresa(empresa, page, size), HttpStatus.OK);
 	}
 
+	@GetMapping("/clients")
+	@ApiOperation(value = "Get all client by promotor name and name.")
+	public ResponseEntity<Page<ClientDto>> getClientsByEmpresa(
+			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "size", defaultValue = "15") int size) {
+		return new ResponseEntity<>(service.getAllClients(page, size), HttpStatus.OK);
+	}
 }
