@@ -1,4 +1,59 @@
 ----------------
+---ROLE
+----------------
+INSERT INTO ROLES(ID_ROLE,NOMBRE) VALUES(1,'admin');
+INSERT INTO ROLES(ID_ROLE,NOMBRE) VALUES(2,'promotor');
+
+----------------
+---USER
+----------------
+INSERT INTO USERS(ID_USER,CORREO,PW,ID_ROLE,NOMBRE)	VALUES(1,'asd@asd.com','123',1,'User1');
+INSERT INTO USERS(ID_USER,CORREO,PW,ID_ROLE,NOMBRE)	VALUES(2,'aaa@asd.com','123',2,'User2');
+
+----------------
+---PROMOTOR
+----------------
+INSERT INTO PROMOTORES(ID_PROMOTOR,NOMBRE,ID_USER)	VALUES(1,'pepsi',1);
+INSERT INTO PROMOTORES(ID_PROMOTOR,NOMBRE,ID_USER)	VALUES(2,'coca',1);
+INSERT INTO PROMOTORES(ID_PROMOTOR,NOMBRE,ID_USER)	VALUES(3,'sabritas',1);	
+	
+----------------
+---EMPRESA
+----------------
+INSERT INTO EMPRESAS(ID_EMPRESA,NOMBRE ,GIRO,LINEA,RAZON_SOCIAL,REGIMEN_FISCAL,CURP,CALLE,NO_EXTERIOR,
+	NO_INTERIOR,MUNICIPIO,LOCALIDAD,ESTADO,CP,REFERENCIA,CORREO,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,
+	COLONIA,LOGOTIPO,LLAVE_PRIVADA,CERTIFICADO_DIGITAL,PW,ENCABEZADO,PIE_DE_PAGINA,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION) 
+VALUES(1,'EMPRESA 1','VENDEDORES','A','La Sociedad Anónima (S.A.)','601','BADD110313HCMLNS09','CALLE',
+	'NO EXTERIOR','NO INTERIOR','010','112390','DF','08000','REFERENCIA','CORREO@gmail.com','www.pagina.com','PROMOTOR 1','SUCURSAL','QUERETARO',
+	'COLONIA',FILE_READ('classpath:/files/images/logotipo.png'),FILE_READ('classpath:/files/keys/file.txt'),FILE_READ('classpath:/files/keys/file.txt'),'SOPA123','ENCABEZADO','PIE DE PAGINA',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+
+INSERT INTO EMPRESAS(ID_EMPRESA,NOMBRE ,GIRO,LINEA,RAZON_SOCIAL,REGIMEN_FISCAL,CURP,CALLE,NO_EXTERIOR,
+	NO_INTERIOR,MUNICIPIO,LOCALIDAD,ESTADO,CP,REFERENCIA,CORREO,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,
+	COLONIA,LOGOTIPO,LLAVE_PRIVADA,CERTIFICADO_DIGITAL,PW,ENCABEZADO,PIE_DE_PAGINA,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION) 
+VALUES(2,'EMPRESA 2','VENDEDORES','B','Importaciones PFV','601','LOIK110313HCMLNS09','CALLE',
+	'NO EXTERIOR','NO INTERIOR','013','112391','DF','08001','REFERENCIA','CORREO1@gmail.com','www.pagina1.com','PROMOTOR 1','SUCURSAL','MEXICO',
+	'COLONIA',FILE_READ('classpath:/files/images/logotipo.png'),FILE_READ('classpath:/files/keys/file.txt'),FILE_READ('classpath:/files/keys/file.txt'),'SOPA123','ENCABEZADO','PIE DE PAGINA',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+	
+INSERT INTO EMPRESAS(ID_EMPRESA,NOMBRE ,GIRO,LINEA,RAZON_SOCIAL,REGIMEN_FISCAL,CURP,CALLE,NO_EXTERIOR,
+	NO_INTERIOR,MUNICIPIO,LOCALIDAD,ESTADO,CP,REFERENCIA,CORREO,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,
+	COLONIA,LOGOTIPO,LLAVE_PRIVADA,CERTIFICADO_DIGITAL,PW,ENCABEZADO,PIE_DE_PAGINA,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION) 
+VALUES(3,'EMPRESA 3','VENDEDORES','C','Grupo Fernández, S.A.','601','MLON110313HCMLNS09','CALLE',
+	'NO EXTERIOR','NO INTERIOR','012','112392','DF','08001','REFERENCIA','CORREO2@gmail.com','www.pagina2.com','PROMOTOR 2','SUCURSAL','CANADA',
+	'COLONIA',FILE_READ('classpath:/files/images/logotipo.png'),FILE_READ('classpath:/files/keys/file.txt'),FILE_READ('classpath:/files/keys/file.txt'),'SOPA123','ENCABEZADO','PIE DE PAGINA',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+
+----------------
+---CLIENT
+----------------
+INSERT INTO CLIENTES(ID_CLIENT,ID_EMPRESA, NOMBRE,RFC,RAZON_SOCIAL,CORREO,CALLE,COLONIA,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
+VALUES(1,1,'paco','CUPU800825569','Arcos Dorados C.A.','juan@email.com','calle','colonia','estado','coo','100','n/a','municipio','colombia','01030',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO CLIENTES(ID_CLIENT,ID_EMPRESA, NOMBRE,RFC,RAZON_SOCIAL,CORREO,CALLE,COLONIA,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
+VALUES(2,1,'mercedes','MERC800823456','Marta c.v.','mercedes@email.com','calle1','colonia1','estado1','coo1','200','n/a','municipio1','mexico','41030',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO CLIENTES(ID_CLIENT,ID_EMPRESA, NOMBRE,RFC,RAZON_SOCIAL,CORREO,CALLE,COLONIA,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
+VALUES(3,2,'lulu','LULU807654321','Refresco lulu','lulu@email.com','calle2','colonia2','estado2','coo2','400','n/a','municipio2','peru','01930',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO CLIENTES(ID_CLIENT,ID_EMPRESA, NOMBRE,RFC,RAZON_SOCIAL,CORREO,CALLE,COLONIA,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
+VALUES(4,3,'pepe','PELO800811111','Pepes asociados.','pepe@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+
+----------------
 ---CATALOGOS
 ----------------
 
@@ -46,8 +101,6 @@ INSERT INTO REGIMEN_FISCAL (CLAVE, DESCRIPCION, P_MORAL, P_FISICA, INICIO_VIGENC
 INSERT INTO REGIMEN_FISCAL (CLAVE, DESCRIPCION, P_MORAL, P_FISICA, INICIO_VIGENCIA) VALUES('629','De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales','1','0','2020-01-01 00:00:00');
 INSERT INTO REGIMEN_FISCAL (CLAVE, DESCRIPCION, P_MORAL, P_FISICA, INICIO_VIGENCIA) VALUES('630','Enajenación de acciones en bolsa de valores','1','0','2020-01-01 00:00:00');
 INSERT INTO REGIMEN_FISCAL (CLAVE, DESCRIPCION, P_MORAL, P_FISICA, INICIO_VIGENCIA) VALUES('615','Régimen de los ingresos por obtención de premios','1','0','2016-11-12 00:00:00');
-
-
 
 INSERT INTO CLAVE_UNIDAD (CLAVE, TIPO, NOMBRE) VALUES('H87','Múltiplos / Fracciones / Decimales','Pieza');
 INSERT INTO CLAVE_UNIDAD (CLAVE, TIPO, NOMBRE) VALUES('EA','Unidades de venta','Elemento');
@@ -4167,51 +4220,9 @@ INSERT INTO CLAVE_PROD_SERV (CLAVE, DESCRIPCION, SIMILARES, INICIO_VIGENCIA) VAL
 INSERT INTO CLAVE_PROD_SERV (CLAVE, DESCRIPCION, SIMILARES, INICIO_VIGENCIA) VALUES(01010101,'No existe en el catálogo','Público en general','2019-01-07 00:00:00');
 INSERT INTO CLAVE_PROD_SERV (CLAVE, DESCRIPCION, SIMILARES, INICIO_VIGENCIA) VALUES(85121701,'Servicios de psicoterapeutas','Servicios de psicoterapia','2019-01-07 00:00:00');
 
+INSERT INTO STATUS_FACTURAS(ID_STATUS_FACTURA,STATUS_EVENTO,STATUS_PAGO,FECHA_CREACION,FECHA_ACTUALIZACION) VALUES(1,'SIN PAGAR','VALIDACION OPERACIONES','2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO STATUS_FACTURAS(ID_STATUS_FACTURA,STATUS_EVENTO,STATUS_PAGO,FECHA_CREACION,FECHA_ACTUALIZACION) VALUES(2,'SIN PAGAR','VALIDACION TESORERIA','2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO STATUS_FACTURAS(ID_STATUS_FACTURA,STATUS_EVENTO,STATUS_PAGO,FECHA_CREACION,FECHA_ACTUALIZACION) VALUES(3,'SIN PAGAR','CANCELADA','2019-01-07 00:00:00','2019-01-07 00:00:00');
+INSERT INTO STATUS_FACTURAS(ID_STATUS_FACTURA,STATUS_EVENTO,STATUS_PAGO,FECHA_CREACION,FECHA_ACTUALIZACION) VALUES(4,'PAGADA','COMPLETADO','2019-01-07 00:00:00','2019-01-07 00:00:00');
 
-----------------
----ROLE
-----------------
-insert into role(id_role,name) values(1,'admin');
-insert into role(id_role,name) values(2,'promotor');
-
-----------------
----USER
-----------------
-insert into user(id_user,email,pw,id_role,name)	values(1,'asd@asd.com','123',1,'User1');
-insert into user(id_user,email,pw,id_role,name)	values(2,'aaa@asd.com','123',2,'User2');
-
-----------------
----PROMOTOR
-----------------
-insert into promotor(id_promotor,name,id_user)	values(1,'pepsi',1);
-insert into promotor(id_promotor,name,id_user)	values(2,'coca',1);
-insert into promotor(id_promotor,name,id_user)	values(3,'sabritas',1);	
-
-----------------
----CLIENT
-----------------
-insert into client(id_client,name,rfc,razon_social,email,calle,colonia,estado,coo,no_interior,no_exterior,municipio,pais,codigo_postal)	values(1,'paco','CUPU800825569','Arcos Dorados C.A.','juan@email.com'
-	,'calle','colonia','estado','coo','100','n/a','municipio','colombia','01030');
-insert into client(id_client,name,rfc,razon_social,email,calle,colonia,estado,coo,no_interior,no_exterior,municipio,pais,codigo_postal)	values(2,'mercedes','MERC800823456','Marta c.v.','mercedes@email.com'
-	,'calle1','colonia1','estado1','coo1','200','n/a','municipio1','mexico','41030');
-insert into client(id_client,name,rfc,razon_social,email,calle,colonia,estado,coo,no_interior,no_exterior,municipio,pais,codigo_postal)	values(3,'lulu','LULU807654321','Refresco lulu','lulu@email.com'
-	,'calle2','colonia2','estado2','coo2','400','n/a','municipio2','peru','01930');
-insert into client(id_client,name,rfc,razon_social,email,calle,colonia,estado,coo,no_interior,no_exterior,municipio,pais,codigo_postal)	values(4,'pepe','PELO800811111','Pepes asociados.','pepe@email.com'
-	,'calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630');
-
-
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(1,'Productos',null);
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(2,'Servicios',null);
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(3,'Alimentos,bebidas y tabaco',1);
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(4,'Electronicos',1);
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(5,'Limpieza',1);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(6,'Gestion',2);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(7,'Clubes generales',2);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(8,'Edificacion',2);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(9,'Clubes',7);
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(10,'Clubes Sociales',9);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(11,'Alimentos',3);	
-insert into cat_producto_servicio(id_producto_servicio,value,id_parent)	values(12,'Cafe y te',11);	
-
-
-commit;	
+COMMIT;

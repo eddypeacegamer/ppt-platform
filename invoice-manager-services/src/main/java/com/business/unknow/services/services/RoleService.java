@@ -39,7 +39,6 @@ public class RoleService {
 			throw new InvoiceManagerException("Role not found", String.format("Role with the name %s not found", name),
 					HttpStatus.NOT_FOUND.value());
 		}
-
 	}
 
 }

@@ -1,45 +1,137 @@
-/**
- * 
- */
-package com.business.unknow.model;
+package com.business.unknow.services.entities;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-/**
- * @author hha0009
- *
- */
-public class EmpresaDto {
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "EMPRESAS")
+public class Empresa implements Serializable {
+
+	private static final long serialVersionUID = 8251482734350985993L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_EMPRESA")
 	private Integer id;
+
+	@Basic(optional = false)
+	@Column(name = "NOMBRE")
 	private String name;
+
+	@Basic(optional = false)
+	@Column(name = "GIRO")
 	private String giro;
+
+	@Basic(optional = false)
+	@Column(name = "LINEA")
 	private String linea;
+
+	@Basic(optional = false)
+	@Column(name = "RAZON_SOCIAL")
 	private String razonSocial;
+
+	@Basic(optional = false)
+	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
+
+	@Basic(optional = false)
+	@Column(name = "CURP")
 	private String curp;
+
+	@Basic(optional = false)
+	@Column(name = "CALLE")
 	private String calle;
+
+	@Basic(optional = false)
+	@Column(name = "NO_EXTERIOR")
 	private String noExterior;
+
+	@Basic(optional = false)
+	@Column(name = "NO_INTERIOR")
 	private String noInterior;
+
+	@Basic(optional = false)
+	@Column(name = "MUNICIPIO")
 	private String municipio;
+
+	@Basic(optional = false)
+	@Column(name = "LOCALIDAD")
 	private String localidad;
+
+	@Basic(optional = false)
+	@Column(name = "ESTADO")
 	private String estado;
+
+	@Basic(optional = false)
+	@Column(name = "CP")
 	private String cp;
+
+	@Basic(optional = false)
+	@Column(name = "REFERENCIA")
 	private String referencia;
+
+	@Basic(optional = false) 
+	@Column(name = "CORREO")
 	private String correo;
+
+	@Column(name = "TELEFONO")
 	private String telefono;
+
+	@Basic(optional = false)
+	@Column(name = "WEB")
 	private String web;
+
+	@Basic(optional = false)
+	@Column(name = "CONTACTO_ADMIN")
 	private String contactoAdmin;
+
+	@Basic(optional = false)
+	@Column(name = "SUCURSAL")
 	private String sucursal;
+
+	@Basic(optional = false)
+	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
+
+	@Basic(optional = false)
+	@Column(name = "COLONIA")
 	private String colonia;
+
+	@Basic(optional = false)
+	@Column(name = "LOGOTIPO")
 	private byte[] logotipo;
+
+	@Basic(optional = false)
+	@Column(name = "LLAVE_PRIVADA")
 	private byte[] llavePrivada;
+
+	@Basic(optional = false)
+	@Column(name = "CERTIFICADO_DIGITAL")
 	private byte[] certificado;
+
+	@Basic(optional = false)
+	@Column(name = "PW")
 	private String pw;
+
+	@Basic(optional = false)
+	@Column(name = "ENCABEZADO")
 	private String encabezado;
+
+	@Basic(optional = false)
+	@Column(name = "PIE_DE_PAGINA")
 	private String piePagina;
-	private Boolean activa;
+
+	@Basic(optional = false)
+	@Column(name = "ACTIVO")
+	private Boolean activo;
 
 	public Integer getId() {
 		return id;
@@ -265,17 +357,17 @@ public class EmpresaDto {
 		this.piePagina = piePagina;
 	}
 
-	public Boolean getActiva() {
-		return activa;
+	public Boolean getActivo() {
+		return activo;
 	}
 
-	public void setActiva(Boolean activa) {
-		this.activa = activa;
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 
 	@Override
 	public String toString() {
-		return "EmpresaDto [id=" + id + ", name=" + name + ", giro=" + giro + ", linea=" + linea + ", razonSocial="
+		return "Empresa [id=" + id + ", name=" + name + ", giro=" + giro + ", linea=" + linea + ", razonSocial="
 				+ razonSocial + ", regimenFiscal=" + regimenFiscal + ", curp=" + curp + ", calle=" + calle
 				+ ", noExterior=" + noExterior + ", noInterior=" + noInterior + ", municipio=" + municipio
 				+ ", localidad=" + localidad + ", estado=" + estado + ", cp=" + cp + ", referencia=" + referencia
@@ -283,7 +375,7 @@ public class EmpresaDto {
 				+ ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion + ", colonia=" + colonia
 				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
 				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
-				+ ", piePagina=" + piePagina + ", activa=" + activa + "]";
+				+ ", piePagina=" + piePagina + ", activo=" + activo + "]";
 	}
 
 }

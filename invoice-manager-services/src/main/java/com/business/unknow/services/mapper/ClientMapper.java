@@ -14,7 +14,7 @@ import com.business.unknow.services.entities.Client;
 @Mapper
 public interface ClientMapper {
 
-	ClientDto getClientDtoFromentity(Client entity);
+	ClientDto getClientDtoFromEntity(Client entity);
 
 	Client getEntityFromClientDto(ClientDto dto);
 
