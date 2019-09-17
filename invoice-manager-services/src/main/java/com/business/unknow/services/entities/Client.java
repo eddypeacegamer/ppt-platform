@@ -1,6 +1,7 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -23,11 +24,11 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_CLIENT")
 	private Integer id;
-	
-	@JoinColumn(name = "ID_EMPRESA", referencedColumnName = "ID_EMPRESA")
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	private Empresa empresa;
 
+	@JoinColumn(name = "ID_PROMOTOR", referencedColumnName = "ID_PROMOTOR")
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	private Promotor promotor;
+	
 	@Basic(optional = false)
 	@Column(name = "NOMBRE")
 	private String name;
@@ -83,6 +84,12 @@ public class Client implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "ACTIVO")
 	private Boolean activo;
+
+	@Column(name = "FECHA_CREACION")
+	private Date fechaCreacion;
+
+	@Column(name = "FECHA_ACTUALIZACION")
+	private Date fechaActualizacion;
 
 	public Integer getId() {
 		return id;
@@ -204,12 +211,37 @@ public class Client implements Serializable {
 		this.activo = activo;
 	}
 
+	public Promotor getPromotor() {
+		return promotor;
+	}
+
+	public void setPromotor(Promotor promotor) {
+		this.promotor = promotor;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", name=" + name + ", rfc=" + rfc + ", razonSocial=" + razonSocial + ", email="
-				+ email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado + ", coo=" + coo
-				+ ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio=" + municipio + ", pais="
-				+ pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo + "]";
+		return "Client [id=" + id + ", promotor=" + promotor + ", name=" + name + ", rfc=" + rfc + ", razonSocial="
+				+ razonSocial + ", email=" + email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado
+				+ ", coo=" + coo + ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio="
+				+ municipio + ", pais=" + pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

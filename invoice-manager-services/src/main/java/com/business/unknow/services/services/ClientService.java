@@ -24,6 +24,18 @@ public class ClientService {
 	@Autowired
 	private ClientMapper mapper;
 
+	public Page<ClientDto> getAllClientsByPromotor(String promotor, int page, int size) {
+		Page<Client> result = repository.findAllByPromotor(promotor, PageRequest.of(page, size));
+		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
+				result.getTotalElements());
+	}
+
+	public Page<ClientDto> getAllClients(int page, int size) {
+		Page<Client> result = repository.findAll(PageRequest.of(page, size));
+		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
+				result.getTotalElements());
+	}
+
 	public ClientDto getClientByRfc(String rfc) throws InvoiceManagerException {
 		Optional<Client> client = repository.findByRfc(rfc);
 		if (client.isPresent()) {
@@ -34,16 +46,15 @@ public class ClientService {
 		}
 	}
 
-	public Page<ClientDto> getAllClientsByEmpresa(String empresa, int page, int size) {
-		Page<Client> result = repository.findAllByEmpresaName(empresa, PageRequest.of(page, size));
-		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-
-	public Page<ClientDto> getAllClients(int page, int size) {
-		Page<Client> result = repository.findAll(PageRequest.of(page, size));
-		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
+	public ClientDto getClientByPromotorAndRfc(String promotor, String rfc) throws InvoiceManagerException {
+		Optional<Client> client = repository.findByEmpresaAndRfc(promotor, rfc);
+		if (client.isPresent()) {
+			return mapper.getClientDtoFromEntity(client.get());
+		} else {
+			throw new InvoiceManagerException("Client not found",
+					String.format("El cliente del promotor %s y con el rfc %s", promotor, rfc),
+					HttpStatus.NOT_FOUND.value());
+		}
 	}
 
 }

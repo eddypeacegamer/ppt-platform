@@ -2,6 +2,7 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -133,6 +134,12 @@ public class Empresa implements Serializable {
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 
+	@Column(name = "FECHA_CREACION")
+	private Date fechaCreacion;
+
+	@Column(name = "FECHA_ACTUALIZACION")
+	private Date fechaActualizacion;
+	
 	public Integer getId() {
 		return id;
 	}

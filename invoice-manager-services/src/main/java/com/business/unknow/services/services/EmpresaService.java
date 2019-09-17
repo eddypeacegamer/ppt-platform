@@ -30,7 +30,7 @@ public class EmpresaService {
 				result.getTotalElements());
 	}
 
-	public EmpresaDto getAllEmpresaByName(String name) throws InvoiceManagerException {
+	public EmpresaDto getEmpresaByName(String name) throws InvoiceManagerException {
 		Optional<Empresa> result = repository.findByName(name);
 		if (result.isPresent()) {
 			return mapper.getEmpresaDtoFromEntity(result.get());

@@ -36,12 +36,12 @@ public class ClientController {
 	}
 
 	
-	@GetMapping("empresas/{empresa}/clients")
+	@GetMapping("promotores/{promotor}/clients")
 	@ApiOperation(value = "Get all client by promotor name and name.")
-	public ResponseEntity<Page<ClientDto>> getClients(@PathVariable String empresa,
+	public ResponseEntity<Page<ClientDto>> getClients(@PathVariable String promotor,
 			@RequestParam(name = "page", defaultValue = "1") int page,
 			@RequestParam(name = "size", defaultValue = "15") int size) {
-		return new ResponseEntity<>(service.getAllClientsByEmpresa(empresa, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getAllClientsByPromotor(promotor, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/clients")

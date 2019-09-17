@@ -1,12 +1,14 @@
 package com.business.unknow.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ClientDto implements Serializable {
 
 	private static final long serialVersionUID = 4951260411762447946L;
 
 	private Integer id;
+	private PromotorDto promotor;
 	private String name;
 	private String rfc;
 	private String razonSocial;
@@ -21,6 +23,8 @@ public class ClientDto implements Serializable {
 	private String pais;
 	private String codigoPostal;
 	private Boolean activo;
+	private Date fechaCreacion;
+	private Date fechaActualizacion;
 
 	public Integer getId() {
 		return id;
@@ -142,12 +146,37 @@ public class ClientDto implements Serializable {
 		this.activo = activo;
 	}
 
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+	
+	public PromotorDto getPromotor() {
+		return promotor;
+	}
+
+	public void setPromotor(PromotorDto promotor) {
+		this.promotor = promotor;
+	}
+
 	@Override
 	public String toString() {
-		return "ClientDto [id=" + id + ", name=" + name + ", rfc=" + rfc + ", razonSocial=" + razonSocial + ", email="
-				+ email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado + ", coo=" + coo
-				+ ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio=" + municipio + ", pais="
-				+ pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo + "]";
+		return "ClientDto [id=" + id + ", promotor=" + promotor + ", name=" + name + ", rfc=" + rfc + ", razonSocial="
+				+ razonSocial + ", email=" + email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado
+				+ ", coo=" + coo + ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio="
+				+ municipio + ", pais=" + pais + ", codigoPostal=" + codigoPostal + ", activo=" + activo
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.business.unknow.model;
 
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @author hha0009
@@ -40,6 +41,8 @@ public class EmpresaDto {
 	private String encabezado;
 	private String piePagina;
 	private Boolean activo;
+	private Date fechaCreacion;
+	private Date fechaActualizacion;
 
 	public Integer getId() {
 		return id;
@@ -273,6 +276,22 @@ public class EmpresaDto {
 		this.activo = activo;
 	}
 
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
 	@Override
 	public String toString() {
 		return "EmpresaDto [id=" + id + ", name=" + name + ", giro=" + giro + ", linea=" + linea + ", razonSocial="
@@ -283,7 +302,8 @@ public class EmpresaDto {
 				+ ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion + ", colonia=" + colonia
 				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
 				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
-				+ ", piePagina=" + piePagina + ", activo=" + activo + "]";
+				+ ", piePagina=" + piePagina + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

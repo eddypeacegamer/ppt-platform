@@ -36,7 +36,7 @@ public class EmpresaController {
 
 	@GetMapping("/{name}")
 	public ResponseEntity<EmpresaDto> getAllEmpresasByName(@PathVariable String name) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getAllEmpresaByName(name), HttpStatus.OK);
+		return new ResponseEntity<>(service.getEmpresaByName(name), HttpStatus.OK);
 	}
 
 }
