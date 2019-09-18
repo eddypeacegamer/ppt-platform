@@ -8,7 +8,7 @@ export class CatalogsService {
 
   constructor(private httpClient:HttpClient) { }
 
-  public getAllClavesProductoServicio(page?:number,size?:number){
+  public getAllClavesProductoServicio(page:number,size:number){
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
     return this.httpClient.get('../api/catalogs/producto-servicios',{params:pageParams});
   }
