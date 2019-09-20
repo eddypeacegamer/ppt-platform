@@ -26,6 +26,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'pre-cfdi',
         link: '/pages/promotor/precfdi'
+      },
+      {
+        title: 'pagos',
+        link: '/pages/promotor/pagos'
       }
 
     ]
@@ -52,9 +56,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },{
         title: 'reportes',
         link: '/pages/operaciones/reportes'
-      },{
-        title: 'carga-xml',
-        link: '/pages/operaciones/carga-xml'
       }
     ]
   },

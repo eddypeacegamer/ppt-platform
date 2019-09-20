@@ -3,10 +3,63 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Reportes</nb-card-header>
       <nb-card-body>
-        <form class="form-inline">
-          <input type="text" nbInput fullWidth placeholder="FOLIO">
-          <button type="button" nbButton status="primary">BUSCAR</button>
-        </form>
+        <div class="row">
+          <div class="col-md-1">
+            <label for="inputFolio" class="label">Folio</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" nbInput fullWidth id="inputFolio" placeholder="Folio PreCFDI">
+          </div>
+          <div class="col-md-1">
+            <label for="inputEmisor" class="label">Emisor</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" nbInput fullWidth id="inputEmisor" placeholder="RFC Emisor">
+          </div>
+          <div class="col-md-1">
+            <label for="InputReceptor" class="label">Receptor</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" nbInput fullWidth id="InputReceptor" placeholder="RFC Receptor">
+          </div>
+
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+            <label for="inputStatus" class="label">Estatus Pago</label>
+          </div>
+          <div class="col-md-2">
+            <nb-select selected="1" id="inputGiro">
+              <nb-option value="1">No Pagado</nb-option>
+              <nb-option value="2">En validacion</nb-option>
+              <nb-option value="3">Pagado</nb-option>
+            </nb-select>
+          </div>
+          <div class="col-md-1">
+            <label for="inputTimbrado" class="label">Estatus Timbrado</label>
+          </div>
+          <div class="col-md-2">
+            <nb-select selected="1" id="inputGiro">
+              <nb-option value="1">Solicitud</nb-option>
+              <nb-option value="2">En validacion</nb-option>
+              <nb-option value="3">Timbrado</nb-option>
+            </nb-select>
+          </div>
+          <div class="col-md-2">
+              <label for="inputTimbrado" class="label">Rango de fechas solicitud</label>
+            </div>
+          <div class="col-md-3">
+              <input nbInput placeholder="Rango de fechas" [nbDatepicker]="rangepicker">
+              <nb-rangepicker #rangepicker></nb-rangepicker>
+          </div>
+          <div class="col-md-1">
+            <button type="button" nbButton status="primary">BUSCAR</button>
+          </div>
+        </div>
+
+
+
       </nb-card-body>
     </nb-card>
   </div>
@@ -27,10 +80,11 @@
             <strong>Resultados</strong>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
-            <nb-select  *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
+            <nb-select *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+              id="inputPageSize" class="float-right">
               <nb-option value="10">10</nb-option>
               <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
-              <nb-option *ngIf="page.number<(page.totalElements/50)"value="50">50</nb-option>
+              <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
             </nb-select>
           </div>
 

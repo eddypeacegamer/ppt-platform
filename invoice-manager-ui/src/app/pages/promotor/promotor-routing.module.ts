@@ -4,6 +4,7 @@ import { PromotorComponent} from "./promotor.component"
 import { ClientesComponent } from './clientes/clientes.component'
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component'
 import { ReportesComponent } from './reportes/reportes.component'
+import { PagosComponent } from './pagos/pagos.component';
 
 const routes: Routes = [{
   path: '',
@@ -20,6 +21,10 @@ const routes: Routes = [{
     {
       path: 'reportes',
       component: ReportesComponent,
+    },
+    {
+      path: 'pagos',
+      component: PagosComponent,
     }
   ]
 }

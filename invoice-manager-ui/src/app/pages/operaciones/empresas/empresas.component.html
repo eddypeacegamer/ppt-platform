@@ -1,3 +1,87 @@
-<p>
-  empresas works!
-</p>
+<div class="row">
+    <div class="col-md-12">
+      <nb-card class="inline-form-card">
+        <nb-card-header>Empresas</nb-card-header>
+        <nb-card-body>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="inputName" class="label">Nombre</label>
+              </div>
+              <div class="col-md-4">
+                <input type="text" nbInput fullWidth id="inputName" placeholder="Nombre o Razon Social">
+              </div>
+              <div class="col-md-1">
+                <label for="inputRfc" class="label">RFC</label>
+              </div>
+              <div class="col-md-3">
+                <input type="text" nbInput fullWidth id="inputRfc" placeholder="RFC Empresa">
+              </div>
+             
+              <div class="col-md-2">
+                  <button type="button" nbButton status="primary">BUSCAR</button>
+                </div>
+    
+            </div>
+            <br>
+        
+          </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+  
+  
+  <div class="row">
+    <div class="col-md-12">
+      <nb-card>
+        <nb-card-header>Facturas</nb-card-header>
+        <nb-card-body>
+  
+          <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+            No se encontraron resultados
+          </div>
+          <div class="table-responsive" *ngIf="page.empty == false">
+            <div class="clearfix">
+              <strong>Resultados</strong>
+              <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+  
+              <nb-select *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+                id="inputPageSize" class="float-right">
+                <nb-option value="10">10</nb-option>
+                <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+                <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
+              </nb-select>
+            </div>
+  
+  
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of page.content">
+                  <td scope="row">{{fila.clave}}</td>
+                  <td scope="row">{{fila.descipcion}}</td>
+                  <td scope="row">{{fila.similares}}</td>
+                  <td scope="row">{{fila.inicioVigencia}}</td>
+                </tr>
+              </tbody>
+            </table>
+  
+            <ul class="pagination" *ngIf="page.totalElements > 1">
+              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                  (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+              <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+            </ul>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
