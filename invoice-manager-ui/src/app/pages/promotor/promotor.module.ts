@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   NbActionsModule,
   NbButtonModule,
@@ -29,6 +30,7 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
   declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent],
   imports: [
     CommonModule,
+    FormsModule,
     PromotorRoutingModule,
     NbActionsModule,
     NbButtonModule,

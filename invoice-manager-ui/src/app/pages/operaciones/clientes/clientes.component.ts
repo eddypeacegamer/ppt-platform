@@ -16,13 +16,13 @@ export class ClientesComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
-  public filterParams : any = {razonSocial:'Arcos'};
+  public filterParams : any = {razonSocial:'',rfc:''};
    
   constructor(private clientsService: ClientsData,
     private donwloadService: DownloadCsvService) { }
 
   ngOnInit() {
-    this.updateDataTable(0,10,this.filterParams);
+    this.updateDataTable(0,10);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {

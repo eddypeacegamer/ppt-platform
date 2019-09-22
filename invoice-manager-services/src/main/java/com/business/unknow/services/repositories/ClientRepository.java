@@ -16,9 +16,9 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
 	public Page<Client> findAll(Pageable pageable);
 	
-	public Page<Client> findByRazonSocialContaining(String razonSocial , Pageable pageable);
+	public Page<Client> findByRazonSocialIgnoreCaseContaining(String razonSocial , Pageable pageable);
 	
-	public Page<Client> findByRfcContaining(String rfc , Pageable pageable);
+	public Page<Client> findByRfcIgnoreCaseContaining(String rfc , Pageable pageable);
 
 	public Optional<Client> findByRfc(String rfc);
 	

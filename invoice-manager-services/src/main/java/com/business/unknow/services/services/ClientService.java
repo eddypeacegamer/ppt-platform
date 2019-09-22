@@ -36,9 +36,9 @@ public class ClientService {
 		if(!razonSocial.isPresent() && !rfc.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		}else if(rfc.isPresent()) {
-			result = repository.findByRfcContaining(rfc.get(), PageRequest.of(page, size));
+			result = repository.findByRfcIgnoreCaseContaining(rfc.get(), PageRequest.of(page, size));
 		}else {
-			result = repository.findByRazonSocialContaining(razonSocial.get(), PageRequest.of(page, size));
+			result = repository.findByRazonSocialIgnoreCaseContaining(razonSocial.get(), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
