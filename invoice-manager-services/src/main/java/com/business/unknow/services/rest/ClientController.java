@@ -1,5 +1,7 @@
 package com.business.unknow.services.rest;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +53,11 @@ public class ClientController {
 	@GetMapping("/clients")
 	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<ClientDto>> getClientsByEmpresa(
+			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
+			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllClients(page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getClients(rfc, razonSocial, page, size), HttpStatus.OK);
 	}
 	
 	@PostMapping("/clients")

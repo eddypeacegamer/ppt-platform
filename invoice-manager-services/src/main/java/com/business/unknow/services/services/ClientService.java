@@ -30,8 +30,16 @@ public class ClientService {
 				result.getTotalElements());
 	}
 
-	public Page<ClientDto> getAllClients(int page, int size) {
-		Page<Client> result = repository.findAll(PageRequest.of(page, size));
+	public Page<ClientDto> getClients(Optional<String> rfc, Optional<String> razonSocial,int page, int size) {
+		Page<Client> result;
+		
+		if(!razonSocial.isPresent() && !rfc.isPresent()) {
+			result = repository.findAll(PageRequest.of(page, size));
+		}else if(rfc.isPresent()) {
+			result = repository.findByRfcContaining(rfc.get(), PageRequest.of(page, size));
+		}else {
+			result = repository.findByRazonSocialContaining(razonSocial.get(), PageRequest.of(page, size));
+		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}

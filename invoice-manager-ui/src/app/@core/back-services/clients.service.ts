@@ -9,8 +9,11 @@ export class ClientsService {
   constructor(private httpClient:HttpClient) { }
 
 
-  public getAllClients(page:number,size:number){
+  public getClients(page:number,size:number, filterParams?: any){
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+    for (const key in filterParams) {
+      pageParams = pageParams.append(key, filterParams[key]);
+    }
     return this.httpClient.get('../api/clients',{params:pageParams});
   }
 

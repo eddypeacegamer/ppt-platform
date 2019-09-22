@@ -4,7 +4,7 @@ import { Client } from '../../models/client';
 
 export abstract class ClientsData {
 
-    abstract getAllClients(page:number,size:number) : Observable<GenericPage<Client>>;
+    abstract getClients(page:number,size:number,filterParams?:any) : Observable<GenericPage<Client>>;
 
     abstract getClientByRFC(rfc:string) : Observable<Client>;
 
