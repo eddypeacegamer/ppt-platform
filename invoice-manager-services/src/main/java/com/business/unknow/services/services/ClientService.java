@@ -8,9 +8,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.ClientDto;
-import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
@@ -26,35 +26,56 @@ public class ClientService {
 
 	public Page<ClientDto> getAllClientsByPromotor(String promotor, int page, int size) {
 		Page<Client> result = repository.findAllByPromotor(promotor, PageRequest.of(page, size));
-		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
+		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
 	public Page<ClientDto> getAllClients(int page, int size) {
 		Page<Client> result = repository.findAll(PageRequest.of(page, size));
-		return new PageImpl<ClientDto>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
+		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
-	public ClientDto getClientByRfc(String rfc) throws InvoiceManagerException {
+	public ClientDto getClientByRfc(String rfc){
 		Optional<Client> client = repository.findByRfc(rfc);
 		if (client.isPresent()) {
 			return mapper.getClientDtoFromEntity(client.get());
 		} else {
-			throw new InvoiceManagerException("Client not found",
-					String.format("The client with the rfc %s does not exist", rfc), HttpStatus.NOT_FOUND.value());
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El cliente con el rfc %s no existe", rfc));
 		}
 	}
 
-	public ClientDto getClientByPromotorAndRfc(String promotor, String rfc) throws InvoiceManagerException {
+	public ClientDto getClientByPromotorAndRfc(String promotor, String rfc) {
 		Optional<Client> client = repository.findByEmpresaAndRfc(promotor, rfc);
 		if (client.isPresent()) {
 			return mapper.getClientDtoFromEntity(client.get());
 		} else {
-			throw new InvoiceManagerException("Client not found",
-					String.format("El cliente del promotor %s y con el rfc %s", promotor, rfc),
-					HttpStatus.NOT_FOUND.value());
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Cliente con rfc %s no encontrado para %s",rfc, promotor));
 		}
+	}
+	
+	public ClientDto insertNewClient(ClientDto cliente) {
+		return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
+	}
+	
+	public ClientDto updateClientInfo(ClientDto client, String rfc) {
+		Client dbClient = repository.findByRfc(rfc).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("El cliente con el rfc %s no existe", rfc)));
+		dbClient.setActivo(client.getActivo());
+		dbClient.setCalle(client.getCalle());
+		dbClient.setCodigoPostal(client.getCodigoPostal());
+		dbClient.setColonia(client.getColonia());
+		dbClient.setCoo(client.getCoo());
+		dbClient.setEmail(client.getEmail());
+		dbClient.setEstado(client.getEstado());
+		dbClient.setMunicipio(client.getMunicipio());
+		dbClient.setName(client.getName());
+		dbClient.setNoExterior(client.getNoExterior());
+		dbClient.setNoInterior(client.getNoInterior());
+		dbClient.setPais(client.getPais());
+		dbClient.setRazonSocial(client.getRazonSocial());
+		//TODO set promotor
+		
+		return mapper.getClientDtoFromEntity(repository.save(dbClient));
 	}
 
 }

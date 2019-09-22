@@ -29,13 +29,13 @@ public class EmpresaController {
 	private EmpresaService service;
 
 	@GetMapping
-	public ResponseEntity<Page<EmpresaDto>> getAllEmpresas(@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "size", defaultValue = "15") int size) {
+	public ResponseEntity<Page<EmpresaDto>> getAllEmpresas(@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getAllEmpresas(page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/{name}")
-	public ResponseEntity<EmpresaDto> getAllEmpresasByName(@PathVariable String name) throws InvoiceManagerException {
+	public ResponseEntity<EmpresaDto> getAllEmpresasByName(@PathVariable String name){
 		return new ResponseEntity<>(service.getEmpresaByName(name), HttpStatus.OK);
 	}
 

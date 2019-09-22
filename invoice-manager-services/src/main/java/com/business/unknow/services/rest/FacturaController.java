@@ -29,7 +29,7 @@ public class FacturaController {
 	private FacturaService service;
 
 	@GetMapping("/facturas")
-	public ResponseEntity<Page<FacturaDto>> getAllFacturas(@RequestParam(name = "page", defaultValue = "1") int page,
+	public ResponseEntity<Page<FacturaDto>> getAllFacturas(@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "15") int size) {
 		return new ResponseEntity<>(service.getAllFacturas(page, size), HttpStatus.OK);
 	}
@@ -38,7 +38,7 @@ public class FacturaController {
 	@GetMapping("/promotores/{promotor}/clientes/{rfc}/facturas")
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByEmpresaAndClientAndEmpresa(@PathVariable String rfc,
 			@PathVariable String promotor, @RequestParam(name = "empresa", required=false) String empresa,
-			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "15") int size) throws InvoiceManagerException {
 		return new ResponseEntity<>(
 				service.getAllFacturasByPromotorAndClientAndEmpresas(promotor, rfc, empresa, page, size), HttpStatus.OK);
@@ -46,7 +46,7 @@ public class FacturaController {
 
 	@GetMapping("/promotores/{promotor}/facturas")
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByEmpresat(@PathVariable String promotor,
-			@RequestParam(name = "page", defaultValue = "1") int page,
+			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "15") int size) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getAllFacturasByPromotor(promotor, page, size), HttpStatus.OK);
 	}

@@ -19,28 +19,13 @@ import { CatalogsData } from './data/catalogs-data';
 
 import { UserService } from './mock/users.service';
 import { CatalogsService } from './back-services/catalogs.service';
+import { ClientsData } from './data/clients-data';
+import { ClientsService } from './back-services/clients.service';
 
-
-const socialLinks = [
-  {
-    url: 'https://github.com/akveo/nebular',
-    target: '_blank',
-    icon: 'github',
-  },
-  {
-    url: 'https://www.facebook.com/akveo/',
-    target: '_blank',
-    icon: 'facebook',
-  },
-  {
-    url: 'https://twitter.com/akveo_inc',
-    target: '_blank',
-    icon: 'twitter',
-  },
-];
 
 const DATA_SERVICES = [
   {provide: CatalogsData, useClass: CatalogsService},
+  {provide: ClientsData, useClass: ClientsService},
 
   { provide: UserData, useClass: UserService },
 ];
@@ -64,12 +49,6 @@ export const NB_CORE_PROVIDERS = [
       }),
     ],
     forms: {
-      login: {
-        socialLinks: socialLinks,
-      },
-      register: {
-        socialLinks: socialLinks,
-      },
     },
   }).providers,
 
