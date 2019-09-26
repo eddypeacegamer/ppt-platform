@@ -7,10 +7,13 @@
 		<artifactId>invoice-manager-platform</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>invoice-manager-services</artifactId>
 	<name>invoice-manager-services</name>
-
+	<description>Invoice manager demo project</description>
+	<packaging>jar</packaging>
 	<properties>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 	</properties>
@@ -93,6 +96,20 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.business.unknow.services.ServicesApplication</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
@@ -113,31 +130,8 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<packagingExcludes>src/test/resources/*.*</packagingExcludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<profiles>
-						<profile>local</profile>
-						<profile>stg</profile>
-						<profile>prod</profile>
-					</profiles>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<releaseProfiles>global</releaseProfiles>
-				</configuration>
-			</plugin>
+
+
 		</plugins>
 	</build>
 
