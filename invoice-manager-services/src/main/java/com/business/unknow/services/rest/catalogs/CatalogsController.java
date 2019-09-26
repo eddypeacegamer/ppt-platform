@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.catalogs.GiroDto;
 import com.business.unknow.model.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.catalogs.UsoCfdiDto;
@@ -38,7 +39,6 @@ public class CatalogsController {
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getAllProductoServicioClaves(page, size), HttpStatus.OK);
 	}
-	
 
 	@GetMapping("/clave-unidad")
 	public ResponseEntity<Page<ClaveUnidadDto>> getAllClaveUnidad(
@@ -56,10 +56,15 @@ public class CatalogsController {
 	public ResponseEntity<List<RegimenFiscalDto>> getRegimenFiscal() {
 		return new ResponseEntity<>(service.getAllRegimenFiscal(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/status-factura")
 	public ResponseEntity<List<StatusFacturaDto>> getStatusFactura() {
 		return new ResponseEntity<>(service.getAllStatusFactura(), HttpStatus.OK);
+	}
+
+	@GetMapping("/giros")
+	public ResponseEntity<List<GiroDto>> getGiros() {
+		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
 	}
 
 }

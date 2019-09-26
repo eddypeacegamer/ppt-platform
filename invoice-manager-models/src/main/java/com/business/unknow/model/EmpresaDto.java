@@ -13,27 +13,13 @@ import java.util.Date;
 public class EmpresaDto {
 
 	private Integer id;
-	private String name;
-	private String giro;
-	private String linea;
-	private String razonSocial;
-	private String regimenFiscal;
-	private String curp;
-	private String calle;
-	private String noExterior;
-	private String noInterior;
-	private String municipio;
-	private String localidad;
-	private String estado;
-	private String cp;
+	private String rfc;
 	private String referencia;
-	private String correo;
-	private String telefono;
+	private String regimenFiscal;
 	private String web;
 	private String contactoAdmin;
 	private String sucursal;
 	private String lugarExpedicion;
-	private String colonia;
 	private byte[] logotipo;
 	private byte[] llavePrivada;
 	private byte[] certificado;
@@ -52,108 +38,12 @@ public class EmpresaDto {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getRfc() {
+		return rfc;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getGiro() {
-		return giro;
-	}
-
-	public void setGiro(String giro) {
-		this.giro = giro;
-	}
-
-	public String getLinea() {
-		return linea;
-	}
-
-	public void setLinea(String linea) {
-		this.linea = linea;
-	}
-
-	public String getRazonSocial() {
-		return razonSocial;
-	}
-
-	public void setRazonSocial(String razonSocial) {
-		this.razonSocial = razonSocial;
-	}
-
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
-
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
-
-	public String getCurp() {
-		return curp;
-	}
-
-	public void setCurp(String curp) {
-		this.curp = curp;
-	}
-
-	public String getCalle() {
-		return calle;
-	}
-
-	public void setCalle(String calle) {
-		this.calle = calle;
-	}
-
-	public String getNoExterior() {
-		return noExterior;
-	}
-
-	public void setNoExterior(String noExterior) {
-		this.noExterior = noExterior;
-	}
-
-	public String getNoInterior() {
-		return noInterior;
-	}
-
-	public void setNoInterior(String noInterior) {
-		this.noInterior = noInterior;
-	}
-
-	public String getMunicipio() {
-		return municipio;
-	}
-
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
-	}
-
-	public String getLocalidad() {
-		return localidad;
-	}
-
-	public void setLocalidad(String localidad) {
-		this.localidad = localidad;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getCp() {
-		return cp;
-	}
-
-	public void setCp(String cp) {
-		this.cp = cp;
+	public void setRfc(String rfc) {
+		this.rfc = rfc;
 	}
 
 	public String getReferencia() {
@@ -162,22 +52,6 @@ public class EmpresaDto {
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
-	}
-
-	public String getCorreo() {
-		return correo;
-	}
-
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
-
-	public String getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
 	}
 
 	public String getWeb() {
@@ -210,14 +84,6 @@ public class EmpresaDto {
 
 	public void setLugarExpedicion(String lugarExpedicion) {
 		this.lugarExpedicion = lugarExpedicion;
-	}
-
-	public String getColonia() {
-		return colonia;
-	}
-
-	public void setColonia(String colonia) {
-		this.colonia = colonia;
 	}
 
 	public byte[] getLogotipo() {
@@ -292,18 +158,22 @@ public class EmpresaDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getRegimenFiscal() {
+		return regimenFiscal;
+	}
+
+	public void setRegimenFiscal(String regimenFiscal) {
+		this.regimenFiscal = regimenFiscal;
+	}
+
 	@Override
 	public String toString() {
-		return "EmpresaDto [id=" + id + ", name=" + name + ", giro=" + giro + ", linea=" + linea + ", razonSocial="
-				+ razonSocial + ", regimenFiscal=" + regimenFiscal + ", curp=" + curp + ", calle=" + calle
-				+ ", noExterior=" + noExterior + ", noInterior=" + noInterior + ", municipio=" + municipio
-				+ ", localidad=" + localidad + ", estado=" + estado + ", cp=" + cp + ", referencia=" + referencia
-				+ ", correo=" + correo + ", telefono=" + telefono + ", web=" + web + ", contactoAdmin=" + contactoAdmin
-				+ ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion + ", colonia=" + colonia
-				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
-				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
-				+ ", piePagina=" + piePagina + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "EmpresaDto [id=" + id + ", rfc=" + rfc + ", referencia=" + referencia + ", regimenFiscal="
+				+ regimenFiscal + ", web=" + web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal
+				+ ", lugarExpedicion=" + lugarExpedicion + ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada="
+				+ Arrays.toString(llavePrivada) + ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw
+				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

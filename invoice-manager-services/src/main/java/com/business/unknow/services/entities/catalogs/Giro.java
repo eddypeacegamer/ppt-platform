@@ -1,14 +1,11 @@
-package com.business.unknow.services.entities;
+package com.business.unknow.services.entities.catalogs;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -16,21 +13,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "CLIENTES")
-public class Client implements Serializable {
+public class Giro implements Serializable {
 
-	private static final long serialVersionUID = -491025321146807933L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CLIENT")
-	private Integer id;
+	@Column(name = "ID_GIRO")
+	private Integer clave;
 
-	@Column(name = "RFC")
-	private String rfc;
-
-	@Column(name = "ACTIVO")
-	private Boolean activo;
+	@Column(name = "NOMBRE")
+	private String nombre;
 
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
@@ -42,28 +34,20 @@ public class Client implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	public Integer getId() {
-		return id;
+	public Integer getClave() {
+		return clave;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setClave(Integer clave) {
+		this.clave = clave;
 	}
 
-	public String getRfc() {
-		return rfc;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
-
-	public Boolean getActivo() {
-		return activo;
-	}
-
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public Date getFechaCreacion() {
@@ -84,8 +68,8 @@ public class Client implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", rfc=" + rfc  + ", activo=" + activo + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Giro [clave=" + clave + ", nombre=" + nombre + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

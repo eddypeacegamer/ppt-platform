@@ -15,17 +15,22 @@ public class RegimenFiscal {
 	@Id
 	@Column(name = "CLAVE")
 	private Integer clave;
+	
 	@Column(name = "DESCRIPCION")
 	private String descripcion;
+	
 	@Column(name = "P_FISICA")
 	private boolean pFisica;
+	
 	@Column(name = "P_MORAL")
 	private boolean pMoral;
+	
 	@Column(name = "INICIO_VIGENCIA")
 	private Date inicioVigencia;
 	public Integer getClave() {
 		return clave;
 	}
+	
 	public void setClave(Integer clave) {
 		this.clave = clave;
 	}

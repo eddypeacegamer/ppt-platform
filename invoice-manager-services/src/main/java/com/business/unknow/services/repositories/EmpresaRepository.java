@@ -11,6 +11,9 @@ import com.business.unknow.services.entities.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 
 	public Page<Empresa> findAll(Pageable pageable);
-	public Optional<Empresa> findByName(String nombre);
+
+	public Optional<Empresa> findByRfc(String rfc);
+
+	public Page<Empresa> findByRfcIgnoreCaseContaining(String rfc, Pageable pageable);
 
 }

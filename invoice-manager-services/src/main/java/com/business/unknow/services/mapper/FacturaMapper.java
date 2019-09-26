@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.FacturaDto;
-import com.business.unknow.services.entities.Factura;
+import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.services.entities.factura.Factura;
 
 @Mapper
 public interface FacturaMapper {
