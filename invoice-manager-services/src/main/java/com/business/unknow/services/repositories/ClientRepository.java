@@ -18,7 +18,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 	@Query("select c from Client c where c.informacionFiscal.rfc like :rfc")
 	public Page<Client> findByRfcIgnoreCaseContaining(@Param("rfc") String rfc , Pageable pageable);
 	
-	@Query("select c from Client c where c.informacionFiscal.razonSocial like :razonSocial")
+	@Query("select c from Client c where upper(c.informacionFiscal.razonSocial) like upper(:razonSocial)")
 	public Page<Client> findByRazonSocialIgnoreCaseContaining(@Param("razonSocial") String razonSocial , Pageable pageable);
 
 	@Query("select c from Client c where c.informacionFiscal.rfc = :rfc")
