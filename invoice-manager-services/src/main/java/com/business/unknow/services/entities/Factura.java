@@ -13,6 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 
@@ -99,9 +104,13 @@ public class Factura implements Serializable {
 	@Column(name = "TOTAL")
 	private double total;
 
+	@Temporal(TemporalType.DATE)
+	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 

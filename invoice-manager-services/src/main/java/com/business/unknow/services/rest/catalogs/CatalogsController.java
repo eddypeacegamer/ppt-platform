@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.business.unknow.services.rest.catalog;
+package com.business.unknow.services.rest.catalogs;
 
 import java.util.List;
 
@@ -34,15 +34,16 @@ public class CatalogsController {
 
 	@GetMapping("/producto-servicios")
 	public ResponseEntity<Page<ClaveProductoServicioDto>> getAllClaveProdServicio(
-			@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "size", defaultValue = "15") int size) {
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getAllProductoServicioClaves(page, size), HttpStatus.OK);
 	}
+	
 
 	@GetMapping("/clave-unidad")
 	public ResponseEntity<Page<ClaveUnidadDto>> getAllClaveUnidad(
-			@RequestParam(name = "page", defaultValue = "1") int page,
-			@RequestParam(name = "size", defaultValue = "15") int size) {
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getAllClaveUnidad(page, size), HttpStatus.OK);
 	}
 

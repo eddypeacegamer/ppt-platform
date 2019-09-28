@@ -5,20 +5,20 @@
         <nb-card-body>
           <div class="row">
             <div class="col-md-2">
-              <label for="inputName" class="label">Nombre</label>
+              <label for="inputName" class="label">Razon Social</label>
             </div>
             <div class="col-md-4">
-              <input type="text" nbInput fullWidth id="inputName" placeholder="Nombre o Razon Social">
+              <input type="text" [(ngModel)]="filterParams.razonSocial" [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="inputName" placeholder="Razon Social">
             </div>
             <div class="col-md-1">
               <label for="inputRfc" class="label">RFC</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth id="inputRfc" placeholder="RFC Cliente">
+              <input type="text" [(ngModel)]="filterParams.rfc" [disabled]="filterParams.razonSocial.length > 0" nbInput fullWidth id="inputRfc" placeholder="RFC Cliente">
             </div>
            
             <div class="col-md-2">
-                <button type="button" nbButton status="primary">BUSCAR</button>
+                <button type="button" (click)="updateDataTable(0,10,filterParams)"  nbButton status="primary">BUSCAR</button>
               </div>
   
           </div>
@@ -61,10 +61,15 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row">{{fila.clave}}</td>
-                  <td scope="row">{{fila.descipcion}}</td>
-                  <td scope="row">{{fila.similares}}</td>
-                  <td scope="row">{{fila.inicioVigencia}}</td>
+                  <td scope="row">{{fila.rfc}}</td>
+                  <td scope="row">{{fila.razonSocial}}</td>
+                  <td scope="row">{{fila.name}}</td>
+                  <td scope="row">{{fila.email}}</td>
+                  <td scope="row">{{fila.noExterior}}</td>
+                  <td scope="row">{{fila.calle}}</td>
+                  <td scope="row">{{fila.colonia}}</td>
+                  <td scope="row">{{fila.municipio}}</td>
+                  <td scope="row">{{fila.codigoPostal}}</td>
                 </tr>
               </tbody>
             </table>

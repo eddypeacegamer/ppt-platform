@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   NbActionsModule,
   NbButtonModule,
@@ -24,12 +26,13 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
-import { CommonModule } from '@angular/common';
+
 
 @NgModule({
   declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent],
   imports: [
     CommonModule,
+    FormsModule,
     OperacionesRoutingModule,
     NbActionsModule,
     NbButtonModule,

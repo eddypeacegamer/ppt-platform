@@ -11,6 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "EMPRESAS")
@@ -134,9 +139,13 @@ public class Empresa implements Serializable {
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 
+	@Temporal(TemporalType.DATE)
+	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 	

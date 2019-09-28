@@ -37,10 +37,7 @@ export class ReportesComponent implements OnInit {
 
 
   public downloadHandler() {
-
-    let filename: string = 'test.csv';
-
-
+    let filename: string = 'Facturas.csv';
     this.catalogService.getAllClavesProductoServicio(0, 10000).subscribe(result => {
       this.donwloadService.exportCsv(result.content,'export')
     });

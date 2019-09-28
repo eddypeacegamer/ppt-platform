@@ -8,9 +8,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
@@ -26,17 +26,16 @@ public class EmpresaService {
 
 	public Page<EmpresaDto> getAllEmpresas(int page, int size) {
 		Page<Empresa> result = repository.findAll(PageRequest.of(page, size));
-		return new PageImpl<EmpresaDto>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
+		return new PageImpl<>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
-	public EmpresaDto getEmpresaByName(String name) throws InvoiceManagerException {
+	public EmpresaDto getEmpresaByName(String name) {
 		Optional<Empresa> result = repository.findByName(name);
 		if (result.isPresent()) {
 			return mapper.getEmpresaDtoFromEntity(result.get());
 		} else {
-			throw new InvoiceManagerException("Empresa not found",
-					String.format("La empresa con el nombre %s no existe", name), HttpStatus.NOT_FOUND.value());
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("La empresa con el nombre %s no existe", name));
 		}
 	}
 

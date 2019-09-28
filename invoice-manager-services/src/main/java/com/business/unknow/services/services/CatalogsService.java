@@ -49,16 +49,22 @@ public class CatalogsService {
 
 	@Autowired
 	private CatalogsMapper mapper;
+	
+	
+	public List<ClaveProductoServicioDto> getProductoServicioByDescription(String description){
+		return mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContaining(description));
+	}
+	
 
 	public Page<ClaveProductoServicioDto> getAllProductoServicioClaves(int page, int size) {
 		Page<ClaveProductoServicio> result = productorServicioRepo.findAll(PageRequest.of(page, size));
-		return new PageImpl<ClaveProductoServicioDto>(mapper.getClaveProdServDtosFromEntities(result.getContent()),
+		return new PageImpl<>(mapper.getClaveProdServDtosFromEntities(result.getContent()),
 				result.getPageable(), result.getTotalElements());
 	}
 
 	public Page<ClaveUnidadDto> getAllClaveUnidad(int page, int size) {
 		Page<ClaveUnidad> result = unidadRepo.findAll(PageRequest.of(page, size));
-		return new PageImpl<ClaveUnidadDto>(mapper.getClaveUnidadDtosFromEntities(result.getContent()),
+		return new PageImpl<>(mapper.getClaveUnidadDtosFromEntities(result.getContent()),
 				result.getPageable(), result.getTotalElements());
 	}
 

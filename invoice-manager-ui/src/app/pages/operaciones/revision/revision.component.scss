@@ -1,0 +1,61 @@
+@import '../../../@theme/styles/themes';
+
+nb-checkbox {
+    margin-bottom: 1rem;
+  }
+  
+  .form-inline [fullWidth] {
+    flex: 1;
+  }
+  
+  .form-inline > * {
+    margin: 0 1.5rem 1.5rem 0;
+  }
+  
+  nb-card.inline-form-card nb-card-body {
+    padding-bottom: 0;
+  }
+  
+  :host ::ng-deep nb-stepper .step-content {
+    text-align: left;
+  
+    button {
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+  }
+
+  .colors {
+    display: flex;
+    flex-direction: column;
+
+    .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .color {
+      width: 86px;
+      height: 60px;
+      border-top-right-radius: 1rem;
+      border-bottom-left-radius: 1rem;
+      @include nb-ltr(margin-right, 1rem);
+      @include nb-rtl(margin-left, 1rem);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  @each $status in nb-get-statuses() {
+    .bg-status-#{$status} {
+      background: nb-theme(text-#{$status}-color);
+    }
+  }
+ 
+  
