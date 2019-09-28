@@ -2,11 +2,18 @@ package com.business.unknow.model.catalogs;
 
 import java.util.Date;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GiroDto {
 
 	private Integer clave;
 	private String nombre;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 
 	public Integer getClave() {

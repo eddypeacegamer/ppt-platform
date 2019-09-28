@@ -31,7 +31,7 @@ public class Client implements Serializable {
 
 	@Column(name = "ACTIVO")
 	private Boolean activo;
-
+	
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")

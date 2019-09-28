@@ -1,7 +1,9 @@
 package com.business.unknow.model;
 
-import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContribuyenteDto {
 
 	private Integer id;
@@ -21,8 +23,7 @@ public class ContribuyenteDto {
 	private String cp;
 	private String correo;
 	private String telefono;
-	private Date fechaCreacion;
-	private Date fechaActualizacion;
+	
 
 	public Integer getId() {
 		return id;
@@ -152,22 +153,6 @@ public class ContribuyenteDto {
 		this.telefono = telefono;
 	}
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
 	public String getCoo() {
 		return coo;
 	}
@@ -182,7 +167,7 @@ public class ContribuyenteDto {
 				+ curp + ", razonSocial=" + razonSocial + ", calle=" + calle + ", noExterior=" + noExterior
 				+ ", noInterior=" + noInterior + ", municipio=" + municipio + ", localidad=" + localidad + ", estado="
 				+ estado + ", pais=" + pais + ", coo=" + coo + ", cp=" + cp + ", correo=" + correo + ", telefono="
-				+ telefono + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ telefono + "]";
 	}
 
 }

@@ -6,6 +6,9 @@ package com.business.unknow.model;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * @author hha0009
  *
@@ -13,7 +16,6 @@ import java.util.Date;
 public class EmpresaDto {
 
 	private Integer id;
-	private String rfc;
 	private String referencia;
 	private String regimenFiscal;
 	private String web;
@@ -27,8 +29,12 @@ public class EmpresaDto {
 	private String encabezado;
 	private String piePagina;
 	private Boolean activo;
+	private String tipo;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
+	private ContribuyenteDto informacionFiscal;
 
 	public Integer getId() {
 		return id;
@@ -36,14 +42,6 @@ public class EmpresaDto {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getRfc() {
-		return rfc;
-	}
-
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
 	}
 
 	public String getReferencia() {
@@ -142,6 +140,14 @@ public class EmpresaDto {
 		this.activo = activo;
 	}
 
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -165,15 +171,24 @@ public class EmpresaDto {
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
 	}
+	
+	public ContribuyenteDto getInformacionFiscal() {
+		return informacionFiscal;
+	}
+
+	public void setInformacionFiscal(ContribuyenteDto informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
+	}
 
 	@Override
 	public String toString() {
-		return "EmpresaDto [id=" + id + ", rfc=" + rfc + ", referencia=" + referencia + ", regimenFiscal="
-				+ regimenFiscal + ", web=" + web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal
-				+ ", lugarExpedicion=" + lugarExpedicion + ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada="
+		return "EmpresaDto [id=" + id + ", referencia=" + referencia + ", regimenFiscal=" + regimenFiscal + ", web="
+				+ web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion="
+				+ lugarExpedicion + ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada="
 				+ Arrays.toString(llavePrivada) + ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw
-				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 
 }

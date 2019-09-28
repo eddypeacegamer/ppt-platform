@@ -3,13 +3,20 @@ package com.business.unknow.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto implements Serializable {
 
 	private static final long serialVersionUID = 4951260411762447946L;
 
 	private Integer id;
 	private Boolean activo;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	private ContribuyenteDto informacionFiscal;
 
@@ -58,4 +65,7 @@ public class ClientDto implements Serializable {
 		return "ClientDto [id=" + id + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
+
+	
+
 }

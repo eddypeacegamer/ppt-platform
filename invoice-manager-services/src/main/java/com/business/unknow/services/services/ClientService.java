@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.model.ClientDto;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 
 @Service
@@ -20,7 +21,8 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository repository;
-
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 	
 
 	@Autowired
@@ -52,6 +54,7 @@ public class ClientService {
 		Client dbClient = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El cliente con el rfc %s no existe", rfc)));
 		dbClient.setActivo(client.getActivo());
+		dbClient.setInformacionFiscal(contribuyenteMapper.getEntityFromContribuyenteDto(client.getInformacionFiscal()));
 		return mapper.getClientDtoFromEntity(repository.save(dbClient));
 	}
 

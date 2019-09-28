@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,10 +30,6 @@ public class Empresa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_EMPRESA")
 	private Integer id;
-
-	@Basic(optional = false)
-	@Column(name = "RFC")
-	private String rfc;
 
 	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
@@ -52,16 +51,17 @@ public class Empresa implements Serializable {
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
 
-	@Basic(optional = false)
+	//TODO  disable optional
+	@Basic(optional = true)
 	@Column(name = "LOGOTIPO")
 	private byte[] logotipo;
-
-	@Basic(optional = false)
+	//TODO  disable optional
+	@Basic(optional = true)
 	@Column(name = "LLAVE_PRIVADA")
 	private byte[] llavePrivada;
-
-	@Basic(optional = false)
-	@Column(name = "CERTIFICADO_DIGITAL")
+	//TODO  disable optional
+	@Basic(optional = true)
+	@Column(name = "CERTIFICADO")
 	private byte[] certificado;
 
 	@Basic(optional = false)
@@ -79,6 +79,10 @@ public class Empresa implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "ACTIVO")
 	private Boolean activo;
+	
+	@Basic(optional = false)
+	@Column(name = "LINEA")
+	private String tipo;
 
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
@@ -89,6 +93,10 @@ public class Empresa implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+	private Contribuyente informacionFiscal;
 
 	public Integer getId() {
 		return id;
@@ -96,14 +104,6 @@ public class Empresa implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getRfc() {
-		return rfc;
-	}
-
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
 	}
 
 	public String getRegimenFiscal() {
@@ -210,6 +210,14 @@ public class Empresa implements Serializable {
 		this.activo = activo;
 	}
 
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -225,15 +233,23 @@ public class Empresa implements Serializable {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
+	
+	public Contribuyente getInformacionFiscal() {
+		return informacionFiscal;
+	}
+
+	public void setInformacionFiscal(Contribuyente informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
+	}
 
 	@Override
 	public String toString() {
-		return "Empresa [id=" + id + ", rfc=" + rfc + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
-				+ ", web=" + web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion="
-				+ lugarExpedicion + ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada="
-				+ Arrays.toString(llavePrivada) + ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw
-				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia + ", web=" + web
+				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
+				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
+				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
+				+ ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
+				+ informacionFiscal + "]";
 	}
-
 }

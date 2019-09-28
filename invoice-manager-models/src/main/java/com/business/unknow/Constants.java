@@ -1,4 +1,4 @@
-package com.business.unknow.model;
+package com.business.unknow;
 
 public class Constants {
 	
