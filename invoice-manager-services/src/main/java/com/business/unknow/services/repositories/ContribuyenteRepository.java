@@ -9,4 +9,6 @@ public interface ContribuyenteRepository extends JpaRepository<Contribuyente, In
 	public Optional<Contribuyente> findByRfc(String rfc);
 	public Optional<Contribuyente> findByRazonSocial(String razonSocial);
 	
+	
+	
 }

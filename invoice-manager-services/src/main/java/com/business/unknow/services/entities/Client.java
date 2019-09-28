@@ -3,11 +3,14 @@ package com.business.unknow.services.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,9 +29,6 @@ public class Client implements Serializable {
 	@Column(name = "ID_CLIENT")
 	private Integer id;
 
-	@Column(name = "RFC")
-	private String rfc;
-
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 
@@ -41,6 +41,11 @@ public class Client implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
+	
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+	private Contribuyente informacionFiscal;
 
 	public Integer getId() {
 		return id;
@@ -48,14 +53,6 @@ public class Client implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getRfc() {
-		return rfc;
-	}
-
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
 	}
 
 	public Boolean getActivo() {
@@ -82,10 +79,17 @@ public class Client implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Override
-	public String toString() {
-		return "Client [id=" + id + ", rfc=" + rfc  + ", activo=" + activo + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+	public Contribuyente getInformacionFiscal() {
+		return informacionFiscal;
 	}
 
+	public void setInformacionFiscal(Contribuyente informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
+	}
+
+	@Override
+	public String toString() {
+		return "Client [id=" + id + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+	}
 }

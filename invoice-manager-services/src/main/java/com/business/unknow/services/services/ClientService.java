@@ -12,10 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.ClientDto;
 import com.business.unknow.services.entities.Client;
-import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
-import com.business.unknow.services.repositories.ContribuyenteRepository;
 
 @Service
 public class ClientService {
@@ -23,8 +21,7 @@ public class ClientService {
 	@Autowired
 	private ClientRepository repository;
 
-	@Autowired
-	private ContribuyenteRepository contribuyenteRepository;
+	
 
 	@Autowired
 	private ClientMapper mapper;
@@ -34,19 +31,17 @@ public class ClientService {
 		if (!razonSocial.isPresent() && !rfc.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else if (rfc.isPresent()) {
-			result = repository.findByRfcIgnoreCaseContaining(rfc.get(), PageRequest.of(page, size));
+			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()), PageRequest.of(page, size));
 		} else {
-			Optional<Contribuyente> contribuyente = contribuyenteRepository.findByRazonSocial(razonSocial.get());
-			if (contribuyente.isPresent()) {
-				result = repository.findByRfcIgnoreCaseContaining(contribuyente.get().getRfc(),
-						PageRequest.of(page, size));
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La razon social %s del cliente no exite ", razonSocial.get()));
-			}
+			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public ClientDto getClientByRFC(String rfc) {
+		Client client = repository.findByRfc(rfc).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe cliente con  rfc %s", rfc)));
+		return mapper.getClientDtoFromEntity(client);
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) {

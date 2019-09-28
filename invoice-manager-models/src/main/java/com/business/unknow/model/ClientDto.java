@@ -8,10 +8,10 @@ public class ClientDto implements Serializable {
 	private static final long serialVersionUID = 4951260411762447946L;
 
 	private Integer id;
-	private String rfc;
 	private Boolean activo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private ContribuyenteDto informacionFiscal;
 
 	public Integer getId() {
 		return id;
@@ -20,15 +20,7 @@ public class ClientDto implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getRfc() {
-		return rfc;
-	}
-
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
-
+	
 	public Boolean getActivo() {
 		return activo;
 	}
@@ -53,10 +45,17 @@ public class ClientDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Override
-	public String toString() {
-		return "ClientDto [id=" + id + ", rfc=" + rfc  + ", activo=" + activo
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+	public ContribuyenteDto getInformacionFiscal() {
+		return informacionFiscal;
 	}
 
+	public void setInformacionFiscal(ContribuyenteDto informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
+	}
+
+	@Override
+	public String toString() {
+		return "ClientDto [id=" + id + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+	}
 }

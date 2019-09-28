@@ -45,6 +45,13 @@ public class ClientController {
 		return new ResponseEntity<>(service.getClientsByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
 	}
 	
+	@GetMapping("/{rfc}")
+	@ApiOperation(value = "Recover single client by RFC")
+	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc){
+		return new ResponseEntity<>(service.getClientByRFC(rfc),HttpStatus.OK);
+	}
+
+	
 	@PostMapping
 	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client){
