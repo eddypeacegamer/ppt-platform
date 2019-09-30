@@ -28,46 +28,38 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping
+@RequestMapping("/clients")
 @Api(value = "ClientController", produces = "application/json")
 public class ClientController {
 
 	@Autowired
 	private ClientService service;
 
-	@GetMapping("/clients/{rfc}")
+	@GetMapping
 	@ApiOperation(value = "Get all client by promotor name and name.")
-	public ResponseEntity<ClientDto> getClientByRfc(@PathVariable String rfc) {
-		return new ResponseEntity<>(service.getClientByRfc(rfc), HttpStatus.OK);
-	}
-
-	
-	@GetMapping("promotores/{promotor}/clients")
-	@ApiOperation(value = "Get all client by promotor name and name.")
-	public ResponseEntity<Page<ClientDto>> getClients(@PathVariable String promotor,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllClientsByPromotor(promotor, page, size), HttpStatus.OK);
-	}
-
-	@GetMapping("/clients")
-	@ApiOperation(value = "Get all client by promotor name and name.")
-	public ResponseEntity<Page<ClientDto>> getClientsByEmpresa(
+	public ResponseEntity<Page<ClientDto>> getClientsByParameters(
 			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
 			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getClients(rfc, razonSocial, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getClientsByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
 	}
 	
-	@PostMapping("/clients")
-	@ApiOperation(value = "insert a new clien into the system")
+	@GetMapping("/{rfc}")
+	@ApiOperation(value = "Recover single client by RFC")
+	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc){
+		return new ResponseEntity<>(service.getClientByRFC(rfc),HttpStatus.OK);
+	}
+
+	
+	@PostMapping
+	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client){
 		return new ResponseEntity<>(service.insertNewClient(client),HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/clients/{rfc}")
-	@ApiOperation(value = "insert a new clien into the system")
+	@PutMapping("/{rfc}")
+	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client){
 		return new ResponseEntity<>(service.updateClientInfo(client, rfc),HttpStatus.OK);
 	}

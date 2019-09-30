@@ -12,21 +12,15 @@ import com.business.unknow.services.entities.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-	
-
 	public Page<Client> findAll(Pageable pageable);
 	
-	public Page<Client> findByRazonSocialIgnoreCaseContaining(String razonSocial , Pageable pageable);
 	
-	public Page<Client> findByRfcIgnoreCaseContaining(String rfc , Pageable pageable);
+	@Query("select c from Client c where c.informacionFiscal.rfc like :rfc")
+	public Page<Client> findByRfcIgnoreCaseContaining(@Param("rfc") String rfc , Pageable pageable);
+	
+	@Query("select c from Client c where upper(c.informacionFiscal.razonSocial) like upper(:razonSocial)")
+	public Page<Client> findByRazonSocialIgnoreCaseContaining(@Param("razonSocial") String razonSocial , Pageable pageable);
 
-	public Optional<Client> findByRfc(String rfc);
-	
-	
-	
-	@Query(value = "select c from Client c where c.promotor.name =:promotor")
-	public Page<Client> findAllByPromotor(@Param("promotor") String promotor, Pageable pageable);
-
-	@Query(value = "select c from Client c where c.promotor.name =:promotor and c.rfc=:rfc")
-	public Optional<Client> findByEmpresaAndRfc(@Param("promotor") String promotor, @Param("rfc") String rfc);
+	@Query("select c from Client c where c.informacionFiscal.rfc = :rfc")
+	public Optional<Client> findByRfc( @Param("rfc") String rfc);
 }

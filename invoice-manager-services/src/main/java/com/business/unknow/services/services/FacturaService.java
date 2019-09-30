@@ -8,13 +8,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.model.ClientDto;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.FacturaDto;
-import com.business.unknow.model.PromotorDto;
-import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.Factura;
+import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.FacturaRepository;
 
@@ -25,69 +22,35 @@ public class FacturaService {
 	private FacturaRepository repository;
 
 	@Autowired
-	private PromotorService promotorService;
-
-	@Autowired
-	private ClientService clientService;
-
-	@Autowired
-	private EmpresaService empresaService;
-	
-	@Autowired
 	private FacturaMapper mapper;
 
-	public Page<FacturaDto> getAllFacturas(int page, int size) {
-		Page<Factura> result = repository.findAll(PageRequest.of(page, size));
-		return new PageImpl<FacturaDto>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-
-	public Page<FacturaDto> getAllFacturasByPromotor(String promotor, int page, int size) throws InvoiceManagerException {
-		PromotorDto promotorDto = promotorService.getPromotorsByName(promotor);
-		Page<Factura> result = repository.findAllByPromotor(promotorDto.getName(), PageRequest.of(page, size));
-		return new PageImpl<FacturaDto>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-
-	private Page<FacturaDto> getAllFacturasByPromotorAndClient(String promotor, String rfc, int page, int size)
-			throws InvoiceManagerException {
-		PromotorDto promotorDto = promotorService.getPromotorsByName(promotor);
-		ClientDto clienteDto = clientService.getClientByPromotorAndRfc(promotorDto.getName(), rfc);
-		Page<Factura> result = repository.findAllByPromotorAndRfc(promotorDto.getName(), clienteDto.getRfc(),
-				PageRequest.of(page, size));
-		return new PageImpl<FacturaDto>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-	
-	
-	private Page<FacturaDto> getAllFacturasByPromotorAndClientAndEmpresa(String promotor, String rfc,String empresa, int page, int size)
-			throws InvoiceManagerException {
-		PromotorDto promotorDto = promotorService.getPromotorsByName(promotor);
-		ClientDto clienteDto = clientService.getClientByPromotorAndRfc(promotorDto.getName(), rfc);
-		EmpresaDto empresaDto=empresaService.getEmpresaByName(empresa);
-		Page<Factura> result = repository.findAllByPromotorAndRfcAndEmpresa(promotorDto.getName(), clienteDto.getRfc(),empresaDto.getName(),
-				PageRequest.of(page, size));
-		return new PageImpl<FacturaDto>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-	
-	public Page<FacturaDto> getAllFacturasByPromotorAndClientAndEmpresas(String promotor, String rfc,String empresa, int page, int size)
-			throws InvoiceManagerException {
-		if(empresa!=null) {
-			return getAllFacturasByPromotorAndClientAndEmpresa(promotor, rfc,empresa, page, size);
-		}else {
-			return getAllFacturasByPromotorAndClient(promotor, rfc, page, size);
-		}
-	}
-
-	public FacturaDto getFacturaByFolio(String folio) throws InvoiceManagerException {
-		Optional<Factura> entity = repository.findByFolio(folio);
-		if (entity.isPresent()) {
-			return mapper.getFacturaDtoFromEntity(entity.get());
+	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
+			Optional<String> folio, Optional<String> uuid, int page, int size) {
+		Page<Factura> result;
+		if (!rfcEmisor.isPresent() && !rfcRemitente.isPresent() && !folio.isPresent() && !uuid.isPresent()) {
+			result = repository.findAll(PageRequest.of(page, size));
+		} else if (rfcEmisor.isPresent()) {
+			result = repository.findByRfcEmisorIgnoreCaseContaining(rfcEmisor.get(), PageRequest.of(page, size));
+		} else if (rfcRemitente.isPresent()) {
+			result = repository.findByRfcRemitenteIgnoreCaseContaining(rfcRemitente.get(), PageRequest.of(page, size));
+		} else if (folio.isPresent()) {
+			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(page, size));
 		} else {
-			throw new InvoiceManagerException("Factura not found",
-					String.format("La factura con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value());
+			result = repository.findByUuidIgnoreCaseContaining(uuid.get(), PageRequest.of(page, size));
 		}
+		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
+				result.getTotalElements());
+	}
 
+	public FacturaDto insertNewFactura(FacturaDto factura) {
+		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(factura)));
+	}
+
+	public FacturaDto updateFacturaInfo(FacturaDto factura, String folio) {
+		Factura fact = repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El folio %s de la factura no existe", folio)));
+		fact.setMoneda(factura.getMoneda());
+		fact.setMoneda(factura.getMoneda());
+		return mapper.getFacturaDtoFromEntity(repository.save(fact));
 	}
 }
