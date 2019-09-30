@@ -50,7 +50,7 @@ public class Factura implements Serializable {
 
 	@Column(name = "SELLO")
 	private String sello;
-
+	//TODO EVALUATE IF THIS FIELDS SHOULD STORED OR CAN BE JUST CALCULATED
 	@Column(name = "CERTIFICADO")
 	private String certificado;
 
@@ -78,10 +78,10 @@ public class Factura implements Serializable {
 	@Column(name = "RFC_EMISOR")
 	private String rfcEmisor;
 
-	@Column(name = "REGIMEN_FIZCAL")
+	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
 
-	@Column(name = "NOMBRE_EMISOR")
+	@Column(name = "RAZON_SOCIAL_EMISOR")
 	private String nombreEmisor;
 
 	@Column(name = "RFC_REMITENTE")
@@ -90,7 +90,7 @@ public class Factura implements Serializable {
 	@Column(name = "USO_CDFI")
 	private String usoCFDI;
 
-	@Column(name = "NOMBRE_REMITENTE")
+	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String nombreRemitente;
 
 	@Column(name = "UUID")
@@ -101,7 +101,7 @@ public class Factura implements Serializable {
 
 	@Column(name = "RFC_PROV_CERTIF")
 	private String rfcProvCertif;
-
+	//REVIEW IF WE NEED TO SAVE THIS VALUES OR JUST SAVING THE XML IS ENOUGH
 	@Column(name = "SELLO_CFD")
 	private String selloCFD;
 
@@ -120,15 +120,16 @@ public class Factura implements Serializable {
 	@Column(name = "NOTAS")
 	private String notas;
 
+	//TODO PROBABLY IS BETTER IF THE STATUS ARE REFENCED TO THE INVOICE BUT IS NECESARY EVALUATE IT
 	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private StatusFactura statusFactura;
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	//TODO CONSIDER REMOVE THIS REFERENCES AND MAKE 2 SEPARATE QUERIES
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "FOLIO", referencedColumnName = "FOLIO")
 	private List<Concepto> conceptos;
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	//TODO CONSIDER REMOVE THIS REFERENCES AND MAKE 2 SEPARATE QUERIES
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false,fetch = FetchType.LAZY)
 	@JoinColumn(name = "FOLIO", referencedColumnName = "FOLIO")
 	private List<Pago> pagos;
 
