@@ -6,7 +6,7 @@ package com.business.unknow.services.rest.catalogs;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,17 +34,15 @@ public class CatalogsController {
 	private CatalogsService service;
 
 	@GetMapping("/producto-servicios")
-	public ResponseEntity<Page<ClaveProductoServicioDto>> getAllClaveProdServicio(
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllProductoServicioClaves(page, size), HttpStatus.OK);
+	public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
+			@RequestParam(name = "descripcion", required = true) String description){
+		return new ResponseEntity<>(service.getProductoServicioByDescription(description), HttpStatus.OK);
 	}
 
 	@GetMapping("/clave-unidad")
-	public ResponseEntity<Page<ClaveUnidadDto>> getAllClaveUnidad(
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllClaveUnidad(page, size), HttpStatus.OK);
+	public ResponseEntity<List<ClaveUnidadDto>> getClaveUnidad(
+			@RequestParam(name = "nombre", required = true) String nombre) {
+		return new ResponseEntity<>(service.getCalveUnidadByNombre(nombre), HttpStatus.OK);
 	}
 
 	@GetMapping("/uso-cdfi")

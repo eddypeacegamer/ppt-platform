@@ -56,7 +56,7 @@ public class CatalogsService {
 	private CatalogsMapper mapper;
 
 	public List<ClaveProductoServicioDto> getProductoServicioByDescription(String description) {
-		return mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContaining(description));
+		return mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContainingIgnoreCase(description));
 	}
 
 	public Page<ClaveProductoServicioDto> getAllProductoServicioClaves(int page, int size) {
@@ -69,6 +69,10 @@ public class CatalogsService {
 		Page<ClaveUnidad> result = unidadRepo.findAll(PageRequest.of(page, size));
 		return new PageImpl<>(mapper.getClaveUnidadDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public List<ClaveUnidadDto> getCalveUnidadByNombre(String nombre){
+		return mapper.getClaveUnidadDtosFromEntities(unidadRepo.findByNombreContainingIgnoreCase(nombre));
 	}
 
 	public List<ClaveUnidadDto> getAllClaveUnidad() {
