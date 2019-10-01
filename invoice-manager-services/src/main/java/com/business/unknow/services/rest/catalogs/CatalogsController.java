@@ -27,7 +27,7 @@ import com.business.unknow.services.services.CatalogsService;
  *
  */
 @RestController
-@RequestMapping("/catalogs")
+@RequestMapping("/api/catalogs")
 public class CatalogsController {
 
 	@Autowired

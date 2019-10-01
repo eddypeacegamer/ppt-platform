@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/facturas")
+@RequestMapping("/api/facturas")
 @Api(value = "FacturaController", produces = "application/json")
 public class FacturaController {
 
