@@ -2,9 +2,7 @@ package com.business.unknow.services.entities.factura;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,6 +40,9 @@ public class Factura implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
+	@Column(name = "FOLIO_PADRE")
+	private String folioPadre;
+
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
 	@Column(name = "FECHA_SOLICITUD")
@@ -50,7 +50,7 @@ public class Factura implements Serializable {
 
 	@Column(name = "SELLO")
 	private String sello;
-	//TODO EVALUATE IF THIS FIELDS SHOULD STORED OR CAN BE JUST CALCULATED
+	// TODO EVALUATE IF THIS FIELDS SHOULD STORED OR CAN BE JUST CALCULATED
 	@Column(name = "CERTIFICADO")
 	private String certificado;
 
@@ -101,7 +101,7 @@ public class Factura implements Serializable {
 
 	@Column(name = "RFC_PROV_CERTIF")
 	private String rfcProvCertif;
-	//REVIEW IF WE NEED TO SAVE THIS VALUES OR JUST SAVING THE XML IS ENOUGH
+	// REVIEW IF WE NEED TO SAVE THIS VALUES OR JUST SAVING THE XML IS ENOUGH
 	@Column(name = "SELLO_CFD")
 	private String selloCFD;
 
@@ -120,18 +120,14 @@ public class Factura implements Serializable {
 	@Column(name = "NOTAS")
 	private String notas;
 
-	//TODO PROBABLY IS BETTER IF THE STATUS ARE REFENCED TO THE INVOICE BUT IS NECESARY EVALUATE IT
+	// TODO PROBABLY IS BETTER IF THE STATUS ARE REFENCED TO THE INVOICE BUT IS
+	// NECESARY EVALUATE IT
 	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private StatusFactura statusFactura;
-	//TODO CONSIDER REMOVE THIS REFERENCES AND MAKE 2 SEPARATE QUERIES
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "FOLIO", referencedColumnName = "FOLIO")
-	private List<Concepto> conceptos;
-	//TODO CONSIDER REMOVE THIS REFERENCES AND MAKE 2 SEPARATE QUERIES
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false,fetch = FetchType.LAZY)
-	@JoinColumn(name = "FOLIO", referencedColumnName = "FOLIO")
-	private List<Pago> pagos;
+	
+	@Column(name = "STATUS_DETAIL")
+	private String statusDetail;
 
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
@@ -399,36 +395,27 @@ public class Factura implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<Concepto> getConceptos() {
-		return conceptos;
+	public String getFolioPadre() {
+		return folioPadre;
 	}
 
-	public void setConceptos(List<Concepto> conceptos) {
-		this.conceptos = conceptos;
-	}
-
-	public List<Pago> getPagos() {
-		return pagos;
-	}
-
-	public void setPagos(List<Pago> pagos) {
-		this.pagos = pagos;
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
 	}
 
 	@Override
 	public String toString() {
-		return "Factura [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio
-				+ ", fechaSolicitud=" + fechaSolicitud + ", sello=" + sello + ", certificado=" + certificado
-				+ ", noCertificado=" + noCertificado + ", subtotal=" + subtotal + ", descuento=" + descuento
-				+ ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante
+		return "Factura [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", folioPadre="
+				+ folioPadre + ", fechaSolicitud=" + fechaSolicitud + ", sello=" + sello + ", certificado="
+				+ certificado + ", noCertificado=" + noCertificado + ", subtotal=" + subtotal + ", descuento="
+				+ descuento + ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante
 				+ ", lugarDeExpedicion=" + lugarDeExpedicion + ", rfcEmisor=" + rfcEmisor + ", regimenFiscal="
 				+ regimenFiscal + ", nombreEmisor=" + nombreEmisor + ", rfcRemitente=" + rfcRemitente + ", usoCFDI="
 				+ usoCFDI + ", nombreRemitente=" + nombreRemitente + ", uuid=" + uuid + ", fechaTimbrado="
 				+ fechaTimbrado + ", rfcProvCertif=" + rfcProvCertif + ", selloCFD=" + selloCFD + ", noCertificadoSat="
 				+ noCertificadoSat + ", selloSAT=" + selloSAT + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", notas=" + notas + ", statusFactura=" + statusFactura + ", conceptos=" + conceptos
-				+ ", pagos=" + pagos + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ "]";
+				+ metodoPago + ", notas=" + notas + ", statusFactura=" + statusFactura + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

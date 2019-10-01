@@ -20,6 +20,9 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 	@Query("select e from Empresa e where upper(e.informacionFiscal.razonSocial) like upper(:razonSocial)")
 	public Page<Empresa> findByRazonSocialIgnoreCaseContaining(@Param("razonSocial") String razonSocial , Pageable pageable);
 
+	@Query("select e from Empresa e where e.tipo like :linea")
+	public Page<Empresa> findByLineaIgnoreCaseContaining(@Param("linea") String linea , Pageable pageable);
+	
 	@Query("select e from Empresa e where e.informacionFiscal.rfc = :rfc")
 	public Optional<Empresa> findByRfc( @Param("rfc") String rfc);
 

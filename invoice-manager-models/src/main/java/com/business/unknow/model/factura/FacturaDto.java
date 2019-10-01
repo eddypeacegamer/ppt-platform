@@ -1,7 +1,6 @@
 package com.business.unknow.model.factura;
 
 import java.util.Date;
-import java.util.List;
 
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 
@@ -11,6 +10,7 @@ public class FacturaDto {
 	private String version;
 	private String serie;
 	private String folio;
+	private String folioPadre;
 	private Date fechaSolicitud;
 	private String sello;
 	private String certificado;
@@ -27,10 +27,6 @@ public class FacturaDto {
 	private String rfcRemitente;
 	private String regimenFiscal;
 	private String nombreRemitente;
-
-	private List<ConceptoDto> conceptos;
-	private List<PagoDto> pagos;
-
 	private String uuid;
 	private Date fechaTimbrado;
 	private String rfcProvCertif;
@@ -302,22 +298,6 @@ public class FacturaDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public List<ConceptoDto> getConceptos() {
-		return conceptos;
-	}
-
-	public void setConceptos(List<ConceptoDto> conceptos) {
-		this.conceptos = conceptos;
-	}
-
-	public List<PagoDto> getPagos() {
-		return pagos;
-	}
-
-	public void setPagos(List<PagoDto> pagos) {
-		this.pagos = pagos;
-	}
-
 	public String getStatusDetail() {
 		return statusDetail;
 	}
@@ -326,20 +306,28 @@ public class FacturaDto {
 		this.statusDetail = statusDetail;
 	}
 
+	public String getFolioPadre() {
+		return folioPadre;
+	}
+
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio
-				+ ", fechaSolicitud=" + fechaSolicitud + ", sello=" + sello + ", certificado=" + certificado
-				+ ", noCertificado=" + noCertificado + ", subtotal=" + subtotal + ", descuento=" + descuento
-				+ ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante
-				+ ", lugarDeExpedicion=" + lugarDeExpedicion + ", rfcEmisor=" + rfcEmisor + ", usoCFDI=" + usoCFDI
-				+ ", nombreEmisor=" + nombreEmisor + ", rfcRemitente=" + rfcRemitente + ", regimenFiscal="
-				+ regimenFiscal + ", nombreRemitente=" + nombreRemitente + ", conceptos=" + conceptos + ", pagos="
-				+ pagos + ", uuid=" + uuid + ", fechaTimbrado=" + fechaTimbrado + ", rfcProvCertif=" + rfcProvCertif
-				+ ", selloCFD=" + selloCFD + ", noCertificadoSat=" + noCertificadoSat + ", selloSAT=" + selloSAT
-				+ ", formaPago=" + formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", statusFactura="
-				+ statusFactura + ", statusDetail=" + statusDetail + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", folioPadre=" + folioPadre + ", fechaSolicitud=" + fechaSolicitud + ", sello=" + sello
+				+ ", certificado=" + certificado + ", noCertificado=" + noCertificado + ", subtotal=" + subtotal
+				+ ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante="
+				+ tipoDeComprobante + ", lugarDeExpedicion=" + lugarDeExpedicion + ", rfcEmisor=" + rfcEmisor
+				+ ", usoCFDI=" + usoCFDI + ", nombreEmisor=" + nombreEmisor + ", rfcRemitente=" + rfcRemitente
+				+ ", regimenFiscal=" + regimenFiscal + ", nombreRemitente=" + nombreRemitente + ", uuid=" + uuid
+				+ ", fechaTimbrado=" + fechaTimbrado + ", rfcProvCertif=" + rfcProvCertif + ", selloCFD=" + selloCFD
+				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSAT=" + selloSAT + ", formaPago=" + formaPago
+				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", statusFactura=" + statusFactura
+				+ ", statusDetail=" + statusDetail + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 
 }

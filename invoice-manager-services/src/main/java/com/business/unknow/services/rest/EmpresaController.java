@@ -40,9 +40,10 @@ public class EmpresaController {
 	public ResponseEntity<Page<EmpresaDto>> getEmpresasByParameter(
 			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
 			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
+			@RequestParam(name = "linea", required = false) Optional<String> linea,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial,linea, page, size), HttpStatus.OK);
 	}
 
 	@PostMapping

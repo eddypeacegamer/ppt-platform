@@ -27,13 +27,16 @@ public class EmpresaService {
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
 
-	public Page<EmpresaDto> getEmpresasByParametros(Optional<String> rfc, Optional<String> razonSocial, int page, int size) {
+	public Page<EmpresaDto> getEmpresasByParametros(Optional<String> rfc, Optional<String> razonSocial,
+			Optional<String> linea, int page, int size) {
 		Page<Empresa> result;
-		if (!razonSocial.isPresent() && !rfc.isPresent()) {
+		if (!razonSocial.isPresent() && !rfc.isPresent()&&!linea.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else if (rfc.isPresent()) {
 			result = repository.findByRfcIgnoreCaseContaining(rfc.get(), PageRequest.of(page, size));
-		} else {
+		} else if (linea.isPresent()) {
+			result = repository.findByLineaIgnoreCaseContaining(linea.get(), PageRequest.of(page, size));
+		}else {
 			result = repository.findByRazonSocialIgnoreCaseContaining(razonSocial.get(), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
@@ -55,7 +58,8 @@ public class EmpresaService {
 		empresa.setCertificado(empresaDto.getCertificado());
 		empresa.setPw(empresaDto.getPw());
 		empresa.setActivo(empresaDto.getActivo());
-		empresa.setInformacionFiscal(contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		empresa.setInformacionFiscal(
+				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
 		return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
 	}
 

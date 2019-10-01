@@ -23,12 +23,16 @@ public class StatusFactura implements Serializable {
 	private Integer id;
 
 	@Basic(optional = false)
-	@Column(name = "STATUS_EVENTO", unique = true)
+	@Column(name = "STATUS_VALIDACION", unique = true)
 	private String statusEvento;
 
 	@Basic(optional = false)
 	@Column(name = "STATUS_PAGO", unique = true)
 	private String statusPago;
+	
+	@Basic(optional = false)
+	@Column(name = "STATUS_DEVOLUCION", unique = true)
+	private String statusDevolucion;
 
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
@@ -76,10 +80,19 @@ public class StatusFactura implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getStatusDevolucion() {
+		return statusDevolucion;
+	}
+
+	public void setStatusDevolucion(String statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
+	}
+
 	@Override
 	public String toString() {
 		return "StatusFactura [id=" + id + ", statusEvento=" + statusEvento + ", statusPago=" + statusPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", statusDevolucion=" + statusDevolucion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

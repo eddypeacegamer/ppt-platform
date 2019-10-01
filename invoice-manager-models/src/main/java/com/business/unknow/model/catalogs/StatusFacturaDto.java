@@ -10,6 +10,7 @@ public class StatusFacturaDto implements Serializable {
 	private Integer id;
 	private String statusEvento;
 	private String statusPago;
+	private String statusDevolucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -53,10 +54,19 @@ public class StatusFacturaDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getStatusDevolucion() {
+		return statusDevolucion;
+	}
+
+	public void setStatusDevolucion(String statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
+	}
+
 	@Override
 	public String toString() {
 		return "StatusFacturaDto [id=" + id + ", statusEvento=" + statusEvento + ", statusPago=" + statusPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", statusDevolucion=" + statusDevolucion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }
