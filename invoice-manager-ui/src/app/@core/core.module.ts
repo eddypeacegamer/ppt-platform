@@ -21,11 +21,17 @@ import { UserService } from './mock/users.service';
 import { CatalogsService } from './back-services/catalogs.service';
 import { ClientsData } from './data/clients-data';
 import { ClientsService } from './back-services/clients.service';
+import { CompaniesData } from './data/companies-data';
+import { CompaniesService } from './back-services/companies.service';
+import { InvoicesData } from './data/invoices-data';
+import { InvoicesService } from './back-services/invoices.service';
 
 
 const DATA_SERVICES = [
   {provide: CatalogsData, useClass: CatalogsService},
   {provide: ClientsData, useClass: ClientsService},
+  {provide: CompaniesData, useClass: CompaniesService},
+  {provide: InvoicesData, useClass: InvoicesService},
 
   { provide: UserData, useClass: UserService },
 ];

@@ -38,8 +38,8 @@ public class FacturaController {
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
 			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
-			@RequestParam(name = "rfcEmisor", required = false) Optional<String> rfcEmisor,
-			@RequestParam(name = "rfcRemitente", required = false) Optional<String> rfcRemitente,
+			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
+			@RequestParam(name = "remitente", required = false) Optional<String> rfcRemitente,
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
 			@RequestParam(name = "uuid", required = false) Optional<String> uuid,
 			@RequestParam(name = "page", defaultValue = "0") int page,

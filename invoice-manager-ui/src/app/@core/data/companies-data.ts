@@ -8,8 +8,6 @@ export abstract class CompaniesData {
 
     abstract getCompanyByRFC(rfc:string) : Observable<Empresa>;
 
-    abstract getCompanyByName(name:string) : Observable<[Empresa]>;
-
     abstract insertNewCompany(empresa : Empresa) : Observable<Empresa>;
 
     abstract updateCompany(empresa : Empresa) : Observable<Empresa>;
