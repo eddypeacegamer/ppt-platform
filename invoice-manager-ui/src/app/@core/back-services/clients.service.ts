@@ -18,19 +18,19 @@ export class ClientsService {
         pageParams = pageParams.append(key, filterParams[key]);
       }
     }
-    return this.httpClient.get('../api/clients',{params:pageParams});
+    return this.httpClient.get('../api/clientes',{params:pageParams});
   }
 
   public getClientByRFC(rfc:string) : Observable<Object>{
-    return this.httpClient.get(`../api/clients/${rfc}`);
+    return this.httpClient.get(`../api/clientes/${rfc}`);
   }
 
   public insertNewClient(client : Client) : Observable<Object>{
-    return this.httpClient.post('../api/clients',client);
+    return this.httpClient.post('../api/clientes',client);
   }
 
   public updateClient(client : Client) : Observable<Object>{
-    return this.httpClient.put(`../api/clients/${client.rfc}`,client);
+    return this.httpClient.put(`../api/clientes/${client.informacionFiscal.rfc}`,client);
   }
 
 }

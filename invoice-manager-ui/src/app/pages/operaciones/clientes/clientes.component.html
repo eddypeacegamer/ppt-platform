@@ -61,15 +61,15 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row">{{fila.rfc}}</td>
-                  <td scope="row">{{fila.razonSocial}}</td>
-                  <td scope="row">{{fila.name}}</td>
-                  <td scope="row">{{fila.email}}</td>
-                  <td scope="row">{{fila.noExterior}}</td>
-                  <td scope="row">{{fila.calle}}</td>
-                  <td scope="row">{{fila.colonia}}</td>
-                  <td scope="row">{{fila.municipio}}</td>
-                  <td scope="row">{{fila.codigoPostal}}</td>
+                  <td scope="row">{{fila.informacionFiscal.rfc}}</td>
+                  <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
+                  <td scope="row">{{fila.informacionFiscal.nombre}}</td>
+                  <td scope="row">{{fila.informacionFiscal.correo}}</td>
+                  <td scope="row">{{fila.informacionFiscal.noExterior}}</td>
+                  <td scope="row">{{fila.informacionFiscal.calle}}</td>
+                  <td scope="row">{{fila.informacionFiscal.localidad}}</td>
+                  <td scope="row">{{fila.informacionFiscal.municipio}}</td>
+                  <td scope="row">{{fila.informacionFiscal.cp}}</td>
                 </tr>
               </tbody>
             </table>

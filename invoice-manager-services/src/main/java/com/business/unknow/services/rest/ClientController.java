@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/clientes")
 @Api(value = "ClientController", produces = "application/json")
 public class ClientController {
 
