@@ -1,4 +1,4 @@
-package com.business.unknow.model.cdfi;
+package com.business.unknow.model.cfdi;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
