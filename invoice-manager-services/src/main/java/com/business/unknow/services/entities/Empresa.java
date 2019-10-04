@@ -51,36 +51,26 @@ public class Empresa implements Serializable {
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
 
-	//TODO  disable optional
-	@Basic(optional = true)
 	@Column(name = "LOGOTIPO")
 	private byte[] logotipo;
-	//TODO  disable optional
-	@Basic(optional = true)
-	@Column(name = "LLAVE_PRIVADA")
+
 	private byte[] llavePrivada;
-	//TODO  disable optional
-	@Basic(optional = true)
+
 	@Column(name = "CERTIFICADO")
 	private byte[] certificado;
 
-	@Basic(optional = false)
 	@Column(name = "PW")
 	private String pw;
 
-	@Basic(optional = false)
 	@Column(name = "ENCABEZADO")
 	private String encabezado;
 
-	@Basic(optional = false)
 	@Column(name = "PIE_DE_PAGINA")
 	private String piePagina;
 
-	@Basic(optional = false)
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 	
-	@Basic(optional = false)
 	@Column(name = "LINEA")
 	private String tipo;
 

@@ -1,6 +1,6 @@
-package com.business.unknow.model.factura;
+package com.business.unknow.model.factura.OLD;
 
-public class RetencionDto {
+public class ImpuestoDto {
 
 	private Integer id;
 	private String base;
@@ -59,7 +59,7 @@ public class RetencionDto {
 
 	@Override
 	public String toString() {
-		return "RetencionDto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
+		return "ImpuestoDto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
 				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
 	}
 

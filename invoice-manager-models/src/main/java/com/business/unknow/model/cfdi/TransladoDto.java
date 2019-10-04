@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = { "base","impuesto", "tipoFactor", "tasaOCuota", "importe" })
-public class Translado {
+public class TransladoDto {
 	private Double base;
 	private String impuesto;
 	private String tipoFactor;

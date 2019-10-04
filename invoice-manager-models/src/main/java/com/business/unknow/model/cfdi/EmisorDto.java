@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = { "rfc", "nombre", "regimenFiscal"})
-public class Emisor {
+public class EmisorDto {
 
 	private String rfc;
 	private String nombre;

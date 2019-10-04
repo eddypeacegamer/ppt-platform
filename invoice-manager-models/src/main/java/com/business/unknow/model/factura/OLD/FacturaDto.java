@@ -1,80 +1,25 @@
-package com.business.unknow.services.entities.factura;
+package com.business.unknow.model.factura.OLD;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.business.unknow.model.catalogs.StatusFacturaDto;
 
-import org.springframework.data.annotation.LastModifiedDate;
+public class FacturaDto {
 
-import com.business.unknow.services.entities.catalogs.StatusFactura;
-
-@Entity
-@Table(name = "FACTURAS")
-public class Factura implements Serializable {
-
-	private static final long serialVersionUID = 2854049815604653381L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_FACTURA")
 	private Integer id;
-
-	@Column(name = "RFC_EMISOR")
 	private String rfcEmisor;
-	
-	@Column(name = "RFC_REMITENTE")
 	private String rfcRemitente;
-	
-	@Column(name = "FOLIO")
 	private String folio;
-
-	@Column(name = "FOLIO_PADRE")
 	private String folioPadre;
-	
-	@Column(name = "UUID")
 	private String uuid;
-	
-	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
-	private StatusFactura statusFactura;
-	
-	@Column(name = "STATUS_DETAIL")
+	private StatusFacturaDto statusFactura;
 	private String statusDetail;
-
-	@Column(name = "TIPO_DOCUMENTO")
 	private String tipoDocumento;
-	
-	@Column(name = "FORMA_PAGO")
 	private String formaPago;
-
-	@Column(name = "METODO_PAGO")
 	private String metodoPago;
-	
-	
-	@Column(name = "NOTAS")
 	private String notas;
-	
-	@Column(name = "TOTAL")
 	private Double total;
-	
-	@Temporal(TemporalType.DATE)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
 	public Integer getId() {
@@ -125,11 +70,11 @@ public class Factura implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public StatusFactura getStatusFactura() {
+	public StatusFacturaDto getStatusFactura() {
 		return statusFactura;
 	}
 
-	public void setStatusFactura(StatusFactura statusFactura) {
+	public void setStatusFactura(StatusFacturaDto statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 
@@ -199,13 +144,11 @@ public class Factura implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura=" + statusFactura
+		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", folio="
+				+ folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura=" + statusFactura
 				+ ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago
 				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total + ", fechaActualizacion="
 				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
 	}
-	
 
-	
 }
