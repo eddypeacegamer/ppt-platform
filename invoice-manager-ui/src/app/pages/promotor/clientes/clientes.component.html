@@ -6,22 +6,28 @@
         <form class="form-inline">
           <input type="text" [(ngModel)]="rfc" [ngModelOptions]="{standalone: true}" nbInput fullWidth placeholder="RFC">
           <button type="button" (click)="buscarClientePorRFC()" nbButton status="primary">BUSCAR</button>
-          <button type="button" nbButton status="primary">REGISTRAR</button>
+          <button type="button" (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>
         </form>
       </nb-card-body>
     </nb-card>
   </div>
 </div>
-<div class="row">
+<div *ngIf="clientInfo!=undefined" class="row">
     <div class="col-md-12">
         <nb-card>
             <nb-card-header>Registro cliente</nb-card-header>
             <nb-card-body>
               <div class="row">
-                <div class="col-md-12">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="inputRFC" class="label">RFC</label>
+                          <input type="text" [(ngModel)]="clientInfo.informacionFiscal.rfc" disabled nbInput fullWidth id="inputRFC" placeholder="RFC cliente">
+                        </div>
+                  </div>
+                <div class="col-md-8">
                     <div class="form-group">
                         <label for="inputSocialReason" class="label">Razón Social</label>
-                        <input type="text" [(ngModel)]="clientInfo.razonSocial" nbInput fullWidth id="inputSocialReason" placeholder="Razón Social">
+                        <input type="text" [(ngModel)]="clientInfo.informacionFiscal.razonSocial" nbInput fullWidth id="inputSocialReason" placeholder="Razón Social">
                       </div>
                 </div>
               </div>
@@ -29,13 +35,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="inputEmail" class="label">Email</label>
-                      <input type="email" [(ngModel)]="clientInfo.email" nbInput fullWidth id="inputEmail" placeholder="Email">
+                      <input type="email" [(ngModel)]="clientInfo.informacionFiscal.correo" nbInput fullWidth id="inputEmail" placeholder="Email">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="inputCCO" class="label">CCO</label>
-                      <input type="text" [(ngModel)]="clientInfo.coo" nbInput fullWidth id="inputCCO" placeholder="CCO">
+                      <input type="text" [(ngModel)]="clientInfo.informacionFiscal.coo" nbInput fullWidth id="inputCCO" placeholder="CCO">
                     </div>
                   </div>
               </div>
@@ -43,19 +49,19 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="inputCalle" class="label">Calle</label>
-                    <input type="text" [(ngModel)]="clientInfo.calle" nbInput fullWidth id="inputCalle" placeholder="Calle">
+                    <input type="text" [(ngModel)]="clientInfo.informacionFiscal.calle" nbInput fullWidth id="inputCalle" placeholder="Calle">
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
                     <label for="inputExterior" class="label">No exterior</label>
-                    <input type="text" [(ngModel)]="clientInfo.noExterior" nbInput fullWidth id="inputExterior" placeholder="No exterior">
+                    <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth id="inputExterior" placeholder="No exterior">
                   </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                       <label for="inputInterior" class="label">No interior</label>
-                      <input type="number" [(ngModel)]="clientInfo.noInterior" nbInput fullWidth id="inputInterior" placeholder="No interior">
+                      <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth id="inputInterior" placeholder="No interior">
                     </div>
                   </div>
               </div>
@@ -64,13 +70,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="inputColonia" class="label">Colonia</label>
-                      <input type="text" [(ngModel)]="clientInfo.colonia" nbInput fullWidth id="inputColonia" placeholder="Colonia">
+                      <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth id="inputColonia" placeholder="Colonia">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="inputCity" class="label">Municipio/Delegación</label>
-                      <input type="text" [(ngModel)]="clientInfo.municipio" nbInput fullWidth id="inputCity" placeholder="Municipio/Delegación">
+                      <input type="text" [(ngModel)]="clientInfo.informacionFiscal.municipio" nbInput fullWidth id="inputCity" placeholder="Municipio/Delegación">
                     </div>
                   </div>
               </div>
@@ -78,19 +84,19 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="inputState" class="label">Estado</label>
-                      <input type="text" [(ngModel)]="clientInfo.estado" nbInput fullWidth id="inputState" placeholder="Estado">
+                      <input type="text" [(ngModel)]="clientInfo.informacionFiscal.estado" nbInput fullWidth id="inputState" placeholder="Estado">
                     </div>
                   </div>
                   <div class="col-sm-3">
                     <div class="form-group">
                       <label for="inputCountry" class="label">País</label>
-                      <input type="text"   [(ngModel)]="clientInfo.pais" nbInput fullWidth id="inputCountry" placeholder="México">
+                      <input type="text"   [(ngModel)]="clientInfo.informacionFiscal.pais" nbInput fullWidth id="inputCountry" placeholder="México">
                     </div>
                   </div>
                   <div class="col-sm-3">
                       <div class="form-group">
                         <label for="inputZipCode" class="label">Código Postal</label>
-                        <input type="number"  [(ngModel)]="clientInfo.codigoPostal" nbInput fullWidth id="inputZipCode" placeholder="00300">
+                        <input type="number"  [(ngModel)]="clientInfo.informacionFiscal.cp" nbInput fullWidth id="inputZipCode" placeholder="00300">
                       </div>
                     </div>
               </div>
@@ -123,8 +129,8 @@
               </div-->
               
               <div class="form-inline">
-                  <button type="button" nbButton status="primary">GUARDAR</button>
-                  <button type="button" nbButton status="primary">ACTUALIZAR</button>
+                  <button type="button" (click)="insertClient()"  nbButton status="primary">GUARDAR</button>
+                  <button type="button" (click)="updateClient()"  nbButton status="primary">ACTUALIZAR</button>
               </div>
             </nb-card-body>
           </nb-card>
