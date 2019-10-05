@@ -64,5 +64,20 @@ public class CatalogsController {
 	public ResponseEntity<List<GiroDto>> getGiros() {
 		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/status-evento")
+	public ResponseEntity<List<GiroDto>> getStatusEventos() {
+		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/status-pago")
+	public ResponseEntity<List<GiroDto>> getStatusPago() {
+		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/status-devolucion")
+	public ResponseEntity<List<GiroDto>> getStatusDevolucion() {
+		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	}
 
 }

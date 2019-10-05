@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
+import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.catalogs.GiroDto;
@@ -17,7 +18,10 @@ import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.Giro;
 import com.business.unknow.services.entities.catalogs.RegimenFiscal;
+import com.business.unknow.services.entities.catalogs.StatusDevolucion;
+import com.business.unknow.services.entities.catalogs.StatusEvento;
 import com.business.unknow.services.entities.catalogs.StatusFactura;
+import com.business.unknow.services.entities.catalogs.StatusPago;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
 
 /**
@@ -50,5 +54,11 @@ public interface CatalogsMapper {
 	GiroDto getGiroDtoFromEntity(Giro giro);
 
 	List<GiroDto> getGiroDtosFromEntities(List<Giro> prodServicio);
+	
+	List<StatusCatalogoDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
+	
+	List<StatusCatalogoDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
+	
+	List<StatusCatalogoDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
 
 }
