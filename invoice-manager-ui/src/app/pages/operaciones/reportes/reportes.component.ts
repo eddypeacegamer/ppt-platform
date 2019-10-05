@@ -14,7 +14,7 @@ export class ReportesComponent implements OnInit {
   public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams : any = {emisor:'',receptor:'',folio:'',statusPago:'*',statusValidacion:'*',start:'',end:''};
+  public filterParams : any = {emisor:'',remitente:'',folio:'',payStatus:'*',validationStatus:'*',start:'',end:''};
 
   constructor(private invoiceService: InvoicesData,
     private donwloadService:DownloadCsvService) {}
@@ -24,21 +24,21 @@ export class ReportesComponent implements OnInit {
     }
   
 
-    public onStatusPago(statusPago:string){
-        this.filterParams.statusPago=statusPago;
+    public onPayStatus(payStatus:string){
+        this.filterParams.payStatus=payStatus;
     }
 
-    public onStatusValidacion(statusValidacion:string){
-        this.filterParams.statusValidacion=statusValidacion;
+    public onValidationStatus(validationStatus:string){
+        this.filterParams.validationStatus=validationStatus;
     }
 
 
-    /***     Funciones factura      ***/
+    /***     Funciones tabla      ***/
     public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
       const pageValue = currentPage || 0;
       const sizeValue = pageSize || 10;
       this.invoiceService.getInvoices(pageValue,sizeValue,filterParams)
-        .subscribe(result => {this.page = result; console.log(result)});
+        .subscribe(result => this.page = result);
     }
 
     public onChangePageSize(pageSize: number) {

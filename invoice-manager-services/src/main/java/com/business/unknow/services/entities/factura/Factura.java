@@ -45,7 +45,7 @@ public class Factura implements Serializable {
 	@Column(name = "UUID")
 	private String uuid;
 	
-	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")
+	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")//TODO remove this ID use ID_FACTURA
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private StatusFactura statusFactura;
 	

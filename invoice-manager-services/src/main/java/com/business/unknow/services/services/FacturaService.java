@@ -24,7 +24,7 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
-	
+
 	@Autowired
 	private FacturaFileRepository facturaFileRepository;
 
@@ -32,18 +32,21 @@ public class FacturaService {
 	private FacturaMapper mapper;
 
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
-			Optional<String> folio, Optional<String> uuid, int page, int size) {
+			Optional<String> folio, Optional<String> statusValidacion, Optional<String> statusPago, int page,
+			int size) {
 		Page<Factura> result;
-		if (!rfcEmisor.isPresent() && !rfcRemitente.isPresent() && !folio.isPresent() && !uuid.isPresent()) {
-			result = repository.findAll(PageRequest.of(page, size));
-		} else if (rfcEmisor.isPresent()) {
-			result = repository.findByRfcEmisorIgnoreCaseContaining(rfcEmisor.get(), PageRequest.of(page, size));
-		} else if (rfcRemitente.isPresent()) {
-			result = repository.findByRfcRemitenteIgnoreCaseContaining(rfcRemitente.get(), PageRequest.of(page, size));
-		} else if (folio.isPresent()) {
+		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(page, size));
+		} else if (rfcEmisor.isPresent()) {
+			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()),
+					String.format("%%%s%%", statusValidacion.orElse("")),
+					String.format("%%%s%%", statusPago.orElse("")), PageRequest.of(page, size));
+		} else if (rfcRemitente.isPresent()) {
+			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()),
+					String.format("%%%s%%", statusValidacion.orElse("")),
+					String.format("%%%s%%", statusPago.orElse("")), PageRequest.of(page, size));
 		} else {
-			result = repository.findByUuidIgnoreCaseContaining(uuid.get(), PageRequest.of(page, size));
+			result = repository.findAll(PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -52,14 +55,14 @@ public class FacturaService {
 	public FacturaDto insertNewFactura(FacturaDto factura) {
 		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(factura)));
 	}
-	
+
 	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
-		Optional<FacturaFile> facturaFile=facturaFileRepository.findByFolio(folio);
-		if(facturaFile.isPresent()) {
+		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
+		if (facturaFile.isPresent()) {
 			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
-		}else {
-			throw new InvoiceManagerException("Folio not found", String.format("Folio with the name %s not found", folio),
-					HttpStatus.NOT_FOUND.value());
+		} else {
+			throw new InvoiceManagerException("Folio not found",
+					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
 		}
 	}
 

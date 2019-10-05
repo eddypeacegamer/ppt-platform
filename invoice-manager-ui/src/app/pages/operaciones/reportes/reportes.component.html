@@ -8,19 +8,19 @@
               <label for="inputFolio" class="label">Folio</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.folio" id="inputFolio" placeholder="Folio PreCFDI">
+              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
             </div>
             <div class="col-md-1">
               <label for="inputEmisor" class="label">Emisor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth  [(ngModel)]="filterParams.emisor" id="inputEmisor" placeholder="RFC Emisor">
+              <input type="text" nbInput fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
             </div>
             <div class="col-md-1">
               <label for="InputReceptor" class="label">Receptor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.receptor" id="InputReceptor" placeholder="RFC Receptor">
+              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
             </div>
   
           </div>
@@ -30,18 +30,18 @@
               <label for="inputStatus" class="label">Estatus Pago</label>
             </div>
             <div class="col-md-2">
-              <nb-select id="inputGiro" [selected]="filterParams.statusValidacion" (selectedChange)="onStatusPago($event)">
+              <nb-select id="inputGiro" [selected]="filterParams.payStatus" (selectedChange)="onPayStatus($event)">
                 <nb-option value="*">Todas</nb-option>
-                <nb-option value="N">No Pagado</nb-option>
-                <nb-option value="V">En validacion</nb-option>
-                <nb-option value="P">Pagado</nb-option>
+                <nb-option value="sin pagar">No Pagado</nb-option>
+                <nb-option value="validacion">En validacion</nb-option>
+                <nb-option value="pagada">Pagado</nb-option>
               </nb-select>
             </div>
             <div class="col-md-1">
               <label for="inputTimbrado" class="label">Estatus Validacion</label>
             </div>
             <div class="col-md-2">
-              <nb-select id="inputGiro" [selected]="filterParams.statusValidacion" (selectedChange)="onStatusValidacion($event)">
+              <nb-select id="inputGiro" [selected]="filterParams.validationStatus" (selectedChange)="onValidationStatus($event)">
                 <nb-option value="*">Todas</nb-option>
                 <nb-option value="S">Solicitud</nb-option>
                 <nb-option value="V">En validacion</nb-option>

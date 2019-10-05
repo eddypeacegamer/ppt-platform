@@ -41,12 +41,12 @@ public class FacturaController {
 			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
 			@RequestParam(name = "remitente", required = false) Optional<String> rfcRemitente,
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
-			@RequestParam(name = "statusPago", required = false) Optional<String> statusPago,
-			@RequestParam(name = "statusValidacion", required = false) Optional<String> statusValidacion,
+			@RequestParam(name = "payStatus", required = false) Optional<String> statusPago,
+			@RequestParam(name = "validationStatus", required = false) Optional<String> statusValidacion,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, statusPago, page, size),
-				HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, statusValidacion,
+				statusPago, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/files/folio/{folio}")
