@@ -38,7 +38,7 @@ public class Pago implements Serializable {
 	@Column(name = "CANTIDAD")
 	private Double candtidad;
 	
-	@Column(name = "TIPO_PAG0")
+	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
 	
 	@Temporal(TemporalType.DATE)

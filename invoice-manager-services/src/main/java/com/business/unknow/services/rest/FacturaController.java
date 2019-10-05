@@ -1,5 +1,6 @@
 package com.business.unknow.services.rest;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -11,14 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
-import com.business.unknow.model.factura.OLD.FacturaDto;
+import com.business.unknow.model.factura.PagoDto;
 import com.business.unknow.services.services.FacturaService;
 
 import io.swagger.annotations.Api;
@@ -48,15 +51,27 @@ public class FacturaController {
 				HttpStatus.OK);
 	}
 
-	@GetMapping("/files/folio/{folio}")
+	@PostMapping
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura) {
+		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
+	}
+
+	@PutMapping("/{folio}")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
+	}
+
+	@GetMapping("/{folio}/files")
 	public ResponseEntity<FacturaFileDto> getFacturaFiles(@PathVariable String folio) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getFacturaFile(folio), HttpStatus.OK);
 	}
 
-	@PostMapping
-	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<FacturaDto> insertClient(@RequestBody @Valid FacturaDto factura) {
-		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
+	@GetMapping("/{folio}/pagos")
+	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
 	}
 
 }

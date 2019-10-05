@@ -22,7 +22,8 @@ public class CfdiDto {
 	private String schemaUrl = "http://www.w3.org/2001/XMLSchema-instance";
 	private String satUrl = "http://www.sat.gob.mx/cfd/3";
 	private String schemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
-	private String version;
+	//TODO: AGREGAR CONFIG GLOBALS
+	private String version="3.3";
 	private String serie;
 	private String folio;
 	private String fecha;
@@ -34,6 +35,7 @@ public class CfdiDto {
 	private Double descuento;
 	private String moneda;
 	private Double total;
+	//I para el caso comun
 	private String tipoDeComprobante;
 	private String metodoPago;
 	private String lugarExpedicion;

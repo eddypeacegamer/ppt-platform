@@ -3,7 +3,6 @@
  */
 package com.business.unknow.model;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -22,9 +21,9 @@ public class EmpresaDto {
 	private String contactoAdmin;
 	private String sucursal;
 	private String lugarExpedicion;
-	private byte[] logotipo;
-	private byte[] llavePrivada;
-	private byte[] certificado;
+	private String logotipo;
+	private String llavePrivada;
+	private String certificado;
 	private String pw;
 	private String encabezado;
 	private String piePagina;
@@ -84,27 +83,27 @@ public class EmpresaDto {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public byte[] getLogotipo() {
+	public String getLogotipo() {
 		return logotipo;
 	}
 
-	public void setLogotipo(byte[] logotipo) {
+	public void setLogotipo(String logotipo) {
 		this.logotipo = logotipo;
 	}
 
-	public byte[] getLlavePrivada() {
+	public String getLlavePrivada() {
 		return llavePrivada;
 	}
 
-	public void setLlavePrivada(byte[] llavePrivada) {
+	public void setLlavePrivada(String llavePrivada) {
 		this.llavePrivada = llavePrivada;
 	}
 
-	public byte[] getCertificado() {
+	public String getCertificado() {
 		return certificado;
 	}
 
-	public void setCertificado(byte[] certificado) {
+	public void setCertificado(String certificado) {
 		this.certificado = certificado;
 	}
 
@@ -171,7 +170,7 @@ public class EmpresaDto {
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
 	}
-	
+
 	public ContribuyenteDto getInformacionFiscal() {
 		return informacionFiscal;
 	}
@@ -184,11 +183,10 @@ public class EmpresaDto {
 	public String toString() {
 		return "EmpresaDto [id=" + id + ", referencia=" + referencia + ", regimenFiscal=" + regimenFiscal + ", web="
 				+ web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion="
-				+ lugarExpedicion + ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada="
-				+ Arrays.toString(llavePrivada) + ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw
-				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", informacionFiscal=" + informacionFiscal + "]";
+				+ lugarExpedicion + ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado="
+				+ certificado + ", pw=" + pw + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
+				+ activo + ", tipo=" + tipo + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
 
 }

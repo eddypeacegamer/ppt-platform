@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -52,12 +51,12 @@ public class Empresa implements Serializable {
 	private String lugarExpedicion;
 
 	@Column(name = "LOGOTIPO")
-	private byte[] logotipo;
+	private String logotipo;
 
-	private byte[] llavePrivada;
+	private String llavePrivada;
 
 	@Column(name = "CERTIFICADO")
-	private byte[] certificado;
+	private String certificado;
 
 	@Column(name = "PW")
 	private String pw;
@@ -70,7 +69,7 @@ public class Empresa implements Serializable {
 
 	@Column(name = "ACTIVO")
 	private Boolean activo;
-	
+
 	@Column(name = "LINEA")
 	private String tipo;
 
@@ -83,9 +82,9 @@ public class Empresa implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
 	public Integer getId() {
@@ -144,27 +143,27 @@ public class Empresa implements Serializable {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public byte[] getLogotipo() {
+	public String getLogotipo() {
 		return logotipo;
 	}
 
-	public void setLogotipo(byte[] logotipo) {
+	public void setLogotipo(String logotipo) {
 		this.logotipo = logotipo;
 	}
 
-	public byte[] getLlavePrivada() {
+	public String getLlavePrivada() {
 		return llavePrivada;
 	}
 
-	public void setLlavePrivada(byte[] llavePrivada) {
+	public void setLlavePrivada(String llavePrivada) {
 		this.llavePrivada = llavePrivada;
 	}
 
-	public byte[] getCertificado() {
+	public String getCertificado() {
 		return certificado;
 	}
 
-	public void setCertificado(byte[] certificado) {
+	public void setCertificado(String certificado) {
 		this.certificado = certificado;
 	}
 
@@ -223,7 +222,7 @@ public class Empresa implements Serializable {
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
-	
+
 	public Contribuyente getInformacionFiscal() {
 		return informacionFiscal;
 	}
@@ -236,10 +235,9 @@ public class Empresa implements Serializable {
 	public String toString() {
 		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia + ", web=" + web
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
-				+ ", logotipo=" + Arrays.toString(logotipo) + ", llavePrivada=" + Arrays.toString(llavePrivada)
-				+ ", certificado=" + Arrays.toString(certificado) + ", pw=" + pw + ", encabezado=" + encabezado
-				+ ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
-				+ informacionFiscal + "]";
+				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado=" + certificado + ", pw="
+				+ pw + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo="
+				+ tipo + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }
