@@ -8,19 +8,19 @@
               <label for="inputFolio" class="label">Folio</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth id="inputFolio" placeholder="Folio PreCFDI">
+              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
             </div>
             <div class="col-md-1">
               <label for="inputEmisor" class="label">Emisor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth id="inputEmisor" placeholder="RFC Emisor">
+              <input type="text" nbInput fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
             </div>
             <div class="col-md-1">
               <label for="InputReceptor" class="label">Receptor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth id="InputReceptor" placeholder="RFC Receptor">
+              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
             </div>
   
           </div>
@@ -30,20 +30,22 @@
               <label for="inputStatus" class="label">Estatus Pago</label>
             </div>
             <div class="col-md-2">
-              <nb-select selected="1" id="inputGiro">
-                <nb-option value="1">No Pagado</nb-option>
-                <nb-option value="2">En validacion</nb-option>
-                <nb-option value="3">Pagado</nb-option>
+              <nb-select id="inputGiro" [selected]="filterParams.payStatus" (selectedChange)="onPayStatus($event)">
+                <nb-option value="*">Todas</nb-option>
+                <nb-option value="sin pagar">No Pagado</nb-option>
+                <nb-option value="validacion">En validacion</nb-option>
+                <nb-option value="pagada">Pagado</nb-option>
               </nb-select>
             </div>
             <div class="col-md-1">
-              <label for="inputTimbrado" class="label">Estatus Timbrado</label>
+              <label for="inputTimbrado" class="label">Estatus Validacion</label>
             </div>
             <div class="col-md-2">
-              <nb-select selected="1" id="inputGiro">
-                <nb-option value="1">Solicitud</nb-option>
-                <nb-option value="2">En validacion</nb-option>
-                <nb-option value="3">Timbrado</nb-option>
+              <nb-select id="inputGiro" [selected]="filterParams.validationStatus" (selectedChange)="onValidationStatus($event)">
+                <nb-option value="*">Todas</nb-option>
+                <nb-option value="S">Solicitud</nb-option>
+                <nb-option value="V">En validacion</nb-option>
+                <nb-option value="T">Timbrado</nb-option>
               </nb-select>
             </div>
             <div class="col-md-2">
@@ -54,7 +56,7 @@
                 <nb-rangepicker #rangepicker></nb-rangepicker>
             </div>
             <div class="col-md-1">
-              <button type="button" nbButton status="primary">BUSCAR</button>
+              <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
             </div>
           </div>
   
@@ -97,10 +99,16 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row">{{fila.clave}}</td>
-                  <td scope="row">{{fila.descipcion}}</td>
-                  <td scope="row">{{fila.similares}}</td>
-                  <td scope="row">{{fila.inicioVigencia}}</td>
+                  <td scope="row">{{fila.folio}}</td>
+                  <td scope="row">{{fila.rfcEmisor}}</td>
+                  <td scope="row">{{fila.nombreEmisor}}</td>
+                  <td scope="row">{{fila.rfcRemitente}}</td>
+                  <td scope="row">{{fila.nombreRemitente}}</td>
+                  <td scope="row">{{fila.statusFactura.statusEvento}}</td>
+                  <td scope="row">{{fila.statusFactura.statusPago}}</td>
+                  <td scope="row">{{fila.total}}</td>
+                  <td scope="row">{{fila.fechaSolicitud}}</td>
+                  <td scope="row">{{fila.fechaTimbrado}}</td>
                 </tr>
               </tbody>
             </table>
