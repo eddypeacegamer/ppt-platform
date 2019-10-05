@@ -37,14 +37,14 @@ public class FacturaController {
 
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
-			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
 			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
 			@RequestParam(name = "remitente", required = false) Optional<String> rfcRemitente,
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
-			@RequestParam(name = "uuid", required = false) Optional<String> uuid,
+			@RequestParam(name = "statusPago", required = false) Optional<String> statusPago,
+			@RequestParam(name = "statusValidacion", required = false) Optional<String> statusValidacion,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, uuid, page, size),
+		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, statusPago, page, size),
 				HttpStatus.OK);
 	}
 

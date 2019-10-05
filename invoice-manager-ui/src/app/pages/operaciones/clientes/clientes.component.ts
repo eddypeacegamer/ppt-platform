@@ -38,7 +38,7 @@ export class ClientesComponent implements OnInit {
 
 
   public downloadHandler() {
-    this.clientsService.getClients(0, 10000).subscribe(result => {
+    this.clientsService.getClients(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content,'Clientes')
     });
   }

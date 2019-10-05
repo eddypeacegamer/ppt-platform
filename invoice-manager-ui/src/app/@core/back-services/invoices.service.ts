@@ -15,7 +15,7 @@ export class InvoicesService {
     for (const key in filterParams) {
       const value : string = filterParams[key];
       if(value.length>0){
-        pageParams = pageParams.append(key, filterParams[key]);
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':filterParams[key]);
       }
     }
     return this.httpClient.get('../api/facturas',{params:pageParams});

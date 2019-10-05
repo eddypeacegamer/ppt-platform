@@ -37,7 +37,7 @@ export class EmpresasComponent implements OnInit {
   
   
     public downloadHandler() {
-      this.companyService.getCompanies(0, 10000).subscribe(result => {
+      this.companyService.getCompanies(0, 10000, this.filterParams).subscribe(result => {
         this.donwloadService.exportCsv(result.content,'Empresas')
       });
     }
