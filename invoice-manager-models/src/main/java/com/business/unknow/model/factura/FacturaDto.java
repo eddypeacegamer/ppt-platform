@@ -9,6 +9,8 @@ public class FacturaDto {
 	private Integer id;
 	private String rfcEmisor;
 	private String rfcRemitente;
+	private String razonSocialEmisor;
+	private String razonSocialRemitente;
 	private String folio;
 	private String folioPadre;
 	private String uuid;
@@ -142,13 +144,30 @@ public class FacturaDto {
 		this.fechaTimbrado = fechaTimbrado;
 	}
 
+	public String getRazonSocialEmisor() {
+		return razonSocialEmisor;
+	}
+
+	public void setRazonSocialEmisor(String razonSocialEmisor) {
+		this.razonSocialEmisor = razonSocialEmisor;
+	}
+
+	public String getRazonSocialRemitente() {
+		return razonSocialRemitente;
+	}
+
+	public void setRazonSocialRemitente(String razonSocialRemitente) {
+		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", folio="
-				+ folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura=" + statusFactura
-				+ ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago
-				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
+		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
+				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
+				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
+				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
 	}
 
 }
