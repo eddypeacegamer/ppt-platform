@@ -16,21 +16,23 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "EMPRESAS")
+@Table(name = "PAGOS")
 public class Pago implements Serializable {
 
 	private static final long serialVersionUID = 8371622895161409889L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_EMPRESA")
+	@Column(name = "ID_PAGO")
 	private Integer id;
 	
+	@Column(name = "FOLIO")
 	private String folio;
+	
 	@Column(name = "TIPO_DOCUMENTO")
 	private String tipoDocumento;
 	
-	@Column(name = "DOCUMENTOS")
+	@Column(name = "DOCUMENTO")
 	private String documento;
 	
 	@Column(name = "CANTIDAD")

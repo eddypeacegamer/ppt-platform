@@ -1,4 +1,4 @@
-package com.business.unknow.services.entities.factura;
+package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
 
@@ -10,14 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "IMPUESTOS")
-public class Impuesto implements Serializable {
+@Table(name = "RETENCIONES")
+public class Retencion implements Serializable {
 
-	private static final long serialVersionUID = 5623944906795628517L;
+	private static final long serialVersionUID = -2655293148503394319L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_IMPUESTO")
+	@Column(name = "ID_RETENCION")
 	private Integer id;
 
 	@Column(name = "ID_CONCEPTO")
@@ -37,6 +37,14 @@ public class Impuesto implements Serializable {
 
 	@Column(name = "IMPORTE")
 	private Double importe;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getBase() {
 		return base;
@@ -86,17 +94,9 @@ public class Impuesto implements Serializable {
 		this.idConcepto = idConcepto;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
 	@Override
 	public String toString() {
-		return "Impuesto [id=" + id + ", idConcepto=" + idConcepto + ", base=" + base + ", impuesto=" + impuesto
+		return "Retencion [id=" + id + ", idConcepto=" + idConcepto + ", base=" + base + ", impuesto=" + impuesto
 				+ ", tipoFactor=" + tipoFactor + ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
 	}
 

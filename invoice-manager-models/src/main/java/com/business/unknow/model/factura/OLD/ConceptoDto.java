@@ -1,66 +1,22 @@
-package com.business.unknow.services.entities.factura;
+package com.business.unknow.model.factura.OLD;
 
-import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+public class ConceptoDto {
 
-@Entity
-@Table(name = "CONCEPTOS")
-public class Concepto implements Serializable {
-
-	private static final long serialVersionUID = -1917092984790590992L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CONCEPTO")
 	private Integer id;
-
-	@Column(name = "FOLIO")
 	private String folio;
-
-	@Column(name = "CLAVE_PROD_SERV")
 	private String claveProdServ;
-
-	@Column(name = "NO_IDENTIFICACION")
 	private String noIdentificacion;
-
-	@Column(name = "CANTIDAD")
 	private Integer cantidad;
-
-	@Column(name = "CLAVE_UNIDAD")
 	private String claveUnidad;
-
-	@Column(name = "UNIDAD")
 	private String unidad;
-
-	@Column(name = "DESCRIPCION")
 	private String descripcion;
-
-	@Column(name = "VALOR_UNITARIO")
 	private Double valorUnitario;
-
-	@Column(name = "IMPORTE")
 	private Double importe;
-
-	@Column(name = "DESCUENTO")
 	private Double descuento;
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-	@JoinColumn(name = "ID_CONCEPTO",referencedColumnName = "ID_CONCEPTO")
-	private List<Impuesto> impuestos;
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-	@JoinColumn(name = "ID_CONCEPTO",referencedColumnName = "ID_CONCEPTO")
-	private List<Retencion> retenciones;
+	private List<ImpuestoDto> impuestos;
+	private List<RetencionDto> retenciones;
 
 	public Integer getId() {
 		return id;
@@ -150,25 +106,25 @@ public class Concepto implements Serializable {
 		this.descuento = descuento;
 	}
 
-	public List<Impuesto> getImpuestos() {
+	public List<ImpuestoDto> getImpuestos() {
 		return impuestos;
 	}
 
-	public void setImpuestos(List<Impuesto> impuestos) {
+	public void setImpuestos(List<ImpuestoDto> impuestos) {
 		this.impuestos = impuestos;
 	}
 
-	public List<Retencion> getRetenciones() {
+	public List<RetencionDto> getRetenciones() {
 		return retenciones;
 	}
 
-	public void setRetenciones(List<Retencion> retenciones) {
+	public void setRetenciones(List<RetencionDto> retenciones) {
 		this.retenciones = retenciones;
 	}
 
 	@Override
 	public String toString() {
-		return "Concepto [id=" + id + ", folio=" + folio + ", claveProdServ=" + claveProdServ + ", noIdentificacion="
+		return "ConceptoDto [id=" + id + ", folio=" + folio + ", claveProdServ=" + claveProdServ + ", noIdentificacion="
 				+ noIdentificacion + ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad
 				+ ", descripcion=" + descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe
 				+ ", descuento=" + descuento + ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";

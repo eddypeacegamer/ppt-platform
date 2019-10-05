@@ -1,5 +1,6 @@
 package com.business.unknow.model;
 
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -23,7 +24,8 @@ public class ContribuyenteDto {
 	private String cp;
 	private String correo;
 	private String telefono;
-	
+	private Date fechaCreacion;
+	private Date fechaActualizacion;
 
 	public Integer getId() {
 		return id;
@@ -159,6 +161,22 @@ public class ContribuyenteDto {
 
 	public void setCoo(String coo) {
 		this.coo = coo;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	@Override

@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.factura.FacturaFileDto;
+import com.business.unknow.model.factura.OLD.FacturaDto;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.entities.factura.FacturaFile;
 
 @Mapper
 public interface FacturaMapper {
@@ -15,5 +17,8 @@ public interface FacturaMapper {
 
 	Factura getEntityFromFacturaDto(FacturaDto dto);
 	List<Factura> getEntitiesFromFacturaDtos(List<FacturaDto> dto);
+	
+	FacturaFile getEntityFromFacturaFileDto(FacturaFileDto dto);
+	FacturaFileDto getFacturaFileDtoFromEntity(FacturaFile dto);
 
 }
