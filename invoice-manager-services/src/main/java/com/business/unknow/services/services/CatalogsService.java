@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.catalogs.GiroDto;
@@ -21,6 +22,9 @@ import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.mapper.CatalogsMapper;
 import com.business.unknow.services.repositories.GiroRepository;
+import com.business.unknow.services.repositories.StatusDevolucionRepository;
+import com.business.unknow.services.repositories.StatusEventoRepository;
+import com.business.unknow.services.repositories.StatusPagoRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveProductoServicioRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
@@ -48,6 +52,15 @@ public class CatalogsService {
 
 	@Autowired
 	private StatusFacturaRepository statusFacturaRepo;
+	
+	@Autowired
+	private StatusEventoRepository statusEventoRepo;
+	
+	@Autowired
+	private StatusPagoRepository statusPagoRepo;
+	
+	@Autowired
+	private StatusDevolucionRepository statusDevoluicionRepo;
 
 	@Autowired
 	private GiroRepository giroRepo;
@@ -93,6 +106,19 @@ public class CatalogsService {
 
 	public List<GiroDto> getAllGiros() {
 		return mapper.getGiroDtosFromEntities(giroRepo.findAll());
+	}
+	
+	public List<StatusCatalogoDto> getAllStatusEvento() {
+		return mapper.getStatusEventoDtosFromEntities(statusEventoRepo.findAll());
+	}
+	
+	
+	public List<StatusCatalogoDto> getAllStatusPago() {
+		return mapper.getStatusPagoDtosFromEntities(statusPagoRepo.findAll());
+	}
+	
+	public List<StatusCatalogoDto> getAllStatusDevoluicion() {
+		return mapper.getStatusDevolucionDtosFromEntities(statusDevoluicionRepo.findAll());
 	}
 
 }

@@ -32,47 +32,53 @@ public class Factura implements Serializable {
 
 	@Column(name = "RFC_EMISOR")
 	private String rfcEmisor;
-	
+
 	@Column(name = "RFC_REMITENTE")
 	private String rfcRemitente;
-	
+
+	@Column(name = "RAZON_SOCIAL_EMISOR")
+	private String razonSocialEmisor;
+
+	@Column(name = "RAZON_SOCIAL_REMITENTE")
+	private String razonSocialRemitente;
+
 	@Column(name = "FOLIO")
 	private String folio;
 
 	@Column(name = "FOLIO_PADRE")
 	private String folioPadre;
-	
+
 	@Column(name = "UUID")
 	private String uuid;
-	
-	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA")//TODO remove this ID use ID_FACTURA
+
+	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA") // TODO remove this ID use
+																						// ID_FACTURA
 	@OneToOne(optional = false, fetch = FetchType.LAZY)
 	private StatusFactura statusFactura;
-	
+
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
 
 	@Column(name = "TIPO_DOCUMENTO")
 	private String tipoDocumento;
-	
+
 	@Column(name = "FORMA_PAGO")
 	private String formaPago;
 
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
-	
-	
+
 	@Column(name = "NOTAS")
 	private String notas;
-	
+
 	@Column(name = "TOTAL")
 	private Double total;
-	
+
 	@Temporal(TemporalType.DATE)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
@@ -197,15 +203,30 @@ public class Factura implements Serializable {
 		this.fechaTimbrado = fechaTimbrado;
 	}
 
+	public String getRazonSocialEmisor() {
+		return razonSocialEmisor;
+	}
+
+	public void setRazonSocialEmisor(String razonSocialEmisor) {
+		this.razonSocialEmisor = razonSocialEmisor;
+	}
+
+	public String getRazonSocialRemitente() {
+		return razonSocialRemitente;
+	}
+
+	public void setRazonSocialRemitente(String razonSocialRemitente) {
+		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
 	@Override
 	public String toString() {
-		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura=" + statusFactura
-				+ ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago
-				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
+		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
+				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
+				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
+				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
 	}
-	
 
-	
 }

@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class ClientService {
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) {
+		cliente.setActivo(false);
+		cliente.setFechaActualizacion(new Date());
+		cliente.setFechaCreacion(new Date());
 		return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
 	}
 
