@@ -30,7 +30,6 @@ export class ClientsService {
   }
 
   public updateClient(client : Client) : Observable<Object>{
-    console.log('Updating : ', client);
     return this.httpClient.put(`../api/clientes/${client.informacionFiscal.rfc}`,client);
   }
 
