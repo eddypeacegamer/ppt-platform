@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientsData } from '../../../@core/data/clients-data';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Client } from '../../../models/client';
+import { Contribuyente } from '../../../models/contribuyente';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ZipCodeInfo } from '../../../models/zip-code-info';
 
 @Component({
   selector: 'ngx-clientes',
@@ -10,17 +14,57 @@ import { Client } from '../../../models/client';
 export class ClientesComponent implements OnInit {
 
   public clientInfo : Client;
-  public rfc : string = '';
-  
-  constructor(private clientService:ClientsData) { }
+  public formInfo : any = {rfc:'',message:'',coloniaId:0, success:''};
+  public colonias = [];
+  public paises = ['México'];
+  public porcentajes = {promotor:25,cliente:25,despacho:25,contacto:25};
+  constructor(private clientService:ClientsData,private catalogsService:CatalogsData) { }
 
   ngOnInit() {
-    this.clientInfo = new Client();
+    
   }
 
   public buscarClientePorRFC(){
-    this.clientService.getClientByRFC(this.rfc)
-      .subscribe(data => this.clientInfo = data);
+    this.clientInfo = undefined;
+    this.formInfo.message = '';
+    this.formInfo.success = '';
+    this.clientService.getClientByRFC(this.formInfo.rfc)
+      .subscribe((data:Client) => this.clientInfo = data,
+      (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
+
+  }
+
+  public onRegitrarCall(){
+    this.clientInfo = new Client();
+    this.clientInfo.informacionFiscal= new Contribuyente();
+    this.clientInfo.informacionFiscal.rfc= this.formInfo.rfc;
+    this.clientInfo.informacionFiscal.pais= 'México';
+  }
+
+  public updateClient(){
+    this.clientService.updateClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente actualizado exitosamente';console.log(success)},
+    (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
+  }
+
+  public insertClient(){
+    this.clientService.insertNewClient(this.clientInfo).subscribe(success=> this.formInfo.success = 'Cliente guardado exitosamente',
+    (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
+  }
+
+  public zipCodeInfo(zipcode:String){
+    let zc = new String(zipcode);
+    if(zc.length>4 && zc.length <6){
+      this.colonias = [];
+      this.catalogsService.getZipCodeInfo(zipcode).subscribe(
+          (data:ZipCodeInfo) => {this.clientInfo.informacionFiscal.estado = data.estado;
+          this.clientInfo.informacionFiscal.municipio= data.municipio;this.colonias=data.colonias; 
+          this.clientInfo.informacionFiscal.localidad=data.colonias[0];},
+          (error: HttpErrorResponse) => console.error(error));
+    }
+  }
+
+  public onLocation(index:number){
+    this.clientInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
 }

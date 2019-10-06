@@ -8,22 +8,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.business.unknow.services.entities.Factura;
+import com.business.unknow.services.entities.factura.Factura;
 
 public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
 	public Page<Factura> findAll(Pageable pageable);
 
-	@Query(value = "select f from Factura f where f.cliente.rfc =:rfc and f.cliente.promotor.name =:promotor and f.empresa.name =:empresa")
-	public Page<Factura> findAllByPromotorAndRfcAndEmpresa(@Param("promotor") String promotor, @Param("rfc") String rfc,@Param("empresa") String empresa,
-			Pageable pageable);
-	
-	@Query(value = "select f from Factura f where f.cliente.rfc =:rfc and f.cliente.promotor.name =:promotor")
-	public Page<Factura> findAllByPromotorAndRfc(@Param("promotor") String promotor, @Param("rfc") String rfc,
-			Pageable pageable);
-
-	@Query(value = "select f from Factura f where  f.cliente.promotor.name =:promotor")
-	public Page<Factura> findAllByPromotor(@Param("promotor") String promotor, Pageable pageable);
-
 	public Optional<Factura> findByFolio(String folio);
+
+	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura.statusEvento) like upper(:statusEvento) and upper(f.statusFactura.statusPago) like upper(:statusPago)")
+	public Page<Factura> findByRfcEmisorWithOtherParams(@Param("rfcEmisor") String rfc,
+			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
+
+	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura.statusEvento) like upper(:statusEvento) and upper(f.statusFactura.statusPago) like upper(:statusPago)")
+	public Page<Factura> findByRfcRemitenteWithOtherParams(@Param("rfcRemitente") String rfc,
+			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
+
+	public Page<Factura> findByFolioIgnoreCaseContaining(String rfc, Pageable pageable);
+
 }

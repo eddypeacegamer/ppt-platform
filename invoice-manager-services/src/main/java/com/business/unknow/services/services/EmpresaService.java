@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.services.entities.Empresa;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 
@@ -23,20 +24,43 @@ public class EmpresaService {
 
 	@Autowired
 	private EmpresaMapper mapper;
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 
-	public Page<EmpresaDto> getAllEmpresas(int page, int size) {
-		Page<Empresa> result = repository.findAll(PageRequest.of(page, size));
+	public Page<EmpresaDto> getEmpresasByParametros(Optional<String> rfc, Optional<String> razonSocial,
+			Optional<String> linea, int page, int size) {
+		Page<Empresa> result;
+		if (!razonSocial.isPresent() && !rfc.isPresent()&&!linea.isPresent()) {
+			result = repository.findAll(PageRequest.of(page, size));
+		} else if (rfc.isPresent()) {
+			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()), PageRequest.of(page, size));
+		} else if (linea.isPresent()) {
+			result = repository.findByLineaIgnoreCaseContaining(String.format("%%%s%%", linea.get()), PageRequest.of(page, size));
+		}else {
+			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()), PageRequest.of(page, size));
+		}
 		return new PageImpl<>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
-	public EmpresaDto getEmpresaByName(String name) {
-		Optional<Empresa> result = repository.findByName(name);
-		if (result.isPresent()) {
-			return mapper.getEmpresaDtoFromEntity(result.get());
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("La empresa con el nombre %s no existe", name));
-		}
+	public EmpresaDto insertNewEmpresa(EmpresaDto empresa) {
+		return mapper.getEmpresaDtoFromEntity(repository.save(mapper.getEntityFromEmpresaDto(empresa)));
+	}
+
+	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {
+		Empresa empresa = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El empresa con el rfc %s no existe", rfc)));
+		empresa.setReferencia(empresaDto.getReferencia());
+		empresa.setWeb(empresaDto.getWeb());
+		empresa.setSucursal(empresaDto.getSucursal());
+		empresa.setLogotipo(empresaDto.getLogotipo());
+		empresa.setLlavePrivada(empresaDto.getLlavePrivada());
+		empresa.setCertificado(empresaDto.getCertificado());
+		empresa.setPw(empresaDto.getPw());
+		empresa.setActivo(empresaDto.getActivo());
+		empresa.setInformacionFiscal(
+				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
 	}
 
 }

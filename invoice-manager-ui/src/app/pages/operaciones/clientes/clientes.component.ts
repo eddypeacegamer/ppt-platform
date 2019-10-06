@@ -12,7 +12,7 @@ import { DownloadCsvService } from '../../../@core/back-services/download-csv.se
 export class ClientesComponent implements OnInit {
 
 
-  public headers: string[] = ['RFC', 'Razon Social', 'Contacto', 'Email', 'No Ext', 'Calle', 'Colonia', 'Municipio', 'C.Postal'];
+  public headers: string[] = ['RFC', 'Razon Social', 'Contacto', 'Email', 'No Ext', 'Calle', 'Localidad', 'Municipio', 'C.Postal'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
@@ -38,7 +38,7 @@ export class ClientesComponent implements OnInit {
 
 
   public downloadHandler() {
-    this.clientsService.getClients(0, 10000).subscribe(result => {
+    this.clientsService.getClients(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content,'Clientes')
     });
   }

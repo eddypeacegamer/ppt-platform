@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
  *
  */
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/roles")
 @Api(value = "RoleController", produces = "application/json")
 public class RoleController {
 

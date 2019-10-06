@@ -3,7 +3,7 @@ package com.business.unknow.model.catalogs;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.business.unknow.model.Constants;
+import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
