@@ -1,0 +1,23 @@
+{
+    "title": "Promotor",
+    "icon": "layout-outline",
+    "children": [
+      {
+        "title": "clientes",
+        "link": "/pages/promotor/clientes"
+      },
+      {
+        "title": "reportes",
+        "link": "/pages/promotor/reportes"
+      },
+      {
+        "title": "pre-cfdi",
+        "link": "/pages/promotor/precfdi"
+      },
+      {
+        "title": "pagos",
+        "link": "/pages/promotor/pagos"
+      }
+
+    ]
+  }

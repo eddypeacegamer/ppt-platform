@@ -32,7 +32,7 @@ public class RoleService {
 	}
 
 	public RoleDto getRoleByName(String name) throws InvoiceManagerException {
-		Optional<Role> result = repository.findByName(name);
+		Optional<Role> result = repository.findByRole(name);
 		if (result.isPresent()) {
 			return mapper.getRoleDtoFromentity(result.get());
 		} else {

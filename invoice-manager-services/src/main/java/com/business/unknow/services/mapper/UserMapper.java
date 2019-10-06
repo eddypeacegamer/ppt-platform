@@ -10,8 +10,8 @@ import com.business.unknow.services.entities.User;
 @Mapper
 public interface UserMapper {
 
-	UserDto getUserDtoFromentity(User entity);
-	User getEntityFromUserDto(UserDto dto);
-	List<UserDto> getUserDtosFromEntities(List<User> entities);
-	List<User> getEntitiesFromUserDtos(List<UserDto> dto);
+//	UserDto getUserDtoFromentity(User entity);
+//	User getEntityFromUserDto(UserDto dto);
+//	List<UserDto> getUserDtosFromEntities(List<User> entities);
+//	List<User> getEntitiesFromUserDtos(List<UserDto> dto);
 }

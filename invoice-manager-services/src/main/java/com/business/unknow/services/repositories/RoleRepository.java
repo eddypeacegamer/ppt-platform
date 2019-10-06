@@ -14,5 +14,5 @@ import com.business.unknow.services.entities.Role;
 public interface RoleRepository extends CrudRepository<Role, Integer> {
  
 	public List<Role> findAll();
-	public Optional<Role> findByName(String name);
+	public Optional<Role> findByRole(String role);
 }

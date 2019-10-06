@@ -1,14 +1,21 @@
 ----------------
----ROLE
-----------------
-INSERT INTO ROLES(ID_ROLE,NOMBRE) VALUES(1,'admin');
-INSERT INTO ROLES(ID_ROLE,NOMBRE) VALUES(2,'promotor');
-
-----------------
 ---USER
 ----------------
-INSERT INTO USERS(ID_USER,CORREO,PW,ID_ROLE,NOMBRE)	VALUES(1,'asd@asd.com','123',1,'User1');
-INSERT INTO USERS(ID_USER,CORREO,PW,ID_ROLE,NOMBRE)	VALUES(2,'aaa@asd.com','123',2,'User2');
+INSERT INTO USERS(ID_USER,ACTIVO,CORREO,FECHA_CREACION,FECHA_ACTUALIZACION)	VALUES(1,1,'rubens.mncrft@gmail.com','2019-09-30 00:00:00','2019-09-30 00:00:00');
+INSERT INTO USERS(ID_USER,ACTIVO,CORREO,FECHA_CREACION,FECHA_ACTUALIZACION)	VALUES(2,1,'edcgamer@gmail.com','2019-09-30 00:00:00','2019-09-30 00:00:00');
+
+----------------
+---ROLE
+----------------
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(1,'ADMINISTRADOR','Este role permite administrarlos accesos a la plataforma',1);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(2,'PROMOTOR','Este role permite ingresar al modulo de promotor',1);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(3,'OPERADOR','Este role permite ingresar al modulo de operador',1);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(4,'TESORERIA','Este role permite ingresar al modulo de tesoreria',1);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(5,'CONTABILIDAD','Este role permite ingresar al modulo de contabilidad',1);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(6,'PROMOTOR','Acesso promotor para Eddy',2);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(7,'OPERADOR','Acesso operador para Eddy',2);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(8,'TESORERIA','Acesso tesoreria para Eddy',2);
+INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(9,'CONTABILIDAD','Acesso contabilidad para Eddy',2);
 
 
 ----------------

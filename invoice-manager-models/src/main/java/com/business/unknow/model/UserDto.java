@@ -4,6 +4,9 @@
 package com.business.unknow.model;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.business.unknow.model.menu.MenuItem;
 
 /**
  * @author eej000f
@@ -11,41 +14,19 @@ import java.io.Serializable;
  */
 public class UserDto implements Serializable {
 
-	private Integer id;
-
-	private RoleDto role;
-
 	private String email;
 
-	private String pw;
+	private Boolean activo;
 
 	private String name;
 
+	private String urlPicture;
+
+	private List<String> roles;
+	
+	private List<MenuItem> menu;
+
 	private static final long serialVersionUID = -4269713581531174125L;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public RoleDto getRole() {
-		return role;
-	}
-
-	public void setRole(RoleDto role) {
-		this.role = role;
-	}
 
 	public String getEmail() {
 		return email;
@@ -55,17 +36,50 @@ public class UserDto implements Serializable {
 		this.email = email;
 	}
 
-	public String getPw() {
-		return pw;
+	public Boolean getActivo() {
+		return activo;
 	}
 
-	public void setPw(String pw) {
-		this.pw = pw;
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUrlPicture() {
+		return urlPicture;
+	}
+
+	public void setUrlPicture(String urlPicture) {
+		this.urlPicture = urlPicture;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+	
+	public List<MenuItem> getMenu() {
+		return menu;
+	}
+
+	public void setMenu(List<MenuItem> menu) {
+		this.menu = menu;
 	}
 
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", role=" + role + ", email=" + email + ", pw=" + pw + ", name=" + name + "]";
+		return "UserDto [email=" + email + ", activo=" + activo + ", name=" + name + ", urlPicture=" + urlPicture
+				+ ", roles=" + roles + "]";
 	}
 
 }

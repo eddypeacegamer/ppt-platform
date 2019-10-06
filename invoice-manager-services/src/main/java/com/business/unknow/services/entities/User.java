@@ -1,17 +1,21 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "USERS")
@@ -24,21 +28,24 @@ public class User implements Serializable {
 	@Column(name = "ID_USER")
 	private Integer id;
 
-	@JoinColumn(name = "ID_ROLE", referencedColumnName = "ID_ROLE")
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	private Role role;
-
-	@Basic(optional = false)
-	@Column(name = "CORREO", unique = true)
+	@Column(name = "ACTIVO")
+	private Boolean activo;
+	
+	@Column(name = "CORREO")
 	private String email;
+	
+	@Temporal(TemporalType.DATE)
+	@CreatedDate
+	@Column(name = "FECHA_CREACION")
+	private Date fechaCreacion;
 
-	@Basic(optional = false)
-	@Column(name = "PW", unique = true)
-	private String pw;
-
-	@Basic(optional = false)
-	@Column(name = "NOMBRE", unique = true)
-	private String name;
+	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
+	@Column(name = "FECHA_ACTUALIZACION")
+	private Date fechaActualizacion;
+	
+	@OneToMany(mappedBy="user")
+	private List<Role> roles;
 
 	public Integer getId() {
 		return id;
@@ -48,12 +55,20 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public Role getRole() {
-		return role;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 
 	public String getEmail() {
@@ -64,25 +79,25 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public String getPw() {
-		return pw;
+	public Date getFechaCreacion() {
+		return fechaCreacion;
 	}
 
-	public void setPw(String pw) {
-		this.pw = pw;
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getName() {
-		return name;
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", role=" + role + ", email=" + email + ", pw=" + pw + ", name=" + name + "]";
+		return "User [id=" + id + ", roles=" + roles + ", activo=" + activo + ", correo=" + email + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }
