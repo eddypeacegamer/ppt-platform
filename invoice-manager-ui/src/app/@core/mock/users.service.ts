@@ -1,10 +1,9 @@
 import { of as observableOf,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Contacts, RecentUsers, UserData } from '../data/users';
 
 @Injectable()
-export class UserService extends UserData {
-
+export class UserService  {
+/*
   private time: Date = new Date;
 
   private users = {
@@ -49,5 +48,5 @@ export class UserService extends UserData {
 
   getRecentUsers(): Observable<RecentUsers[]> {
     return observableOf(this.recentUsers);
-  }
+  }*/
 }

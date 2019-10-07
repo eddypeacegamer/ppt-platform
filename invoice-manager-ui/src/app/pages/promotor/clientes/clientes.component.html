@@ -6,7 +6,7 @@
         <form class="form-inline">
           <input type="text" [(ngModel)]="formInfo.rfc" [ngModelOptions]="{standalone: true}" nbInput fullWidth
             placeholder="RFC">
-          <button type="button" [disabled]="formInfo.rfc.length < 12 && formInfo.rfc.length > 13" (click)="buscarClientePorRFC()" nbButton
+          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.rfc.length > 13" (click)="buscarClientePorRFC()" nbButton
             status="primary">BUSCAR</button>
           <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
             (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>

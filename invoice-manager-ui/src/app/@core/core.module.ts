@@ -13,11 +13,11 @@ import {
 } from './utils';
 import { MockDataModule } from './mock/mock-data.module';
 
-import { UserData } from './data/users';
+import { UsersData } from './data/users-data';
 import { CatalogsData } from './data/catalogs-data';
 
 
-import { UserService } from './mock/users.service';
+import { UsersService } from './back-services/users.service';
 import { CatalogsService } from './back-services/catalogs.service';
 import { ClientsData } from './data/clients-data';
 import { ClientsService } from './back-services/clients.service';
@@ -32,8 +32,7 @@ const DATA_SERVICES = [
   {provide: ClientsData, useClass: ClientsService},
   {provide: CompaniesData, useClass: CompaniesService},
   {provide: InvoicesData, useClass: InvoicesService},
-
-  { provide: UserData, useClass: UserService },
+  { provide: UsersData, useClass: UsersService },
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {

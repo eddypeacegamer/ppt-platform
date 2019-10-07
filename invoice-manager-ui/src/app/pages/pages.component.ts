@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { UsersData, User } from '../@core/data/users-data';
 import { MENU_ITEMS } from './pages-menu';
 
 @Component({
@@ -12,7 +12,15 @@ import { MENU_ITEMS } from './pages-menu';
     </ngx-one-column-layout>
   `,
 })
-export class PagesComponent {
+export class PagesComponent implements OnInit{
 
-  menu = MENU_ITEMS;
+  constructor(private userService:UsersData){}
+
+  public menu = [];
+
+  public ngOnInit(){
+    this.userService.getUserInfo().subscribe((user:User)=>{this.menu = user.menu});
+  }
+
+  //menu = MENU_ITEMS;
 }
