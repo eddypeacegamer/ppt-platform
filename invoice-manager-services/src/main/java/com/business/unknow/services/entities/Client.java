@@ -31,7 +31,19 @@ public class Client implements Serializable {
 
 	@Column(name = "ACTIVO")
 	private Boolean activo;
-	
+
+	@Column(name = "PORCENTAJE_PROMOTOR")
+	private Integer porcentajePromotor;
+
+	@Column(name = "PORCENTAJE_CLIENTE")
+	private Integer porcentajeCliente;
+
+	@Column(name = "PORCENTAJE_DESPACHO")
+	private Integer porcentajeDespacho;
+
+	@Column(name = "PORCENTAJE_CONTACTO")
+	private Integer porcentajeContacto;
+
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -41,10 +53,9 @@ public class Client implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
 	public Integer getId() {
@@ -87,9 +98,43 @@ public class Client implements Serializable {
 		this.informacionFiscal = informacionFiscal;
 	}
 
+	public Integer getPorcentajePromotor() {
+		return porcentajePromotor;
+	}
+
+	public void setPorcentajePromotor(Integer porcentajePromotor) {
+		this.porcentajePromotor = porcentajePromotor;
+	}
+
+	public Integer getPorcentajeCliente() {
+		return porcentajeCliente;
+	}
+
+	public void setPorcentajeCliente(Integer porcentajeCliente) {
+		this.porcentajeCliente = porcentajeCliente;
+	}
+
+	public Integer getPorcentajeDespacho() {
+		return porcentajeDespacho;
+	}
+
+	public void setPorcentajeDespacho(Integer porcentajeDespacho) {
+		this.porcentajeDespacho = porcentajeDespacho;
+	}
+
+	public Integer getPorcentajeContacto() {
+		return porcentajeContacto;
+	}
+
+	public void setPorcentajeContacto(Integer porcentajeContacto) {
+		this.porcentajeContacto = porcentajeContacto;
+	}
+
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+		return "Client [id=" + id + ", activo=" + activo + ", porcentajePromotor=" + porcentajePromotor
+				+ ", porcentajeCliente=" + porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho
+				+ ", porcentajeContacto=" + porcentajeContacto + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }

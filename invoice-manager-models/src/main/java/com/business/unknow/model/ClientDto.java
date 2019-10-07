@@ -14,6 +14,10 @@ public class ClientDto implements Serializable {
 
 	private Integer id;
 	private Boolean activo;
+	private Integer porcentajePromotor;
+	private Integer porcentajeCliente;
+	private Integer porcentajeDespacho;
+	private Integer porcentajeContacto;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
@@ -27,7 +31,7 @@ public class ClientDto implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public Boolean getActivo() {
 		return activo;
 	}
@@ -60,12 +64,44 @@ public class ClientDto implements Serializable {
 		this.informacionFiscal = informacionFiscal;
 	}
 
-	@Override
-	public String toString() {
-		return "ClientDto [id=" + id + ", activo=" + activo + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+	public Integer getPorcentajePromotor() {
+		return porcentajePromotor;
 	}
 
-	
+	public void setPorcentajePromotor(Integer porcentajePromotor) {
+		this.porcentajePromotor = porcentajePromotor;
+	}
+
+	public Integer getPorcentajeCliente() {
+		return porcentajeCliente;
+	}
+
+	public void setPorcentajeCliente(Integer porcentajeCliente) {
+		this.porcentajeCliente = porcentajeCliente;
+	}
+
+	public Integer getPorcentajeDespacho() {
+		return porcentajeDespacho;
+	}
+
+	public void setPorcentajeDespacho(Integer porcentajeDespacho) {
+		this.porcentajeDespacho = porcentajeDespacho;
+	}
+
+	public Integer getPorcentajeContacto() {
+		return porcentajeContacto;
+	}
+
+	public void setPorcentajeContacto(Integer porcentajeContacto) {
+		this.porcentajeContacto = porcentajeContacto;
+	}
+
+	@Override
+	public String toString() {
+		return "ClientDto [id=" + id + ", activo=" + activo + ", porcentajePromotor=" + porcentajePromotor
+				+ ", porcentajeCliente=" + porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho
+				+ ", porcentajeContacto=" + porcentajeContacto + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+	}
 
 }

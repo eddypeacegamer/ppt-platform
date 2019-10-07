@@ -1,11 +1,6 @@
 package com.business.unknow.services.mapper;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
-
-import com.business.unknow.model.UserDto;
-import com.business.unknow.services.entities.User;
 
 @Mapper
 public interface UserMapper {
