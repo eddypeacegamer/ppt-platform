@@ -89,8 +89,6 @@
               <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
             </nb-select>
           </div>
-
-
           <table class="table">
             <thead class="thead-light">
               <tr>
@@ -101,9 +99,9 @@
               <tr *ngFor="let fila of page.content">
                 <td scope="row">{{fila.folio}}</td>
                 <td scope="row">{{fila.rfcEmisor}}</td>
-                <td scope="row">{{fila.nombreEmisor}}</td>
+                <td scope="row">{{fila.razonSocialEmisor}}</td>
                 <td scope="row">{{fila.rfcRemitente}}</td>
-                <td scope="row">{{fila.nombreRemitente}}</td>
+                <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.statusFactura.statusEvento}}</td>
                 <td scope="row">{{fila.statusFactura.statusPago}}</td>
                 <td scope="row">{{fila.total}}</td>
