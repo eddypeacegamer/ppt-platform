@@ -1,6 +1,7 @@
 package com.business.unknow.services.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,15 +73,22 @@ public class UserService {
 	
 	public UserDto setMenuItems(UserDto user) throws IOException{
 		List<MenuItem> menu = new ArrayList<>();
-		MenuItem dashboard = objMapper.readValue(resourceLoader.getResource("classpath:/menus/dashboard.json").getFile(), MenuItem.class);
-		menu.add(dashboard);
-		MenuItem division = objMapper.readValue(resourceLoader.getResource("classpath:/menus/division.json").getFile(), MenuItem.class);
-		menu.add(division);
+		menu.add(getMenuFromResource("dashboard"));
+		menu.add(getMenuFromResource("division"));
 		for (String role : user.getRoles()) {
-			MenuItem item  = objMapper.readValue(resourceLoader.getResource(String.format("classpath:/menus/%s.json",role.toLowerCase())).getFile(), MenuItem.class);
-			menu.add(item);
+			menu.add(getMenuFromResource(role.toLowerCase()));
 		}
 		user.setMenu(menu);
 		return user;
+	}
+	
+	private MenuItem getMenuFromResource(String fileName) throws IOException {
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(String.format("menus/%s.json",fileName));
+		if(is!=null) {
+		return	objMapper.readValue(is, MenuItem.class);
+		}else {
+			log.error("menus/{}.json not found.",fileName);
+			return new MenuItem();
+		}
 	}
 }
