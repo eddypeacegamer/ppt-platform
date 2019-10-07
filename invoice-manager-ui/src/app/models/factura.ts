@@ -18,10 +18,10 @@ export class Factura{
 	public lugarDeExpedicion : string;
 	public rfcEmisor : string;
 	public usoCFDI : string;
-	public nombreEmisor : string;
+	public razonSocialEmisor : string;
 	public rfcRemitente : string;
 	public regimenFiscal : string;
-	public nombreRemitente : string;
+	public razonSocialRemitente : string;
 	public uuid : string;
 	public fechaTimbrado : Date;
 	public rfcProvCertif : string;

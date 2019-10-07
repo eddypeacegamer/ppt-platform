@@ -1,0 +1,10 @@
+{
+	"title": "Contabilidad",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "inicio",
+			"link": "/pages/contabilidad"
+		}
+	]
+}

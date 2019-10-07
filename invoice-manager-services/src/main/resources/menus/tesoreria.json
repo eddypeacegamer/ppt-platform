@@ -1,0 +1,10 @@
+ {
+    "title": "Tesoreria",
+    "icon": "layout-outline",
+    "children": [
+      {
+        "title": "inicio",
+        "link": "/pages/tesoreria"
+      }
+    ]
+  }
