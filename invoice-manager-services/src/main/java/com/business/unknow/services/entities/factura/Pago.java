@@ -20,27 +20,32 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class Pago implements Serializable {
 
 	private static final long serialVersionUID = 8371622895161409889L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PAGO")
 	private Integer id;
-	
+
 	@Column(name = "FOLIO")
 	private String folio;
-	
+
 	@Column(name = "TIPO_DOCUMENTO")
 	private String tipoDocumento;
-	
+
 	@Column(name = "DOCUMENTO")
 	private String documento;
-	
+
 	@Column(name = "CANTIDAD")
 	private Double candtidad;
-	
+
 	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
-	
+
+	@Temporal(TemporalType.DATE)
+	@CreatedDate
+	@Column(name = "FECHA_PAGO")
+	private Date fechaPago;
+
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -115,11 +120,19 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public Date getFechaPago() {
+		return fechaPago;
+	}
+
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
+	}
+
 	@Override
 	public String toString() {
-		return "Pagos [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento=" + documento
-				+ ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Pago [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento=" + documento
+				+ ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-	
+
 }

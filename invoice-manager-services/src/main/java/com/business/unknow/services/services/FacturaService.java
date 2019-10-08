@@ -74,7 +74,7 @@ public class FacturaService {
 		entity.setRfcEmisor(factura.getRfcEmisor());
 		entity.setStatusFactura(mapper.getEntityFromStatusFacturaDto(factura.getStatusFactura()));
 		entity.setStatusDetail(factura.getStatusDetail());
-		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(factura)));
+		return mapper.getFacturaDtoFromEntity(repository.save(entity));
 	}
 
 	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
@@ -87,6 +87,28 @@ public class FacturaService {
 		}
 	}
 
+	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
+		return mapper
+				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
+	}
+
+	public void deleteFacturaFile(String folio) {
+		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", folio)));
+		facturaFileRepository.delete(entity);
+	}
+
+	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
+		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", folio)));
+		entity.setPdf(factura.getPdf());
+		entity.setXml(factura.getXml());
+		entity.setQr(factura.getQr());
+		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
+	}
+
 	public List<PagoDto> getPagos(String folio) throws InvoiceManagerException {
 		List<Pago> archivos = pagoRepository.findByFolio(folio);
 		if (archivos.isEmpty()) {
@@ -94,6 +116,25 @@ public class FacturaService {
 		} else {
 			return mapper.getPagosDtoFromEntity(archivos);
 		}
+	}
+
+	public PagoDto insertNewPago(PagoDto pago) {
+		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+	}
+
+	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
+		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El pago con el id %d no existe", id)));
+		entity.setDocumento(pago.getDocumento());
+		entity.setTipoDocumento(pago.getTipoDocumento());
+		entity.setTipoPago(pago.getTipoPago());
+		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
+	}
+	
+	public void deletePago(Integer id) {
+		Pago pago=pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El pago con el id %d no existe", id)));
+		pagoRepository.delete(pago);
 	}
 
 }

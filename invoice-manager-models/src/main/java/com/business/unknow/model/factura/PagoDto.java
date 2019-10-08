@@ -10,6 +10,7 @@ public class PagoDto {
 	private String documento;
 	private Double candtidad;
 	private String tipoPago;
+	private Date fechaPago;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -77,11 +78,19 @@ public class PagoDto {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public Date getFechaPago() {
+		return fechaPago;
+	}
+
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
+	}
+
 	@Override
 	public String toString() {
 		return "PagoDto [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento="
-				+ documento + ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ documento + ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

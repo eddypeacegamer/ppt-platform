@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,9 +71,50 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getFacturaFile(folio), HttpStatus.OK);
 	}
 
+	@PostMapping("/{folio}/files")
+	@ApiOperation(value = "insert a new Factura FILE into the system")
+	public ResponseEntity<FacturaFileDto> insertFacturaFile(@RequestBody @Valid FacturaFileDto facturaFile) {
+		return new ResponseEntity<>(service.insertNewFacturaFile(facturaFile), HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{folio}/files/{id}")
+	@ApiOperation(value = "insert a new Factura FILE into the system")
+	public ResponseEntity<Void> deleteFacturaFile(@PathVariable String folio) {
+		service.deleteFacturaFile(folio);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@PutMapping("/{folio}/files")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaFileDto> updateFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaFileDto facturaFile) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.updateFacturaFile(facturaFile, folio), HttpStatus.OK);
+	}
+
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
+	}
+
+	@PostMapping("/{folio}/pagos")
+	@ApiOperation(value = "insert a new Pago into the system")
+	public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago) {
+		return new ResponseEntity<>(service.insertNewPago(pago), HttpStatus.CREATED);
+	}
+
+	@PutMapping("/{folio}/pagos/{id}")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
+			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.updatePago(pagoDto, id), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{folio}/pagos/{id}")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
+			throws InvoiceManagerException {
+		service.deletePago(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }
