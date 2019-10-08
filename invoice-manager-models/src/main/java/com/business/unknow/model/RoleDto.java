@@ -4,6 +4,7 @@ public class RoleDto {
 
 	private Integer id;
 	private String role;
+	private String description;
 
 	public Integer getId() {
 		return id;
@@ -21,9 +22,17 @@ public class RoleDto {
 		this.role = role;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@Override
 	public String toString() {
-		return "RoleDto [id=" + id + ", role=" + role + "]";
+		return "RoleDto [id=" + id + ", role=" + role + ", description=" + description + "]";
 	}
 
 }

@@ -15,13 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.model.RoleDto;
 import com.business.unknow.model.UserDto;
 import com.business.unknow.model.menu.MenuItem;
 import com.business.unknow.model.security.UserDetails;
-import com.business.unknow.services.entities.Role;
 import com.business.unknow.services.entities.User;
-import com.business.unknow.services.mapper.RoleMapper;
 import com.business.unknow.services.mapper.UserMapper;
 import com.business.unknow.services.repositories.RoleRepository;
 import com.business.unknow.services.repositories.UserRepository;
@@ -42,9 +39,6 @@ public class UserService {
 
 	@Autowired
 	private UserMapper mapper;
-	
-	@Autowired
-	private RoleMapper roleMapper;
 
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -117,17 +111,4 @@ public class UserService {
 		}
 	}
 	
-	public List<RoleDto> getRolesByUserId(Integer id) {
-		User entity = repository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
-		return roleMapper.getRoleDtosFromEntities(rolRepository.findByUserId(entity.getId()));
-	}
-	
-	public void deleteRoleByUserIdAndId(Integer userId,Integer id) {
-		User entity = repository.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", userId)));
-		Role rol=rolRepository.findByUserIdAndId(entity.getId(), id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("role no existe %d", id)));;
-		rolRepository.delete(rol);
-	}
 }

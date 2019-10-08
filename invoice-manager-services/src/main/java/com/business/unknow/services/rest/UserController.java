@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.RoleDto;
 import com.business.unknow.model.UserDto;
+import com.business.unknow.services.services.RoleService;
 import com.business.unknow.services.services.UserService;
 
 import io.swagger.annotations.Api;
@@ -35,6 +36,9 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
+
+	@Autowired
+	private RoleService rolService;
 
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Get by id.")
@@ -62,13 +66,18 @@ public class UserController {
 	@GetMapping("/{id}/roles")
 	@ApiOperation(value = "Get roles by user id.")
 	public ResponseEntity<List<RoleDto>> getRolesByUserId(@PathVariable Integer id) {
-		return new ResponseEntity<>(service.getRolesByUserId(id), HttpStatus.OK);
+		return new ResponseEntity<>(rolService.getRolesByUserId(id), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{userId}/roles/{id}")
 	public ResponseEntity<Void> deleteUserRoles(@PathVariable Integer id, @PathVariable Integer userId) {
-		service.deleteRoleByUserIdAndId(userId,id);
+		rolService.deleteRoleByUserIdAndId(userId, id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@PostMapping("/{userId}/roles")
+	public ResponseEntity<RoleDto> insertRoleToUser(@PathVariable Integer userId, @RequestBody @Valid  RoleDto roleDto) {
+		return new ResponseEntity<RoleDto>(rolService.insertNewRole(userId, roleDto), HttpStatus.OK);
 	}
 
 }

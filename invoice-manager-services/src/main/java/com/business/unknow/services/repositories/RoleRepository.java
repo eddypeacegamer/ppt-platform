@@ -22,4 +22,7 @@ public interface RoleRepository extends CrudRepository<Role, Integer> {
 	
 	@Query("select c from Role c where c.user.id = :userId and c.id =:id")
 	public Optional<Role> findByUserIdAndId( @Param("userId")Integer userId,@Param("id")Integer id);
+	
+	@Query("select c from Role c where c.user.id = :userId and c.role =:role")
+	public Optional<Role> findByUserIdAndRole( @Param("userId")Integer userId,@Param("role")String role);
 }
