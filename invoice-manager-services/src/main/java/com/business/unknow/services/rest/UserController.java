@@ -1,6 +1,7 @@
 package com.business.unknow.services.rest;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.unknow.model.RoleDto;
 import com.business.unknow.model.UserDto;
 import com.business.unknow.services.services.UserService;
 
@@ -39,23 +41,34 @@ public class UserController {
 	public ResponseEntity<UserDto> getRolesByName(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
 		return new ResponseEntity<>(service.createUser(userDto), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-		service.deleteUSer(id);
+		service.deleteUser(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/myInfo")
 	@ApiOperation(value = "Get current user info")
 	public ResponseEntity<UserDto> geMyUserInfo(Authentication authentication) throws IOException {
 		return new ResponseEntity<>(service.getUserInfo(authentication), HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}/roles")
+	@ApiOperation(value = "Get roles by user id.")
+	public ResponseEntity<List<RoleDto>> getRolesByUserId(@PathVariable Integer id) {
+		return new ResponseEntity<>(service.getRolesByUserId(id), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{userId}/roles/{id}")
+	public ResponseEntity<Void> deleteUserRoles(@PathVariable Integer id, @PathVariable Integer userId) {
+		service.deleteRoleByUserIdAndId(userId,id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

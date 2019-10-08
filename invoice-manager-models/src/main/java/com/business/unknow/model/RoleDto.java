@@ -3,7 +3,7 @@ package com.business.unknow.model;
 public class RoleDto {
 
 	private Integer id;
-	private String name;
+	private String role;
 
 	public Integer getId() {
 		return id;
@@ -13,17 +13,17 @@ public class RoleDto {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getRole() {
+		return role;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	@Override
 	public String toString() {
-		return "RoleDto [id=" + id + ", name=" + name + "]";
+		return "RoleDto [id=" + id + ", role=" + role + "]";
 	}
 
 }
