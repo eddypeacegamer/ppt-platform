@@ -3,6 +3,9 @@ package com.business.unknow.services.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +23,19 @@ public class ContribuyenteService {
 
 	@Autowired
 	private ContribuyenteMapper mapper;
+	
+	public Page<ContribuyenteDto> getContribuyentesByParametros(Optional<String> rfc, Optional<String> razonSocial, int page, int size) {
+		Page<Contribuyente> result;
+		if (!razonSocial.isPresent() && !rfc.isPresent()) {
+			result = repository.findAll(PageRequest.of(page, size));
+		} else if (rfc.isPresent()) {
+			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()), PageRequest.of(page, size));
+		} else {
+			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()), PageRequest.of(page, size));
+		}
+		return new PageImpl<>(mapper.getContribuyenteDtosFromEntities(result.getContent()), result.getPageable(),
+				result.getTotalElements());
+	}
 
 	public ContribuyenteDto getContribuyenteByRfc(String rfc) {
 		Optional<Contribuyente> client = repository.findByRfc(rfc);

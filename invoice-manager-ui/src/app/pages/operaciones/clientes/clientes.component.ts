@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
+import { Client } from '../../../models/client';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
 
 @Component({
@@ -18,7 +19,7 @@ export class ClientesComponent implements OnInit {
 
   public filterParams : any = {razonSocial:'',rfc:''};
    
-  constructor(private clientsService: ClientsData,
+  constructor(private clientService: ClientsData,
     private donwloadService: DownloadCsvService) { }
 
   ngOnInit() {
@@ -28,7 +29,7 @@ export class ClientesComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.clientsService.getClients(pageValue, sizeValue, filterParams)
+    this.clientService.getClients(pageValue, sizeValue, filterParams)
       .subscribe(result => this.page = result);
   }
 
@@ -38,8 +39,8 @@ export class ClientesComponent implements OnInit {
 
 
   public downloadHandler() {
-    this.clientsService.getClients(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content,'Clientes')
+    this.clientService.getClients(0, 10000, this.filterParams).subscribe((result:GenericPage<Client>) => {
+      this.donwloadService.exportCsv(result.content.map(r=>r.informacionFiscal),'Clientes')
     });
   }
 

@@ -1,5 +1,5 @@
 export class GenericPage<T> {
-    public content: [T];
+    public content: T[];
     public totalElements:number;
     public last: boolean;
     public totalPages:number;
