@@ -15,6 +15,7 @@ export class ClientesComponent implements OnInit {
 
   public clientInfo : Client;
   public formInfo : any = {rfc:'',message:'',coloniaId:0, success:''};
+  public coloniaId: number=0;
   public colonias = [];
   public paises = ['México'];
   public porcentajes = {promotor:25,cliente:25,despacho:25,contacto:25};
@@ -31,7 +32,6 @@ export class ClientesComponent implements OnInit {
     this.clientService.getClientByRFC(this.formInfo.rfc)
       .subscribe((data:Client) => this.clientInfo = data,
       (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
-
   }
 
   public onRegitrarCall(){
