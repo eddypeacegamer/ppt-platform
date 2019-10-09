@@ -23,6 +23,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
 import com.business.unknow.model.factura.PagoDto;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.services.services.FacturaService;
 
 import io.swagger.annotations.Api;
@@ -64,6 +65,11 @@ public class FacturaController {
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{folio}/cfdi")
+	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}/files")

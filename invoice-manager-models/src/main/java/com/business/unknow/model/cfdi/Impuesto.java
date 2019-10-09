@@ -6,10 +6,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
-public class ImpuestoDto {
+public class Impuesto {
 
 	private Double totalImpuestosTrasladados;
-	private List<TransladoDto> translados;
+	private List<Translado> translados;
 
 	@XmlAttribute(name = "TotalImpuestosTrasladados")
 	public Double getTotalImpuestosTrasladados() {
@@ -22,11 +22,11 @@ public class ImpuestoDto {
 
 	@XmlElementWrapper(name = "cfdi:Traslados")
 	@XmlElement(name = "cfdi:Traslado")
-	public List<TransladoDto> getTranslados() {
+	public List<Translado> getTranslados() {
 		return translados;
 	}
 
-	public void setTranslados(List<TransladoDto> translados) {
+	public void setTranslados(List<Translado> translados) {
 		this.translados = translados;
 	}
 

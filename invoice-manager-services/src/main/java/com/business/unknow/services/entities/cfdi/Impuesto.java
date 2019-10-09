@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,9 +21,6 @@ public class Impuesto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_IMPUESTO")
 	private Integer id;
-
-	@Column(name = "ID_CONCEPTO")
-	private Integer idConcepto;
 
 	@Column(name = "BASE")
 	private String base;
@@ -37,6 +36,18 @@ public class Impuesto implements Serializable {
 
 	@Column(name = "IMPORTE")
 	private Double importe;
+
+	@ManyToOne
+	@JoinColumn(name = "ID_CONCEPTO", nullable = false)
+	private Concepto concepto;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getBase() {
 		return base;
@@ -78,26 +89,18 @@ public class Impuesto implements Serializable {
 		this.importe = importe;
 	}
 
-	public Integer getIdConcepto() {
-		return idConcepto;
+	public Concepto getConcepto() {
+		return concepto;
 	}
 
-	public void setIdConcepto(Integer idConcepto) {
-		this.idConcepto = idConcepto;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Integer getId() {
-		return id;
+	public void setConcepto(Concepto concepto) {
+		this.concepto = concepto;
 	}
 
 	@Override
 	public String toString() {
-		return "Impuesto [id=" + id + ", idConcepto=" + idConcepto + ", base=" + base + ", impuesto=" + impuesto
-				+ ", tipoFactor=" + tipoFactor + ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
+		return "Impuesto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
+				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + ", concepto=" + concepto + "]";
 	}
 
 }

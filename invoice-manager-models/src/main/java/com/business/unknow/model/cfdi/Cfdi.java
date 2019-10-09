@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "version", "serie", "folio", "sello", "noCertificado", "certificado", "subtotal", "descuento",
 		"moneda", "total", "tipoDeComprobante", "metodoPago", "lugarExpedicion", "emisor", "receptor", "conceptos",
 		"impuestos", "schemaUrl", "satUrl","schemaLocation" })
-public class CfdiDto {
+public class Cfdi {
 
 	private String schemaUrl = "http://www.w3.org/2001/XMLSchema-instance";
 	private String satUrl = "http://www.sat.gob.mx/cfd/3";
@@ -39,10 +39,10 @@ public class CfdiDto {
 	private String tipoDeComprobante;
 	private String metodoPago;
 	private String lugarExpedicion;
-	private EmisorDto emisor;
-	private ReceptorDto receptor;
-	private List<ConceptoDto> conceptos;
-	private ImpuestoDto impuestos;
+	private Emisor emisor;
+	private Receptor receptor;
+	private List<Concepto> conceptos;
+	private Impuesto impuestos;
 
 	@XmlAttribute(name = "xmlns:xsi")
 	public String getSchemaUrl() {
@@ -208,45 +208,45 @@ public class CfdiDto {
 	}
 
 	@XmlElement(name = "cfdi:Emisor")
-	public EmisorDto getEmisor() {
+	public Emisor getEmisor() {
 		return emisor;
 	}
 
-	public void setEmisor(EmisorDto emisor) {
+	public void setEmisor(Emisor emisor) {
 		this.emisor = emisor;
 	}
 
 	@XmlElement(name = "cfdi:Receptor")
-	public ReceptorDto getReceptor() {
+	public Receptor getReceptor() {
 		return receptor;
 	}
 
-	public void setReceptor(ReceptorDto receptor) {
+	public void setReceptor(Receptor receptor) {
 		this.receptor = receptor;
 	}
 
 	@XmlElementWrapper(name = "cfdi:Conceptos")
 	@XmlElement(name = "cfdi:Concepto")
-	public List<ConceptoDto> getConceptos() {
+	public List<Concepto> getConceptos() {
 		return conceptos;
 	}
 
-	public void setConceptos(List<ConceptoDto> conceptos) {
+	public void setConceptos(List<Concepto> conceptos) {
 		this.conceptos = conceptos;
 	}
 
 	@XmlElement(name = "cfdi:Impuestos")
-	public ImpuestoDto getImpuestos() {
+	public Impuesto getImpuestos() {
 		return impuestos;
 	}
 
-	public void setImpuestos(ImpuestoDto impuestos) {
+	public void setImpuestos(Impuesto impuestos) {
 		this.impuestos = impuestos;
 	}
 
 	public static void main(String[] args) {
 
-		CfdiDto fact = new CfdiDto();
+		Cfdi fact = new Cfdi();
 		fact.setVersion("3.3");
 		fact.setSello(
 				"QM8VOArjf/u8vAqkpdPonY+1kJT8n9w7gXhdiqd+Ah6c+TjQsdCKnR8En7uQebxP5PzOhZVgE0YoIkkHYYu4tuMNNP4+YZyDydJH6Lk+Tvp9xSUMUdXiCOgz36kx4Tx7HGIKhXDDVDY6LWnrOlnMe/K3VieZsK2QZJIR4eFdpJ3UWJBNsvgBdmHT4/TCcBsapDmT527i/8/3als5JSPfVcPAjzo5GqoPupduzVmQOhCYbelWk5IlMxtXkmRFPZPCT6jGrlfMv6NQoMDW0qOlB+Yv3I3BYiWAVBRrSG+GyZcPa2vsj65N5dUFrw+G4zbyAplFrp7taSEIbBcFbC6Tnw==");
@@ -265,27 +265,27 @@ public class CfdiDto {
 		fact.setLugarExpedicion("68050");
 		fact.setFecha("2019-09-24T14:47:08");
 
-		EmisorDto emisor = new EmisorDto();
+		Emisor emisor = new Emisor();
 		emisor.setNombre("emisor");
 		emisor.setRfc("LAN7008173R5");
 		emisor.setRegimenFiscal("601");
 
-		ReceptorDto receptor = new ReceptorDto();
+		Receptor receptor = new Receptor();
 		receptor.setNombre("receptor");
 		receptor.setRfc("SAF080804RH7");
 		receptor.setUsoCfdi("G01");
 
-		ImpuestoDto impuesto = new ImpuestoDto();
+		Impuesto impuesto = new Impuesto();
 		impuesto.setTotalImpuestosTrasladados(268.0);
 
-		TransladoDto traslado = new TransladoDto();
+		Translado traslado = new Translado();
 		traslado.setImporte(268.0);
 		traslado.setImpuesto("002");
 		traslado.setTasaOCuota("0.160000");
 		traslado.setTipoFactor("Tasa");
 		impuesto.setTranslados(Arrays.asList(traslado));
 
-		ConceptoDto concepto1 = new ConceptoDto();
+		Concepto concepto1 = new Concepto();
 		concepto1.setClaveProdServ("01010101");
 		concepto1.setNoIdentificacion("AULOG001");
 		concepto1.setCantidad(5);
@@ -296,8 +296,8 @@ public class CfdiDto {
 		concepto1.setImporte(1750.00);
 		concepto1.setDescuento(175.00);
 
-		ImpuestoDto impuestoConcepto1 = new ImpuestoDto();
-		TransladoDto traslado1 = new TransladoDto();
+		Impuesto impuestoConcepto1 = new Impuesto();
+		Translado traslado1 = new Translado();
 		traslado1.setImporte(252.00);
 		traslado1.setImpuesto("002");
 		traslado1.setTasaOCuota("0.160000");
@@ -307,7 +307,7 @@ public class CfdiDto {
 
 		concepto1.setImpuestos(impuestoConcepto1);
 
-		ConceptoDto concepto2 = new ConceptoDto();
+		Concepto concepto2 = new Concepto();
 		concepto2.setClaveProdServ("43201800");
 		concepto2.setNoIdentificacion("USB");
 		concepto2.setCantidad(1);
@@ -317,8 +317,8 @@ public class CfdiDto {
 		concepto2.setValorUnitario(100.0);
 		concepto2.setImporte(100.00);
 
-		ImpuestoDto impuestoConcepto2 = new ImpuestoDto();
-		TransladoDto traslado2 = new TransladoDto();
+		Impuesto impuestoConcepto2 = new Impuesto();
+		Translado traslado2 = new Translado();
 		traslado2.setImporte(16.00);
 		traslado2.setImpuesto("002");
 		traslado2.setTasaOCuota("0.160000");
@@ -335,7 +335,7 @@ public class CfdiDto {
 		try {
 
 			File file = new File("/Users/eej000f/Documents/personal-projects/1.xml");
-			JAXBContext jaxbContext = JAXBContext.newInstance(CfdiDto.class);
+			JAXBContext jaxbContext = JAXBContext.newInstance(Cfdi.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 			// output pretty printed

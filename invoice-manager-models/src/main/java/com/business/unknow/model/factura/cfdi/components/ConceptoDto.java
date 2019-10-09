@@ -1,11 +1,10 @@
-package com.business.unknow.model.factura.OLD;
+package com.business.unknow.model.factura.cfdi.components;
 
 import java.util.List;
 
 public class ConceptoDto {
 
 	private Integer id;
-	private String folio;
 	private String claveProdServ;
 	private String noIdentificacion;
 	private Integer cantidad;
@@ -24,14 +23,6 @@ public class ConceptoDto {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getFolio() {
-		return folio;
-	}
-
-	public void setFolio(String folio) {
-		this.folio = folio;
 	}
 
 	public String getClaveProdServ() {
@@ -124,10 +115,10 @@ public class ConceptoDto {
 
 	@Override
 	public String toString() {
-		return "ConceptoDto [id=" + id + ", folio=" + folio + ", claveProdServ=" + claveProdServ + ", noIdentificacion="
-				+ noIdentificacion + ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad
-				+ ", descripcion=" + descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe
-				+ ", descuento=" + descuento + ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";
+		return "ConceptoDto [id=" + id + ", claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion
+				+ ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", descripcion="
+				+ descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe + ", descuento=" + descuento
+				+ ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";
 	}
 
 }

@@ -1,110 +1,41 @@
-package com.business.unknow.services.entities.cfdi;
+package com.business.unknow.model.factura.cfdi.components;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class CfdiDto {
 
-@Entity
-@Table(name = "CDFI")
-public class Cdfi implements Serializable {
-
-	private static final long serialVersionUID = 6362879952092338829L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CDFI")
 	private Integer id;
-
-	@Column(name = "VERSION")
 	private String version;
-
-	@Column(name = "SERIE")
 	private String serie;
-
-	@Column(name = "FOLIO")
 	private String folio;
-
-	@Column(name = "FECHA_SOLICITUD")
 	private Date fecha;
-
-	@Column(name = "SELLO")
 	private String sello;
-
-	@Column(name = "FORMA_PAGO")
 	private String formaPago;
-
-	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
-
-	@Column(name = "CERTIFICADO")
 	private String certificado;
-
-	@Column(name = "SUBTOTAL")
 	private Double subtotal;
-
-	@Column(name = "DESCUENTO")
 	private Double descuento;
-
-	@Column(name = "MONEDA")
 	private String moneda;
-
-	@Column(name = "TOTAL")
 	private Double total;
-
-	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
-
-	@Column(name = "METODO_PAGO")
 	private String metodoPago;
-
-	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
-
-	@Column(name = "NOMBRE_EMISOR")
 	private String nombreEmisor;
-
-	@Column(name = "RFC_EMISOR")
 	private String rfcEmisor;
-
-	@Column(name = "NOMBRE_RECEPTOR")
 	private String nombreReceptor;
-
-	@Column(name = "RFC_RECEPTOR")
 	private String rfcReceptor;
-
-	@Column(name = "USO_CFDI")
 	private String usoCfdi;
-
-	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
-	
-	@Column(name = "RFC_PROV_CERTIF")
 	private String rfcProvCertif;
-	
-	@Column(name = "UUID")
 	private String uuid;
-	
-	@Column(name = "SELLO_CFD")
 	private String selloCfd;
-	
-	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
-	
-	@Column(name = "NO_CERTIFICADO_SAT")
 	private String noCertificadoSat;
-	
-	@Column(name = "SELLO_SAT")
 	private String selloSat;
-	
-	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
+	private List<ConceptoDto> conceptos;
+
 	public Integer getId() {
 		return id;
 	}
@@ -281,20 +212,82 @@ public class Cdfi implements Serializable {
 		this.regimenFiscal = regimenFiscal;
 	}
 
+	public String getRfcProvCertif() {
+		return rfcProvCertif;
+	}
+
+	public void setRfcProvCertif(String rfcProvCertif) {
+		this.rfcProvCertif = rfcProvCertif;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getSelloCfd() {
+		return selloCfd;
+	}
+
+	public void setSelloCfd(String selloCfd) {
+		this.selloCfd = selloCfd;
+	}
+
+	public Date getFechaTimbrado() {
+		return fechaTimbrado;
+	}
+
+	public void setFechaTimbrado(Date fechaTimbrado) {
+		this.fechaTimbrado = fechaTimbrado;
+	}
+
+	public String getNoCertificadoSat() {
+		return noCertificadoSat;
+	}
+
+	public void setNoCertificadoSat(String noCertificadoSat) {
+		this.noCertificadoSat = noCertificadoSat;
+	}
+
+	public String getSelloSat() {
+		return selloSat;
+	}
+
+	public void setSelloSat(String selloSat) {
+		this.selloSat = selloSat;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public List<ConceptoDto> getConceptos() {
+		return conceptos;
+	}
+
+	public void setConceptos(List<ConceptoDto> conceptos) {
+		this.conceptos = conceptos;
+	}
+
 	@Override
 	public String toString() {
-		return "Cdfi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha
-				+ ", sello=" + sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado
+		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha="
+				+ fecha + ", sello=" + sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado
 				+ ", certificado=" + certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda="
 				+ moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago="
 				+ metodoPago + ", lugarExpedicion=" + lugarExpedicion + ", nombreEmisor=" + nombreEmisor
 				+ ", rfcEmisor=" + rfcEmisor + ", nombreReceptor=" + nombreReceptor + ", rfcReceptor=" + rfcReceptor
-				+ ", usoCfdi=" + usoCfdi + ", regimenFiscal=" + regimenFiscal + "]";
+				+ ", usoCfdi=" + usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif
+				+ ", uuid=" + uuid + ", selloCfd=" + selloCfd + ", fechaTimbrado=" + fechaTimbrado
+				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", fechaActualizacion="
+				+ fechaActualizacion + ", conceptos=" + conceptos + "]";
 	}
-
-//	private EmisorDto emisor;
-//	private ReceptorDto receptor;
-//	private List<ConceptoDto> conceptos;
-//	private ImpuestoDto impuestos;
 
 }

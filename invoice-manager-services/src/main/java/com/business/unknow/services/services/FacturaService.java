@@ -16,10 +16,14 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
 import com.business.unknow.model.factura.PagoDto;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
+import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.factura.FacturaFile;
 import com.business.unknow.services.entities.factura.Pago;
+import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.repositories.CfdiRepository;
 import com.business.unknow.services.repositories.FacturaFileRepository;
 import com.business.unknow.services.repositories.FacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
@@ -35,9 +39,15 @@ public class FacturaService {
 
 	@Autowired
 	private PagoRepository pagoRepository;
+	
+	@Autowired
+	private CfdiRepository cfdiRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
+	
+	@Autowired
+	private CfdiMapper cfdiMapper;
 
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
 			Optional<String> folio, Optional<String> statusValidacion, Optional<String> statusPago, int page,
@@ -58,6 +68,12 @@ public class FacturaService {
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public CfdiDto getFacturaCdfi(String folio) {
+		Cfdi entity=cfdiRepository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El cfdi con el folio %s no existe", folio)));
+		return cfdiMapper.getCfdiDtoFromEntity(entity);
 	}
 
 	public FacturaDto insertNewFactura(FacturaDto factura) {

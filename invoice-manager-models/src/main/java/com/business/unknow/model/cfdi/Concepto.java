@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = { "claveProdServ", "noIdentificacion", "cantidad", "claveUnidad", "unidad", "descripcion",
 		"valorUnitario", "importe","descuento","impuestos" })
-public class ConceptoDto {
+public class Concepto {
 
 	private String claveProdServ;
 	private String noIdentificacion;
@@ -17,7 +17,7 @@ public class ConceptoDto {
 	private Double valorUnitario;
 	private Double importe;
 	private Double descuento;
-	private ImpuestoDto impuestos;
+	private Impuesto impuestos;
 
 	@XmlAttribute(name = "ClaveProdServ")
 	public String getClaveProdServ() {
@@ -92,11 +92,11 @@ public class ConceptoDto {
 	}
 
 	@XmlElement(name = "cfdi:Impuestos")
-	public ImpuestoDto getImpuestos() {
+	public Impuesto getImpuestos() {
 		return impuestos;
 	}
 
-	public void setImpuestos(ImpuestoDto impuestos) {
+	public void setImpuestos(Impuesto impuestos) {
 		this.impuestos = impuestos;
 	}
 

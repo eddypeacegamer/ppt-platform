@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.catalogs.GiroDto;
@@ -66,18 +67,18 @@ public class CatalogsController {
 	}
 	
 	@GetMapping("/status-evento")
-	public ResponseEntity<List<GiroDto>> getStatusEventos() {
-		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	public ResponseEntity<List<StatusCatalogoDto>> getStatusEventos() {
+		return new ResponseEntity<>(service.getAllStatusEvento(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/status-pago")
-	public ResponseEntity<List<GiroDto>> getStatusPago() {
-		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	public ResponseEntity<List<StatusCatalogoDto>> getStatusPago() {
+		return new ResponseEntity<>(service.getAllStatusPago(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/status-devolucion")
-	public ResponseEntity<List<GiroDto>> getStatusDevolucion() {
-		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+	public ResponseEntity<List<StatusCatalogoDto>> getAllStatusDevoluicion() {
+		return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
 	}
 
 }

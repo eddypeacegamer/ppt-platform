@@ -1,6 +1,6 @@
-package com.business.unknow.model.factura.OLD;
+package com.business.unknow.model.factura.cfdi.components;
 
-public class ImpuestoDto {
+public class RetencionDto {
 
 	private Integer id;
 	private String base;
@@ -59,7 +59,7 @@ public class ImpuestoDto {
 
 	@Override
 	public String toString() {
-		return "ImpuestoDto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
+		return "RetencionDto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
 				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
 	}
 

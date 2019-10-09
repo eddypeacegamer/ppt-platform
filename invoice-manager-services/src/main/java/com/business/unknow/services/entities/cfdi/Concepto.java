@@ -3,13 +3,13 @@ package com.business.unknow.services.entities.cfdi;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,9 +23,6 @@ public class Concepto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_CONCEPTO")
 	private Integer id;
-
-	@Column(name = "FOLIO")
-	private String folio;
 
 	@Column(name = "CLAVE_PROD_SERV")
 	private String claveProdServ;
@@ -54,12 +51,14 @@ public class Concepto implements Serializable {
 	@Column(name = "DESCUENTO")
 	private Double descuento;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-	@JoinColumn(name = "ID_CONCEPTO",referencedColumnName = "ID_CONCEPTO")
+	@ManyToOne
+	@JoinColumn(name = "ID_USER", nullable = false)
+	private Cfdi cfdi;
+
+	@OneToMany(mappedBy = "concepto")
 	private List<Impuesto> impuestos;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-	@JoinColumn(name = "ID_CONCEPTO",referencedColumnName = "ID_CONCEPTO")
+	@OneToMany(mappedBy = "concepto")
 	private List<Retencion> retenciones;
 
 	public Integer getId() {
@@ -68,22 +67,6 @@ public class Concepto implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getFolio() {
-		return folio;
-	}
-
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
-
-	public String getClaveProdServ() {
-		return claveProdServ;
-	}
-
-	public void setClaveProdServ(String claveProdServ) {
-		this.claveProdServ = claveProdServ;
 	}
 
 	public String getNoIdentificacion() {
@@ -150,6 +133,22 @@ public class Concepto implements Serializable {
 		this.descuento = descuento;
 	}
 
+	public String getClaveProdServ() {
+		return claveProdServ;
+	}
+
+	public void setClaveProdServ(String claveProdServ) {
+		this.claveProdServ = claveProdServ;
+	}
+
+	public Cfdi getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(Cfdi cfdi) {
+		this.cfdi = cfdi;
+	}
+
 	public List<Impuesto> getImpuestos() {
 		return impuestos;
 	}
@@ -168,10 +167,10 @@ public class Concepto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Concepto [id=" + id + ", folio=" + folio + ", claveProdServ=" + claveProdServ + ", noIdentificacion="
-				+ noIdentificacion + ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad
-				+ ", descripcion=" + descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe
-				+ ", descuento=" + descuento + ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";
+		return "Concepto [id=" + id + ", claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion
+				+ ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", descripcion="
+				+ descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe + ", descuento=" + descuento
+				+ ", cfdi=" + cfdi + ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";
 	}
 
 }
