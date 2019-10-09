@@ -47,9 +47,8 @@ export class ClientesComponent implements OnInit {
   }
 
   public insertClient(){
-    this.clientService.insertNewClient(this.clientInfo).subscribe(success=> this.formInfo.success = 'Cliente guardado exitosamente',
-    (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
-    this.clientInfo = undefined;
+    this.clientService.insertNewClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente guardado exitosamente';this.clientInfo = undefined;},
+    (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status}); 
   }
 
   public zipCodeInfo(zipcode:String){

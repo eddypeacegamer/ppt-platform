@@ -23,4 +23,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
 	@Query("select c from Client c where lower(c.informacionFiscal.rfc) = lower(:rfc)")
 	public Optional<Client> findByRfc( @Param("rfc") String rfc);
+	
+	@Query("select c from Client c where lower(c.informacionFiscal.razonSocial) = lower(:razonSocial)")
+	public Optional<Client> findByRazonSocial( @Param("razonSocial") String razonSocial);
 }

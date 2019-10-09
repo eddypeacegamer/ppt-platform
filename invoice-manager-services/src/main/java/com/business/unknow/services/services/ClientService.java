@@ -24,35 +24,45 @@ public class ClientService {
 	private ClientRepository repository;
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
-	
 
 	@Autowired
 	private ClientMapper mapper;
 
-	public Page<ClientDto> getClientsByParametros(Optional<String> rfc, Optional<String> razonSocial, int page, int size) {
+	public Page<ClientDto> getClientsByParametros(Optional<String> rfc, Optional<String> razonSocial, int page,
+			int size) {
 		Page<Client> result;
 		if (!razonSocial.isPresent() && !rfc.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else if (rfc.isPresent()) {
-			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()), PageRequest.of(page, size));
+			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()),
+					PageRequest.of(page, size));
 		} else {
-			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()), PageRequest.of(page, size));
+			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()),
+					PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
+
 	public ClientDto getClientByRFC(String rfc) {
-		Client client = repository.findByRfc(rfc).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe cliente con  rfc %s", rfc)));
+		Client client = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("No existe cliente con  rfc %s", rfc)));
 		return mapper.getClientDtoFromEntity(client);
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) {
-		cliente.setActivo(false);
-		cliente.setFechaActualizacion(new Date());
-		cliente.setFechaCreacion(new Date());
-		cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
-		return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
+		Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());
+		if (entity.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("La razon social  %s ya esta creada en el sistema",
+							cliente.getInformacionFiscal().getRazonSocial()));
+		} else {
+			cliente.setActivo(false);
+			cliente.setFechaActualizacion(new Date());
+			cliente.setFechaCreacion(new Date());
+			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
+			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
+		}
 	}
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) {
