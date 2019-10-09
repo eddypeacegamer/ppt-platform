@@ -17,4 +17,8 @@ export class UsersService {
   public getUserInfo():Observable<any>{
     return this.httpClient.get('../api/users/myInfo');
   }
+
+  public logout():Observable<any>{
+    return this.httpClient.get('../api/logout');
+  }
 }

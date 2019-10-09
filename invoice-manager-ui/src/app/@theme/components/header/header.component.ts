@@ -38,14 +38,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [{ title: 'Profile' }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private userService: UsersData,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private userService: UsersData,
+    private layoutService: LayoutService,
+    private breakpointService: NbMediaBreakpointsService) {
   }
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.userService.getUserInfo()
       //.pipe(takeUntil(this.destroy$))
-      .subscribe((user: any) => {this.user = user;console.log(user)});
+      .subscribe((user: any) => { this.user = user; console.log(user) });
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -91,4 +91,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.menuService.navigateHome();
     return false;
   }
+
+  logout() {
+    this.userService.logout().subscribe({
+      next(r) { console.log(r) },
+      error(e) { console.error(e) },
+      complete() { this.document.location.href = "https://mail.google.com/mail/u/0/?logout&hl=en"}
+    });
+  }
+
 }

@@ -13,4 +13,5 @@ export interface User {
 export abstract class UsersData {
   abstract getUsers(): Observable<User[]>;
   abstract getUserInfo(): Observable<User>;
+  abstract logout():Observable<any>;
 }
