@@ -8,10 +8,11 @@
             placeholder="RFC">
           <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.rfc.length > 13" (click)="buscarClientePorRFC()" nbButton
             status="primary">BUSCAR</button>
-          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
-            (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>
+          <!--button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
+            (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>-->
         </form>
         <p class="alert alert-warning" *ngIf="formInfo.message.length > 0" role="alert">{{formInfo.message}}</p>
+        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
       </nb-card-body>
     </nb-card>
   </div>
@@ -143,15 +144,14 @@
           </div>
         </div>
         {{procentajes | json}}
-        <p class="alert alert-warning" *ngIf="(porcentajes.promotor + porcentajes.cliente + porcentajes.despacho + porcentajes.contacto) != 100" role="alert">La suma de los porcentajes debe ser igual al 100%</p>
+        <p class="alert alert-warning" *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100" role="alert">La suma de los porcentajes debe ser igual al 100%</p>
 
         <div class="form-inline">
-          <button type="button" *ngIf="formInfo.message.length > 0" [disabled]="(porcentajes.promotor + porcentajes.cliente + porcentajes.despacho + porcentajes.contacto) != 100" (click)="insertClient()" nbButton
+          <button type="button" *ngIf="formInfo.message.length > 0" [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100" (click)="insertClient()" nbButton
             status="primary">GUARDAR</button>
           <button type="button" *ngIf="formInfo.message.length == 0" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
-        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
       </nb-card-body>
     </nb-card>
   </div>

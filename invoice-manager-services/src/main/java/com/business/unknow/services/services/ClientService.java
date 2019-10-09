@@ -51,6 +51,7 @@ public class ClientService {
 		cliente.setActivo(false);
 		cliente.setFechaActualizacion(new Date());
 		cliente.setFechaCreacion(new Date());
+		cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 		return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
 	}
 

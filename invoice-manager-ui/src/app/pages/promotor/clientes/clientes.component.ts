@@ -25,9 +25,9 @@ export class ClientesComponent implements OnInit {
   }
 
   public buscarClientePorRFC(){
-    this.clientInfo = undefined;
     this.formInfo.message = '';
     this.formInfo.success = '';
+    this.onRegitrarCall();
     this.clientService.getClientByRFC(this.formInfo.rfc)
       .subscribe((data:Client) => this.clientInfo = data,
       (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
@@ -49,6 +49,7 @@ export class ClientesComponent implements OnInit {
   public insertClient(){
     this.clientService.insertNewClient(this.clientInfo).subscribe(success=> this.formInfo.success = 'Cliente guardado exitosamente',
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
+    this.clientInfo = undefined;
   }
 
   public zipCodeInfo(zipcode:String){
