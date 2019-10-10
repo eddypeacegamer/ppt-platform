@@ -34,38 +34,38 @@ INSERT INTO ROLES(ID_ROLE,ROLE,ROLE_DESC,ID_USER) VALUES(20,'ADMINISTRADOR','Ace
 ---CONTRIBUYENTES
 ----------------
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(1,'paco','CUPU800825569','Arcos Dorados C.A 1.','Comercial','juan@email.com','calle','colonia','estado','coo','100','n/a','municipio','colombia','01030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(1,'paco','CUPU800825569','Arcos Dorados C.A 1.','Comercial','juan@email.com','calle','colonia','Mexico','coo','100','300','Atizapan','Mexico','53000','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(2,'mercedes','MERC800823456','Marta c.v 1.','Comercial','mercedes@email.com','calle1','colonia1','estado1','coo1','200','n/a','municipio1','mexico','41030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(2,'mercedes','MERC800823456','Marta c.v 1.','Comercial','mercedes@email.com','calle1','colonia1','Mexico','coo1','200','52','Naucalpan','Mexico','53550','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(3,'lulu','LULU807654321','Refresco lulu 1','Comercial','lulu@email.com','calle2','colonia2','estado2','coo2','400','n/a','municipio2','peru','01930','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(3,'lulu','LULU807654321','Refresco lulu 1','Comercial','lulu@email.com','calle2','colonia2','Mexico','coo2','4D','n/a','Neza','peru','01930','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(4,'pepe','PELO800811111','Pepes asociados 1.','Comercial','pepe@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(4,'pepe','PELO800811111','Pepes asociados 1.','Comercial','pepe@email.com','calle3','colonia3','Ciudad de Mexico','coo3','5A','n/a','Azcapotzalco','Mexico','07000','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(5,'Goku','GOKU800825569','Arcos Dorados C.A 2.','Comercial','juan@email.com','calle','colonia','estado','coo','100','n/a','municipio','colombia','01030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(5,'Goku','GOKU800825569','Arcos Dorados C.A 2.','Comercial','juan@email.com','calle','colonia','Ciudad de Mexico','coo','N/A','Sin numero','Tlalpan','Mexico','01500','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(6,'Patito SA de CV','PATO800823456','Marta c.v 2.','Comercial','mercedes@email.com','calle1','colonia1','estado1','coo1','200','n/a','municipio1','mexico','41030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(6,'Patito SA de CV','PATO800823456','Marta c.v 2.','Comercial','mercedes@email.com','calle1','Chihuahua','estado1','coo1','200','500','Ciudad Juarez','Mexico','41030','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(7,'Oxxito','OXXO807654321','Refresco lulu','Comercial 2','lulu@email.com','calle2','colonia2','estado2','coo2','400','n/a','municipio2','peru','01930','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(7,'Oxxito','OXXO807654321','Refresco lulu','Comercial 2','lulu@email.com','calle2','colonia2','Ciudad de Mexico','coo2','400','6320','Gustavo A Madero','Mexico','07200','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(8,'Mal Corp','MALO800822222','Pepes asociados.','Comercial 2','pepe@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(8,'Mal Corp','MALO800822222','Pepes asociados.','Comercial 2','pepe@email.com','calle3','colonia3','Mexico','coo3','500','5320','Tultitlan','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(9,'Cerveceria Duf','CDUF800825569','Arcos Dorados C.A 3.','Comercial','juan@email.com','calle','colonia','estado','coo','100','n/a','municipio','colombia','01030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(9,'Cerveceria Duf','CDUF800825569','Arcos Dorados C.A 3.','Comercial','juan@email.com','calle','Mexico','estado','coo','100','n/a','Toluca','Mexico','01030','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(10,'Kangreburger','KBUR800823456','Marta c.v.','Comercial 3','mercedes@email.com','calle1','colonia1','estado1','coo1','200','n/a','municipio1','mexico','41030','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(10,'Kangreburger','KBUR800823456','Marta c.v.','Comercial 3','mercedes@email.com','calle1','colonia1','Hidalgo','coo1','200','n/a','Tula','Mexico','41030','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(11,'Test client','TEST807654321','Refresco lulu','Comercial 3','lulu@email.com','calle2','colonia2','estado2','coo2','400','n/a','municipio2','peru','01930','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(11,'Test client','TEST807654321','Refresco lulu','Comercial 3','lulu@email.com','calle2','colonia2','Coahuila','coo2','400','n/a','Ramos Arizpe','Mexico','01930','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(12,'Penelope','PEPE800811111','Pepes asociados.','Comercial 3','pepe@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(12,'Penelope','PEPE800811111','Pepes asociados.','Comercial 3','pepe@email.com','calle3','colonia3','Puebla','coo3','500','n/a','Tepeaca','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(13,'EMPRESA PATITO 1','EMP1311299HH1','Patito 1 SA de CV','Comercial','patito5@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(13,'EMPRESA PATITO 1','EMP1311299HH1','Patito 1 SA de CV','Comercial','patito5@email.com','calle3','colonia3','Guadalajara','coo3','500','n/a','Tequila','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(14,'EMPRESA PATITO 2','EMP2311299HH4','Patito 2 SA de CV','Comercial','patito4@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(14,'EMPRESA PATITO 2','EMP2311299HH4','Patito 2 SA de CV','Comercial','patito4@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(15,'EMPRESA PATITO 3','EMP3311299HH3','Patito 3 SA de CV','Comercial','patito3@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(15,'EMPRESA PATITO 3','EMP3311299HH3','Patito 3 SA de CV','Comercial','patito3@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO CONTRIBUYENTES(ID_CONTRIBUYENTE,NOMBRE,RFC,RAZON_SOCIAL,GIRO,CORREO,CALLE,LOCALIDAD,ESTADO,COO,NO_INTERIOR,NO_EXTERIOR,MUNICIPIO,PAIS,CODIGO_POSTAL,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(16,'EMPRESA PATITO 5','EMP4311299HH2','Patito 4 SA de CV','Comercial','patito2@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','chile','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(16,'EMPRESA PATITO 5','EMP4311299HH2','Patito 4 SA de CV','Comercial','patito2@email.com','calle3','colonia3','estado3','coo3','500','n/a','municipio3','Mexico','08630','2019-01-07 00:00:00','2019-01-07 00:00:00');
 
 ----------------
 ---CLIENT
