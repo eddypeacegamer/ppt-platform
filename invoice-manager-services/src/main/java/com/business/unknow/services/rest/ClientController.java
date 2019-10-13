@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,23 +45,30 @@ public class ClientController {
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getClientsByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{rfc}")
 	@ApiOperation(value = "Recover single client by RFC")
-	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc){
-		return new ResponseEntity<>(service.getClientByRFC(rfc),HttpStatus.OK);
+	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc) {
+		return new ResponseEntity<>(service.getClientByRFC(rfc), HttpStatus.OK);
 	}
 
-	
 	@PostMapping
 	@ApiOperation(value = "insert a new client into the system")
-	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client){
-		return new ResponseEntity<>(service.insertNewClient(client),HttpStatus.CREATED);
+	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client,
+			@RequestParam(name = "validation", defaultValue = "false") boolean validation) {
+		return new ResponseEntity<>(service.insertNewClient(client, validation), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{rfc}")
 	@ApiOperation(value = "insert a new client into the system")
-	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client){
-		return new ResponseEntity<>(service.updateClientInfo(client, rfc),HttpStatus.OK);
+	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client) {
+		return new ResponseEntity<>(service.updateClientInfo(client, rfc), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{rfc}")
+	@ApiOperation(value = "insert a new client into the system")
+	public ResponseEntity<Void> deleteClient(@PathVariable String rfc) {
+		service.deleteClientInfo(rfc);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }

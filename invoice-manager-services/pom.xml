@@ -31,7 +31,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.business.unknow</groupId>
-			<artifactId>invoice-manager-models</artifactId>
+			<artifactId>invoice-manager-commons</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

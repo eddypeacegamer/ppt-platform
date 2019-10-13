@@ -21,6 +21,7 @@ public class FacturaDto {
 	private String metodoPago;
 	private String notas;
 	private Double total;
+	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 
@@ -160,6 +161,14 @@ public class FacturaDto {
 		this.razonSocialRemitente = razonSocialRemitente;
 	}
 
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -167,7 +176,8 @@ public class FacturaDto {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
 				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
 				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
+				+ fechaTimbrado + "]";
 	}
 
 }

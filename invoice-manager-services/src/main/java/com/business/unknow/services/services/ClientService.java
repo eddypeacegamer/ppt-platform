@@ -58,30 +58,29 @@ public class ClientService {
 		return mapper.getClientDtoFromEntity(client);
 	}
 
-	public ClientDto insertNewClient(ClientDto cliente) {
+	public ClientDto insertNewClient(ClientDto cliente, boolean validation) {
 		try {
 			Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());
 			if (entity.isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("La razon social  %s ya esta creada en el sistema",
 								cliente.getInformacionFiscal().getRazonSocial()));
-			} else {
+			} else if (validation) {
 				SwSapiensConfig config = swSapiensClient.getSwSapiensClient()
 						.validateRfc(cliente.getInformacionFiscal().getRfc());
-				if (config.getStatus().equals(Constants.SUCCESS)) {
-
-					cliente.setActivo(false);
-					cliente.setFechaActualizacion(new Date());
-					cliente.setFechaCreacion(new Date());
-					cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
-					return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
-				} else {
+				if (!config.getStatus().equals(Constants.SUCCESS)) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
 							.format("El rfc %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 				}
 			}
+			cliente.setActivo(false);
+			cliente.setFechaActualizacion(new Date());
+			cliente.setFechaCreacion(new Date());
+			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
+			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
 		} catch (SwSapiensClientException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getErrorMessage().getMessage());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					String.format("El rfc %s no esta dado de alta en el SAt", cliente.getInformacionFiscal().getRfc()));
 		}
 	}
 
@@ -91,6 +90,12 @@ public class ClientService {
 		dbClient.setActivo(client.getActivo());
 		dbClient.setInformacionFiscal(contribuyenteMapper.getEntityFromContribuyenteDto(client.getInformacionFiscal()));
 		return mapper.getClientDtoFromEntity(repository.save(dbClient));
+	}
+
+	public void deleteClientInfo(String rfc) {
+		Client dbClient = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El cliente con el rfc %s no existe", rfc)));
+		repository.delete(dbClient);
 	}
 
 }
