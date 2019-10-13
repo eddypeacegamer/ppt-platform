@@ -1,5 +1,6 @@
 package com.business.unknow.services.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,5 +26,8 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
 
 	public Page<Factura> findByFolioIgnoreCaseContaining(String rfc, Pageable pageable);
+	
+	@Query("select f from Factura f where folioPadre= :folioPadre")
+	public List<Factura> findComplementosByFolioPadre(@Param("folioPadre") String folioPadre);
 
 }

@@ -83,6 +83,10 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA_CREACION")
+	private Date fechaCreacion;
+
 	public Integer getId() {
 		return id;
 	}
@@ -217,6 +221,14 @@ public class Factura implements Serializable {
 
 	public void setRazonSocialRemitente(String razonSocialRemitente) {
 		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	@Override

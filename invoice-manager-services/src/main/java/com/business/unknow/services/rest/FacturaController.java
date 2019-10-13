@@ -56,7 +56,8 @@ public class FacturaController {
 
 	@PostMapping
 	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura) {
+	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
 	}
 
@@ -66,7 +67,12 @@ public class FacturaController {
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/{folio}/complementos")
+	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
+	}
+
 	@GetMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);

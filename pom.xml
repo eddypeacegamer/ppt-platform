@@ -10,6 +10,8 @@
 		<module>invoice-manager-models</module>
 		<module>invoice-manager-rules</module>
 		<module>invoice-manager-services</module>
+		<module>invoice-external-sdk</module>
+		<module>invoice-manager-commons</module>
 	</modules>
 	<properties>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
