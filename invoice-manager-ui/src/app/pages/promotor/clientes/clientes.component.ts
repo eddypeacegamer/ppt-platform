@@ -38,6 +38,10 @@ export class ClientesComponent implements OnInit {
     this.clientInfo = new Client();
     this.clientInfo.informacionFiscal= new Contribuyente();
     this.clientInfo.informacionFiscal.rfc= this.formInfo.rfc;
+    this.clientInfo.porcentajeCliente =25;
+    this.clientInfo.porcentajeContacto =25;
+    this.clientInfo.porcentajePromotor =25;
+    this.clientInfo.porcentajeDespacho =25;
     this.clientInfo.informacionFiscal.pais= 'México';
   }
 

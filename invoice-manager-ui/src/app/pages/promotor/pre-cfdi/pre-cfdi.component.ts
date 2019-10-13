@@ -2,6 +2,9 @@ import { Component, OnInit , TemplateRef } from '@angular/core';
 import { NbIconLibraries } from '@nebular/theme';
 import { NbDialogService } from '@nebular/theme';
 import { LocalDataSource } from 'ng2-smart-table';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
+import { Giro } from '../../../models/catalogos/giro';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -78,13 +81,21 @@ export class PreCfdiComponent implements OnInit {
   };
 
 
+  public girosCat : Giro[];
+  public messages : any = {catMessage :''};
+
   constructor(private dialogService: NbDialogService, 
-              private iconsLibrary: NbIconLibraries){
+              private iconsLibrary: NbIconLibraries,
+              private catalogsService : CatalogsData){
     this.source.load(this.data);
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
   }
 
   ngOnInit() {
+
+    /**** LOADING CAT INFO ****/ 
+    this.catalogsService.getAllGiros().subscribe(giros=>this.girosCat= giros,
+      (error : HttpErrorResponse)=>this.messages.catMessage = error.error.message || `${error.statusText} : ${error.message}`);
   }
 
   onDeleteConfirm(event): void {
