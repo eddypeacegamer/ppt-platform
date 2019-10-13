@@ -61,7 +61,7 @@ public class FacturaController {
 	}
 
 	@PutMapping("/{folio}")
-	@ApiOperation(value = "insert a new Factura into the system")
+	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
@@ -117,8 +117,7 @@ public class FacturaController {
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id){
 		service.deletePago(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
