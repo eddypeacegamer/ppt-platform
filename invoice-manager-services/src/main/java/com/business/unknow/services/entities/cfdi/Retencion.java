@@ -23,16 +23,16 @@ public class Retencion implements Serializable {
 	private Integer id;
 
 	@Column(name = "BASE")
-	private String base;
+	private Double base;
 
 	@Column(name = "IMPUESTO")
-	private Double impuesto;
+	private String impuesto;
 
 	@Column(name = "TIPO_FACTOR")
 	private String tipoFactor;
 
 	@Column(name = "TASA_CUOTA")
-	private Double tasaOCuota;
+	private String tasaOCuota;
 
 	@Column(name = "IMPORTE")
 	private Double importe;
@@ -49,19 +49,19 @@ public class Retencion implements Serializable {
 		this.id = id;
 	}
 
-	public String getBase() {
+	public Double getBase() {
 		return base;
 	}
 
-	public void setBase(String base) {
+	public void setBase(Double base) {
 		this.base = base;
 	}
 
-	public Double getImpuesto() {
+	public String getImpuesto() {
 		return impuesto;
 	}
 
-	public void setImpuesto(Double impuesto) {
+	public void setImpuesto(String impuesto) {
 		this.impuesto = impuesto;
 	}
 
@@ -73,11 +73,11 @@ public class Retencion implements Serializable {
 		this.tipoFactor = tipoFactor;
 	}
 
-	public Double getTasaOCuota() {
+	public String getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(Double tasaOCuota) {
+	public void setTasaOCuota(String tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.Constants;
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -52,7 +53,7 @@ public class FacturaService {
 	@Autowired
 	private CfdiMapper cfdiMapper;
 
-	private FacturaValidator validator= new FacturaValidator();
+	private FacturaValidator validator = new FacturaValidator();
 
 	public List<FacturaDto> getComplementos(String folioPadre) {
 		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
@@ -79,13 +80,6 @@ public class FacturaService {
 				result.getTotalElements());
 	}
 
-	public CfdiDto getFacturaCdfi(String folio) {
-		Cfdi entity = cfdiRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("El cfdi con el folio %s no existe", folio)));
-		return cfdiMapper.getCfdiDtoFromEntity(entity);
-	}
-
 	public FacturaDto insertNewFactura(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFactura(dto);
 		dto.setFechaCreacion(new Date());
@@ -105,6 +99,40 @@ public class FacturaService {
 		entity.setStatusFactura(mapper.getEntityFromStatusFacturaDto(factura.getStatusFactura()));
 		entity.setStatusDetail(factura.getStatusDetail());
 		return mapper.getFacturaDtoFromEntity(repository.save(entity));
+	}
+
+	public CfdiDto getFacturaCdfi(String folio) throws InvoiceManagerException {
+		Cfdi entity = cfdiRepository.findByFolio(folio)
+				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+		return cfdiMapper.getCfdiDtoFromEntity(entity);
+	}
+	
+	public CfdiDto updateFacturaCfdi(String folio,Integer id,CfdiDto dto) throws InvoiceManagerException {
+		validator.validatePostCfdi(dto, folio);
+		Cfdi entity=cfdiRepository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+				String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+		entity.setFechaActualizacion(new Date());
+		entity.setFormaPago(dto.getFormaPago());
+		entity.setMetodoPago(dto.getMetodoPago());
+		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(entity));
+	}
+	
+	public void deleteFacturaCfdi(String folio,Integer id) throws InvoiceManagerException {
+		Cfdi entity=cfdiRepository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+				String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+		cfdiRepository.delete(entity);
+	}
+
+	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) throws InvoiceManagerException {
+		validator.validatePostCfdi(dto, folio);
+		Optional<Cfdi> entity = cfdiRepository.findByFolio(folio);
+		if (entity.isPresent()) {
+			throw new InvoiceManagerException("Error al crear Cfdi", "El cfdi ya existe", Constants.BAD_REQUEST);
+		} else {
+			dto.setFechaActualizacion(new Date());
+			return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto)));
+		}
 	}
 
 	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {

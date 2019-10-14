@@ -3,10 +3,10 @@ package com.business.unknow.model.factura.cfdi.components;
 public class RetencionDto {
 
 	private Integer id;
-	private String base;
-	private Double impuesto;
+	private Double base;
+	private String impuesto;
 	private String tipoFactor;
-	private Double tasaOCuota;
+	private String tasaOCuota;
 	private Double importe;
 
 	public Integer getId() {
@@ -17,19 +17,19 @@ public class RetencionDto {
 		this.id = id;
 	}
 
-	public String getBase() {
+	public Double getBase() {
 		return base;
 	}
 
-	public void setBase(String base) {
+	public void setBase(Double base) {
 		this.base = base;
 	}
 
-	public Double getImpuesto() {
+	public String getImpuesto() {
 		return impuesto;
 	}
 
-	public void setImpuesto(Double impuesto) {
+	public void setImpuesto(String impuesto) {
 		this.impuesto = impuesto;
 	}
 
@@ -41,11 +41,11 @@ public class RetencionDto {
 		this.tipoFactor = tipoFactor;
 	}
 
-	public Double getTasaOCuota() {
+	public String getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(Double tasaOCuota) {
+	public void setTasaOCuota(String tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 
