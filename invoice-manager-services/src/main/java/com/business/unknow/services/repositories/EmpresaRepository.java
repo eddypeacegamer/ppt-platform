@@ -1,5 +1,6 @@
 package com.business.unknow.services.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,5 +26,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 	
 	@Query("select e from Empresa e where e.informacionFiscal.rfc = :rfc")
 	public Optional<Empresa> findByRfc( @Param("rfc") String rfc);
+	
+	public List<Empresa> findByTipoAndGiro(String tipo,Integer giroId);
 
 }

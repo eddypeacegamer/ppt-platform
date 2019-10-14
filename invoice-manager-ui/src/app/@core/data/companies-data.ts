@@ -6,6 +6,8 @@ export abstract class CompaniesData {
 
     abstract getCompanies(page:number,size:number,filterParams?:any) : Observable<GenericPage<Empresa>>;
 
+    abstract getCompaniesByLineaAndGiro(linea:string, giro: number) : Observable<Empresa[]>;
+    
     abstract getCompanyByRFC(rfc:string) : Observable<Empresa>;
 
     abstract insertNewCompany(empresa : Empresa) : Observable<Empresa>;
