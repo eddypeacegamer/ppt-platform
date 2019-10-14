@@ -1,12 +1,14 @@
 package com.business.unknow.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ContribuyenteDto {
+public class ContribuyenteDto implements Serializable {
 
+	private static final long serialVersionUID = 963194607439661498L;
 	private Integer id;
 	private String rfc;
 	private String giro;

@@ -18,4 +18,31 @@ export class CatalogsService {
     return this.httpClient.get(`https://api-codigos-postales.herokuapp.com/v2/codigo_postal/${zipCode}`)
   }
 
+  public getProductoServiciosByDescription(description:string) {
+    let params : HttpParams =  new HttpParams().append('descripcion',description);
+    return this.httpClient.get("/api/catalogs/producto-servicios",{params:params});
+  }
+  public getClaveUnidadByName(name:string) {
+    let params : HttpParams =  new HttpParams().append('nombre',name);
+    return this.httpClient.get("/api/catalogs/clave-unidad",{params:params});
+  }
+  public getAllUsoCfdis() {
+    return this.httpClient.get("/api/catalogs/uso-cdfi");
+  }
+  public getAllRegimenFiscal() {
+    return this.httpClient.get("/api/catalogs/regimen-fiscal");
+  }
+  public getAllGiros(){
+    return this.httpClient.get("/api/catalogs/giros");
+  }
+  public getStatusPago() {
+    return this.httpClient.get("/api/catalogs/status-pago");
+  }
+  public getStatusValidacion() {
+    return this.httpClient.get("/api/catalogs/status-evento");
+  }
+  public getStatusDevolucion() {
+    return this.httpClient.get("/api/catalogs/status-devolucion");
+  }
+
 }

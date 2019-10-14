@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,15 @@ public class EmpresaService {
 		}
 		return new PageImpl<>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public EmpresaDto getEmpresaByRfc(String rfc) {
+		Empresa empresa = repository.findByRfc(rfc).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("No existe la empresa con rfc %s", rfc)));
+		return mapper.getEmpresaDtoFromEntity(empresa);
+	}
+	
+	public List<EmpresaDto> getEmpresasByGiroAndLinea(String tipo, Integer giro){
+		return mapper.getEmpresaDtosFromEntities(repository.findByTipoAndGiro(tipo, giro));
 	}
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresa) {

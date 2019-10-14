@@ -72,6 +72,9 @@ public class Empresa implements Serializable {
 
 	@Column(name = "LINEA")
 	private String tipo;
+	
+	@Column(name = "GIRO_ID")
+	private Integer giro;
 
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
@@ -205,6 +208,14 @@ public class Empresa implements Serializable {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public Integer getGiro() {
+		return giro;
+	}
+
+	public void setGiro(Integer giro) {
+		this.giro = giro;
 	}
 
 	public Date getFechaCreacion() {

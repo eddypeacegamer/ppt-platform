@@ -14,7 +14,7 @@ import { ZipCodeInfo } from '../../../models/zip-code-info';
 export class ClientesComponent implements OnInit {
 
   public clientInfo : Client;
-  public formInfo : any = {rfc:'',message:'',coloniaId:0, success:''};
+  public formInfo : any = {rfc:'',message:'',coloniaId:'*', success:''};
   public coloniaId: number=0;
   public colonias = [];
   public paises = ['México'];
@@ -38,11 +38,15 @@ export class ClientesComponent implements OnInit {
     this.clientInfo = new Client();
     this.clientInfo.informacionFiscal= new Contribuyente();
     this.clientInfo.informacionFiscal.rfc= this.formInfo.rfc;
+    this.clientInfo.porcentajeCliente =25;
+    this.clientInfo.porcentajeContacto =25;
+    this.clientInfo.porcentajePromotor =25;
+    this.clientInfo.porcentajeDespacho =25;
     this.clientInfo.informacionFiscal.pais= 'México';
   }
 
   public updateClient(){
-    this.clientService.updateClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente actualizado exitosamente';console.log(success)},
+    this.clientService.updateClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente actualizado exitosamente';this.clientInfo = undefined;},
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
   }
 
@@ -63,7 +67,7 @@ export class ClientesComponent implements OnInit {
     }
   }
 
-  public onLocation(index:number){
+  public onLocation(index:string){
     this.clientInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
