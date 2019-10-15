@@ -52,7 +52,7 @@ public class Concepto implements Serializable {
 	private Double descuento;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_USER", nullable = false)
+	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
 
 	@OneToMany(mappedBy = "concepto")

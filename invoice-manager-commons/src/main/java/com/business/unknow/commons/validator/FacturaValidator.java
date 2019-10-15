@@ -3,6 +3,7 @@ package com.business.unknow.commons.validator;
 import com.business.unknow.Constants;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 
 public class FacturaValidator {
 
@@ -14,6 +15,13 @@ public class FacturaValidator {
 		checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
 		checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
+	}
+	
+	public void validatePostCfdi(CfdiDto dto,String folio) throws InvoiceManagerException {
+		if(!folio.equals(dto.getFolio())) {
+			throw new InvoiceManagerException("Error al crear Cfdi","Los folios son diferentes",
+					Constants.BAD_REQUEST);
+		}
 	}
 
 	public void checkNotNull(Object var, String attribute) throws InvoiceManagerException {

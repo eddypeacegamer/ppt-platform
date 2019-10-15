@@ -6,4 +6,5 @@ import com.business.unknow.services.entities.cfdi.Cfdi;
 
 public interface CfdiRepository extends JpaRepository<Cfdi, Integer> {
 	public Optional<Cfdi> findByFolio(String folio);
+	public Optional<Cfdi> findById(Integer id);
 }
