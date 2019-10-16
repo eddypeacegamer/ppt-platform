@@ -1,7 +1,5 @@
 import { Component, OnInit , TemplateRef } from '@angular/core';
-import { NbIconLibraries } from '@nebular/theme';
 import { NbDialogService } from '@nebular/theme';
-import { LocalDataSource } from 'ng2-smart-table';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
@@ -10,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
+import { Concepto } from '../../../models/factura/concepto';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -18,77 +17,12 @@ import { ClaveProductoServicio } from '../../../models/catalogos/producto-servic
 })
 export class PreCfdiComponent implements OnInit {
 
-  source: LocalDataSource = new LocalDataSource();
-
-  
-
-  private data :any[] = [{
-    claveProdServ: 500234,
-    cantidad: 3,
-    claveUnidad: 5,
-    unidad: 'kilogramos',
-    valorUnitario: 71.52,
-    descripcion: 'Aguacates de temporada',
-    importe : 253.62,
-    descuento : 0
-  }, {
-    claveProdServ: 500434,
-    cantidad: 5,
-    claveUnidad: 5,
-    unidad: 'kilogramos',
-    valorUnitario: 30.52,
-    descripcion: 'Naranjas de temporada',
-    importe : 153.62,
-    descuento : 0
-  }];
-
-  settings = {
-    hideSubHeader: true,
-    actions:{edit: false},
-    delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-    },
-    columns: {
-      claveProdServ: {
-        title: 'Clave Prod Serv',
-        type: 'string',
-      },
-      cantidad: {
-        title: 'Cantidad',
-        type: 'number',
-      },
-      claveUnidad: {
-        title: 'Clave Unidad',
-        type: 'number',
-      },
-      unidad: {
-        title: 'Unidad',
-        type: 'number',
-      },
-      valorUnitario: {
-        title: 'Valor Unitario',
-        type: 'string',
-      },
-      descripcion: {
-        title: 'Descripción',
-        type: 'string',
-      },
-      importe: {
-        title: 'Importe',
-        type: 'number',
-      },
-      descuento: {
-        title: 'Descuento',
-        type: 'number',
-      },
-    },
-  };
-
-
   public girosCat : Giro[];
   public companiesCat : Empresa[];
-  public prodServCat : ClaveProductoServicio[]
+  public prodServCat : ClaveProductoServicio[];
+  public concentos : Concepto [] =[];
+  public newConcep : Concepto = new Concepto();
+
   public messages : any = {catMessage :''};
 
   public formInfo = {clientRfc:'',companyRfc:'',claveProdServ:''}
@@ -96,13 +30,9 @@ export class PreCfdiComponent implements OnInit {
   public companyInfo : Contribuyente;
 
   constructor(private dialogService: NbDialogService, 
-              private iconsLibrary: NbIconLibraries,
               private catalogsService : CatalogsData,
               private clientsService : ClientsData,
-              private companiesService:CompaniesData){
-    this.source.load(this.data);
-    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
-  }
+              private companiesService:CompaniesData){}
 
   ngOnInit() {
 
@@ -142,6 +72,19 @@ export class PreCfdiComponent implements OnInit {
   buscarClientInfo(){
     this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(client=>this.clientInfo=client.informacionFiscal,
       (error : HttpErrorResponse)=>this.messages.catMessage = error.error.message || `${error.statusText} : ${error.message}`);
+  }
+
+  onClaveProdServSelected(clave:string){
+    this.newConcep.claveProdServ = clave;
+  }
+
+  onSelectUnidad(clave:string){
+    this.newConcep.claveUnidad = clave;
+  }
+
+  agregarConcepto(){
+    console.log('Concepto:', this.newConcep);
+    this.concentos.push(this.newConcep);
   }
 
 

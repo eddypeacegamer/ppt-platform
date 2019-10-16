@@ -82,7 +82,7 @@
               </div>
               <div class="col-sm-6">
                 <label for="inputdesc" class="label">Descripcion</label>
-                <input id="inputdesc" class="form-control" fullWidth type="text" placeholder="Descripción del producto">
+                <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion" placeholder="Descripción del producto">
               </div>
 
             </div>
@@ -90,7 +90,7 @@
             <div class="row">
               <div class="col-sm-2">
                 <label for="inputunidad" class="label">Unidad Medida</label>
-                <select selected="H87" id="inputunidad" style="display:block;" class="form-control">
+                <select selected="H87" id="inputunidad" style="display:block;" class="form-control" (change)="onSelectUnidad($event.target.value)">
                   <option value="H87">Pieza</option>
                   <option value="EA">Elemento</option>
                   <option value="E48">Unidad de Servicio</option>
@@ -126,11 +126,11 @@
               </div>
               <div class="col-sm-2">
                 <label for="inputCantidad" class="label">Cantidad</label>
-                <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad">
+                <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad" [(ngModel)]="newConcep.cantidad">
               </div>
               <div class="col-sm-2">
                 <label for="inputPrecio" class="label">Precio Unitario</label>
-                <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario">
+                <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario" [(ngModel)]="newConcep.valorUnitario">
               </div>
               <div class="col-sm-2">
                 <label for="inputIVA" class="label">IVA</label>
@@ -140,18 +140,18 @@
               </div>
               <div class="col-sm-2">
                 <label for="inputDescuento" class="label">Descuento</label>
-                <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Precio Unitario">
+                <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado" [(ngModel)]="newConcep.descuento">
               </div>
               <div class="col-sm-2">
-                <button class="btn btn-success">Agregar Concepto</button>
+                <button class="btn btn-success" (click)="agregarConcepto()" >Agregar Concepto</button>
               </div>
             </div>
 
 
 
             <br>
-            <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
-            </ng2-smart-table>
+            <!--ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+            </ng2-smart-table-->
             <br>
             <div class="row form-inline">
               <button type="button" nbButton status="primary">SOLICITAR VALIDACION</button>
