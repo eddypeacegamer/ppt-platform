@@ -9,4 +9,11 @@ export class Concepto{
 	public valorUnitario : number;
 	public importe : number;
 	public descuento : number;
+
+	constructor(){
+		this.descuento = 0;
+		this.valorUnitario = 0;
+		this.valorUnitario = 0;
+		this.importe = 0;
+	}
 }

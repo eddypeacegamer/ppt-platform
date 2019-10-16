@@ -9,6 +9,7 @@ import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { Concepto } from '../../../models/factura/concepto';
+import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -20,10 +21,11 @@ export class PreCfdiComponent implements OnInit {
   public girosCat : Giro[];
   public companiesCat : Empresa[];
   public prodServCat : ClaveProductoServicio[];
+  public claveUnidadCat : ClaveUnidad [];
   public concentos : Concepto [] =[];
-  public newConcep : Concepto = new Concepto();
-
-  public messages : any = {catMessage :''};
+  public newConcep : Concepto ;
+  public headers: string[] = ['Producto Servicio', 'Cantidad','Clave Unidad', 'Unidad','Deescripcion', 'Valor Unitario', 'Importe','Descuento'];
+  public errorMessage : string = '';
 
   public formInfo = {clientRfc:'',companyRfc:'',claveProdServ:''}
   public clientInfo : Contribuyente;
@@ -38,7 +40,12 @@ export class PreCfdiComponent implements OnInit {
 
     /**** LOADING CAT INFO ****/ 
     this.catalogsService.getAllGiros().subscribe((giros:Giro[])=>this.girosCat= giros,
-      (error : HttpErrorResponse)=>this.messages.catMessage = error.error.message || `${error.statusText} : ${error.message}`)
+      (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
+    this.catalogsService.getClaveUnidadByName('').subscribe((unidades:ClaveUnidad[])=>this.claveUnidadCat=unidades,
+    (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
+
+    /** INIT VARIABLES **/
+    this.newConcep = new Concepto();
   }
 
   onDeleteConfirm(event): void {
@@ -56,7 +63,7 @@ export class PreCfdiComponent implements OnInit {
 
   onGiroSelection(giroId:any){
     this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies=>this.companiesCat = companies,
-      (error : HttpErrorResponse)=>this.messages.catMessage = error.error.message || `${error.statusText} : ${error.message}`);
+      (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
   }
 
   onCompanySelection(companyId:number){
@@ -70,8 +77,9 @@ export class PreCfdiComponent implements OnInit {
   }
 
   buscarClientInfo(){
+    this.errorMessage = '';
     this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(client=>this.clientInfo=client.informacionFiscal,
-      (error : HttpErrorResponse)=>this.messages.catMessage = error.error.message || `${error.statusText} : ${error.message}`);
+      (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
   }
 
   onClaveProdServSelected(clave:string){
@@ -80,11 +88,13 @@ export class PreCfdiComponent implements OnInit {
 
   onSelectUnidad(clave:string){
     this.newConcep.claveUnidad = clave;
+    this.newConcep.unidad = this.claveUnidadCat.find(u=>u.clave==clave).nombre;
   }
 
   agregarConcepto(){
-    console.log('Concepto:', this.newConcep);
-    this.concentos.push(this.newConcep);
+    this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario - this.newConcep.descuento;
+    this.concentos.push({... this.newConcep});
+    this.newConcep = new Concepto();
   }
 
 
