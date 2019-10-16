@@ -17,6 +17,15 @@ public class FacturaValidator {
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
 	}
 	
+	
+	public void validatePostFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
+		checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
+		checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
+		checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
+		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
+		checkNotNull(dto.getCfdi(), "cfdi");
+	}
+	
 	public void validatePostCfdi(CfdiDto dto,String folio) throws InvoiceManagerException {
 		if(!folio.equals(dto.getFolio())) {
 			throw new InvoiceManagerException("Error al crear Cfdi","Los folios son diferentes",

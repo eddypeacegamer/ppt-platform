@@ -54,13 +54,26 @@ public class FacturaController {
 				statusPago, page, size), HttpStatus.OK);
 	}
 
+	@GetMapping("/{folio}")
+	public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getfacturaByFolio(folio), HttpStatus.OK);
+	}
+
 	@PostMapping
 	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
 	}
+	
+	@PostMapping("/chain")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaDto> insertFacturaWithCfdi(@RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
+	}
 
+	
 	@PutMapping("/{folio}")
 	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
@@ -142,7 +155,7 @@ public class FacturaController {
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id){
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

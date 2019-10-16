@@ -28,5 +28,13 @@ public class FacturaCalculator {
 			throw new InvoiceManagerException(e.getMessage(), e.getCause().toString(), Constants.INTERNAL_ERROR);
 		}
 	}
+	
+	public static void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
+		String folio =folioEncrypt(dto);
+		dto.setFolio(folio);
+		if(dto.getCfdi()!=null) {
+			dto.getCfdi().setFolio(folio);
+		}
+	}
 
 }
