@@ -3,6 +3,7 @@ package com.business.unknow.model.factura;
 import java.util.Date;
 
 import com.business.unknow.model.catalogs.StatusFacturaDto;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 
 public class FacturaDto {
 
@@ -24,6 +25,7 @@ public class FacturaDto {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
+	private CfdiDto cfdi;
 
 	public Integer getId() {
 		return id;
@@ -169,6 +171,14 @@ public class FacturaDto {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public CfdiDto getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(CfdiDto cfdi) {
+		this.cfdi = cfdi;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -177,7 +187,7 @@ public class FacturaDto {
 				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
 				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
-				+ fechaTimbrado + "]";
+				+ fechaTimbrado + ", cfdi=" + cfdi + "]";
 	}
 
 }

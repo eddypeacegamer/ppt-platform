@@ -1,5 +1,6 @@
 package com.business.unknow.model.factura.cfdi.components;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConceptoDto {
@@ -14,8 +15,8 @@ public class ConceptoDto {
 	private Double valorUnitario;
 	private Double importe;
 	private Double descuento;
-	private List<ImpuestoDto> impuestos;
-	private List<RetencionDto> retenciones;
+	private List<ImpuestoDto> impuestos = new ArrayList<ImpuestoDto>();;
+	private List<RetencionDto> retenciones = new ArrayList<RetencionDto>();;
 
 	public Integer getId() {
 		return id;

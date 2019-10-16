@@ -1,5 +1,6 @@
 package com.business.unknow.model.factura.cfdi.components;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class CfdiDto {
 	private String noCertificadoSat;
 	private String selloSat;
 	private Date fechaActualizacion;
-	private List<ConceptoDto> conceptos;
-
+	private List<ConceptoDto> conceptos= new ArrayList<ConceptoDto>();
+	
 	public Integer getId() {
 		return id;
 	}
