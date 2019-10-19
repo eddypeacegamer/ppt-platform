@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CfdiDto {
 
 	private Integer id;
@@ -35,7 +40,7 @@ public class CfdiDto {
 	private String noCertificadoSat;
 	private String selloSat;
 	private Date fechaActualizacion;
-	private List<ConceptoDto> conceptos= new ArrayList<ConceptoDto>();
+	private List<ConceptoDto> conceptos= new ArrayList<>();
 	
 	public Integer getId() {
 		return id;

@@ -1,4 +1,4 @@
-<div class="row">
+<!--div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
       <nb-card-header>Pre CFDI</nb-card-header>
@@ -13,7 +13,7 @@
       </nb-card-body>
     </nb-card>
   </div>
-</div>
+</div-->
 
 <div class="row">
   <div class="col-md-12">
@@ -24,14 +24,10 @@
           <nb-step [label]="labelOne">
             <ng-template #labelOne>Registro</ng-template>
             <br>
+            <p class="font-weight-bold">Información Emisor y Receptor</p>
             <div class="row">
-              <div class="col-sm-2">
-                <label for="inputDocType" class="label">Tipo documento</label>
-                <select id="inputDocType" class="form-control" fullWidth>
-                  <option>FACTURA</option>
-                </select>
-              </div>
-              <div class="col-sm-3">
+
+              <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputGiro" class="label">Giro Empresa</label>
                   <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
@@ -41,10 +37,11 @@
                   </select>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <label for="inputEmpresa" class="label">Empresa</label>
-                <select id="inputEmpresa" class="form-control" (change)="onCompanySelection($event.target.value)"
+                <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
                   style="display:block;" fullWidth>
+                  <option value="*">Seleccionar</option>
                   <option *ngFor="let company of companiesCat" [value]="company.id">{{company.informacionFiscal.nombre}}
                   </option>
                 </select>
@@ -64,6 +61,54 @@
             <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">
               {{clientInfo.rfc}} - {{clientInfo.razonSocial}}
             </div>
+            <br>
+            <p class="font-weight-bold">Información CFDI</p>
+            <div class="row">
+              <div class="col-sm-2">
+                <label for="inputDocType" class="label">Tipo documento</label>
+                <select id="inputDocType" class="form-control" fullWidth>
+                  <option>FACTURA</option>
+                </select>
+              </div>
+              <div class="col-sm-4">
+                <label for="inputPaytype" class="label">Uso CFDI</label>
+                <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
+                  (change)="onUsoCfdiSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option *ngFor="let clave of usoCfdiCat" [value]="clave.clave">{{clave.descripcion}}</option>
+                </select>
+              </div>
+              <div class="col-sm-1">
+                <label for="inputCoin" class="label">Moneda</label>
+                <select selected="1" id="inputCoin" style="display:block;" class="form-control"
+                (change)="onMonedaSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="MXN">Peso MX</option>
+                  <option value="USD">Dollar US</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <label for="inputPayMethod" class="label">Metodo de Pago</label>
+                <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
+                (change)="onMetodoDePagoSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="PUE">Pago en una sola exhibición</option>
+                  <option value="PPD">Pago en parcialidades o diferido</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <label for="inputPaytype" class="label">Forma de Pago</label>
+                <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
+                (change)="onFormaDePagoSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="001">Efectivo</option>
+                  <option value="002">Cheque nominativo</option>
+                  <option value="003">Transferencia electrónica de fondos</option>
+                </select>
+              </div>
+
+            </div>
+
 
             <br>
             <p class="font-weight-bold">Conceptos factura</p>
@@ -72,21 +117,22 @@
               <div class="col-sm-4">
                 <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
                 <div class="form-inline">
-                  <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
-                    placeholder="palabra clave producto servicio">
-                  <button class="btn btn-primary" (click)="buscarClaveProdServSelected()" >Buscar</button>
+                  <input id="inputProdServ" class="form-control" fullWidth type="text"
+                    [(ngModel)]="formInfo.claveProdServ" placeholder="palabra clave producto servicio">
+                  <button class="btn btn-primary" (click)="buscarClaveProdServSelected()">Buscar</button>
                 </div>
               </div>
               <div class="col-sm-2">
                 <label for="inputProdServ" class="label">Selecion clave producto servicio</label>
-                <select id="inputProdServ" fullWidth class="form-control" (change)="onClaveProdServSelected($event.target.value)"
-                    style="display:block;">
-                    <option *ngFor="let clave of prodServCat" [value]="clave.clave">{{clave.descripcion}}</option>
+                <select id="inputProdServ" fullWidth class="form-control"
+                  (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
+                  <option *ngFor="let clave of prodServCat" [value]="clave.clave">{{clave.descripcion}}</option>
                 </select>
               </div>
               <div class="col-sm-6">
                 <label for="inputdesc" class="label">Descripcion</label>
-                <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion" placeholder="Descripción del producto">
+                <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion"
+                  placeholder="Descripción del producto">
               </div>
 
             </div>
@@ -94,39 +140,38 @@
             <div class="row">
               <div class="col-sm-2">
                 <label for="inputunidad" class="label">Unidad Medida</label>
-                <select selected="H87" id="inputunidad" style="display:block;" class="form-control" (change)="onSelectUnidad($event.target.value)">
+                <select selected="H87" id="inputunidad" style="display:block;" class="form-control"
+                  (change)="onSelectUnidad($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let clave of claveUnidadCat" [value]="clave.clave">{{clave.nombre}}</option>
                 </select>
               </div>
               <div class="col-sm-2">
                 <label for="inputCantidad" class="label">Cantidad</label>
-                <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad" [(ngModel)]="newConcep.cantidad">
+                <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad"
+                  [(ngModel)]="newConcep.cantidad">
               </div>
               <div class="col-sm-2">
                 <label for="inputPrecio" class="label">Precio Unitario</label>
-                <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario" [(ngModel)]="newConcep.valorUnitario">
+                <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
+                  [(ngModel)]="newConcep.valorUnitario">
               </div>
+              <div class="col-sm-2">
+                  <label for="inputDescuento" class="label">Descuento</label>
+                  <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
+                    [(ngModel)]="newConcep.descuento">
+                </div>
               <div class="col-sm-1">
-                <label for="inputIVA" class="label">IVA</label>
-                <select selected="1" id="inputIVA" style="display:block;" class="form-control">
-                  <option value="1">16%</option>
-                </select>
-              </div>
-              <div class="col-sm-1">
-                <label for="inputCoin" class="label">Moneda</label>
-                <select selected="1" id="inputCoin" style="display:block;" class="form-control">
-                  <option value="*">Seleccionar</option>
-                  <option value="MXN">Peso MX</option>
-                  <option value="USD">Dollar US</option>
+                <label for="inputImpuesto" class="label">Impuesto</label>
+                <select selected="1" id="inputImpuesto" style="display:block;" class="form-control">
+                  <!--option value="*">Seleccionar</option-->
+                  <!--option value="001">ISR</option-->
+                  <option value="002">IVA</option>
+                  <!--option value="003">IEPS</option-->
                 </select>
               </div>
               <div class="col-sm-2">
-                <label for="inputDescuento" class="label">Descuento</label>
-                <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado" [(ngModel)]="newConcep.descuento">
-              </div>
-              <div class="col-sm-2">
-                <button class="btn btn-success" (click)="agregarConcepto()" >Agregar Concepto</button>
+                <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
               </div>
             </div>
 
@@ -141,7 +186,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let fila of concentos">
+                <tr *ngFor="let fila of factura.cfdi.conceptos">
                   <td scope="row">{{fila.claveProdServ}}</td>
                   <td scope="row">{{fila.cantidad}}</td>
                   <td scope="row">{{fila.claveUnidad}}</td>
@@ -156,11 +201,12 @@
               </tbody>
             </table>
 
-            <!--ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
-            </ng2-smart-table-->
+
+            <p>FACTURA INFO : {{factura | json}}</p>
             <br>
+
             <div class="row form-inline">
-              <button type="button" nbButton status="primary">SOLICITAR VALIDACION</button>
+              <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR VALIDACION</button>
               <button type="button" nbButton status="primary">CANCELAR</button>
             </div>
             <br>

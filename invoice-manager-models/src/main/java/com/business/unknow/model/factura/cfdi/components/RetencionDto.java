@@ -1,5 +1,10 @@
 package com.business.unknow.model.factura.cfdi.components;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RetencionDto {
 
 	private Integer id;

@@ -10,6 +10,11 @@ import { Empresa } from '../../../models/empresa';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { Concepto } from '../../../models/factura/concepto';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
+import { Impuesto } from '../../../models/factura/impuesto';
+import { Cfdi } from '../../../models/factura/cfdi';
+import { Client } from '../../../models/client';
+import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
+import { Factura } from '../../../models/factura/factura';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -22,14 +27,18 @@ export class PreCfdiComponent implements OnInit {
   public companiesCat : Empresa[];
   public prodServCat : ClaveProductoServicio[];
   public claveUnidadCat : ClaveUnidad [];
-  public concentos : Concepto [] =[];
+  public usoCfdiCat : UsoCfdi [];
+  
   public newConcep : Concepto ;
-  public headers: string[] = ['Producto Servicio', 'Cantidad','Clave Unidad', 'Unidad','Deescripcion', 'Valor Unitario', 'Importe','Descuento'];
+  public factura : Factura;
+
+  public headers: string[] = ['Producto Servicio', 'Cantidad','Clave Unidad', 'Unidad','Descripcion', 'Valor Unitario', 'Importe','Descuento'];
   public errorMessage : string = '';
 
   public formInfo = {clientRfc:'',companyRfc:'',claveProdServ:''}
   public clientInfo : Contribuyente;
-  public companyInfo : Contribuyente;
+  public companyInfo : Empresa;
+  
 
   constructor(private dialogService: NbDialogService, 
               private catalogsService : CatalogsData,
@@ -43,9 +52,13 @@ export class PreCfdiComponent implements OnInit {
       (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
     this.catalogsService.getClaveUnidadByName('').subscribe((unidades:ClaveUnidad[])=>this.claveUnidadCat=unidades,
     (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
-
+    this.catalogsService.getAllUsoCfdis().subscribe((usos:UsoCfdi[])=>this.usoCfdiCat = usos,
+    (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
     /** INIT VARIABLES **/
     this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
+    this.factura.cfdi.conceptos = [];
   }
 
   onDeleteConfirm(event): void {
@@ -57,7 +70,6 @@ export class PreCfdiComponent implements OnInit {
   }
 
   openBuscadorSAT(dialog: TemplateRef<any>) {
-
     this.dialogService.open(dialog);
   }
 
@@ -66,9 +78,9 @@ export class PreCfdiComponent implements OnInit {
       (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
   }
 
-  onCompanySelection(companyId:number){
+  onCompanySelected(companyId:number){
+    this.companyInfo = this.companiesCat.find(c=>c.id == companyId);
     console.log(this.companyInfo)
-    this.companyInfo = this.companiesCat.find(c=>c.id == companyId).informacionFiscal;
   }
 
   buscarClaveProdServSelected(){
@@ -78,12 +90,35 @@ export class PreCfdiComponent implements OnInit {
 
   buscarClientInfo(){
     this.errorMessage = '';
-    this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(client=>this.clientInfo=client.informacionFiscal,
+    this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
+      (client:Client) => {this.clientInfo=client.informacionFiscal},
       (error : HttpErrorResponse)=>this.errorMessage = error.error.message || `${error.statusText} : ${error.message}`);
+  }
+
+  onUsoCfdiSelected(clave:string){
+    this.factura.cfdi.usoCfdi = clave;
+  }
+
+  onMonedaSelected(clave:string){
+    this.factura.cfdi.moneda = clave;
+  }
+
+  onMetodoDePagoSelected(clave:string){
+    this.factura.cfdi.metodoPago = clave;
+  }
+
+  onFormaDePagoSelected(clave:string){
+    this.factura.cfdi.formaPago = clave;
   }
 
   onClaveProdServSelected(clave:string){
     this.newConcep.claveProdServ = clave;
+  }
+
+  onImpuestoSelected(clave:string){
+    if(clave === '002'){
+      this.newConcep.impuestos = [new Impuesto(clave,'0.160000')]
+    }
   }
 
   onSelectUnidad(clave:string){
@@ -92,11 +127,31 @@ export class PreCfdiComponent implements OnInit {
   }
 
   agregarConcepto(){
-    this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario - this.newConcep.descuento;
-    this.concentos.push({... this.newConcep});
+    this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
+    const base = this.newConcep.importe -this.newConcep.descuento;
+    const impuesto = base * 0.16;
+    this.newConcep.impuestos = [new Impuesto('002','0.160000',base,impuesto)];//IVA is harcoded
+    this.factura.cfdi.conceptos.push({... this.newConcep});
     this.newConcep = new Concepto();
   }
 
+  solicitarCfdi(){
+    
+    this.factura.cfdi.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+    this.factura.cfdi.nombreEmisor = this.companyInfo.informacionFiscal.razonSocial;
+    this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
+    this.factura.cfdi.rfcReceptor = this.clientInfo.rfc;
+    this.factura.cfdi.nombreReceptor = this.clientInfo.razonSocial;
+    
+
+    this.factura.cfdi = this.factura.cfdi;
+    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+    this.factura.rfcRemitente = this.clientInfo.rfc;
+    this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
+
+    console.log(this.factura);
+  }
 
 
 }

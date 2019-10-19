@@ -1,3 +1,5 @@
+import { Impuesto } from './impuesto';
+
 export class Concepto{
     public id : number;
 	public claveProdServ : string;
@@ -9,7 +11,10 @@ export class Concepto{
 	public valorUnitario : number;
 	public importe : number;
 	public descuento : number;
+	public impuestos : Impuesto[];
+	public retenciones : any[];
 
+	
 	constructor(){
 		this.descuento = 0;
 		this.valorUnitario = 0;
