@@ -5,9 +5,11 @@ import java.util.Date;
 
 import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegimenFiscalDto implements Serializable{
 
 	private static final long serialVersionUID = -6301363194780882965L;

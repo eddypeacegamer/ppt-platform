@@ -20,5 +20,9 @@ export class Concepto{
 		this.valorUnitario = 0;
 		this.valorUnitario = 0;
 		this.importe = 0;
+		this.impuestos = [];
+		this.retenciones = [];
 	}
+
+	
 }

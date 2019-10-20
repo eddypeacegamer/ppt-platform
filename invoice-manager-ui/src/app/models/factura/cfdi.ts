@@ -21,17 +21,19 @@ export class Cfdi{
     conceptos : Concepto[];
     total: number;
     subtotal: number;
+    impuestos : number;
     descuento: number;
     //generado
     serie : string; 
     fecha: Date; //esta fecha cual es?
+    fechaTimbrado: Date;
+    fechaActualizacion :Date;
     sello : string;
     uuid: string;
     selloCfd: string;
-    fechaTimbrado: Date;
     noCertificadoSat : string;
     selloSat : string ;
-    fechaActualizacion :Date;
+    
     //no deberia ser expuesto
     noCertificado: string;
     certificado: string;
@@ -40,5 +42,10 @@ export class Cfdi{
     constructor(){
         this.version = '3.3';
         this.tipoDeComprobante = 'I';
+        this.conceptos = [];
+        this.total = 0;
+        this.subtotal = 0;
+        this.descuento = 0;
+        this.impuestos = 0;
     }
 }

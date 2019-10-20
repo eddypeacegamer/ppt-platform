@@ -81,7 +81,7 @@
               <div class="col-sm-1">
                 <label for="inputCoin" class="label">Moneda</label>
                 <select selected="1" id="inputCoin" style="display:block;" class="form-control"
-                (change)="onMonedaSelected($event.target.value)">
+                  (change)="onMonedaSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option value="MXN">Peso MX</option>
                   <option value="USD">Dollar US</option>
@@ -90,7 +90,7 @@
               <div class="col-sm-3">
                 <label for="inputPayMethod" class="label">Metodo de Pago</label>
                 <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
-                (change)="onMetodoDePagoSelected($event.target.value)">
+                  (change)="onMetodoDePagoSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option value="PUE">Pago en una sola exhibición</option>
                   <option value="PPD">Pago en parcialidades o diferido</option>
@@ -99,7 +99,7 @@
               <div class="col-sm-2">
                 <label for="inputPaytype" class="label">Forma de Pago</label>
                 <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
-                (change)="onFormaDePagoSelected($event.target.value)">
+                  (change)="onFormaDePagoSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option value="001">Efectivo</option>
                   <option value="002">Cheque nominativo</option>
@@ -156,23 +156,25 @@
                 <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
                   [(ngModel)]="newConcep.valorUnitario">
               </div>
-              <div class="col-sm-2">
-                  <label for="inputDescuento" class="label">Descuento</label>
-                  <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
-                    [(ngModel)]="newConcep.descuento">
-                </div>
-              <div class="col-sm-1">
+              <!--div class="col-sm-2">
+                <label for="inputDescuento" class="label">Descuento</label>
+                <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
+                  [(ngModel)]="newConcep.descuento">
+              </div-->
+              <div class="col-sm-4">
                 <label for="inputImpuesto" class="label">Impuesto</label>
-                <select selected="1" id="inputImpuesto" style="display:block;" class="form-control">
-                  <!--option value="*">Seleccionar</option-->
-                  <!--option value="001">ISR</option-->
-                  <option value="002">IVA</option>
-                  <!--option value="003">IEPS</option-->
-                </select>
+                
+                <div class="row form-inline">
+                    <select selected="1" id="inputImpuesto" style="display:block;width: 150px;" class="form-control">
+                        <!--option value="*">Seleccionar</option-->
+                        <!--option value="001">ISR</option-->
+                        <option value="002">IVA</option>
+                        <!--option value="003">IEPS</option-->
+                      </select>
+                      <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
+                  </div>
               </div>
-              <div class="col-sm-2">
-                <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
-              </div>
+              
             </div>
 
 
@@ -192,11 +194,24 @@
                   <td scope="row">{{fila.claveUnidad}}</td>
                   <td scope="row">{{fila.unidad}}</td>
                   <td scope="row">{{fila.descripcion}}</td>
-                  <td scope="row">{{fila.valorUnitario}}</td>
-                  <td scope="row">{{fila.importe}}</td>
-                  <td scope="row">{{fila.descuento}}</td>
-                  <td scope="row">{{fila.fechaSolicitud}}</td>
-                  <td scope="row">{{fila.fechaTimbrado}}</td>
+                  <td scope="row">{{fila.valorUnitario | currency}}</td>
+                  <td scope="row">{{getImporteImpuestos(fila.impuestos) | currency}}</td>
+                  <td scope="row">{{fila.importe | currency}}</td>
+                </tr>
+                <tr>
+                  <td colspan="6"></td>
+                  <td>Subtotal</td>
+                  <td>{{factura.cfdi.subtotal | currency}}</td>
+                </tr>
+                <tr>
+                  <td colspan="6"></td>
+                  <td>Impuestos</td>
+                  <td>{{factura.cfdi.impuestos | currency}}</td>
+                </tr>
+                <tr>
+                  <td colspan="6"></td>
+                  <td>Total</td>
+                  <td>{{factura.cfdi.total | currency}}</td>
                 </tr>
               </tbody>
             </table>

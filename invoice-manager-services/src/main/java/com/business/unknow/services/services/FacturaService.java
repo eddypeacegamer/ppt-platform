@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -119,6 +121,7 @@ public class FacturaService {
 		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 	}
 
+	@Transactional(rollbackOn = InvoiceManagerException.class)
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(dto);
 		Optional<Factura> factura = repository.findByFolio(dto.getFolio());

@@ -32,7 +32,7 @@ export class PreCfdiComponent implements OnInit {
   public newConcep : Concepto ;
   public factura : Factura;
 
-  public headers: string[] = ['Producto Servicio', 'Cantidad','Clave Unidad', 'Unidad','Descripcion', 'Valor Unitario', 'Importe','Descuento'];
+  public headers: string[] = ['Producto Servicio', 'Cantidad','Clave Unidad', 'Unidad','Descripcion', 'Valor Unitario', 'Impuesto','Importe'];
   public errorMessage : string = '';
 
   public formInfo = {clientRfc:'',companyRfc:'',claveProdServ:''}
@@ -130,13 +130,22 @@ export class PreCfdiComponent implements OnInit {
     this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
     const base = this.newConcep.importe -this.newConcep.descuento;
     const impuesto = base * 0.16;
+    this.factura.cfdi.impuestos+=impuesto;
+    this.factura.cfdi.subtotal+=base;
+    this.factura.cfdi.total=(this.factura.cfdi.total*3+base*3+impuesto*3)/3;
     this.newConcep.impuestos = [new Impuesto('002','0.160000',base,impuesto)];//IVA is harcoded
     this.factura.cfdi.conceptos.push({... this.newConcep});
     this.newConcep = new Concepto();
   }
 
+  getImporteImpuestos(impuestos:Impuesto[]){
+		return impuestos.map(i=>i.importe).reduce((total,value)=>total+value);
+	}
+
   solicitarCfdi(){
     
+    //this.factura.cfdi.conceptos[0].impuestos.map(imp=>imp.impuesto).reduce((total,value)=>total+value);
+
     this.factura.cfdi.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
     this.factura.cfdi.nombreEmisor = this.companyInfo.informacionFiscal.razonSocial;
     this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;

@@ -1,5 +1,6 @@
 package com.business.unknow.model.factura;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,13 +8,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PagoDto {
+public class PagoDto implements Serializable {
 
+
+	private static final long serialVersionUID = -8495281362684756977L;
+	
 	private Integer id;
 	private String folio;
 	private String tipoDocumento;
 	private String documento;
-	private Double candtidad;
+	private Double monto;
 	private String tipoPago;
 	private Date fechaPago;
 	private Date fechaCreacion;
@@ -51,12 +55,12 @@ public class PagoDto {
 		this.documento = documento;
 	}
 
-	public Double getCandtidad() {
-		return candtidad;
+	public Double getMonto() {
+		return monto;
 	}
 
-	public void setCandtidad(Double candtidad) {
-		this.candtidad = candtidad;
+	public void setMonto(Double monto) {
+		this.monto = monto;
 	}
 
 	public String getTipoPago() {
@@ -94,8 +98,10 @@ public class PagoDto {
 	@Override
 	public String toString() {
 		return "PagoDto [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento="
-				+ documento + ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
+				+ documento + ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
+
+	
 
 }

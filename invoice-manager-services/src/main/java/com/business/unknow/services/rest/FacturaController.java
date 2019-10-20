@@ -157,7 +157,7 @@ public class FacturaController {
 	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

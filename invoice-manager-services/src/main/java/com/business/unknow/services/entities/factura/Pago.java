@@ -35,14 +35,13 @@ public class Pago implements Serializable {
 	@Column(name = "DOCUMENTO")
 	private String documento;
 
-	@Column(name = "CANTIDAD")
-	private Double candtidad;
+	@Column(name = "MONTO")
+	private Double monto;
 
 	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
 
 	@Temporal(TemporalType.DATE)
-	@CreatedDate
 	@Column(name = "FECHA_PAGO")
 	private Date fechaPago;
 
@@ -88,12 +87,12 @@ public class Pago implements Serializable {
 		this.documento = documento;
 	}
 
-	public Double getCandtidad() {
-		return candtidad;
+	public Double getMonto() {
+		return monto;
 	}
 
-	public void setCandtidad(Double candtidad) {
-		this.candtidad = candtidad;
+	public void setMonto(Double monto) {
+		this.monto = monto;
 	}
 
 	public String getTipoPago() {
@@ -131,8 +130,8 @@ public class Pago implements Serializable {
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento=" + documento
-				+ ", candtidad=" + candtidad + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

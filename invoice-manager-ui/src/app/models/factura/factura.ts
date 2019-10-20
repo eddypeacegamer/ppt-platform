@@ -11,9 +11,10 @@ export class Factura{
 	public folioPadre : string;
 	public tipoDocumento : string;
 	public cfdi : Cfdi;
+	public total : string;
 	//opcional
 	public notas : string;
-    public total : string;
+    
 	//duplicado
 	public formaPago : string;
     public metodoPago : string;
