@@ -47,5 +47,6 @@ export class Cfdi{
         this.subtotal = 0;
         this.descuento = 0;
         this.impuestos = 0;
+        this.serie = '1';//should be generated
     }
 }

@@ -5,4 +5,8 @@ export class StatusFactura{
 	private statusPago : string;
 	private statusDevolucion : string;
 	private fechaActualizacion: Date;
+
+	constructor(id?:number){
+		this.id = id || 0;
+	}
 }

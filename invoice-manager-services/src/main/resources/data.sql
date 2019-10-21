@@ -99,13 +99,13 @@ VALUES(12,'PEPE800811111',1,25,25,25,25,'2019-01-07 00:00:00','2019-01-07 00:00:
 ---EMPRESA
 ----------------
 INSERT INTO EMPRESAS(ID_EMPRESA,LINEA,GIRO_ID,RFC,REGIMEN_FISCAL,REFERENCIA,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,PW,ENCABEZADO,PIE_DE_PAGINA,PW_CORREO,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(1,'A',1,'EMP1311299HH1','REF 1','REPUVE','www.patito1.com','patito 1','suc patito 1','Mexico','patito_secret','encabezado patito 1','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(1,'A',1,'EMP1311299HH1','621','REPUVE','www.patito1.com','patito 1','suc patito 1','Mexico','patito_secret','encabezado patito 1','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO EMPRESAS(ID_EMPRESA,LINEA,GIRO_ID,RFC,REGIMEN_FISCAL,REFERENCIA,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,PW,ENCABEZADO,PIE_DE_PAGINA,PW_CORREO,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(2,'A',2,'EMP2311299HH4','REF 2','REPUVE','www.patito2.com','patito 2','suc patito 2','Mexico','patito_secret','encabezado patito 2','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(2,'A',2,'EMP2311299HH4','621','REPUVE','www.patito2.com','patito 2','suc patito 2','Mexico','patito_secret','encabezado patito 2','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO EMPRESAS(ID_EMPRESA,LINEA,GIRO_ID,RFC,REGIMEN_FISCAL,REFERENCIA,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,PW,ENCABEZADO,PIE_DE_PAGINA,PW_CORREO,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(3,'A',3,'EMP3311299HH3','REF 3','REPUVE','www.patito3.com','patito 3','suc patito 3','Mexico','patito_secret','encabezado patito 3','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(3,'A',3,'ERFT3311299HH3','601','REPUVE','www.patito3.com','patito 3','suc patito 3','Mexico','patito_secret','encabezado patito 3','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
 INSERT INTO EMPRESAS(ID_EMPRESA,LINEA,GIRO_ID,RFC,REGIMEN_FISCAL,REFERENCIA,WEB,CONTACTO_ADMIN,SUCURSAL,LUGAR_EXPEDICION,PW,ENCABEZADO,PIE_DE_PAGINA,PW_CORREO,ACTIVO,FECHA_CREACION,FECHA_ACTUALIZACION)
-VALUES(4,'B',1,'EMP4311299HH2','REF 4','REPUVE','www.patito4.com','patito 4','suc patito 4','Mexico','patito_secret','encabezado patito 4','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
+VALUES(4,'B',1,'TEMO4311299HH2','601','REPUVE','www.patito4.com','patito 4','suc patito 4','Mexico','patito_secret','encabezado patito 4','pie de pagina','patito_secret',1,'2019-01-07 00:00:00','2019-01-07 00:00:00');
 
 ----------------
 ---FACTURAS 

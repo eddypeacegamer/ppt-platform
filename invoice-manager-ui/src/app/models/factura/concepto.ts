@@ -17,6 +17,7 @@ export class Concepto{
 	
 	constructor(){
 		this.descuento = 0;
+		this.cantidad = 0;
 		this.valorUnitario = 0;
 		this.valorUnitario = 0;
 		this.importe = 0;

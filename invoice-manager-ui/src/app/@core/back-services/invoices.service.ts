@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
+import { Factura } from '../../models/factura/factura';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,6 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 export class InvoicesService {
 
   constructor(private httpClient:HttpClient) { }
-
 
   public getInvoices(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
@@ -19,5 +19,13 @@ export class InvoicesService {
       }
     }
     return this.httpClient.get('../api/facturas',{params:pageParams});
+  }
+
+  public getInvoiceByFolio(folio:string) : Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folio}`);
+  }
+
+  public insertNewInvoice(invoice : Factura): Observable<any>{
+    return this.httpClient.post('../api/facturas/chain',invoice);
   }
 }

@@ -25,9 +25,13 @@ export class Factura{
     public fechaCreacion : Date;
     public fechaActualizacion : Date;
     public fechaTimbrado : Date ;
-	
+	public folio : string;
 
 	constructor(){
 		this.tipoDocumento = 'Factura';
+		this.statusFactura = new StatusFactura(1);
+		this.metodoPago = 'PUE';
+		this.formaPago = '003';
+		this.notas ='campo no obligatorio a remover';
 	}
 }

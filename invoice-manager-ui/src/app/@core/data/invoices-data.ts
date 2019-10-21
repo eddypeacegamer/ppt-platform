@@ -10,8 +10,8 @@ export abstract class InvoicesData {
 
     abstract getInvoiceById(id:number) : Observable<[Factura]>;
 
-    abstract insertNewCompany(empresa : Factura) : Observable<Factura>;
+    abstract insertNewInvoice(invoice : Factura) : Observable<Factura>;
 
-    abstract updateCompany(empresa : Factura) : Observable<Factura>;
+    abstract updateInvoice(invoice : Factura) : Observable<Factura>;
   
 }
