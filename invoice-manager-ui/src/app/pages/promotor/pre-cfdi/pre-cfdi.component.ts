@@ -16,6 +16,7 @@ import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
+import { Pago } from '../../../models/pago';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -45,7 +46,9 @@ export class PreCfdiComponent implements OnInit {
   public companyInfo: Empresa;
 
   /** PAYMENT SECCTION**/
-  public filename;
+  
+  public paymentForm = {coin:'*',payType:'*',bank:'*',filename:''};
+  public newPayment : Pago;
 
 
   constructor(private dialogService: NbDialogService,
@@ -64,6 +67,7 @@ export class PreCfdiComponent implements OnInit {
     this.catalogsService.getAllUsoCfdis().subscribe((usos: UsoCfdi[]) => this.usoCfdiCat = usos,
     (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     /** INIT VARIABLES **/
+    this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.factura.cfdi = new Cfdi();
@@ -251,21 +255,34 @@ export class PreCfdiComponent implements OnInit {
 
 
   /******* PAGOS ********/
-  public fileUploadListener($event: any): void {
+
+
+  onPaymentCoinSelected(clave:string){
+    this.newPayment.moneda = clave;
+  }
+
+  onPaymentTypeSelected(clave:string){
+    this.newPayment.tipoPago = clave;
+  }
+
+  onPaymentBankSelected(clave:string){
+    this.newPayment.banco = clave;
+  }
+
+  fileUploadListener($event: any): void {
     const file = $event.target.files[0];
-    this.filename = file.name;
-    const reader = new FileReader();
-
-  reader.onloadend = function () {
-    // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
-    var b64 = reader.result;
-    console.log(b64); //-> "R0lGODdhAQABAPAAAP8AAAAAACwAAAAAAQABAAACAkQBADs="
-  };
-
-  reader.readAsDataURL(file);
+    this.paymentForm.filename = file.name;
     
+    this.toBase64(file).then((b64=>{this.newPayment.documento=b64}))
     
   }
+
+  sendPayment(){
+    console.log(this.newPayment);
+    this.invoiceService.insertNewPayment(this.factura.folio,this.newPayment);
+  }
+
+
 
   public toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();

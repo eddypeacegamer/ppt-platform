@@ -29,12 +29,15 @@ public class Pago implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "TIPO_DOCUMENTO")
-	private String tipoDocumento;
+	@Column(name = "MONEDA")
+	private String moneda;
 
 	@Column(name = "DOCUMENTO")
 	private String documento;
 
+	@Column(name = "BANCO")
+	private String banco;
+	
 	@Column(name = "MONTO")
 	private Double monto;
 
@@ -71,12 +74,12 @@ public class Pago implements Serializable {
 		this.folio = folio;
 	}
 
-	public String getTipoDocumento() {
-		return tipoDocumento;
+	public String getMoneda() {
+		return moneda;
 	}
 
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
 	}
 
 	public String getDocumento() {
@@ -85,6 +88,14 @@ public class Pago implements Serializable {
 
 	public void setDocumento(String documento) {
 		this.documento = documento;
+	}
+
+	public String getBanco() {
+		return banco;
+	}
+
+	public void setBanco(String banco) {
+		this.banco = banco;
 	}
 
 	public Double getMonto() {
@@ -103,6 +114,14 @@ public class Pago implements Serializable {
 		this.tipoPago = tipoPago;
 	}
 
+	public Date getFechaPago() {
+		return fechaPago;
+	}
+
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -119,19 +138,11 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Date getFechaPago() {
-		return fechaPago;
-	}
-
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
-	}
-
 	@Override
 	public String toString() {
-		return "Pago [id=" + id + ", folio=" + folio + ", tipoDocumento=" + tipoDocumento + ", documento=" + documento
-				+ ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Pago [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", documento=" + documento + ", banco="
+				+ banco + ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

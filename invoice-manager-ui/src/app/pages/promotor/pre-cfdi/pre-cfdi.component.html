@@ -108,9 +108,10 @@
             <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
               [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
               <option value="*">Seleccionar</option>
-              <option value="001">Efectivo</option>
-              <option value="002">Cheque nominativo</option>
-              <option value="003">Transferencia electrónica de fondos</option>
+              <option value="01">Efectivo</option>
+              <option value="02">Cheque nominativo</option>
+              <option value="03">Transferencia electrónica de fondos</option>
+              <option value="99">Por definir</option>
             </select>
           </div>
 
@@ -242,7 +243,7 @@
           <div class="col-sm-1">
             <label for="inputPayCoin" class="label">Moneda</label>
             <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
-              [(ngModel)]="formInfo.moneda" (change)="onMonedaSelected($event.target.value)">
+              [(ngModel)]="paymentForm.coin" (change)="onPaymentCoinSelected($event.target.value)">
               <option value="*">Seleccionar</option>
               <option value="MXN">Peso MX</option>
               <option value="USD">Dollar US</option>
@@ -251,21 +252,34 @@
           <div class="col-sm-2">
             <label for="inputPayType" class="label">Forma de Pago</label>
             <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-              [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
+              [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
               <option value="*">Seleccionar</option>
-              <option value="001">Efectivo</option>
-              <option value="002">Cheque nominativo</option>
-              <option value="003">Transferencia electrónica de fondos</option>
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="CHEQUE">Cheque nominativo</option>
+              <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
+              <option value="DEPOSITO">Deposito bancario</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="inputPayType" class="label">Banco receptor</label>
+            <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+              [(ngModel)]="paymentForm.bank" (change)="onPaymentBankSelected($event.target.value)">
+              <option value="*">Seleccionar</option>
+              <option value="BBVA">BBVA</option>
+              <option value="HSBC">HSBC</option>
+              <option value="BANORTE">BANORTE</option>
+              <option value="BANAMEX">BANAMEX</option>
+              <option value="N/A">NO APLICA</option>
             </select>
           </div>
           <div class="col-sm-2">
             <label for="payAmmount" class="label">Monto Pago</label>
-            <input id="payAmmount" class="form-control" fullWidth type="number" placeholder="Cantidad"
-              [(ngModel)]="newConcep.cantidad">
+            <input id="payAmmount" class="form-control" fullWidth type="number" placeholder="Monto"
+              [(ngModel)]="newPayment.monto">
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="payAmmount" class="label">Fecha de pago</label>
-            <input nbInput placeholder="Form Picker" [nbDatepicker]="formpicker" fullWidth style="display:block;">
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;" [(ngModel)]="newPayment.fechaPago">
             <nb-datepicker #formpicker></nb-datepicker>
           </div>
           <div class="form-group col-md-3">
@@ -275,9 +289,9 @@
                     <span class="input-group-text" id="inputGroupFileAddon01">Comprobante</span>
                   </div-->
                   <div class="custom-file" id="payFile">
-                    <input type="file" class="custom-file-input" id="inputGroupFile01" (change)="fileUploadListener($event)" style="display:block;"
+                    <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" (change)="fileUploadListener($event)" style="display:block;"
                       aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">{{filename}}</label>
+                    <label class="custom-file-label" for="inputGroupFile01">{{paymentForm.filename}}</label>
                   </div>
               </div>
 
@@ -288,7 +302,7 @@
       </div>
         <br>
         <div class="row form-inline">
-          <button type="button" nbButton status="primary">GUARDAR</button>
+          <button type="button" nbButton status="primary" (click)="sendPayment()">GUARDAR</button>
           <button type="button" nbButton status="primary">ACTUALIZAR</button>
         </div>
         <br>

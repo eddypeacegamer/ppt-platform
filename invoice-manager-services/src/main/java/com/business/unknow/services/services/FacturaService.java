@@ -239,7 +239,7 @@ public class FacturaService {
 		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
 	}
 
-	public List<PagoDto> getPagos(String folio) throws InvoiceManagerException {
+	public List<PagoDto> getPagos(String folio) {
 		List<Pago> archivos = new ArrayList<>();
 		archivos.addAll(pagoRepository.findByFolio(folio));
 		return mapper.getPagosDtoFromEntity(archivos);
@@ -253,7 +253,8 @@ public class FacturaService {
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
 		entity.setDocumento(pago.getDocumento());
-		entity.setTipoDocumento(pago.getTipoDocumento());
+		entity.setBanco(pago.getBanco());
+		entity.setMoneda(pago.getMoneda());
 		entity.setTipoPago(pago.getTipoPago());
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
 	}
