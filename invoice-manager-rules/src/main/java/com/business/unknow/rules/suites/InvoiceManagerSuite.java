@@ -6,6 +6,6 @@ import org.jeasy.rules.api.Rules;
  * @author eej000f
  *
  */
-public interface PptSuite {
+public interface InvoiceManagerSuite {
 	public Rules getSuite();
 }

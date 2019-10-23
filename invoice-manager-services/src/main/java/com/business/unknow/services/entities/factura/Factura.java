@@ -5,19 +5,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.LastModifiedDate;
-
-import com.business.unknow.services.entities.catalogs.StatusFactura;
 
 @Entity
 @Table(name = "FACTURAS")
@@ -51,10 +46,14 @@ public class Factura implements Serializable {
 	@Column(name = "UUID")
 	private String uuid;
 
-	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA") // TODO remove this ID use
-																						// ID_FACTURA
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
-	private StatusFactura statusFactura;
+	@Column(name = "STATUS_PAGO")
+	private String statusPago;
+
+	@Column(name = "STATUS_DEVOLUCION")
+	private String statusDevolucion;
+
+	@Column(name = "STATUS_FACTURA")
+	private String statusFactura;
 
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
@@ -135,11 +134,27 @@ public class Factura implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public StatusFactura getStatusFactura() {
+	public String getStatusPago() {
+		return statusPago;
+	}
+
+	public void setStatusPago(String statusPago) {
+		this.statusPago = statusPago;
+	}
+
+	public String getStatusDevolucion() {
+		return statusDevolucion;
+	}
+
+	public void setStatusDevolucion(String statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
+	}
+
+	public String getStatusFactura() {
 		return statusFactura;
 	}
 
-	public void setStatusFactura(StatusFactura statusFactura) {
+	public void setStatusFactura(String statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 

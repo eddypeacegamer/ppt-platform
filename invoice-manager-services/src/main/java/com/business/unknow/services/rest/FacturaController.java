@@ -61,19 +61,18 @@ public class FacturaController {
 
 	@PostMapping
 	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
-	}
-	
-	@PostMapping("/chain")
-	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<FacturaDto> insertFacturaWithCfdi(@RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
 
-	
+	@PostMapping("/{folio}/complementos")
+	@ApiOperation(value = "insert a new complemento into the system")
+	public ResponseEntity<FacturaDto> insertComplemento(@RequestBody @Valid FacturaDto factura,
+			@PathVariable String folio) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewComplemento(factura, folio), HttpStatus.CREATED);
+	}
+
 	@PutMapping("/{folio}")
 	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)

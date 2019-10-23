@@ -8,5 +8,6 @@ public class Constants {
 	
 	public static final Integer INTERNAL_ERROR = 500;
 	public static final Integer BAD_REQUEST = 400;
-
+	
+		
 }

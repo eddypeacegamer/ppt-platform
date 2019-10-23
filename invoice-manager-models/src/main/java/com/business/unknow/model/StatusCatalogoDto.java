@@ -1,12 +1,15 @@
 package com.business.unknow.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StatusCatalogoDto {
+public class StatusCatalogoDto  implements Serializable{
 
+	private static final long serialVersionUID = -3039997993037438873L;
 	private int id;
 	private String value;
 

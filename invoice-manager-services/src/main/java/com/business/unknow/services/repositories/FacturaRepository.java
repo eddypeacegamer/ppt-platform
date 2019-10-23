@@ -17,11 +17,11 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
 	public Optional<Factura> findByFolio(String folio);
 
-	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura.statusEvento) like upper(:statusEvento) and upper(f.statusFactura.statusPago) like upper(:statusPago)")
+	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura) like upper(:statusEvento) and upper(f.statusPago) like upper(:statusPago)")
 	public Page<Factura> findByRfcEmisorWithOtherParams(@Param("rfcEmisor") String rfc,
 			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
 
-	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura.statusEvento) like upper(:statusEvento) and upper(f.statusFactura.statusPago) like upper(:statusPago)")
+	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura) like upper(:statusEvento) and upper(f.statusPago) like upper(:statusPago)")
 	public Page<Factura> findByRfcRemitenteWithOtherParams(@Param("rfcRemitente") String rfc,
 			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
 
@@ -29,5 +29,7 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	
 	@Query("select f from Factura f where folioPadre= :folioPadre")
 	public List<Factura> findComplementosByFolioPadre(@Param("folioPadre") String folioPadre);
+	
+	public List<Factura> findByFolioPadre(String folioPadre);
 
 }

@@ -1,5 +1,6 @@
 package com.business.unknow.model.factura.cfdi.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConceptoDto {
+public class ConceptoDto implements Serializable {
 
+	private static final long serialVersionUID = 1690079459401358817L;
 	private Integer id;
 	private String claveProdServ;
 	private String noIdentificacion;

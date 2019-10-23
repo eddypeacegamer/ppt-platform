@@ -10,9 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PagoDto implements Serializable {
 
-
 	private static final long serialVersionUID = -8495281362684756977L;
-	
+
 	private Integer id;
 	private String folio;
 	private String tipoDocumento;
@@ -101,7 +100,5 @@ public class PagoDto implements Serializable {
 				+ documento + ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
-	
 
 }

@@ -1,6 +1,15 @@
 package com.business.unknow.model.factura;
 
-public class FacturaFileDto {
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class FacturaFileDto implements Serializable {
+
+	private static final long serialVersionUID = -4385921763462504713L;
 
 	private Integer id;
 

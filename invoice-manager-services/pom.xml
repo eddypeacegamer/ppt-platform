@@ -36,6 +36,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.business.unknow</groupId>
+			<artifactId>invoice-manager-rule</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-external-sdk</artifactId>
 			<version>${project.version}</version>
 			 <exclusions>

@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
+import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
@@ -41,6 +43,7 @@ import com.business.unknow.services.repositories.FacturaFileRepository;
 import com.business.unknow.services.repositories.FacturaRepository;
 import com.business.unknow.services.repositories.ImpuestoRepository;
 import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.services.evaluations.FacturaServiceEvaluator;
 
 @Service
 public class FacturaService {
@@ -59,7 +62,7 @@ public class FacturaService {
 
 	@Autowired
 	private ConceptoRepository conceptoRepository;
-	
+
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
 
@@ -71,9 +74,12 @@ public class FacturaService {
 
 	@Autowired
 	private ConceptoMapper conceptoMapper;
-	
+
 	@Autowired
 	private ImpuestoMapper impuestoMapper;
+
+	@Autowired
+	private FacturaServiceEvaluator facturaServiceEvaluation;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -121,25 +127,34 @@ public class FacturaService {
 		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 	}
 
+	public FacturaDto insertNewComplemento(FacturaDto dto, String folio) throws InvoiceManagerException {
+		dto.setFolio(FacturaCalculator.folioEncrypt(dto));
+		validator.validatePosComplementoDto(dto, folio);
+		Optional<Factura> factura = repository.findByFolio(dto.getFolioPadre());
+		if (factura.isPresent()) {
+			FacturaContext facturaContext = new FacturaContextBuilder()
+					.setFacturaDto(mapper.getFacturaDtoFromEntity(factura.get()))
+					.setTipoFactura(factura.get().getMetodoPago())
+					.setComplementos(
+							mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
+					.setComplementos(dto).build();
+			facturaServiceEvaluation.facruraContexctValidation(facturaContext);
+			return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
+		} else {
+			throw new InvoiceManagerException("Error al crear Complemento", "La factura padre no existe",
+					Constants.BAD_REQUEST);
+		}
+	}
+
 	@Transactional(rollbackOn = InvoiceManagerException.class)
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(dto);
-		Optional<Factura> factura = repository.findByFolio(dto.getFolio());
-		if (factura.isPresent()) {
-			throw new InvoiceManagerException("Error al crear la Factura", "Ya existe la factura",
-					Constants.BAD_REQUEST);
-		}
 		dto.setFechaCreacion(new Date());
 		dto.setFechaActualizacion(new Date());
 		FacturaCalculator.assignFolioInFacturaDto(dto);
 		dto.setFolio(FacturaCalculator.folioEncrypt(dto));
 		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
-		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(dto.getFolio());
-		if (cfdi.isPresent()) {
-			throw new InvoiceManagerException("Error al crear Cfdi", "El cfdi ya existe", Constants.BAD_REQUEST);
-		} else {
-			dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
-		}
+		dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
 		return facturaDto;
 	}
 
@@ -151,7 +166,9 @@ public class FacturaService {
 		entity.setMetodoPago(factura.getMetodoPago());
 		entity.setNotas(factura.getNotas());
 		entity.setRfcEmisor(factura.getRfcEmisor());
-		entity.setStatusFactura(mapper.getEntityFromStatusFacturaDto(factura.getStatusFactura()));
+		entity.setStatusFactura(factura.getStatusFactura());
+		entity.setStatusPago(factura.getStatusPago());
+		entity.setStatusDevolucion(factura.getStatusDevolucion());
 		entity.setStatusDetail(factura.getStatusDetail());
 		return mapper.getFacturaDtoFromEntity(repository.save(entity));
 	}
@@ -168,9 +185,6 @@ public class FacturaService {
 		Cfdi entity = cfdiRepository.findById(id)
 				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
 						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
-		entity.setFechaActualizacion(new Date());
-		entity.setFormaPago(dto.getFormaPago());
-		entity.setMetodoPago(dto.getMetodoPago());
 		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(entity));
 	}
 
@@ -182,29 +196,23 @@ public class FacturaService {
 	}
 
 	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) throws InvoiceManagerException {
-		validator.validatePostCfdi(dto, folio);
-		Optional<Cfdi> entity = cfdiRepository.findByFolio(folio);
-		if (entity.isPresent()) {
-			throw new InvoiceManagerException("Error al crear Cfdi", "El cfdi ya existe", Constants.BAD_REQUEST);
-		} else {
-			dto.setFechaActualizacion(new Date());
-			Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
-			CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
-				for (ConceptoDto conceptoDto : dto.getConceptos()) {
-					Concepto tempConcepto = conceptoMapper.getEntityFromClientDto(conceptoDto);
-					tempConcepto.setCfdi(cfdiTemp);
-					tempConcepto=conceptoRepository.save(tempConcepto);
-					cfdiDto.getConceptos().add(conceptoMapper.getClientDtoFromEntity(tempConcepto));
-					List<ImpuestoDto> impuestos= new ArrayList<>();
-					for(ImpuestoDto impuestoDto:conceptoDto.getImpuestos()) {
-						Impuesto impuestoTemp = impuestoMapper.getEntityFromClientDto(impuestoDto);
-						impuestoTemp.setConcepto(tempConcepto);
-						impuestos.add(impuestoMapper.getClientDtoFromEntity(impuestoRepository.save(impuestoTemp)));
-					}
-					conceptoDto.setImpuestos(impuestos);
-				}
-			return cfdiDto;
+
+		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
+		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
+		for (ConceptoDto conceptoDto : dto.getConceptos()) {
+			Concepto tempConcepto = conceptoMapper.getEntityFromClientDto(conceptoDto);
+			tempConcepto.setCfdi(cfdiTemp);
+			tempConcepto = conceptoRepository.save(tempConcepto);
+			cfdiDto.getConceptos().add(conceptoMapper.getClientDtoFromEntity(tempConcepto));
+			List<ImpuestoDto> impuestos = new ArrayList<>();
+			for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
+				Impuesto impuestoTemp = impuestoMapper.getEntityFromClientDto(impuestoDto);
+				impuestoTemp.setConcepto(tempConcepto);
+				impuestos.add(impuestoMapper.getClientDtoFromEntity(impuestoRepository.save(impuestoTemp)));
+			}
+			conceptoDto.setImpuestos(impuestos);
 		}
+		return cfdiDto;
 	}
 
 	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {

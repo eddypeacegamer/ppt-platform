@@ -1,4 +1,4 @@
-package com.business.unknow.services.config.error;
+package com.business.unknow.services.config;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

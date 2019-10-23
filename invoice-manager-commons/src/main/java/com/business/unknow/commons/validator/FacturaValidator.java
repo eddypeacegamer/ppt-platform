@@ -17,6 +17,22 @@ public class FacturaValidator {
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
 	}
 	
+	public void validatePosComplementoDto(FacturaDto dto,String folio) throws InvoiceManagerException {
+		checkNotNull(dto.getFolioPadre(), "folio padre");
+		if(!folio.equals(dto.getFolioPadre())) {
+			throw new InvoiceManagerException("Error al crear Complemento","Los folios son diferentes",
+					Constants.BAD_REQUEST);
+		}
+		if(folio.equals(dto.getFolio())) {
+			throw new InvoiceManagerException("Error al crear Complemento","El folio del padre no puede ser igual al del hijo",
+					Constants.BAD_REQUEST);
+		}
+		checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
+		checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
+		checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
+		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
+	}
+	
 	
 	public void validatePostFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
