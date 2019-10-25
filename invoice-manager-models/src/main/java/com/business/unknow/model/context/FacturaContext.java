@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.factura.PagoDto;
 
 public class FacturaContext implements Serializable {
 
 	private static final long serialVersionUID = 661221684069242273L;
 	private String tipoFactura;
 	private FacturaDto facturaDto;
+	private FacturaDto comlpemento;
 	private List<FacturaDto> complementos;
+	private List<PagoDto> pagos;
 	private FacturaDto complementoActual;
 	private boolean valid;
 	private String ruleErrorDesc;
@@ -76,9 +79,28 @@ public class FacturaContext implements Serializable {
 		this.suiteError = suiteError;
 	}
 
+	public List<PagoDto> getPagos() {
+		return pagos;
+	}
+
+	public void setPagos(List<PagoDto> pagos) {
+		this.pagos = pagos;
+	}
+
+	public FacturaDto getComlpemento() {
+		return comlpemento;
+	}
+
+	public void setComlpemento(FacturaDto comlpemento) {
+		this.comlpemento = comlpemento;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", valid=" + valid + "]";
+		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", comlpemento="
+				+ comlpemento + ", complementos=" + complementos + ", pagos=" + pagos + ", complementoActual="
+				+ complementoActual + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError="
+				+ suiteError + "]";
 	}
 
 }

@@ -55,9 +55,6 @@ public class FacturaService {
 	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
-	private PagoRepository pagoRepository;
-
-	@Autowired
 	private CfdiRepository cfdiRepository;
 
 	@Autowired
@@ -65,6 +62,9 @@ public class FacturaService {
 
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
+
+	@Autowired
+	private PagoRepository pagoRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
@@ -134,9 +134,10 @@ public class FacturaService {
 		if (factura.isPresent()) {
 			FacturaContext facturaContext = new FacturaContextBuilder()
 					.setFacturaDto(mapper.getFacturaDtoFromEntity(factura.get()))
-					.setTipoFactura(factura.get().getMetodoPago())
+					.setTipoFactura(factura.get().getMetodoPago()).setComlpemento(dto)
 					.setComplementos(
 							mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
+					.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(dto.getFolioPadre())))
 					.setComplementos(dto).build();
 			facturaServiceEvaluation.facruraContexctValidation(facturaContext);
 			return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));

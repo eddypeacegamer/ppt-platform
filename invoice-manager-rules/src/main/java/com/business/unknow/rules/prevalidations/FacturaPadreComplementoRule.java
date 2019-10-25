@@ -13,8 +13,9 @@ import com.business.unknow.rules.common.Constants;
 public class FacturaPadreComplementoRule extends AbstractPrevalidations {
 
 	@Condition
-	public boolean firstNameCondition(@Fact("facturaContext") FacturaContext fc) {
-		return (fc.getFacturaDto() == null || fc.getFacturaDto().getFechaTimbrado() == null
+	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
+		return (fc.getComlpemento() == null|| fc.getFacturaDto() == null
+				|| fc.getFacturaDto().getFechaTimbrado() == null
 				|| !fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPT.getNombre())
 				|| fc.getFacturaDto().getUuid() == null || fc.getComplementoActual() == null);
 	}

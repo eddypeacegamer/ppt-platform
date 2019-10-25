@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.factura.PagoDto;
 
 public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 
@@ -28,6 +29,16 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 
 	public FacturaContextBuilder setComplementos(FacturaDto complemento) {
 		instance.setComplementoActual(complemento);
+		return this;
+	}
+	
+	public FacturaContextBuilder setPagos(List<PagoDto> pagos) {
+		instance.setPagos(pagos);
+		return this;
+	}
+	
+	public FacturaContextBuilder setComlpemento(FacturaDto comlpemento) {
+		instance.setComlpemento(comlpemento);
 		return this;
 	}
 
