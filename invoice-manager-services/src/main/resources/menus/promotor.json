@@ -12,7 +12,7 @@
       },
       {
         "title": "pre-cfdi",
-        "link": "/pages/promotor/precfdi"
+        "link": "/pages/promotor/precfdi/*"
       },
       {
         "title": "pagos",

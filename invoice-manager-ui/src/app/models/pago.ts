@@ -4,7 +4,7 @@ export class Pago{
 	public folio: string;
     public moneda: string;
     public banco: string;
-	public documento:any;
+	public documento:string;
 	public monto:number;
 	public tipoPago:string;
 	public fechaPago:Date;

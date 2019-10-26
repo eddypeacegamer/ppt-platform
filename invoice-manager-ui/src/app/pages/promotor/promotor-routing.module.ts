@@ -11,7 +11,7 @@ const routes: Routes = [{
   component: PromotorComponent,
   children: [
     {
-      path: 'precfdi',
+      path: 'precfdi/:folio',
       component: PreCfdiComponent,
     },
     {

@@ -30,8 +30,11 @@ export class InvoicesService {
     return this.httpClient.post('../api/facturas/chain',invoice);
   }
 
-  public insertNewPayment(folio : string, payment : Pago ): Observable<any>{
-    console.log(`../api/facturas/${folio}/pagos`)
+  public getPayments(folio : string): Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folio}/pagos`);
+  }
+
+  public insertNewPayment(folio : string, payment : Pago): Observable<any>{
     return this.httpClient.post(`../api/facturas/${folio}/pagos`,payment);
   }
 }
