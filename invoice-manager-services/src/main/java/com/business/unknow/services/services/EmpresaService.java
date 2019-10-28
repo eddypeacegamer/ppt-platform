@@ -29,16 +29,14 @@ public class EmpresaService {
 	private ContribuyenteMapper contribuyenteMapper;
 
 	public Page<EmpresaDto> getEmpresasByParametros(Optional<String> rfc, Optional<String> razonSocial,
-			Optional<String> linea, int page, int size) {
+			String linea, int page, int size) {
 		Page<Empresa> result;
-		if (!razonSocial.isPresent() && !rfc.isPresent()&&!linea.isPresent()) {
+		if (!razonSocial.isPresent() && !rfc.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else if (rfc.isPresent()) {
-			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()), PageRequest.of(page, size));
-		} else if (linea.isPresent()) {
-			result = repository.findByLineaIgnoreCaseContaining(String.format("%%%s%%", linea.get()), PageRequest.of(page, size));
+			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()),String.format("%%%s%%", linea), PageRequest.of(page, size));
 		}else {
-			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()), PageRequest.of(page, size));
+			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()),String.format("%%%s%%", linea), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getEmpresaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());

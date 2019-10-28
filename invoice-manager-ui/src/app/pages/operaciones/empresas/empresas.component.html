@@ -18,7 +18,7 @@
             <label for="inputCompanyType" class="label">Tipo Empresa</label>
             <div class="row form-inline">
               <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
-                [(ngModel)]="filterParams.companyType" (change)="onCompanySelected($event.target.value)">
+                (change)="onCompanySelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="A">Tipo A</option>
                 <option value="B">Tipo B</option>
@@ -26,6 +26,8 @@
               </select>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button class="btn btn-primary" (click)="newCompany()">NUEVA EMPRESA</button>
             </div>
           </div>
         </div>
