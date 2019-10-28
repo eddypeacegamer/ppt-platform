@@ -27,9 +27,6 @@ import { NbIconLibraries } from '@nebular/theme';
 })
 export class PreCfdiComponent implements OnInit, OnDestroy {
 
-
-
-
   public girosCat: Giro[] = [];
   public companiesCat: Empresa[] = [];
   public prodServCat: ClaveProductoServicio[] = [];
@@ -38,8 +35,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public newConcep: Concepto;
   public factura: Factura;
+  public folioParam: string;
 
-  public headers: string[] = ['Acciones','Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
+  public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
   public errorMessages: string[] = [];
   public conceptoMessages : string[] = [];
   public payErrorMessages: string[] = [];
@@ -73,6 +71,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
         let folio = route.get('folio');
+        this.folioParam = folio;
         this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => this.factura = invoice);
         this.invoiceService.getPayments(folio).subscribe(payments => this.invoicePayments = payments);
         });
@@ -90,7 +89,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    
+    /** CLEAN VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
   }
 
   onDeleteConfirm(event): void {
@@ -302,6 +305,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   sendPayment(){
+    this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
     let validPayment = true;
     if(this.newPayment.banco == undefined){
@@ -339,7 +343,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     if(validPayment){
       this.invoiceService.insertNewPayment(this.factura.folio,this.newPayment).subscribe(
-        result =>{this.paymentForm.successPayment=true;this.newPayment = new Pago();},
+        result =>{this.paymentForm.successPayment=true;this.newPayment = new Pago(); this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);},
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
     

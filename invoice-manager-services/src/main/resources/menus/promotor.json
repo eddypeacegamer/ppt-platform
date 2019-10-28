@@ -13,11 +13,6 @@
       {
         "title": "pre-cfdi",
         "link": "/pages/promotor/precfdi/*"
-      },
-      {
-        "title": "pagos",
-        "link": "/pages/promotor/pagos"
       }
-
     ]
   }

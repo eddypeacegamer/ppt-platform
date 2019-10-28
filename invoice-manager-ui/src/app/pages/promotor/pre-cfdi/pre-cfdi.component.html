@@ -20,10 +20,41 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI</nb-card-header>
       <nb-card-body>
-          <div *ngIf="factura.folio!=undefined">
-            {{factura | json}}
+          <div *ngIf="folioParam != '*'" >
+            <p class="font-weight-bold">Información Emisor y Receptor</p>
+            <div class="form-inline">
+                
+                
+                <p class="font-weight-bold">Emisor</p>
+                <p>{{factura.cfdi.rfcEmisor}}</p>
+                <p>{{factura.cfdi.nombreEmisor}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Receptor</p>
+                <p>{{factura.cfdi.rfcReceptor}}</p>
+                <p>{{factura.cfdi.nombreReceptor}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <span class="badge badge-primary">{{factura.statusFactura.statusEvento}}</span>    
+            </div>
+            <p class="font-weight-bold">Información CFDI</p>
+            <br>
+            <div class="form-inline">
+                <p class="font-weight-bold">Uso CFDI</p>
+                <p>{{factura.cfdi.usoCfdi}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Moneda</p>
+                <p>{{factura.cfdi.moneda}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Metodo de Pago</p>
+                <p>{{factura.cfdi.metodoPago}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Forma de Pago</p>
+                <p>{{factura.cfdi.formaPago}}</p>
+                
+            </div>
+            <br>
+          <p class="font-weight-bold">Conceptos factura</p>
           </div>
-        <div *ngIf="factura.folio==undefined">
+        <div *ngIf="folioParam === '*'" >
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="row">
 
@@ -173,6 +204,7 @@
                   <option value="002">IVA</option>
                   <!--option value="003">IEPS</option-->
                 </select>
+                
                 <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
               </div>
             </div>
@@ -188,12 +220,13 @@
           <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
             <thead class="thead-light">
               <tr>
+                <th scope="col" *ngIf="factura.folio==undefined" class="text-center">Acciones</th>
                 <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-                <td scope="row" class="text-center">
+                <td scope="row" *ngIf="factura.folio==undefined" class="text-center">
                   <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
                     (click)="removeConcepto(i)"></nb-icon>
                 </td>
@@ -207,17 +240,20 @@
                 <td scope="row" class="text-center">{{fila.importe | currency}}</td>
               </tr>
               <tr>
-                <td colspan="7"></td>
+                <td *ngIf="folioParam != '*'" colspan="6"></td>
+                <td *ngIf="folioParam === '*'" colspan="7"></td>
                 <td class="text-center">Subtotal</td>
                 <td class="text-center">{{factura.cfdi.subtotal | currency}}</td>
               </tr>
               <tr>
-                <td colspan="7"></td>
+                <td *ngIf="folioParam != '*'" colspan="6"></td>
+                <td *ngIf="folioParam === '*'" colspan="7"></td>
                 <td class="text-center">Impuestos</td>
                 <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
               </tr>
               <tr>
-                <td colspan="7"></td>
+                <td *ngIf="folioParam != '*'"  colspan="6"></td>
+                <td *ngIf="folioParam === '*'" colspan="7"></td>
                 <td class="text-center">Total</td>
                 <td class="text-center">{{factura.cfdi.total | currency}}</td>
               </tr>
@@ -225,11 +261,11 @@
           </table>
           <br>
 
-          <div class="form-inline" *ngIf="factura.folio==undefined">
+          <div class="form-inline" *ngIf="folioParam === '*'">
             <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
             <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
             <div class="alert alert-success" *ngIf="factura.folio!=undefined" role="alert">
-                La solicitus del CFDI ha sido generada correctamente con el folio {{factura.folio}}
+                La solicitud del CFDI ha sido generada correctamente con el folio {{factura.folio}}
               </div>
           </div>
           <br>

@@ -14,7 +14,7 @@ export class EmpresasComponent implements OnInit {
   public headers: string[] = ['RFC', 'Razon Social', 'Nombre', 'Tipo', 'Activa', 'Correo', 'Fecha Creacion', 'Fecha Actualizacion'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams : any = {razonSocial:'',rfc:''};
+  public filterParams : any = {razonSocial:'',rfc:'',companyType:'*'};
 
   constructor(private companyService: CompaniesData,
     private donwloadService:DownloadCsvService) {}
