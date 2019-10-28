@@ -10,6 +10,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { RevisionComponent } from './revision/revision.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
 import { EmpresaComponent } from './empresa/empresa.component';
+import { ClienteComponent } from './cliente/cliente.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -17,6 +18,10 @@ const routes: Routes = [{
     {
       path: 'clientes',
       component: ClientesComponent,
+    },
+    {
+      path: 'cliente/:rfc',
+      component: ClienteComponent,
     },
     {
       path: 'empresas',

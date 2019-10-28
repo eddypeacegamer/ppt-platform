@@ -47,4 +47,16 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
+  public onRegimenFiscalSelected(regimen:string){
+    console.log(regimen);
+  }
+
+  public onGiroSelection(giro:string){
+    console.log(giro);
+  }
+
+  public onCompanySelected(company:string){
+    console.log(company);
+  }
+
 }

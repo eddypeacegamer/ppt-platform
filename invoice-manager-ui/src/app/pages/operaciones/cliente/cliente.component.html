@@ -1,23 +1,3 @@
-<div class="row">
-  <div class="col-md-12">
-    <nb-card class="inline-form-card">
-      <nb-card-header>Clientes</nb-card-header>
-      <nb-card-body>
-        <form class="form-inline">
-          <input type="text" [(ngModel)]="formInfo.rfc" [ngModelOptions]="{standalone: true}" nbInput fullWidth
-            placeholder="RFC">
-          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.rfc.length > 13"
-            (click)="buscarClientePorRFC()" nbButton status="primary">BUSCAR</button>
-          <!--button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
-            (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>-->
-        </form>
-        <p class="alert alert-warning" *ngIf="formInfo.message.length > 0" role="alert">{{formInfo.message}}</p>
-        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
-      </nb-card-body>
-    </nb-card>
-  </div>
-</div>
-
 <div *ngIf="clientInfo!=undefined" class="row">
   <div class="col-md-12">
     <nb-card>
@@ -97,14 +77,14 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputExterior" class="label">No exterior</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth
+              <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth
                 id="inputExterior" placeholder="No exterior">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No interior</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
+              <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
                 id="inputInterior" placeholder="No interior">
             </div>
           </div>

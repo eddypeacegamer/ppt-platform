@@ -4,6 +4,7 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-clientes',
@@ -20,7 +21,8 @@ export class ClientesComponent implements OnInit {
   public filterParams : any = {razonSocial:'',rfc:''};
    
   constructor(private clientService: ClientsData,
-    private donwloadService: DownloadCsvService) { }
+    private donwloadService: DownloadCsvService,
+    private router: Router) { }
 
   ngOnInit() {
     this.updateDataTable(0,10);
@@ -42,6 +44,10 @@ export class ClientesComponent implements OnInit {
     this.clientService.getClients(0, 10000, this.filterParams).subscribe((result:GenericPage<Client>) => {
       this.donwloadService.exportCsv(result.content.map(r=>r.informacionFiscal),'Clientes')
     });
+  }
+
+  public redirectToCliente(rfc:string){
+    this.router.navigate([`./pages/operaciones/cliente/${rfc}`])
   }
 
 }

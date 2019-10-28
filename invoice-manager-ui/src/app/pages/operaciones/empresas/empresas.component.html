@@ -70,7 +70,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">{{fila.informacionFiscal.rfc}}</td>
+                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToEmpresa(fila.informacionFiscal.rfc)">{{fila.informacionFiscal.rfc}}</button></td>
                 <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
                 <td scope="row">{{fila.informacionFiscal.nombre}}</td>
                 <td scope="row">{{fila.tipo}}</td>

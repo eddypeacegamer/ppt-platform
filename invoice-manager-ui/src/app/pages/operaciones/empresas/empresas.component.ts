@@ -54,4 +54,8 @@ export class EmpresasComponent implements OnInit {
         this.donwloadService.exportCsv(result.content.map(r=>r.informacionFiscal),'Empresas')
       });
     }
+
+    public redirectToEmpresa(rfc:string){
+      this.router.navigate([`./pages/operaciones/empresa/${rfc}`])
+    }
 }
