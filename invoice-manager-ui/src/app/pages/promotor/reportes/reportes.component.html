@@ -97,7 +97,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">{{fila.folio}}</td>
+                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
                 <td scope="row">{{fila.rfcEmisor}}</td>
                 <td scope="row">{{fila.razonSocialEmisor}}</td>
                 <td scope="row">{{fila.rfcRemitente}}</td>

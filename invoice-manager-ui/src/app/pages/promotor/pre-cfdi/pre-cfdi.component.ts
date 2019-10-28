@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -16,16 +16,16 @@ import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
+import { Pago } from '../../../models/pago';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-pre-cfdi',
   templateUrl: './pre-cfdi.component.html',
   styleUrls: ['./pre-cfdi.component.scss']
 })
-export class PreCfdiComponent implements OnInit {
-
-
-
+export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public girosCat: Giro[] = [];
   public companiesCat: Empresa[] = [];
@@ -35,26 +35,47 @@ export class PreCfdiComponent implements OnInit {
 
   public newConcep: Concepto;
   public factura: Factura;
+  public folioParam: string;
 
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
   public errorMessages: string[] = [];
   public conceptoMessages : string[] = [];
+  public payErrorMessages: string[] = [];
 
   public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
 
   /** PAYMENT SECCTION**/
-  public filename;
-
+  
+  public paymentForm = {coin:'*',payType:'*',bank:'*',filename:'',successPayment:false};
+  public newPayment : Pago;
+  public invoicePayments = [];
 
   constructor(private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
-    private invoiceService: InvoicesData) { }
+    private invoiceService: InvoicesData,
+    private iconsLibrary: NbIconLibraries,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+    /** INIT VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
+    this.factura.cfdi.conceptos = [];
+    /** recovering folio info**/
+    this.route.paramMap.subscribe(route => {
+        let folio = route.get('folio');
+        this.folioParam = folio;
+        this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => this.factura = invoice);
+        this.invoiceService.getPayments(folio).subscribe(payments => this.invoicePayments = payments);
+        });
+    
 
     /**** LOADING CAT INFO ****/
     this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
@@ -63,12 +84,16 @@ export class PreCfdiComponent implements OnInit {
     (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     this.catalogsService.getAllUsoCfdis().subscribe((usos: UsoCfdi[]) => this.usoCfdiCat = usos,
     (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    /** INIT VARIABLES **/
+    
+
+  }
+
+  ngOnDestroy(){
+    /** CLEAN VARIABLES **/
+    this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.factura.cfdi = new Cfdi();
-    this.factura.cfdi.conceptos = [];
-
   }
 
   onDeleteConfirm(event): void {
@@ -145,6 +170,10 @@ export class PreCfdiComponent implements OnInit {
     this.factura = new Factura();
     this.factura.cfdi = new Cfdi();
     this.factura.cfdi.conceptos = [];
+  }
+
+  removeConcepto(index:number){
+    this.factura.cfdi.conceptos.splice(index,1);
   }
 
   agregarConcepto() {
@@ -244,35 +273,80 @@ export class PreCfdiComponent implements OnInit {
     if(validCdfi){
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => this.factura.folio = invoice.folio,
+        (invoice: Factura) => {this.factura.folio = invoice.folio;this.newPayment.folio = invoice.folio;},
         (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
   }
 
 
   /******* PAGOS ********/
-  public fileUploadListener($event: any): void {
-    const file = $event.target.files[0];
-    this.filename = file.name;
-    const reader = new FileReader();
 
-  reader.onloadend = function () {
-    // Since it contains the Data URI, we should remove the prefix and keep only Base64 string
-    var b64 = reader.result;
-    console.log(b64); //-> "R0lGODdhAQABAPAAAP8AAAAAACwAAAAAAQABAAACAkQBADs="
-  };
 
-  reader.readAsDataURL(file);
-    
-    
+  onPaymentCoinSelected(clave:string){
+    this.newPayment.moneda = clave;
   }
 
-  public toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+  onPaymentTypeSelected(clave:string){
+    this.newPayment.tipoPago = clave;
+  }
 
+  onPaymentBankSelected(clave:string){
+    this.newPayment.banco = clave;
+  }
+
+  fileUploadListener(event: any): void {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {this.paymentForm.filename = file.name + " " + file.type;this.newPayment.documento = reader.result.toString()}
+      reader.onerror = (error) => {this.payErrorMessages.push('Error parsing image file');console.error(error)};
+    }
+  }
+
+  sendPayment(){
+    this.newPayment.folio = this.factura.folio;
+    this.payErrorMessages = [];
+    let validPayment = true;
+    if(this.newPayment.banco == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El banco es un valor requerido');
+    }
+    if(this.newPayment.fechaPago == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('La fecha de pago es un valor requerido');
+    }
+    if(this.newPayment.moneda == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('Es necesario especificar la moneda con la que se realizo el pago.');
+    }
+    if(this.newPayment.monto == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El monto del pago es requerido.');
+    }
+    if(this.newPayment.monto <= 1){
+      validPayment = false;
+      this.payErrorMessages.push('El monto pagado es invalido');
+    }
+    if(this.newPayment.tipoPago == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El tipo de pago es requerido.');
+    }
+    if(this.newPayment.tipoPago!='EFECTIVO' && this.newPayment.documento== undefined){
+      validPayment = false;
+      this.payErrorMessages.push('La imagen del documento de pago es requerida.');
+    }
+    if(this.factura.cfdi.metodoPago=='PUE' && Math.abs(this.factura.cfdi.total-this.newPayment.monto)>0.01){
+      validPayment = false;
+      this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
+    }
+
+    if(validPayment){
+      this.invoiceService.insertNewPayment(this.factura.folio,this.newPayment).subscribe(
+        result =>{this.paymentForm.successPayment=true;this.newPayment = new Pago(); this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);},
+        (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+    
+  }
 
 }

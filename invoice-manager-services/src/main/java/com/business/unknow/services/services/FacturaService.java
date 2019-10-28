@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
+import com.business.unknow.commons.util.FacturaDefaultValues;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -150,10 +151,7 @@ public class FacturaService {
 	@Transactional(rollbackOn = InvoiceManagerException.class)
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(dto);
-		dto.setFechaCreacion(new Date());
-		dto.setFechaActualizacion(new Date());
-		FacturaCalculator.assignFolioInFacturaDto(dto);
-		dto.setFolio(FacturaCalculator.folioEncrypt(dto));
+		FacturaDefaultValues.assignaDefaultsFactura(dto);
 		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 		dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
 		return facturaDto;
@@ -248,7 +246,7 @@ public class FacturaService {
 		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
 	}
 
-	public List<PagoDto> getPagos(String folio) throws InvoiceManagerException {
+	public List<PagoDto> getPagos(String folio) {
 		List<Pago> archivos = new ArrayList<>();
 		archivos.addAll(pagoRepository.findByFolio(folio));
 		return mapper.getPagosDtoFromEntity(archivos);
@@ -262,7 +260,8 @@ public class FacturaService {
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
 		entity.setDocumento(pago.getDocumento());
-		entity.setTipoDocumento(pago.getTipoDocumento());
+		entity.setBanco(pago.getBanco());
+		entity.setMoneda(pago.getMoneda());
 		entity.setTipoPago(pago.getTipoPago());
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
 	}

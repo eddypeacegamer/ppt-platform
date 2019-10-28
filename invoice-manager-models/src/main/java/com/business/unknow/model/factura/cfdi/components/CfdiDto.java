@@ -19,10 +19,7 @@ public class CfdiDto implements Serializable {
 	private String sello;
 	private String noCertificado;
 	private String certificado;
-	private Double subtotal;
-	private Double descuento;
 	private String moneda;
-	private Double total;
 	private String tipoDeComprobante;
 	private String usoCfdi;
 	private String regimenFiscal;
@@ -88,36 +85,12 @@ public class CfdiDto implements Serializable {
 		this.certificado = certificado;
 	}
 
-	public Double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-	public Double getDescuento() {
-		return descuento;
-	}
-
-	public void setDescuento(Double descuento) {
-		this.descuento = descuento;
-	}
-
 	public String getMoneda() {
 		return moneda;
 	}
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
-	}
-
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
 	}
 
 	public String getTipoDeComprobante() {
@@ -187,11 +160,10 @@ public class CfdiDto implements Serializable {
 	@Override
 	public String toString() {
 		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello="
-				+ sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", subtotal=" + subtotal
-				+ ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante="
-				+ tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif="
-				+ rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat=" + noCertificadoSat + ", selloSat="
-				+ selloSat + ", conceptos=" + conceptos + "]";
+				+ sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
+				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
+				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
 	}
 
 }

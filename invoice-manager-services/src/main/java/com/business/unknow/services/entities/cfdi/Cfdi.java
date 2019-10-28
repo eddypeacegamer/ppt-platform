@@ -40,17 +40,8 @@ public class Cfdi implements Serializable {
 	@Column(name = "CERTIFICADO")
 	private String certificado;
 
-	@Column(name = "SUBTOTAL")
-	private Double subtotal;
-
-	@Column(name = "DESCUENTO")
-	private Double descuento;
-
 	@Column(name = "MONEDA")
 	private String moneda;
-
-	@Column(name = "TOTAL")
-	private Double total;
 
 	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
@@ -132,36 +123,12 @@ public class Cfdi implements Serializable {
 		this.certificado = certificado;
 	}
 
-	public Double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-	public Double getDescuento() {
-		return descuento;
-	}
-
-	public void setDescuento(Double descuento) {
-		this.descuento = descuento;
-	}
-
 	public String getMoneda() {
 		return moneda;
 	}
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
-	}
-
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
 	}
 
 	public String getTipoDeComprobante() {
@@ -231,11 +198,10 @@ public class Cfdi implements Serializable {
 	@Override
 	public String toString() {
 		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
-				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", subtotal=" + subtotal
-				+ ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante="
-				+ tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif="
-				+ rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat=" + noCertificadoSat + ", selloSat="
-				+ selloSat + ", conceptos=" + conceptos + "]";
+				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
+				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
+				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
 	}
 
 }

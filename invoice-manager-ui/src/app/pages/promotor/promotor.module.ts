@@ -15,7 +15,6 @@ import {
   NbDialogModule,
   NbIconModule
 } from '@nebular/theme';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { PromotorRoutingModule } from './promotor-routing.module';
 import { PromotorComponent } from './promotor.component';
@@ -29,9 +28,10 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
 @NgModule({
   declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent],
   imports: [
+    PromotorRoutingModule,
+    
     CommonModule,
     FormsModule,
-    PromotorRoutingModule,
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
@@ -43,7 +43,6 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    Ng2SmartTableModule,
     NbDialogModule,
   ],
   providers:[DownloadCsvService]

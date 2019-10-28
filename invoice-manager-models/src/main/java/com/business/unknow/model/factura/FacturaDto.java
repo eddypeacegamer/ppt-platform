@@ -29,6 +29,8 @@ public class FacturaDto implements Serializable {
 	private String metodoPago;
 	private String notas;
 	private Double total;
+	private Double subtotal;
+	private Double descuento;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
@@ -202,6 +204,22 @@ public class FacturaDto implements Serializable {
 		this.cfdi = cfdi;
 	}
 
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Double getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Double descuento) {
+		this.descuento = descuento;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -209,9 +227,9 @@ public class FacturaDto implements Serializable {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", notas=" + notas + ", total=" + total + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi
-				+ "]";
+				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
+				+ descuento + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
 	}
 
 }

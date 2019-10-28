@@ -73,6 +73,12 @@ public class Factura implements Serializable {
 	@Column(name = "TOTAL")
 	private Double total;
 
+	@Column(name = "SUBTOTAL")
+	private Double subtotal;
+
+	@Column(name = "DESCUENTO")
+	private Double descuento;
+
 	@Temporal(TemporalType.DATE)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
@@ -83,6 +89,7 @@ public class Factura implements Serializable {
 	private Date fechaTimbrado;
 
 	@Temporal(TemporalType.DATE)
+	@LastModifiedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
@@ -246,14 +253,32 @@ public class Factura implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Double getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Double descuento) {
+		this.descuento = descuento;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
-				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
-				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
-				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
+				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
+				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
+				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
+				+ descuento + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
+				+ ", fechaCreacion=" + fechaCreacion + "]";
 	}
 
 }
