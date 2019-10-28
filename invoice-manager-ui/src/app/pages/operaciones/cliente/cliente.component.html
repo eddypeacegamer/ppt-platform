@@ -1,8 +1,10 @@
-<div *ngIf="clientInfo!=undefined" class="row">
+<div class="row">
   <div class="col-md-12">
     <nb-card>
       <nb-card-header>Registro cliente</nb-card-header>
       <nb-card-body>
+        <p class="alert alert-warning" *ngIf="formInfo.message.length > 0" role="alert">{{formInfo.message}}</p>
+        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
@@ -77,14 +79,14 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputExterior" class="label">No exterior</label>
-              <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth
+              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth
                 id="inputExterior" placeholder="No exterior">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No interior</label>
-              <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
+              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
                 id="inputInterior" placeholder="No interior">
             </div>
           </div>
@@ -100,7 +102,7 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputCCO" class="label">Correo Alternativo</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.coo" nbInput fullWidth id="inputCCO"
+              <input type="email" [(ngModel)]="clientInfo.informacionFiscal.coo" nbInput fullWidth id="inputCCO"
                 placeholder="CCO">
             </div>
           </div>
