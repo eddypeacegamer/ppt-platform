@@ -5,6 +5,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Giro } from '../../../models/catalogos/giro';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ngx-empresa',
@@ -22,10 +23,17 @@ export class EmpresaComponent implements OnInit {
   public girosCat: Giro[] = [];
   public errorMessages: string[] = [];
   
-  constructor(private catalogsService:CatalogsData,private empresaService:CompaniesData) { }
+  constructor(private catalogsService:CatalogsData,private empresaService:CompaniesData ,private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.companyInfo = new Empresa();
+      /** recovering folio info**/
+      this.route.paramMap.subscribe(route => {
+        let rfc = route.get('rfc');
+        this.empresaService.getCompanyByRFC(rfc)
+        .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
+        (error : HttpErrorResponse)=>{this.companyInfo = new Empresa();});  
+        });
+    
     /**** LOADING CAT INFO ****/
     this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
@@ -45,6 +53,18 @@ export class EmpresaComponent implements OnInit {
 
   public onLocation(index:string){
     this.companyInfo.informacionFiscal.localidad = this.colonias[index];
+  }
+
+  public onRegimenFiscalSelected(regimen:string){
+    console.log(regimen);
+  }
+
+  public onGiroSelection(giro:string){
+    console.log(giro);
+  }
+
+  public onCompanySelected(company:string){
+    console.log(company);
   }
 
 }

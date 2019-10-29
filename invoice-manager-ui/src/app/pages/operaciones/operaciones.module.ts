@@ -26,10 +26,11 @@ import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
 import { EmpresaComponent } from './empresa/empresa.component';
+import { ClienteComponent } from './cliente/cliente.component';
 
 
 @NgModule({
-  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent],
+  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent, ClienteComponent],
   imports: [
     CommonModule,
     FormsModule,
