@@ -25,7 +25,7 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 			Optional<PagoDto> pagoDto = fc.getPagos().stream()
 					.filter(a -> a.getMonto() == fc.getComlpemento().getTotal()).findFirst();
 			return (fc.getComlpemento().getTotal() == 0 || pagos == 0 || pagos > fc.getFacturaDto().getTotal()
-					|| pagoDto.isPresent());
+					|| !pagoDto.isPresent());
 		}
 
 	}

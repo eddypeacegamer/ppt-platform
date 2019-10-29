@@ -9,13 +9,12 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculator {
-	private final static String DATE_FORMAT = "yyyy-mm-dd-hh:mm:ss";
+	private final static String DATE_FORMAT = "yyyy-MM-dd-hh:mm:ss";
 
 	public static String folioEncrypt(FacturaDto dto) throws InvoiceManagerException {
 		SimpleDateFormat dt1 = new SimpleDateFormat(DATE_FORMAT);
 		String cadena = String.format("%s|%s|%s", dto.getRfcEmisor(), dto.getRfcRemitente(),
 				dt1.format(dto.getFechaCreacion()));
-		System.out.println(cadena);
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte[] bytes = md.digest(cadena.getBytes());

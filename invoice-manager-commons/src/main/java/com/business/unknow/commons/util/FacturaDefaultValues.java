@@ -19,4 +19,14 @@ public class FacturaDefaultValues {
 		FacturaCalculator.assignFolioInFacturaDto(facturaDto);
 		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
 	}
+	
+	public static void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {
+		facturaDto.setFechaCreacion(new Date());
+		facturaDto.setFechaActualizacion(new Date());
+		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
+		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
+		FacturaCalculator.assignFolioInFacturaDto(facturaDto);
+		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
+	}
 }

@@ -129,7 +129,7 @@ public class FacturaService {
 	}
 
 	public FacturaDto insertNewComplemento(FacturaDto dto, String folio) throws InvoiceManagerException {
-		dto.setFolio(FacturaCalculator.folioEncrypt(dto));
+		FacturaDefaultValues.assignaDefaultsFactura(dto);
 		validator.validatePosComplementoDto(dto, folio);
 		Optional<Factura> factura = repository.findByFolio(dto.getFolioPadre());
 		if (factura.isPresent()) {
