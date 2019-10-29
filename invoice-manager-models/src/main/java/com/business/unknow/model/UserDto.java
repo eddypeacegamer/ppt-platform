@@ -20,7 +20,7 @@ public class UserDto implements Serializable {
 
 	private String email;
 
-	private Boolean activo;
+	private boolean activo;
 
 	private String name;
 

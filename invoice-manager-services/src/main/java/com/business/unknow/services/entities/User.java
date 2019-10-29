@@ -29,7 +29,7 @@ public class User implements Serializable {
 	private Integer id;
 
 	@Column(name = "ACTIVO")
-	private Boolean activo;
+	private boolean activo;
 	
 	@Column(name = "CORREO")
 	private String email;

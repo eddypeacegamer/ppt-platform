@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: "local"
+    active: "stg"
   main:
     banner-mode: "off"
         
@@ -38,7 +38,7 @@ spring:
   profiles: stg         
   
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/invoice_manager
     username: invoice-manager
     password: hola123

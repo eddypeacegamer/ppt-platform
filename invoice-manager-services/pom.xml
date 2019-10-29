@@ -43,16 +43,16 @@
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-external-sdk</artifactId>
 			<version>${project.version}</version>
-			 <exclusions>
-		    	<exclusion>
-		    		<groupId>org.slf4j</groupId>
-		    		<artifactId>slf4j-simple</artifactId>
-		    	</exclusion>
-		    	<exclusion>
-		    		<groupId>org.glassfish.hk2.external</groupId>
-		    		<artifactId>javax.inject</artifactId>
-		    	</exclusion>
-		    </exclusions>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.glassfish.hk2.external</groupId>
+					<artifactId>javax.inject</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -111,7 +111,11 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
-			</dependency>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
