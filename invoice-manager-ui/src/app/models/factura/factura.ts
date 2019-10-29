@@ -19,7 +19,9 @@ export class Factura{
 	public formaPago : string;
     public metodoPago : string;
 	//generado
-	public statusFactura : StatusFactura ;
+	public statusPago : string ;
+	public statusDevolucion : string ;
+	public statusFactura : string ;
     public uuid : string;
     public statusDetail : string;
     public fechaCreacion : Date;
@@ -29,7 +31,6 @@ export class Factura{
 
 	constructor(){
 		this.tipoDocumento = 'Factura';
-		this.statusFactura = new StatusFactura(1);
 		this.metodoPago = 'PUE';
 		this.formaPago = '003';
 		this.notas ='campo no obligatorio a remover';

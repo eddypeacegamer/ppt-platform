@@ -113,7 +113,6 @@ public class FacturaService {
 		FacturaDto dto = mapper.getFacturaDtoFromEntity(
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
-		System.out.println(cfdiRepository.findByFolio(folio).get());
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(
 				cfdiRepository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
