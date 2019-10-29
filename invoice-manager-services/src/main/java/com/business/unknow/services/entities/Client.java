@@ -26,8 +26,8 @@ public class Client implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CLIENT")
-	private Integer id;
+	@Column(name = "ID_CLIENTE")
+	private int id;
 
 	@Column(name = "ACTIVO")
 	private Boolean activo;
@@ -57,14 +57,6 @@ public class Client implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public Boolean getActivo() {
 		return activo;
@@ -130,11 +122,19 @@ public class Client implements Serializable {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", activo=" + activo + ", porcentajePromotor=" + porcentajePromotor
-				+ ", porcentajeCliente=" + porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho
-				+ ", porcentajeContacto=" + porcentajeContacto + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+		return "Client [activo=" + activo + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
+				+ porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho + ", porcentajeContacto="
+				+ porcentajeContacto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }

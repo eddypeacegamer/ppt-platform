@@ -1,28 +1,58 @@
 spring:
-    profiles: 
-        active: local 
-    h2:
-      console:
-        enabled: true
-    datasource:
-      url: jdbc:h2:mem:mydb
-    jpa:
-      show-sql: true
-      hibernate:
-        ddl-auto: none
-    resources:
-      static-locations: 
-      - classpath:/static/
-    security:
-      oauth2:
-        client:
-          registration:
-            google:
-              client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
-              client-secret: NzIQxH-VGVxWqZz9flDEMROg
-                
-          
-
-
+  profiles:
+    active: "local"
+  main:
+    banner-mode: "off"
+        
 server:
-  port: 8080
+     port: 8080          
+   
+---
+ 
+spring:
+  profiles: local      
+  
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:mydb
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  resources:
+    static-locations: 
+    - classpath:/static/
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
+            client-secret: NzIQxH-VGVxWqZz9flDEMROg         
+
+---
+
+spring:
+  profiles: stg         
+  
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/invoice_manager
+    username: invoice-manager
+    password: hola123
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  resources:
+    static-locations: 
+    - classpath:/static/
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
+            client-secret: NzIQxH-VGVxWqZz9flDEMROg

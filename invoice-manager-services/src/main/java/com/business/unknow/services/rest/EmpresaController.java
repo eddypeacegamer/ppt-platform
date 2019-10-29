@@ -44,13 +44,15 @@ public class EmpresaController {
 			@RequestParam(name = "linea", defaultValue = "") String linea,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial,linea, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial, linea, page, size),
+				HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/lineas/{linea}/giros/{giro}/empresas")
 	@ApiOperation(value = "Get all companies by linea and giro")
-	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea, @PathVariable(name = "giro") Integer giro){
-		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro),HttpStatus.OK);
+	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea,
+			@PathVariable(name = "giro") Integer giro) {
+		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro), HttpStatus.OK);
 	}
 
 	@PostMapping("/empresas")

@@ -36,14 +36,6 @@ public class FacturaDto implements Serializable {
 	private Date fechaTimbrado;
 	private CfdiDto cfdi;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getRfcEmisor() {
 		return rfcEmisor;
 	}
@@ -220,16 +212,24 @@ public class FacturaDto implements Serializable {
 		this.descuento = descuento;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
-				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
-				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
-				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
-				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
-				+ descuento + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
+		return "FacturaDto [rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", razonSocialEmisor="
+				+ razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente + ", folio=" + folio
+				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
+				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
+				+ ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago=" + metodoPago
+				+ ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
+				+ fechaTimbrado + ", cfdi=" + cfdi + "]";
 	}
 
 }

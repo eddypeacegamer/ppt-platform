@@ -87,14 +87,6 @@ public class Contribuyente implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getRfc() {
 		return rfc;
 	}
@@ -239,9 +231,17 @@ public class Contribuyente implements Serializable {
 		this.coo = coo;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "Contribuyente [id=" + id + ", rfc=" + rfc + ", giro=" + giro + ", nombre=" + nombre + ", curp=" + curp
+		return "Contribuyente [rfc=" + rfc + ", giro=" + giro + ", nombre=" + nombre + ", curp=" + curp
 				+ ", razonSocial=" + razonSocial + ", calle=" + calle + ", noExterior=" + noExterior + ", noInterior="
 				+ noInterior + ", municipio=" + municipio + ", localidad=" + localidad + ", estado=" + estado
 				+ ", pais=" + pais + ", coo=" + coo + ", cp=" + cp + ", correo=" + correo + ", telefono=" + telefono

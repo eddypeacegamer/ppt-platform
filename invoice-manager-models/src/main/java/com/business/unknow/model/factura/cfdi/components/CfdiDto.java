@@ -29,14 +29,6 @@ public class CfdiDto implements Serializable {
 	private String selloSat;
 	private List<ConceptoDto> conceptos = new ArrayList<>();
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getVersion() {
 		return version;
 	}
@@ -157,10 +149,18 @@ public class CfdiDto implements Serializable {
 		this.conceptos = conceptos;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello="
-				+ sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+		return "CfdiDto [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
 				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
 				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";

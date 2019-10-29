@@ -93,14 +93,6 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getRfcEmisor() {
 		return rfcEmisor;
 	}

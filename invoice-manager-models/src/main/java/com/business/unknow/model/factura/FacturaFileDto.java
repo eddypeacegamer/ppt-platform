@@ -12,22 +12,10 @@ public class FacturaFileDto implements Serializable {
 	private static final long serialVersionUID = -4385921763462504713L;
 
 	private Integer id;
-
 	private String xml;
-
 	private String pdf;
-
 	private String qr;
-
 	private String folio;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getXml() {
 		return xml;
@@ -61,9 +49,17 @@ public class FacturaFileDto implements Serializable {
 		this.folio = folio;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaFileDto [id=" + id + ", xml=" + xml + ", pdf=" + pdf + ", qr=" + qr + ", folio=" + folio + "]";
+		return "FacturaFileDto [xml=" + xml + ", pdf=" + pdf + ", qr=" + qr + ", folio=" + folio + "]";
 	}
 
 }

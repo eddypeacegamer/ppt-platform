@@ -67,14 +67,6 @@ public class Cfdi implements Serializable {
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getVersion() {
 		return version;
 	}
@@ -195,9 +187,17 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
 				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="

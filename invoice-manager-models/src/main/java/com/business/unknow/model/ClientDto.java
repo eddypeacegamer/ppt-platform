@@ -14,7 +14,7 @@ public class ClientDto implements Serializable {
 
 	private static final long serialVersionUID = 4951260411762447946L;
 
-	private Integer id;
+	private int id;
 	private Boolean activo;
 	private Integer porcentajePromotor;
 	private Integer porcentajeCliente;
@@ -25,14 +25,6 @@ public class ClientDto implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	private ContribuyenteDto informacionFiscal;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public Boolean getActivo() {
 		return activo;
@@ -98,12 +90,20 @@ public class ClientDto implements Serializable {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "ClientDto [id=" + id + ", activo=" + activo + ", porcentajePromotor=" + porcentajePromotor
-				+ ", porcentajeCliente=" + porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho
-				+ ", porcentajeContacto=" + porcentajeContacto + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+		return "ClientDto [activo=" + activo + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
+				+ porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho + ", porcentajeContacto="
+				+ porcentajeContacto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 
 }

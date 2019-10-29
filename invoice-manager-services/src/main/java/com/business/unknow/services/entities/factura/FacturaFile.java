@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,10 +14,6 @@ public class FacturaFile implements Serializable {
 	private static final long serialVersionUID = -7716416675628804402L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_FACTURA_ARCHIVO")
-	private Integer id;
-
 	@Column(name = "FOLIO")
 	private String folio;
 
@@ -31,14 +25,6 @@ public class FacturaFile implements Serializable {
 
 	@Column(name = "ARCHIVO_QR")
 	private String qr;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getFolio() {
 		return folio;
@@ -74,7 +60,7 @@ public class FacturaFile implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FacturaFile [id=" + id + ", folio=" + folio + ", xml=" + xml + ", pdf=" + pdf + ", qr=" + qr + "]";
+		return "FacturaFile [folio=" + folio + ", xml=" + xml + ", pdf=" + pdf + ", qr=" + qr + "]";
 	}
 
 }

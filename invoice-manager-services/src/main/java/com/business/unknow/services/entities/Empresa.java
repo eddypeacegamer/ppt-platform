@@ -28,8 +28,8 @@ public class Empresa implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_EMPRESA")
-	private Integer id;
-
+	private int id;
+	
 	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
 
@@ -72,7 +72,7 @@ public class Empresa implements Serializable {
 
 	@Column(name = "LINEA")
 	private String tipo;
-	
+
 	@Column(name = "GIRO_ID")
 	private Integer giro;
 
@@ -89,14 +89,6 @@ public class Empresa implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getRegimenFiscal() {
 		return regimenFiscal;
@@ -244,11 +236,11 @@ public class Empresa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia + ", web=" + web
+		return "Empresa [regimenFiscal=" + regimenFiscal + ", referencia=" + referencia + ", web=" + web
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
 				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado=" + certificado + ", pw="
 				+ pw + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo="
-				+ tipo + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", informacionFiscal=" + informacionFiscal + "]";
+				+ tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }
