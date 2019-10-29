@@ -22,7 +22,7 @@
           
           <div class="col-sm-2">
               <label for="inputPayType" class="label">Regimen Fiscal</label>
-              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+              <select selected="1" id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="companyInfo.regimenFiscal"
                 (change)="onRegimenFiscalSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="601">General de Ley Personas Morales</option>
@@ -49,7 +49,6 @@
             </div>
           </div>
           <div class="col-sm-6">
-            
               <label for="inputColonia" class="label">Seleccionar colonia</label>
               <select id="inputColonia" fullWidth class="form-control"
                 (selectedChange)="onLocation($event)" style="display:block;">
@@ -109,7 +108,7 @@
             <div class="col-sm-6">
                     <label for="inputGiro" class="label">Giro Empresa</label>
                     <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
-                      style="display:block;">
+                      style="display:block;" [(ngModel)]="companyInfo.giro">
                       <option value="*">Seleccionar</option>
                       <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
                     </select>
@@ -117,13 +116,22 @@
             <div class="col-sm-3">
                 <label for="inputCompanyType" class="label">Linea Empresa</label>
                 <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
-                (change)="onCompanySelected($event.target.value)">
+                [(ngModel)]="companyInfo.tipo" (change)="onCompanySelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="A">Tipo A</option>
                 <option value="B">Tipo B</option>
                 <option value="C">Tipo C</option>
               </select>
             </div>
+            <div class="col-sm-3">
+              <label for="inputCompanyActive" class="label">activo</label>
+              <select id="inputCompanyActive" style="display:block;width: 250px;" class="form-control"
+              [(ngModel)]="companyInfo.activo" >
+              <option value="*">Seleccionar</option>
+              <option value="true">SI</option>
+              <option value="false">NO</option>
+            </select>
+          </div>
         </div>
         <p class="font-weight-bold">Datos facturacion</p>
         <div>
@@ -134,9 +142,7 @@
           <li>password</li>
           <li>encabezado</li>
           <li>pie de pagina</li>
-          <li>activo</li>
-          <li>giro</li>
-          <li>linea</li>
+         
         </div>
         <p class="font-weight-bold">Claves y accessos</p>
         <div class="row">
