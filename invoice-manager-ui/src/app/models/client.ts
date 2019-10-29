@@ -4,10 +4,10 @@ export class Client {
 
     public id: number;
     public activo : boolean;
-    public porcentajePromotor: number=25;
-    public porcentajeCliente: number=25;
-    public porcentajeDespacho: number=25;
-    public porcentajeContacto: number=25;
+    public porcentajePromotor: number;
+    public porcentajeCliente: number;
+    public porcentajeDespacho: number;
+    public porcentajeContacto: number;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     public informacionFiscal: Contribuyente;

@@ -1,7 +1,6 @@
 import { Component, OnInit , TemplateRef } from '@angular/core';
 import { NbIconLibraries } from '@nebular/theme';
 import { NbDialogService } from '@nebular/theme';
-import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ngx-revision',
@@ -9,10 +8,6 @@ import { LocalDataSource } from 'ng2-smart-table';
   styleUrls: ['./revision.component.scss']
 })
 export class RevisionComponent implements OnInit {
-
-  source: LocalDataSource = new LocalDataSource();
-
-  
 
   private data :any[] = [{
     claveProdServ: 500234,
@@ -80,7 +75,6 @@ export class RevisionComponent implements OnInit {
 
   constructor(private dialogService: NbDialogService, 
               private iconsLibrary: NbIconLibraries){
-    this.source.load(this.data);
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
   }
 

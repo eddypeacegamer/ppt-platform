@@ -22,4 +22,27 @@ public class StatusPago implements Serializable {
 	
 	@Column(name = "VALUE")
 	private String value;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return "StatusPago [id=" + id + ", value=" + value + "]";
+	}
+	
+	
 }

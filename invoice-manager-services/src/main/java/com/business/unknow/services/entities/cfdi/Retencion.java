@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,23 +22,24 @@ public class Retencion implements Serializable {
 	@Column(name = "ID_RETENCION")
 	private Integer id;
 
-	@Column(name = "ID_CONCEPTO")
-	private Integer idConcepto;
-
 	@Column(name = "BASE")
-	private String base;
+	private Double base;
 
 	@Column(name = "IMPUESTO")
-	private Double impuesto;
+	private String impuesto;
 
 	@Column(name = "TIPO_FACTOR")
 	private String tipoFactor;
 
 	@Column(name = "TASA_CUOTA")
-	private Double tasaOCuota;
+	private String tasaOCuota;
 
 	@Column(name = "IMPORTE")
 	private Double importe;
+
+	@ManyToOne
+	@JoinColumn(name = "ID_CONCEPTO", nullable = false)
+	private Concepto concepto;
 
 	public Integer getId() {
 		return id;
@@ -46,19 +49,19 @@ public class Retencion implements Serializable {
 		this.id = id;
 	}
 
-	public String getBase() {
+	public Double getBase() {
 		return base;
 	}
 
-	public void setBase(String base) {
+	public void setBase(Double base) {
 		this.base = base;
 	}
 
-	public Double getImpuesto() {
+	public String getImpuesto() {
 		return impuesto;
 	}
 
-	public void setImpuesto(Double impuesto) {
+	public void setImpuesto(String impuesto) {
 		this.impuesto = impuesto;
 	}
 
@@ -70,11 +73,11 @@ public class Retencion implements Serializable {
 		this.tipoFactor = tipoFactor;
 	}
 
-	public Double getTasaOCuota() {
+	public String getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(Double tasaOCuota) {
+	public void setTasaOCuota(String tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 
@@ -86,18 +89,18 @@ public class Retencion implements Serializable {
 		this.importe = importe;
 	}
 
-	public Integer getIdConcepto() {
-		return idConcepto;
+	public Concepto getConcepto() {
+		return concepto;
 	}
 
-	public void setIdConcepto(Integer idConcepto) {
-		this.idConcepto = idConcepto;
+	public void setConcepto(Concepto concepto) {
+		this.concepto = concepto;
 	}
 
 	@Override
 	public String toString() {
-		return "Retencion [id=" + id + ", idConcepto=" + idConcepto + ", base=" + base + ", impuesto=" + impuesto
-				+ ", tipoFactor=" + tipoFactor + ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
+		return "Retencion [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
+				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + ", concepto=" + concepto + "]";
 	}
 
 }

@@ -1,6 +1,7 @@
-import { Factura } from '../../models/factura';
+import { Factura } from '../../models/factura/factura';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
+import { Pago } from '../../models/pago';
 
 export abstract class InvoicesData {
 
@@ -10,8 +11,12 @@ export abstract class InvoicesData {
 
     abstract getInvoiceById(id:number) : Observable<[Factura]>;
 
-    abstract insertNewCompany(empresa : Factura) : Observable<Factura>;
+    abstract insertNewInvoice(invoice : Factura) : Observable<Factura>;
 
-    abstract updateCompany(empresa : Factura) : Observable<Factura>;
+    abstract updateInvoice(invoice : Factura) : Observable<Factura>;
+
+    abstract getPayments(folio : string): Observable<Pago[]>
+
+    abstract insertNewPayment(folio : string, payment : Pago): Observable<Pago>;
   
 }

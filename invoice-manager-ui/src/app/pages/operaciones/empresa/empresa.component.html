@@ -1,0 +1,162 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Registro Empresa</nb-card-header>
+      <nb-card-body>
+        <p class="font-weight-bold">Informacion Fiscal</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="inputRFC" class="label">RFC</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC"
+                placeholder="RFC Empresa">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="inputSocialReason" class="label">Razón Social</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.razonSocial" class="form-control" fullWidth
+                id="inputSocialReason" placeholder="Razón Social">
+            </div>
+          </div>
+          
+          <div class="col-sm-2">
+              <label for="inputPayType" class="label">Regimen Fiscal</label>
+              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                (change)="onRegimenFiscalSelected($event.target.value)">
+                <option value="*">Seleccionar</option>
+                <option value="601">General de Ley Personas Morales</option>
+                <option value="603">Personas Morales con Fines no Lucrativos</option>
+                <option value="609">Consolidación</option>
+                <option value="612">Personas Físicas con Actividades Empresariales y Profesionales</option>
+                <option value="620">Sociedades Cooperativas de Producción que optan por diferir sus ingresos</option>
+                <option value="621">Incorporación Fiscal</option>
+              </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <label for="inputPais" class="label">País</label>
+            <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;">
+              <option value="0">México</option>
+            </select>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="inputZipCode" class="label">Código Postal</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.cp" (ngModelChange)="zipCodeInfo($event)"
+                class="form-control" fullWidth id="inputZipCode" placeholder="00300">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            
+              <label for="inputColonia" class="label">Seleccionar colonia</label>
+              <select id="inputColonia" fullWidth class="form-control"
+                (selectedChange)="onLocation($event)" style="display:block;">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
+              </select>
+            
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <label for="inputState" class="label">Estado</label>
+            <input type="text" [(ngModel)]="companyInfo.informacionFiscal.estado" class="form-control" fullWidth id="inputState"
+              placeholder="Estado">
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="inputCity" class="label">Municipio/Delegación</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.municipio" class="form-control" fullWidth id="inputCity"
+                placeholder="Municipio/Delegación">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="inputLocalidad" class="label">Colonia</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.localidad" class="form-control" fullWidth
+                id="inputLocalidad" placeholder="Colonia">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="inputCalle" class="label">Calle</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.calle" class="form-control" fullWidth id="inputCalle"
+                placeholder="Calle">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="inputExterior" class="label">No exterior</label>
+              <input type="number" [(ngModel)]="companyInfo.informacionFiscal.noExterior" class="form-control" fullWidth
+                id="inputExterior" placeholder="No exterior">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="inputInterior" class="label">No interior</label>
+              <input type="number" [(ngModel)]="companyInfo.informacionFiscal.noInterior" class="form-control" fullWidth
+                id="inputInterior" placeholder="No interior">
+            </div>
+          </div>
+        </div>
+        <p class="font-weight-bold">Datos addicionales</p>
+        <div class="row">
+            <div class="col-sm-6">
+                    <label for="inputGiro" class="label">Giro Empresa</label>
+                    <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
+                      style="display:block;">
+                      <option value="*">Seleccionar</option>
+                      <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
+                    </select>
+            </div>
+            <div class="col-sm-3">
+                <label for="inputCompanyType" class="label">Linea Empresa</label>
+                <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
+                (change)="onCompanySelected($event.target.value)">
+                <option value="*">Seleccionar</option>
+                <option value="A">Tipo A</option>
+                <option value="B">Tipo B</option>
+                <option value="C">Tipo C</option>
+              </select>
+            </div>
+        </div>
+        <p class="font-weight-bold">Datos facturacion</p>
+        <div>
+          <li>contactoAdmin</li>
+          <li>logotipo</li>
+          <li>llavePrivada</li>
+          <li>certificado</li>
+          <li>password</li>
+          <li>encabezado</li>
+          <li>pie de pagina</li>
+          <li>activo</li>
+          <li>giro</li>
+          <li>linea</li>
+        </div>
+        <p class="font-weight-bold">Claves y accessos</p>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputEmail" class="label">Correo Empresa</label>
+              <input type="email" [(ngModel)]="companyInfo.informacionFiscal.correo" class="form-control" fullWidth id="inputEmail"
+                placeholder="Email">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputPassword" class="label">Contraseña correo</label>
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.coo" class="form-control" fullWidth id="inputPassword"
+                placeholder="Password">
+            </div>
+          </div>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

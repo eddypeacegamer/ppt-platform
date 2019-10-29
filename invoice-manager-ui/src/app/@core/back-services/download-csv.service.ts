@@ -10,8 +10,7 @@ export class DownloadCsvService {
 
   constructor(private csvParser: Papa) { }
 
-  public exportCsv(data: [any], filename: string) {
-
+  public exportCsv(data: any[], filename: string) {
 
     if (data == null || data == undefined || data.length < 1) {
       console.error("Donwload service can't generate repor from empty or null data.");

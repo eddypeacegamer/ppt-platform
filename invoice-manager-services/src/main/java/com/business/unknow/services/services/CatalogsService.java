@@ -114,6 +114,7 @@ public class CatalogsService {
 	
 	
 	public List<StatusCatalogoDto> getAllStatusPago() {
+		System.out.println(statusPagoRepo.findAll());
 		return mapper.getStatusPagoDtosFromEntities(statusPagoRepo.findAll());
 	}
 	

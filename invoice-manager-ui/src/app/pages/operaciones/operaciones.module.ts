@@ -15,7 +15,6 @@ import {
   NbDialogModule,
   NbIconModule
 } from '@nebular/theme';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { OperacionesRoutingModule } from './operaciones-routing.module';
 import { OperacionesComponent } from './operaciones.component';
@@ -26,10 +25,12 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
+import { EmpresaComponent } from './empresa/empresa.component';
+import { ClienteComponent } from './cliente/cliente.component';
 
 
 @NgModule({
-  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent],
+  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent, ClienteComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -45,7 +46,6 @@ import { CargaXmlComponent } from './carga-xml/carga-xml.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    Ng2SmartTableModule,
     NbDialogModule
   ]
 })

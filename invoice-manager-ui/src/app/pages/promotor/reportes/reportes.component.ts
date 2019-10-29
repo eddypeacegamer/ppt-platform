@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class ReportesComponent implements OnInit {
   public filterParams : any = {emisor:'',remitente:'',folio:'',payStatus:'*',validationStatus:'*',start:'',end:''};
 
   constructor(private invoiceService: InvoicesData,
-    private donwloadService:DownloadCsvService) {}
+    private donwloadService:DownloadCsvService,
+    private router: Router) {}
 
     ngOnInit() {
       this.updateDataTable();
@@ -33,6 +35,9 @@ export class ReportesComponent implements OnInit {
         this.filterParams.validationStatus=validationStatus;
     }
 
+    public redirectToCfdi(folio:string){
+      this.router.navigate([`./pages/promotor/precfdi/${folio}`])
+    }
 
     /***     Funciones tabla      ***/
     public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
@@ -51,5 +56,7 @@ export class ReportesComponent implements OnInit {
         this.donwloadService.exportCsv(result.content,'Facturas')
       });
     }
+
+   
 
 }

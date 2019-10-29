@@ -22,6 +22,10 @@ export class CompaniesService {
     return this.httpClient.get('../api/empresas',{params:pageParams});
   }
 
+  public getCompaniesByLineaAndGiro(linea:string, giro: number){
+    return this.httpClient.get(`../api/lineas/${linea}/giros/${giro}/empresas`);
+  }
+
   public getCompanyByRFC(rfc: string): Observable<Object> {
     return this.httpClient.get(`../api/empresas/${rfc}`);
   }

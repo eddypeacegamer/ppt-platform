@@ -17,7 +17,13 @@ export class Empresa{
     public encabezado: string;
     public piePagina: string;
     public tipo: string;
+    public giro : number;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     public informacionFiscal: Contribuyente
+
+
+    constructor(){
+        this.informacionFiscal = new Contribuyente();
+    }
 }

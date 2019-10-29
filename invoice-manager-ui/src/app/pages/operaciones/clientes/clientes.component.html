@@ -33,7 +33,7 @@
   <div class="row">
     <div class="col-md-12">
       <nb-card>
-        <nb-card-header>Facturas</nb-card-header>
+        <nb-card-header>Clientes</nb-card-header>
         <nb-card-body>
   
           <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
@@ -61,7 +61,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row">{{fila.informacionFiscal.rfc}}</td>
+                  <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCliente(fila.informacionFiscal.rfc)">{{fila.informacionFiscal.rfc}}</button></td>
                   <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
                   <td scope="row">{{fila.informacionFiscal.nombre}}</td>
                   <td scope="row">{{fila.informacionFiscal.correo}}</td>

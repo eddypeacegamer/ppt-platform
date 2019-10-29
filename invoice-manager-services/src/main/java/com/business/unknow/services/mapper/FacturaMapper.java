@@ -3,6 +3,8 @@ package com.business.unknow.services.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.factura.FacturaDto;
@@ -16,6 +18,7 @@ import com.business.unknow.services.entities.factura.Pago;
 @Mapper
 public interface FacturaMapper {
 	
+	@Mappings({ @Mapping(target = "cfdi", ignore = true)})
 	FacturaDto getFacturaDtoFromEntity(Factura entity);
 	List<FacturaDto> getFacturaDtosFromEntities(List<Factura> entities);
 

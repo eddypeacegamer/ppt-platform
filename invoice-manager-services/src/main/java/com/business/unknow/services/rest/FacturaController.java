@@ -23,6 +23,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
 import com.business.unknow.model.factura.PagoDto;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.services.services.FacturaService;
 
 import io.swagger.annotations.Api;
@@ -53,17 +54,60 @@ public class FacturaController {
 				statusPago, page, size), HttpStatus.OK);
 	}
 
-	@PostMapping
-	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura) {
-		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
+	@GetMapping("/{folio}")
+	public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getfacturaByFolio(folio), HttpStatus.OK);
 	}
 
-	@PutMapping("/{folio}")
+	@PostMapping
 	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaDto> insertFactura(@RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewFactura(factura), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/chain")
+	@ApiOperation(value = "insert a new Factura into the system")
+	public ResponseEntity<FacturaDto> insertFacturaWithCfdi(@RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
+	}
+
+	
+	@PutMapping("/{folio}")
+	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
+	}
+
+	@GetMapping("/{folio}/complementos")
+	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
+	}
+
+	@GetMapping("/{folio}/cfdi")
+	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);
+	}
+
+	@PostMapping("/{folio}/cfdi")
+	public ResponseEntity<CfdiDto> insertFacturaCfdi(@PathVariable String folio, @RequestBody @Valid CfdiDto cfdi)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewCfdi(folio, cfdi), HttpStatus.OK);
+	}
+
+	@PutMapping("/{folio}/cfdi/{id}")
+	public ResponseEntity<CfdiDto> updateFacturaCfdi(@PathVariable String folio, @PathVariable Integer id,
+			@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.updateFacturaCfdi(folio, id, cfdi), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{folio}/cfdi/{id}")
+	public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable String folio, @PathVariable Integer id)
+			throws InvoiceManagerException {
+		service.deleteFacturaCfdi(folio, id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}/files")
@@ -111,10 +155,9 @@ public class FacturaController {
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "insert a new Factura into the system")
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

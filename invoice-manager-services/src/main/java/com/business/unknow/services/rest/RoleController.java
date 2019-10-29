@@ -40,5 +40,7 @@ public class RoleController {
 	public ResponseEntity<RoleDto> getRolesByName(@PathVariable String name) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getRoleByName(name), HttpStatus.OK);
 	}
+	
+	
 
 }

@@ -6,12 +6,13 @@
         <form class="form-inline">
           <input type="text" [(ngModel)]="formInfo.rfc" [ngModelOptions]="{standalone: true}" nbInput fullWidth
             placeholder="RFC">
-          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.rfc.length > 13" (click)="buscarClientePorRFC()" nbButton
-            status="primary">BUSCAR</button>
-          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
-            (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>
+          <button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.rfc.length > 13"
+            (click)="buscarClientePorRFC()" nbButton status="primary">BUSCAR</button>
+          <!--button type="button" [disabled]="formInfo.rfc.length < 12 || formInfo.status != 404"
+            (click)="onRegitrarCall()" nbButton status="primary">REGISTRAR</button>-->
         </form>
         <p class="alert alert-warning" *ngIf="formInfo.message.length > 0" role="alert">{{formInfo.message}}</p>
+        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
       </nb-card-body>
     </nb-card>
   </div>
@@ -53,26 +54,35 @@
             </div>
           </div>
           <div class="col-sm-6">
-            <label for="inputState" class="label">Estado</label>
-            <input type="text" [(ngModel)]="clientInfo.informacionFiscal.estado" nbInput fullWidth id="inputState"
-              placeholder="Estado">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
             <div class="form-group">
-              <label for="inputColonia" class="label">Colonia</label>
+              <label for="inputColonia" class="label">Seleccionar colonia</label>
               <nb-select id="inputColonia" [selected]="formInfo.coloniaId" fullWidth
                 (selectedChange)="onLocation($event)" style="display:block;">
+                <nb-option value="*">Seleccionar</nb-option>
                 <nb-option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</nb-option>
               </nb-select>
             </div>
           </div>
-          <div class="col-sm-6">
+
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <label for="inputState" class="label">Estado</label>
+            <input type="text" [(ngModel)]="clientInfo.informacionFiscal.estado" nbInput fullWidth id="inputState"
+              placeholder="Estado">
+          </div>
+          <div class="col-sm-4">
             <div class="form-group">
               <label for="inputCity" class="label">Municipio/Delegación</label>
               <input type="text" [(ngModel)]="clientInfo.informacionFiscal.municipio" nbInput fullWidth id="inputCity"
                 placeholder="Municipio/Delegación">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="inputLocalidad" class="label">Colonia</label>
+              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth
+                id="inputLocalidad" placeholder="Colonia">
             </div>
           </div>
         </div>
@@ -94,7 +104,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No interior</label>
-              <input type="number" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
+              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth
                 id="inputInterior" placeholder="No interior">
             </div>
           </div>
@@ -120,38 +130,44 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputPromotor" class="label">Promotor</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor"
+                placeholder="25">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCliente" class="label">Cliente</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente"
+                placeholder="25">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputdespacho" class="label">Despacho</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho"
+                placeholder="25">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputContacto" class="label">Contacto</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto"
+                placeholder="25">
             </div>
           </div>
         </div>
         {{procentajes | json}}
-        <p class="alert alert-warning" *ngIf="(porcentajes.promotor + porcentajes.cliente + porcentajes.despacho + porcentajes.contacto) != 100" role="alert">La suma de los porcentajes debe ser igual al 100%</p>
+        <p class="alert alert-warning"
+          *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100"
+          role="alert">La suma de los porcentajes debe ser igual al 100%</p>
 
         <div class="form-inline">
-          <button type="button" *ngIf="formInfo.message.length > 0" [disabled]="(porcentajes.promotor + porcentajes.cliente + porcentajes.despacho + porcentajes.contacto) != 100" (click)="insertClient()" nbButton
-            status="primary">GUARDAR</button>
+          <button type="button" *ngIf="formInfo.message.length > 0"
+            [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100"
+            (click)="insertClient()" nbButton status="primary">GUARDAR</button>
           <button type="button" *ngIf="formInfo.message.length == 0" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
-        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
       </nb-card-body>
     </nb-card>
   </div>

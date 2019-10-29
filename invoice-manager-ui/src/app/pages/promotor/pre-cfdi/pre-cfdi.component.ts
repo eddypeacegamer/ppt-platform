@@ -1,90 +1,99 @@
-import { Component, OnInit , TemplateRef } from '@angular/core';
-import { NbIconLibraries } from '@nebular/theme';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
-import { LocalDataSource } from 'ng2-smart-table';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
+import { ClientsData } from '../../../@core/data/clients-data';
+import { CompaniesData } from '../../../@core/data/companies-data';
+import { Giro } from '../../../models/catalogos/giro';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Contribuyente } from '../../../models/contribuyente';
+import { Empresa } from '../../../models/empresa';
+import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
+import { Concepto } from '../../../models/factura/concepto';
+import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
+import { Impuesto } from '../../../models/factura/impuesto';
+import { Cfdi } from '../../../models/factura/cfdi';
+import { Client } from '../../../models/client';
+import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
+import { Factura } from '../../../models/factura/factura';
+import { InvoicesData } from '../../../@core/data/invoices-data';
+import { Pago } from '../../../models/pago';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-pre-cfdi',
   templateUrl: './pre-cfdi.component.html',
   styleUrls: ['./pre-cfdi.component.scss']
 })
-export class PreCfdiComponent implements OnInit {
+export class PreCfdiComponent implements OnInit, OnDestroy {
 
-  source: LocalDataSource = new LocalDataSource();
+  public girosCat: Giro[] = [];
+  public companiesCat: Empresa[] = [];
+  public prodServCat: ClaveProductoServicio[] = [];
+  public claveUnidadCat: ClaveUnidad[] = [];
+  public usoCfdiCat: UsoCfdi[] = [];
 
+  public newConcep: Concepto;
+  public factura: Factura;
+  public folioParam: string;
+
+  public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
+  public errorMessages: string[] = [];
+  public conceptoMessages : string[] = [];
+  public payErrorMessages: string[] = [];
+
+  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+  public clientInfo: Contribuyente;
+  public companyInfo: Empresa;
+
+  /** PAYMENT SECCTION**/
   
+  public paymentForm = {coin:'*',payType:'*',bank:'*',filename:'',successPayment:false};
+  public newPayment : Pago;
+  public invoicePayments = [];
 
-  private data :any[] = [{
-    claveProdServ: 500234,
-    cantidad: 3,
-    claveUnidad: 5,
-    unidad: 'kilogramos',
-    valorUnitario: 71.52,
-    descripcion: 'Aguacates de temporada',
-    importe : 253.62,
-    descuento : 0
-  }, {
-    claveProdServ: 500434,
-    cantidad: 5,
-    claveUnidad: 5,
-    unidad: 'kilogramos',
-    valorUnitario: 30.52,
-    descripcion: 'Naranjas de temporada',
-    importe : 153.62,
-    descuento : 0
-  }];
-
-  settings = {
-    hideSubHeader: true,
-    actions:{edit: false},
-    delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-    },
-    columns: {
-      claveProdServ: {
-        title: 'Clave Prod Serv',
-        type: 'string',
-      },
-      cantidad: {
-        title: 'Cantidad',
-        type: 'number',
-      },
-      claveUnidad: {
-        title: 'Clave Unidad',
-        type: 'number',
-      },
-      unidad: {
-        title: 'Unidad',
-        type: 'number',
-      },
-      valorUnitario: {
-        title: 'Valor Unitario',
-        type: 'string',
-      },
-      descripcion: {
-        title: 'Descripción',
-        type: 'string',
-      },
-      importe: {
-        title: 'Importe',
-        type: 'number',
-      },
-      descuento: {
-        title: 'Descuento',
-        type: 'number',
-      },
-    },
-  };
-
-
-  constructor(private dialogService: NbDialogService, 
-              private iconsLibrary: NbIconLibraries){
-    this.source.load(this.data);
-    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
-  }
+  constructor(private dialogService: NbDialogService,
+    private catalogsService: CatalogsData,
+    private clientsService: ClientsData,
+    private companiesService: CompaniesData,
+    private invoiceService: InvoicesData,
+    private iconsLibrary: NbIconLibraries,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+    /** INIT VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
+    this.factura.cfdi.conceptos = [];
+    /** recovering folio info**/
+    this.route.paramMap.subscribe(route => {
+        let folio = route.get('folio');
+        this.folioParam = folio;
+        this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => this.factura = invoice);
+        this.invoiceService.getPayments(folio).subscribe(payments => this.invoicePayments = payments);
+        });
+    
+
+    /**** LOADING CAT INFO ****/
+    this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    this.catalogsService.getClaveUnidadByName('').subscribe((unidades: ClaveUnidad[]) => this.claveUnidadCat = unidades,
+    (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    this.catalogsService.getAllUsoCfdis().subscribe((usos: UsoCfdi[]) => this.usoCfdiCat = usos,
+    (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    
+
+  }
+
+  ngOnDestroy(){
+    /** CLEAN VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
   }
 
   onDeleteConfirm(event): void {
@@ -96,8 +105,248 @@ export class PreCfdiComponent implements OnInit {
   }
 
   openBuscadorSAT(dialog: TemplateRef<any>) {
-
     this.dialogService.open(dialog);
+  }
+
+  onGiroSelection(giroId: any) {
+    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
+  onCompanySelected(companyId: number) {
+    this.companyInfo = this.companiesCat.find(c => c.id == companyId);
+  }
+
+  buscarClaveProdServSelected() {
+    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => this.prodServCat = claves);
+  }
+
+  buscarClientInfo() {
+    this.errorMessages = [];
+    this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
+      (client: Client) => { this.clientInfo = client.informacionFiscal },
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
+  onUsoCfdiSelected(clave: string) {
+    this.factura.cfdi.usoCfdi = clave;
+  }
+
+  onMonedaSelected(clave: string) {
+    this.factura.cfdi.moneda = clave;
+  }
+
+  onMetodoDePagoSelected(clave: string) {
+    this.factura.cfdi.metodoPago = clave;
+  }
+
+  onFormaDePagoSelected(clave: string) {
+    this.factura.cfdi.formaPago = clave;
+  }
+
+  onClaveProdServSelected(clave: string) {
+    this.newConcep.claveProdServ = clave;
+
+  }
+
+  onImpuestoSelected(clave: string) {
+    if (clave === '002') {
+      this.newConcep.impuestos = [new Impuesto(clave, '0.160000')]
+    }
+  }
+
+  onSelectUnidad(clave: string) {
+    if (clave != '*') {
+      this.newConcep.claveUnidad = clave;
+      this.newConcep.unidad = this.claveUnidadCat.find(u => u.clave == clave).nombre;
+    }
+  }
+
+  limpiarForma(){
+    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+    this.clientInfo = undefined;
+    this.companyInfo = undefined;
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.factura.cfdi = new Cfdi();
+    this.factura.cfdi.conceptos = [];
+  }
+
+  removeConcepto(index:number){
+    this.factura.cfdi.conceptos.splice(index,1);
+  }
+
+  agregarConcepto() {
+    this.conceptoMessages = [];
+    let validConcept= true;
+    if(this.newConcep.cantidad<1){
+      this.conceptoMessages.push('La cantidad requerida debe ser igual o mayor a 1');
+      validConcept = false;
+    }
+    if(this.newConcep.claveProdServ==undefined){
+      this.conceptoMessages.push('La clave producto servicio del conepto es un valor requerido.');
+      validConcept = false;
+    }
+    if(this.newConcep.claveUnidad==undefined){
+      this.conceptoMessages.push('La clave de unidad y la unidad son campos requeridos.');
+      validConcept = false;
+    }
+    if(this.newConcep.descripcion == undefined){
+      this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
+      validConcept = false;
+    }else if(this.newConcep.descripcion.length<10){
+      this.conceptoMessages.push('La descripción del concepto es muy corta.');
+      validConcept = false;
+    }
+    if(this.newConcep.valorUnitario<1){
+      this.conceptoMessages.push('El valor unitario de un concepto no puede ser menor a 1.00$');
+      validConcept = false;
+    }
+
+    if(validConcept){
+      this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
+      const base = this.newConcep.importe - this.newConcep.descuento;
+      const impuesto = base * 0.16;
+      this.factura.cfdi.impuestos += impuesto;
+      this.factura.cfdi.subtotal += base;
+      this.factura.cfdi.total = (this.factura.cfdi.total * 3 + base * 3 + impuesto * 3) / 3;
+      this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];//IVA is harcoded
+      this.factura.cfdi.conceptos.push({ ... this.newConcep });
+      this.formInfo.prodServ = '*';
+      this.formInfo.unidad = '*';
+      this.newConcep = new Concepto();
+    }
+  }
+
+  getImporteImpuestos(impuestos: Impuesto[]) {
+    return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+  }
+
+  solicitarCfdi() {
+    this.errorMessages = [];
+    let validCdfi = true;
+    if (this.companyInfo == undefined) {
+      this.errorMessages.push('La empresa emisora es requerida.');
+      validCdfi = false;
+    } else {
+      this.factura.cfdi.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+      this.factura.cfdi.nombreEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
+      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+    }
+
+    if(this.clientInfo == undefined){
+      this.errorMessages.push('La información del cliente es un valor solicitado');
+      validCdfi = false;
+    }else{
+      this.factura.cfdi.rfcReceptor = this.clientInfo.rfc;
+      this.factura.cfdi.nombreReceptor = this.clientInfo.razonSocial;
+      this.factura.rfcRemitente = this.clientInfo.rfc;
+      this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
+    }
+
+    if(this.factura.cfdi.usoCfdi == undefined){
+      this.errorMessages.push('El uso del CFDI es un campo requerido.');
+      validCdfi = false;
+    }
+    if(this.factura.cfdi.moneda == undefined){
+      this.errorMessages.push('La moneda es un campo requerido.');
+      validCdfi = false;
+    }
+
+    if(this.factura.cfdi.formaPago == undefined){
+      this.errorMessages.push('La forma de pago es un campo requerido.');
+      validCdfi = false;
+    }
+
+    if(this.factura.cfdi.metodoPago == undefined){
+      this.errorMessages.push('El metodo de pago es un campo requerido.');
+      validCdfi = false;
+    }
+
+    if(this.factura.cfdi.conceptos.length<1){
+      this.errorMessages.push('La factura debe contener a menos 1 concepto a declarar.');
+      validCdfi = false;
+    }
+
+    if(validCdfi){
+      this.factura.cfdi = this.factura.cfdi;
+      this.invoiceService.insertNewInvoice(this.factura).subscribe(
+        (invoice: Factura) => {this.factura.folio = invoice.folio;this.newPayment.folio = invoice.folio;},
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+  }
+
+
+  /******* PAGOS ********/
+
+
+  onPaymentCoinSelected(clave:string){
+    this.newPayment.moneda = clave;
+  }
+
+  onPaymentTypeSelected(clave:string){
+    this.newPayment.tipoPago = clave;
+  }
+
+  onPaymentBankSelected(clave:string){
+    this.newPayment.banco = clave;
+  }
+
+  fileUploadListener(event: any): void {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {this.paymentForm.filename = file.name + " " + file.type;this.newPayment.documento = reader.result.toString()}
+      reader.onerror = (error) => {this.payErrorMessages.push('Error parsing image file');console.error(error)};
+    }
+  }
+
+  sendPayment(){
+    this.newPayment.folio = this.factura.folio;
+    this.payErrorMessages = [];
+    let validPayment = true;
+    if(this.newPayment.banco == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El banco es un valor requerido');
+    }
+    if(this.newPayment.fechaPago == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('La fecha de pago es un valor requerido');
+    }
+    if(this.newPayment.moneda == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('Es necesario especificar la moneda con la que se realizo el pago.');
+    }
+    if(this.newPayment.monto == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El monto del pago es requerido.');
+    }
+    if(this.newPayment.monto <= 1){
+      validPayment = false;
+      this.payErrorMessages.push('El monto pagado es invalido');
+    }
+    if(this.newPayment.tipoPago == undefined){
+      validPayment = false;
+      this.payErrorMessages.push('El tipo de pago es requerido.');
+    }
+    if(this.newPayment.tipoPago!='EFECTIVO' && this.newPayment.documento== undefined){
+      validPayment = false;
+      this.payErrorMessages.push('La imagen del documento de pago es requerida.');
+    }
+    if(this.factura.cfdi.metodoPago=='PUE' && Math.abs(this.factura.cfdi.total-this.newPayment.monto)>0.01){
+      validPayment = false;
+      this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
+    }
+
+    if(validPayment){
+      this.invoiceService.insertNewPayment(this.factura.folio,this.newPayment).subscribe(
+        result =>{this.paymentForm.successPayment=true;this.newPayment = new Pago(); this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);},
+        (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+    
   }
 
 }

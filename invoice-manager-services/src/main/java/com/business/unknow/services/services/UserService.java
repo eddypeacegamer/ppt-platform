@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import com.business.unknow.model.menu.MenuItem;
 import com.business.unknow.model.security.UserDetails;
 import com.business.unknow.services.entities.User;
 import com.business.unknow.services.mapper.UserMapper;
+import com.business.unknow.services.repositories.RoleRepository;
 import com.business.unknow.services.repositories.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +30,12 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repository;
-
+	
 	@Autowired
-	private ResourceLoader resourceLoader;
+	private RoleRepository rolRepository;
+
+//	@Autowired
+//	private ResourceLoader resourceLoader;
 
 	@Autowired
 	private UserMapper mapper;
@@ -58,9 +61,10 @@ public class UserService {
 		}
 	}
 	
-	public void deleteUSer(Integer id) {
+	public void deleteUser(Integer id) {
 		User entity = repository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
+		rolRepository.findByUserId(id).stream().forEach(a->rolRepository.delete(a));
 		repository.delete(entity);
 	}
 
@@ -106,4 +110,5 @@ public class UserService {
 			return new MenuItem();
 		}
 	}
+	
 }

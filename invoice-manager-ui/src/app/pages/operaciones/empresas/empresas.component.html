@@ -4,25 +4,32 @@
       <nb-card-header>Empresas</nb-card-header>
       <nb-card-body>
         <div class="row">
-          <div class="col-md-2">
-            <label for="inputName" class="label">Razon Social</label>
+          <div class="col-sm-4">
+            <label for="inputName" class="label">Razon Social Empresa</label>
+            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.razonSocial"
+              [disabled]="filterParams.rfc.length > 0" fullWidth placeholder="Razon Social">
           </div>
-          <div class="col-md-4">
-            <input type="text" [(ngModel)]="filterParams.razonSocial" [disabled]="filterParams.rfc.length > 0" nbInput
-              fullWidth id="inputName" placeholder="Razon Social">
-          </div>
-          <div class="col-md-1">
+          <div class="col-sm-4">
             <label for="inputRfc" class="label">RFC</label>
+            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
+              [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
           </div>
-          <div class="col-md-3">
-            <input type="text" [(ngModel)]="filterParams.rfc" [disabled]="filterParams.razonSocial.length > 0" nbInput
-              fullWidth id="inputRfc" placeholder="RFC Cliente">
+          <div class="col-sm-4">
+            <label for="inputCompanyType" class="label">Tipo Empresa</label>
+            <div class="row form-inline">
+              <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
+                (change)="onCompanySelected($event.target.value)">
+                <option value="*">Seleccionar</option>
+                <option value="A">Tipo A</option>
+                <option value="B">Tipo B</option>
+                <option value="C">Tipo C</option>
+              </select>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button class="btn btn-primary" (click)="newCompany()">NUEVA EMPRESA</button>
+            </div>
           </div>
-
-          <div class="col-md-2">
-            <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
-          </div>
-
         </div>
         <br>
 
@@ -63,7 +70,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">{{fila.informacionFiscal.rfc}}</td>
+                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToEmpresa(fila.informacionFiscal.rfc)">{{fila.informacionFiscal.rfc}}</button></td>
                 <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
                 <td scope="row">{{fila.informacionFiscal.nombre}}</td>
                 <td scope="row">{{fila.tipo}}</td>
