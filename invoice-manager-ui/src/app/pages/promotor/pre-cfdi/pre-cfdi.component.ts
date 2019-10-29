@@ -68,6 +68,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura = new Factura();
     this.factura.cfdi = new Cfdi();
     this.factura.cfdi.conceptos = [];
+    this.errorMessages = [];
+    this.folioParam = undefined;
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
         let folio = route.get('folio');
@@ -137,11 +139,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   onMetodoDePagoSelected(clave: string) {
-    this.factura.cfdi.metodoPago = clave;
+    this.factura.metodoPago = clave;
   }
 
   onFormaDePagoSelected(clave: string) {
-    this.factura.cfdi.formaPago = clave;
+    this.factura.formaPago = clave;
   }
 
   onClaveProdServSelected(clave: string) {
@@ -207,9 +209,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      this.factura.cfdi.impuestos += impuesto;
-      this.factura.cfdi.subtotal += base;
-      this.factura.cfdi.total = (this.factura.cfdi.total * 3 + base * 3 + impuesto * 3) / 3;
+      console.log(base);
+      //this.factura.impuestos += impuesto;
+      this.factura.subtotal += base;
+      this.factura.total = (this.factura.total * 3 + base * 3 + impuesto * 3) / 3;
       this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
       this.formInfo.prodServ = '*';
@@ -229,8 +232,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.errorMessages.push('La empresa emisora es requerida.');
       validCdfi = false;
     } else {
-      this.factura.cfdi.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-      this.factura.cfdi.nombreEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
@@ -240,8 +243,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.errorMessages.push('La información del cliente es un valor solicitado');
       validCdfi = false;
     }else{
-      this.factura.cfdi.rfcReceptor = this.clientInfo.rfc;
-      this.factura.cfdi.nombreReceptor = this.clientInfo.razonSocial;
       this.factura.rfcRemitente = this.clientInfo.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
     }
@@ -255,12 +256,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validCdfi = false;
     }
 
-    if(this.factura.cfdi.formaPago == undefined){
+    if(this.factura.formaPago == undefined){
       this.errorMessages.push('La forma de pago es un campo requerido.');
       validCdfi = false;
     }
 
-    if(this.factura.cfdi.metodoPago == undefined){
+    if(this.factura.metodoPago == undefined){
       this.errorMessages.push('El metodo de pago es un campo requerido.');
       validCdfi = false;
     }
@@ -336,7 +337,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
-    if(this.factura.cfdi.metodoPago=='PUE' && Math.abs(this.factura.cfdi.total-this.newPayment.monto)>0.01){
+    if(this.factura.metodoPago=='PUE' && Math.abs(this.factura.total-this.newPayment.monto)>0.01){
       validPayment = false;
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }

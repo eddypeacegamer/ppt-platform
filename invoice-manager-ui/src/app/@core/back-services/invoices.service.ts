@@ -27,7 +27,7 @@ export class InvoicesService {
   }
 
   public insertNewInvoice(invoice : Factura): Observable<any>{
-    return this.httpClient.post('../api/facturas/chain',invoice);
+    return this.httpClient.post('../api/facturas',invoice);
   }
 
   public getPayments(folio : string): Observable<any>{

@@ -26,14 +26,14 @@
                 
                 
                 <p class="font-weight-bold">Emisor</p>
-                <p>{{factura.cfdi.rfcEmisor}}</p>
-                <p>{{factura.cfdi.nombreEmisor}}</p>
+                <p>{{factura.rfcEmisor}}</p>
+                <p>{{factura.razonSocialEmisor}}</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                 <p class="font-weight-bold">Receptor</p>
-                <p>{{factura.cfdi.rfcReceptor}}</p>
-                <p>{{factura.cfdi.nombreReceptor}}</p>
+                <p>{{factura.rfcRemitente}}</p>
+                <p>{{factura.razonSocialRemitente}}</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <span class="badge badge-primary">{{factura.statusFactura.statusEvento}}</span>    
+                <span class="badge badge-primary">{{factura.statusFactura}}</span>    
             </div>
             <p class="font-weight-bold">Información CFDI</p>
             <br>
@@ -45,10 +45,10 @@
                 <p>{{factura.cfdi.moneda}}</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                 <p class="font-weight-bold">Metodo de Pago</p>
-                <p>{{factura.cfdi.metodoPago}}</p>
+                <p>{{factura.metodoPago}}</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                 <p class="font-weight-bold">Forma de Pago</p>
-                <p>{{factura.cfdi.formaPago}}</p>
+                <p>{{factura.formaPago}}</p>
                 
             </div>
             <br>
@@ -240,22 +240,22 @@
                 <td scope="row" class="text-center">{{fila.importe | currency}}</td>
               </tr>
               <tr>
-                <td *ngIf="folioParam != '*'" colspan="6"></td>
-                <td *ngIf="folioParam === '*'" colspan="7"></td>
+                <td *ngIf="this.factura.folio != undefined"  colspan="6"></td>
+                <td *ngIf="this.factura.folio == undefined" colspan="7"></td>
                 <td class="text-center">Subtotal</td>
-                <td class="text-center">{{factura.cfdi.subtotal | currency}}</td>
+                <td class="text-center">{{factura.subtotal | currency}}</td>
               </tr>
-              <tr>
+              <!--tr>
                 <td *ngIf="folioParam != '*'" colspan="6"></td>
                 <td *ngIf="folioParam === '*'" colspan="7"></td>
                 <td class="text-center">Impuestos</td>
                 <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
-              </tr>
+              </tr-->
               <tr>
-                <td *ngIf="folioParam != '*'"  colspan="6"></td>
-                <td *ngIf="folioParam === '*'" colspan="7"></td>
+                <td *ngIf="this.factura.folio != undefined"  colspan="6"></td>
+                <td *ngIf="this.factura.folio == undefined" colspan="7"></td>
                 <td class="text-center">Total</td>
-                <td class="text-center">{{factura.cfdi.total | currency}}</td>
+                <td class="text-center">{{factura.total | currency}}</td>
               </tr>
             </tbody>
           </table>
