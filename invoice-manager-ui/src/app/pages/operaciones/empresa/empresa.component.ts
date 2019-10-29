@@ -26,12 +26,17 @@ export class EmpresaComponent implements OnInit {
   constructor(private catalogsService:CatalogsData,private empresaService:CompaniesData ,private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.companyInfo = new Empresa();
+    this.companyInfo.regimenFiscal = '*';
+    this.companyInfo.giro = '*';
+    this.companyInfo.tipo = '*';
+    this.companyInfo.activo = '*';
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {
         let rfc = route.get('rfc');
         this.empresaService.getCompanyByRFC(rfc)
         .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
-        (error : HttpErrorResponse)=>{this.companyInfo = new Empresa();});  
+        (error : HttpErrorResponse)=>this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));  
         });
     
     /**** LOADING CAT INFO ****/
