@@ -43,8 +43,13 @@ spring:
     username: invoice-manager
     password: hola123
   jpa:
+    hibernate:
+      ddlAuto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
     show-sql: true
+      
   resources:
     static-locations: 
     - classpath:/static/
