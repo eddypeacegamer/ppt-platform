@@ -53,6 +53,7 @@ public class Empresa implements Serializable {
 	@Column(name = "LOGOTIPO")
 	private String logotipo;
 
+	@Column(name = "LLAVE_PRIVADA")
 	private String llavePrivada;
 
 	@Column(name = "CERTIFICADO")
