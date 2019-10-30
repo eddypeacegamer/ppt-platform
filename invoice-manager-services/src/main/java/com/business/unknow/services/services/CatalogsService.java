@@ -29,6 +29,7 @@ import com.business.unknow.services.repositories.catalogs.ClaveProductoServicioR
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusFacturaRepository;
+import com.business.unknow.services.repositories.catalogs.StatusRevisionRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 
 /**
@@ -61,6 +62,9 @@ public class CatalogsService {
 	
 	@Autowired
 	private StatusDevolucionRepository statusDevoluicionRepo;
+	
+	@Autowired
+	private StatusRevisionRepository statusRevisionRepo;
 
 	@Autowired
 	private GiroRepository giroRepo;
@@ -114,12 +118,15 @@ public class CatalogsService {
 	
 	
 	public List<StatusCatalogoDto> getAllStatusPago() {
-		System.out.println(statusPagoRepo.findAll());
 		return mapper.getStatusPagoDtosFromEntities(statusPagoRepo.findAll());
 	}
 	
 	public List<StatusCatalogoDto> getAllStatusDevoluicion() {
 		return mapper.getStatusDevolucionDtosFromEntities(statusDevoluicionRepo.findAll());
+	}
+	
+	public List<StatusCatalogoDto> getAllStatusRevision() {
+		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
 	}
 
 }

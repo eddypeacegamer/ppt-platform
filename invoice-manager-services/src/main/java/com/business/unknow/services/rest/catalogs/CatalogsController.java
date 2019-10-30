@@ -80,5 +80,10 @@ public class CatalogsController {
 	public ResponseEntity<List<StatusCatalogoDto>> getAllStatusDevoluicion() {
 		return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/status-revision")
+	public ResponseEntity<List<StatusCatalogoDto>> getAllStatusRevision() {
+		return new ResponseEntity<>(service.getAllStatusRevision(), HttpStatus.OK);
+	}
 
 }

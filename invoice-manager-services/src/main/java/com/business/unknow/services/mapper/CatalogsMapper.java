@@ -22,6 +22,7 @@ import com.business.unknow.services.entities.catalogs.StatusDevolucion;
 import com.business.unknow.services.entities.catalogs.StatusEvento;
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.catalogs.StatusPago;
+import com.business.unknow.services.entities.catalogs.StatusRevision;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
 
 /**
@@ -61,4 +62,5 @@ public interface CatalogsMapper {
 	
 	List<StatusCatalogoDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
 
+	List<StatusCatalogoDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
 }

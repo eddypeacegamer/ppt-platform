@@ -37,9 +37,15 @@ public class Pago implements Serializable {
 
 	@Column(name = "BANCO")
 	private String banco;
-	
+
 	@Column(name = "MONTO")
 	private Double monto;
+
+	@Column(name = "STATUS_PAGO")
+	private String statusPago;
+
+	@Column(name = "COMENTARIO_PAGO")
+	private String comentarioPago;
 
 	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
@@ -136,6 +142,22 @@ public class Pago implements Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public String getStatusPago() {
+		return statusPago;
+	}
+
+	public void setStatusPago(String statusPago) {
+		this.statusPago = statusPago;
+	}
+
+	public String getComentarioPago() {
+		return comentarioPago;
+	}
+
+	public void setComentarioPago(String comentarioPago) {
+		this.comentarioPago = comentarioPago;
 	}
 
 	@Override
