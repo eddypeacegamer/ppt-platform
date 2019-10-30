@@ -156,7 +156,6 @@
             </div>
           </div>
         </div>
-        {{procentajes | json}}
         <p class="alert alert-warning"
           *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100"
           role="alert">La suma de los porcentajes debe ser igual al 100%</p>

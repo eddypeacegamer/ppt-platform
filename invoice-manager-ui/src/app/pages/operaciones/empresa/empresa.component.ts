@@ -15,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EmpresaComponent implements OnInit {
 
   public companyInfo : Empresa;
-  public formInfo : any = {rfc:'',message:'',coloniaId:'*', success:''};
+  public formInfo : any = {rfc:'',message:'',coloniaId:'*', success:'',certificateFileName:'',keyFileName:'', logoFileName:''};
   public coloniaId: number=0;
   public colonias = [];
   public paises = ['México'];
@@ -31,12 +31,13 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.giro = '*';
     this.companyInfo.tipo = '*';
     this.companyInfo.activo = '*';
+    this.errorMessages = [];
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {
         let rfc = route.get('rfc');
         this.empresaService.getCompanyByRFC(rfc)
         .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
-        (error : HttpErrorResponse)=>this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));  
+        (error : HttpErrorResponse)=>console.log(error.error.message || `${error.statusText} : ${error.message}`));  
         });
     
     /**** LOADING CAT INFO ****/
@@ -61,15 +62,68 @@ export class EmpresaComponent implements OnInit {
   }
 
   public onRegimenFiscalSelected(regimen:string){
-    console.log(regimen);
+    this.companyInfo.regimenFiscal= regimen;
   }
 
   public onGiroSelection(giro:string){
-    console.log(giro);
+    this.companyInfo.giro = giro;
   }
 
-  public onCompanySelected(company:string){
-    console.log(company);
+  public onLineaSelected(linea:string){
+    this.companyInfo.tipo = linea;
+  }
+
+  logoUploadListener(event: any): void {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {this.formInfo.logoFileName = file.name + " " + file.type;this.companyInfo.logotipo = reader.result.toString()}
+      reader.onerror = (error) => {this.errorMessages.push('Error parsing image file');console.error(error)};
+    }
+  }
+
+  keyUploadListener(event: any): void {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {this.formInfo.keyFileName = file.name + " " + file.type;this.companyInfo.llavePrivada = reader.result.toString()}
+      reader.onerror = (error) => {this.errorMessages.push('Error parsing image file');console.error(error)};
+    }
+  }
+
+  certificateUploadListener(event: any): void {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {this.formInfo.certificateFileName = file.name + " " + file.type;this.companyInfo.certificado = reader.result.toString()}
+      reader.onerror = (error) => {this.errorMessages.push('Error parsing image file')};
+    }
+  }
+
+  public insertNewCompany():void{
+    this.errorMessages = [];
+    this.formInfo.success ='';
+    this.empresaService.insertNewCompany(this.companyInfo)
+    .subscribe((data:Empresa) => {this.companyInfo = new Empresa();
+      this.companyInfo.regimenFiscal = '*';
+      this.companyInfo.giro = '*';
+      this.companyInfo.tipo = '*';
+      this.companyInfo.activo = '*'; 
+      this.formInfo.success='Empresa creada correctamente'},
+    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
+    );
+  }
+
+  public updateCompany():void{
+    this.errorMessages = [];
+    this.formInfo.success ='';
+    this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc,this.companyInfo)
+    .subscribe((data:Empresa) => {this.formInfo.success='Empresa actualizada correctamente';},
+    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
+    );
   }
 
 }

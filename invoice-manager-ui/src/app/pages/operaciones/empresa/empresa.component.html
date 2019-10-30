@@ -91,14 +91,14 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputExterior" class="label">No exterior</label>
-              <input type="number" [(ngModel)]="companyInfo.informacionFiscal.noExterior" class="form-control" fullWidth
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.noExterior" class="form-control" fullWidth
                 id="inputExterior" placeholder="No exterior">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No interior</label>
-              <input type="number" [(ngModel)]="companyInfo.informacionFiscal.noInterior" class="form-control" fullWidth
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.noInterior" class="form-control" fullWidth
                 id="inputInterior" placeholder="No interior">
             </div>
           </div>
@@ -116,7 +116,7 @@
             <div class="col-sm-3">
                 <label for="inputCompanyType" class="label">Linea Empresa</label>
                 <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
-                [(ngModel)]="companyInfo.tipo" (change)="onCompanySelected($event.target.value)">
+                [(ngModel)]="companyInfo.tipo" (change)="onLineaSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="A">Tipo A</option>
                 <option value="B">Tipo B</option>
@@ -134,14 +134,38 @@
           </div>
         </div>
         <p class="font-weight-bold">Datos facturacion</p>
-        <div>
-          <li>contactoAdmin</li>
-          <li>logotipo</li>
-          <li>llavePrivada</li>
-          <li>certificado</li>
-          <li>password</li>
-          <li>encabezado</li>
-          <li>pie de pagina</li>
+        <div >
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="inputPassword" class="label">Encabezado</label>
+                <textarea type="text" [(ngModel)]="companyInfo.encabezado" class="form-control" fullWidth id="inputPassword"
+                  placeholder="Breve leyenda de encabezado para facturas empresa."></textarea>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="inputPassword" class="label">Pie de pagina</label>
+                <textarea type="text" [(ngModel)]="companyInfo.piePagina" class="form-control" fullWidth id="inputPassword"
+                  placeholder="Breve leyenda de pie de pagina para facturas empresa."></textarea>
+              </div>
+            </div>
+          </div>
+         <div class="row">
+          <div class="form-group col-md-4">
+            <label for="logoFile" class="label">Logotipo Empresa</label>
+            <div class="input-group">
+              <div class="custom-file" id="logoFile">
+                <input type="file" class="custom-file-input" id="inputLogoFile" accept="image/*"
+                  (change)="logoUploadListener($event)" style="display:block;"
+                  aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label" for="inputLogoFile">{{formInfo.logoFileName}}</label>
+              </div>
+            </div>
+          </div>
+         </div>
+          
+      
          
         </div>
         <p class="font-weight-bold">Claves y accessos</p>
@@ -161,7 +185,49 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="certFile" class="label">Certificado SAT</label>
+            <div class="input-group">
+              <div class="custom-file" id="certFile">
+                <input type="file" class="custom-file-input" id="inputCertificateFile" accept=".cer"
+                  (change)="certificateUploadListener($event)" style="display:block;"
+                  aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label" for="inputCertificateFile">{{formInfo.certificateFileName}}</label>
+              </div>
+            </div>
+          </div>
 
+          <div class="form-group col-md-4">
+            <label for="keyFile" class="label">Llave SAT</label>
+            <div class="input-group">
+              <div class="custom-file" id="keyFile">
+                <input type="file" class="custom-file-input" id="inputKeyFile" accept=".key"
+                  (change)="keyUploadListener($event)" style="display:block;"
+                  aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label" for="inputKeyFile">{{formInfo.keyFileName}}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="inputPasswordSAT" class="label">Contraseña SAT</label>
+              <input type="password" [(ngModel)]="companyInfo.pw" class="form-control" fullWidth
+                id="inputPasswordSAT" placeholder="Contraseña SAT">
+            </div>
+          </div>
+        </div>
+        <div class="form-inline">
+          <button type="button" *ngIf="companyInfo.id == undefined"
+            (click)="insertNewCompany()" nbButton status="primary">GUARDAR</button>
+          <button type="button" *ngIf="companyInfo.id != undefined" (click)="updateCompany()" nbButton
+            status="primary">ACTUALIZAR</button>
+        </div>
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
+        <p class="alert alert-success" *ngIf="formInfo.success.length > 0" role="alert">{{formInfo.success}}</p>
       </nb-card-body>
     </nb-card>
   </div>

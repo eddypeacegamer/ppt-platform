@@ -12,6 +12,6 @@ export abstract class CompaniesData {
 
     abstract insertNewCompany(empresa : Empresa) : Observable<Empresa>;
 
-    abstract updateCompany(empresa : Empresa) : Observable<Empresa>;
+    abstract updateCompany(rfc:string,empresa : Empresa) : Observable<Empresa>;
   
 }
