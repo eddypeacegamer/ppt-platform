@@ -3,7 +3,7 @@ spring:
     active: "stg"
   main:
     banner-mode: "off"
-        
+    
 server:
      port: 8080          
    
@@ -43,8 +43,7 @@ spring:
     username: invoice-manager
     password: hola123
   jpa:
-    hibernate.ddl-auto: update
-    generate-ddl: true
+    hibernate.ddl-auto: none
     show-sql: true
   resources:
     static-locations: 
