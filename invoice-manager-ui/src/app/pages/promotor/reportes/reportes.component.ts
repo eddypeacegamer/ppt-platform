@@ -8,6 +8,7 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Factura } from '../../../models/factura/factura';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { NbIconLibraries } from '@nebular/theme';
 
 
 @Component({
@@ -29,15 +30,16 @@ export class ReportesComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private catalogService : CatalogsData,
+    private iconsLibrary :NbIconLibraries,
     private donwloadService:DownloadCsvService,
     private router: Router) {}
 
     ngOnInit() {
+      this.iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
       this.catalogService.getStatusValidacion().subscribe(cat=>this.validationCat = cat);
       this.catalogService.getStatusPago().subscribe(cat=>this.payCat = cat);
-      this.catalogService.getStatusDevolucion().subscribe(cat=>this.devolutionCat = cat);
-      this.updateDataTable();
-      
+      this.catalogService.getStatusDevolucion().toPromise()
+        .then(cat=>this.devolutionCat = cat).then(()=>this.updateDataTable());
     }
   
 

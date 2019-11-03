@@ -38,10 +38,10 @@ export class ClientesComponent implements OnInit {
     this.clientInfo = new Client();
     this.clientInfo.informacionFiscal= new Contribuyente();
     this.clientInfo.informacionFiscal.rfc= this.formInfo.rfc;
-    this.clientInfo.porcentajeCliente =25;
-    this.clientInfo.porcentajeContacto =25;
-    this.clientInfo.porcentajePromotor =25;
-    this.clientInfo.porcentajeDespacho =25;
+    this.clientInfo.porcentajeCliente =4;
+    this.clientInfo.porcentajeContacto =4;
+    this.clientInfo.porcentajePromotor =4;
+    this.clientInfo.porcentajeDespacho =4;
     this.clientInfo.informacionFiscal.pais= 'México';
   }
 
@@ -51,6 +51,7 @@ export class ClientesComponent implements OnInit {
   }
 
   public insertClient(){
+    this.formInfo.message = '';
     this.clientService.insertNewClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente guardado exitosamente';this.clientInfo = undefined;},
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status}); 
   }

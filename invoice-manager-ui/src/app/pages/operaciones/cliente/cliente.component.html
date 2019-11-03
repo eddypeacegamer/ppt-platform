@@ -139,12 +139,12 @@
           </div>
         </div>
         <p class="alert alert-warning"
-          *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100"
-          role="alert">La suma de los porcentajes debe ser igual al 100%</p>
+          *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
+          role="alert">La suma de los porcentajes debe ser igual al 16%</p>
 
         <div class="form-inline">
           <button type="button" *ngIf="formInfo.message.length > 0"
-            [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 100"
+            [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>
           <button type="button" *ngIf="formInfo.message.length == 0" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
