@@ -2,9 +2,9 @@ package com.business.unknow.commons.builder;
 
 import java.util.List;
 
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.PagoDto;
 
 public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 

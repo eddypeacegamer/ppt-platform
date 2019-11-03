@@ -3,8 +3,8 @@ package com.business.unknow.model.context;
 import java.io.Serializable;
 import java.util.List;
 
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.PagoDto;
 
 public class FacturaContext implements Serializable {
 

@@ -1,10 +1,11 @@
-package com.business.unknow.services.entities.factura;
+package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,8 +15,10 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "PAGOS")
 public class Pago implements Serializable {
 
@@ -40,6 +43,12 @@ public class Pago implements Serializable {
 
 	@Column(name = "MONTO")
 	private Double monto;
+	
+	@Column(name = "REVISION_1")
+	private Boolean revision1;
+	
+	@Column(name = "REVISION_2")
+	private Boolean revision2;
 
 	@Column(name = "STATUS_PAGO")
 	private String statusPago;
@@ -160,11 +169,28 @@ public class Pago implements Serializable {
 		this.comentarioPago = comentarioPago;
 	}
 
+	public Boolean getRevision1() {
+		return revision1;
+	}
+
+	public void setRevision1(Boolean revision1) {
+		this.revision1 = revision1;
+	}
+
+	public Boolean getRevision2() {
+		return revision2;
+	}
+
+	public void setRevision2(Boolean revision2) {
+		this.revision2 = revision2;
+	}
+
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", documento=" + documento + ", banco="
-				+ banco + ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ banco + ", monto=" + monto + ", revision1=" + revision1 + ", revision2=" + revision2 + ", statusPago="
+				+ statusPago + ", comentarioPago=" + comentarioPago + ", tipoPago=" + tipoPago + ", fechaPago="
+				+ fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

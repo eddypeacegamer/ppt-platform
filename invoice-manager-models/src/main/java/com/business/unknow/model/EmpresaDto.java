@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * @author hha0009
+ *@author ralfdemoledor
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

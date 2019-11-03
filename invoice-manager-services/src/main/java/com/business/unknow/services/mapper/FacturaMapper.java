@@ -6,14 +6,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
-import com.business.unknow.model.factura.PagoDto;
+import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.factura.FacturaFile;
-import com.business.unknow.services.entities.factura.Pago;
 
 @Mapper
 public interface FacturaMapper {

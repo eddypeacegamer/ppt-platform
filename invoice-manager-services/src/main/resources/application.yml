@@ -48,7 +48,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
-    show-sql: true
+    show-sql: false
       
   resources:
     static-locations: 

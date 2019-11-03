@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
-import com.business.unknow.model.factura.PagoDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.services.services.FacturaService;
 

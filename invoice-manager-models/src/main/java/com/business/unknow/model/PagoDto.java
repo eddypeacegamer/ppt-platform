@@ -1,8 +1,10 @@
-package com.business.unknow.model.factura;
+package com.business.unknow.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -18,11 +20,16 @@ public class PagoDto implements Serializable {
 	private String banco;
 	private Double monto;
 	private String statusPago;
+	private Boolean revision1;
+	private Boolean revision2;
 	private String comentarioPago;
 	private String tipoPago;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaPago;
 	private String documento;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 
 	public Integer getId() {
@@ -121,10 +128,29 @@ public class PagoDto implements Serializable {
 		this.comentarioPago = comentarioPago;
 	}
 
+	public Boolean getRevision1() {
+		return revision1;
+	}
+
+	public void setRevision1(Boolean revision1) {
+		this.revision1 = revision1;
+	}
+
+	public Boolean getRevision2() {
+		return revision2;
+	}
+
+	public void setRevision2(Boolean revision2) {
+		this.revision2 = revision2;
+	}
+
 	@Override
 	public String toString() {
-		return "PagoDto [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", documento=" + documento + ", banco="
-				+ banco + ", monto=" + monto + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "PagoDto [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", banco=" + banco + ", monto=" + monto
+				+ ", statusPago=" + statusPago + ", revision1=" + revision1 + ", revision2=" + revision2
+				+ ", comentarioPago=" + comentarioPago + ", tipoPago=" + tipoPago + ", fechaPago=" + fechaPago
+				+ ", documento=" + documento + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
+
 }
