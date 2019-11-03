@@ -70,15 +70,15 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToEmpresa(fila.informacionFiscal.rfc)">{{fila.informacionFiscal.rfc}}</button></td>
-                <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
-                <td scope="row">{{fila.informacionFiscal.nombre}}</td>
+                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToEmpresa(fila.informacionFiscal.rfc)">{{fila.rfc}}</button></td>
+                <td scope="row">{{fila.razonSocial}}</td>
+                <td scope="row">{{fila.giro}}</td>
                 <td scope="row">{{fila.tipo}}</td>
                 <td scope="row">
                   <p *ngIf="fila.activo">SI</p>
                   <p *ngIf="!fila.activo">NO</p>
                 </td>
-                <td scope="row">{{fila.informacionFiscal.correo}}</td>
+                <td scope="row">{{fila.correo}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>

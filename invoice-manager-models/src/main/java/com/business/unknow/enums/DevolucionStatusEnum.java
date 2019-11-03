@@ -2,17 +2,25 @@ package com.business.unknow.enums;
 
 public enum DevolucionStatusEnum {
 
-	SIN_DEVOLVER("Sin devolver"),
-	DEVUELTA("Devuelta"),
-	PARCIALMENTE_DEVUELTA("Parcialmente devuelta");
+	SIN_DEVOLVER(1,"Sin devolver"),
+	DEVUELTA(2,"Devuelta"),
+	PARCIALMENTE_DEVUELTA(3,"Parcialmente devuelta");
 
-	private String valor;
+	private Integer valor;
+	private String descripcion;
+	
 
-	private DevolucionStatusEnum(String valor) {
+	private DevolucionStatusEnum(Integer valor, String descripcion) {
 		this.valor = valor;
+		this.descripcion = descripcion;
 	}
 
-	public String getValor() {
+	public Integer getValor() {
 		return valor;
 	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+	
 }

@@ -9,7 +9,7 @@
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
               <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC"
-                placeholder="RFC Empresa">
+                placeholder="RFC Empresa" [disabled]="companyInfo.id!=undefined" >
             </div>
           </div>
           <div class="col-md-6">
@@ -154,13 +154,16 @@
          <div class="row">
           <div class="form-group col-md-4">
             <label for="logoFile" class="label">Logotipo Empresa</label>
-            <div class="input-group">
+            <div class="input-group" *ngIf="companyInfo.logotipo==undefined">
               <div class="custom-file" id="logoFile">
                 <input type="file" class="custom-file-input" id="inputLogoFile" accept="image/*"
                   (change)="logoUploadListener($event)" style="display:block;"
                   aria-describedby="inputGroupFileAddon01">
                 <label class="custom-file-label" for="inputLogoFile">{{formInfo.logoFileName}}</label>
               </div>
+            </div>
+            <div *ngIf="companyInfo.logotipo!=undefined">
+              <img [src]="sanitize(companyInfo.logotipo)" style="height: 80px;">
             </div>
           </div>
          </div>
@@ -173,14 +176,14 @@
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputEmail" class="label">Correo Empresa</label>
-              <input type="email" [(ngModel)]="companyInfo.informacionFiscal.correo" class="form-control" fullWidth id="inputEmail"
+              <input type="email" [(ngModel)]="companyInfo.correo" class="form-control" fullWidth id="inputEmail"
                 placeholder="Email">
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputPassword" class="label">Contraseña correo</label>
-              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.coo" class="form-control" fullWidth id="inputPassword"
+              <input type="text" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth id="inputPassword"
                 placeholder="Password">
             </div>
           </div>
@@ -213,7 +216,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputPasswordSAT" class="label">Contraseña SAT</label>
-              <input type="password" [(ngModel)]="companyInfo.pw" class="form-control" fullWidth
+              <input type="password" [(ngModel)]="companyInfo.pwSat" class="form-control" fullWidth
                 id="inputPasswordSAT" placeholder="Contraseña SAT">
             </div>
           </div>

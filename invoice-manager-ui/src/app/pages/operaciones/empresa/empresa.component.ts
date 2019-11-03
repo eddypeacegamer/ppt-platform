@@ -6,6 +6,7 @@ import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Giro } from '../../../models/catalogos/giro';
 import { ActivatedRoute } from '@angular/router';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'ngx-empresa',
@@ -23,7 +24,10 @@ export class EmpresaComponent implements OnInit {
   public girosCat: Giro[] = [];
   public errorMessages: string[] = [];
   
-  constructor(private catalogsService:CatalogsData,private empresaService:CompaniesData ,private route: ActivatedRoute) { }
+  constructor(private catalogsService:CatalogsData,
+              private empresaService:CompaniesData,
+              private route: ActivatedRoute,
+              private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.companyInfo = new Empresa();
@@ -44,6 +48,11 @@ export class EmpresaComponent implements OnInit {
     this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
+
+  sanitize(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
 
   public zipCodeInfo(zipcode:String){
     let zc = new String(zipcode);
@@ -72,7 +81,7 @@ export class EmpresaComponent implements OnInit {
   public onLineaSelected(linea:string){
     this.companyInfo.tipo = linea;
   }
-
+  
   logoUploadListener(event: any): void {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
@@ -107,12 +116,7 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = [];
     this.formInfo.success ='';
     this.empresaService.insertNewCompany(this.companyInfo)
-    .subscribe((data:Empresa) => {this.companyInfo = new Empresa();
-      this.companyInfo.regimenFiscal = '*';
-      this.companyInfo.giro = '*';
-      this.companyInfo.tipo = '*';
-      this.companyInfo.activo = '*'; 
-      this.formInfo.success='Empresa creada correctamente'},
+    .subscribe((empresa:Empresa) => {this.companyInfo.id = empresa.id;this.formInfo.success='Empresa creada correctamente';},
     (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
     );
   }

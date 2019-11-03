@@ -20,9 +20,9 @@ public class FacturaDto implements Serializable {
 	private String folio;
 	private String folioPadre;
 	private String uuid;
-	private String statusPago;
-	private String statusDevolucion;
-	private String statusFactura;
+	private Integer statusPago;
+	private Integer statusDevolucion;
+	private Integer statusFactura;
 	private String statusDetail;
 	private String tipoDocumento;
 	private String formaPago;
@@ -92,27 +92,27 @@ public class FacturaDto implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public String getStatusPago() {
+	public Integer getStatusPago() {
 		return statusPago;
 	}
 
-	public void setStatusPago(String statusPago) {
+	public void setStatusPago(Integer statusPago) {
 		this.statusPago = statusPago;
 	}
 
-	public String getStatusDevolucion() {
+	public Integer getStatusDevolucion() {
 		return statusDevolucion;
 	}
 
-	public void setStatusDevolucion(String statusDevolucion) {
+	public void setStatusDevolucion(Integer statusDevolucion) {
 		this.statusDevolucion = statusDevolucion;
 	}
 
-	public String getStatusFactura() {
+	public Integer getStatusFactura() {
 		return statusFactura;
 	}
 
-	public void setStatusFactura(String statusFactura) {
+	public void setStatusFactura(Integer statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 

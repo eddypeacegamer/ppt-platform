@@ -22,6 +22,7 @@ export class ClienteComponent implements OnInit {
   constructor(private clientService:ClientsData,private catalogsService:CatalogsData,private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.clientInfo = new Client();
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
       let rfc = route.get('rfc');

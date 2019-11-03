@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.business.unknow.services.entities.Client;
 
+@Repository
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
 	public Page<Client> findAll(Pageable pageable);

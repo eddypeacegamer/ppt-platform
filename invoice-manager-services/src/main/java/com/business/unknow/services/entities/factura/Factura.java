@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +14,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "FACTURAS")
 public class Factura implements Serializable {
 
@@ -47,13 +50,13 @@ public class Factura implements Serializable {
 	private String uuid;
 
 	@Column(name = "STATUS_PAGO")
-	private String statusPago;
+	private Integer statusPago;
 
 	@Column(name = "STATUS_DEVOLUCION")
-	private String statusDevolucion;
+	private Integer statusDevolucion;
 
 	@Column(name = "STATUS_FACTURA")
-	private String statusFactura;
+	private Integer statusFactura;
 
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
@@ -133,27 +136,35 @@ public class Factura implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public String getStatusPago() {
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getStatusPago() {
 		return statusPago;
 	}
 
-	public void setStatusPago(String statusPago) {
+	public void setStatusPago(Integer statusPago) {
 		this.statusPago = statusPago;
 	}
 
-	public String getStatusDevolucion() {
+	public Integer getStatusDevolucion() {
 		return statusDevolucion;
 	}
 
-	public void setStatusDevolucion(String statusDevolucion) {
+	public void setStatusDevolucion(Integer statusDevolucion) {
 		this.statusDevolucion = statusDevolucion;
 	}
 
-	public String getStatusFactura() {
+	public Integer getStatusFactura() {
 		return statusFactura;
 	}
 
-	public void setStatusFactura(String statusFactura) {
+	public void setStatusFactura(Integer statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 

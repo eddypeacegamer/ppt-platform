@@ -194,7 +194,7 @@ public class FacturaService {
 		cfdiRepository.delete(entity);
 	}
 
-	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) throws InvoiceManagerException {
+	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) {
 
 		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);

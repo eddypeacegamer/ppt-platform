@@ -54,7 +54,7 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
 		service.deleteUser(id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/myInfo")
@@ -72,12 +72,12 @@ public class UserController {
 	@DeleteMapping("/{userId}/roles/{id}")
 	public ResponseEntity<Void> deleteUserRoles(@PathVariable Integer id, @PathVariable Integer userId) {
 		rolService.deleteRoleByUserIdAndId(userId, id);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/{userId}/roles")
 	public ResponseEntity<RoleDto> insertRoleToUser(@PathVariable Integer userId, @RequestBody @Valid  RoleDto roleDto) {
-		return new ResponseEntity<RoleDto>(rolService.insertNewRole(userId, roleDto), HttpStatus.OK);
+		return new ResponseEntity<>(rolService.insertNewRole(userId, roleDto), HttpStatus.OK);
 	}
 
 }

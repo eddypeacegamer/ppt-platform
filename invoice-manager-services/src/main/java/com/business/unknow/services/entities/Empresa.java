@@ -7,6 +7,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,8 +19,10 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "EMPRESAS")
 public class Empresa implements Serializable {
 
@@ -35,9 +38,6 @@ public class Empresa implements Serializable {
 
 	@Column(name = "REFERENCIA")
 	private String referencia;
-
-	@Column(name = "web")
-	private String web;
 
 	@Column(name = "CONTACTO_ADMIN")
 	private String contactoAdmin;
@@ -58,9 +58,18 @@ public class Empresa implements Serializable {
 
 	@Column(name = "CERTIFICADO")
 	private String certificado;
+	
+	@Column(name = "PW_SAT")
+	private String pwSat;
 
-	@Column(name = "PW")
-	private String pw;
+	@Column(name = "PW_CORREO")
+	private String pwCorreo;
+	
+	@Column(name = "WEB")
+	private String web;
+	
+	@Column(name = "CORREO")
+	private String correo;
 
 	@Column(name = "ENCABEZADO")
 	private String encabezado;
@@ -91,6 +100,14 @@ public class Empresa implements Serializable {
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getRegimenFiscal() {
 		return regimenFiscal;
 	}
@@ -105,14 +122,6 @@ public class Empresa implements Serializable {
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
-	}
-
-	public String getWeb() {
-		return web;
-	}
-
-	public void setWeb(String web) {
-		this.web = web;
 	}
 
 	public String getContactoAdmin() {
@@ -163,12 +172,36 @@ public class Empresa implements Serializable {
 		this.certificado = certificado;
 	}
 
-	public String getPw() {
-		return pw;
+	public String getPwSat() {
+		return pwSat;
 	}
 
-	public void setPw(String pw) {
-		this.pw = pw;
+	public void setPwSat(String pwSat) {
+		this.pwSat = pwSat;
+	}
+
+	public String getPwCorreo() {
+		return pwCorreo;
+	}
+
+	public void setPwCorreo(String pwCorreo) {
+		this.pwCorreo = pwCorreo;
+	}
+
+	public String getWeb() {
+		return web;
+	}
+
+	public void setWeb(String web) {
+		this.web = web;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 
 	public String getEncabezado() {
@@ -237,11 +270,12 @@ public class Empresa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Empresa [regimenFiscal=" + regimenFiscal + ", referencia=" + referencia + ", web=" + web
+		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
-				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado=" + certificado + ", pw="
-				+ pw + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo="
-				+ tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado=" + certificado
+				+ ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web + ", correo=" + correo
+				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo
+				+ ", giro=" + giro + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }

@@ -11,4 +11,9 @@ export class Client {
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     public informacionFiscal: Contribuyente;
+
+
+    constructor(){
+        this.informacionFiscal = new Contribuyente();
+    }
 }

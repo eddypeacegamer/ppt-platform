@@ -64,7 +64,9 @@ public class EmpresaService {
 		empresa.setLogotipo(empresaDto.getLogotipo());
 		empresa.setLlavePrivada(empresaDto.getLlavePrivada());
 		empresa.setCertificado(empresaDto.getCertificado());
-		empresa.setPw(empresaDto.getPw());
+		empresa.setPwSat(empresaDto.getPwSat());
+		empresa.setCorreo(empresaDto.getCorreo());
+		empresa.setPwCorreo(empresa.getPwCorreo());
 		empresa.setActivo(empresaDto.getActivo());
 		empresa.setInformacionFiscal(
 				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));

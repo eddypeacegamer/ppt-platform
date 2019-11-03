@@ -2,17 +2,24 @@ package com.business.unknow.enums;
 
 public enum PagoStatusEnum {
 	
-	SIN_PAGAR("Sin pagar"),
-	PAGADA("Pagada"),
-	PARCIALMENTE_PAGADA("Parcialmente pagada");
+	SIN_PAGAR(1,"Sin pagar"),
+	PAGADA(2,"Pagada"),
+	PARCIALMENTE_PAGADA(3,"Parcialmente pagada");
 
-	private String valor;
+	private Integer valor;
+	private String descripcion;
 
-	private PagoStatusEnum(String valor) {
+	private PagoStatusEnum(Integer valor, String descripcion) {
 		this.valor = valor;
+		this.descripcion = descripcion;
 	}
 
-	public String getValor() {
+	public Integer getValor() {
 		return valor;
 	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+	
 }

@@ -2,21 +2,29 @@ package com.business.unknow.enums;
 
 public enum FacturaStatusEnum {
 	
-	VALIDACION_OPERACIONES("Validacion operaciones"),
-	VALIDACION_TESORERIA("Validacion tesoreria"),
-	TIMBRADA("Timbrada"),
-	RECHAZO_TESORERIA("Rechazo tesoreria"),
-	RECHAZO_OPERACIONES("Rechazo Operaciones"),
-	CANCELADA("Cancelada");
+	VALIDACION_OPERACIONES(1,"Validacion operaciones"),
+	VALIDACION_TESORERIA(2,"Validacion tesoreria"),
+	TIMBRADA(3,"Timbrada"),
+	RECHAZO_TESORERIA(4,"Rechazo tesoreria"),
+	RECHAZO_OPERACIONES(5,"Rechazo Operaciones"),
+	CANCELADA(6,"Cancelada");
 
-	private String valor;
+	private Integer valor;
+	private String descripcion;
 	
-	private FacturaStatusEnum(String valor) {
-		this.valor=valor;
+	private FacturaStatusEnum(Integer valor, String descripcion) {
+		this.valor = valor;
+		this.descripcion = descripcion;
 	}
 
-	public String getValor() {
+
+	public Integer getValor() {
 		return valor;
 	}
 
+	public String getDescripcion() {
+		return descripcion;
+	}
+	
+	
 }

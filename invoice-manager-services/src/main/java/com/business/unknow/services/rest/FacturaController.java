@@ -135,7 +135,7 @@ public class FacturaController {
 	}
 
 	@GetMapping("/{folio}/pagos")
-	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) throws InvoiceManagerException {
+	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio){
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
 	}
 
