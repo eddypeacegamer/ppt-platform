@@ -15,6 +15,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,18 +36,35 @@ public class Client implements Serializable {
 	@Column(name = "ID_CLIENTE")
 	private int id;
 
+	@NotNull
 	@Column(name = "ACTIVO")
 	private Boolean activo;
 
+	@NotEmpty
+	@Column(name = "CORREO_PROMOTOR")
+	private String correoPromotor;
+	
+	@NotEmpty
+	@Column(name = "CORREO_CONTACTO")
+	private String correoContacto;
+	
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_PROMOTOR")
 	private Integer porcentajePromotor;
 
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CLIENTE")
 	private Integer porcentajeCliente;
 
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_DESPACHO")
 	private Integer porcentajeDespacho;
 
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CONTACTO")
 	private Integer porcentajeContacto;
 
@@ -61,6 +82,14 @@ public class Client implements Serializable {
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Boolean getActivo() {
 		return activo;
 	}
@@ -68,29 +97,21 @@ public class Client implements Serializable {
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	
+	public String getCorreoPromotor() {
+		return correoPromotor;
 	}
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	public void setCorreoPromotor(String correoPromotor) {
+		this.correoPromotor = correoPromotor;
 	}
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
+	public String getCorreoContacto() {
+		return correoContacto;
 	}
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Contribuyente getInformacionFiscal() {
-		return informacionFiscal;
-	}
-
-	public void setInformacionFiscal(Contribuyente informacionFiscal) {
-		this.informacionFiscal = informacionFiscal;
+	public void setCorreoContacto(String correoContacto) {
+		this.correoContacto = correoContacto;
 	}
 
 	public Integer getPorcentajePromotor() {
@@ -125,19 +146,37 @@ public class Client implements Serializable {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 
-	public int getId() {
-		return id;
+	public Date getFechaCreacion() {
+		return fechaCreacion;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Contribuyente getInformacionFiscal() {
+		return informacionFiscal;
+	}
+
+	public void setInformacionFiscal(Contribuyente informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
 	}
 
 	@Override
 	public String toString() {
-		return "Client [activo=" + activo + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
+		return "Client [id=" + id + ", activo=" + activo + ", correoPromotor=" + correoPromotor + ", correoContacto="
+				+ correoContacto + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
 				+ porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho + ", porcentajeContacto="
 				+ porcentajeContacto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
+
 }

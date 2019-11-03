@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 /**
  *@author ralfdemoledor
  *
+ *Las devoluciones solo pueden ser creadas para facturas pagadas y timbradas, de otro modo no es posible  crear una devolucion
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -33,33 +35,39 @@ public class Devolucion {
 	@Column(name = "ID_DEVOLUCION")
 	private Integer id;
 	
+	/*
+	 * Este ID es llenado al momento de hacer el pago de la devolucion, el diseño permite que un pago pueda ligar multiples devoluciones.
+	 */
 	@Column(name = "ID_PAGO")
 	private Integer idPago;
-
+	/*
+	 *Folio de complemento si es PPD o folio factura si es PUE 
+	 */
+	@NotNull
 	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "MONEDA")
-	private String moneda;
-
-	@Column(name = "BANCO")
-	private String banco;
-
-	@Column(name = "MONTO")
-	private Double monto;
-	
 	@Column(name = "STATUS_DEVOLUCION")
 	private String statusPago;
 	
-	@Column(name = "TIPO_DEVOLUCION")
-	private String tipoPago;
+	@NotNull
+	@Column(name = "MONTO")
+	private Double monto;
 	
-	@Column(name = "DOCUMENTO")
-	private String documento;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name = "FECHA_DEVOLUCION")
-	private Date fechaPago;
+	/*
+	 *Entidad que recibe pago,en este caso es e correo de promotor,RFC cliente, correo contacto y CASA 
+	 */
+	@NotNull
+	@Column(name = "ID_RECEPTOR")
+	private String receptor;
+	
+	/*
+	 * CLIENTE,PROMOTOR,CONTACTO,CASA
+	 */
+	@NotNull
+	@Column(name = "TIPO_RECEPTOR")
+	private String tipoReceptor;
+	
 
 	@Temporal(TemporalType.DATE)
 	@CreatedDate
@@ -95,20 +103,12 @@ public class Devolucion {
 		this.folio = folio;
 	}
 
-	public String getMoneda() {
-		return moneda;
+	public String getStatusPago() {
+		return statusPago;
 	}
 
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
-
-	public String getBanco() {
-		return banco;
-	}
-
-	public void setBanco(String banco) {
-		this.banco = banco;
+	public void setStatusPago(String statusPago) {
+		this.statusPago = statusPago;
 	}
 
 	public Double getMonto() {
@@ -119,36 +119,20 @@ public class Devolucion {
 		this.monto = monto;
 	}
 
-	public String getStatusPago() {
-		return statusPago;
+	public String getReceptor() {
+		return receptor;
 	}
 
-	public void setStatusPago(String statusPago) {
-		this.statusPago = statusPago;
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
 	}
 
-	public String getTipoPago() {
-		return tipoPago;
+	public String getTipoReceptor() {
+		return tipoReceptor;
 	}
 
-	public void setTipoPago(String tipoPago) {
-		this.tipoPago = tipoPago;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
-
-	public Date getFechaPago() {
-		return fechaPago;
-	}
-
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
+	public void setTipoReceptor(String tipoReceptor) {
+		this.tipoReceptor = tipoReceptor;
 	}
 
 	public Date getFechaCreacion() {
@@ -169,11 +153,9 @@ public class Devolucion {
 
 	@Override
 	public String toString() {
-		return "Devolucion [id=" + id + ", idPago=" + idPago + ", folio=" + folio + ", moneda=" + moneda + ", banco="
-				+ banco + ", monto=" + monto + ", statusPago=" + statusPago + ", tipoPago=" + tipoPago + ", documento="
-				+ documento + ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+		return "Devolucion [id=" + id + ", idPago=" + idPago + ", folio=" + folio + ", statusPago=" + statusPago
+				+ ", monto=" + monto + ", receptor=" + receptor + ", tipoReceptor=" + tipoReceptor + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-	
 
 }

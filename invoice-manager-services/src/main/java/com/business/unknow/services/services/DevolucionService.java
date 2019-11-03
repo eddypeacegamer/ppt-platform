@@ -29,10 +29,15 @@ public class DevolucionService {
 	private DevolucionMapper mapper;
 	
 	public Page<DevolucionDto> getAllDevoluciones(int page,int size){
-		
 		Page<Devolucion> result = repository.findAll(PageRequest.of(page, size));
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	
+	public DevolucionDto insertDevolution(DevolucionDto devolucion) {
+		devolucion.setStatusPago("VALIDACION");
+		return mapper.getDevolucionDtoFromEntity(repository.save(mapper.getEntityFromDevolucionDto(devolucion)));
 	}
 
 }

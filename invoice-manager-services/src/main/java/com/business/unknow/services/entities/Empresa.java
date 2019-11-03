@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -68,6 +69,7 @@ public class Empresa implements Serializable {
 	@Column(name = "WEB")
 	private String web;
 	
+	@Email
 	@Column(name = "CORREO")
 	private String correo;
 

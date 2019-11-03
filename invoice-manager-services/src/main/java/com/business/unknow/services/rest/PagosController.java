@@ -36,8 +36,10 @@ public class PagosController {
 	public ResponseEntity<Page<PagoDto>> getAllPayments(
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllPagos(page, size),
-				HttpStatus.OK);
+		
+		Page<PagoDto> pagos = service.getAllPagos(page, size);
+		
+		return new ResponseEntity<>(pagos,HttpStatus.OK);
 	}
 
 }
