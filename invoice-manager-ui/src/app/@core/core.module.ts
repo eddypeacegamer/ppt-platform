@@ -25,6 +25,8 @@ import { CompaniesData } from './data/companies-data';
 import { CompaniesService } from './back-services/companies.service';
 import { InvoicesData } from './data/invoices-data';
 import { InvoicesService } from './back-services/invoices.service';
+import { DevolutionData } from './data/devolution-data';
+import { DevolutionService } from './back-services/devolution.service';
 
 
 const DATA_SERVICES = [
@@ -32,7 +34,8 @@ const DATA_SERVICES = [
   {provide: ClientsData, useClass: ClientsService},
   {provide: CompaniesData, useClass: CompaniesService},
   {provide: InvoicesData, useClass: InvoicesService},
-  { provide: UsersData, useClass: UsersService },
+  {provide: DevolutionData, useClass: DevolutionService},
+  {provide: UsersData, useClass: UsersService },
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {

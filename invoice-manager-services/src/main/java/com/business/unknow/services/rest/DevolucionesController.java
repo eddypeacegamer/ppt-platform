@@ -3,6 +3,8 @@
  */
 package com.business.unknow.services.rest;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -35,9 +37,12 @@ public class DevolucionesController {
 	@GetMapping
 	@ApiOperation(value = "Get all devolutions.")
 	public ResponseEntity<Page<DevolucionDto>> getAllDevolutions(
+			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
+			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,
+			@RequestParam(name = "statusPago", required = false) Optional<String> statusPago,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getAllDevoluciones(page, size),
+		return new ResponseEntity<>(service.getDevolucionesByParams(tipoReceptor,idReceptor,statusPago,page, size),
 				HttpStatus.OK);
 	}
 }

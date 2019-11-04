@@ -3,6 +3,8 @@
  */
 package com.business.unknow.services.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,8 +30,13 @@ public class DevolucionService {
 	@Autowired
 	private DevolucionMapper mapper;
 	
-	public Page<DevolucionDto> getAllDevoluciones(int page,int size){
-		Page<Devolucion> result = repository.findAll(PageRequest.of(page, size));
+	public Page<DevolucionDto> getDevolucionesByParams(Optional<String> receptorType,Optional<String> idReceptor,Optional<String> statusPay, int page,int size){
+		Page<Devolucion> result =null;
+		if(!receptorType.isPresent() && !idReceptor.isPresent() && !statusPay.isPresent()) {
+			result = repository.findAll(PageRequest.of(page, size));
+		}else {
+			result = repository.findDevolucionesByParams(receptorType.get(),idReceptor.get(),String.format("%%%s%%", statusPay.get()),PageRequest.of(page, size));
+		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
