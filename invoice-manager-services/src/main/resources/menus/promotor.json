@@ -13,6 +13,10 @@
       {
         "title": "pre-cfdi",
         "link": "/pages/promotor/precfdi/*"
+      },
+      {
+        "title": "devoluciones",
+        "link": "/pages/promotor/devoluciones"
       }
     ]
   }

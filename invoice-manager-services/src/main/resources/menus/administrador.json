@@ -1,5 +1,9 @@
  {
     "title": "Administracion",
     "icon": "layout-outline",
-    "children": []
+    "children": [
+    	{
+			"title": "usuarios",
+			"link": "/pages/administracion/users"
+		}]
   }

@@ -22,11 +22,13 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import { DevolucionesComponent } from './devoluciones/devoluciones.component'
 
-import {DownloadCsvService } from '../../@core/back-services/download-csv.service'
+import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
+
 
 @NgModule({
-  declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent],
+  declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent, DevolucionesComponent],
   imports: [
     PromotorRoutingModule,
     

@@ -16,17 +16,16 @@ import {
   NbIconModule
 } from '@nebular/theme';
 
-import { TesoreriaRoutingModule } from './tesoreria-routing.module';
-import { TesoreriaComponent } from './tesoreria.component';
-import { PagosComponent } from './pagos/pagos.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { DownloadCsvService } from '../../@core/back-services/download-csv.service'
+import { AdministracionRoutingModule } from './administracion-routing.module';
+import { AdministracionComponent } from './administracion.component';
+import { UsersComponent } from './users/users.component';
 
-import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
 
 @NgModule({
-  declarations: [TesoreriaComponent,PagosComponent,DevolucionesComponent],
+  declarations: [AdministracionComponent,UsersComponent],
   imports: [
-    TesoreriaRoutingModule,
+    AdministracionRoutingModule,
 
     CommonModule,
     FormsModule,
@@ -45,4 +44,4 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
   ],
   providers:[DownloadCsvService]
 })
-export class TesoreriaModule { }
+export class AdministracionModule { }

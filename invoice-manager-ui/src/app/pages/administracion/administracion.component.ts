@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-tesoreria',
+  selector: 'ngx-administracion',
   template: `
     <router-outlet></router-outlet>
   `,
 })
-export class TesoreriaComponent implements OnInit {
+export class AdministracionComponent implements OnInit {
 
   constructor() { }
 
