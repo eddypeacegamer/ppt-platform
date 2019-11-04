@@ -8,6 +8,8 @@ export class Client {
     public porcentajeCliente: number;
     public porcentajeDespacho: number;
     public porcentajeContacto: number;
+    public correoPromotor : string;
+    public correoContacto : string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     public informacionFiscal: Contribuyente;

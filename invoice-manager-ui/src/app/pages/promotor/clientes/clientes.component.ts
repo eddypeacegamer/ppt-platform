@@ -22,7 +22,7 @@ export class ClientesComponent implements OnInit {
   constructor(private clientService:ClientsData,private catalogsService:CatalogsData) { }
 
   ngOnInit() {
-    
+  
   }
 
   public buscarClientePorRFC(){
@@ -52,6 +52,7 @@ export class ClientesComponent implements OnInit {
 
   public insertClient(){
     this.formInfo.message = '';
+    this.clientInfo.correoPromotor = 'promotor@gmail.com';
     this.clientService.insertNewClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente guardado exitosamente';this.clientInfo = undefined;},
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status}); 
   }
