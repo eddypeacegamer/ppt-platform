@@ -316,7 +316,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   onPaymentTypeSelected(clave: string) {
-    this.newPayment.tipoPago = clave;
+    this.newPayment.formaPago = clave;
   }
 
   onPaymentBankSelected(clave: string) {
@@ -357,11 +357,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validPayment = false;
       this.payErrorMessages.push('El monto pagado es invalido');
     }
-    if (this.newPayment.tipoPago == undefined) {
+    if (this.newPayment.formaPago == undefined) {
       validPayment = false;
       this.payErrorMessages.push('El tipo de pago es requerido.');
     }
-    if (this.newPayment.tipoPago != 'EFECTIVO' && this.newPayment.documento == undefined) {
+    if (this.newPayment.formaPago != 'EFECTIVO' && this.newPayment.documento == undefined) {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
@@ -371,6 +371,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
 
     if (validPayment) {
+      this.newPayment.tipoPago = 'INGRESO';
       this.invoiceService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
         result => { this.paymentForm.successPayment = true; this.newPayment = new Pago(); this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));

@@ -73,7 +73,7 @@
               <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
                 [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let company of companiesCat" [(value)]="company.id">{{company.informacionFiscal.nombre}}
+                <option *ngFor="let company of companiesCat" [(value)]="company.id">{{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
                 </option>
               </select>
             </div>
@@ -361,7 +361,7 @@
                     (click)="removePago(i)"></nb-icon>
                 </td>
                 <td scope="row" class="text-center">{{payment.moneda}}</td>
-                <td scope="row" class="text-center">{{payment.tipoPago}}</td>
+                <td scope="row" class="text-center">{{payment.formaPago}}</td>
                 <td scope="row" class="text-center">{{payment.banco}}</td>
                 <td scope="row" class="text-center">{{payment.monto | currency}}</td>
                 <td scope="row" class="text-center">{{payment.fechaPago}}</td>

@@ -140,7 +140,7 @@ public class FacturaController {
 	}
 
 	@PostMapping("/{folio}/pagos")
-	@ApiOperation(value = "insert a new Pago into the system")
+	@ApiOperation(value = "insert a new Payment into the system")
 	public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago) {
 		return new ResponseEntity<>(service.insertNewPago(pago), HttpStatus.CREATED);
 	}

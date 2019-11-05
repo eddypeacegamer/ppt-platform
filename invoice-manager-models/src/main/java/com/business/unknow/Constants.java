@@ -2,7 +2,7 @@ package com.business.unknow;
 
 public class Constants {
 	
-	public static final String JSON_DATE_FORMAT = "yyyy-MM-dd@HH:mm:ss.SSSZ";
+	public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";//Dont update this format, this format is the same than frontend parse dates
 	public static final String SUCCESS = "success";
 	
 	
