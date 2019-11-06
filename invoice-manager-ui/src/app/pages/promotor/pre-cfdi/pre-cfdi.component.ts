@@ -333,7 +333,15 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
+  deletePayment(paymentId){
+    console.log(paymentId)
+    this.invoiceService.deletePayment(this.factura.folio,paymentId).subscribe(
+      result => { this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+      (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
   sendPayment() {
+    this.paymentForm.successPayment = false;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
     let validPayment = true;
@@ -370,10 +378,16 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
+    if(this.invoicePayments.reduce((total,p)=>total+p.monto)+this.newPayment.monto>this.factura.total){
+      validPayment = false;
+      this.payErrorMessages.push('El pago actual o la suma de los pagos no puede ser superior al monto total de la factura.');
+    }
+
     if (validPayment) {
       this.newPayment.tipoPago = 'INGRESO';
       this.invoiceService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
-        result => { this.paymentForm.successPayment = true; this.newPayment = new Pago(); this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+        result => { this.paymentForm.successPayment = true; this.newPayment = new Pago(); 
+          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
 

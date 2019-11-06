@@ -37,4 +37,8 @@ export class InvoicesService {
   public insertNewPayment(folio : string, payment : Pago): Observable<any>{
     return this.httpClient.post(`../api/facturas/${folio}/pagos`,payment);
   }
+
+  public deletePayment(folio : string, paymentId : number): Observable<any>{
+    return this.httpClient.delete(`../api/facturas/${folio}/pagos/${paymentId}`);
+  }
 }

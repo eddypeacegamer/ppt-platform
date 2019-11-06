@@ -358,7 +358,7 @@
               <tr *ngFor="let payment of invoicePayments; let i = index">
                 <td scope="row" class="text-center">
                   <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
-                    (click)="removePago(i)"></nb-icon>
+                    (click)="deletePayment(payment.id)"></nb-icon>
                 </td>
                 <td scope="row" class="text-center">{{payment.moneda}}</td>
                 <td scope="row" class="text-center">{{payment.formaPago}}</td>

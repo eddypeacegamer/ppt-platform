@@ -153,10 +153,10 @@ public class FacturaController {
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
-	@ApiOperation(value = "insert a new Factura into the system")
+	@ApiOperation(value = "Deletes an existing payment")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

@@ -36,7 +36,11 @@ spring:
 
 spring:
   profiles: dev         
-  
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://ec2-52-52-101-173.us-west-1.compute.amazonaws.com:3306/invoice_manager
