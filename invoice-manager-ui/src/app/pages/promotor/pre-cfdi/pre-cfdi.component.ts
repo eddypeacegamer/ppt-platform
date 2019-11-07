@@ -308,7 +308,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
-  public donwloadFiexportFilesles(folio:string){
+  public donwloadFiles(folio:string){
     this.downloadService.exportFiles(folio,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
   }
 
