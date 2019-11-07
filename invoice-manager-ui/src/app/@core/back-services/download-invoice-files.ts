@@ -9,14 +9,13 @@ export class DownloadInvoiceFilesService{
 
     constructor(private invoiceService:InvoicesData){}
 
-    public exportXMLfile(folio:string,filename:string){
+    public exportFiles(folio:string,filename:string){
         this.invoiceService.getInvoiceFiles(folio).subscribe(files=>{
           this.downloadFile(files.xml,`${filename}.xml`,'text/xml;charset=utf8;');
           this.downloadFile(files.pdf,`${filename}.pdf`,'application/pdf;')});
     }
 
-    public exportPDFFile(){}
-
+  
     public downloadFile(data:any,filename:string,fileType:string){
         console.log(`Downloading ${filename} ...`)
         if (data == null || data == undefined || data.length < 1) {

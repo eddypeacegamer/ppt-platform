@@ -29,8 +29,8 @@ export class ClientsService {
     return this.httpClient.post('../api/clientes',client);
   }
 
-  public updateClient(client : Client) : Observable<Object>{
-    return this.httpClient.put(`../api/clientes/${client.informacionFiscal.rfc}`,client);
+  public updateClient(cliente : Client) : Observable<Object>{
+    return this.httpClient.put(`../api/clientes/${cliente.informacionFiscal.rfc}`,cliente);
   }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.business.unknow.model.error.ErrorMessage;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			errors.put(fieldName, errorMessage);
 		});
 		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler(value = {ResponseStatusException.class})
+	public ResponseEntity<Object> handleResponseStatusException(ResponseStatusException ex, WebRequest request){
+		logger.warn(ex.getMessage());
+		return handleExceptionInternal(ex,new ErrorMessage(ex.getReason(),ex.getMessage(), ex.getStatus().value()) ,new HttpHeaders(),ex.getStatus(), request);
 	}
 	
 	

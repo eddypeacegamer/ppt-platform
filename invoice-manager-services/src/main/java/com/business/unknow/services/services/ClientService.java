@@ -1,6 +1,5 @@
 package com.business.unknow.services.services;
 
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import com.business.unknow.model.ClientDto;
 import com.business.unknow.services.client.SwSapiensClient;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
-import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 
 @Service
@@ -27,8 +25,6 @@ public class ClientService {
 	@Autowired
 	private ClientRepository repository;
 
-	@Autowired
-	private ContribuyenteMapper contribuyenteMapper;
 
 	@Autowired
 	private SwSapiensClient swSapiensClient;
@@ -74,8 +70,6 @@ public class ClientService {
 				}
 			}
 			cliente.setActivo(false);
-			cliente.setFechaActualizacion(new Date());
-			cliente.setFechaCreacion(new Date());
 			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
 		} catch (SwSapiensClientException e) {
@@ -85,11 +79,11 @@ public class ClientService {
 	}
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) {
-		Client dbClient = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format("El cliente con el rfc %s no existe", rfc)));
-		dbClient.setActivo(client.getActivo());
-		dbClient.setInformacionFiscal(contribuyenteMapper.getEntityFromContribuyenteDto(client.getInformacionFiscal()));
-		return mapper.getClientDtoFromEntity(repository.save(dbClient));
+		if(repository.findByRfc(rfc).isPresent()) {
+			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
+		}else {
+			 throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("El cliente con el rfc %s no existe", rfc));
+		}
 	}
 
 	public void deleteClientInfo(String rfc) {

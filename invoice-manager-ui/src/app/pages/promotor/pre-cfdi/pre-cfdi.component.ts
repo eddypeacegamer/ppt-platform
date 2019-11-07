@@ -149,7 +149,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   buscarClaveProdServSelected() {
-    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => this.prodServCat = claves);
+    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves =>{ 
+      this.prodServCat = claves;
+      if(claves.length<1){
+        alert(`No se encontro ninguna clave que coincida con ${this.formInfo.claveProdServ}`);
+      }
+    });
   }
 
   buscarClientInfo() {
@@ -225,9 +230,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (this.newConcep.descripcion == undefined) {
       this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
       validConcept = false;
-    } else if (this.newConcep.descripcion.length < 10) {
-      this.conceptoMessages.push('La descripción del concepto es muy corta.');
-      validConcept = false;
     }
     if (this.newConcep.valorUnitario < 1) {
       this.conceptoMessages.push('El valor unitario de un concepto no puede ser menor a 1.00$');
@@ -238,8 +240,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      console.log(base);
-      //this.factura.impuestos += impuesto;
       this.factura.subtotal += base;
       this.factura.total = (this.factura.total * 3 + base * 3 + impuesto * 3) / 3;
       this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];//IVA is harcoded
@@ -308,8 +308,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
-  public donwloadFiles(folio:string){
-    this.downloadService.exportXMLfile(folio,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
+  public donwloadFiexportFilesles(folio:string){
+    this.downloadService.exportFiles(folio,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
   }
 
 
@@ -339,7 +339,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   deletePayment(paymentId){
-    console.log(paymentId)
     this.invoiceService.deletePayment(this.factura.folio,paymentId).subscribe(
       result => { this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
       (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));

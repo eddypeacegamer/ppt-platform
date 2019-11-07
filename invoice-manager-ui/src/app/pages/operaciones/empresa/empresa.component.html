@@ -133,6 +133,20 @@
             </select>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+              <label for="inputContact" class="label">Nombre contacto Legal</label>
+              <input type="text" [(ngModel)]="companyInfo.contactoAdmin" class="form-control" fullWidth
+                id="inputContact" placeholder="Contacto legal">
+          </div>
+          <div class="col-md-6">
+            
+              <label for="inputWeb" class="label">Sitio web</label>
+              <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth
+                id="inputWeb" placeholder="www.mi-empresa.com">
+            
+          </div>
+        </div>
         <p class="font-weight-bold">Datos facturacion</p>
         <div >
           <div class="row">
