@@ -101,12 +101,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       let folio = route.get('folio');
       this.folioParam = folio;
       this.invoiceService.getInvoiceByFolio(folio).pipe(
-        map(fac => {
+        map((fac:Factura) => {
           fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
           fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
           fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
           fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-          fac.formaPago = this.payTypeCat.find(v=>v.id = fac.formaPago).value;
+          fac.formaPago = this.payTypeCat.find(v=>v.id == fac.formaPago).value;
           return fac;
         })).subscribe(invoice => {
         this.factura = invoice;
