@@ -38,5 +38,10 @@ export class Factura{
 		this.total = 0;
 		this.subtotal  = 0;	
 		this.descuento = 0;
+		this.statusFactura ='';
+		this.statusDetail = '';
+		this.statusPago = '';
+		this.statusDevolucion = '';
+		this.cfdi = new Cfdi();
 	}
 }

@@ -21,6 +21,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
 import { Status } from '../../../models/catalogos/status';
 import { map } from 'rxjs/operators';
+import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -37,6 +38,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public validationCat: Status[] = [];
   public payCat: Status[] = [];
   public devolutionCat: Status[] = [];
+  public payTypeCat : Status[] = [new Status('01','Efectivo'), new Status('02','Cheque nominativo'), new Status('03','Transferencia electrónica de fondos'),new Status('99','Por definir')];
 
   public newConcep: Concepto;
   public factura: Factura;
@@ -63,6 +65,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private iconsLibrary: NbIconLibraries,
+    private downloadService :DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -77,7 +80,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
-    this.factura.cfdi = new Cfdi();
   }
 
   public async loadCatInfo() {
@@ -101,9 +103,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.invoiceService.getInvoiceByFolio(folio).pipe(
         map(fac => {
           fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-          fac.statusFactura = this.validationCat.find(v => v.id == Number(fac.statusFactura)).value;
-          fac.statusPago = this.payCat.find(v => v.id == Number(fac.statusPago)).value;
-          fac.statusDevolucion = this.devolutionCat.find(v => v.id == Number(fac.statusDevolucion)).value;
+          fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
+          fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
+          fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
+          fac.formaPago = this.payTypeCat.find(v=>v.id = fac.formaPago).value;
           return fac;
         })).subscribe(invoice => {
         this.factura = invoice;
@@ -121,8 +124,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
-    this.factura.cfdi = new Cfdi();
-    this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
   }
 
@@ -305,6 +306,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio; },
         (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
+  }
+
+  public donwloadFiles(folio:string){
+    this.downloadService.exportXMLfile(folio,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
   }
 
 

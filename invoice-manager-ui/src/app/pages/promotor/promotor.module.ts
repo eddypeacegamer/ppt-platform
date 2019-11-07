@@ -25,6 +25,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component'
 
 import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
+import { DownloadInvoiceFilesService } from '../../@core/back-services/download-invoice-files';
 
 
 @NgModule({
@@ -47,6 +48,6 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
     NbStepperModule,
     NbDialogModule,
   ],
-  providers:[DownloadCsvService]
+  providers:[DownloadCsvService,DownloadInvoiceFilesService]
 })
 export class PromotorModule { }

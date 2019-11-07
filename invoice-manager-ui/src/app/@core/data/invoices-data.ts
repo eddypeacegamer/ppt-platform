@@ -11,6 +11,8 @@ export abstract class InvoicesData {
 
     abstract getInvoiceById(id:number) : Observable<[Factura]>;
 
+    abstract getInvoiceFiles(folio:string) : Observable<any>;
+
     abstract insertNewInvoice(invoice : Factura) : Observable<Factura>;
 
     abstract updateInvoice(invoice : Factura) : Observable<Factura>;
@@ -20,5 +22,6 @@ export abstract class InvoicesData {
     abstract insertNewPayment(folio : string, payment : Pago): Observable<Pago>;
 
     abstract deletePayment(folio : string, paymentId : number): Observable<Pago>;
+
   
 }

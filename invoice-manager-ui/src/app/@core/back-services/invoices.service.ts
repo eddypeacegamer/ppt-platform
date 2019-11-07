@@ -26,6 +26,10 @@ export class InvoicesService {
     return this.httpClient.get(`../api/facturas/${folio}`);
   }
 
+  public getInvoiceFiles(folio:string) : Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folio}/files`);
+  }
+
   public insertNewInvoice(invoice : Factura): Observable<any>{
     return this.httpClient.post('../api/facturas',invoice);
   }

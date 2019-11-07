@@ -181,10 +181,10 @@ public class FacturaService {
 
 	public CfdiDto updateFacturaCfdi(String folio, Integer id, CfdiDto dto) throws InvoiceManagerException {
 		validator.validatePostCfdi(dto, folio);
-		Cfdi entity = cfdiRepository.findById(id)
+		cfdiRepository.findById(id)
 				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
 						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
-		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(entity));
+		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto)));
 	}
 
 	public void deleteFacturaCfdi(String folio, Integer id) throws InvoiceManagerException {

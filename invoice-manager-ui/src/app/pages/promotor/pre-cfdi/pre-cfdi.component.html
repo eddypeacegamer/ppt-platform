@@ -20,41 +20,40 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI</nb-card-header>
       <nb-card-body>
-          <div *ngIf="folioParam != '*'" >
-            <p class="font-weight-bold">Información Emisor y Receptor</p>
-            <div class="form-inline">
-                
-                
-                <p class="font-weight-bold">Emisor</p>
-                <p>{{factura.rfcEmisor}}</p>
-                <p>{{factura.razonSocialEmisor}}</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="font-weight-bold">Receptor</p>
-                <p>{{factura.rfcRemitente}}</p>
-                <p>{{factura.razonSocialRemitente}}</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <span class="badge badge-primary">{{factura.statusFactura}}</span>    
-            </div>
-            <p class="font-weight-bold">Información CFDI</p>
-            <br>
-            <div class="form-inline">
-                <p class="font-weight-bold">Uso CFDI</p>
-                <p>{{factura.cfdi.usoCfdi}}</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="font-weight-bold">Moneda</p>
-                <p>{{factura.cfdi.moneda}}</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="font-weight-bold">Metodo de Pago</p>
-                <p>{{factura.metodoPago}}</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="font-weight-bold">Forma de Pago</p>
-                <p>{{factura.formaPago}}</p>
-                
-            </div>
-            <br>
-          <p class="font-weight-bold">Conceptos factura</p>
+        <div *ngIf="folioParam != '*'">
+          <p class="font-weight-bold">Información Emisor y Receptor</p>
+          <div class="form-inline">
+
+
+            <p class="font-weight-bold">Emisor</p>
+            <p>{{factura.rfcEmisor}}</p>
+            <p>{{factura.razonSocialEmisor}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Receptor</p>
+            <p>{{factura.rfcRemitente}}</p>
+            <p>{{factura.razonSocialRemitente}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <span class="badge badge-primary">{{factura.statusFactura}}</span>
+            <button *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-success" (click)="donwloadFiles(factura.folio)">Descarga Archivos</button>
           </div>
-        <div *ngIf="folioParam === '*'" >
+          <p class="font-weight-bold">Información CFDI</p>
+          <br>
+          <div class="form-inline">
+            <p class="font-weight-bold">Uso CFDI</p>
+            <p>{{factura.cfdi.usoCfdi}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Moneda</p>
+            <p>{{factura.cfdi.moneda}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Metodo de Pago</p>
+            <p>{{factura.metodoPago}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Forma de Pago</p>
+            <p>{{factura.formaPago}}</p>
+
+          </div>
+        </div>
+        <div *ngIf="folioParam === '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="row">
 
@@ -73,7 +72,8 @@
               <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
                 [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let company of companiesCat" [(value)]="company.id">{{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                <option *ngFor="let company of companiesCat" [(value)]="company.id">
+                  {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
                 </option>
               </select>
             </div>
@@ -132,145 +132,143 @@
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
-                <option value="01">Efectivo</option>
-                <option value="02">Cheque nominativo</option>
-                <option value="03">Transferencia electrónica de fondos</option>
-                <option value="99">Por definir</option>
+                <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
               </select>
             </div>
 
           </div>
 
+        </div>
+        <br>
+        <p class="font-weight-bold">Conceptos factura</p>
 
-          <br>
-          <p class="font-weight-bold">Conceptos factura</p>
-
-          <div class="row">
-            <div class="col-sm-4">
-              <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
-              <div class="form-inline">
-                <input id="inputProdServ" class="form-control" fullWidth type="text"
-                  [(ngModel)]="formInfo.claveProdServ" placeholder="palabra clave producto servicio">
-                <button class="btn btn-primary" (click)="buscarClaveProdServSelected()">Buscar</button>
-              </div>
+        <div class="row" *ngIf="factura.statusFactura.includes('Validacion')">
+          <div class="col-sm-4">
+            <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
+            <div class="form-inline">
+              <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
+                placeholder="palabra clave producto servicio">
+              <button class="btn btn-primary" (click)="buscarClaveProdServSelected()">Buscar</button>
             </div>
-            <div class="col-sm-2" *ngIf="prodServCat.length>0">
-              <label for="inputProdServ" class="label">Selección clave producto servicio</label>
-              <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
-                (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
-                <option value="*">Seleccionar</option>
-                <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
-              </select>
-            </div>
-            <div class="col-sm-6">
-              <label for="inputdesc" class="label">Descripción</label>
-              <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion"
-                placeholder="Descripción del producto">
-            </div>
-
+          </div>
+          <div class="col-sm-2" *ngIf="prodServCat.length>0">
+            <label for="inputProdServ" class="label">Selección clave producto servicio</label>
+            <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
+              (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label for="inputdesc" class="label">Descripción</label>
+            <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion"
+              placeholder="Descripción del producto">
           </div>
 
-          <div class="row">
-            <div class="col-sm-2">
-              <label for="inputunidad" class="label">Unidad Medida</label>
-              <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
-                (change)="onSelectUnidad($event.target.value)">
-                <option value="*">Seleccionar</option>
-                <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">{{clave.nombre}}</option>
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <label for="inputCantidad" class="label">Cantidad</label>
-              <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad"
-                [(ngModel)]="newConcep.cantidad">
-            </div>
-            <div class="col-sm-2">
-              <label for="inputPrecio" class="label">Precio Unitario</label>
-              <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
-                [(ngModel)]="newConcep.valorUnitario">
-            </div>
-            <!--div class="col-sm-2">
+        </div>
+
+
+        <div class="row" *ngIf="factura.statusFactura.includes('Validacion')">
+          <div class="col-sm-2">
+            <label for="inputunidad" class="label">Unidad Medida</label>
+            <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
+              (change)="onSelectUnidad($event.target.value)">
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">{{clave.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="inputCantidad" class="label">Cantidad</label>
+            <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad"
+              [(ngModel)]="newConcep.cantidad">
+          </div>
+          <div class="col-sm-2">
+            <label for="inputPrecio" class="label">Precio Unitario</label>
+            <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
+              [(ngModel)]="newConcep.valorUnitario">
+          </div>
+          <!--div class="col-sm-2">
                 <label for="inputDescuento" class="label">Descuento</label>
                 <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
                   [(ngModel)]="newConcep.descuento">
               </div-->
-            <div class="col-sm-4">
-              <label for="inputImpuesto" class="label">Impuesto</label>
+          <div class="col-sm-4">
+            <label for="inputImpuesto" class="label">Impuesto</label>
 
-              <div class="row form-inline">
-                <select selected="1" id="inputImpuesto" style="display:block;width: 150px;" class="form-control">
-                  <!--option value="*">Seleccionar</option-->
-                  <!--option value="001">ISR</option-->
-                  <option value="002">IVA</option>
-                  <!--option value="003">IEPS</option-->
-                </select>
-                
-                <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
-              </div>
+            <div class="row form-inline">
+              <select selected="1" id="inputImpuesto" style="display:block;width: 150px;" class="form-control">
+                <!--option value="*">Seleccionar</option-->
+                <!--option value="001">ISR</option-->
+                <option value="002">IVA</option>
+                <!--option value="003">IEPS</option-->
+              </select>
+
+              <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
             </div>
-
-          </div>
-          <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
-            <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
           </div>
 
         </div>
-          <br>
-          <!--TABLA CONCEPTOS-->
-          <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col" *ngIf="factura.folio==undefined" class="text-center">Acciones</th>
-                <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-                <td scope="row" *ngIf="factura.folio==undefined" class="text-center">
-                  <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
-                    (click)="removeConcepto(i)"></nb-icon>
-                </td>
-                <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
-                <td scope="row" class="text-center">{{fila.cantidad}}</td>
-                <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
-                <td scope="row" class="text-center">{{fila.unidad}}</td>
-                <td scope="row" class="text-center">{{fila.descripcion}}</td>
-                <td scope="row" class="text-center">{{fila.valorUnitario | currency}}</td>
-                <td scope="row" class="text-center">{{getImporteImpuestos(fila.impuestos) | currency}}</td>
-                <td scope="row" class="text-center">{{fila.importe | currency}}</td>
-              </tr>
-              <tr>
-                <td *ngIf="this.factura.folio != undefined"  colspan="6"></td>
-                <td *ngIf="this.factura.folio == undefined" colspan="7"></td>
-                <td class="text-center">Subtotal</td>
-                <td class="text-center">{{factura.subtotal | currency}}</td>
-              </tr>
-              <!--tr>
+        <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
+          <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
+        </div>
+
+
+        <br>
+        <!--TABLA CONCEPTOS-->
+        <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')" class="text-center">Acciones</th>
+              <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
+              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')" class="text-center">
+                <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
+                  (click)="removeConcepto(i)"></nb-icon>
+              </td>
+              <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
+              <td scope="row" class="text-center">{{fila.cantidad}}</td>
+              <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
+              <td scope="row" class="text-center">{{fila.unidad}}</td>
+              <td scope="row" class="text-center">{{fila.descripcion}}</td>
+              <td scope="row" class="text-center">{{fila.valorUnitario | currency}}</td>
+              <td scope="row" class="text-center">{{getImporteImpuestos(fila.impuestos) | currency}}</td>
+              <td scope="row" class="text-center">{{fila.importe | currency}}</td>
+            </tr>
+            <tr>
+              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6"></td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7"></td>
+              <td class="text-center">Subtotal</td>
+              <td class="text-center">{{factura.subtotal | currency}}</td>
+            </tr>
+            <!--tr>
                 <td *ngIf="folioParam != '*'" colspan="6"></td>
                 <td *ngIf="folioParam === '*'" colspan="7"></td>
                 <td class="text-center">Impuestos</td>
                 <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
               </tr-->
-              <tr>
-                <td *ngIf="this.factura.folio != undefined"  colspan="6"></td>
-                <td *ngIf="this.factura.folio == undefined" colspan="7"></td>
-                <td class="text-center">Total</td>
-                <td class="text-center">{{factura.total | currency}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <br>
-          
-          <div class="form-inline" *ngIf="folioParam === '*'">
-            <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
-            <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
-            <div class="alert alert-success" *ngIf="factura.folio!=undefined" role="alert">
-                La solicitud del CFDI ha sido generada correctamente con el folio {{factura.folio}}
-              </div>
+            <tr>
+              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6"></td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7"></td>
+              <td class="text-center">Total</td>
+              <td class="text-center">{{factura.total | currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+
+        <div class="form-inline" *ngIf="folioParam === '*'">
+          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
+          <div class="alert alert-success" *ngIf="factura.folio!=undefined" role="alert">
+            La solicitud del CFDI ha sido generada correctamente con el folio {{factura.folio}}
           </div>
-          <br>
-          
-        
+        </div>
+        <br>
+
+
         <div *ngIf="factura.folio!=undefined">
           <p class="font-weight-bold">Pago CFDI</p>
           <br>

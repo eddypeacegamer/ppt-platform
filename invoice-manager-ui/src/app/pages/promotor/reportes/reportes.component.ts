@@ -63,9 +63,9 @@ export class ReportesComponent implements OnInit {
       .pipe(
         map((page:GenericPage<Factura>)=>{ 
           let records : Factura[] = page.content.map(record=>{
-            record.statusFactura = this.validationCat.find(v=>v.id==Number(record.statusFactura)).value;
-            record.statusPago = this.payCat.find(v=>v.id==Number(record.statusPago)).value;
-            record.statusDevolucion = this.devolutionCat.find(v=>v.id==Number(record.statusDevolucion)).value;
+            record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
+            record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
+            record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
             return record;
           });
           page.content = records;

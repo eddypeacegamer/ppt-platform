@@ -13,7 +13,8 @@ export class DownloadCsvService {
   public exportCsv(data: any[], filename: string) {
 
     if (data == null || data == undefined || data.length < 1) {
-      console.error("Donwload service can't generate repor from empty or null data.");
+      console.error("Donwload service can't generate report from empty or null data.");
+      alert("Donwload service can't generate report from empty or null data.");
       return;
     } else {
       let content = this.csvParser.unparse(data);
@@ -22,7 +23,7 @@ export class DownloadCsvService {
       if (navigator.msSaveBlob) {
         navigator.msSaveBlob(blob, (filename == undefined || filename == null || filename == '') ? this.DEFAULT_FILENAME : filename.replace(/ /g, "_") + ".csv");
       } else {
-        let uri = 'data:attachment/csv;charset=utf-8,' + encodeURI(content);
+      
         let link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.setAttribute('visibility', 'hidden');
