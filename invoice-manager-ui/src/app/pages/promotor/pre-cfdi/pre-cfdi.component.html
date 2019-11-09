@@ -142,7 +142,7 @@
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
 
-        <div class="row" *ngIf="factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
           <div class="col-sm-4">
             <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
             <div class="form-inline">
@@ -168,7 +168,7 @@
         </div>
 
 
-        <div class="row" *ngIf="factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
           <div class="col-sm-2">
             <label for="inputunidad" class="label">Unidad Medida</label>
             <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"

@@ -382,7 +382,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if(this.invoicePayments.reduce((total,p)=>total+p.monto)+this.newPayment.monto>this.factura.total){
+    if(this.invoicePayments.length>0 && this.invoicePayments.reduce((total,p)=>(total)+p.monto)+this.newPayment.monto>this.factura.total){
       validPayment = false;
       this.payErrorMessages.push('El pago actual o la suma de los pagos no puede ser superior al monto total de la factura.');
     }
