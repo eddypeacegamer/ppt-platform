@@ -16,9 +16,9 @@ public class FacturaPadreStatusRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		return (fc.getFacturaDto().getStatusPago().equals(PagoStatusEnum.PAGADA.getValor())
-				|| fc.getFacturaDto().getStatusDevolucion().equals(DevolucionStatusEnum.DEVUELTA.getValor())
-				|| !fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor()));
+		return fc.getFacturaDto().getStatusPago() == PagoStatusEnum.PAGADA.getValor()//TODO review if this is correct
+				|| fc.getFacturaDto().getStatusFactura()!=FacturaStatusEnum.TIMBRADA.getValor() 
+				 || fc.getFacturaDto().getStatusDevolucion() == DevolucionStatusEnum.DEVUELTA.getValor();
 	}
 
 	@Action

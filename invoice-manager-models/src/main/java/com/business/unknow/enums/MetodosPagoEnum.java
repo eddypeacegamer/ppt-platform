@@ -3,7 +3,7 @@ package com.business.unknow.enums;
 public enum MetodosPagoEnum {
 	
 	PUE("PUE"),
-	PPT("PPT");
+	PPD("PPD");
 	
 	private MetodosPagoEnum(String nombre) {
 		this.nombre=nombre;

@@ -31,6 +31,7 @@ public class FacturaDto implements Serializable {
 	private Double total;
 	private Double subtotal;
 	private Double descuento;
+	private Integer idPago;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
@@ -220,16 +221,23 @@ public class FacturaDto implements Serializable {
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return "FacturaDto [rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", razonSocialEmisor="
-				+ razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
-				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago=" + metodoPago
-				+ ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
-				+ fechaTimbrado + ", cfdi=" + cfdi + "]";
+	public Integer getIdPago() {
+		return idPago;
 	}
 
+	public void setIdPago(Integer idPago) {
+		this.idPago = idPago;
+	}
+
+	@Override
+	public String toString() {
+		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
+				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
+				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
+				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
+				+ descuento + ", idPago=" + idPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
+	}
 }

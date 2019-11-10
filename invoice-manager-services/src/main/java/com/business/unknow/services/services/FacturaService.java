@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,7 @@ import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.util.FacturaDefaultValues;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -148,34 +151,45 @@ public class FacturaService {
 		}
 	}
 
-	@Transactional(rollbackOn = InvoiceManagerException.class)
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(dto);
 		FacturaDefaultValues.assignaDefaultsFactura(dto);
 		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 		dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
+		if (dto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
+			Pago payment = new Pago();// TODO move this logic to other place
+			payment.setBanco("N/A");
+			payment.setComentarioPago("Pago Automatico por sistema");
+			payment.setFechaPago(new Date());
+			payment.setFolio(facturaDto.getFolio());
+			payment.setFormaPago("CREDITO");
+			payment.setMoneda("MXN");
+			payment.setMonto(dto.getTotal());
+			payment.setRevision1(false);
+			payment.setRevision2(false);
+			payment.setTipoDeCambio(1.00D);
+			payment.setStatusPago("ACEPTADO");
+			payment.setTipoPago("INGRESO");
+			pagoRepository.save(payment);
+		}
 		return facturaDto;
 	}
 
-	public FacturaDto updateFactura(FacturaDto factura, String folio) throws InvoiceManagerException {
-		Factura entity = repository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		entity.setFormaPago(factura.getFormaPago());
-		entity.setMetodoPago(factura.getMetodoPago());
-		entity.setNotas(factura.getNotas());
-		entity.setRfcEmisor(factura.getRfcEmisor());
-		entity.setStatusFactura(factura.getStatusFactura());
-		entity.setStatusPago(factura.getStatusPago());
-		entity.setStatusDevolucion(factura.getStatusDevolucion());
-		entity.setStatusDetail(factura.getStatusDetail());
-		return mapper.getFacturaDtoFromEntity(repository.save(entity));
+	public FacturaDto updateFactura(FacturaDto factura, String folio) {
+		if (repository.findByFolio(folio).isPresent()) {
+			Factura entity = mapper.getEntityFromFacturaDto(factura);
+			return mapper.getFacturaDtoFromEntity(repository.save(entity));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el folio %s no existe", folio));
+		}
 	}
 
 	public CfdiDto getFacturaCdfi(String folio) throws InvoiceManagerException {
 		Cfdi entity = cfdiRepository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", folio)));
 		return cfdiMapper.getCfdiDtoFromEntity(entity);
 	}
 

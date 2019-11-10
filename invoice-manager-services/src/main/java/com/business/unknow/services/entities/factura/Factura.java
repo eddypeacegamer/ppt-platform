@@ -81,6 +81,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "DESCUENTO")
 	private Double descuento;
+	
+	@Column(name = "Id_PAGO")
+	private Integer idPago;
 
 	@Temporal(TemporalType.DATE)
 	@LastModifiedDate
@@ -272,6 +275,14 @@ public class Factura implements Serializable {
 		this.descuento = descuento;
 	}
 
+	public Integer getIdPago() {
+		return idPago;
+	}
+
+	public void setIdPago(Integer idPago) {
+		this.idPago = idPago;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -280,8 +291,8 @@ public class Factura implements Serializable {
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
 				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
-				+ descuento + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
-				+ ", fechaCreacion=" + fechaCreacion + "]";
+				+ descuento + ", idPago=" + idPago + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
+				+ fechaTimbrado + ", fechaCreacion=" + fechaCreacion + "]";
 	}
 
 }

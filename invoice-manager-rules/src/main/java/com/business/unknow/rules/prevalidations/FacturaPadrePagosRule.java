@@ -13,7 +13,7 @@ import com.business.unknow.rules.common.Constants;
 
 @Rule(name = Constants.Prevalidations.FACTURA_PADRE_PAGOS_RULE, description = Constants.Prevalidations.FACTURA_PADRE_PAGOS)
 public class FacturaPadrePagosRule extends AbstractPrevalidations {
-
+	
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		if (fc.getPagos().isEmpty() || fc.getComlpemento().getTotal() == null || fc.getComlpemento().getTotal() == 0) {
@@ -22,9 +22,14 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 			double pagos = 0.0f;
 			for (PagoDto pago : fc.getPagos())
 				pagos += pago.getMonto();
+			
+//			Optional<PagoDto> pagoDto = fc.getPagos().stream().filter(p->p.getId().compareTo(fc.getComlpemento().getIdPago())==0)
+//					.findFirst();
 			Optional<PagoDto> pagoDto = fc.getPagos().stream()
-					.filter(a -> a.getMonto() == fc.getComlpemento().getTotal()).findFirst();
-			return (fc.getComlpemento().getTotal() == 0 || pagos == 0 || pagos > fc.getFacturaDto().getTotal()
+					.filter(a -> a.getMonto().compareTo(fc.getComlpemento().getTotal()) == 0 //TODO review this logic here is a potential issue when  the complement will be created with one ammount equal to a previous ammount  
+					).findFirst();
+			return (fc.getComlpemento().getTotal() == 0 || pagos == 0 
+					//|| pagos > fc.getFacturaDto().getTotal() //validate how to handle this condition, this is not allowing generate complements
 					|| !pagoDto.isPresent());
 		}
 

@@ -2,8 +2,8 @@ package com.business.unknow.enums;
 
 public enum FacturaStatusEnum {
 	
-	VALIDACION_OPERACIONES(1,"Validacion operaciones"),
-	VALIDACION_TESORERIA(2,"Validacion tesoreria"),
+	VALIDACION_TESORERIA(1,"Validacion tesoreria"),
+	VALIDACION_OPERACIONES(2,"Validacion operaciones"),
 	TIMBRADA(3,"Timbrada"),
 	RECHAZO_TESORERIA(4,"Rechazo tesoreria"),
 	RECHAZO_OPERACIONES(5,"Rechazo Operaciones"),
