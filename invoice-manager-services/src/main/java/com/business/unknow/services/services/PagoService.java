@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.mapper.PagoMapper;
-import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.repositories.facturas.PagoRepository;
 
 /**
  *@author ralfdemoledor

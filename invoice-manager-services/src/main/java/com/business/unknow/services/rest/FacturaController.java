@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
@@ -157,6 +158,18 @@ public class FacturaController {
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping("/{folio}/timbrar")
+	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.timbrarFacrtura(folio, factura), HttpStatus.OK);
+	}
+	
+	@PostMapping("/{folio}/cancelar")
+	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.cancelarFactura(folio, factura), HttpStatus.OK);
 	}
 
 }

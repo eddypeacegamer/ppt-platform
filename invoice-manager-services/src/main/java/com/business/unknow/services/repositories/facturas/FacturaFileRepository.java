@@ -1,4 +1,4 @@
-package com.business.unknow.services.repositories;
+package com.business.unknow.services.repositories.facturas;
 
 import java.util.Optional;
 

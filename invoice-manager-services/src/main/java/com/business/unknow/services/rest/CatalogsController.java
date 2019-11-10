@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.business.unknow.services.rest.catalogs;
+package com.business.unknow.services.rest;
 
 import java.util.List;
 

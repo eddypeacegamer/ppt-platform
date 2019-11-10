@@ -38,12 +38,12 @@ import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
-import com.business.unknow.services.repositories.CfdiRepository;
-import com.business.unknow.services.repositories.ConceptoRepository;
-import com.business.unknow.services.repositories.FacturaFileRepository;
-import com.business.unknow.services.repositories.FacturaRepository;
-import com.business.unknow.services.repositories.ImpuestoRepository;
-import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.repositories.facturas.ConceptoRepository;
+import com.business.unknow.services.repositories.facturas.FacturaFileRepository;
+import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
+import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.evaluations.FacturaServiceEvaluator;
 
 @Service
@@ -181,9 +181,8 @@ public class FacturaService {
 
 	public CfdiDto updateFacturaCfdi(String folio, Integer id, CfdiDto dto) throws InvoiceManagerException {
 		validator.validatePostCfdi(dto, folio);
-		cfdiRepository.findById(id)
-				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+		cfdiRepository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+				String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
 		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto)));
 	}
 
@@ -270,6 +269,14 @@ public class FacturaService {
 		Pago pago = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
 		pagoRepository.delete(pago);
+	}
+
+	public FacturaContext timbrarFacrtura(String folio, FacturaDto facturaContext) {
+		return null;
+	}
+
+	public FacturaContext cancelarFactura(String folio, FacturaDto facturaContext) {
+		return null;
 	}
 
 }
