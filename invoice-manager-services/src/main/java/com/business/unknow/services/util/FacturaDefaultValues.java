@@ -1,13 +1,16 @@
-package com.business.unknow.commons.util;
+package com.business.unknow.services.util;
 
 import java.util.Date;
 
+import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.services.entities.Pago;
 
 public class FacturaDefaultValues {
 
@@ -16,15 +19,33 @@ public class FacturaDefaultValues {
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
-		if(facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre()) && facturaDto.getFolioPadre() == null) {
+		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.getNombre());
+		if (facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre()) && facturaDto.getFolioPadre() == null) {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
-		}else {
+		} else {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		}
 		FacturaCalculator.assignFolioInFacturaDto(facturaDto);
 		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
 	}
-	
+
+	public static Pago assignaDefaultsFacturaPPD(FacturaDto facturaDto) throws InvoiceManagerException {
+		Pago payment = new Pago();// TODO move this logic to other place
+		payment.setBanco("N/A");
+		payment.setComentarioPago("Pago Automatico por sistema");
+		payment.setFechaPago(new Date());
+		payment.setFolio(facturaDto.getFolio());
+		payment.setFormaPago("CREDITO");
+		payment.setMoneda("MXN");
+		payment.setMonto(facturaDto.getTotal());
+		payment.setRevision1(false);
+		payment.setRevision2(false);
+		payment.setTipoDeCambio(1.00D);
+		payment.setStatusPago("ACEPTADO");
+		payment.setTipoPago("INGRESO");
+		return payment;
+	}
+
 	public static void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {
 		facturaDto.setFechaCreacion(new Date());
 		facturaDto.setFechaActualizacion(new Date());

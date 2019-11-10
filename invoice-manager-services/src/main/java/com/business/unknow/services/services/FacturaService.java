@@ -18,11 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
+import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
-import com.business.unknow.commons.util.FacturaDefaultValues;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -48,6 +49,7 @@ import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.evaluations.FacturaServiceEvaluator;
+import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
 public class FacturaService {
@@ -134,21 +136,15 @@ public class FacturaService {
 	public FacturaDto insertNewComplemento(FacturaDto dto, String folio) throws InvoiceManagerException {
 		FacturaDefaultValues.assignaDefaultsFactura(dto);
 		validator.validatePosComplementoDto(dto, folio);
-		Optional<Factura> factura = repository.findByFolio(dto.getFolioPadre());
-		if (factura.isPresent()) {
-			FacturaContext facturaContext = new FacturaContextBuilder()
-					.setFacturaDto(mapper.getFacturaDtoFromEntity(factura.get()))
-					.setTipoFactura(factura.get().getMetodoPago()).setComlpemento(dto)
-					.setComplementos(
-							mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
-					.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(dto.getFolioPadre())))
-					.setComplementos(dto).build();
-			facturaServiceEvaluation.facruraContexctValidation(facturaContext);
-			return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
-		} else {
-			throw new InvoiceManagerException("Error al crear Complemento", "La factura padre no existe",
-					Constants.BAD_REQUEST);
-		}
+		Factura factura = repository.findByFolio(dto.getFolioPadre())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear Complemento",
+						"La factura padre no existe", Constants.BAD_REQUEST));
+		FacturaContext facturaContext = new FacturaContextBuilder().setFacturaDto(dto)
+				.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(factura)).setTipoFactura(factura.getMetodoPago())
+				.setComplementos(mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
+				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(dto.getFolioPadre()))).build();
+		facturaServiceEvaluation.facturaComplementoValidation(facturaContext);
+		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -158,20 +154,7 @@ public class FacturaService {
 		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 		dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
 		if (dto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
-			Pago payment = new Pago();// TODO move this logic to other place
-			payment.setBanco("N/A");
-			payment.setComentarioPago("Pago Automatico por sistema");
-			payment.setFechaPago(new Date());
-			payment.setFolio(facturaDto.getFolio());
-			payment.setFormaPago("CREDITO");
-			payment.setMoneda("MXN");
-			payment.setMonto(dto.getTotal());
-			payment.setRevision1(false);
-			payment.setRevision2(false);
-			payment.setTipoDeCambio(1.00D);
-			payment.setStatusPago("ACEPTADO");
-			payment.setTipoPago("INGRESO");
-			pagoRepository.save(payment);
+			pagoRepository.save(FacturaDefaultValues.assignaDefaultsFacturaPPD(facturaDto));
 		}
 		return facturaDto;
 	}
@@ -265,8 +248,29 @@ public class FacturaService {
 		return mapper.getPagosDtoFromEntity(archivos);
 	}
 
-	public PagoDto insertNewPago(PagoDto pago) {
-		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+	public PagoDto insertNewPago(String folio, PagoDto pago) throws InvoiceManagerException {
+		Factura factura = repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("Folio not found",
+				String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
+		if (factura.getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())) {
+			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+		} else {
+			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
+					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
+					.setRfcRemitente(factura.getRfcRemitente()).setRazonSocialEmisor(factura.getRazonSocialEmisor())
+					.setRazonSocialRemitente(factura.getRazonSocialRemitente()).setTotal(pago.getMonto())
+					.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
+					.setFormaPago(factura.getFormaPago());
+			FacturaDto complemento = insertNewComplemento(facturaBuilder.build(), factura.getFolio());
+			pago.setFolio(complemento.getFolio());
+			pago.setFolioPadre(complemento.getFolioPadre());
+			Pago pagoPadre = pagoRepository.findByFolio(complemento.getFolioPadre()).stream().findFirst()
+					.orElseThrow(() -> new InvoiceManagerException("Pago not found",
+							String.format("Pago Folio with the name %s not found", folio),
+							HttpStatus.NOT_FOUND.value()));
+			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
+			pagoRepository.save(pagoPadre);
+			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+		}
 	}
 
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
@@ -285,12 +289,34 @@ public class FacturaService {
 		pagoRepository.delete(pago);
 	}
 
-	public FacturaContext timbrarFacrtura(String folio, FacturaDto facturaContext) {
-		return null;
+	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		validator.validateTimbrado(facturaDto, folio);
+		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
+		Factura folioEnity = repository.findByFolio(folio)
+				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
+						String.format("Folio with the name %s not found", facturaDto.getFolio()),
+						HttpStatus.NOT_FOUND.value()));
+		FacturaContext facturaContext = new FacturaContextBuilder()
+				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+				.setFacturaPadreDto(
+						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
+				.setTipoFactura(facturaDto.getMetodoPago()).build();
+		return facturaServiceEvaluation.facturaTimbradoValidation(facturaContext);
 	}
 
-	public FacturaContext cancelarFactura(String folio, FacturaDto facturaContext) {
-		return null;
+	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		validator.validateTimbrado(facturaDto, folio);
+		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
+		Factura folioEnity = repository.findByFolio(folio)
+				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
+						String.format("Folio with the name %s not found", facturaDto.getFolio()),
+						HttpStatus.NOT_FOUND.value()));
+		FacturaContext facturaContext = new FacturaContextBuilder()
+				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+				.setFacturaPadreDto(
+						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
+				.setTipoFactura(facturaDto.getMetodoPago()).build();
+		return facturaServiceEvaluation.facturaCancelacionValidation(facturaContext);
 	}
 
 }

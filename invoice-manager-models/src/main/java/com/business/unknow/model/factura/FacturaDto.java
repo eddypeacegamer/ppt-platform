@@ -27,11 +27,11 @@ public class FacturaDto implements Serializable {
 	private String tipoDocumento;
 	private String formaPago;
 	private String metodoPago;
+	private String packFacturacion;
 	private String notas;
 	private Double total;
 	private Double subtotal;
 	private Double descuento;
-	private Integer idPago;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
@@ -221,12 +221,12 @@ public class FacturaDto implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getIdPago() {
-		return idPago;
+	public String getPackFacturacion() {
+		return packFacturacion;
 	}
 
-	public void setIdPago(Integer idPago) {
-		this.idPago = idPago;
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
 	}
 
 	@Override
@@ -236,8 +236,10 @@ public class FacturaDto implements Serializable {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
-				+ descuento + ", idPago=" + idPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
+				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi
+				+ "]";
 	}
+
 }

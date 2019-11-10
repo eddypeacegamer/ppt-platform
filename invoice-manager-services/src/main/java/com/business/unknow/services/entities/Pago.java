@@ -36,6 +36,9 @@ public class Pago implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
+	@Column(name = "FOLIO_PADRE")
+	private String folioPadre;
+
 	@NotEmpty
 	@Column(name = "MONEDA")
 	private String moneda;
@@ -50,15 +53,15 @@ public class Pago implements Serializable {
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
 	private Double tipoDeCambio;
-	
+
 	@DecimalMin(value = "1.00")
 	@Column(name = "MONTO")
 	private Double monto;
-	
+
 	@NotNull
 	@Column(name = "REVISION_1")
 	private Boolean revision1;
-	
+
 	@NotNull
 	@Column(name = "REVISION_2")
 	private Boolean revision2;
@@ -68,12 +71,12 @@ public class Pago implements Serializable {
 
 	@Column(name = "COMENTARIO_PAGO")
 	private String comentarioPago;
-	/*INGRESO(pagos facturas) -- EGRESO(devoluciones)*/
+	/* INGRESO(pagos facturas) -- EGRESO(devoluciones) */
 	@NotEmpty
 	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
-	
-	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO*/
+
+	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO */
 	@NotEmpty
 	@Column(name = "FORMA_PAGO")
 	private String formaPago;
@@ -91,7 +94,6 @@ public class Pago implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-
 	public Integer getId() {
 		return id;
 	}
@@ -100,157 +102,105 @@ public class Pago implements Serializable {
 		this.id = id;
 	}
 
-
-
 	public String getFolio() {
 		return folio;
 	}
-
-
 
 	public void setFolio(String folio) {
 		this.folio = folio;
 	}
 
-
-
 	public String getMoneda() {
 		return moneda;
 	}
-
-
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
 	}
 
-
-
 	public String getDocumento() {
 		return documento;
 	}
-
-
 
 	public void setDocumento(String documento) {
 		this.documento = documento;
 	}
 
-
-
 	public String getBanco() {
 		return banco;
 	}
-
-
 
 	public void setBanco(String banco) {
 		this.banco = banco;
 	}
 
-
-
 	public Double getTipoDeCambio() {
 		return tipoDeCambio;
 	}
-
-
 
 	public void setTipoDeCambio(Double tipoDeCambio) {
 		this.tipoDeCambio = tipoDeCambio;
 	}
 
-
-
 	public Double getMonto() {
 		return monto;
 	}
-
-
 
 	public void setMonto(Double monto) {
 		this.monto = monto;
 	}
 
-
-
 	public Boolean getRevision1() {
 		return revision1;
 	}
-
-
 
 	public void setRevision1(Boolean revision1) {
 		this.revision1 = revision1;
 	}
 
-
-
 	public Boolean getRevision2() {
 		return revision2;
 	}
-
-
 
 	public void setRevision2(Boolean revision2) {
 		this.revision2 = revision2;
 	}
 
-
-
 	public String getStatusPago() {
 		return statusPago;
 	}
-
-
 
 	public void setStatusPago(String statusPago) {
 		this.statusPago = statusPago;
 	}
 
-
-
 	public String getComentarioPago() {
 		return comentarioPago;
 	}
-
-
 
 	public void setComentarioPago(String comentarioPago) {
 		this.comentarioPago = comentarioPago;
 	}
 
-
-
 	public String getTipoPago() {
 		return tipoPago;
 	}
-
-
 
 	public void setTipoPago(String tipoPago) {
 		this.tipoPago = tipoPago;
 	}
 
-
-
 	public String getFormaPago() {
 		return formaPago;
 	}
-
-
 
 	public void setFormaPago(String formaPago) {
 		this.formaPago = formaPago;
 	}
 
-
-
 	public Date getFechaPago() {
 		return fechaPago;
 	}
-
-
 
 	public void setFechaPago(Date fechaPago) {
 		this.fechaPago = fechaPago;
@@ -272,13 +222,22 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getFolioPadre() {
+		return folioPadre;
+	}
+
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
+	}
+
 	@Override
 	public String toString() {
-		return "Pago [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", documento=" + documento + ", banco="
-				+ banco + ", tipoDeCambio=" + tipoDeCambio + ", monto=" + monto + ", revision1=" + revision1
-				+ ", revision2=" + revision2 + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
-				+ ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
+				+ ", documento=" + documento + ", banco=" + banco + ", tipoDeCambio=" + tipoDeCambio + ", monto="
+				+ monto + ", revision1=" + revision1 + ", revision2=" + revision2 + ", statusPago=" + statusPago
+				+ ", comentarioPago=" + comentarioPago + ", tipoPago=" + tipoPago + ", formaPago=" + formaPago
+				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 
 }

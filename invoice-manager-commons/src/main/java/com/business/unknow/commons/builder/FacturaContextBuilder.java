@@ -22,23 +22,18 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		return this;
 	}
 
+	public FacturaContextBuilder setFacturaPadreDto(FacturaDto facturaPadre) {
+		instance.setFacturaPadreDto(facturaPadre);
+		return this;
+	}
+
 	public FacturaContextBuilder setComplementos(List<FacturaDto> complementos) {
 		instance.setComplementos(complementos);
 		return this;
 	}
 
-	public FacturaContextBuilder setComplementos(FacturaDto complemento) {
-		instance.setComplementoActual(complemento);
-		return this;
-	}
-	
 	public FacturaContextBuilder setPagos(List<PagoDto> pagos) {
 		instance.setPagos(pagos);
-		return this;
-	}
-	
-	public FacturaContextBuilder setComlpemento(FacturaDto comlpemento) {
-		instance.setComlpemento(comlpemento);
 		return this;
 	}
 

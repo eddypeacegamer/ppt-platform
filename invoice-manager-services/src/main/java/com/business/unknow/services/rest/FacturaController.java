@@ -67,13 +67,6 @@ public class FacturaController {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
 
-	@PostMapping("/{folio}/complementos")
-	@ApiOperation(value = "insert a new complemento into the system")
-	public ResponseEntity<FacturaDto> insertComplemento(@RequestBody @Valid FacturaDto factura,
-			@PathVariable String folio) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewComplemento(factura, folio), HttpStatus.CREATED);
-	}
-
 	@PutMapping("/{folio}")
 	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
@@ -136,14 +129,15 @@ public class FacturaController {
 	}
 
 	@GetMapping("/{folio}/pagos")
-	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio){
+	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/pagos")
 	@ApiOperation(value = "insert a new Payment into the system")
-	public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago) {
-		return new ResponseEntity<>(service.insertNewPago(pago), HttpStatus.CREATED);
+	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewPago(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
@@ -159,17 +153,17 @@ public class FacturaController {
 		service.deletePago(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	@PostMapping("/{folio}/timbrar")
-	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.timbrarFacrtura(folio, factura), HttpStatus.OK);
+	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.timbrarFactura(folio, facturaDto), HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/{folio}/cancelar")
-	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.cancelarFactura(folio, factura), HttpStatus.OK);
+	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
 	}
 
 }
