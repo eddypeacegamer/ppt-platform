@@ -19,7 +19,7 @@ import { NbIconLibraries } from '@nebular/theme';
 export class ReportesComponent implements OnInit {
 
 
-  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
+  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public filterParams : any = {emisor:'',remitente:'',folio:'',payStatus:'*',validationStatus:'*',start:'',end:''};

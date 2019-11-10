@@ -34,7 +34,10 @@
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
-            <button *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-success" (click)="donwloadFiles(factura.folio)">Descarga Archivos</button>
+            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-success" (click)="donwloadFiles(factura.folio)">
+                <i class="fa fa-file-download"></i>
+          </button>
+            
           </div>
           <p class="font-weight-bold">Información CFDI</p>
           <br>
@@ -355,8 +358,9 @@
             <tbody>
               <tr *ngFor="let payment of invoicePayments; let i = index">
                 <td scope="row" class="text-center">
-                  <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
-                    (click)="deletePayment(payment.id)"></nb-icon>
+                  <button type="button" class="btn" [ngClass]="{'btn-outline-secondary': payment.statusPago =='ACEPTADO', 'btn-outline-danger':payment.statusPago !='ACEPTADO'}" [disabled]="payment.statusPago =='ACEPTADO'" (click)="deletePayment(payment.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
                 </td>
                 <td scope="row" class="text-center">{{payment.moneda}}</td>
                 <td scope="row" class="text-center">{{payment.formaPago}}</td>
