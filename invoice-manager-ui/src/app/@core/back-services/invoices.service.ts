@@ -30,6 +30,18 @@ export class InvoicesService {
     return this.httpClient.get(`../api/facturas/${folio}/files`);
   }
 
+  public getComplementosInvoice(folioPadre:string) : Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folioPadre}/complementos`);
+  }
+
+  public timbrarFactura(folio:string,factura:Factura) : Observable<any>{
+    return this.httpClient.post(`../api/facturas/${folio}/timbrar`,factura);
+  }
+
+  public cancelarFactura(folio:string,factura:Factura) : Observable<any>{
+    return this.httpClient.post(`../api/facturas/${folio}/cancelar`,factura);
+  }
+
   public insertNewInvoice(invoice : Factura): Observable<any>{
     return this.httpClient.post('../api/facturas',invoice);
   }

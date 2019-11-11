@@ -32,7 +32,7 @@ const routes: Routes = [{
       path: 'reportes',
       component : ReportesComponent,
     },{
-      path: 'revision',
+      path: 'revision/:folio',
       component : RevisionComponent,
     },{
       path: 'carga-xml',

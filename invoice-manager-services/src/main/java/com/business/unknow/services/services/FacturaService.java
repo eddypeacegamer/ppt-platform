@@ -243,13 +243,12 @@ public class FacturaService {
 	}
 
 	public List<PagoDto> getPagos(String folio) {
-		List<Pago> archivos = new ArrayList<>();
-		archivos.addAll(pagoRepository.findByFolio(folio));
-		return mapper.getPagosDtoFromEntity(archivos);
+		return mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre(folio));
 	}
 
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPago(String folio, PagoDto pago) throws InvoiceManagerException {
-		Factura factura = repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("Folio not found",
+		Factura factura = repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
 				String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
 		if (factura.getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())) {
 			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
@@ -263,9 +262,12 @@ public class FacturaService {
 			FacturaDto complemento = insertNewComplemento(facturaBuilder.build(), factura.getFolio());
 			pago.setFolio(complemento.getFolio());
 			pago.setFolioPadre(complemento.getFolioPadre());
-			Pago pagoPadre = pagoRepository.findByFolio(complemento.getFolioPadre()).stream().findFirst()
-					.orElseThrow(() -> new InvoiceManagerException("Pago not found",
-							String.format("Pago Folio with the name %s not found", folio),
+			
+			List<Pago> pagos  = pagoRepository.findByFolioPadre(complemento.getFolioPadre());
+			
+			Pago pagoPadre = pagos.stream().filter(p->p.getFolio().equals(folio)).
+					findFirst().orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
+							String.format("Verificar consitencia de pagos del folio %s", folio),
 							HttpStatus.NOT_FOUND.value()));
 			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
 			pagoRepository.save(pagoPadre);

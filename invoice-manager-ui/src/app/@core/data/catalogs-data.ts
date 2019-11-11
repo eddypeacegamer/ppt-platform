@@ -23,4 +23,6 @@ export abstract class CatalogsData {
     abstract getStatusPago() : Observable<Status[]>;
     abstract getStatusValidacion() : Observable<Status[]>;
     abstract getStatusDevolucion() : Observable<Status[]>;
+
+    abstract getInvoiceCatalogs() : Observable<any[]>;
 }

@@ -29,12 +29,13 @@ public class FacturaDefaultValues {
 		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
 	}
 
-	public static Pago assignaDefaultsFacturaPPD(FacturaDto facturaDto) throws InvoiceManagerException {
+	public static Pago assignaDefaultsFacturaPPD(FacturaDto facturaDto) {
 		Pago payment = new Pago();// TODO move this logic to other place
 		payment.setBanco("N/A");
 		payment.setComentarioPago("Pago Automatico por sistema");
 		payment.setFechaPago(new Date());
 		payment.setFolio(facturaDto.getFolio());
+		payment.setFolioPadre(facturaDto.getFolio());
 		payment.setFormaPago("CREDITO");
 		payment.setMoneda("MXN");
 		payment.setMonto(facturaDto.getTotal());
