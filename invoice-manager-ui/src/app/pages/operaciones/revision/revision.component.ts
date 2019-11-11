@@ -320,7 +320,13 @@ export class RevisionComponent implements OnInit {
   public timbrarFactura(factura:Factura){
     this.successMessage=undefined;
     this.errorMessages = [];
-    this.invoiceService.timbrarFactura(factura.folio,factura)
+    let fact = {... factura};
+    fact.cfdi=null;
+    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
+    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    this.invoiceService.timbrarFactura(fact.folio,fact)
     .subscribe(success=>this.successMessage = 'Factura correctamente timbrada',
     (error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
   }
@@ -328,7 +334,14 @@ export class RevisionComponent implements OnInit {
   public cancelarFactura(factura:Factura){
     this.successMessage=undefined;
     this.errorMessages = [];
-    this.invoiceService.cancelarFactura(factura.folio,factura)
+    let fact = {... factura};
+    fact.cfdi=null;
+    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
+    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    this.invoiceService.timbrarFactura(fact.folio,fact)
+    this.invoiceService.cancelarFactura(fact.folio,fact)
     .subscribe(success=>this.successMessage = 'Factura correctamente cancelada',
     (error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`);console.error(this.errorMessages)}); 
   }
