@@ -1,0 +1,21 @@
+{
+	"id": 24,
+	"rfcEmisor": "ALAN123456EMP",
+	"rfcRemitente": "HUGO102030HDD",
+	"razonSocialEmisor": "PANTOJA CONSULTORES",
+	"razonSocialRemitente": "HUGO Y RUBEN",
+	"folio": "a922448ce471de62d52b02332aa787bf",
+	"statusPago": 1,
+	"statusDevolucion": 1,
+	"statusFactura": 1,
+	"statusDetail": "",
+	"tipoDocumento": "Factura",
+	"formaPago": "01",
+	"metodoPago": "PUE",
+	"packFacturacion": "SW_SAPIENS",
+	"total": 5800.0,
+	"subtotal": 5000.0,
+	"descuento": 0.0,
+	"fechaCreacion": "2019-11-11",
+	"fechaActualizacion": "2019-11-11"
+}
