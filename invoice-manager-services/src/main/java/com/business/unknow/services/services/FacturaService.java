@@ -269,7 +269,7 @@ public class FacturaService {
 					findFirst().orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
 							String.format("Verificar consitencia de pagos del folio %s", folio),
 							HttpStatus.NOT_FOUND.value()));
-			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
+			pagoPadre.setMonto(pagoPadre.getMonto() + pago.getMonto());
 			pagoRepository.save(pagoPadre);
 			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
 		}
@@ -282,6 +282,7 @@ public class FacturaService {
 		entity.setBanco(pago.getBanco());
 		entity.setMoneda(pago.getMoneda());
 		entity.setTipoPago(pago.getTipoPago());
+		entity.setStatusPago(pago.getStatusPago());
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
 	}
 
@@ -300,6 +301,7 @@ public class FacturaService {
 						HttpStatus.NOT_FOUND.value()));
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
 				.setTipoFactura(facturaDto.getMetodoPago()).build();

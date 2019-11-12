@@ -36,6 +36,10 @@ public class Constants {
 		public static final String FACTURA_PADRE_STATUS = "FacturaPadreStatusValidation";
 		public static final String FACTURA_PADRE_STATUS_RULE = "FacturaPadreStatusValidationRule";
 		public static final String FACTURA_PADRE_STATUS_RULE_DESC = "Los datos de la factura padre tienen una inconsistencia.";
+		
+		public static final String FACTURA_PAGO_VALIDATION = "FacturaPagoValidation";
+		public static final String FACTURA_PAGO_VALIDATION_RULE = "FacturaPagoValidationRule";
+		public static final String FACTURA_PAGO_VALIDATION_RULE_DES = "Los datos de la factura padre tienen una inconsistencia.";
 	}
 	
 	public class CancelacionSuite {
