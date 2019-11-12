@@ -6,6 +6,7 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.FacturaSuite;
 
@@ -14,10 +15,13 @@ public class FacturaDatosValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		return fc.getFacturaDto().getFechaTimbrado() == null || fc.getFacturaDto().getUuid() == null
-				|| (fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())
+		return fc.getFacturaDto().getFechaTimbrado() != null || fc.getFacturaDto().getUuid() != null
+				|| ((fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())
+						|| fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre()))
+						&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())
 						&& fc.getFacturaDto().getFolioPadre() != null)
 				|| (fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())
+						&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
 						&& fc.getFacturaDto().getFolioPadre() == null);
 	}
 

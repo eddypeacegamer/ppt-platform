@@ -14,8 +14,9 @@ public class FacturaPadreStatusValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		return fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
-				|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor());
+		return fc.getFacturaPadreDto() != null
+				&& !fc.getFacturaPadreDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor());
+						
 	}
 
 	@Action
