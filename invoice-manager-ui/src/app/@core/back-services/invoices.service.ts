@@ -57,4 +57,19 @@ export class InvoicesService {
   public deletePayment(folio : string, paymentId : number): Observable<any>{
     return this.httpClient.delete(`../api/facturas/${folio}/pagos/${paymentId}`);
   }
+
+  public updatePayment(folio : string, paymentId : number, payment : Pago): Observable<any>{
+    return this.httpClient.put(`../api/facturas/${folio}/pagos/${paymentId}`,payment);
+  }
+
+  public getAllPayments(page: number, size: number, filterParams?: any): Observable<Object> {
+    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+    for (const key in filterParams) {
+      const value : string = filterParams[key];
+      if(value.length>0){
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':filterParams[key]);
+      }
+    }
+    return this.httpClient.get('../api/pagos',{params:pageParams});
+  }
 }

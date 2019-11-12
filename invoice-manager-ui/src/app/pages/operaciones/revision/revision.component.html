@@ -261,11 +261,11 @@
           <div class="form-inline" *ngIf="folioParam === '*'">
             <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
             <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
-            <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
-              {{successMessage}}
-            </div>
           </div>
           <br>
+          <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
+            {{successMessage}}
+          </div>
   
           <div *ngIf="factura.metodoPago=='PPD'">
             <p class="font-weight-bold">Complementos</p>

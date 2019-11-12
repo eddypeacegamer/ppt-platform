@@ -85,16 +85,15 @@ public class Factura implements Serializable {
 	@Column(name = "DESCUENTO")
 	private Double descuento;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;

@@ -9,7 +9,7 @@ public class AbstractFacturaServiceEvaluator {
 
 	protected void validateFacturaContext(FacturaContext facturaContexrt) throws InvoiceManagerException {
 		if (!facturaContexrt.isValid()) {
-			throw new InvoiceManagerException(facturaContexrt.getSuiteError(), facturaContexrt.getRuleErrorDesc(),
+			throw new InvoiceManagerException(facturaContexrt.getRuleErrorDesc(),facturaContexrt.getSuiteError(),
 					HttpStatus.SC_BAD_REQUEST);
 		}
 	}
