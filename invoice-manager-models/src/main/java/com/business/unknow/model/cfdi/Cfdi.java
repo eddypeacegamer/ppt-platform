@@ -8,17 +8,18 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.business.unknow.Constants.CfdiConstants;
+
 @XmlRootElement(name = "cfdi:Comprobante")
 @XmlType(propOrder = { "version", "serie", "folio", "sello", "noCertificado", "certificado", "subtotal", "descuento",
 		"moneda", "total", "tipoDeComprobante", "metodoPago", "lugarExpedicion", "emisor", "receptor", "conceptos",
 		"impuestos", "schemaUrl", "satUrl", "schemaLocation" })
 public class Cfdi {
 
-	private String schemaUrl = "http://www.w3.org/2001/XMLSchema-instance";
-	private String satUrl = "http://www.sat.gob.mx/cfd/3";
-	private String schemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd";
-	// TODO: AGREGAR CONFIG GLOBALS
-	private String version = "3.3";
+	private String schemaUrl = CfdiConstants.SCHEMA_URL;
+	private String satUrl = CfdiConstants.SAT_URL;
+	private String schemaLocation = CfdiConstants.SCHEMA_LOCATION;
+	private String version =CfdiConstants.FACTURA_VERSION;
 	private String serie;
 	private String folio;
 	private String fecha;

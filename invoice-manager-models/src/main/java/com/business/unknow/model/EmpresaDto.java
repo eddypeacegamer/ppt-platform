@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- *@author ralfdemoledor
+ * @author ralfdemoledor
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -40,132 +40,182 @@ public class EmpresaDto implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	private ContribuyenteDto informacionFiscal;
+
+	public EmpresaDto() {
+	}
+
+	public EmpresaDto(String pwSat) {
+		this.pwSat = pwSat;
+	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getReferencia() {
 		return referencia;
 	}
+
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
+
 	public String getRegimenFiscal() {
 		return regimenFiscal;
 	}
+
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
 	}
+
 	public String getWeb() {
 		return web;
 	}
+
 	public void setWeb(String web) {
 		this.web = web;
 	}
+
 	public String getContactoAdmin() {
 		return contactoAdmin;
 	}
+
 	public void setContactoAdmin(String contactoAdmin) {
 		this.contactoAdmin = contactoAdmin;
 	}
+
 	public String getSucursal() {
 		return sucursal;
 	}
+
 	public void setSucursal(String sucursal) {
 		this.sucursal = sucursal;
 	}
+
 	public String getLugarExpedicion() {
 		return lugarExpedicion;
 	}
+
 	public void setLugarExpedicion(String lugarExpedicion) {
 		this.lugarExpedicion = lugarExpedicion;
 	}
+
 	public String getLogotipo() {
 		return logotipo;
 	}
+
 	public void setLogotipo(String logotipo) {
 		this.logotipo = logotipo;
 	}
+
 	public String getLlavePrivada() {
 		return llavePrivada;
 	}
+
 	public void setLlavePrivada(String llavePrivada) {
 		this.llavePrivada = llavePrivada;
 	}
+
 	public String getCertificado() {
 		return certificado;
 	}
+
 	public void setCertificado(String certificado) {
 		this.certificado = certificado;
 	}
+
 	public String getPwSat() {
 		return pwSat;
 	}
+
 	public void setPwSat(String pwSat) {
 		this.pwSat = pwSat;
 	}
+
 	public String getPwCorreo() {
 		return pwCorreo;
 	}
+
 	public void setPwCorreo(String pwCorreo) {
 		this.pwCorreo = pwCorreo;
 	}
+
 	public String getCorreo() {
 		return correo;
 	}
+
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
+
 	public String getEncabezado() {
 		return encabezado;
 	}
+
 	public void setEncabezado(String encabezado) {
 		this.encabezado = encabezado;
 	}
+
 	public String getPiePagina() {
 		return piePagina;
 	}
+
 	public void setPiePagina(String piePagina) {
 		this.piePagina = piePagina;
 	}
+
 	public Boolean getActivo() {
 		return activo;
 	}
+
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
+
 	public String getTipo() {
 		return tipo;
 	}
+
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+
 	public Integer getGiro() {
 		return giro;
 	}
+
 	public void setGiro(Integer giro) {
 		this.giro = giro;
 	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
+
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
+
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
+
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
+
 	public ContribuyenteDto getInformacionFiscal() {
 		return informacionFiscal;
 	}
+
 	public void setInformacionFiscal(ContribuyenteDto informacionFiscal) {
 		this.informacionFiscal = informacionFiscal;
 	}
+
 	@Override
 	public String toString() {
 		return "EmpresaDto [id=" + id + ", referencia=" + referencia + ", regimenFiscal=" + regimenFiscal + ", web="

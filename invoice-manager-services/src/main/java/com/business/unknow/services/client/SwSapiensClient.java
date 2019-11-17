@@ -10,8 +10,10 @@ public class SwSapiensClient {
 
 	private static final String URL = "http://services.test.sw.com.mx";
 	private static final String CONTEXT = "";
+	private static final String USR = "demo";
+	private static final String PW = "123456789";
 
 	public RestSwSapiensClient getSwSapiensClient() {
-		return new RestSwSapiensClientImpl(URL, CONTEXT);
+		return new RestSwSapiensClientImpl(URL, CONTEXT, USR, PW);
 	}
 }

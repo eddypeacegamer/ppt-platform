@@ -3,7 +3,9 @@ package com.business.unknow.model.context;
 import java.io.Serializable;
 import java.util.List;
 
+import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaContext implements Serializable {
@@ -17,6 +19,10 @@ public class FacturaContext implements Serializable {
 	private boolean valid;
 	private String ruleErrorDesc;
 	private String suiteError;
+	private EmpresaDto empresaDto;
+	private Cfdi cfdi;
+	private String xml;
+	private String qr;
 
 	public FacturaContext() {
 		valid = true;
@@ -86,11 +92,44 @@ public class FacturaContext implements Serializable {
 		this.pagos = pagos;
 	}
 
+	public EmpresaDto getEmpresaDto() {
+		return empresaDto;
+	}
+
+	public void setEmpresaDto(EmpresaDto empresaDto) {
+		this.empresaDto = empresaDto;
+	}
+
+	public Cfdi getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(Cfdi cfdi) {
+		this.cfdi = cfdi;
+	}
+
+	public String getXml() {
+		return xml;
+	}
+
+	public void setXml(String xml) {
+		this.xml = xml;
+	}
+
+	public String getQr() {
+		return qr;
+	}
+
+	public void setQr(String qr) {
+		this.qr = qr;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", facturaPadreDto="
 				+ facturaPadreDto + ", complementos=" + complementos + ", pagos=" + pagos + ", valid=" + valid
-				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + "]";
+				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + ", empresaDto=" + empresaDto
+				+ ", cfdi=" + cfdi + ", xml=" + xml + ", qr=" + qr + "]";
 	}
 
 }

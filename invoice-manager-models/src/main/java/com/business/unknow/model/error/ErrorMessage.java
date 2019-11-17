@@ -22,6 +22,10 @@ public class ErrorMessage implements Serializable{
 	public ErrorMessage(int httpStatus) {
 		this.httpStatus = httpStatus;
 	}
+	
+	public ErrorMessage(String message) {
+		this.message = message;
+	}
 
 	public ErrorMessage(String message, int httpStatus) {
 		this.message = message;
