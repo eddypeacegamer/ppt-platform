@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.model.DevolucionDto;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.mapper.DevolucionMapper;
-import com.business.unknow.services.repositories.DevolucionRepository;
+import com.business.unknow.services.repositories.facturas.DevolucionRepository;
 
 /**
  *@author ralfdemoledor

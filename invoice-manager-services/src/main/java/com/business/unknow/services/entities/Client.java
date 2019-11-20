@@ -68,12 +68,12 @@ public class Client implements Serializable {
 	@Column(name = "PORCENTAJE_CONTACTO")
 	private Integer porcentajeContacto;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
@@ -82,65 +82,81 @@ public class Client implements Serializable {
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
+	
 	public int getId() {
 		return id;
 	}
+
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
+
 	public Boolean getActivo() {
 		return activo;
 	}
 
+
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-	
+
+
 	public String getCorreoPromotor() {
 		return correoPromotor;
 	}
+
 
 	public void setCorreoPromotor(String correoPromotor) {
 		this.correoPromotor = correoPromotor;
 	}
 
+
 	public String getCorreoContacto() {
 		return correoContacto;
 	}
+
 
 	public void setCorreoContacto(String correoContacto) {
 		this.correoContacto = correoContacto;
 	}
 
+
 	public Integer getPorcentajePromotor() {
 		return porcentajePromotor;
 	}
+
 
 	public void setPorcentajePromotor(Integer porcentajePromotor) {
 		this.porcentajePromotor = porcentajePromotor;
 	}
 
+
 	public Integer getPorcentajeCliente() {
 		return porcentajeCliente;
 	}
+
 
 	public void setPorcentajeCliente(Integer porcentajeCliente) {
 		this.porcentajeCliente = porcentajeCliente;
 	}
 
+
 	public Integer getPorcentajeDespacho() {
 		return porcentajeDespacho;
 	}
+
 
 	public void setPorcentajeDespacho(Integer porcentajeDespacho) {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
 
+
 	public Integer getPorcentajeContacto() {
 		return porcentajeContacto;
 	}
+
 
 	public void setPorcentajeContacto(Integer porcentajeContacto) {
 		this.porcentajeContacto = porcentajeContacto;
@@ -150,25 +166,31 @@ public class Client implements Serializable {
 		return fechaCreacion;
 	}
 
+
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
+
 
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
 
+
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
+
 
 	public Contribuyente getInformacionFiscal() {
 		return informacionFiscal;
 	}
 
+
 	public void setInformacionFiscal(Contribuyente informacionFiscal) {
 		this.informacionFiscal = informacionFiscal;
 	}
+
 
 	@Override
 	public String toString() {

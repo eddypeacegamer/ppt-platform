@@ -1,0 +1,22 @@
+{
+	"id": 2,
+	"rfcEmisor": "EMP4311299HH2",
+	"rfcRemitente": "KBUR800823456",
+	"razonSocialEmisor": "RAZON SOCIAL EMISOR",
+	"razonSocialRemitente": "RAZON SOCIAL REMITENTE",
+	"folio": "0002",
+	"statusPago": 1,
+	"statusDevolucion": 1,
+	"statusFactura":3,
+	"statusDetail": "En valoracion",
+	"tipoDocumento": "Factura",
+	"formaPago": "03",
+	"metodoPago": "PPD",
+	"packFacturacion": "SW_SAPIENS",
+	"notas": "Factura test demo",
+	"total": 3300.54,
+	"subtotal": 2845.29,
+	"descuento": 0.0,
+	"fechaCreacion": "2019-09-30",
+	"fechaActualizacion": "2019-09-30"
+}

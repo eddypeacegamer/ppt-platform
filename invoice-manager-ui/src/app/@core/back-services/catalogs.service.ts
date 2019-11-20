@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -45,4 +46,13 @@ export class CatalogsService {
     return this.httpClient.get("/api/catalogs/status-devolucion");
   }
 
+  public getInvoiceCatalogs() : Observable<any[]>{
+    let giros = this.getAllGiros();
+    let claveUnidad = this.getClaveUnidadByName('');
+    let usoCfdi = this.getAllUsoCfdis();
+    let statusPago = this.getStatusPago();
+    let statusDevolucion = this.getStatusDevolucion();
+    let statusEvento = this.getStatusValidacion();
+    return forkJoin([giros,claveUnidad,usoCfdi,statusPago,statusDevolucion,statusEvento]);
+  }
 }

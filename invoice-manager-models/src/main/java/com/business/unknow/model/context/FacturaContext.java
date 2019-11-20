@@ -11,10 +11,9 @@ public class FacturaContext implements Serializable {
 	private static final long serialVersionUID = 661221684069242273L;
 	private String tipoFactura;
 	private FacturaDto facturaDto;
-	private FacturaDto comlpemento;
+	private FacturaDto facturaPadreDto;
 	private List<FacturaDto> complementos;
 	private List<PagoDto> pagos;
-	private FacturaDto complementoActual;
 	private boolean valid;
 	private String ruleErrorDesc;
 	private String suiteError;
@@ -55,14 +54,6 @@ public class FacturaContext implements Serializable {
 		this.complementos = complementos;
 	}
 
-	public FacturaDto getComplementoActual() {
-		return complementoActual;
-	}
-
-	public void setComplementoActual(FacturaDto complementoActual) {
-		this.complementoActual = complementoActual;
-	}
-
 	public String getRuleErrorDesc() {
 		return ruleErrorDesc;
 	}
@@ -79,6 +70,14 @@ public class FacturaContext implements Serializable {
 		this.suiteError = suiteError;
 	}
 
+	public FacturaDto getFacturaPadreDto() {
+		return facturaPadreDto;
+	}
+
+	public void setFacturaPadreDto(FacturaDto facturaPadreDto) {
+		this.facturaPadreDto = facturaPadreDto;
+	}
+
 	public List<PagoDto> getPagos() {
 		return pagos;
 	}
@@ -87,20 +86,11 @@ public class FacturaContext implements Serializable {
 		this.pagos = pagos;
 	}
 
-	public FacturaDto getComlpemento() {
-		return comlpemento;
-	}
-
-	public void setComlpemento(FacturaDto comlpemento) {
-		this.comlpemento = comlpemento;
-	}
-
 	@Override
 	public String toString() {
-		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", comlpemento="
-				+ comlpemento + ", complementos=" + complementos + ", pagos=" + pagos + ", complementoActual="
-				+ complementoActual + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError="
-				+ suiteError + "]";
+		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", facturaPadreDto="
+				+ facturaPadreDto + ", complementos=" + complementos + ", pagos=" + pagos + ", valid=" + valid
+				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + "]";
 	}
 
 }

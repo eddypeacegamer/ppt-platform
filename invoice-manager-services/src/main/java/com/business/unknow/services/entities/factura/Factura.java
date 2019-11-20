@@ -70,6 +70,9 @@ public class Factura implements Serializable {
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
 
+	@Column(name = "PACK_FACTURACION")
+	private String packFacturacion;
+
 	@Column(name = "NOTAS")
 	private String notas;
 
@@ -82,16 +85,15 @@ public class Factura implements Serializable {
 	@Column(name = "DESCUENTO")
 	private Double descuento;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
@@ -272,6 +274,14 @@ public class Factura implements Serializable {
 		this.descuento = descuento;
 	}
 
+	public String getPackFacturacion() {
+		return packFacturacion;
+	}
+
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -279,9 +289,9 @@ public class Factura implements Serializable {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento="
-				+ descuento + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
-				+ ", fechaCreacion=" + fechaCreacion + "]";
+				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaTimbrado=" + fechaTimbrado + ", fechaCreacion=" + fechaCreacion + "]";
 	}
 
 }

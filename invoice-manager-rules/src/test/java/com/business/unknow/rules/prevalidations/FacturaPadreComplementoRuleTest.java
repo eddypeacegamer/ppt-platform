@@ -1,5 +1,8 @@
 package com.business.unknow.rules.prevalidations;
 
-public class FacturaPadreComplementoRuleTest {
+import com.business.unknow.rules.AbstractRuleTest;
 
+public class FacturaPadreComplementoRuleTest extends AbstractRuleTest {
+
+	
 }

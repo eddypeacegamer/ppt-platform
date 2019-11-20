@@ -17,10 +17,9 @@ import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Pago } from '../../../models/pago';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { NbIconLibraries } from '@nebular/theme';
+import { ActivatedRoute } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
-import { map } from 'rxjs/operators';
+import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
 
 @Component({
@@ -38,12 +37,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public validationCat: Status[] = [];
   public payCat: Status[] = [];
   public devolutionCat: Status[] = [];
-  public payTypeCat : Status[] = [new Status('01','Efectivo'), new Status('02','Cheque nominativo'), new Status('03','Transferencia electrónica de fondos'),new Status('99','Por definir')];
+  public payTypeCat: Status[] = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos'), new Status('99', 'Por definir')];
 
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
 
+  public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
@@ -64,15 +64,53 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private iconsLibrary: NbIconLibraries,
-    private downloadService :DownloadInvoiceFilesService,
+    private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.initVariables();
-    this.iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
-    this.loadCatInfo().then(cat => this.validationCat = cat)//this force th invoice info is loaded after cat info is loaded
-      .then(() => this.loadInvoiceInfo());
+  
+    this.route.paramMap.subscribe(route=>{
+      this.folioParam = route.get('folio');
+      console.log(`recovering ${this.folioParam} information`);
+      this.catalogsService.getInvoiceCatalogs()
+      .toPromise().then(results=>{
+        this.girosCat = results[0];
+        this.claveUnidadCat = results[1];
+        this.usoCfdiCat = results[2];
+        this.payCat = results[3];
+        this.devolutionCat = results[4];
+        this.validationCat = results[5];
+      }).then(()=>{
+          if(this.folioParam!='*'){
+            this.invoiceService.getComplementosInvoice(this.folioParam)
+            .pipe(
+              map((facturas:Factura[]) =>{
+                return facturas.map(record=>{
+                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
+                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
+                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
+                  record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
+                  return record;})
+              }))
+            .subscribe(complementos => this.complementos = complementos);
+            this.invoiceService.getPayments(this.folioParam).subscribe(payments => this.invoicePayments = payments);
+            this.invoiceService.getInvoiceByFolio(this.folioParam).pipe(
+              map((fac: Factura) => {
+                fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
+                fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
+                fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
+                fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
+                fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
+                return fac;
+              })).subscribe(invoice => this.factura = invoice, 
+                error => {
+                console.error('Info cant found, creating a new invoice:', error)
+                this.initVariables();
+              });
+          }
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -80,43 +118,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
-  }
-
-  public async loadCatInfo() {
-    /**** LOADING CAT INFO ****/
-    this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    this.catalogsService.getClaveUnidadByName('').subscribe((unidades: ClaveUnidad[]) => this.claveUnidadCat = unidades,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    this.catalogsService.getAllUsoCfdis().subscribe((usos: UsoCfdi[]) => this.usoCfdiCat = usos,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    this.catalogsService.getStatusPago().subscribe(cat => this.payCat = cat);
-    this.catalogsService.getStatusDevolucion().subscribe(cat => this.devolutionCat = cat);
-    return this.catalogsService.getStatusValidacion().toPromise()
-  }
-  
-  public loadInvoiceInfo() {
-    /** recovering folio info**/
-    this.route.paramMap.subscribe(route => {
-      let folio = route.get('folio');
-      this.folioParam = folio;
-      this.invoiceService.getInvoiceByFolio(folio).pipe(
-        map((fac:Factura) => {
-          fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-          fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-          fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-          fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-          fac.formaPago = this.payTypeCat.find(v=>v.id == fac.formaPago).value;
-          return fac;
-        })).subscribe(invoice => {
-        this.factura = invoice;
-          this.invoiceService.getPayments(folio).subscribe(payments => this.invoicePayments = payments);
-        }, error => {
-          console.error('Info cant found, creating a new invoice:', error)
-          this.initVariables();
-        }
-        )
-    });
   }
 
   public initVariables() {
@@ -149,9 +150,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   buscarClaveProdServSelected() {
-    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves =>{ 
+    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => {
       this.prodServCat = claves;
-      if(claves.length<1){
+      if (claves.length < 1) {
         alert(`No se encontro ninguna clave que coincida con ${this.formInfo.claveProdServ}`);
       }
     });
@@ -303,13 +304,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (validCdfi) {
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio; },
-        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+        (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio; 
+          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+        },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
     }
   }
 
-  public donwloadFiles(folio:string){
-    this.downloadService.exportFiles(folio,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
+  public donwloadFiles(folio: string) {
+    this.downloadService.exportFiles(folio, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
   }
 
 
@@ -338,8 +340,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
-  deletePayment(paymentId){
-    this.invoiceService.deletePayment(this.factura.folio,paymentId).subscribe(
+  deletePayment(paymentId) {
+    this.invoiceService.deletePayment(this.factura.folio, paymentId).subscribe(
       result => { this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
       (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
@@ -382,7 +384,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if(this.invoicePayments.length>0 && this.invoicePayments.reduce((total,p)=>(total)+p.monto)+this.newPayment.monto>this.factura.total){
+    if (this.invoicePayments.length > 0 && this.invoicePayments.reduce((total, p) => (total) + p.monto) + this.newPayment.monto > this.factura.total) {
       validPayment = false;
       this.payErrorMessages.push('El pago actual o la suma de los pagos no puede ser superior al monto total de la factura.');
     }
@@ -390,8 +392,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (validPayment) {
       this.newPayment.tipoPago = 'INGRESO';
       this.invoiceService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
-        result => { this.paymentForm.successPayment = true; this.newPayment = new Pago(); 
-          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+        result => {
+          this.paymentForm.successPayment = true; this.newPayment = new Pago();
+          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = this.complementos);
+        },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
 

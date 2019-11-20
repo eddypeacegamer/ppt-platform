@@ -1,25 +1,11 @@
-<!--div class="row">
-  <div class="col-md-12">
-    <nb-card class="inline-form-card">
-      <nb-card-header>Pre CFDI</nb-card-header>
-      <nb-card-body>
-
-
-        <form class="form-inline">
-          <input type="text" nbInput fullWidth placeholder="Folio">
-          <button type="button" nbButton status="primary">BUSCAR</button>
-          <button type="button" nbButton status="primary">REGISTRO</button>
-        </form>
-      </nb-card-body>
-    </nb-card>
-  </div>
-</div-->
-
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI</nb-card-header>
       <nb-card-body>
+          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+              <p *ngFor="let message of errorMessages">{{message}}</p>
+            </div>
         <div *ngIf="folioParam != '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="form-inline">
@@ -34,7 +20,11 @@
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
-            <button *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-success" (click)="donwloadFiles(factura.folio)">Descarga Archivos</button>
+            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-success"
+              (click)="donwloadFiles(factura.folio)">
+              <i class="fa fa-file-download"></i>
+            </button>
+
           </div>
           <p class="font-weight-bold">Información CFDI</p>
           <br>
@@ -86,9 +76,7 @@
               </div>
             </div>
           </div>
-          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-            <p *ngFor="let message of errorMessages">{{message}}</p>
-          </div>
+          
           <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">
             {{clientInfo.rfc}} - {{clientInfo.razonSocial}}
           </div>
@@ -218,15 +206,16 @@
         <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
           <thead class="thead-light">
             <tr>
-              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')" class="text-center">Acciones</th>
+              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
+                class="text-center">Acciones</th>
               <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')" class="text-center">
-                <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
-                  (click)="removeConcepto(i)"></nb-icon>
+              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
+                class="text-center">
+                <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
               </td>
               <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
@@ -238,8 +227,10 @@
               <td scope="row" class="text-center">{{fila.importe | currency}}</td>
             </tr>
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6"></td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7"></td>
+              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
+              </td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
+              </td>
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
@@ -250,8 +241,10 @@
                 <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
               </tr-->
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6"></td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7"></td>
+              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
+              </td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
+              </td>
               <td class="text-center">Total</td>
               <td class="text-center">{{factura.total | currency}}</td>
             </tr>
@@ -268,9 +261,46 @@
         </div>
         <br>
 
+        <div *ngIf="factura.metodoPago=='PPD'">
+          <p class="font-weight-bold">Complementos</p>
+          <br>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th class="text-center">Acciones</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-center">Emisor</th>
+                  <th class="text-center">Receptor</th>
+                  <th class="text-center">Metodo Pago</th>
+                  <th class="text-center">Estatus Validacion</th>
+                  <th class="text-center">Estatus Pago</th>
+                  <th class="text-center">Monto</th>
+                  <th class="text-center">Fecha Solicitud</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let complemento of complementos">
+                  <td scope="row" class="text-center"> <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" [disabled]="complemento.statusFactura !='Timbrada'"
+                      class="btn" [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}" (click)="donwloadFiles(complemento.folio)">
+                      <i class="fa fa-file-download"></i>
+                    </button></td>
+                  <td scope="row" class="text-center">{{complemento.folio}}</td>
+                  <td scope="row" class="text-center">{{complemento.rfcEmisor}}</td>
+                  <td scope="row" class="text-center">{{complemento.rfcRemitente}}</td>
+                  <td scope="row" class="text-center">{{complemento.metodoPago}}</td>
+                  <td scope="row" class="text-center">{{complemento.statusFactura}}</td>
+                  <td scope="row" class="text-center">{{complemento.statusPago}}</td>
+                  <td scope="row" class="text-center">{{complemento.total}}</td>
+                  <td scope="row" class="text-center">{{complemento.fechaCreacion}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div *ngIf="factura.folio!=undefined">
-          <p class="font-weight-bold">Pago CFDI</p>
+          <p class="font-weight-bold">Lista de pagos</p>
           <br>
           <div class="row">
             <div class="col-sm-1">
@@ -355,8 +385,11 @@
             <tbody>
               <tr *ngFor="let payment of invoicePayments; let i = index">
                 <td scope="row" class="text-center">
-                  <nb-icon class="btn btn-sm" icon="trash-a" pack="ion" style="cursor: pointer;"
-                    (click)="deletePayment(payment.id)"></nb-icon>
+                  <button type="button" class="btn"
+                    [ngClass]="{'btn-outline-secondary': payment.statusPago =='ACEPTADO', 'btn-outline-danger':payment.statusPago !='ACEPTADO'}"
+                    [disabled]="payment.statusPago =='ACEPTADO'" (click)="deletePayment(payment.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
                 </td>
                 <td scope="row" class="text-center">{{payment.moneda}}</td>
                 <td scope="row" class="text-center">{{payment.formaPago}}</td>

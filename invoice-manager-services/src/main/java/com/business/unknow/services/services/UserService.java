@@ -82,7 +82,7 @@ public class UserService {
 		user.setName(details.get(0).getAttributes().getName());
 		user.setUrlPicture(details.get(0).getAttributes().getPicture());
 		if (userInfo.isPresent()) {
-			user.setActivo(userInfo.get().getActivo());
+			user.setActivo(userInfo.get().isActivo());
 			user.setRoles(userInfo.get().getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList()));
 		} else {
 			user.setActivo(false);

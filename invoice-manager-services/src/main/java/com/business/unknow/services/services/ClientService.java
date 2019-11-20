@@ -25,7 +25,6 @@ public class ClientService {
 	@Autowired
 	private ClientRepository repository;
 
-
 	@Autowired
 	private SwSapiensClient swSapiensClient;
 

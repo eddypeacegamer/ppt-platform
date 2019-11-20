@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { GenericPage } from '../../../models/generic-page';
-import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
 import { Router } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Factura } from '../../../models/factura/factura';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { NbIconLibraries } from '@nebular/theme';
 
 
 @Component({
@@ -19,7 +18,7 @@ import { NbIconLibraries } from '@nebular/theme';
 export class ReportesComponent implements OnInit {
 
 
-  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
+  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public filterParams : any = {emisor:'',remitente:'',folio:'',payStatus:'*',validationStatus:'*',start:'',end:''};
@@ -30,12 +29,10 @@ export class ReportesComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private catalogService : CatalogsData,
-    private iconsLibrary :NbIconLibraries,
     private donwloadService:DownloadCsvService,
     private router: Router) {}
 
     ngOnInit() {
-      this.iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
       this.catalogService.getStatusValidacion().subscribe(cat=>this.validationCat = cat);
       this.catalogService.getStatusPago().subscribe(cat=>this.payCat = cat);
       this.catalogService.getStatusDevolucion().toPromise()

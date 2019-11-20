@@ -11,10 +11,6 @@
 			"link": "/pages/operaciones/empresas"
 		},
 		{
-			"title": "revision",
-			"link": "/pages/operaciones/revision"
-		},
-		{
 			"title": "reportes",
 			"link": "/pages/operaciones/reportes"
 		}

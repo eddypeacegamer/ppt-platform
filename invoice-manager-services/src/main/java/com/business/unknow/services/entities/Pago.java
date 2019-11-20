@@ -36,6 +36,9 @@ public class Pago implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
+	@Column(name = "FOLIO_PADRE")
+	private String folioPadre;
+
 	@NotEmpty
 	@Column(name = "MONEDA")
 	private String moneda;
@@ -50,15 +53,15 @@ public class Pago implements Serializable {
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
 	private Double tipoDeCambio;
-	
+
 	@DecimalMin(value = "1.00")
 	@Column(name = "MONTO")
 	private Double monto;
-	
+
 	@NotNull
 	@Column(name = "REVISION_1")
 	private Boolean revision1;
-	
+
 	@NotNull
 	@Column(name = "REVISION_2")
 	private Boolean revision2;
@@ -68,26 +71,25 @@ public class Pago implements Serializable {
 
 	@Column(name = "COMENTARIO_PAGO")
 	private String comentarioPago;
-	/*INGRESO(pagos facturas) -- EGRESO(devoluciones)*/
+	/* INGRESO(pagos facturas) -- EGRESO(devoluciones) */
 	@NotEmpty
 	@Column(name = "TIPO_PAGO")
 	private String tipoPago;
-	
-	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO*/
+
+	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO */
 	@NotEmpty
 	@Column(name = "FORMA_PAGO")
 	private String formaPago;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_PAGO")
 	private Date fechaPago;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
@@ -220,13 +222,22 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getFolioPadre() {
+		return folioPadre;
+	}
+
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
+	}
+
 	@Override
 	public String toString() {
-		return "Pago [id=" + id + ", folio=" + folio + ", moneda=" + moneda + ", documento=" + documento + ", banco="
-				+ banco + ", tipoDeCambio=" + tipoDeCambio + ", monto=" + monto + ", revision1=" + revision1
-				+ ", revision2=" + revision2 + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
-				+ ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
+				+ ", documento=" + documento + ", banco=" + banco + ", tipoDeCambio=" + tipoDeCambio + ", monto="
+				+ monto + ", revision1=" + revision1 + ", revision2=" + revision2 + ", statusPago=" + statusPago
+				+ ", comentarioPago=" + comentarioPago + ", tipoPago=" + tipoPago + ", formaPago=" + formaPago
+				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 
 }

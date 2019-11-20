@@ -27,6 +27,7 @@ public class FacturaDto implements Serializable {
 	private String tipoDocumento;
 	private String formaPago;
 	private String metodoPago;
+	private String packFacturacion;
 	private String notas;
 	private Double total;
 	private Double subtotal;
@@ -220,16 +221,25 @@ public class FacturaDto implements Serializable {
 		this.id = id;
 	}
 
+	public String getPackFacturacion() {
+		return packFacturacion;
+	}
+
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaDto [rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente + ", razonSocialEmisor="
-				+ razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
-				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago=" + metodoPago
-				+ ", notas=" + notas + ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
-				+ fechaTimbrado + ", cfdi=" + cfdi + "]";
+		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
+				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
+				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
+				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi
+				+ "]";
 	}
 
 }

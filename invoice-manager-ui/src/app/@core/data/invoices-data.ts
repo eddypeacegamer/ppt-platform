@@ -9,9 +9,15 @@ export abstract class InvoicesData {
 
     abstract getInvoiceByFolio(folio:string) : Observable<Factura>;
 
-    abstract getInvoiceById(id:number) : Observable<[Factura]>;
+    abstract getInvoiceById(id:number) : Observable<Factura>;
 
     abstract getInvoiceFiles(folio:string) : Observable<any>;
+
+    abstract getComplementosInvoice(folioPadre:string) : Observable<Factura[]>;
+
+    abstract timbrarFactura(folio:string,factura:Factura) : Observable<any>;
+
+    abstract cancelarFactura(folio:string,factura:Factura) : Observable<any>;
 
     abstract insertNewInvoice(invoice : Factura) : Observable<Factura>;
 
@@ -23,5 +29,7 @@ export abstract class InvoicesData {
 
     abstract deletePayment(folio : string, paymentId : number): Observable<Pago>;
 
-  
+    abstract updatePayment(folio : string, paymentId : number, payment : Pago) : Observable<Pago>;
+
+    abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 }

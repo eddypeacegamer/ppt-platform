@@ -32,9 +32,8 @@
             <div class="col-md-2">
               <nb-select id="inputGiro" [selected]="filterParams.payStatus" (selectedChange)="onPayStatus($event)">
                 <nb-option value="*">Todas</nb-option>
-                <nb-option value="sin pagar">No Pagado</nb-option>
-                <nb-option value="validacion">En validacion</nb-option>
-                <nb-option value="pagada">Pagado</nb-option>
+                <nb-option *ngFor="let pay of payCat" [value]="pay.id">{{pay.value}}</nb-option>
+                
               </nb-select>
             </div>
             <div class="col-md-1">
@@ -43,9 +42,7 @@
             <div class="col-md-2">
               <nb-select id="inputGiro" [selected]="filterParams.validationStatus" (selectedChange)="onValidationStatus($event)">
                 <nb-option value="*">Todas</nb-option>
-                <nb-option value="S">Solicitud</nb-option>
-                <nb-option value="V">En validacion</nb-option>
-                <nb-option value="T">Timbrado</nb-option>
+                <nb-option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</nb-option>
               </nb-select>
             </div>
             <div class="col-md-2">
@@ -89,25 +86,29 @@
                 <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
               </nb-select>
             </div>
-  
-  
             <table class="table">
               <thead class="thead-light">
                 <tr>
+                  <th class="text-center">Acciones</th>
                   <th scope="col" *ngFor="let header of headers">{{header}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
+                  <td scope="row" class="text-center"> 
+                    <button class="btn btn-outline-primary" (click)= "redirectToCfdi(fila.folioPadre || fila.folio)"><i class="fa fa-search"></i>
+                    </button> 
+                  </td>
                   <td scope="row">{{fila.folio}}</td>
                   <td scope="row">{{fila.rfcEmisor}}</td>
                   <td scope="row">{{fila.razonSocialEmisor}}</td>
                   <td scope="row">{{fila.rfcRemitente}}</td>
                   <td scope="row">{{fila.razonSocialRemitente}}</td>
-                  <td scope="row">{{fila.statusFactura.statusEvento}}</td>
-                  <td scope="row">{{fila.statusFactura.statusPago}}</td>
-                  <td scope="row">{{fila.total}}</td>
-                  <td scope="row">{{fila.fechaSolicitud}}</td>
+                  <td scope="row">{{fila.metodoPago}}</td>
+                  <td scope="row">{{fila.statusFactura}}</td>
+                  <td scope="row">{{fila.statusPago}}</td>
+                  <td scope="row">{{fila.total | currency}}</td>
+                  <td scope="row">{{fila.fechaCreacion}}</td>
                   <td scope="row">{{fila.fechaTimbrado}}</td>
                 </tr>
               </tbody>

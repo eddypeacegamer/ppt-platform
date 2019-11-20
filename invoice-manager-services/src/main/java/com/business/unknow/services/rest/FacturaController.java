@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.FacturaFileDto;
@@ -64,13 +65,6 @@ public class FacturaController {
 	public ResponseEntity<FacturaDto> insertFacturaWithCfdi(@RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
-	}
-
-	@PostMapping("/{folio}/complementos")
-	@ApiOperation(value = "insert a new complemento into the system")
-	public ResponseEntity<FacturaDto> insertComplemento(@RequestBody @Valid FacturaDto factura,
-			@PathVariable String folio) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewComplemento(factura, folio), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}")
@@ -135,14 +129,15 @@ public class FacturaController {
 	}
 
 	@GetMapping("/{folio}/pagos")
-	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio){
+	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/pagos")
 	@ApiOperation(value = "insert a new Payment into the system")
-	public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago) {
-		return new ResponseEntity<>(service.insertNewPago(pago), HttpStatus.CREATED);
+	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewPago(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
@@ -157,6 +152,18 @@ public class FacturaController {
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
 		service.deletePago(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/{folio}/timbrar")
+	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.timbrarFactura(folio, facturaDto), HttpStatus.OK);
+	}
+
+	@PostMapping("/{folio}/cancelar")
+	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
 	}
 
 }
