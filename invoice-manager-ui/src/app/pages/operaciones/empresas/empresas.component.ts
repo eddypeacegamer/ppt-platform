@@ -9,7 +9,6 @@ import { Giro } from '../../../models/catalogos/giro';
 import { Observable } from 'rxjs';
 import { Empresa } from '../../../models/empresa';
 import { map } from 'rxjs/operators';
-import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-empresas',
@@ -27,11 +26,9 @@ export class EmpresasComponent implements OnInit {
   constructor(private router: Router,
     private companyService: CompaniesData,
     private catalogsService : CatalogsData,
-    private iconsLibrary: NbIconLibraries,
     private donwloadService:DownloadCsvService) {}
 
     ngOnInit() {
-      this.iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
       this.catalogsService.getAllGiros().toPromise()
         .then(cat=>this.girosCat = cat)
         .then(()=>this.updateDataTable())

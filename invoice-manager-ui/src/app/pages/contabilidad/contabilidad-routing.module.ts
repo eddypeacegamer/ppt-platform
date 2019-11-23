@@ -32,10 +32,10 @@ const routes: Routes = [{
       path: 'reportes',
       component : ReportesComponent,
     },{
-      path: 'revision/:folio',
+      path: 'cfdi/:folio',
       component : PreCfdiComponent,
     },{
-      path: 'carga-xml',
+      path: 'carga-masiva',
       component : CargaMasivaComponent,
     }
   ]

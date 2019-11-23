@@ -62,7 +62,8 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row" class="text-center"> <nb-icon icon="edit" pack="fa" style="cursor: pointer;" (click)= "redirectToCliente(fila.informacionFiscal.rfc)"></nb-icon></td>
+                  <td scope="row" class="text-center"> <button class="btn btn-outline-primary" (click)= "redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
+                  </td>
                   <td scope="row">{{fila.informacionFiscal.rfc}}</td>
                   <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
                   <td scope="row">{{fila.informacionFiscal.nombre}}</td>

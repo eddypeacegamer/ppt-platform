@@ -1,5 +1,22 @@
 import { NgModule } from '@angular/core';
 
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+  NbActionsModule,
+  NbButtonModule,
+  NbCardModule,
+  NbCheckboxModule,
+  NbDatepickerModule,
+  NbInputModule,
+  NbRadioModule,
+  NbSelectModule,
+  NbUserModule,
+  NbStepperModule,
+  NbDialogModule,
+  NbIconModule
+} from '@nebular/theme';
+
 import { ContabilidadRoutingModule } from './contabilidad-routing.module';
 import { ContabilidadComponent } from './contabilidad.component';
 import { ClientesComponent } from './clientes/clientes.component';
@@ -13,7 +30,21 @@ import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
 @NgModule({
   declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, CargaMasivaComponent],
   imports: [
-    ContabilidadRoutingModule
+    ContabilidadRoutingModule,
+    CommonModule,
+    FormsModule,
+    NbActionsModule,
+    NbButtonModule,
+    NbCardModule,
+    NbCheckboxModule,
+    NbDatepickerModule, 
+    NbIconModule,
+    NbInputModule,
+    NbRadioModule,
+    NbSelectModule,
+    NbUserModule,
+    NbStepperModule,
+    NbDialogModule
   ]
 })
 export class ContabilidadModule { }

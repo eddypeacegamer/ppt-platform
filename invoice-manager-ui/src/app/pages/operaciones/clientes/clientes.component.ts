@@ -5,7 +5,6 @@ import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
 import { Router } from '@angular/router';
-import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-clientes',
@@ -22,12 +21,10 @@ export class ClientesComponent implements OnInit {
   public filterParams : any = {razonSocial:'',rfc:''};
    
   constructor(private clientService: ClientsData,
-    private iconsLibrary: NbIconLibraries,
     private donwloadService: DownloadCsvService,
     private router: Router) { }
 
   ngOnInit() {
-    this.iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     this.updateDataTable(0,10);
   }
 
