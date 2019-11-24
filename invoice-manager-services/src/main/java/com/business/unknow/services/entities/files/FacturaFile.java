@@ -36,7 +36,7 @@ public class FacturaFile implements Serializable {
     @Column(name = "FILE_ID", unique = true, nullable = false)
 	private Integer id;
 	
-	@Column(name = "FILE_TYPE", unique = false, nullable = false)
+	@Column(name = "TIPO_ARCHIVO", unique = false, nullable = false)
 	private String tipoArchivo;
 	
 	@Column(name = "FOLIO", unique = false, nullable = false)

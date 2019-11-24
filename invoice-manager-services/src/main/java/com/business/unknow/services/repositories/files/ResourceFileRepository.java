@@ -5,7 +5,8 @@ package com.business.unknow.services.repositories.files;
 
 import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.business.unknow.services.entities.files.ResourceFile;
 
@@ -13,8 +14,9 @@ import com.business.unknow.services.entities.files.ResourceFile;
  * @author ralfdemoledor
  *
  */
-public interface ResourceFileRepository extends CrudRepository<ResourceFile, Integer>{
+@Repository
+public interface ResourceFileRepository extends JpaRepository<ResourceFile, Integer>{
 	
-	public Optional<ResourceFile> findByTipoRecursoReferenciaAndTipoArchivo(String tipoRecurso, String referencia, String tipoArchivo);
+	public Optional<ResourceFile> findByTipoRecursoAndReferenciaAndTipoArchivo(String tipoRecurso, String referencia, String tipoArchivo);
 
 }

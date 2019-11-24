@@ -39,14 +39,12 @@ import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.entities.factura.FacturaFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
-import com.business.unknow.services.repositories.facturas.FacturaFileRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
@@ -59,8 +57,8 @@ public class FacturaService {
 	@Autowired
 	private FacturaRepository repository;
 
-	@Autowired
-	private FacturaFileRepository facturaFileRepository;
+//	@Autowired
+//	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
@@ -212,37 +210,37 @@ public class FacturaService {
 		return cfdiDto;
 	}
 
-	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
-		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
-		if (facturaFile.isPresent()) {
-			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
-		} else {
-			throw new InvoiceManagerException("Folio not found",
-					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
-		}
-	}
+//	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
+//		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
+//		if (facturaFile.isPresent()) {
+//			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
+//		} else {
+//			throw new InvoiceManagerException("Folio not found",
+//					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
+//		}
+//	}
 
-	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
-		return mapper
-				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
-	}
-
-	public void deleteFacturaFile(String folio) {
-		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		facturaFileRepository.delete(entity);
-	}
-
-	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
-		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		entity.setPdf(factura.getPdf());
-		entity.setXml(factura.getXml());
-		entity.setQr(factura.getQr());
-		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
-	}
+//	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
+//		return mapper
+//				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
+//	}
+//
+//	public void deleteFacturaFile(String folio) {
+//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//						String.format("La factura con el folio %s no existe", folio)));
+//		facturaFileRepository.delete(entity);
+//	}
+//
+//	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
+//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//						String.format("La factura con el folio %s no existe", folio)));
+//		entity.setPdf(factura.getPdf());
+//		entity.setXml(factura.getXml());
+//		entity.setQr(factura.getQr());
+//		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
+//	}
 
 	public List<PagoDto> getPagos(String folio) {
 		return mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre(folio));

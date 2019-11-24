@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.files.FacturaFileDto;
@@ -21,6 +22,7 @@ import com.business.unknow.services.repositories.files.ResourceFileRepository;
  * @author ralfdemoledor
  *
  */
+@Service
 public class FilesService {
 	
 	@Autowired
@@ -38,16 +40,16 @@ public class FilesService {
 		if(file.isPresent()) {
 			return mapper.getFacturaFileDtoFromEntity(file.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso no existe.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
 	
 	public ResourceFileDto getFileByResourceReferenceAndType(String resource,String referencia, String type) {
-		Optional<ResourceFile> file = resourceRepo.findByTipoRecursoReferenciaAndTipoArchivo(resource, referencia, type);
+		Optional<ResourceFile> file = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia, type);
 		if(file.isPresent()) {
 			return mapper.getResourceFileDtoFromEntity(file.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso no existe.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
 	
@@ -65,7 +67,7 @@ public class FilesService {
 		if(entity.isPresent()) {
 			facturaRepo.delete(entity.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso no existe.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
 	
@@ -75,7 +77,7 @@ public class FilesService {
 		if(entity.isPresent()) {
 			resourceRepo.delete(entity.get());
 		}else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso no existe.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
 

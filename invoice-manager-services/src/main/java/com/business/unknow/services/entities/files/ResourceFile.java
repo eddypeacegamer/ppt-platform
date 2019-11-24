@@ -36,7 +36,7 @@ public class ResourceFile implements Serializable {
     @Column(name = "FILE_ID", unique = true, nullable = false)
 	private Integer id;
 	
-	@Column(name = "FILE_TYPE",nullable = false)
+	@Column(name = "TIPO_ARCHIVO",nullable = false)
 	private String tipoArchivo;
 	
 	@Column(name = "REFERENCIA",nullable = false)

@@ -7,8 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "FACTURA_ARCHIVO")
+
 public class FacturaFile implements Serializable {
 
 	private static final long serialVersionUID = -7716416675628804402L;
