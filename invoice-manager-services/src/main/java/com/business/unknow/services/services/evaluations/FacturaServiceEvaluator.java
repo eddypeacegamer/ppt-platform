@@ -6,8 +6,8 @@ import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.CancelacionSuite;
@@ -69,8 +69,7 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		rulesEngine.fire(FacturarSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
 		facturaContext = facturaTranslator.translateFactura(facturaContext);
-		
-		if (facturaContext.getTipoFactura().equals(MetodosPagoEnum.PUE.getNombre())) {
+		if (facturaContext.getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
 			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
 			case SW_SAPIENS:
 				swSapinsExecutorService.stamp(facturaContext);

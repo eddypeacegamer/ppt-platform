@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface CfdiMapper {
 
 	CfdiDto getCfdiDtoFromEntity(Cfdi entity);

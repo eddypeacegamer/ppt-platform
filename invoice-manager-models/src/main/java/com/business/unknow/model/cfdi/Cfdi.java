@@ -1,5 +1,6 @@
 package com.business.unknow.model.cfdi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -19,7 +20,7 @@ public class Cfdi {
 	private String schemaUrl = CfdiConstants.SCHEMA_URL;
 	private String satUrl = CfdiConstants.SAT_URL;
 	private String schemaLocation = CfdiConstants.SCHEMA_LOCATION;
-	private String version =CfdiConstants.FACTURA_VERSION;
+	private String version = CfdiConstants.FACTURA_VERSION;
 	private String serie;
 	private String folio;
 	private String fecha;
@@ -39,6 +40,11 @@ public class Cfdi {
 	private Receptor receptor;
 	private List<Concepto> conceptos;
 	private Impuesto impuestos;
+
+	public Cfdi() {
+		this.conceptos = new ArrayList<>();
+		this.impuestos = new Impuesto();
+	}
 
 	@XmlAttribute(name = "xmlns:xsi")
 	public String getSchemaUrl() {
@@ -237,6 +243,17 @@ public class Cfdi {
 
 	public void setImpuestos(Impuesto impuestos) {
 		this.impuestos = impuestos;
+	}
+
+	@Override
+	public String toString() {
+		return "Cfdi [schemaUrl=" + schemaUrl + ", satUrl=" + satUrl + ", schemaLocation=" + schemaLocation
+				+ ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha + ", sello="
+				+ sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado + ", certificado="
+				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda
+				+ ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago
+				+ ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor + ", receptor=" + receptor
+				+ ", conceptos=" + conceptos + ", impuestos=" + impuestos + "]";
 	}
 
 }

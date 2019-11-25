@@ -1,7 +1,7 @@
 {
 	"id": 2,
 	"rfcEmisor": "LAN7008173R5",
-	"rfcRemitente": "RASE8810158B9",
+	"rfcRemitente": "KBUR800823456",
 	"razonSocialEmisor": "RAZON SOCIAL EMISOR",
 	"razonSocialRemitente": "RAZON SOCIAL REMITENTE",
 	"folio": "0002",
@@ -15,8 +15,8 @@
 	"metodoPago": "PPD",
 	"packFacturacion": "SW_SAPIENS",
 	"notas": "Factura test demo",
-	"total": 2030.0,
-	"subtotal": 1750.0,
+	"subtotal": 1500.0,
+	"total": 1500.0,
 	"fechaCreacion": "2019-09-30",
 	"fechaActualizacion": "2019-09-30",
 	"fechaTimbrado": "2019-09-30",
@@ -43,14 +43,30 @@
 				"descripcion": "Aurriculares USB Logitech",
 				"valorUnitario": 350.0,
 				"importe": 1750.0,
+				"descuento": 175.0,
 				"impuestos": [
 					{
 						"id": 2,
-						"base": 1750.0,
+						"base": 1575.0,
 						"impuesto": "002",
 						"tipoFactor": "Tasa",
 						"tasaOCuota": "0.16",
-						"importe": 280.0
+						"importe": 252.0
+					},{
+						"id": 3,
+						"base": 2000.0,
+						"impuesto": "002",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 1000.0
+					},
+					{
+						"id": 4,
+						"base": 1000.0,
+						"impuesto": "003",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 500.0
 					}
 				],
 				"retenciones": [

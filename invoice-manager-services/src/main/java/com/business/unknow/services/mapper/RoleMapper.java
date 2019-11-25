@@ -7,11 +7,7 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.RoleDto;
 import com.business.unknow.services.entities.Role;
 
-/**
- * @author eej000f
- *
- */
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface RoleMapper {
 
 	RoleDto getRoleDtoFromentity(Role entity);

@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ImpuestoMapper {
 
 	ImpuestoDto getClientDtoFromEntity(Impuesto entity);

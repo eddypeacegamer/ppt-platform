@@ -7,11 +7,13 @@ import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.factura.FacturaFileDto;
 
 public class FacturaContext implements Serializable {
 
 	private static final long serialVersionUID = 661221684069242273L;
 	private String tipoFactura;
+	private String tipoDocumento;
 	private FacturaDto facturaDto;
 	private FacturaDto facturaPadreDto;
 	private List<FacturaDto> complementos;
@@ -21,8 +23,8 @@ public class FacturaContext implements Serializable {
 	private String suiteError;
 	private EmpresaDto empresaDto;
 	private Cfdi cfdi;
+	private FacturaFileDto facturaFileDto;
 	private String xml;
-	private String qr;
 
 	public FacturaContext() {
 		valid = true;
@@ -108,6 +110,22 @@ public class FacturaContext implements Serializable {
 		this.cfdi = cfdi;
 	}
 
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public FacturaFileDto getFacturaFileDto() {
+		return facturaFileDto;
+	}
+
+	public void setFacturaFileDto(FacturaFileDto facturaFileDto) {
+		this.facturaFileDto = facturaFileDto;
+	}
+
 	public String getXml() {
 		return xml;
 	}
@@ -116,20 +134,13 @@ public class FacturaContext implements Serializable {
 		this.xml = xml;
 	}
 
-	public String getQr() {
-		return qr;
-	}
-
-	public void setQr(String qr) {
-		this.qr = qr;
-	}
-
 	@Override
 	public String toString() {
-		return "FacturaContext [tipoFactura=" + tipoFactura + ", facturaDto=" + facturaDto + ", facturaPadreDto="
-				+ facturaPadreDto + ", complementos=" + complementos + ", pagos=" + pagos + ", valid=" + valid
-				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + ", empresaDto=" + empresaDto
-				+ ", cfdi=" + cfdi + ", xml=" + xml + ", qr=" + qr + "]";
+		return "FacturaContext [tipoFactura=" + tipoFactura + ", tipoDocumento=" + tipoDocumento + ", facturaDto="
+				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
+				+ pagos + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError
+				+ ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFileDto=" + facturaFileDto + ", xml="
+				+ xml + "]";
 	}
 
 }

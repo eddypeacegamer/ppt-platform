@@ -1,0 +1,133 @@
+{
+	"id": 2,
+	"rfcEmisor": "LAN7008173R5",
+	"rfcRemitente": "KBUR800823456",
+	"razonSocialEmisor": "RAZON SOCIAL EMISOR",
+	"razonSocialRemitente": "RAZON SOCIAL REMITENTE",
+	"folio": "0002",
+	"uuid": "UUID-1123",
+	"statusPago": 1,
+	"statusDevolucion": 1,
+	"statusFactura": 3,
+	"statusDetail": "En valoracion",
+	"tipoDocumento": "PREGUNTAR",
+	"formaPago": "03",
+	"metodoPago": "PPD",
+	"packFacturacion": "SW_SAPIENS",
+	"notas": "Factura test demo",
+	"subtotal": 1500.0,
+	"total": 1500.0,
+	"fechaCreacion": "2019-09-30",
+	"fechaActualizacion": "2019-09-30",
+	"fechaTimbrado": "2019-09-30",
+	"cfdi": {
+		"id": 2,
+		"version": "3.3",
+		"serie": "1",
+		"folio": "0002",
+		"sello": "asdasdasdasdadasdasd",
+		"noCertificado": "20001000000300022815",
+		"certificado": "asddadasfgaskmnfjf",
+		"moneda": "MXN",
+		"tipoDeComprobante": "I",
+		"usoCfdi": "G01",
+		"regimenFiscal": "601",
+		"conceptos": [
+			{
+				"id": 2,
+				"claveProdServ": "01010101",
+				"noIdentificacion": "AULOG001",
+				"cantidad": 5,
+				"claveUnidad": "H87",
+				"unidad": "Pieza",
+				"descripcion": "Aurriculares USB Logitech",
+				"valorUnitario": 350.0,
+				"importe": 1750.0,
+				"descuento": 175.0,
+				"impuestos": [
+					{
+						"id": 2,
+						"base": 1575.0,
+						"impuesto": "002",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 252.0
+					}
+				],
+				"retenciones": [
+					{
+						"id": 1,
+						"base": 1575.0,
+						"impuesto": "2.0",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 252.0
+					}
+				]
+			},{
+				"id": 2,
+				"claveProdServ": "01010101",
+				"noIdentificacion": "AULOG001",
+				"cantidad": 5,
+				"claveUnidad": "H87",
+				"unidad": "Pieza",
+				"descripcion": "Aurriculares USB Logitech",
+				"valorUnitario": 350.0,
+				"importe": 1750.0,
+				"descuento": 175.0,
+				"impuestos": [
+					{
+						"id": 2,
+						"base": 2500.0,
+						"impuesto": "002",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 1900.0
+					}
+				],
+				"retenciones": [
+					{
+						"id": 1,
+						"base": 1575.0,
+						"impuesto": "2.0",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 252.0
+					}
+				]
+			},
+			{
+				"id": 3,
+				"claveProdServ": "01010101",
+				"noIdentificacion": "AULOG001",
+				"cantidad": 5,
+				"claveUnidad": "H87",
+				"unidad": "Pieza",
+				"descripcion": "Aurriculares USB Logitech",
+				"valorUnitario": 350.0,
+				"importe": 1750.0,
+				"descuento": 175.0,
+				"impuestos": [
+					{
+						"id": 2,
+						"base": 1575.0,
+						"impuesto": "003",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 252.0
+					}
+				],
+				"retenciones": [
+					{
+						"id": 1,
+						"base": 1575.0,
+						"impuesto": "3.0",
+						"tipoFactor": "Tasa",
+						"tasaOCuota": "0.16",
+						"importe": 252.0
+					}
+				]
+			}
+		]
+	}
+}

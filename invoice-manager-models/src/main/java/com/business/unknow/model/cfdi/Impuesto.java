@@ -1,5 +1,6 @@
 package com.business.unknow.model.cfdi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,6 +12,9 @@ public class Impuesto {
 	private Double totalImpuestosTrasladados;
 	private List<Translado> translados;
 
+	public Impuesto() {
+		translados= new ArrayList<>();
+	}
 	@XmlAttribute(name = "TotalImpuestosTrasladados")
 	public Double getTotalImpuestosTrasladados() {
 		return totalImpuestosTrasladados;

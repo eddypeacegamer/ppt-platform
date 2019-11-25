@@ -27,6 +27,7 @@ public class EmpresaDto implements Serializable {
 	private String logotipo;
 	private String llavePrivada;
 	private String certificado;
+	private String noCertificado;
 	private String pwSat;
 	private String pwCorreo;
 	private String correo;
@@ -216,15 +217,23 @@ public class EmpresaDto implements Serializable {
 		this.informacionFiscal = informacionFiscal;
 	}
 
+	public String getNoCertificado() {
+		return noCertificado;
+	}
+
+	public void setNoCertificado(String noCertificado) {
+		this.noCertificado = noCertificado;
+	}
+
 	@Override
 	public String toString() {
 		return "EmpresaDto [id=" + id + ", referencia=" + referencia + ", regimenFiscal=" + regimenFiscal + ", web="
 				+ web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion="
 				+ lugarExpedicion + ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado="
-				+ certificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", correo=" + correo + ", encabezado="
-				+ encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo + ", giro=" + giro
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", informacionFiscal=" + informacionFiscal + "]";
+				+ certificado + ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo
+				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
+				+ activo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
 
 }

@@ -8,28 +8,22 @@ import org.apache.commons.ssl.PKCS8Key;
 import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.model.error.InvoiceCommonException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.util.Base64;
 
 public class SignHelper {
 
-	private String getKey() throws InvoiceCommonException {
-		try {
-			File file = new File(FacturaConstants.EMPRESA_CERT_PRUEBAS);
-			FileInputStream fileInputStream = new FileInputStream(file);
-			byte[] fileBytes = new byte[fileInputStream.available()];
-			fileInputStream.read(fileBytes);
-			fileInputStream.close();
-			return DatatypeConverter.printBase64Binary(fileBytes);
-		} catch (IOException e) {
-			throw new InvoiceCommonException(e.getMessage());
-		}
+	private String getKey(String key) throws InvoiceCommonException {
+		byte[] decode =Base64.getDecoder().decode(key.getBytes(StandardCharsets.UTF_8));
+		return DatatypeConverter.printBase64Binary(decode);
 	}
 
-	public String getSign(String cadena, String keyWord) throws InvoiceCommonException {
+	public String getSign(String cadena, String keyWord,String key) throws InvoiceCommonException {
 		try {
-			String archivoLlavePrivada = this.getKey();
+			String archivoLlavePrivada = this.getKey(key);
 			InputStream myInputStream = new ByteArrayInputStream(
 					DatatypeConverter.parseBase64Binary(archivoLlavePrivada));
 			PKCS8Key pkcs8 = new PKCS8Key(myInputStream, keyWord.toCharArray());

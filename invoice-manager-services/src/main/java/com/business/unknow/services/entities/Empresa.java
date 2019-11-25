@@ -33,7 +33,7 @@ public class Empresa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_EMPRESA")
 	private int id;
-	
+
 	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
 
@@ -57,18 +57,21 @@ public class Empresa implements Serializable {
 	@Column(name = "LLAVE_PRIVADA")
 	private String llavePrivada;
 
+	@Column(name = "NO_CERTIFICADO")
+	private String noCertificado;
+
 	@Column(name = "CERTIFICADO")
 	private String certificado;
-	
+
 	@Column(name = "PW_SAT")
 	private String pwSat;
 
 	@Column(name = "PW_CORREO")
 	private String pwCorreo;
-	
+
 	@Column(name = "WEB")
 	private String web;
-	
+
 	@Email
 	@Column(name = "CORREO")
 	private String correo;
@@ -102,225 +105,190 @@ public class Empresa implements Serializable {
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
-	
 	public int getId() {
 		return id;
 	}
-
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-
 	public String getRegimenFiscal() {
 		return regimenFiscal;
 	}
-
 
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
 	}
 
-
 	public String getReferencia() {
 		return referencia;
 	}
-
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
 
-
 	public String getContactoAdmin() {
 		return contactoAdmin;
 	}
-
 
 	public void setContactoAdmin(String contactoAdmin) {
 		this.contactoAdmin = contactoAdmin;
 	}
 
-
 	public String getSucursal() {
 		return sucursal;
 	}
-
 
 	public void setSucursal(String sucursal) {
 		this.sucursal = sucursal;
 	}
 
-
 	public String getLugarExpedicion() {
 		return lugarExpedicion;
 	}
-
 
 	public void setLugarExpedicion(String lugarExpedicion) {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-
 	public String getLogotipo() {
 		return logotipo;
 	}
-
 
 	public void setLogotipo(String logotipo) {
 		this.logotipo = logotipo;
 	}
 
-
 	public String getLlavePrivada() {
 		return llavePrivada;
 	}
-
 
 	public void setLlavePrivada(String llavePrivada) {
 		this.llavePrivada = llavePrivada;
 	}
 
-
 	public String getCertificado() {
 		return certificado;
 	}
-
 
 	public void setCertificado(String certificado) {
 		this.certificado = certificado;
 	}
 
-
 	public String getPwSat() {
 		return pwSat;
 	}
-
 
 	public void setPwSat(String pwSat) {
 		this.pwSat = pwSat;
 	}
 
-
 	public String getPwCorreo() {
 		return pwCorreo;
 	}
-
 
 	public void setPwCorreo(String pwCorreo) {
 		this.pwCorreo = pwCorreo;
 	}
 
-
 	public String getWeb() {
 		return web;
 	}
-
 
 	public void setWeb(String web) {
 		this.web = web;
 	}
 
-
 	public String getCorreo() {
 		return correo;
 	}
-
 
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
 
-
 	public String getEncabezado() {
 		return encabezado;
 	}
-
 
 	public void setEncabezado(String encabezado) {
 		this.encabezado = encabezado;
 	}
 
-
 	public String getPiePagina() {
 		return piePagina;
 	}
-
 
 	public void setPiePagina(String piePagina) {
 		this.piePagina = piePagina;
 	}
 
-
 	public Boolean getActivo() {
 		return activo;
 	}
-
 
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
 
-
 	public String getTipo() {
 		return tipo;
 	}
-
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 
-
 	public Integer getGiro() {
 		return giro;
 	}
-
 
 	public void setGiro(Integer giro) {
 		this.giro = giro;
 	}
 
-	
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
-
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
-
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-
 	public Contribuyente getInformacionFiscal() {
 		return informacionFiscal;
 	}
-
 
 	public void setInformacionFiscal(Contribuyente informacionFiscal) {
 		this.informacionFiscal = informacionFiscal;
 	}
 
+	public String getNoCertificado() {
+		return noCertificado;
+	}
+
+	public void setNoCertificado(String noCertificado) {
+		this.noCertificado = noCertificado;
+	}
 
 	@Override
 	public String toString() {
 		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
-				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado=" + certificado
-				+ ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web + ", correo=" + correo
-				+ ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo=" + activo + ", tipo=" + tipo
-				+ ", giro=" + giro + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", informacionFiscal=" + informacionFiscal + "]";
+				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", noCertificado=" + noCertificado
+				+ ", certificado=" + certificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web
+				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
+				+ activo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
 }

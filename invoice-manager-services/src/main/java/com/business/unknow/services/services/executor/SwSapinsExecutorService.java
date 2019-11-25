@@ -1,5 +1,8 @@
 package com.business.unknow.services.services.executor;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import org.apache.http.HttpStatus;
@@ -9,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
 import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
 import com.business.unknow.client.model.swsapiens.SwSapiensVersionEnum;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.model.factura.FacturaFileDto;
 import com.business.unknow.services.client.SwSapiensClient;
 
 @Service
@@ -25,14 +30,23 @@ public class SwSapinsExecutorService {
 			SwSapiensConfig swSapiensConfig = swSapiensClient.getSwSapiensClient().stamp(context.getXml(),
 					SwSapiensVersionEnum.V4.getValue());
 			context.getFacturaDto().setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
+			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			context.getFacturaDto().setUuid(swSapiensConfig.getData().getUuid());
 			context.getFacturaDto().getCfdi().setSelloSat(swSapiensConfig.getData().getSelloSAT());
 			context.getFacturaDto().getCfdi().setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
 			context.getFacturaDto().getCfdi().setSelloCfd(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
-			context.setQr(swSapiensConfig.getData().getQrCode());
+			FacturaFileDto facturaFileDto = new FacturaFileDto();
+			facturaFileDto.setFolio(context.getFacturaDto().getFolio());
+			facturaFileDto.setQr(swSapiensConfig.getData().getQrCode());
+			facturaFileDto.setXml(swSapiensConfig.getData().getCfdi());
+			facturaFileDto.setPdf(
+					new String(Files.readAllBytes(Paths.get("src/main/resources/files/factura_dummy.txt"))));
+			context.setFacturaFileDto(facturaFileDto);
 		} catch (SwSapiensClientException e) {
 			throw new InvoiceManagerException("Error durante el timbrado", e.getMessage(), HttpStatus.SC_CONFLICT);
+		} catch (IOException e) {
+			throw new InvoiceManagerException("Error durante la creacion de archivos", e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}

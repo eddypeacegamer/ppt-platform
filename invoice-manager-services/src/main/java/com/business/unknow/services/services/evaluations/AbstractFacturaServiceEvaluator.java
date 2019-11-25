@@ -8,12 +8,16 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.repositories.facturas.FacturaFileRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 
 public class AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private FacturaRepository repository;
+
+	@Autowired
+	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
@@ -38,6 +42,9 @@ public class AbstractFacturaServiceEvaluator {
 	protected void updateFacturaAndCfdiValues(FacturaContext context) {
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
+		if (context.getFacturaFileDto() != null) {
+			facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(context.getFacturaFileDto()));
+		}
 	}
 
 }

@@ -15,7 +15,7 @@ import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.factura.FacturaFile;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface FacturaMapper {
 	
 	@Mappings({ @Mapping(target = "cfdi", ignore = true)})
