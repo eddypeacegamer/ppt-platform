@@ -26,6 +26,7 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -41,8 +42,10 @@ import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
+import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
+import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
@@ -75,6 +78,12 @@ public class FacturaService {
 
 	@Autowired
 	private PagoRepository pagoRepository;
+
+	@Autowired
+	private EmpresaRepository empresaRepository;
+
+	@Autowired
+	private EmpresaMapper empresaMapper;
 
 	@Autowired
 	private FacturaMapper mapper;
@@ -266,11 +275,11 @@ public class FacturaService {
 			FacturaDto complemento = insertNewComplemento(facturaBuilder.build(), factura.getFolio());
 			pago.setFolio(complemento.getFolio());
 			pago.setFolioPadre(complemento.getFolioPadre());
-			
-			List<Pago> pagos  = pagoRepository.findByFolioPadre(complemento.getFolioPadre());
-			
-			Pago pagoPadre = pagos.stream().filter(p->p.getFolio().equals(folio)).
-					findFirst().orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
+
+			List<Pago> pagos = pagoRepository.findByFolioPadre(complemento.getFolioPadre());
+
+			Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
+					.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
 							String.format("Verificar consitencia de pagos del folio %s", folio),
 							HttpStatus.NOT_FOUND.value()));
 			pagoPadre.setMonto(pagoPadre.getMonto() + pago.getMonto());
@@ -334,12 +343,20 @@ public class FacturaService {
 				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
 						String.format("Folio with the name %s not found", facturaDto.getFolio()),
 						HttpStatus.NOT_FOUND.value()));
+		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(
+				cfdiRepository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", folio))));
+		EmpresaDto empresaDto = empresaMapper
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
-				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
+				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setCfdi(cfdiDto)
+				.setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).build();
+				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
 		return facturaServiceEvaluation.facturaTimbradoValidation(facturaContext);
 	}
 

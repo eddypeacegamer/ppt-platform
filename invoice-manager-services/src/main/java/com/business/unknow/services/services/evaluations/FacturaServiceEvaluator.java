@@ -1,18 +1,20 @@
 package com.business.unknow.services.services.evaluations;
 
+import org.apache.http.HttpStatus;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
 import com.business.unknow.rules.suites.FacturarSuite;
+import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
-import com.business.unknow.services.services.translators.TimbradoService;
 
 @Service
 public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
@@ -30,17 +32,18 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 	private FacturaTranslator facturaTranslator;
 
 	@Autowired
-	private TimbradoService timbradoService;
+	private SwSapinsExecutorService swSapinsExecutorService;
 
 	@Autowired
 	private RulesEngine rulesEngine;
+
+	
 
 	public FacturaContext facturaComplementoValidation(FacturaContext facturaContext) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(complementoSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-
 		return facturaContext;
 	}
 
@@ -49,7 +52,14 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(cancelacionSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		timbradoService.cancelarFactura(facturaContext);
+		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+		case SW_SAPIENS:
+			swSapinsExecutorService.cancelarFactura(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+					HttpStatus.SC_BAD_REQUEST);
+		}
 		return facturaContext;
 	}
 
@@ -58,12 +68,28 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(FacturarSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		facturaTranslator.translateFactura(facturaContext);
-		if (facturaContext.getTipoFactura().equals(MetodosPagoEnum.PUE.getNombre())) {
-			return timbradoService.timbrarFactura(facturaContext);
+		facturaContext = facturaTranslator.translateFactura(facturaContext);
+		if (facturaContext.getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+			case SW_SAPIENS:
+				swSapinsExecutorService.stamp(facturaContext);
+				break;
+			default:
+				throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+						HttpStatus.SC_BAD_REQUEST);
+			}
 		} else {
-			return timbradoService.timbraComplemento(facturaContext);
+			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+			case SW_SAPIENS:
+				 swSapinsExecutorService.timbraComplemento(facturaContext);
+				 break;
+			default:
+				throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+						HttpStatus.SC_BAD_REQUEST);
+			}
 		}
+		updateFacturaAndCfdiValues(facturaContext);
+		return facturaContext;
 	}
 
 }

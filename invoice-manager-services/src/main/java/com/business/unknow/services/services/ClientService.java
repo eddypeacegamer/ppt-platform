@@ -14,10 +14,10 @@ import com.business.unknow.Constants;
 import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
 import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
 import com.business.unknow.model.ClientDto;
-import com.business.unknow.services.client.SwSapiensClient;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 
 @Service
 public class ClientService {
@@ -26,11 +26,11 @@ public class ClientService {
 	private ClientRepository repository;
 
 	@Autowired
-	private SwSapiensClient swSapiensClient;
-
-	@Autowired
 	private ClientMapper mapper;
 
+	@Autowired
+	private  SwSapinsExecutorService swSapinsExecutorService;
+	
 	public Page<ClientDto> getClientsByParametros(Optional<String> rfc, Optional<String> razonSocial, int page,
 			int size) {
 		Page<Client> result;
@@ -61,8 +61,7 @@ public class ClientService {
 						String.format("La razon social  %s ya esta creada en el sistema",
 								cliente.getInformacionFiscal().getRazonSocial()));
 			} else if (validation) {
-				SwSapiensConfig config = swSapiensClient.getSwSapiensClient()
-						.validateRfc(cliente.getInformacionFiscal().getRfc());
+				SwSapiensConfig config = swSapinsExecutorService.validateRfc(cliente.getInformacionFiscal().getRfc());
 				if (!config.getStatus().equals(Constants.SUCCESS)) {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
 							.format("El rfc %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));

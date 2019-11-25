@@ -6,6 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.business.unknow.commons.factura.CdfiHelper;
+import com.business.unknow.commons.util.DateHelper;
+import com.business.unknow.commons.util.FacturaHelper;
+import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.FacturarSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
@@ -40,4 +44,25 @@ public class ServicesApplication {
 	public RulesEngine getRulesEngine() {
 		return new DefaultRulesEngine();
 	}
+
+	@Bean
+	public CdfiHelper getCdfiHelper() {
+		return new CdfiHelper();
+	}
+
+	@Bean
+	public FacturaHelper getFacturaHelper() {
+		return new FacturaHelper();
+	}
+
+	@Bean
+	public DateHelper getDateHelper() {
+		return new DateHelper();
+	}
+
+	@Bean
+	public NumberHelper getNumberHelper() {
+		return new NumberHelper();
+	}
+
 }

@@ -1,10 +1,21 @@
 package com.business.unknow.client.model.swsapiens;
 
+import java.util.Date;
+
 public class Data {
 	private String token;
 	private Integer expires_in;
 	private String tokeny_type;
 	private String contribuyenteRFC;
+	private String cadenaOriginalSAT;
+	private String noCertificadoSAT;
+	private String noCertificadoCFDI;
+	private String uuid;
+	private String selloSAT;
+	private String selloCFDI;
+	private Date fechaTimbrado;
+	private String qrCode;
+	private String cfdi;
 	private Boolean sncf;
 	private Boolean subcontratacion;
 
@@ -56,10 +67,85 @@ public class Data {
 		this.subcontratacion = subcontratacion;
 	}
 
+	public String getCadenaOriginalSAT() {
+		return cadenaOriginalSAT;
+	}
+
+	public void setCadenaOriginalSAT(String cadenaOriginalSAT) {
+		this.cadenaOriginalSAT = cadenaOriginalSAT;
+	}
+
+	public String getNoCertificadoSAT() {
+		return noCertificadoSAT;
+	}
+
+	public void setNoCertificadoSAT(String noCertificadoSAT) {
+		this.noCertificadoSAT = noCertificadoSAT;
+	}
+
+	public String getNoCertificadoCFDI() {
+		return noCertificadoCFDI;
+	}
+
+	public void setNoCertificadoCFDI(String noCertificadoCFDI) {
+		this.noCertificadoCFDI = noCertificadoCFDI;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getSelloSAT() {
+		return selloSAT;
+	}
+
+	public void setSelloSAT(String selloSAT) {
+		this.selloSAT = selloSAT;
+	}
+
+	public String getSelloCFDI() {
+		return selloCFDI;
+	}
+
+	public void setSelloCFDI(String selloCFDI) {
+		this.selloCFDI = selloCFDI;
+	}
+
+	public Date getFechaTimbrado() {
+		return fechaTimbrado;
+	}
+
+	public void setFechaTimbrado(Date fechaTimbrado) {
+		this.fechaTimbrado = fechaTimbrado;
+	}
+
+	public String getQrCode() {
+		return qrCode;
+	}
+
+	public void setQrCode(String qrCode) {
+		this.qrCode = qrCode;
+	}
+
+	public String getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(String cfdi) {
+		this.cfdi = cfdi;
+	}
+
 	@Override
 	public String toString() {
 		return "Data [token=" + token + ", expires_in=" + expires_in + ", tokeny_type=" + tokeny_type
-				+ ", contribuyenteRFC=" + contribuyenteRFC + ", sncf=" + sncf + ", subcontratacion=" + subcontratacion
+				+ ", contribuyenteRFC=" + contribuyenteRFC + ", cadenaOriginalSAT=" + cadenaOriginalSAT
+				+ ", noCertificadoSAT=" + noCertificadoSAT + ", noCertificadoCFDI=" + noCertificadoCFDI + ", uuid="
+				+ uuid + ", selloSAT=" + selloSAT + ", selloCFDI=" + selloCFDI + ", fechaTimbrado=" + fechaTimbrado
+				+ ", qrCode=" + qrCode + ", cfdi=" + cfdi + ", sncf=" + sncf + ", subcontratacion=" + subcontratacion
 				+ "]";
 	}
 

@@ -8,7 +8,7 @@ import com.business.unknow.model.ClientDto;
 import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.entities.cfdi.Concepto;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ConceptoMapper {
 
 	ConceptoDto getClientDtoFromEntity(Concepto entity);

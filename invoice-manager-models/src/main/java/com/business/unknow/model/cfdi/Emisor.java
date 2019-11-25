@@ -3,7 +3,7 @@ package com.business.unknow.model.cfdi;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder = { "rfc", "nombre", "regimenFiscal"})
+@XmlType(propOrder = { "rfc", "nombre", "regimenFiscal" })
 public class Emisor {
 
 	private String rfc;
@@ -14,7 +14,7 @@ public class Emisor {
 	public String getRfc() {
 		return rfc;
 	}
-	
+
 	public void setRfc(String rfc) {
 		this.rfc = rfc;
 	}
@@ -32,7 +32,7 @@ public class Emisor {
 	public String getRegimenFiscal() {
 		return regimenFiscal;
 	}
-	
+
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
 	}

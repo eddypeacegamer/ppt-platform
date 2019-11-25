@@ -10,6 +10,16 @@ public class Translado {
 	private String tipoFactor;
 	private String tasaOCuota;
 	private Double importe;
+	
+	public Translado() {
+	}
+	
+	public Translado(String impuesto, String tipoFactor, String tasaOCuota, Double importe) {
+		this.impuesto=impuesto;
+		this.tipoFactor=tipoFactor;
+		this.tasaOCuota=tasaOCuota;
+		this.importe=importe;
+	}
 
 	@XmlAttribute(name = "Impuesto")
 	public String getImpuesto() {

@@ -111,9 +111,10 @@ public class Concepto {
 
 	@Override
 	public String toString() {
-		return "Concepto [claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion + ", claveUnidad="
-				+ claveUnidad + ", unidad=" + unidad + ", descripcion=" + descripcion + ", valorUnitario="
-				+ valorUnitario + ", importe=" + importe + ", descuento=" + descuento + "]";
+		return "Concepto [claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion + ", cantidad="
+				+ cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", descripcion=" + descripcion
+				+ ", valorUnitario=" + valorUnitario + ", importe=" + importe + ", descuento=" + descuento
+				+ ", impuestos=" + impuestos + "]";
 	}
 
 }
