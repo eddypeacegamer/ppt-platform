@@ -77,7 +77,7 @@ export class EmpresasComponent implements OnInit {
     }
 
     public newCompany(){
-      this.router.navigate([`./pages/operaciones/empresa/*`])
+      this.router.navigate([`./pages/contabilidad/empresa/*`])
     }
   
     public downloadHandler() {
@@ -87,6 +87,7 @@ export class EmpresasComponent implements OnInit {
     }
 
     public redirectToEmpresa(rfc:string){
-      this.router.navigate([`./pages/operaciones/empresa/${rfc}`])
+      this.router.navigate([`./pages/contabilidad/empresa/${rfc}`])
     }
+
 }

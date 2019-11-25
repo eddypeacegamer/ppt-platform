@@ -29,5 +29,7 @@ export abstract class InvoicesData {
 
     abstract deletePayment(folio : string, paymentId : number): Observable<Pago>;
 
-  
+    abstract updatePayment(folio : string, paymentId : number, payment : Pago) : Observable<Pago>;
+
+    abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 }

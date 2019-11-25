@@ -1,29 +1,38 @@
 <div class="row">
     <div class="col-md-12">
       <nb-card class="inline-form-card">
-        <nb-card-header>Clientes</nb-card-header>
+        <nb-card-header>Empresas</nb-card-header>
         <nb-card-body>
           <div class="row">
-            <div class="col-md-2">
-              <label for="inputName" class="label">Razon Social</label>
+            <div class="col-sm-3">
+              <label for="inputName" class="label">Razon Social Empresa</label>
+              <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.razonSocial"
+                [disabled]="filterParams.rfc.length > 0" fullWidth placeholder="Razon Social">
             </div>
-            <div class="col-md-4">
-              <input type="text" [(ngModel)]="filterParams.razonSocial" [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="inputName" placeholder="Razon Social">
-            </div>
-            <div class="col-md-1">
+            <div class="col-sm-3">
               <label for="inputRfc" class="label">RFC</label>
+              <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
+                [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
             </div>
-            <div class="col-md-3">
-              <input type="text" [(ngModel)]="filterParams.rfc" [disabled]="filterParams.razonSocial.length > 0" nbInput fullWidth id="inputRfc" placeholder="RFC Cliente">
-            </div>
-           
-            <div class="col-md-2">
-                <button type="button" (click)="updateDataTable(0,10,filterParams)"  nbButton status="primary">BUSCAR</button>
+            <div class="col-sm-6">
+              <label for="inputCompanyType" class="label">Tipo Empresa</label>
+              <div class="row form-inline">
+                <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
+                  (change)="onCompanySelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="A">Tipo A</option>
+                  <option value="B">Tipo B</option>
+                  <option value="C">Tipo C</option>
+                </select>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <button class="btn btn-primary" (click)="newCompany()">NUEVA EMPRESA</button>
               </div>
-  
+            </div>
           </div>
           <br>
-      
+  
         </nb-card-body>
       </nb-card>
     </div>
@@ -33,7 +42,7 @@
   <div class="row">
     <div class="col-md-12">
       <nb-card>
-        <nb-card-header>Clientes</nb-card-header>
+        <nb-card-header>Facturas</nb-card-header>
         <nb-card-body>
   
           <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
@@ -62,17 +71,19 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row" class="text-center"> <button class="btn btn-outline-primary" (click)= "redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
+                  <td scope="row" class="text-center"> <button class="btn btn-outline-primary" (click)= "redirectToEmpresa(fila.rfc)"><i class="fa fa-edit"></i></button>
                   </td>
-                  <td scope="row">{{fila.informacionFiscal.rfc}}</td>
-                  <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
-                  <td scope="row">{{fila.informacionFiscal.nombre}}</td>
-                  <td scope="row">{{fila.informacionFiscal.correo}}</td>
-                  <td scope="row">{{fila.informacionFiscal.noExterior}}</td>
-                  <td scope="row">{{fila.informacionFiscal.calle}}</td>
-                  <td scope="row">{{fila.informacionFiscal.localidad}}</td>
-                  <td scope="row">{{fila.informacionFiscal.municipio}}</td>
-                  <td scope="row">{{fila.informacionFiscal.cp}}</td>
+                  <td scope="row">{{fila.rfc}}</td>
+                  <td scope="row">{{fila.razonSocial}}</td>
+                  <td scope="row">{{fila.giro}}</td>
+                  <td scope="row">{{fila.tipo}}</td>
+                  <td scope="row">
+                    <p *ngIf="fila.activo">SI</p>
+                    <p *ngIf="!fila.activo">NO</p>
+                  </td>
+                  <td scope="row">{{fila.correo}}</td>
+                  <td scope="row">{{fila.fechaCreacion}}</td>
+                  <td scope="row">{{fila.fechaActualizacion}}</td>
                 </tr>
               </tbody>
             </table>

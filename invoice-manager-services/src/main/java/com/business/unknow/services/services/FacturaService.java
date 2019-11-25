@@ -22,7 +22,9 @@ import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
@@ -38,7 +40,6 @@ import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.entities.factura.FacturaFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
@@ -47,7 +48,6 @@ import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
-import com.business.unknow.services.repositories.facturas.FacturaFileRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
@@ -60,8 +60,8 @@ public class FacturaService {
 	@Autowired
 	private FacturaRepository repository;
 
-	@Autowired
-	private FacturaFileRepository facturaFileRepository;
+//	@Autowired
+//	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
@@ -219,37 +219,37 @@ public class FacturaService {
 		return cfdiDto;
 	}
 
-	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
-		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
-		if (facturaFile.isPresent()) {
-			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
-		} else {
-			throw new InvoiceManagerException("Folio not found",
-					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
-		}
-	}
+//	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
+//		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
+//		if (facturaFile.isPresent()) {
+//			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
+//		} else {
+//			throw new InvoiceManagerException("Folio not found",
+//					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
+//		}
+//	}
 
-	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
-		return mapper
-				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
-	}
-
-	public void deleteFacturaFile(String folio) {
-		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		facturaFileRepository.delete(entity);
-	}
-
-	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
-		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		entity.setPdf(factura.getPdf());
-		entity.setXml(factura.getXml());
-		entity.setQr(factura.getQr());
-		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
-	}
+//	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
+//		return mapper
+//				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
+//	}
+//
+//	public void deleteFacturaFile(String folio) {
+//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//						String.format("La factura con el folio %s no existe", folio)));
+//		facturaFileRepository.delete(entity);
+//	}
+//
+//	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
+//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+//						String.format("La factura con el folio %s no existe", folio)));
+//		entity.setPdf(factura.getPdf());
+//		entity.setXml(factura.getXml());
+//		entity.setQr(factura.getQr());
+//		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
+//	}
 
 	public List<PagoDto> getPagos(String folio) {
 		return mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre(folio));
@@ -288,17 +288,30 @@ public class FacturaService {
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
-		entity.setDocumento(pago.getDocumento());
-		entity.setBanco(pago.getBanco());
-		entity.setMoneda(pago.getMoneda());
-		entity.setTipoPago(pago.getTipoPago());
-		entity.setStatusPago(pago.getStatusPago());
+		entity.setComentarioPago(pago.getComentarioPago());
+		entity.setRevision1(pago.getRevision1());
+		entity.setRevision2(pago.getRevision2());
+		//TODO review here the logic to avoid invalid estates in payments
+		/*
+		 * the 2 payment approvals can't come from the same user
+		 * 1 user can't approve 2 checks at the same time, is necessary review previous state vs current
+		 *  Bank, Document, payForm and pay type can't be updated
+		 * */
+		if(pago.getRevision1() && pago.getRevision2()) {
+			entity.setStatusPago("ACEPTADO");
+			Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(
+					()-> new InvoiceManagerException("El pago no tiene  asignada una factura","Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+			factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
+			factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+			repository.save(factura);
+		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
 	}
 
 	public void deletePago(Integer id) {
 		Pago pago = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
+		//TODO implement logic to delete complements linked to the payments
 		pagoRepository.delete(pago);
 	}
 

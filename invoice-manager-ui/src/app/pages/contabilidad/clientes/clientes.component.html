@@ -1,64 +1,30 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Pagos</nb-card-header>
+      <nb-card-header>Clientes</nb-card-header>
       <nb-card-body>
         <div class="row">
-          <div class="col-md-1">
-            <label for="inputFolio" class="label">Folio Pago</label>
+          <div class="col-md-2">
+            <label for="inputName" class="label">Razon Social</label>
           </div>
-          <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="inputFolio" placeholder="Folio Pago">
-          </div>
-          <div class="col-md-1">
-            <label for="inputEmisor" class="label">Emisor</label>
-          </div>
-          <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="inputEmisor" placeholder="RFC Emisor">
+          <div class="col-md-4">
+            <input type="text" [(ngModel)]="filterParams.razonSocial" [disabled]="filterParams.rfc.length > 0" nbInput
+              fullWidth id="inputName" placeholder="Razon Social">
           </div>
           <div class="col-md-1">
-            <label for="InputReceptor" class="label">Receptor</label>
+            <label for="inputRfc" class="label">RFC</label>
           </div>
           <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="InputReceptor" placeholder="RFC Receptor">
+            <input type="text" [(ngModel)]="filterParams.rfc" [disabled]="filterParams.razonSocial.length > 0" nbInput
+              fullWidth id="inputRfc" placeholder="RFC Cliente">
+          </div>
+
+          <div class="col-md-2">
+            <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
           </div>
 
         </div>
         <br>
-        <div class="row">
-          <div class="col-md-1">
-            <label for="inputStatus" class="label">Estatus Pago</label>
-          </div>
-          <div class="col-md-2">
-            <nb-select selected="1" id="inputGiro">
-              <nb-option value="1">No Pagado</nb-option>
-              <nb-option value="2">En validacion</nb-option>
-              <nb-option value="3">Pagado</nb-option>
-            </nb-select>
-          </div>
-          <div class="col-md-1">
-            <label for="inputTimbrado" class="label">Estatus Timbrado</label>
-          </div>
-          <div class="col-md-2">
-            <nb-select selected="1" id="inputGiro">
-              <nb-option value="1">Solicitud</nb-option>
-              <nb-option value="2">En validacion</nb-option>
-              <nb-option value="3">Timbrado</nb-option>
-            </nb-select>
-          </div>
-          <div class="col-md-2">
-              <label for="inputTimbrado" class="label">Rango de fecha pago</label>
-            </div>
-          <div class="col-md-3">
-              <input nbInput placeholder="Rango de fechas" [nbDatepicker]="rangepicker">
-              <nb-rangepicker #rangepicker></nb-rangepicker>
-          </div>
-          <div class="col-md-1">
-            <button type="button" nbButton status="primary">BUSCAR</button>
-          </div>
-        </div>
-
-
 
       </nb-card-body>
     </nb-card>
@@ -69,7 +35,7 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Facturas</nb-card-header>
+      <nb-card-header>Clientes</nb-card-header>
       <nb-card-body>
 
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
@@ -92,21 +58,24 @@
           <table class="table">
             <thead class="thead-light">
               <tr>
+                <th class="text-center">Acciones</th>
                 <th scope="col" *ngFor="let header of headers">{{header}}</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">{{fila.folio}}</td>
-                <td scope="row">{{fila.moneda}}</td>
-                <td scope="row">{{fila.banco}}</td>
-                <td scope="row">{{fila.monto}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.revision1}}</td>
-                <td scope="row">{{fila.revision2}}</td>
-                <td scope="row">{{fila.tipoPago}}</td>
-                <td scope="row">{{fila.formaPago}}</td>
-                <td scope="row">{{fila.fechaPago}}</td>
+                <td scope="row" class="text-center"> <button class="btn btn-outline-primary"
+                    (click)="redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
+                </td>
+                <td scope="row">{{fila.informacionFiscal.rfc}}</td>
+                <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
+                <td scope="row">{{fila.informacionFiscal.nombre}}</td>
+                <td scope="row">{{fila.informacionFiscal.correo}}</td>
+                <td scope="row">{{fila.informacionFiscal.noExterior}}</td>
+                <td scope="row">{{fila.informacionFiscal.calle}}</td>
+                <td scope="row">{{fila.informacionFiscal.localidad}}</td>
+                <td scope="row">{{fila.informacionFiscal.municipio}}</td>
+                <td scope="row">{{fila.informacionFiscal.cp}}</td>
               </tr>
             </tbody>
           </table>

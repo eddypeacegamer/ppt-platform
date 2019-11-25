@@ -15,14 +15,19 @@ public class FacturaDatosValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		return fc.getFacturaDto().getFechaTimbrado() != null || fc.getFacturaDto().getUuid() != null
-				|| ((fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())
-						|| fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre()))
-						&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())
-						&& fc.getFacturaDto().getFolioPadre() != null)
-				|| (fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())
-						&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-						&& fc.getFacturaDto().getFolioPadre() == null);
+		
+		if(fc.getFacturaDto().getFechaTimbrado() != null || fc.getFacturaDto().getUuid() != null) {
+			return true;
+		}else {
+			if(fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+				return fc.getFacturaDto().getFolioPadre() != null;
+			}
+			if(fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+				return fc.getFacturaDto().getFolioPadre() == null 
+						&& fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre());
+			}
+			return true;//invalid document type
+		}
 	}
 
 	@Action
