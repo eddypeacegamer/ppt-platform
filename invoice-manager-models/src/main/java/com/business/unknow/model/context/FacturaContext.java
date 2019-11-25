@@ -7,7 +7,7 @@ import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.FacturaFileDto;
+import com.business.unknow.model.files.FacturaFileDto;
 
 public class FacturaContext implements Serializable {
 
@@ -23,7 +23,7 @@ public class FacturaContext implements Serializable {
 	private String suiteError;
 	private EmpresaDto empresaDto;
 	private Cfdi cfdi;
-	private FacturaFileDto facturaFileDto;
+	private List<FacturaFileDto> facturaFilesDto;
 	private String xml;
 
 	public FacturaContext() {
@@ -118,12 +118,12 @@ public class FacturaContext implements Serializable {
 		this.tipoDocumento = tipoDocumento;
 	}
 
-	public FacturaFileDto getFacturaFileDto() {
-		return facturaFileDto;
+	public List<FacturaFileDto> getFacturaFilesDto() {
+		return facturaFilesDto;
 	}
 
-	public void setFacturaFileDto(FacturaFileDto facturaFileDto) {
-		this.facturaFileDto = facturaFileDto;
+	public void setFacturaFilesDto(List<FacturaFileDto> facturaFilesDto) {
+		this.facturaFilesDto = facturaFilesDto;
 	}
 
 	public String getXml() {
@@ -139,7 +139,7 @@ public class FacturaContext implements Serializable {
 		return "FacturaContext [tipoFactura=" + tipoFactura + ", tipoDocumento=" + tipoDocumento + ", facturaDto="
 				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
 				+ pagos + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError
-				+ ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFileDto=" + facturaFileDto + ", xml="
+				+ ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml="
 				+ xml + "]";
 	}
 

@@ -31,7 +31,6 @@ import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.FacturaFileDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;

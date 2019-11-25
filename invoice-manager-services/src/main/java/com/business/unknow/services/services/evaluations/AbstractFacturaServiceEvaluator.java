@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
-import com.business.unknow.services.repositories.facturas.FacturaFileRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.repositories.files.FacturaFileRepository;
 
 public class AbstractFacturaServiceEvaluator {
 
@@ -24,13 +26,16 @@ public class AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private FacturaMapper mapper;
+	
+	@Autowired
+	private FilesMapper filesMapper;
 
 	@Autowired
 	private CfdiMapper cfdiMapper;
 
 	protected void validateFacturaContext(FacturaContext facturaContexrt) throws InvoiceManagerException {
 		if (!facturaContexrt.isValid()) {
-			throw new InvoiceManagerException(facturaContexrt.getRuleErrorDesc(),facturaContexrt.getSuiteError(),
+			throw new InvoiceManagerException(facturaContexrt.getRuleErrorDesc(), facturaContexrt.getSuiteError(),
 					HttpStatus.SC_BAD_REQUEST);
 		}
 	}
@@ -42,9 +47,10 @@ public class AbstractFacturaServiceEvaluator {
 	protected void updateFacturaAndCfdiValues(FacturaContext context) {
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
-		if (context.getFacturaFileDto() != null) {
-			facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(context.getFacturaFileDto()));
-		}
+		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto())
+			if (facturaFileDto != null) {
+				facturaFileRepository.save(filesMapper.getFacturaFileFromDto(facturaFileDto));
+			}
 	}
 
 }
