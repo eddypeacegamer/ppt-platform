@@ -23,6 +23,7 @@ import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
+import { FilesData } from '../../../@core/data/files-data';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -69,6 +70,7 @@ export class PreCfdiComponent implements OnInit {
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private paymentsService : PaymentsData,
+    private filesService : FilesData,
     private userService : UsersData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
@@ -319,8 +321,15 @@ export class PreCfdiComponent implements OnInit {
     }
   }
 
-  public donwloadFiles(folio: string) {
-    this.downloadService.exportFiles(folio, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
+  public downloadPdf(folio:string){
+    this.filesService.getFacturaFile(folio,'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,'application/pdf;')
+    )
+  }
+  public downloadXml(folio:string){
+    this.filesService.getFacturaFile(folio,'XML').subscribe(
+      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,'text/xml;charset=utf8;')
+    )
   }
 
   public timbrarFactura(factura:Factura){

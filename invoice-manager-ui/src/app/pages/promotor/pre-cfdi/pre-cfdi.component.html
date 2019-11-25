@@ -20,9 +20,13 @@
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-success"
-              (click)="donwloadFiles(factura.folio)">
-              <i class="fa fa-file-download"></i>
+            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
+              (click)="downloadPdf(factura.folio)">
+              <i class="fa fa-file-pdf"></i>
+            </button>
+            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
+              (click)="downloadXml(factura.folio)">
+              <i class="fa fa-code"></i>
             </button>
 
           </div>
@@ -281,10 +285,20 @@
               </thead>
               <tbody>
                 <tr *ngFor="let complemento of complementos">
-                  <td scope="row" class="text-center"> <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" [disabled]="complemento.statusFactura !='Timbrada'"
-                      class="btn" [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}" (click)="donwloadFiles(complemento.folio)">
-                      <i class="fa fa-file-download"></i>
-                    </button></td>
+                  <td scope="row" class="text-center"> 
+                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
+                      [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                      (click)="downloadPdf(complemento.folio)">
+                      <i class="fa fa-file-pdf"></i>
+                    </button>&nbsp;&nbsp;
+                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
+                      [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                      (click)="downloadXml(complemento.folio)">
+                      <i class="fa fa-code"></i>
+                    </button>
+                  </td>
                   <td scope="row" class="text-center">{{complemento.folio}}</td>
                   <td scope="row" class="text-center">{{complemento.rfcEmisor}}</td>
                   <td scope="row" class="text-center">{{complemento.rfcRemitente}}</td>

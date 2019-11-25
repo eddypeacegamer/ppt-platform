@@ -18,6 +18,7 @@ import { Pago } from '../../../models/pago';
 export class PagosComponent implements OnInit {
 
   public userEmail : string;
+  public paymentForm : any = {'payType':'*','status':'*','bank':'*','monto':0}
 
   public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Tipo pago', 'Forma de pago', 'Fecha pago','Actualizado por'];
   public page: GenericPage<any> = new GenericPage();
