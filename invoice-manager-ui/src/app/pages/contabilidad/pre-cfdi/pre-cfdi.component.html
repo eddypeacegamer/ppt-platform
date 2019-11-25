@@ -397,6 +397,7 @@
                   <th scope="col" class="text-center">Monto</th>
                   <th scope="col" class="text-center">Fecha de Pago</th>
                   <th scope="col" class="text-center">Validacion</th>
+                  <th scope="col" class="text-center">Comentarios</th>
                 </tr>
               </thead>
               <tbody>
@@ -414,6 +415,7 @@
                   <td scope="row" class="text-center">{{payment.monto | currency}}</td>
                   <td scope="row" class="text-center">{{payment.fechaPago}}</td>
                   <td scope="row" class="text-center">{{payment.statusPago}}</td>
+                  <td scope="row" class="text-center">{{payment.comentarioPago}}</td>
                 </tr>
               </tbody>
             </table>

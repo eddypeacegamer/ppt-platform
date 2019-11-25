@@ -10,22 +10,25 @@ import {
   PlayerService,
   StateService,
 } from './utils';
-import { MockDataModule } from './mock/mock-data.module';
+
 
 import { UsersData } from './data/users-data';
-import { CatalogsData } from './data/catalogs-data';
-
-
 import { UsersService } from './back-services/users.service';
-import { CatalogsService } from './back-services/catalogs.service';
-import { ClientsData } from './data/clients-data';
-import { ClientsService } from './back-services/clients.service';
+
+
+import { CatalogsData } from './data/catalogs-data';
 import { CompaniesData } from './data/companies-data';
-import { CompaniesService } from './back-services/companies.service';
 import { InvoicesData } from './data/invoices-data';
-import { InvoicesService } from './back-services/invoices.service';
 import { DevolutionData } from './data/devolution-data';
+import { ClientsData } from './data/clients-data';
+import { PaymentsData } from './data/payments-data';
+
+import { CatalogsService } from './back-services/catalogs.service';
+import { ClientsService } from './back-services/clients.service';
+import { CompaniesService } from './back-services/companies.service';
+import { InvoicesService } from './back-services/invoices.service';
 import { DevolutionService } from './back-services/devolution.service';
+import { PaymentsService } from './back-services/payments.service';
 
 
 const DATA_SERVICES = [
@@ -33,6 +36,7 @@ const DATA_SERVICES = [
   {provide: ClientsData, useClass: ClientsService},
   {provide: CompaniesData, useClass: CompaniesService},
   {provide: InvoicesData, useClass: InvoicesService},
+  {provide: PaymentsData, useClass : PaymentsService},
   {provide: DevolutionData, useClass: DevolutionService},
   {provide: UsersData, useClass: UsersService },
 ];
@@ -45,7 +49,7 @@ export class NbSimpleRoleProvider extends NbRoleProvider {
 }
 
 export const NB_CORE_PROVIDERS = [
-  ...MockDataModule.forRoot().providers,
+  //...MockDataModule.forRoot().providers,
   ...DATA_SERVICES,
   ...NbAuthModule.forRoot({
 

@@ -21,6 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
 import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
+import { PaymentsData } from '../../../@core/data/payments-data';
 
 @Component({
   selector: 'ngx-revision',
@@ -65,6 +66,7 @@ export class RevisionComponent implements OnInit {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
+    private paymentsService : PaymentsData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
@@ -95,7 +97,7 @@ export class RevisionComponent implements OnInit {
                   return record;})
               }))
             .subscribe(complementos => this.complementos = complementos);
-            this.invoiceService.getPayments(this.folioParam).subscribe(payments => this.invoicePayments = payments);
+            this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => this.invoicePayments = payments);
             this.invoiceService.getInvoiceByFolio(this.folioParam).pipe(
               map((fac: Factura) => {
                 fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
@@ -308,7 +310,7 @@ export class RevisionComponent implements OnInit {
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
         (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio;
           this.successMessage = `La solicitud del CFDI ha sido generada correctamente con el folio ${invoice.folio}`;
-          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
         },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
     }
   }
@@ -372,8 +374,8 @@ export class RevisionComponent implements OnInit {
   }
 
   deletePayment(paymentId) {
-    this.invoiceService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => { this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
+      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
       (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
@@ -422,10 +424,10 @@ export class RevisionComponent implements OnInit {
 
     if (validPayment) {
       this.newPayment.tipoPago = 'INGRESO';
-      this.invoiceService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
+      this.paymentsService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
-          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
           this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = this.complementos);
         },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));

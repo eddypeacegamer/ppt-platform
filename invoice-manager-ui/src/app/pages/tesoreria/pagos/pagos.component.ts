@@ -4,6 +4,7 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
 import { InvoicesData } from '../../../@core/data/invoices-data';
+import { PaymentsData } from '../../../@core/data/payments-data';
 
 @Component({
   selector: 'ngx-pagos',
@@ -17,7 +18,7 @@ export class PagosComponent implements OnInit {
   public pageSize = '10';
 
   constructor(private donwloadService:DownloadCsvService,
-    private invoiceService : InvoicesData) {}
+    private paymentService : PaymentsData) {}
 
   ngOnInit() {
     this.updateDataTable();
@@ -26,7 +27,7 @@ export class PagosComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.invoiceService.getAllPayments(pageValue,sizeValue)
+    this.paymentService.getAllPayments(pageValue,sizeValue)
       .subscribe((result:GenericPage<any>) => this.page = result);
   }
 

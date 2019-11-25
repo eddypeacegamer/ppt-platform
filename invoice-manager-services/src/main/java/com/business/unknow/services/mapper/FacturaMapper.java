@@ -29,6 +29,8 @@ public interface FacturaMapper {
 	FacturaFileDto getFacturaFileDtoFromEntity(FacturaFile dto);
 	
 	Pago getEntityFromPagoDto(PagoDto dto);
+	
+	@Mappings({ @Mapping(target = "documento", ignore = true)})
 	PagoDto getPagoDtoFromEntity(Pago dto);
 	List<PagoDto> getPagosDtoFromEntity(List<Pago> dto);
 	
