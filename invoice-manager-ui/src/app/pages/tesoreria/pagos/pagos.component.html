@@ -93,6 +93,7 @@
             <thead class="thead-light">
               <tr>
                 <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                <th scope="col">Validar</th>
               </tr>
             </thead>
             <tbody>
@@ -100,13 +101,14 @@
                 <td scope="row">{{fila.folio}}</td>
                 <td scope="row">{{fila.moneda}}</td>
                 <td scope="row">{{fila.banco}}</td>
-                <td scope="row">{{fila.monto}}</td>
+                <td scope="row">{{fila.monto | currency}}</td>
                 <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.revision1}}</td>
-                <td scope="row">{{fila.revision2}}</td>
+                
                 <td scope="row">{{fila.tipoPago}}</td>
                 <td scope="row">{{fila.formaPago}}</td>
                 <td scope="row">{{fila.fechaPago}}</td>
+                <td scope="row">{{fila.ultimoUsuario}}</td>
+                <td scope="row"><button type="button" (click)="openDialog(fila)" class="btn btn-primary"><i class="fa fa-search"></i></button></td>
               </tr>
             </tbody>
           </table>
@@ -123,6 +125,8 @@
                 (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
           </ul>
         </div>
+
+        
       </nb-card-body>
     </nb-card>
   </div>

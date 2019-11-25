@@ -29,6 +29,8 @@ import { CompaniesService } from './back-services/companies.service';
 import { InvoicesService } from './back-services/invoices.service';
 import { DevolutionService } from './back-services/devolution.service';
 import { PaymentsService } from './back-services/payments.service';
+import { FilesData } from './data/files-data';
+import { FilesService } from './back-services/files.service';
 
 
 const DATA_SERVICES = [
@@ -38,6 +40,7 @@ const DATA_SERVICES = [
   {provide: InvoicesData, useClass: InvoicesService},
   {provide: PaymentsData, useClass : PaymentsService},
   {provide: DevolutionData, useClass: DevolutionService},
+  {provide: FilesData, useClass : FilesService},
   {provide: UsersData, useClass: UsersService },
 ];
 

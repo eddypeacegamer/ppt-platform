@@ -5,6 +5,10 @@ import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { UsersData } from '../../../@core/data/users-data';
+import { NbDialogService } from '@nebular/theme';
+import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
+import { Pago } from '../../../models/pago';
 
 @Component({
   selector: 'ngx-pagos',
@@ -13,15 +17,21 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 })
 export class PagosComponent implements OnInit {
 
-  public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Revision 1','Revision 2','Tipo pago', 'Forma de pago', 'Fecha pago'];
+  public userEmail : string;
+
+  public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Tipo pago', 'Forma de pago', 'Fecha pago','Actualizado por'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
-  constructor(private donwloadService:DownloadCsvService,
-    private paymentService : PaymentsData) {}
+  constructor(
+    private userService : UsersData,
+    private paymentService : PaymentsData,
+    private dialogService: NbDialogService
+    ) {}
 
   ngOnInit() {
     this.updateDataTable();
+    this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
@@ -35,5 +45,28 @@ export class PagosComponent implements OnInit {
     this.updateDataTable(this.page.number, pageSize);
   }
 
+  openDialog(payment:Pago) {
+    this.dialogService.open(ValidacionPagoComponent, {
+      context: {
+        pago: payment,
+      },
+    }).onClose.subscribe(pago => {
+      console.log(pago);
+      if(pago!=undefined){
+        pago.ultimoUsuario = this.userEmail;
+        this.paymentService.updatePayment(pago.folio,pago.id,pago).toPromise()
+        .then(success=>console.log(success), error=>console.error(error))
+        .then(()=>this.updateDataTable())
+      }
+      });
+  }
+ 
+  public updateRevision(){
+
+  }
+
+  public rechazarPago(){
+    
+  }
 
 }

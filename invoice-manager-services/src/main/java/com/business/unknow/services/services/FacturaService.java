@@ -309,6 +309,8 @@ public class FacturaService {
 		entity.setComentarioPago(pago.getComentarioPago());
 		entity.setRevision1(pago.getRevision1());
 		entity.setRevision2(pago.getRevision2());
+		entity.setUltimoUsuario(pago.getUltimoUsuario());
+		entity.setStatusPago(pago.getStatusPago());
 		
 		if(pago.getStatusPago().equals("RECHAZADO")) {
 			Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(

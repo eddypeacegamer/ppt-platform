@@ -22,6 +22,7 @@ import { Status } from '../../../models/catalogos/status';
 import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { UsersData } from '../../../@core/data/users-data';
 
 @Component({
   selector: 'ngx-revision',
@@ -43,6 +44,7 @@ export class RevisionComponent implements OnInit {
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
+  public userEmail : string;
 
   public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
@@ -67,10 +69,12 @@ export class RevisionComponent implements OnInit {
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private paymentsService : PaymentsData,
+    private userService : UsersData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
     this.initVariables();
   
     this.route.paramMap.subscribe(route=>{
@@ -424,6 +428,7 @@ export class RevisionComponent implements OnInit {
 
     if (validPayment) {
       this.newPayment.tipoPago = 'INGRESO';
+      this.newPayment.ultimoUsuario = this.userEmail;
       this.paymentsService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();

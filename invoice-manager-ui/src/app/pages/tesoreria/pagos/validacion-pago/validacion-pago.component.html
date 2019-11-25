@@ -1,0 +1,45 @@
+<nb-card>
+  <nb-card-header>Validacion Pago</nb-card-header>
+  <nb-card-body>
+    <div class="row" *ngIf="comprobanteUrl!=undefined">
+      <div class="col-sm-12" >
+          <img [src]="comprobanteUrl" style="width: 900px;">
+      </div>
+    </div>
+    
+    <form>
+      
+      
+      <div class="form-group form-check">
+        <input type="checkbox" [(ngModel)]="updatedPayment.revision1" class="form-check-input" id="exampleCheck1" [ngModelOptions]="{standalone: true}">
+        <label class="form-check-label" for="exampleCheck1" >Revision 1</label>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" [(ngModel)]="updatedPayment.revision2" class="form-check-input" id="exampleCheck2" [ngModelOptions]="{standalone: true}" [disabled]="pago.revision1==false">
+        <label class="form-check-label" for="exampleCheck2">Revision 2</label>
+      </div>
+      <div class="form-group">
+        <label for="comments">Comentarios</label>
+        <input type="text" class="form-control" id="comments" placeholder="Comentarios" [(ngModel)]="updatedPayment.comentarioPago" fullWidth  [ngModelOptions]="{standalone: true}">
+        <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago (opcional).</small>
+      </div>
+      
+    </form>
+
+
+    
+  </nb-card-body>
+  <nb-card-footer>
+      
+    <button nbButton status="success" (click)="onValidarPago()">Validar</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="cancel" nbButton status="danger" (click)="onRecahzarPago()">Rechazar Pago</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="cancel" nbButton status="warning" (click)="cancel()">Salir</button>
+    
+  </nb-card-footer>
+</nb-card>
+
+
+
+
