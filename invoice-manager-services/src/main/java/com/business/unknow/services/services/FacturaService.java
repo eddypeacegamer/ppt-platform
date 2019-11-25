@@ -39,6 +39,7 @@ import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
@@ -50,6 +51,7 @@ import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
+import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import com.business.unknow.services.services.evaluations.FacturaServiceEvaluator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 
@@ -58,6 +60,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
+	
+	@Autowired
+	private ResourceFileRepository resourceRepo;
 
 //	@Autowired
 //	private FacturaFileRepository facturaFileRepository;
@@ -91,9 +96,11 @@ public class FacturaService {
 
 	@Autowired
 	private ImpuestoMapper impuestoMapper;
+	
 
 	@Autowired
 	private FacturaServiceEvaluator facturaServiceEvaluation;
+	
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -256,12 +263,9 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPago(String folio, PagoDto pago) throws InvoiceManagerException {
-		Factura factura = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
-						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
-		if (factura.getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())) {
-			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
-		} else {
+		Factura factura = repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
+				String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
+		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
 			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
 					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
 					.setRfcRemitente(factura.getRfcRemitente()).setRazonSocialEmisor(factura.getRazonSocialEmisor())
@@ -280,31 +284,51 @@ public class FacturaService {
 							HttpStatus.NOT_FOUND.value()));
 			pagoPadre.setMonto(pagoPadre.getMonto() + pago.getMonto());
 			pagoRepository.save(pagoPadre);
-			return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+			
 		}
+		if(pago.getDocumento()!=null) {
+			ResourceFile resource = new ResourceFile();
+			resource.setData(pago.getDocumento().getBytes());
+			resource.setReferencia(pago.getFolio());
+			resource.setTipoRecurso("PAGO");
+			resource.setTipoArchivo("IMAGEN");
+			resourceRepo.save(resource);
+		}
+		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
 	}
 
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
+		
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
+		
+		if(entity.getUltimoUsuario().equalsIgnoreCase(pago.getUltimoUsuario())) {
+			throw new InvoiceManagerException("Mismo usuario no puede actualizar el pago", "La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva", HttpStatus.CONFLICT.value());
+		}
+		//Bank, Document, payForm and pay type can't be updated
 		entity.setComentarioPago(pago.getComentarioPago());
 		entity.setRevision1(pago.getRevision1());
 		entity.setRevision2(pago.getRevision2());
-		//TODO review here the logic to avoid invalid estates in payments
-		/*
-		 * the 2 payment approvals can't come from the same user
-		 * 1 user can't approve 2 checks at the same time, is necessary review previous state vs current
-		 *  Bank, Document, payForm and pay type can't be updated
-		 * */
-		if(pago.getRevision1() && pago.getRevision2()) {
-			entity.setStatusPago("ACEPTADO");
+		entity.setUltimoUsuario(pago.getUltimoUsuario());
+		entity.setStatusPago(pago.getStatusPago());
+		
+		if(pago.getStatusPago().equals("RECHAZADO")) {
 			Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(
 					()-> new InvoiceManagerException("El pago no tiene  asignada una factura","Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
-			factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
-			factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+			factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 			repository.save(factura);
+		}else {
+			if(pago.getRevision1() && pago.getRevision2()) {
+				entity.setStatusPago("ACEPTADO");
+				Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(
+						()-> new InvoiceManagerException("El pago no tiene  asignada una factura","Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
+				factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+				repository.save(factura);
+			}
 		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
+		
 	}
 
 	public void deletePago(Integer id) {

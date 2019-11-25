@@ -3,63 +3,56 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Pagos</nb-card-header>
       <nb-card-body>
-        <div class="row">
-          <div class="col-md-1">
-            <label for="inputFolio" class="label">Folio Pago</label>
-          </div>
-          <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="inputFolio" placeholder="Folio Pago">
-          </div>
-          <div class="col-md-1">
-            <label for="inputEmisor" class="label">Emisor</label>
-          </div>
-          <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="inputEmisor" placeholder="RFC Emisor">
-          </div>
-          <div class="col-md-1">
-            <label for="InputReceptor" class="label">Receptor</label>
-          </div>
-          <div class="col-md-3">
-            <input type="text" nbInput fullWidth id="InputReceptor" placeholder="RFC Receptor">
-          </div>
-
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-md-1">
-            <label for="inputStatus" class="label">Estatus Pago</label>
-          </div>
-          <div class="col-md-2">
-            <nb-select selected="1" id="inputGiro">
-              <nb-option value="1">No Pagado</nb-option>
-              <nb-option value="2">En validacion</nb-option>
-              <nb-option value="3">Pagado</nb-option>
-            </nb-select>
-          </div>
-          <div class="col-md-1">
-            <label for="inputTimbrado" class="label">Estatus Timbrado</label>
-          </div>
-          <div class="col-md-2">
-            <nb-select selected="1" id="inputGiro">
-              <nb-option value="1">Solicitud</nb-option>
-              <nb-option value="2">En validacion</nb-option>
-              <nb-option value="3">Timbrado</nb-option>
-            </nb-select>
-          </div>
-          <div class="col-md-2">
-              <label for="inputTimbrado" class="label">Rango de fecha pago</label>
+          <div class="row">
+              <div class="col-sm-2">
+                <label for="inputPayType" class="label">Forma de Pago</label>
+                <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="EFECTIVO">Efectivo</option>
+                  <option value="CHEQUE">Cheque nominativo</option>
+                  <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
+                  <option value="DEPOSITO">Deposito bancario</option>
+                  <option value="CREDITO">Credito Despacho</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                  <label for="inputValidationStatus" class="label">Estatus Validacion</label>
+                  <select selected="1" id="inputValidationStatus" style="display:block;" class="form-control"
+                    [(ngModel)]="paymentForm.status" (change)="onPaymentStatusSelected($event.target.value)">
+                    <option value="*">TODOS</option>
+                    <option value="VALIDACION">En Validacion</option>
+                    <option value="ACEPTADO">Aceptado</option>
+                    <option value="RECHAZADO">Rechazado</option>
+                  </select>
+                </div>
+              <div class="col-sm-2">
+                <label for="inputPayType" class="label">Banco receptor</label>
+                <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.bank" (change)="onPaymentBankSelected($event.target.value)">
+                  <option value="*">TODOS</option>
+                  <option value="BBVA">BBVA</option>
+                  <option value="HSBC">HSBC</option>
+                  <option value="BANORTE">BANORTE</option>
+                  <option value="BANAMEX">BANAMEX</option>
+                  <option value="N/A">NO APLICA</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <label for="payAmmount" class="label">Monto Pago</label>
+                <input id="payAmmount" class="form-control" fullWidth type="number" placeholder="Monto"
+                  [(ngModel)]="paymentForm.monto">
+              </div>
+              <div class="col-md-2">
+                <label for="payAmmount" class="label">Fecha de pago</label>
+                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.fechaPago">
+                <nb-datepicker #formpicker></nb-datepicker>
+              </div>
+              <div class="form-group col-md-2">
+                  <button type="button" class="btn btn-primary" status="primary">BUSCAR</button>
+              </div>
             </div>
-          <div class="col-md-3">
-              <input nbInput placeholder="Rango de fechas" [nbDatepicker]="rangepicker">
-              <nb-rangepicker #rangepicker></nb-rangepicker>
-          </div>
-          <div class="col-md-1">
-            <button type="button" nbButton status="primary">BUSCAR</button>
-          </div>
-        </div>
-
-
-
       </nb-card-body>
     </nb-card>
   </div>
@@ -93,6 +86,7 @@
             <thead class="thead-light">
               <tr>
                 <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                <th scope="col">Validar</th>
               </tr>
             </thead>
             <tbody>
@@ -100,13 +94,14 @@
                 <td scope="row">{{fila.folio}}</td>
                 <td scope="row">{{fila.moneda}}</td>
                 <td scope="row">{{fila.banco}}</td>
-                <td scope="row">{{fila.monto}}</td>
+                <td scope="row">{{fila.monto | currency}}</td>
                 <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.revision1}}</td>
-                <td scope="row">{{fila.revision2}}</td>
+                
                 <td scope="row">{{fila.tipoPago}}</td>
                 <td scope="row">{{fila.formaPago}}</td>
                 <td scope="row">{{fila.fechaPago}}</td>
+                <td scope="row">{{fila.ultimoUsuario}}</td>
+                <td scope="row"><button type="button" (click)="openDialog(fila)" class="btn btn-primary"><i class="fa fa-search"></i></button></td>
               </tr>
             </tbody>
           </table>
@@ -123,6 +118,8 @@
                 (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
           </ul>
         </div>
+
+        
       </nb-card-body>
     </nb-card>
   </div>

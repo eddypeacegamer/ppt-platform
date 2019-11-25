@@ -60,16 +60,16 @@ public class FilesController {
 		return new ResponseEntity<>(service.insertResourceFile(resourceFile), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/facturas/{folio}/files/{id}")
+	@DeleteMapping("/facturas/files/{id}")
 	@ApiOperation(value = "delete factura file from the system")
-	public ResponseEntity<Void> deleteFacturaFile(@PathVariable String folio,@PathVariable Integer id) {
+	public ResponseEntity<Void> deleteFacturaFile(@PathVariable Integer id) {
 		service.deleteFacturaFile(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
-	@DeleteMapping("/recursos/{recurso}/files/{id}")
+	@DeleteMapping("/recursos/files/{id}")
 	@ApiOperation(value = "delete recurso file from the system")
-	public ResponseEntity<Void> deleteRecursoFile(@PathVariable String recurso,@PathVariable Integer id) {
+	public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
 		service.deleteResourceFile(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

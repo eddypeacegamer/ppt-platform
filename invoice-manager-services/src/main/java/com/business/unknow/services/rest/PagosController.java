@@ -31,6 +31,7 @@ public class PagosController {
 	private PagoService service;
 	
 	
+	
 	@GetMapping
 	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getAllPayments(

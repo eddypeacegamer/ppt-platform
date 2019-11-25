@@ -21,6 +21,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
 import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
+import { PaymentsData } from '../../../@core/data/payments-data';
+import { UsersData } from '../../../@core/data/users-data';
+import { FilesData } from '../../../@core/data/files-data';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -42,6 +45,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
+  public userEmail : string;
 
   public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
@@ -64,10 +68,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
+    private paymentsService : PaymentsData,
+    private userService : UsersData,
+    private filesService : FilesData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
     this.initVariables();
   
     this.route.paramMap.subscribe(route=>{
@@ -94,7 +102,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   return record;})
               }))
             .subscribe(complementos => this.complementos = complementos);
-            this.invoiceService.getPayments(this.folioParam).subscribe(payments => this.invoicePayments = payments);
+            this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => this.invoicePayments = payments);
             this.invoiceService.getInvoiceByFolio(this.folioParam).pipe(
               map((fac: Factura) => {
                 fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
@@ -305,13 +313,21 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
         (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio; 
-          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
         },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
     }
   }
 
-  public donwloadFiles(folio: string) {
-    this.downloadService.exportFiles(folio, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}`);
+
+  public downloadPdf(folio:string){
+    this.filesService.getFacturaFile(folio,'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,'application/pdf;')
+    )
+  }
+  public downloadXml(folio:string){
+    this.filesService.getFacturaFile(folio,'XML').subscribe(
+      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,'text/xml;charset=utf8;')
+    )
   }
 
 
@@ -341,8 +357,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   deletePayment(paymentId) {
-    this.invoiceService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => { this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
+      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
       (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
@@ -391,11 +407,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     if (validPayment) {
       this.newPayment.tipoPago = 'INGRESO';
-      this.invoiceService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
+      this.newPayment.ultimoUsuario = this.userEmail;
+      this.paymentsService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
-          this.invoiceService.getPayments(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
-          this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = this.complementos);
+          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
         },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }

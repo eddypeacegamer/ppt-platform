@@ -42,10 +42,7 @@ public class Pago implements Serializable {
 	@NotEmpty
 	@Column(name = "MONEDA")
 	private String moneda;
-
-	@Column(name = "DOCUMENTO")
-	private String documento;
-
+	
 	@NotEmpty
 	@Column(name = "BANCO")
 	private String banco;
@@ -93,6 +90,9 @@ public class Pago implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
+	
+	@Column(name="MODIF_USER")
+	private String ultimoUsuario;
 
 	public Integer getId() {
 		return id;
@@ -116,14 +116,6 @@ public class Pago implements Serializable {
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
 	}
 
 	public String getBanco() {
@@ -230,14 +222,22 @@ public class Pago implements Serializable {
 		this.folioPadre = folioPadre;
 	}
 
+	public String getUltimoUsuario() {
+		return ultimoUsuario;
+	}
+
+	public void setUltimoUsuario(String ultimoUsuario) {
+		this.ultimoUsuario = ultimoUsuario;
+	}
+
 	@Override
 	public String toString() {
-		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
-				+ ", documento=" + documento + ", banco=" + banco + ", tipoDeCambio=" + tipoDeCambio + ", monto="
-				+ monto + ", revision1=" + revision1 + ", revision2=" + revision2 + ", statusPago=" + statusPago
-				+ ", comentarioPago=" + comentarioPago + ", tipoPago=" + tipoPago + ", formaPago=" + formaPago
-				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda + ", banco="
+				+ banco + ", tipoDeCambio=" + tipoDeCambio + ", monto=" + monto + ", revision1=" + revision1
+				+ ", revision2=" + revision2 + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
+				+ ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", ultimoUsuario="
+				+ ultimoUsuario + "]";
 	}
 
 }
