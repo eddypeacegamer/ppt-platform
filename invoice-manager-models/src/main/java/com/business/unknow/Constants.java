@@ -21,7 +21,7 @@ public class Constants {
 		public static final String SYSTEM_CODIFICATION = "UTF-8";
 		
 		public static final String CADENA_ORIGINAL = "src/main/resources/factura-xslt/cadenaoriginal_3_3.xslt";
-		public static final String EMPRESA_CERT_PRUEBAS = "src/main/resources/certificados/CSD_Pruebas_CFDI_LAN7008173R5.key";
+		public static final String FACTURA_DUMMY = "src/main/resources/factura-xslt/factura_dummy.txt";
 	}
 	
 	public class CfdiConstants{

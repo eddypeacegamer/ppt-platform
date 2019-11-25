@@ -11,9 +11,11 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
 import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
 import com.business.unknow.client.model.swsapiens.SwSapiensVersionEnum;
+import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
@@ -26,6 +28,9 @@ public class SwSapinsExecutorService {
 
 	@Autowired
 	private SwSapiensClient swSapiensClient;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		SwSapiensClient swSapiensClient = new SwSapiensClient();
@@ -48,12 +53,12 @@ public class SwSapinsExecutorService {
 			FacturaFileDto xml = new FacturaFileDto();
 			xml.setFolio(context.getFacturaDto().getFolio());
 			xml.setTipoArchivo(TipoArchivoEnum.XML.getDescripcion());
-			xml.setData(swSapiensConfig.getData().getCfdi());
-
+			xml.setData(fileHelper.stringToBase64(swSapiensConfig.getData().getCfdi()));
 			FacturaFileDto pdf = new FacturaFileDto();
 			pdf.setFolio(context.getFacturaDto().getFolio());
 			pdf.setTipoArchivo(TipoArchivoEnum.PDF.getDescripcion());
-			pdf.setData(new String(Files.readAllBytes(Paths.get("src/main/resources/files/factura_dummy.txt"))));
+			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
+
 			files.add(qr);
 			files.add(xml);
 			files.add(pdf);

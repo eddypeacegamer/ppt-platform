@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
+import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberHelper;
+import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.FacturarSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
@@ -26,7 +28,7 @@ public class ServicesApplication {
 	}
 
 	@Bean
-	public ComplementoSuite getPreValidationSuite() {
+	public ComplementoSuite getComplementoSuite() {
 		return new ComplementoSuite();
 	}
 
@@ -39,7 +41,7 @@ public class ServicesApplication {
 	public CancelacionSuite getCancelacionSuite() {
 		return new CancelacionSuite();
 	}
-
+	
 	@Bean
 	public RulesEngine getRulesEngine() {
 		return new DefaultRulesEngine();
@@ -63,6 +65,16 @@ public class ServicesApplication {
 	@Bean
 	public NumberHelper getNumberHelper() {
 		return new NumberHelper();
+	}
+	
+	@Bean
+	public FileHelper getFileHelper() {
+		return new FileHelper();
+	}
+	
+	@Bean
+	public StringHelper getStringHelper() {
+		return new StringHelper();
 	}
 
 }
