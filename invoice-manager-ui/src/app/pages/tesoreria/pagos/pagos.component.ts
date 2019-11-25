@@ -62,12 +62,18 @@ export class PagosComponent implements OnInit {
       });
   }
  
-  public updateRevision(){
-
+  public onPaymentTypeSelected(event){
+    console.log(event);
   }
 
-  public rechazarPago(){
-    
+  public onPaymentStatusSelected(event){
+    console.log(event);
   }
+
+  public onPaymentBankSelected(event){
+    console.log(event);
+  }
+
+  
 
 }
