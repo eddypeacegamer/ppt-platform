@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: "local"
+    active: "stg"
   main:
     banner-mode: "off"
     

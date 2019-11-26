@@ -15,7 +15,9 @@ public class FacturaStatusRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
-				|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor());
+				|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())
+						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())
+								|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 	}
 
 	@Action

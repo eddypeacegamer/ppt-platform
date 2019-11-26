@@ -20,4 +20,8 @@ public class DateHelper {
 		Date newDate=dateMinusDays(new Date(), days);
 		return date.after(newDate);
 	}
+	
+	public Date epochTimeToDate(int date) {
+		return new Date(new Long(date)*Constants.MILISECONDS);
+	}
 }

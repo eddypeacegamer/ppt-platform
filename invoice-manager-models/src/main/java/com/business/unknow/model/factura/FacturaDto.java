@@ -33,6 +33,7 @@ public class FacturaDto implements Serializable {
 	private Double subtotal;
 	private Double descuento;
 	private Date fechaCreacion;
+	private Date fechaCancelacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 	private CfdiDto cfdi;
@@ -227,6 +228,14 @@ public class FacturaDto implements Serializable {
 
 	public void setPackFacturacion(String packFacturacion) {
 		this.packFacturacion = packFacturacion;
+	}
+
+	public Date getFechaCancelacion() {
+		return fechaCancelacion;
+	}
+
+	public void setFechaCancelacion(Date fechaCancelacion) {
+		this.fechaCancelacion = fechaCancelacion;
 	}
 
 	@Override

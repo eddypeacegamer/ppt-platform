@@ -26,7 +26,7 @@ public class AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private FacturaMapper mapper;
-	
+
 	@Autowired
 	private FilesMapper filesMapper;
 
@@ -51,6 +51,10 @@ public class AbstractFacturaServiceEvaluator {
 			if (facturaFileDto != null) {
 				facturaFileRepository.save(filesMapper.getFacturaFileFromDto(facturaFileDto));
 			}
+	}
+
+	protected void updateCanceladoValues(FacturaContext context) {
+		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
 
 }

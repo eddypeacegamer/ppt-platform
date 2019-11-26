@@ -10,16 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.Constants;
+import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.NumberHelper;
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.cfdi.Complemento;
+import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
 
@@ -31,12 +36,12 @@ public class FacturaTranslator {
 
 	@Autowired
 	private FacturaHelper facturaHelper;
-	
+
 	@Autowired
-	private  DateHelper dateHelper;
-	
+	private DateHelper dateHelper;
+
 	@Autowired
-	private  NumberHelper numberHelper;
+	private NumberHelper numberHelper;
 
 	@Autowired
 	private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
@@ -62,6 +67,50 @@ public class FacturaTranslator {
 		}
 	}
 
+	public FacturaContext translateComplemento(FacturaContext context) throws InvoiceManagerException {
+		try {
+			context.getFacturaDto().setCfdi(new CfdiDto());
+			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
+			
+			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto(),
+					context.getEmpresaDto());
+			context.getFacturaDto().getCfdi().setSerie("");
+			context.getFacturaDto().getCfdi().setVersion(cfdi.getVersion());
+			cfdi.setImpuestos(null);
+			cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(new ConceptoDto()));
+			Complemento complemento = new Complemento();
+			for (PagoDto pagoDto : context.getPagos()) {
+				ComplementoPago complementoComponente = facturaCfdiTranslatorMapper
+						.complementoComponente(context.getFacturaDto(), pagoDto);
+				complementoComponente.getComplementoDocRelacionado().setNumParcialidad(context.getCtdadComplementos());
+				complementoComponente.getComplementoDocRelacionado().setIdDocumento(context.getFacturaPadreDto().getUuid());
+				complementoComponente.getComplementoDocRelacionado()
+						.setImpSaldoAnt(context.getPagoCredito().getMonto() + complementoComponente.getMonto());
+				complementoComponente.getComplementoDocRelacionado()
+						.setImpSaldoInsoluto(context.getPagoCredito().getMonto());
+				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
+
+			}
+			cfdi.setComplemento(complemento);
+			context.setCfdi(cfdi);
+			complementoToXmlSigned(context);
+			return context;
+		} catch (InvoiceCommonException e) {
+			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
+		}
+	}
+	
+	public void complementoToXmlSigned(FacturaContext context) throws InvoiceCommonException {
+		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
+		xml=xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
+		xml=xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
+		context.setXml(cdfiHelper.signXML(xml,
+				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
+						? context.getFacturaDto().getFechaActualizacion()
+						: new Date(),
+				context.getEmpresaDto()));
+	}
+
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
 		context.setXml(cdfiHelper.signXML(xml,
@@ -69,7 +118,6 @@ public class FacturaTranslator {
 						? context.getFacturaDto().getFechaActualizacion()
 						: new Date(),
 				context.getEmpresaDto()));
-		System.out.println(context.getXml());
 	}
 
 	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {

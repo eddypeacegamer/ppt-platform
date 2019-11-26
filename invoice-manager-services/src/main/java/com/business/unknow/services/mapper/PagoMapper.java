@@ -14,7 +14,7 @@ import com.business.unknow.services.entities.Pago;
  *@author ralfdemoledor
  *
  */
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface PagoMapper {
 	
 	

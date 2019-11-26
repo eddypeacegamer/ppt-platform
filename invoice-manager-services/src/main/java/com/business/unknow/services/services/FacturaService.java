@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
+import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
@@ -60,12 +61,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
-	
+
 	@Autowired
 	private ResourceFileRepository resourceRepo;
-
-//	@Autowired
-//	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
@@ -96,11 +94,9 @@ public class FacturaService {
 
 	@Autowired
 	private ImpuestoMapper impuestoMapper;
-	
 
 	@Autowired
 	private FacturaServiceEvaluator facturaServiceEvaluation;
-	
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -133,10 +129,8 @@ public class FacturaService {
 		FacturaDto dto = mapper.getFacturaDtoFromEntity(
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
-		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(
-				cfdiRepository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio))));
-		dto.setCfdi(cfdiDto);
+		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
+		dto.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null);
 		return dto;
 	}
 
@@ -225,46 +219,15 @@ public class FacturaService {
 		return cfdiDto;
 	}
 
-//	public FacturaFileDto getFacturaFile(String folio) throws InvoiceManagerException {
-//		Optional<FacturaFile> facturaFile = facturaFileRepository.findByFolio(folio);
-//		if (facturaFile.isPresent()) {
-//			return mapper.getFacturaFileDtoFromEntity(facturaFile.get());
-//		} else {
-//			throw new InvoiceManagerException("Folio not found",
-//					String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value());
-//		}
-//	}
-
-//	public FacturaFileDto insertNewFacturaFile(FacturaFileDto factura) {
-//		return mapper
-//				.getFacturaFileDtoFromEntity(facturaFileRepository.save(mapper.getEntityFromFacturaFileDto(factura)));
-//	}
-//
-//	public void deleteFacturaFile(String folio) {
-//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-//						String.format("La factura con el folio %s no existe", folio)));
-//		facturaFileRepository.delete(entity);
-//	}
-//
-//	public FacturaFileDto updateFacturaFile(FacturaFileDto factura, String folio) throws InvoiceManagerException {
-//		FacturaFile entity = facturaFileRepository.findByFolio(folio)
-//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-//						String.format("La factura con el folio %s no existe", folio)));
-//		entity.setPdf(factura.getPdf());
-//		entity.setXml(factura.getXml());
-//		entity.setQr(factura.getQr());
-//		return mapper.getFacturaFileDtoFromEntity(facturaFileRepository.save(entity));
-//	}
-
 	public List<PagoDto> getPagos(String folio) {
 		return mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre(folio));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPago(String folio, PagoDto pago) throws InvoiceManagerException {
-		Factura factura = repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
-				String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
+		Factura factura = repository.findByFolio(folio)
+				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
+						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
 		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
 			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
 					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
@@ -282,11 +245,11 @@ public class FacturaService {
 					.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
 							String.format("Verificar consitencia de pagos del folio %s", folio),
 							HttpStatus.NOT_FOUND.value()));
-			pagoPadre.setMonto(pagoPadre.getMonto() + pago.getMonto());
+			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
 			pagoRepository.save(pagoPadre);
-			
+
 		}
-		if(pago.getDocumento()!=null) {
+		if (pago.getDocumento() != null) {
 			ResourceFile resource = new ResourceFile();
 			resource.setData(pago.getDocumento().getBytes());
 			resource.setReferencia(pago.getFolio());
@@ -298,43 +261,47 @@ public class FacturaService {
 	}
 
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
-		
+
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
-		
-		if(entity.getUltimoUsuario().equalsIgnoreCase(pago.getUltimoUsuario())) {
-			throw new InvoiceManagerException("Mismo usuario no puede actualizar el pago", "La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva", HttpStatus.CONFLICT.value());
+
+		if (entity.getUltimoUsuario().equalsIgnoreCase(pago.getUltimoUsuario())) {
+			throw new InvoiceManagerException("Mismo usuario no puede actualizar el pago",
+					"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
+					HttpStatus.CONFLICT.value());
 		}
-		//Bank, Document, payForm and pay type can't be updated
+		// Bank, Document, payForm and pay type can't be updated
 		entity.setComentarioPago(pago.getComentarioPago());
 		entity.setRevision1(pago.getRevision1());
 		entity.setRevision2(pago.getRevision2());
 		entity.setUltimoUsuario(pago.getUltimoUsuario());
 		entity.setStatusPago(pago.getStatusPago());
-		
-		if(pago.getStatusPago().equals("RECHAZADO")) {
-			Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(
-					()-> new InvoiceManagerException("El pago no tiene  asignada una factura","Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+
+		if (pago.getStatusPago().equals("RECHAZADO")) {
+			Factura factura = repository.findByFolio(pago.getFolio())
+					.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+							"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
 			factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 			repository.save(factura);
-		}else {
-			if(pago.getRevision1() && pago.getRevision2()) {
+		} else {
+			if (pago.getRevision1() && pago.getRevision2()) {
 				entity.setStatusPago("ACEPTADO");
-				Factura factura =repository.findByFolio(pago.getFolio()).orElseThrow(
-						()-> new InvoiceManagerException("El pago no tiene  asignada una factura","Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+				Factura factura = repository.findByFolio(pago.getFolio())
+						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
 				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
 				factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 				repository.save(factura);
 			}
 		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
-		
+
 	}
 
 	public void deletePago(Integer id) {
 		Pago pago = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
-		//TODO implement logic to delete complements linked to the payments
+		// TODO implement logic to delete complements linked to the payments
 		pagoRepository.delete(pago);
 	}
 
@@ -345,20 +312,27 @@ public class FacturaService {
 				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
 						String.format("Folio with the name %s not found", facturaDto.getFolio()),
 						HttpStatus.NOT_FOUND.value()));
-		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(
-				cfdiRepository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio))));
+		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
 		EmpresaDto empresaDto = empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
+		Optional<Pago> pagoCredito = pagoRepository.findByFormaPagoAndComentarioPago(FacturaComplemento.FORMA_PAGO,
+				FacturaComplemento.PAGO_COMENTARIO);
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
-				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setCfdi(cfdiDto)
+				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
+				.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null)
 				.setEmpresaDto(empresaDto)
+				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
+				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
+				.setCtdadComplementos(repository
+						.findByFolioPadre(
+								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
+						.size())
+				.build();
 		return facturaServiceEvaluation.facturaTimbradoValidation(facturaContext);
 	}
 
@@ -369,11 +343,16 @@ public class FacturaService {
 				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
 						String.format("Folio with the name %s not found", facturaDto.getFolio()),
 						HttpStatus.NOT_FOUND.value()));
+		EmpresaDto empresaDto = empresaMapper
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).build();
+				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
 		return facturaServiceEvaluation.facturaCancelacionValidation(facturaContext);
 	}
 

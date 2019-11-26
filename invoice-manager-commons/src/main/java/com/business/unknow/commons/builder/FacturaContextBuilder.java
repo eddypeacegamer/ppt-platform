@@ -44,6 +44,11 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		return this;
 	}
 	
+	public FacturaContextBuilder setPagoCredito(PagoDto pagoCredito) {
+		instance.setPagoCredito(pagoCredito);
+		return this;
+	}
+	
 	public FacturaContextBuilder setEmpresaDto(EmpresaDto empresaDto) {
 		instance.setEmpresaDto(empresaDto);
 		return this;
@@ -51,6 +56,11 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 	
 	public FacturaContextBuilder setTipoDocumento(String tipoDocumento) {
 		instance.setTipoDocumento(tipoDocumento);
+		return this;
+	}
+	
+	public FacturaContextBuilder setCtdadComplementos(int ctdadComplementos) {
+		instance.setCtdadComplementos(ctdadComplementos);
 		return this;
 	}
 

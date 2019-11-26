@@ -60,6 +60,7 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.SC_BAD_REQUEST);
 		}
+		updateCanceladoValues(facturaContext);
 		return facturaContext;
 	}
 
@@ -68,8 +69,8 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(FacturarSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		facturaContext = facturaTranslator.translateFactura(facturaContext);
 		if (facturaContext.getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+			facturaContext = facturaTranslator.translateFactura(facturaContext);
 			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
 			case SW_SAPIENS:
 				swSapinsExecutorService.stamp(facturaContext);
@@ -79,9 +80,10 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 						HttpStatus.SC_BAD_REQUEST);
 			}
 		} else {
+			facturaContext = facturaTranslator.translateComplemento(facturaContext);
 			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
 			case SW_SAPIENS:
-				 swSapinsExecutorService.timbraComplemento(facturaContext);
+				 swSapinsExecutorService.stamp(facturaContext);
 				 break;
 			default:
 				throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",

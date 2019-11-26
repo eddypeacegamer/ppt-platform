@@ -93,6 +93,9 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
+	@Column(name = "FECHA_CANCELADO")
+	private Date fechaCancelacion;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_CREACION")
@@ -282,6 +285,14 @@ public class Factura implements Serializable {
 		this.packFacturacion = packFacturacion;
 	}
 
+	public Date getFechaCancelacion() {
+		return fechaCancelacion;
+	}
+
+	public void setFechaCancelacion(Date fechaCancelacion) {
+		this.fechaCancelacion = fechaCancelacion;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -291,7 +302,8 @@ public class Factura implements Serializable {
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
 				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", fechaCreacion=" + fechaCreacion + "]";
+				+ ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion="
+				+ fechaCreacion + "]";
 	}
 
 }

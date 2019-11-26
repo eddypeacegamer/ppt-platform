@@ -22,6 +22,11 @@
 		<appender-ref ref="SYSLOG-TLS" />
 		<appender-ref ref="CONSOLE" />
 	</root>
+	
+	<root level="INFO">
+		<appender-ref ref="SYSLOG-TLS" />
+		<appender-ref ref="CONSOLE" />
+	</root>
 
 	<logger name="com.business.unknow.services" level="INFO"/>
 

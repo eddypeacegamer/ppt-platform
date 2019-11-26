@@ -13,13 +13,14 @@ import com.business.unknow.Constants.CfdiConstants;
 
 @XmlRootElement(name = "cfdi:Comprobante")
 @XmlType(propOrder = { "version", "serie", "folio", "sello", "noCertificado", "certificado", "subtotal", "descuento",
-		"moneda", "total", "tipoDeComprobante", "metodoPago", "lugarExpedicion", "emisor", "receptor", "conceptos",
-		"impuestos", "schemaUrl", "satUrl", "schemaLocation" })
+		"moneda", "total", "tipoDeComprobante", "metodoPago", "lugarExpedicion", "emisor", "receptor", "conceptos","complemento",
+		"impuestos", "schemaUrl", "satUrl", "schemaLocation","pagoLocation" })
 public class Cfdi {
 
 	private String schemaUrl = CfdiConstants.SCHEMA_URL;
 	private String satUrl = CfdiConstants.SAT_URL;
 	private String schemaLocation = CfdiConstants.SCHEMA_LOCATION;
+	private String pagoLocation = CfdiConstants.PAGO_LOCATION;
 	private String version = CfdiConstants.FACTURA_VERSION;
 	private String serie;
 	private String folio;
@@ -32,7 +33,6 @@ public class Cfdi {
 	private Double descuento;
 	private String moneda;
 	private Double total;
-	// I para el caso comun
 	private String tipoDeComprobante;
 	private String metodoPago;
 	private String lugarExpedicion;
@@ -40,7 +40,9 @@ public class Cfdi {
 	private Receptor receptor;
 	private List<Concepto> conceptos;
 	private Impuesto impuestos;
+	private Complemento complemento;
 
+	
 	public Cfdi() {
 		this.conceptos = new ArrayList<>();
 		this.impuestos = new Impuesto();
@@ -71,6 +73,15 @@ public class Cfdi {
 
 	public void setSchemaLocation(String schemaLocation) {
 		this.schemaLocation = schemaLocation;
+	}
+
+	@XmlAttribute(name = "xmlns:pago10")
+	public String getPagoLocation() {
+		return pagoLocation;
+	}
+
+	public void setPagoLocation(String pagoLocation) {
+		this.pagoLocation = pagoLocation;
 	}
 
 	@XmlAttribute(name = "Version")
@@ -245,6 +256,15 @@ public class Cfdi {
 		this.impuestos = impuestos;
 	}
 
+	@XmlElement(name = "cfdi:Complemento")
+	public Complemento getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(Complemento complemento) {
+		this.complemento = complemento;
+	}
+
 	@Override
 	public String toString() {
 		return "Cfdi [schemaUrl=" + schemaUrl + ", satUrl=" + satUrl + ", schemaLocation=" + schemaLocation
@@ -253,7 +273,7 @@ public class Cfdi {
 				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda
 				+ ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago
 				+ ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor + ", receptor=" + receptor
-				+ ", conceptos=" + conceptos + ", impuestos=" + impuestos + "]";
+				+ ", conceptos=" + conceptos + ", impuestos=" + impuestos + ", complemento=" + complemento + "]";
 	}
 
 }

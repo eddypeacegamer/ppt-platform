@@ -6,7 +6,9 @@ import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Impuesto;
 import com.business.unknow.model.cfdi.Translado;
@@ -55,6 +57,14 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 		}
 		conpeto.setImpuestos(impuesto);
 		return conpeto;
+	}
+
+	@Override
+	public ComplementoPago complementoComponente(FacturaDto facturaDto, PagoDto pagoDto) {
+		ComplementoPago complementoPago = delegate.complementoComponente(facturaDto, pagoDto);
+		complementoPago.setFechaPago(
+				dateHelper.getStringFromFecha(pagoDto.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
+		return complementoPago;
 	}
 
 }

@@ -11,6 +11,7 @@ public class Data {
 	private String noCertificadoSAT;
 	private String noCertificadoCFDI;
 	private String uuid;
+	private String acuse;
 	private String selloSAT;
 	private String selloCFDI;
 	private Date fechaTimbrado;
@@ -139,14 +140,22 @@ public class Data {
 		this.cfdi = cfdi;
 	}
 
+	public String getAcuse() {
+		return acuse;
+	}
+
+	public void setAcuse(String acuse) {
+		this.acuse = acuse;
+	}
+
 	@Override
 	public String toString() {
 		return "Data [token=" + token + ", expires_in=" + expires_in + ", tokeny_type=" + tokeny_type
 				+ ", contribuyenteRFC=" + contribuyenteRFC + ", cadenaOriginalSAT=" + cadenaOriginalSAT
 				+ ", noCertificadoSAT=" + noCertificadoSAT + ", noCertificadoCFDI=" + noCertificadoCFDI + ", uuid="
-				+ uuid + ", selloSAT=" + selloSAT + ", selloCFDI=" + selloCFDI + ", fechaTimbrado=" + fechaTimbrado
-				+ ", qrCode=" + qrCode + ", cfdi=" + cfdi + ", sncf=" + sncf + ", subcontratacion=" + subcontratacion
-				+ "]";
+				+ uuid + ", acuse=" + acuse + ", selloSAT=" + selloSAT + ", selloCFDI=" + selloCFDI + ", fechaTimbrado="
+				+ fechaTimbrado + ", qrCode=" + qrCode + ", cfdi=" + cfdi + ", sncf=" + sncf + ", subcontratacion="
+				+ subcontratacion + "]";
 	}
 
 }

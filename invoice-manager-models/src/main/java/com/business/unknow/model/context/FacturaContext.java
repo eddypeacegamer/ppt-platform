@@ -18,6 +18,7 @@ public class FacturaContext implements Serializable {
 	private FacturaDto facturaPadreDto;
 	private List<FacturaDto> complementos;
 	private List<PagoDto> pagos;
+	private PagoDto pagoCredito;
 	private boolean valid;
 	private String ruleErrorDesc;
 	private String suiteError;
@@ -25,6 +26,7 @@ public class FacturaContext implements Serializable {
 	private Cfdi cfdi;
 	private List<FacturaFileDto> facturaFilesDto;
 	private String xml;
+	private int ctdadComplementos;
 
 	public FacturaContext() {
 		valid = true;
@@ -134,13 +136,29 @@ public class FacturaContext implements Serializable {
 		this.xml = xml;
 	}
 
+	public PagoDto getPagoCredito() {
+		return pagoCredito;
+	}
+
+	public void setPagoCredito(PagoDto pagoCredito) {
+		this.pagoCredito = pagoCredito;
+	}
+
+	public int getCtdadComplementos() {
+		return ctdadComplementos;
+	}
+
+	public void setCtdadComplementos(int ctdadComplementos) {
+		this.ctdadComplementos = ctdadComplementos;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaContext [tipoFactura=" + tipoFactura + ", tipoDocumento=" + tipoDocumento + ", facturaDto="
 				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
-				+ pagos + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError
-				+ ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml="
-				+ xml + "]";
+				+ pagos + ", pagoCredito=" + pagoCredito + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc
+				+ ", suiteError=" + suiteError + ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFilesDto="
+				+ facturaFilesDto + ", xml=" + xml + "]";
 	}
 
 }

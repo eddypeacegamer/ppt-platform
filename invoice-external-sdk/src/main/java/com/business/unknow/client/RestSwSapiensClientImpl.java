@@ -2,40 +2,37 @@ package com.business.unknow.client;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.UUID;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
 import javax.ws.rs.core.Response.Status;
 
-import org.glassfish.jersey.media.multipart.BodyPart;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.MultiPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.business.unknow.Constants;
 import com.business.unknow.client.common.AbstractClient;
 import com.business.unknow.client.endpoints.SwSapiensEndpoints;
 import com.business.unknow.client.interfaces.RestSwSapiensClient;
+import com.business.unknow.client.model.swsapiens.SwSapiensCancel;
 import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
 import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
 import com.business.unknow.client.model.swsapiens.SwSapiensConstans;
 import com.business.unknow.client.model.swsapiens.SwSapiensErrorMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SuppressWarnings("unused")
 public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSapiensClient {
 
 	private String token;
+	private Integer time=0;
 	private String user;
 	private String pw;
-
+	
 	public RestSwSapiensClientImpl(String url, String contextPath, String user, String pw) {
 		super(url, contextPath);
 		this.pw = pw;
@@ -49,6 +46,7 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		T result = null;
 		int status = response.getStatus();
 		log.info("Status {}", status);
+		System.out.println();
 		try {
 			String content = response.readEntity(String.class);
 			ObjectMapper mapper = new ObjectMapper();
@@ -92,13 +90,13 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 	}
 
 	@Override
-	public SwSapiensConfig authenticate(String usr, String pw) throws SwSapiensClientException {
+	public SwSapiensConfig authenticateService() throws SwSapiensClientException {
 		log.info("authenticate with Sw Sapiens.");
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
-		headers.add(SwSapiensConstans.USER, usr);
-		headers.add(SwSapiensConstans.PW, pw);
+		headers.add(SwSapiensConstans.USER, this.user);
+		headers.add(SwSapiensConstans.PW, this.pw);
 		String endpoint = SwSapiensEndpoints.getAuthenticateEndpoint();
-		Response response = post(endpoint, MediaType.APPLICATION_JSON, null, headers);
+		Response response = post(endpoint, MediaType.APPLICATION_JSON, "", headers);
 		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
 		});
 	}
@@ -116,9 +114,11 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 	}
 
 	private void authenticate() throws SwSapiensClientException {
-		if (token == null) {
-			SwSapiensConfig config = authenticate(this.user, this.pw);
-			token = config.getData().getToken();
+		Date date=new Date(new Long(this.time)*Constants.MILISECONDS);
+		if (this.token == null||date.before(new Date())) {
+			SwSapiensConfig config = authenticateService();
+			this.token = config.getData().getToken();
+			this.time=config.getData().getExpires_in();
 		}
 	}
 
@@ -134,10 +134,22 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		headers.add(SwSapiensConstans.CONTENT_TYPE_PARAMETER, SwSapiensConstans.CONTENT_TYPE_VALUE.concat(boundary));
 		headers.add(SwSapiensConstans.CONTENT_DISPOSITION_PARAMETER, SwSapiensConstans.CONTENT_DISPOSITION_VALUE);
 		String endpoint = SwSapiensEndpoints.getStampByVersionEndpoint(version);
-		Response response = post(endpoint, SwSapiensConstans.CONTENT_TYPE_VALUE.concat(boundary),
-				raw, headers);
+		Response response = post(endpoint, SwSapiensConstans.CONTENT_TYPE_VALUE.concat(boundary), raw, headers);
 		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
 		});
 	}
 
+	@Override
+	public SwSapiensConfig cancel(String uuid, String password, String rfc, String cert, String key)
+			throws SwSapiensClientException {
+		log.info("Canceling the factura {}", uuid);
+		authenticate();
+		SwSapiensCancel cancel = new SwSapiensCancel(uuid, password, rfc, cert, key);
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
+		headers.add(SwSapiensConstans.TOKEN_PARAMETER, token);
+		String endpoint = SwSapiensEndpoints.getCancelCsdEndpoint();
+		Response response = post(endpoint, MediaType.APPLICATION_JSON, cancel, headers);
+		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
+		});
+	}
 }
