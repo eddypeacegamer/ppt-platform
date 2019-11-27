@@ -149,10 +149,15 @@ export class RevisionComponent implements OnInit {
     this.dialogService.open(dialog);
   }
 
-  onGiroSelection(giroId: any) {
-    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-  }
+  onGiroSelection(giroId: string) {
+    let  value = +giroId;
+    if(isNaN(value)){
+     this.companiesCat = [];
+    }else{
+     this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
+       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+   }
 
   onCompanySelected(companyId: number) {
     this.companyInfo = this.companiesCat.find(c => c.id == companyId);
@@ -380,9 +385,13 @@ export class RevisionComponent implements OnInit {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
+      if(file.size > 100000){
+        alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
+      }else{
       reader.readAsDataURL(file);
       reader.onload = () => { this.paymentForm.filename = file.name + " " + file.type; this.newPayment.documento = reader.result.toString() }
       reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
+      }
     }
   }
 

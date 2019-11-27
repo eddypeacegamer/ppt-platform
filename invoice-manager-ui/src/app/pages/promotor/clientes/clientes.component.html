@@ -124,33 +124,33 @@
           </div>
         </div>
         <h6>Porcentajes Comisiones</h6>
-        <div class="row">
+        <div class="row" >
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputPromotor" class="label">Promotor</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor"
-                placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" [disabled]="clientInfo.id!=undefined"
+                placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCliente" class="label">Cliente</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente"
-                placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" [disabled]="clientInfo.id!=undefined"
+                placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputdespacho" class="label">Despacho</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho"
-                placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" [disabled]="clientInfo.id!=undefined"
+                placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputContacto" class="label">Contacto</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto"
-                placeholder="25">
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" [disabled]="clientInfo.id!=undefined"
+                placeholder="4">
             </div>
           </div>
         </div>

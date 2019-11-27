@@ -35,7 +35,7 @@ export class ClienteComponent implements OnInit {
     this.formInfo.success='';
     this.formInfo.message='';
     this.validatePercentages();
-    this.clientService.updateClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente actualizado exitosamente';},
+    this.clientService.updateClient(this.clientInfo).subscribe(success=> { this.clientInfo = success;this.formInfo.success = 'Cliente actualizado exitosamente';},
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
   }
 
@@ -70,6 +70,16 @@ export class ClienteComponent implements OnInit {
       this.clientInfo.porcentajeContacto = 0;
       this.clientInfo.porcentajeDespacho = 16 -this.clientInfo.porcentajeCliente -this.clientInfo.porcentajePromotor;
     }
+  }
+
+  public toggleOn(){
+    this.clientInfo.activo =true;
+    this.updateClient();
+  }
+
+  public toggleOff(){
+    this.clientInfo.activo =false;
+    this.updateClient();
   }
 
 }

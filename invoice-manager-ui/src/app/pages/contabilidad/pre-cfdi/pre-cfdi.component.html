@@ -244,12 +244,7 @@
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
-            <!--tr>
-                  <td *ngIf="folioParam != '*'" colspan="6"></td>
-                  <td *ngIf="folioParam === '*'" colspan="7"></td>
-                  <td class="text-center">Impuestos</td>
-                  <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
-                </tr-->
+            
             <tr>
               <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
               </td>
@@ -262,7 +257,7 @@
         </table>
         <br>
 
-        <div class="form-inline" *ngIf="folioParam === '*'">
+        <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>

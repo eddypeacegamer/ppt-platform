@@ -5,7 +5,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Giro } from '../../../models/catalogos/giro';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
@@ -24,7 +24,8 @@ export class EmpresaComponent implements OnInit {
   public girosCat: Giro[] = [];
   public errorMessages: string[] = [];
   
-  constructor(private catalogsService:CatalogsData,
+  constructor(private router: Router,
+              private catalogsService:CatalogsData,
               private empresaService:CompaniesData,
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer) { }
@@ -120,7 +121,7 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = [];
     this.formInfo.success ='';
     this.empresaService.insertNewCompany(this.companyInfo)
-    .subscribe((empresa:Empresa) => {this.companyInfo.id = empresa.id;this.formInfo.success='Empresa creada correctamente';},
+    .subscribe((empresa:Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]);},
     (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
     );
   }

@@ -78,7 +78,7 @@ export class PreCfdiComponent implements OnInit {
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
     this.initVariables();
-  
+    this.successMessage = undefined;
     this.route.paramMap.subscribe(route=>{
       this.folioParam = route.get('folio');
       console.log(`recovering ${this.folioParam} information`);
@@ -149,10 +149,15 @@ export class PreCfdiComponent implements OnInit {
     this.dialogService.open(dialog);
   }
 
-  onGiroSelection(giroId: any) {
-    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-  }
+  onGiroSelection(giroId: string) {
+    let  value = +giroId;
+    if(isNaN(value)){
+     this.companiesCat = [];
+    }else{
+     this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
+       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+   }
 
   onCompanySelected(companyId: number) {
     this.companyInfo = this.companiesCat.find(c => c.id == companyId);
@@ -314,7 +319,7 @@ export class PreCfdiComponent implements OnInit {
     if (validCdfi) {
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio;
+        (invoice: Factura) => { this.factura = invoice; this.newPayment.folio = invoice.folio;
           this.successMessage = `La solicitud del CFDI ha sido generada correctamente con el folio ${invoice.folio}`;
           this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
         },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
@@ -380,9 +385,13 @@ export class PreCfdiComponent implements OnInit {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
+      if(file.size > 100000){
+        alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
+      }else{
       reader.readAsDataURL(file);
       reader.onload = () => { this.paymentForm.filename = file.name + " " + file.type; this.newPayment.documento = reader.result.toString() }
       reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
+      }
     }
   }
 
