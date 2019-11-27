@@ -318,8 +318,8 @@ public class FacturaService {
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
-		Optional<Pago> pagoCredito = pagoRepository.findByFormaPagoAndComentarioPago(FacturaComplemento.FORMA_PAGO,
-				FacturaComplemento.PAGO_COMENTARIO);
+		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
+				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))

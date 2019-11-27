@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSapiensClient {
 
+	private static final Logger log = LoggerFactory.getLogger(RestSwSapiensClientImpl.class);
+	
 	private String token;
 	private Integer time=0;
 	private String user;
@@ -38,8 +40,6 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		this.pw = pw;
 		this.user = user;
 	}
-
-	private static final Logger log = LoggerFactory.getLogger(RestSwSapiensClientImpl.class);
 
 	@Override
 	protected <T> T parseResponse(Response response, TypeReference<T> entityType) throws SwSapiensClientException {

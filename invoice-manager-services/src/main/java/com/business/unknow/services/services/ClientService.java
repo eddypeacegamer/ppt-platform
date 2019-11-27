@@ -60,12 +60,11 @@ public class ClientService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("La razon social  %s ya esta creada en el sistema",
 								cliente.getInformacionFiscal().getRazonSocial()));
-			} else if (validation) {
-				SwSapiensConfig config = swSapinsExecutorService.validateRfc(cliente.getInformacionFiscal().getRfc());
-				if (!config.getStatus().equals(Constants.SUCCESS)) {
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
-							.format("El rfc %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
-				}
+			}
+			SwSapiensConfig config = swSapinsExecutorService.validateRfc(cliente.getInformacionFiscal().getRfc());
+			if (!config.getStatus().equals(Constants.SUCCESS)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
+						.format("El rfc %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 			}
 			cliente.setActivo(false);
 			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());

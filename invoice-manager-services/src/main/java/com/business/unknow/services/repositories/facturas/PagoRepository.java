@@ -16,7 +16,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	public Page<Pago> findAll(Pageable pageable);
 	public List<Pago> findByFolio(String folio);
 	public List<Pago> findByFolioPadre(String folio);
-	public Optional<Pago> findByFormaPagoAndComentarioPago(String formaPago,String Comentario);
+	public Optional<Pago> findByFolioAndFormaPagoAndComentarioPago(String folio,String formaPago,String Comentario);
 	public Optional<Pago> findById(Integer id);
 	
 }
