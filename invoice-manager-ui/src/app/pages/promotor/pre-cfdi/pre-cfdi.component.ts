@@ -17,7 +17,7 @@ import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Pago } from '../../../models/pago';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
 import { map} from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
@@ -72,7 +72,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private userService : UsersData,
     private filesService : FilesData,
     private downloadService: DownloadInvoiceFilesService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
@@ -317,9 +318,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (validCdfi) {
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => { this.factura.folio = invoice.folio; this.newPayment.folio = invoice.folio; 
-          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
-        },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
+        (invoice: Factura) => { this.router.navigate([`./pages/promotor/precfdi/${invoice.folio}`])},(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
     }
   }
 
@@ -373,6 +372,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   sendPayment() {
     this.paymentForm.successPayment = false;
+    this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
     let validPayment = true;
@@ -425,7 +425,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         },
         (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
-
   }
 
 }

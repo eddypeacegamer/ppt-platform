@@ -3,9 +3,9 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI</nb-card-header>
       <nb-card-body>
-          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-              <p *ngFor="let message of errorMessages">{{message}}</p>
-            </div>
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
         <div *ngIf="folioParam != '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="form-inline">
@@ -28,7 +28,6 @@
               (click)="downloadXml(factura.folio)">
               <i class="fa fa-code"></i>
             </button>
-
           </div>
           <p class="font-weight-bold">Información CFDI</p>
           <br>
@@ -80,7 +79,6 @@
               </div>
             </div>
           </div>
-          
           <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">
             {{clientInfo.rfc}} - {{clientInfo.razonSocial}}
           </div>
@@ -238,12 +236,7 @@
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
-            <!--tr>
-                <td *ngIf="folioParam != '*'" colspan="6"></td>
-                <td *ngIf="folioParam === '*'" colspan="7"></td>
-                <td class="text-center">Impuestos</td>
-                <td class="text-center">{{factura.cfdi.impuestos | currency}}</td>
-              </tr-->
+
             <tr>
               <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
               </td>
@@ -256,14 +249,14 @@
         </table>
         <br>
 
-        <div class="form-inline" *ngIf="folioParam === '*'">
+        <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
-          <div class="alert alert-success" *ngIf="factura.folio!=undefined" role="alert">
-            La solicitud del CFDI ha sido generada correctamente con el folio {{factura.folio}}
-          </div>
         </div>
         <br>
+        <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
+          {{successMessage}}
+        </div>
 
         <div *ngIf="factura.metodoPago=='PPD'">
           <p class="font-weight-bold">Complementos</p>
@@ -285,7 +278,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let complemento of complementos">
-                  <td scope="row" class="text-center"> 
+                  <td scope="row" class="text-center">
                     <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
                       [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
                       [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
@@ -419,70 +412,8 @@
         </div>
 
 
-        <!--div class="row">
-              <div class="colors col-md-6">
-                <div class="item text-success">
-                  <div class="color bg-status-success"></div>
-                  <div>
-                    <h5 class="text-success">Aceptado</h5>
-                    El CFDI fue aceptado.
-                  </div>
-                </div>
-                <div class="item text-info">
-                  <div class="color bg-status-info"></div>
-                  <div>
-                    <h5 class="text-info">En validacion</h5>
-                    El CFDI esta siendo validado por el area de operaciones.
-                  </div>
-                </div>
-                <div class="item text-warning">
-                  <div class="color bg-status-warning"></div>
-                  <div>
-                    <h5 class="text-warning">Solicitud de cambios</h5>
-                    El area de Operaciones require cambios.
-                  </div>
-                </div>
-                <div class="item text-danger">
-                  <div class="color bg-status-danger"></div>
-                  <div>
-                    <h5 class="text-danger">Rechazado</h5>
-                    El CFDi fue rechazado.
-                  </div>
-                </div>
-              </div>
-              <div class="colors col-md-6">
-                <div class="item text-success">
-                  <div class="color bg-status-success"></div>
-                  <div>
-                    <h5 class="text-success">Pago Validado</h5>
-                    El pago ha sido validado.
-                  </div>
-                </div>
-                <div class="item text-info">
-                  <div class="color bg-status-info"></div>
-                  <div>
-                    <h5 class="text-info">En validacion</h5>
-                    El pago esta siendo validado por el area de tesosreria.
-                  </div>
-                </div>
-                <div class="item text-warning">
-                  <div class="color bg-status-warning"></div>
-                  <div>
-                    <h5 class="text-warning">Referencia invalida</h5>
-                    Existe una referencia de pago no valida.
-                  </div>
-                </div>
-                <div class="item text-danger">
-                  <div class="color bg-status-danger"></div>
-                  <div>
-                    <h5 class="text-danger">Sin pago registrado</h5>
-                    No existe evidencia de pago.
-                  </div>
-                </div>
-              </div>
-            </div-->
+
       </nb-card-body>
     </nb-card>
   </div>
 </div>
-

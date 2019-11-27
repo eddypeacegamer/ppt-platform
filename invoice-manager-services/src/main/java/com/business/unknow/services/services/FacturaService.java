@@ -260,6 +260,7 @@ public class FacturaService {
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
 	}
 
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
 
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

@@ -403,6 +403,7 @@ export class PreCfdiComponent implements OnInit {
 
   sendPayment() {
     this.paymentForm.successPayment = false;
+    this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
     let validPayment = true;
