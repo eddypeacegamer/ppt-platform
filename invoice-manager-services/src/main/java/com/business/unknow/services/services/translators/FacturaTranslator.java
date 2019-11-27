@@ -118,6 +118,7 @@ public class FacturaTranslator {
 						? context.getFacturaDto().getFechaActualizacion()
 						: new Date(),
 				context.getEmpresaDto()));
+		System.out.println(context.getXml());
 	}
 
 	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {
