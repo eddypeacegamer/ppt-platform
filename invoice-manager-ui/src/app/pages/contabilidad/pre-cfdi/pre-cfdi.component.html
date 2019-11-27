@@ -29,7 +29,7 @@
               <i class="fa fa-code"></i>
             </button>
             <button type="button" *ngIf="factura.statusFactura != 'Timbrada'" class="btn btn-success"
-              (click)="timbrarFactura(factura)">
+            (click)="timbrarFactura(factura,dialog)">
               Timbrar
             </button>
             <button type="button" class="btn btn-danger" (click)="cancelarFactura(factura)">
@@ -302,7 +302,7 @@
                     <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
                       [disabled]="complemento.statusFactura =='Timbrada'" class="btn"
                       [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
-                      (click)="timbrarFactura(complemento)">
+                      (click)="timbrarFactura(complemento,dialog)">
                       <i class="fa fa-check-circle"></i>
                     </button>&nbsp;&nbsp;
                     <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
@@ -499,110 +499,29 @@
     </nb-card>
   </div>
 </div>
-
 <ng-template #dialog let-data let-ref="dialogRef">
-  <nb-card>
-    <nb-card-header>Buscador SAT</nb-card-header>
-    <nb-card-body>
-      <div class="row">
-
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="inputTipo" class="label">Tipo</label>
-            <nb-select selected="1" id="inputTipo">
-              <nb-option value="1">Productos</nb-option>
-              <nb-option value="2">Servicios</nb-option>
-            </nb-select>
-          </div>
+    <nb-card>
+      <nb-card-header>Seleccione Pack Facturacion</nb-card-header>
+      <nb-card-body>
+        <div class="row" style="width: 300 px;">
+            <div class="col-sm-12">
+                
+                  <label for="inputGiro" class="label">Pack de facturacion</label>
+                  <select id="inputGiro" fullWidth class="form-control" 
+                    style="display:block;" [(ngModel)]="data.packFacturacion">
+                    <option value="SW_SAPIENS">SW Sapiens</option>
+                    <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
+                  </select>
+                
+              </div>
+          
         </div>
-        <div class="col-md-8">
-          <div class="form-group">
-            <label for="inputDivision" class="label">División</label>
-
-            <nb-select selected="52" id="inputDivision">
-              <nb-option value="50">Alimentos, Bebidas y Tabaco</nb-option>
-              <nb-option value="52">Art&#237;culos Dom&#233;sticos, Suministros y Productos Electr&#243;nicos de Consumo
-              </nb-option>
-              <nb-option value="40">Componentes y Equipos para Distribuci&#243;n y Sistemas de Acondicionamiento
-              </nb-option>
-              <nb-option value="31">Componentes y Suministros de Manufactura</nb-option>
-              <nb-option value="32">Componentes y Suministros Electr&#243;nicos</nb-option>
-              <nb-option value="30">Componentes y Suministros para Estructuras, Edificaci&#243;n, Construcci&#243;n y
-                Obras Civiles</nb-option>
-              <nb-option value="39">Componentes, Accesorios y Suministros de Sistemas El&#233;ctricos e Iluminaci&#243;n
-              </nb-option>
-              <nb-option value="43">Difusi&#243;n de Tecnolog&#237;as de Informaci&#243;n y Telecomunicaciones
-              </nb-option>
-              <nb-option value="42">Equipo M&#233;dico, Accesorios y Suministros</nb-option>
-              <nb-option value="47">Equipos de Limpieza y Suministros</nb-option>
-              <nb-option value="44">Equipos de Oficina, Accesorios y Suministros</nb-option>
-              <nb-option value="46">Equipos y Suministros de Defensa, Orden Publico, Proteccion, Vigilancia y Seguridad
-              </nb-option>
-              <nb-option value="41">Equipos y Suministros de Laboratorio, de Medici&#243;n, de Observaci&#243;n y de
-                Pruebas</nb-option>
-              <nb-option value="45">Equipos y Suministros para Impresi&#243;n, Fotografia y Audiovisuales</nb-option>
-              <nb-option value="49">Equipos, Suministros y Accesorios para Deportes y Recreaci&#243;n</nb-option>
-              <nb-option value="27">Herramientas y Maquinaria General</nb-option>
-              <nb-option value="64">Instrumentos financieros, productos, contratos y acuerdos</nb-option>
-              <nb-option value="60">Instrumentos Musicales, Juegos, Juguetes, Artes, Artesan&#237;as y Equipo educativo,
-                Materiales, Accesorios y Suministros</nb-option>
-              <nb-option value="20">Maquinaria y Accesorios de Miner&#237;a y Perforaci&#243;n de Pozos</nb-option>
-              <nb-option value="21">Maquinaria y Accesorios para Agricultura, Pesca, Silvicultura y Fauna</nb-option>
-              <nb-option value="22">Maquinaria y Accesorios para Construcci&#243;n y Edificaci&#243;n</nb-option>
-              <nb-option value="26">Maquinaria y Accesorios para Generaci&#243;n y Distribuci&#243;n de Energ&#237;a
-              </nb-option>
-              <nb-option value="23">Maquinaria y Accesorios para Manufactura y Procesamiento Industrial</nb-option>
-              <nb-option value="24">Maquinaria, Accesorios y Suministros para Manejo, Acondicionamiento y Almacenamiento
-                de Materiales</nb-option>
-              <nb-option value="48">Maquinaria, Equipo y Suministros para la Industria de Servicios</nb-option>
-              <nb-option value="11">Material Mineral, Textil y Vegetal y Animal No Comestible</nb-option>
-              <nb-option value="12">Material Qu&#237;mico incluyendo Bioqu&#237;micos y Materiales de Gas</nb-option>
-              <nb-option value="10">Material Vivo Vegetal y Animal, Accesorios y Suministros</nb-option>
-              <nb-option value="15">Materiales Combustibles, Aditivos para Combustibles, Lubricantes y Anticorrosivos
-              </nb-option>
-              <nb-option value="13">Materiales de Resina, Colofonia, Caucho, Espuma, Pel&#237;cula y Elast&#243;mericos
-              </nb-option>
-              <nb-option value="14">Materiales y Productos de Papel</nb-option>
-              <nb-option value="51">Medicamentos y Productos Farmac&#233;uticos</nb-option>
-              <nb-option value="56">Muebles, Mobiliario y Decoraci&#243;n</nb-option>
-              <nb-option value="54">Productos para Relojer&#237;a, Joyer&#237;a y Piedras Preciosas</nb-option>
-              <nb-option value="55">Publicaciones Impresas, Publicaciones Electr&#243;nicas y Accesorios</nb-option>
-              <nb-option value="53">Ropa, Maletas y Productos de Aseo Personal</nb-option>
-              <nb-option value="95">Terrenos, Edificios, Estructuras y V&#237;as</nb-option>
-              <nb-option value="25">Veh&#237;culos Comerciales, Militares y Particulares, Accesorios y Componentes
-              </nb-option>
-            </nb-select>
-
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="inputGrupo" class="label">Grupo</label>
-
-            <nb-select selected="4110" id="inputGrupo">
-              <nb-option value="4110">Equipo de laboratorio y cient&#237;fico</nb-option>
-              <nb-option value="4111">Instrumentos de medida, observaci&#243;n y ensayo</nb-option>
-              <nb-option value="4112">Suministros y accesorios de laboratorio</nb-option>
-            </nb-select>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="inputClase" class="label">Clase</label>
-            <nb-select selected="4110" id="inputClase">
-              <nb-option value="4110">Equipo de laboratorio y cient&#237;fico</nb-option>
-              <nb-option value="4111">Instrumentos de medida, observaci&#243;n y ensayo</nb-option>
-              <nb-option value="4112">Suministros y accesorios de laboratorio</nb-option>
-            </nb-select>
-          </div>
-        </div>
-      </div>
-    </nb-card-body>
-    <nb-card-footer>
-      <button nbButton (click)="ref.close()">Cerrar</button>
-    </nb-card-footer>
-  </nb-card>
+        
+      </nb-card-body>
+      <nb-card-footer>
+        <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+        &nbsp;&nbsp;
+        <button class="btn btn-success" (click)="ref.close(data)">Timbrar</button>
+      </nb-card-footer>
+    </nb-card>
 </ng-template>

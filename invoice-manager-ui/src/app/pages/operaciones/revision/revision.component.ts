@@ -106,19 +106,7 @@ export class RevisionComponent implements OnInit {
                 }))
               .subscribe(complementos => this.complementos = complementos);
             this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => this.invoicePayments = payments);
-            this.invoiceService.getInvoiceByFolio(this.folioParam).pipe(
-              map((fac: Factura) => {
-                fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-                fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-                fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-                fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-                fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
-                return fac;
-              })).subscribe(invoice => this.factura = invoice,
-                error => {
-                  console.error('Info cant found, creating a new invoice:', error)
-                  this.initVariables();
-                });
+            this.getInvoiceByFolio(this.folioParam);
           }
         });
     });
@@ -129,6 +117,22 @@ export class RevisionComponent implements OnInit {
     this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
+  }
+
+  public getInvoiceByFolio(folio:string){
+    this.invoiceService.getInvoiceByFolio(folio).pipe(
+      map((fac: Factura) => {
+        fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
+        fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
+        return fac;
+      })).subscribe(invoice => this.factura = invoice,
+        error => {
+          console.error('Info cant found, creating a new invoice:', error)
+          this.initVariables();
+        });
   }
 
   public initVariables() {
@@ -357,9 +361,12 @@ export class RevisionComponent implements OnInit {
 
     this.dialogService.open(dialog, { context: factura })
       .onClose.subscribe(invoice => {
+        console.log('Timbrando:',invoice);
         if (invoice != undefined) {
           this.invoiceService.timbrarFactura(fact.folio, fact)
-            .subscribe(invoice => { this.router.navigate([`./pages/operaciones/revision/${invoice.folio}`]); },
+            .subscribe(result => { 
+              console.log('factura timbrada correctamente');
+              this.getInvoiceByFolio(invoice.folioPadre || invoice.folio);},
               (error: HttpErrorResponse) => {
                 this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
               });
