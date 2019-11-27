@@ -49,6 +49,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
+  public successMessage : string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
