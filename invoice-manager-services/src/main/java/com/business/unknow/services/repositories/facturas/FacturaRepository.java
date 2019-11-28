@@ -1,5 +1,6 @@
 package com.business.unknow.services.repositories.facturas;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +20,13 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
 	public Optional<Factura> findByFolio(String folio);
 
-	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura) like upper(:statusEvento) and upper(f.statusPago) like upper(:statusPago)")
+	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura) like upper(:status) and f.fechaCreacion between :since and :to")
 	public Page<Factura> findByRfcEmisorWithOtherParams(@Param("rfcEmisor") String rfc,
-			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
+			@Param("status") String status, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 
-	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura) like upper(:statusEvento) and upper(f.statusPago) like upper(:statusPago)")
+	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura) like upper(:status) and f.fechaCreacion between :since and :to")
 	public Page<Factura> findByRfcRemitenteWithOtherParams(@Param("rfcRemitente") String rfc,
-			@Param("statusEvento") String statusValidacion, @Param("statusPago") String statusPago, Pageable pageable);
+			@Param("status") String status, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 
 	public Page<Factura> findByFolioIgnoreCaseContaining(String rfc, Pageable pageable);
 	

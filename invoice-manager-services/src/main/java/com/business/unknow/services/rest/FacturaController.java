@@ -1,5 +1,6 @@
 package com.business.unknow.services.rest;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,12 +48,12 @@ public class FacturaController {
 			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
 			@RequestParam(name = "remitente", required = false) Optional<String> rfcRemitente,
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
-			@RequestParam(name = "payStatus", required = false) Optional<String> statusPago,
-			@RequestParam(name = "validationStatus", required = false) Optional<String> statusValidacion,
+			@RequestParam(name = "status", defaultValue = "") String status,
+			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
+			@RequestParam(name = "to", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, statusValidacion,
-				statusPago, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, status, since, to, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")

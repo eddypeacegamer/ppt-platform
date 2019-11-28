@@ -8,50 +8,49 @@
               <label for="inputFolio" class="label">Folio</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
+              <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
             </div>
             <div class="col-md-1">
               <label for="inputEmisor" class="label">Emisor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
+              <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
             </div>
             <div class="col-md-1">
               <label for="InputReceptor" class="label">Receptor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" nbInput fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
+              <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
             </div>
   
           </div>
           <br>
           <div class="row">
             <div class="col-md-1">
-              <label for="inputStatus" class="label">Estatus Pago</label>
+              <label for="inputStatus" class="label">Estatus factura</label>
             </div>
             <div class="col-md-2">
-              <nb-select id="inputGiro" [selected]="filterParams.payStatus" (selectedChange)="onPayStatus($event)">
-                <nb-option value="*">Todas</nb-option>
-                <nb-option *ngFor="let pay of payCat" [value]="pay.id">{{pay.value}}</nb-option>
-                
-              </nb-select>
-            </div>
-            <div class="col-md-1">
-              <label for="inputTimbrado" class="label">Estatus Validacion</label>
+              <select id="inputStatus" style="display:block;" class="form-control" (click)="onValidationStatus($event.target.value)">
+                <option value="*">Todas</option>
+                <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</option>
+              </select>
             </div>
             <div class="col-md-2">
-              <nb-select id="inputGiro" [selected]="filterParams.validationStatus" (selectedChange)="onValidationStatus($event)">
-                <nb-option value="*">Todas</nb-option>
-                <nb-option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</nb-option>
-              </nb-select>
-            </div>
-            <div class="col-md-2">
-                <label for="inputTimbrado" class="label">Rango de fechas solicitud</label>
+                <label for="inputTimbrado" class="label">Desde</label>
               </div>
-            <div class="col-md-3">
-                <input nbInput placeholder="Rango de fechas" [nbDatepicker]="rangepicker">
-                <nb-rangepicker #rangepicker></nb-rangepicker>
+            <div class="col-md-2">
+              <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
+              [(ngModel)]="filterParams.since">
+              <nb-datepicker #sincepicker></nb-datepicker>
             </div>
+            <div class="col-md-2">
+              <label for="inputTimbrado" class="label">Hasta</label>
+            </div>
+          <div class="col-md-2">
+            <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
+            [(ngModel)]="filterParams.to">
+            <nb-datepicker #topicker></nb-datepicker>
+          </div>
             <div class="col-md-1">
               <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
             </div>
