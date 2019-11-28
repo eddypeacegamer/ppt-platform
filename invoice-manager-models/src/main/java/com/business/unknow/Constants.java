@@ -49,6 +49,7 @@ public class Constants {
 		public static final String USER_PASS_PARAMETER = "UserPass";
 		public static final String USER_ID_PARAMETER = "UserID";
 		public static final String EMISOR_PARAMETER = "emisorRFC";
+		public static final String UUID_PARAMETER = "uuid";
 		public static final String TEXT_PARAMETER = "text2CFDI";
 		public static final String GENERAR_TEXT_PARAMETER = "generarTXT";
 		public static final String GENERAR_PDF_PARAMETER = "generarPDF";
@@ -56,6 +57,23 @@ public class Constants {
 		public static final String TYPE_PARAMETER = "xsi:type";
 		public static final String STRING_TYPE_PARAMETER = "xsd:string";
 		public static final String BOOLEAN_TYPE_PARAMETER = "xsd:boolean";
+		
+		public static final String REQUEST = "request";
+		public static final String NS1 = "ns1";
+		public static final String XSD = "xsd";
+		public static final String XSI = "xsi";
+		public static final String SOAP_ENC = "SOAP-ENC";
+		public static final String SOAP_ENV = "SOAP-ENV";
+		public static final String SOAP_ENV_STRUCT="SOAP-ENC:Struct";
+		
+		
+		public static final String URL_TIMBRADO = "https://t1demo.facturacionmoderna.com/timbrado/soap";
+		public static final String URL_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+		public static final String URL_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+		public static final String URL_ENCODING = "ttp://schemas.xmlsoap.org/soap/encoding/";
+	
+		public static final String REQUEST_CANCELADO="requestCancelarCFDI";
+		public static final String REQUEST_TIMBRADO="requestTimbrarCFDI";
 	}
 	
 }

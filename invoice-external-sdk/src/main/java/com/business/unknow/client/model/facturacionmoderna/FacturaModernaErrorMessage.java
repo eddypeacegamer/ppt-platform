@@ -5,6 +5,14 @@ public class FacturaModernaErrorMessage {
 	private String message;
 	private String messageDetail;
 
+	public FacturaModernaErrorMessage() {
+	}
+
+	public FacturaModernaErrorMessage(String message, String messageDetail) {
+		this.message = message;
+		this.messageDetail = messageDetail;
+	}
+
 	public String getMessage() {
 		return message;
 	}

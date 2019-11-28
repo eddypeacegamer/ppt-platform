@@ -41,7 +41,6 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		this.user = user;
 	}
 
-	@Override
 	protected <T> T parseResponse(Response response, TypeReference<T> entityType) throws SwSapiensClientException {
 		T result = null;
 		int status = response.getStatus();
