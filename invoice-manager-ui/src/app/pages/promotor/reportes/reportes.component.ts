@@ -21,7 +21,7 @@ export class ReportesComponent implements OnInit {
   public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams : any = {emisor:'',remitente:'',folio:'',payStatus:'*',validationStatus:'*',start:'',end:''};
+  public filterParams : any = {emisor:'',remitente:'',folio:'',status:'*',since:'',to:''};
 
   public validationCat : Status[] = [];
   public payCat : Status[] = [];
@@ -45,7 +45,8 @@ export class ReportesComponent implements OnInit {
     }
 
     public onValidationStatus(validationStatus:string){
-        this.filterParams.validationStatus=validationStatus;
+        this.filterParams.status=validationStatus;
+        console.log(this.filterParams);
     }
 
     public redirectToCfdi(folio:string){

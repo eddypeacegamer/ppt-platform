@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -103,21 +104,20 @@ public class FacturaService {
 	public List<FacturaDto> getComplementos(String folioPadre) {
 		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
 	}
-
+	//rfcEmisor, rfcRemitente, folio, status, start, end, page, size
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
-			Optional<String> folio, Optional<String> statusValidacion, Optional<String> statusPago, int page,
-			int size) {
+			Optional<String> folio, String status, Date since,Date to, int page,int size) {
+		
+		Date start = (since==null) ? new DateTime().minusYears(1).toDate():since;
+		Date end = (to == null) ? new Date() : to;
+		
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(page, size));
 		} else if (rfcEmisor.isPresent()) {
-			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()),
-					String.format("%%%s%%", statusValidacion.orElse("")),
-					String.format("%%%s%%", statusPago.orElse("")), PageRequest.of(page, size));
+			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()), String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else if (rfcRemitente.isPresent()) {
-			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()),
-					String.format("%%%s%%", statusValidacion.orElse("")),
-					String.format("%%%s%%", statusPago.orElse("")), PageRequest.of(page, size));
+			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()), String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else {
 			result = repository.findAll(PageRequest.of(page, size));
 		}

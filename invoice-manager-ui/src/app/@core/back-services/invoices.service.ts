@@ -13,9 +13,16 @@ export class InvoicesService {
   public getInvoices(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
     for (const key in filterParams) {
-      const value : string = filterParams[key];
+      let value : string;
+      if(filterParams[key] instanceof Date){
+        let date : Date = filterParams[key] as Date; 
+        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+      }else{
+        value = filterParams[key];
+      }
+      
       if(value.length>0){
-        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':filterParams[key]);
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
       }
     }
     return this.httpClient.get('../api/facturas',{params:pageParams});
