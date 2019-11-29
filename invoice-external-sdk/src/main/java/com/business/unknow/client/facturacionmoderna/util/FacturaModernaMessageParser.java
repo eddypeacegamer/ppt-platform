@@ -1,4 +1,4 @@
-package com.business.unknow.client.model.facturacionmoderna;
+package com.business.unknow.client.facturacionmoderna.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +20,9 @@ import javax.xml.soap.SOAPPart;
 
 import org.apache.http.HttpStatus;
 import com.business.unknow.Constants.FacturacionModernaRequest;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaErrorMessage;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaErrorModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaRequestModel;
 
 public class FacturaModernaMessageParser {
 

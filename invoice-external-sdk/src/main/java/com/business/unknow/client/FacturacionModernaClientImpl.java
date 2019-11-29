@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import com.business.unknow.client.common.AbstractClient;
 import com.business.unknow.client.endpoints.FacturacionModernaEndpoints;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaCancelResponseModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaErrorMessage;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaErrorModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaRequestModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaResponseModel;
+import com.business.unknow.client.facturacionmoderna.util.FacturaModernaClientException;
+import com.business.unknow.client.facturacionmoderna.util.FacturaModernaMessageParser;
 import com.business.unknow.client.interfaces.RestFacturacionModernaClient;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaCancelResponseModel;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaClientException;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaErrorMessage;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaErrorModel;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaRequestModel;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaResponseModel;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaMessageParser;
 
 public class FacturacionModernaClientImpl extends AbstractClient implements RestFacturacionModernaClient {
 

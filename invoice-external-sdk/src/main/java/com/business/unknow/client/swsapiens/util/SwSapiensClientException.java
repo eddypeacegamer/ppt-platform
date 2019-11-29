@@ -1,30 +1,24 @@
-package com.business.unknow.client.model.facturacionmoderna;
+package com.business.unknow.client.swsapiens.util;
 
-public class FacturaModernaClientException extends Exception {
+import com.business.unknow.client.swsapiens.model.SwSapiensErrorMessage;
+
+public class SwSapiensClientException extends Exception {
 
 	private static final long serialVersionUID = -6806226126010278250L;
-	private FacturaModernaErrorMessage errorMessage;
+	private SwSapiensErrorMessage errorMessage;
 	private Integer httpStatus;
 
-	public FacturaModernaClientException() {
-		super();
-	}
-	
-	public FacturaModernaClientException(String message) {
-		super(message);
-	}
-	
-	public FacturaModernaClientException(FacturaModernaErrorMessage errorMessage, Integer httpStatus) {
+	public SwSapiensClientException(SwSapiensErrorMessage errorMessage, Integer httpStatus) {
 		super();
 		this.errorMessage = errorMessage;
 		this.httpStatus = httpStatus;
 	}
 
-	public FacturaModernaErrorMessage getErrorMessage() {
+	public SwSapiensErrorMessage getErrorMessage() {
 		return errorMessage;
 	}
 
-	public void setErrorMessage(FacturaModernaErrorMessage errorMessage) {
+	public void setErrorMessage(SwSapiensErrorMessage errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 

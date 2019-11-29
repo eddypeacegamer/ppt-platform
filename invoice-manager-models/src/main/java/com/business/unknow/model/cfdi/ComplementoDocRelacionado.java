@@ -1,20 +1,33 @@
 package com.business.unknow.model.cfdi;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "DoctoRelacionado", namespace = "http://www.sat.gob.mx/Pagos")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ComplementoDocRelacionado {
 
-	private String folio;
-	private String idDocumento;
-	private Double impPagado;
-	private Double impSaldoAnt;
-	private Double impSaldoInsoluto;
-	private String metodoDePagoDR;
-	private String monedaDR;
-	private int numParcialidad;
-	private String serie;
-	
 	@XmlAttribute(name = "Folio")
+	private String folio;
+	@XmlAttribute(name = "IdDocumento")
+	private String idDocumento;
+	@XmlAttribute(name = "ImpPagado")
+	private String impPagado;
+	@XmlAttribute(name = "ImpSaldoAnt")
+	private String impSaldoAnt;
+	@XmlAttribute(name = "ImpSaldoInsoluto")
+	private String impSaldoInsoluto;
+	@XmlAttribute(name = "MetodoDePagoDR")
+	private String metodoDePagoDR;
+	@XmlAttribute(name = "MonedaDR")
+	private String monedaDR;
+	@XmlAttribute(name = "NumParcialidad")
+	private int numParcialidad;
+	@XmlAttribute(name = "Serie")
+	private String serie;
+
 	public String getFolio() {
 		return folio;
 	}
@@ -23,7 +36,6 @@ public class ComplementoDocRelacionado {
 		this.folio = folio;
 	}
 
-	@XmlAttribute(name = "IdDocumento")
 	public String getIdDocumento() {
 		return idDocumento;
 	}
@@ -32,34 +44,30 @@ public class ComplementoDocRelacionado {
 		this.idDocumento = idDocumento;
 	}
 
-	@XmlAttribute(name = "ImpPagado")
-	public Double getImpPagado() {
+	public String getImpPagado() {
 		return impPagado;
 	}
 
-	public void setImpPagado(Double impPagado) {
+	public void setImpPagado(String impPagado) {
 		this.impPagado = impPagado;
 	}
 
-	@XmlAttribute(name = "ImpSaldoAnt")
-	public Double getImpSaldoAnt() {
+	public String getImpSaldoAnt() {
 		return impSaldoAnt;
 	}
 
-	public void setImpSaldoAnt(Double impSaldoAnt) {
+	public void setImpSaldoAnt(String impSaldoAnt) {
 		this.impSaldoAnt = impSaldoAnt;
 	}
 
-	@XmlAttribute(name = "ImpSaldoInsoluto")
-	public Double getImpSaldoInsoluto() {
+	public String getImpSaldoInsoluto() {
 		return impSaldoInsoluto;
 	}
 
-	public void setImpSaldoInsoluto(Double impSaldoInsoluto) {
+	public void setImpSaldoInsoluto(String impSaldoInsoluto) {
 		this.impSaldoInsoluto = impSaldoInsoluto;
 	}
 
-	@XmlAttribute(name = "MetodoDePagoDR")
 	public String getMetodoDePagoDR() {
 		return metodoDePagoDR;
 	}
@@ -68,7 +76,6 @@ public class ComplementoDocRelacionado {
 		this.metodoDePagoDR = metodoDePagoDR;
 	}
 
-	@XmlAttribute(name = "MonedaDR")
 	public String getMonedaDR() {
 		return monedaDR;
 	}
@@ -77,7 +84,6 @@ public class ComplementoDocRelacionado {
 		this.monedaDR = monedaDR;
 	}
 
-	@XmlAttribute(name = "NumParcialidad")
 	public int getNumParcialidad() {
 		return numParcialidad;
 	}
@@ -86,7 +92,6 @@ public class ComplementoDocRelacionado {
 		this.numParcialidad = numParcialidad;
 	}
 
-	@XmlAttribute(name = "Serie")
 	public String getSerie() {
 		return serie;
 	}

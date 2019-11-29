@@ -26,5 +26,6 @@ public class StringHelper {
 			throw new InvoiceCommonException(String.format("Error reading the file %s", e.getMessage()));
 		}
 	}
+	
 
 }

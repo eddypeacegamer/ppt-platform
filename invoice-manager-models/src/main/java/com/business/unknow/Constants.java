@@ -41,6 +41,7 @@ public class Constants {
 		public static final String FACTURA_COMPLEMENTO_VERSION = "1.0";
 		public static final String SCHEMA_URL = "http://www.w3.org/2001/XMLSchema-instance";
 		public static final String SAT_URL = "http://www.sat.gob.mx/cfd/3";
+		public static final String TFD_URL = "http://www.sat.gob.mx/TimbreFiscalDigital";
 		public static final String SCHEMA_LOCATION = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd  http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd";
 		public static final String PAGO_LOCATION = "http://www.sat.gob.mx/Pagos";
 	}

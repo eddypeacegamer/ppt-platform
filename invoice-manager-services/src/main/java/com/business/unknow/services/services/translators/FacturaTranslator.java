@@ -63,6 +63,7 @@ public class FacturaTranslator {
 			facturaToXmlSigned(context);
 			return context;
 		} catch (InvoiceCommonException e) {
+			e.printStackTrace();
 			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 	}
@@ -71,7 +72,7 @@ public class FacturaTranslator {
 		try {
 			context.getFacturaDto().setCfdi(new CfdiDto());
 			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
-			
+
 			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto(),
 					context.getEmpresaDto());
 			context.getFacturaDto().getCfdi().setSerie("");
@@ -83,11 +84,12 @@ public class FacturaTranslator {
 				ComplementoPago complementoComponente = facturaCfdiTranslatorMapper
 						.complementoComponente(context.getFacturaDto(), pagoDto);
 				complementoComponente.getComplementoDocRelacionado().setNumParcialidad(context.getCtdadComplementos());
-				complementoComponente.getComplementoDocRelacionado().setIdDocumento(context.getFacturaPadreDto().getUuid());
 				complementoComponente.getComplementoDocRelacionado()
-						.setImpSaldoAnt(context.getPagoCredito().getMonto() + complementoComponente.getMonto());
+						.setIdDocumento(context.getFacturaPadreDto().getUuid());
+				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f%n",
+						context.getPagoCredito().getMonto() + Double.valueOf(complementoComponente.getMonto())));
 				complementoComponente.getComplementoDocRelacionado()
-						.setImpSaldoInsoluto(context.getPagoCredito().getMonto());
+						.setImpSaldoInsoluto(String.format("%.2f%n", context.getPagoCredito().getMonto()));
 				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
 
 			}
@@ -99,11 +101,12 @@ public class FacturaTranslator {
 			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 	}
-	
+
 	public void complementoToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-		xml=xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
-		xml=xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
+		System.out.println(xml);
+		xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
+		xml = xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
 		context.setXml(cdfiHelper.signXML(xml,
 				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
 						? context.getFacturaDto().getFechaActualizacion()
@@ -113,6 +116,7 @@ public class FacturaTranslator {
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
+		System.out.println(xml);
 		context.setXml(cdfiHelper.signXML(xml,
 				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
 						? context.getFacturaDto().getFechaActualizacion()

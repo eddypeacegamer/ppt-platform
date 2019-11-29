@@ -1,17 +1,26 @@
 package com.business.unknow.model.cfdi;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "Pago", namespace = "http://www.sat.gob.mx/Pagos")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ComplementoPago {
 
+	@XmlAttribute(name = "FechaPago")
 	private String fechaPago;
+	@XmlAttribute(name = "FormaDePagoP")
 	private String formaDePago;
+	@XmlAttribute(name = "MonedaP")
 	private String moneda;
-	private Double monto;
+	@XmlAttribute(name = "Monto")
+	private String monto;
+	@XmlElement(name = "DoctoRelacionado", namespace = "http://www.sat.gob.mx/Pagos")
 	private ComplementoDocRelacionado complementoDocRelacionado;
 
-	@XmlAttribute(name = "FechaPago")
 	public String getFechaPago() {
 		return fechaPago;
 	}
@@ -20,7 +29,6 @@ public class ComplementoPago {
 		this.fechaPago = fechaPago;
 	}
 
-	@XmlAttribute(name = "FormaDePagoP")
 	public String getFormaDePago() {
 		return formaDePago;
 	}
@@ -29,7 +37,6 @@ public class ComplementoPago {
 		this.formaDePago = formaDePago;
 	}
 
-	@XmlAttribute(name = "MonedaP")
 	public String getMoneda() {
 		return moneda;
 	}
@@ -38,16 +45,14 @@ public class ComplementoPago {
 		this.moneda = moneda;
 	}
 
-	@XmlAttribute(name = "Monto")
-	public Double getMonto() {
+	public String getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(String monto) {
 		this.monto = monto;
 	}
 
-	@XmlElement(name = "pago10:DoctoRelacionado")
 	public ComplementoDocRelacionado getComplementoDocRelacionado() {
 		return complementoDocRelacionado;
 	}

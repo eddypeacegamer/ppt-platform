@@ -70,10 +70,8 @@ public interface FacturaCfdiTranslatorMapper {
 
 	@Mappings({ @Mapping(target = "formaDePago", source = "facturaDto.formaPago"),
 			@Mapping(target = "moneda", source = "pagoDto.moneda"),
-			@Mapping(target = "monto", source = "pagoDto.monto"),
 			@Mapping(target = "complementoDocRelacionado.folio", source = "facturaDto.folioPadre"),
 			@Mapping(target = "complementoDocRelacionado.idDocumento", source = "facturaDto.uuid"),
-			@Mapping(target = "complementoDocRelacionado.impPagado", source = "pagoDto.monto"),
 			@Mapping(target = "complementoDocRelacionado.metodoDePagoDR", source = "facturaDto.metodoPago"),
 			@Mapping(target = "complementoDocRelacionado.monedaDR", source = "pagoDto.moneda"),
 			@Mapping(target = "complementoDocRelacionado.serie", constant = "PFP")})

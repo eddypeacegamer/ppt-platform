@@ -3,88 +3,66 @@ package com.business.unknow.model.cfdi;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 import com.business.unknow.Constants.CfdiConstants;
 
-@XmlRootElement(name = "cfdi:Comprobante")
-@XmlType(propOrder = { "version", "serie", "folio", "sello", "noCertificado", "certificado", "subtotal", "descuento",
-		"moneda", "total", "tipoDeComprobante", "metodoPago", "lugarExpedicion", "emisor", "receptor", "conceptos","complemento",
-		"impuestos", "schemaUrl", "satUrl", "schemaLocation","pagoLocation" })
+@XmlRootElement(name = "Comprobante", namespace = "http://www.sat.gob.mx/cfd/3")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Cfdi {
 
-	private String schemaUrl = CfdiConstants.SCHEMA_URL;
-	private String satUrl = CfdiConstants.SAT_URL;
-	private String schemaLocation = CfdiConstants.SCHEMA_LOCATION;
-	private String pagoLocation = CfdiConstants.PAGO_LOCATION;
+	@XmlAttribute(name = "Version")
 	private String version = CfdiConstants.FACTURA_VERSION;
+	@XmlAttribute(name = "Serie")
 	private String serie;
+	@XmlAttribute(name = "Folio")
 	private String folio;
+	@XmlAttribute(name = "Fecha")
 	private String fecha;
+	@XmlAttribute(name = "Sello")
 	private String sello;
+	@XmlAttribute(name = "FormaPago")
 	private String formaPago;
+	@XmlAttribute(name = "NoCertificado")
 	private String noCertificado;
+	@XmlAttribute(name = "Certificado")
 	private String certificado;
+	@XmlAttribute(name = "SubTotal")
 	private Double subtotal;
+	@XmlAttribute(name = "Descuento")
 	private Double descuento;
+	@XmlAttribute(name = "Moneda")
 	private String moneda;
+	@XmlAttribute(name = "Total")
 	private Double total;
+	@XmlAttribute(name = "TipoDeComprobante")
 	private String tipoDeComprobante;
+	@XmlAttribute(name = "MetodoPago")
 	private String metodoPago;
+	@XmlAttribute(name = "LugarExpedicion")
 	private String lugarExpedicion;
+	@XmlElement(name = "Emisor", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Emisor emisor;
+	@XmlElement(name = "Receptor", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Receptor receptor;
+	@XmlElementWrapper(name = "Conceptos", namespace = "http://www.sat.gob.mx/cfd/3")
+	@XmlElement(name = "Concepto", namespace = "http://www.sat.gob.mx/cfd/3")
 	private List<Concepto> conceptos;
+	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Impuesto impuestos;
+	@XmlElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Complemento complemento;
 
-	
 	public Cfdi() {
 		this.conceptos = new ArrayList<>();
 		this.impuestos = new Impuesto();
 	}
 
-	@XmlAttribute(name = "xmlns:xsi")
-	public String getSchemaUrl() {
-		return schemaUrl;
-	}
-
-	public void setSchemaUrl(String schemaUrl) {
-		this.schemaUrl = schemaUrl;
-	}
-
-	@XmlAttribute(name = "xmlns:cfdi")
-	public String getSatUrl() {
-		return satUrl;
-	}
-
-	public void setSatUrl(String satUrl) {
-		this.satUrl = satUrl;
-	}
-
-	@XmlAttribute(name = "xsi:schemaLocation")
-	public String getSchemaLocation() {
-		return schemaLocation;
-	}
-
-	public void setSchemaLocation(String schemaLocation) {
-		this.schemaLocation = schemaLocation;
-	}
-
-	@XmlAttribute(name = "xmlns:pago10")
-	public String getPagoLocation() {
-		return pagoLocation;
-	}
-
-	public void setPagoLocation(String pagoLocation) {
-		this.pagoLocation = pagoLocation;
-	}
-
-	@XmlAttribute(name = "Version")
 	public String getVersion() {
 		return version;
 	}
@@ -93,7 +71,6 @@ public class Cfdi {
 		this.version = version;
 	}
 
-	@XmlAttribute(name = "Serie")
 	public String getSerie() {
 		return serie;
 	}
@@ -102,7 +79,6 @@ public class Cfdi {
 		this.serie = serie;
 	}
 
-	@XmlAttribute(name = "Folio")
 	public String getFolio() {
 		return folio;
 	}
@@ -111,7 +87,6 @@ public class Cfdi {
 		this.folio = folio;
 	}
 
-	@XmlAttribute(name = "Fecha")
 	public String getFecha() {
 		return fecha;
 	}
@@ -120,7 +95,6 @@ public class Cfdi {
 		this.fecha = fecha;
 	}
 
-	@XmlAttribute(name = "Sello")
 	public String getSello() {
 		return sello;
 	}
@@ -129,7 +103,6 @@ public class Cfdi {
 		this.sello = sello;
 	}
 
-	@XmlAttribute(name = "FormaPago")
 	public String getFormaPago() {
 		return formaPago;
 	}
@@ -138,7 +111,6 @@ public class Cfdi {
 		this.formaPago = formaPago;
 	}
 
-	@XmlAttribute(name = "NoCertificado")
 	public String getNoCertificado() {
 		return noCertificado;
 	}
@@ -147,7 +119,6 @@ public class Cfdi {
 		this.noCertificado = noCertificado;
 	}
 
-	@XmlAttribute(name = "Certificado")
 	public String getCertificado() {
 		return certificado;
 	}
@@ -156,7 +127,6 @@ public class Cfdi {
 		this.certificado = certificado;
 	}
 
-	@XmlAttribute(name = "SubTotal")
 	public Double getSubtotal() {
 		return subtotal;
 	}
@@ -165,7 +135,6 @@ public class Cfdi {
 		this.subtotal = subtotal;
 	}
 
-	@XmlAttribute(name = "Descuento")
 	public Double getDescuento() {
 		return descuento;
 	}
@@ -174,7 +143,6 @@ public class Cfdi {
 		this.descuento = descuento;
 	}
 
-	@XmlAttribute(name = "Moneda")
 	public String getMoneda() {
 		return moneda;
 	}
@@ -183,7 +151,6 @@ public class Cfdi {
 		this.moneda = moneda;
 	}
 
-	@XmlAttribute(name = "Total")
 	public Double getTotal() {
 		return total;
 	}
@@ -192,7 +159,6 @@ public class Cfdi {
 		this.total = total;
 	}
 
-	@XmlAttribute(name = "TipoDeComprobante")
 	public String getTipoDeComprobante() {
 		return tipoDeComprobante;
 	}
@@ -201,7 +167,6 @@ public class Cfdi {
 		this.tipoDeComprobante = tipoDeComprobante;
 	}
 
-	@XmlAttribute(name = "MetodoPago")
 	public String getMetodoPago() {
 		return metodoPago;
 	}
@@ -210,7 +175,6 @@ public class Cfdi {
 		this.metodoPago = metodoPago;
 	}
 
-	@XmlAttribute(name = "LugarExpedicion")
 	public String getLugarExpedicion() {
 		return lugarExpedicion;
 	}
@@ -219,7 +183,6 @@ public class Cfdi {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	@XmlElement(name = "cfdi:Emisor")
 	public Emisor getEmisor() {
 		return emisor;
 	}
@@ -228,7 +191,6 @@ public class Cfdi {
 		this.emisor = emisor;
 	}
 
-	@XmlElement(name = "cfdi:Receptor")
 	public Receptor getReceptor() {
 		return receptor;
 	}
@@ -237,8 +199,6 @@ public class Cfdi {
 		this.receptor = receptor;
 	}
 
-	@XmlElementWrapper(name = "cfdi:Conceptos")
-	@XmlElement(name = "cfdi:Concepto")
 	public List<Concepto> getConceptos() {
 		return conceptos;
 	}
@@ -247,7 +207,6 @@ public class Cfdi {
 		this.conceptos = conceptos;
 	}
 
-	@XmlElement(name = "cfdi:Impuestos")
 	public Impuesto getImpuestos() {
 		return impuestos;
 	}
@@ -256,7 +215,6 @@ public class Cfdi {
 		this.impuestos = impuestos;
 	}
 
-	@XmlElement(name = "cfdi:Complemento")
 	public Complemento getComplemento() {
 		return complemento;
 	}
@@ -267,8 +225,7 @@ public class Cfdi {
 
 	@Override
 	public String toString() {
-		return "Cfdi [schemaUrl=" + schemaUrl + ", satUrl=" + satUrl + ", schemaLocation=" + schemaLocation
-				+ ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha + ", sello="
+		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha + ", sello="
 				+ sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado + ", certificado="
 				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda
 				+ ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago

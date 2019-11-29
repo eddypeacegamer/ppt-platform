@@ -26,6 +26,7 @@ import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.EmpresaDto;
@@ -200,7 +201,6 @@ public class FacturaService {
 	}
 
 	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) {
-
 		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
 		for (ConceptoDto conceptoDto : dto.getConceptos()) {
@@ -320,8 +320,10 @@ public class FacturaService {
 								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
+		FacturaDto currentFacturaDto=mapper.getFacturaDtoFromEntity(folioEnity);
+//		currentFacturaDto.setPackFacturacion(PackFacturarionEnum.FACTURACION_MODERNA.getNombre());
 		FacturaContext facturaContext = new FacturaContextBuilder()
-				.setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+				.setFacturaDto(currentFacturaDto)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
 				.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null)
 				.setEmpresaDto(empresaDto)

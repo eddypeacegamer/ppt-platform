@@ -1,4 +1,4 @@
-package com.business.unknow.client.model.facturacionmoderna;
+package com.business.unknow.client.facturacionmoderna.model;
 
 public enum FacturacionModernaObjectEnum {
 

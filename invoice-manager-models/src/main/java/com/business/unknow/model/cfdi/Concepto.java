@@ -1,25 +1,36 @@
 package com.business.unknow.model.cfdi;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlType(propOrder = { "claveProdServ", "noIdentificacion", "cantidad", "claveUnidad", "unidad", "descripcion",
-		"valorUnitario", "importe","descuento","impuestos" })
+@XmlRootElement(name = "Concepto", namespace = "http://www.sat.gob.mx/cfd/3")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Concepto {
 
+	@XmlAttribute(name = "ClaveProdServ")
 	private String claveProdServ;
+	@XmlAttribute(name = "NoIdentificacion")
 	private String noIdentificacion;
+	@XmlAttribute(name = "Cantidad")
 	private Integer cantidad;
+	@XmlAttribute(name = "ClaveUnidad")
 	private String claveUnidad;
+	@XmlAttribute(name = "Unidad")
 	private String unidad;
+	@XmlAttribute(name = "Descripcion")
 	private String descripcion;
+	@XmlAttribute(name = "ValorUnitario")
 	private Double valorUnitario;
+	@XmlAttribute(name = "Importe")
 	private Double importe;
+	@XmlAttribute(name = "Descuento")
 	private Double descuento;
+	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Impuesto impuestos;
 
-	@XmlAttribute(name = "ClaveProdServ")
 	public String getClaveProdServ() {
 		return claveProdServ;
 	}
@@ -28,7 +39,6 @@ public class Concepto {
 		this.claveProdServ = claveProdServ;
 	}
 
-	@XmlAttribute(name = "NoIdentificacion")
 	public String getNoIdentificacion() {
 		return noIdentificacion;
 	}
@@ -37,7 +47,6 @@ public class Concepto {
 		this.noIdentificacion = noIdentificacion;
 	}
 
-	@XmlAttribute(name = "ClaveUnidad")
 	public String getClaveUnidad() {
 		return claveUnidad;
 	}
@@ -46,7 +55,6 @@ public class Concepto {
 		this.claveUnidad = claveUnidad;
 	}
 
-	@XmlAttribute(name = "Unidad")
 	public String getUnidad() {
 		return unidad;
 	}
@@ -55,7 +63,6 @@ public class Concepto {
 		this.unidad = unidad;
 	}
 
-	@XmlAttribute(name = "Descripcion")
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -64,7 +71,6 @@ public class Concepto {
 		this.descripcion = descripcion;
 	}
 
-	@XmlAttribute(name = "ValorUnitario")
 	public Double getValorUnitario() {
 		return valorUnitario;
 	}
@@ -73,7 +79,6 @@ public class Concepto {
 		this.valorUnitario = valorUnitario;
 	}
 
-	@XmlAttribute(name = "Importe")
 	public Double getImporte() {
 		return importe;
 	}
@@ -82,7 +87,6 @@ public class Concepto {
 		this.importe = importe;
 	}
 
-	@XmlAttribute(name = "Descuento")
 	public Double getDescuento() {
 		return descuento;
 	}
@@ -91,7 +95,6 @@ public class Concepto {
 		this.descuento = descuento;
 	}
 
-	@XmlElement(name = "cfdi:Impuestos")
 	public Impuesto getImpuestos() {
 		return impuestos;
 	}
@@ -100,7 +103,6 @@ public class Concepto {
 		this.impuestos = impuestos;
 	}
 
-	@XmlAttribute(name = "Cantidad")
 	public Integer getCantidad() {
 		return cantidad;
 	}
