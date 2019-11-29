@@ -47,7 +47,7 @@ export class ReportesComponent implements OnInit {
   }
 
   public redirectToCfdi(folio: string) {
-    this.router.navigate([`./pages/promotor/precfdi/${folio}`])
+    this.router.navigate([`./pages/contabilidad/cfdi/${folio}`])
   }
 
 
