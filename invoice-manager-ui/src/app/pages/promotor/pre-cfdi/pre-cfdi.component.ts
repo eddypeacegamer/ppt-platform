@@ -261,7 +261,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
       this.calcularImportes();
-
+      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+        alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
+        this.factura.cfdi.conceptos.pop();
+      }
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.newConcep = new Concepto();
@@ -279,7 +282,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe*3 + impuesto * 3) / 3;
       }
-      console.log('impuesto',impuesto);
       this.factura.total += (base *3 + impuesto * 3)/3;
     }
   }

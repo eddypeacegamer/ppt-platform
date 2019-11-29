@@ -262,9 +262,14 @@ export class RevisionComponent implements OnInit {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      this.calcularImportes();
+      
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
+      this.calcularImportes();
+      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+        alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
+        this.factura.cfdi.conceptos.pop();
+      }
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.newConcep = new Concepto();
