@@ -3,6 +3,10 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Pagos</nb-card-header>
       <nb-card-body>
+
+          <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
+              <p *ngFor="let message of errors">{{message}}</p>
+          </div>
           <div class="row">
               <div class="col-sm-2">
                 <label for="inputPayType" class="label">Forma de Pago</label>

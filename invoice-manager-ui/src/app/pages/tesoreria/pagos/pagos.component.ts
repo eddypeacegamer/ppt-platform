@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
-import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
 import { Pago } from '../../../models/pago';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-pagos',
@@ -19,6 +18,7 @@ export class PagosComponent implements OnInit {
 
   public userEmail : string;
   public paymentForm : any = {'payType':'*','status':'*','bank':'*','monto':0}
+  public errors : string[]=[];
 
   public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Tipo pago', 'Forma de pago', 'Fecha pago','Actualizado por'];
   public page: GenericPage<any> = new GenericPage();
@@ -47,16 +47,16 @@ export class PagosComponent implements OnInit {
   }
 
   openDialog(payment:Pago) {
+    this.errors =[];
     this.dialogService.open(ValidacionPagoComponent, {
       context: {
         pago: payment,
       },
     }).onClose.subscribe(pago => {
-      console.log(pago);
       if(pago!=undefined){
         pago.ultimoUsuario = this.userEmail;
         this.paymentService.updatePayment(pago.folio,pago.id,pago).toPromise()
-        .then(success=>console.log(success), error=>console.error(error))
+        .then(success=>console.log(success), (error:HttpErrorResponse)=>this.errors.push(error.error.message || `${error.statusText} : ${error.message}`))
         .then(()=>this.updateDataTable())
       }
       });
