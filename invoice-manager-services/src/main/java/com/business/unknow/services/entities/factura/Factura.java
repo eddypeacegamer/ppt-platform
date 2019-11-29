@@ -39,6 +39,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String razonSocialRemitente;
+	
+	@Column(name = "SOLICITANTE")
+	private String solicitante;
 
 	@Column(name = "FOLIO")
 	private String folio;
@@ -292,6 +295,14 @@ public class Factura implements Serializable {
 	public void setFechaCancelacion(Date fechaCancelacion) {
 		this.fechaCancelacion = fechaCancelacion;
 	}
+	
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
+	}
 
 	@Override
 	public String toString() {
@@ -300,7 +311,7 @@ public class Factura implements Serializable {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
+				+ metodoPago + ", packFacturacion=" + packFacturacion + ", solicitante=" + solicitante + ", total=" + total
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion=" + fechaActualizacion
 				+ ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion="
 				+ fechaCreacion + "]";

@@ -19,6 +19,9 @@
             <p>{{factura.rfcRemitente}}</p>
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Solicitante</p>
+            <p>{{factura.solicitante}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
             <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
               (click)="downloadPdf(factura.folio)">
@@ -29,7 +32,7 @@
               <i class="fa fa-code"></i>
             </button>
             <button type="button" *ngIf="factura.statusFactura != 'Timbrada'" class="btn btn-success"
-            (click)="timbrarFactura(factura,dialog)">
+              (click)="timbrarFactura(factura,dialog)">
               Timbrar
             </button>
             <button type="button" class="btn btn-danger" (click)="cancelarFactura(factura)">
@@ -191,16 +194,10 @@
                     [(ngModel)]="newConcep.descuento">
                 </div-->
           <div class="col-sm-4">
-            <label for="inputImpuesto" class="label">Impuesto</label>
-
+            <label for="inputImpuesto" class="label"></label>
             <div class="row form-inline">
-              <select selected="1" id="inputImpuesto" style="display:block;width: 150px;" class="form-control">
-                <!--option value="*">Seleccionar</option-->
-                <!--option value="001">ISR</option-->
-                <option value="002">IVA</option>
-                <!--option value="003">IEPS</option-->
-              </select>
-
+              <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
+              <label class="form-check-label" for="iva">IVA</label>
               <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
             </div>
           </div>
@@ -500,28 +497,28 @@
   </div>
 </div>
 <ng-template #dialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>Seleccione Pack Facturacion</nb-card-header>
-      <nb-card-body>
-        <div class="row" style="width: 300 px;">
-            <div class="col-sm-12">
-                
-                  <label for="inputGiro" class="label">Pack de facturacion</label>
-                  <select id="inputGiro" fullWidth class="form-control" 
-                    style="display:block;" [(ngModel)]="data.packFacturacion">
-                    <option value="SW_SAPIENS">SW Sapiens</option>
-                    <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
-                  </select>
-                
-              </div>
-          
+  <nb-card>
+    <nb-card-header>Seleccione Pack Facturacion</nb-card-header>
+    <nb-card-body>
+      <div class="row" style="width: 300 px;">
+        <div class="col-sm-12">
+
+          <label for="inputGiro" class="label">Pack de facturacion</label>
+          <select id="inputGiro" fullWidth class="form-control" style="display:block;"
+            [(ngModel)]="data.packFacturacion">
+            <option value="SW_SAPIENS">SW Sapiens</option>
+            <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
+          </select>
+
         </div>
-        
-      </nb-card-body>
-      <nb-card-footer>
-        <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
-        &nbsp;&nbsp;
-        <button class="btn btn-success" (click)="ref.close(data)">Timbrar</button>
-      </nb-card-footer>
-    </nb-card>
+
+      </div>
+
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+      &nbsp;&nbsp;
+      <button class="btn btn-success" (click)="ref.close(data)">Timbrar</button>
+    </nb-card-footer>
+  </nb-card>
 </ng-template>

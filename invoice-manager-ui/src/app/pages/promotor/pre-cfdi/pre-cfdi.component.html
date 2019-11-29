@@ -19,6 +19,9 @@
             <p>{{factura.rfcRemitente}}</p>
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Promotor</p>
+            <p>{{factura.solicitante}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
             <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
               (click)="downloadPdf(factura.folio)">
@@ -177,22 +180,17 @@
             <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
               [(ngModel)]="newConcep.valorUnitario">
           </div>
+
           <!--div class="col-sm-2">
                 <label for="inputDescuento" class="label">Descuento</label>
                 <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
                   [(ngModel)]="newConcep.descuento">
               </div-->
           <div class="col-sm-4">
-            <label for="inputImpuesto" class="label">Impuesto</label>
-
+            <label for="inputImpuesto" class="label"></label>
             <div class="row form-inline">
-              <select selected="1" id="inputImpuesto" style="display:block;width: 150px;" class="form-control">
-                <!--option value="*">Seleccionar</option-->
-                <!--option value="001">ISR</option-->
-                <option value="002">IVA</option>
-                <!--option value="003">IEPS</option-->
-              </select>
-
+              <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
+              <label class="form-check-label" for="iva">IVA</label>
               <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
             </div>
           </div>

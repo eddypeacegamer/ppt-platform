@@ -14,6 +14,8 @@ export class Concepto{
 	public impuestos : Impuesto[];
 	public retenciones : any[];
 
+	//field only used on UI
+	public iva: boolean;
 	
 	constructor(){
 		this.descuento = 0;
@@ -23,6 +25,8 @@ export class Concepto{
 		this.importe = 0;
 		this.impuestos = [];
 		this.retenciones = [];
+
+		this.iva = true;
 	}
 
 	

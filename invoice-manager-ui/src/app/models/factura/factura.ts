@@ -10,7 +10,7 @@ export class Factura{
     public rfcRemitente : string ;
     public razonSocialEmisor : string;
     public razonSocialRemitente : string;
-	
+	public solicitante : string;
 	public tipoDocumento : string;
 	public cfdi : Cfdi;
 	public total : number;
