@@ -24,6 +24,7 @@ import { DownloadInvoiceFilesService } from '../../../@core/back-services/downlo
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -79,7 +80,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
     this.initVariables();
-  
     this.route.paramMap.subscribe(route=>{
       this.folioParam = route.get('folio');
       console.log(`recovering ${this.folioParam} information`);
@@ -226,6 +226,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   removeConcepto(index: number) {
     this.factura.cfdi.conceptos.splice(index, 1);
+    this.calcularImportes();
   }
 
   agregarConcepto() {
@@ -256,13 +257,30 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      this.factura.subtotal += base;
-      this.factura.total = (this.factura.total * 3 + base * 3 + impuesto * 3) / 3;
-      this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];//IVA is harcoded
+      
+      if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
+      this.calcularImportes();
+
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.newConcep = new Concepto();
+    }
+  }
+
+  calcularImportes(){
+    this.factura.total = 0;
+    this.factura.subtotal = 0;
+    for (const concepto of this.factura.cfdi.conceptos) {
+
+      const base = concepto.importe - concepto.descuento;
+      this.factura.subtotal += base;
+      let impuesto = 0;
+      for (const imp of concepto.impuestos) {
+        impuesto = (imp.importe*3 + impuesto * 3) / 3;
+      }
+      console.log('impuesto',impuesto);
+      this.factura.total += (base *3 + impuesto * 3)/3;
     }
   }
 
@@ -273,6 +291,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   solicitarCfdi() {
     this.errorMessages = [];
     let validCdfi = true;
+    this.factura.solicitante = this.userEmail;
     if (this.companyInfo == undefined) {
       this.errorMessages.push('La empresa emisora es requerida.');
       validCdfi = false;

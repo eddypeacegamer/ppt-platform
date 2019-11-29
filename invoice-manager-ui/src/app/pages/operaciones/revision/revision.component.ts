@@ -231,6 +231,7 @@ export class RevisionComponent implements OnInit {
 
   removeConcepto(index: number) {
     this.factura.cfdi.conceptos.splice(index, 1);
+    this.calcularImportes();
   }
 
   agregarConcepto() {
@@ -261,13 +262,28 @@ export class RevisionComponent implements OnInit {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      this.factura.subtotal += base;
-      this.factura.total = (this.factura.total * 3 + base * 3 + impuesto * 3) / 3;
-      this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];//IVA is harcoded
+      this.calcularImportes();
+      if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.newConcep = new Concepto();
+    }
+  }
+
+  calcularImportes(){
+    this.factura.total = 0;
+    this.factura.subtotal = 0;
+    for (const concepto of this.factura.cfdi.conceptos) {
+
+      const base = concepto.importe - concepto.descuento;
+      this.factura.subtotal += base;
+      let impuesto = 0;
+      for (const imp of concepto.impuestos) {
+        impuesto = (imp.importe*3 + impuesto * 3) / 3;
+      }
+      console.log('impuesto',impuesto);
+      this.factura.total += (base *3 + impuesto * 3)/3;
     }
   }
 

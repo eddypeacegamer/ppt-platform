@@ -17,6 +17,7 @@ public class FacturaDto implements Serializable {
 	private String rfcRemitente;
 	private String razonSocialEmisor;
 	private String razonSocialRemitente;
+	private String solicitante;
 	private String folio;
 	private String folioPadre;
 	private String uuid;
@@ -68,6 +69,14 @@ public class FacturaDto implements Serializable {
 
 	public void setRazonSocialRemitente(String razonSocialRemitente) {
 		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 
 	public String getFolio() {
@@ -245,7 +254,7 @@ public class FacturaDto implements Serializable {
 				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", total=" + total
+				+ metodoPago + ", packFacturacion=" + packFacturacion + ", solicitante=" + solicitante + ", total=" + total
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi
 				+ "]";
