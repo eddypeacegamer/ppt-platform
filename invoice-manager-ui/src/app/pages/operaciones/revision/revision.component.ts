@@ -369,21 +369,18 @@ export class RevisionComponent implements OnInit {
   }
 
 
-  public onSelectPack(event) {
-    console.log(event)
-  }
-
   public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...factura };
+    
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
     fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
 
-    this.dialogService.open(dialog, { context: factura })
+    this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         console.log('Timbrando:',invoice);
         if (invoice != undefined) {
