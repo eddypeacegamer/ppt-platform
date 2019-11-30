@@ -51,7 +51,7 @@ public class Pago implements Serializable {
 	@Column(name = "TIPO_CAMBIO")
 	private Double tipoDeCambio;
 
-	@DecimalMin(value = "1.00")
+
 	@Column(name = "MONTO")
 	private Double monto;
 
