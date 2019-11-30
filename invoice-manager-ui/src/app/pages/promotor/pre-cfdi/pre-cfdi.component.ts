@@ -287,7 +287,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
-    return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+    if(impuestos!=null && impuestos!= undefined){
+      return impuestos.map(i => i.impuesto).reduce((total, value) => total + value);
+    }
   }
 
   solicitarCfdi() {

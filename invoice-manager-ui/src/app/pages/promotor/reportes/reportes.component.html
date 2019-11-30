@@ -30,7 +30,7 @@
               <label for="inputStatus" class="label">Estatus factura</label>
             </div>
             <div class="col-md-2">
-              <select id="inputStatus" style="display:block;" class="form-control" (click)="onValidationStatus($event.target.value)">
+              <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
                 <option value="*">Todas</option>
                 <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</option>
               </select>
