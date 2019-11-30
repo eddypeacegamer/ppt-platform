@@ -251,10 +251,7 @@ export class PreCfdiComponent implements OnInit {
       this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
       validConcept = false;
     }
-    if (this.newConcep.valorUnitario < 1) {
-      this.conceptoMessages.push('El valor unitario de un concepto no puede ser menor a 1.00$');
-      validConcept = false;
-    }
+    
     if (validConcept) {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
