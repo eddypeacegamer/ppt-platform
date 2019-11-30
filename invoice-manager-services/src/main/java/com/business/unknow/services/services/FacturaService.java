@@ -320,7 +320,7 @@ public class FacturaService {
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
 		FacturaDto currentFacturaDto=mapper.getFacturaDtoFromEntity(folioEnity);
-//		currentFacturaDto.setPackFacturacion(PackFacturarionEnum.FACTURACION_MODERNA.getNombre());
+		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
 		FacturaContext facturaContext = new FacturaContextBuilder()
 				.setFacturaDto(currentFacturaDto)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
