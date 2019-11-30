@@ -86,12 +86,11 @@ public class FacturaTranslator {
 				complementoComponente.getComplementoDocRelacionado().setNumParcialidad(context.getCtdadComplementos());
 				complementoComponente.getComplementoDocRelacionado()
 						.setIdDocumento(context.getFacturaPadreDto().getUuid());
-				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f%n",
+				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f",
 						context.getPagoCredito().getMonto() + Double.valueOf(complementoComponente.getMonto())));
 				complementoComponente.getComplementoDocRelacionado()
-						.setImpSaldoInsoluto(String.format("%.2f%n", context.getPagoCredito().getMonto()));
+						.setImpSaldoInsoluto(String.format("%.2f", numberHelper.assignPrecision(context.getPagoCredito().getMonto(), Constants.DEFAULT_SCALE)));
 				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
-
 			}
 			cfdi.setComplemento(complemento);
 			context.setCfdi(cfdi);

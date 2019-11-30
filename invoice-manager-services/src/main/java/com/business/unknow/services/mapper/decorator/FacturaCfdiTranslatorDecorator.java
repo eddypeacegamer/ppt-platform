@@ -62,8 +62,8 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 	@Override
 	public ComplementoPago complementoComponente(FacturaDto facturaDto, PagoDto pagoDto) {
 		ComplementoPago complementoPago = delegate.complementoComponente(facturaDto, pagoDto);
-		complementoPago.setMonto(String.format("%.2f%n", pagoDto.getMonto()));
-		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f%n", pagoDto.getMonto()));
+		complementoPago.setMonto(String.format("%.2f", pagoDto.getMonto()));
+		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f", pagoDto.getMonto()));
 		complementoPago.setFechaPago(
 				dateHelper.getStringFromFecha(pagoDto.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
 		return complementoPago;

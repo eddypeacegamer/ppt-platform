@@ -286,7 +286,6 @@ export class PreCfdiComponent implements OnInit {
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe*3 + impuesto * 3) / 3;
       }
-      console.log('impuesto',impuesto);
       this.factura.total += (base *3 + impuesto * 3)/3;
     }
   }
@@ -312,6 +311,11 @@ export class PreCfdiComponent implements OnInit {
       this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      
+      this.factura.statusFactura = this.validationCat.find(v => v.value == this.factura.statusFactura).id;
+      this.factura.statusPago = this.payCat.find(v => v.value == this.factura.statusPago).id;
+      this.factura.statusDevolucion = this.devolutionCat.find(v => v.value == this.factura.statusDevolucion).id;
+      this.factura.formaPago = this.payTypeCat.find(v => v.value == this.factura.formaPago).id;
     }
 
     if (this.clientInfo == undefined) {
@@ -380,7 +384,7 @@ export class PreCfdiComponent implements OnInit {
       .onClose.subscribe(invoice => {
         console.log('Timbrando:',invoice);
         if (invoice != undefined) {
-          this.invoiceService.timbrarFactura(fact.folio, invoice)
+          this.invoiceService.timbrarFactura(fact.folio, fact)
             .subscribe(result => { 
               console.log('factura timbrada correctamente');
               this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
