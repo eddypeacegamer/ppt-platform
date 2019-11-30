@@ -248,6 +248,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
       validConcept = false;
     }
+    if(this.newConcep.valorUnitario<=0){
+      this.conceptoMessages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
+      validConcept = false;
+    }
   
     if (validConcept) {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
@@ -283,8 +287,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
-    if(impuestos!=null && impuestos!= undefined){
-      return impuestos.map(i => i.impuesto).reduce((total, value) => total + value);
+    if(impuestos.length>0){
+      return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+    }else{
+      return 0;
     }
   }
 
