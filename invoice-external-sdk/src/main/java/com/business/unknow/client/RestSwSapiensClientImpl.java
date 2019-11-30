@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
 
 import com.business.unknow.Constants;
 import com.business.unknow.client.common.AbstractClient;
+import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 import com.business.unknow.client.endpoints.SwSapiensEndpoints;
 import com.business.unknow.client.interfaces.RestSwSapiensClient;
-import com.business.unknow.client.model.swsapiens.SwSapiensCancel;
-import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
-import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
-import com.business.unknow.client.model.swsapiens.SwSapiensConstans;
-import com.business.unknow.client.model.swsapiens.SwSapiensErrorMessage;
+import com.business.unknow.client.swsapiens.model.SwSapiensCancel;
+import com.business.unknow.client.swsapiens.model.SwSapiensConstans;
+import com.business.unknow.client.swsapiens.model.SwSapiensErrorMessage;
+import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,7 +41,6 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		this.user = user;
 	}
 
-	@Override
 	protected <T> T parseResponse(Response response, TypeReference<T> entityType) throws SwSapiensClientException {
 		T result = null;
 		int status = response.getStatus();

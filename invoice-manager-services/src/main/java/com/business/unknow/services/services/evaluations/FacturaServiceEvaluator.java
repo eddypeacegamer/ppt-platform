@@ -13,6 +13,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
 import com.business.unknow.rules.suites.FacturarSuite;
+import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 
@@ -35,9 +36,10 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 	private SwSapinsExecutorService swSapinsExecutorService;
 
 	@Autowired
-	private RulesEngine rulesEngine;
+	private FacturacionModernaExecutor facturacionModernaExecutor;
 
-	
+	@Autowired
+	private RulesEngine rulesEngine;
 
 	public FacturaContext facturaComplementoValidation(FacturaContext facturaContext) throws InvoiceManagerException {
 		Facts facts = new Facts();
@@ -56,6 +58,9 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		case SW_SAPIENS:
 			swSapinsExecutorService.cancelarFactura(facturaContext);
 			break;
+		case FACTURACION_MODERNA:
+			facturacionModernaExecutor.cancelarFactura(facturaContext);
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.SC_BAD_REQUEST);
@@ -69,26 +74,29 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(FacturarSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		if (facturaContext.getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
+		case FACRTURA:
 			facturaContext = facturaTranslator.translateFactura(facturaContext);
-			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-			case SW_SAPIENS:
-				swSapinsExecutorService.stamp(facturaContext);
-				break;
-			default:
-				throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
-						HttpStatus.SC_BAD_REQUEST);
-			}
-		} else {
+			break;
+		case COMPLEMENTO:
 			facturaContext = facturaTranslator.translateComplemento(facturaContext);
-			switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-			case SW_SAPIENS:
-				 swSapinsExecutorService.stamp(facturaContext);
-				 break;
-			default:
-				throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
-						HttpStatus.SC_BAD_REQUEST);
-			}
+			break;
+		default:
+			throw new InvoiceManagerException("The type of document not supported",
+					String.format("The type of document %s not valid", facturaContext.getTipoDocumento()),
+					HttpStatus.SC_BAD_REQUEST);
+		}
+
+		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+		case SW_SAPIENS:
+			swSapinsExecutorService.stamp(facturaContext);
+			break;
+		case FACTURACION_MODERNA:
+			facturacionModernaExecutor.stamp(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+					HttpStatus.SC_BAD_REQUEST);
 		}
 		updateFacturaAndCfdiValues(facturaContext);
 		return facturaContext;

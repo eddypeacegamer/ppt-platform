@@ -1,6 +1,7 @@
 package com.business.unknow.commons.util;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -18,7 +19,11 @@ public class FileHelper {
 		}
 	}
 
-	public String stringToBase64(String cadena) {
+	public String stringEncodeBase64(String cadena) {
 		return Base64.getEncoder().encodeToString(cadena.getBytes());
+	}
+
+	public String stringDecodeBase64(String cadena) {
+		return new String(Base64.getDecoder().decode(cadena.getBytes()), StandardCharsets.UTF_8);
 	}
 }

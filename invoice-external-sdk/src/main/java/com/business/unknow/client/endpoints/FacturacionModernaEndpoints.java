@@ -8,4 +8,5 @@ public class FacturacionModernaEndpoints {
 	public static String getTimbradoEndpoint() {
 		return TIMBRADO.concat(SOAP);
 	}
+
 }

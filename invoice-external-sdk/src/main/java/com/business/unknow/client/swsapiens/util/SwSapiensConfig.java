@@ -1,4 +1,6 @@
-package com.business.unknow.client.model.swsapiens;
+package com.business.unknow.client.swsapiens.util;
+
+import com.business.unknow.client.swsapiens.model.Data;
 
 public class SwSapiensConfig {
 

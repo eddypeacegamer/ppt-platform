@@ -3,21 +3,29 @@ package com.business.unknow.model.cfdi;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.business.unknow.Constants.CfdiConstants;
 
+@XmlRootElement(name = "Pagos",namespace = "http://www.sat.gob.mx/Pagos")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ComplementoPagos {
 
+	@XmlAttribute(name = "Version")
 	private String version = CfdiConstants.FACTURA_COMPLEMENTO_VERSION;
+	@XmlElement(name = "Pago",namespace = "http://www.sat.gob.mx/Pagos")
 	private List<ComplementoPago> complementoPagos;
 
+	
 	public ComplementoPagos() {
 		this.complementoPagos = new ArrayList<>();
 	}
 
-	@XmlAttribute(name = "Version")
+	
 	public String getVersion() {
 		return version;
 	}
@@ -26,7 +34,7 @@ public class ComplementoPagos {
 		this.version = version;
 	}
 
-	@XmlElement(name = "pago10:Pago")
+	
 	public List<ComplementoPago> getComplementoPagos() {
 		return complementoPagos;
 	}

@@ -1,4 +1,4 @@
-package com.business.unknow.client.model.facturacionmoderna;
+package com.business.unknow.client.facturacionmoderna.model;
 
 public class FacturaModernaRequestModel {
 
@@ -6,9 +6,31 @@ public class FacturaModernaRequestModel {
 	private String userPass;
 	private String rfc;
 	private String xml;
+	private String uuid;
 	private Boolean generarTxt;
 	private Boolean generarPdf;
 	private Boolean generarCbb;
+
+	public FacturaModernaRequestModel() {
+	}
+
+	public FacturaModernaRequestModel(String user, String userPass, String rfc, String xml, Boolean generarTxt,
+			Boolean generarPdf, Boolean generarCbb) {
+		this.user = user;
+		this.userPass = userPass;
+		this.rfc = rfc;
+		this.xml = xml;
+		this.generarTxt = generarTxt;
+		this.generarPdf = generarPdf;
+		this.generarCbb = generarCbb;
+	}
+	
+	public FacturaModernaRequestModel(String user, String userPass, String rfc, String uuid) {
+		this.user = user;
+		this.userPass = userPass;
+		this.rfc = rfc;
+		this.uuid=uuid;
+	}
 
 	public String getUser() {
 		return user;
@@ -66,10 +88,31 @@ public class FacturaModernaRequestModel {
 		this.generarCbb = generarCbb;
 	}
 
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public Boolean getGenerarTxt() {
+		return generarTxt;
+	}
+
+	public Boolean getGenerarPdf() {
+		return generarPdf;
+	}
+
+	public Boolean getGenerarCbb() {
+		return generarCbb;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaModernaRequestModel [user=" + user + ", userPass=" + userPass + ", rfc=" + rfc + ", xml=" + xml
-				+ ", generarTxt=" + generarTxt + ", generarPdf=" + generarPdf + ", generarCbb=" + generarCbb + "]";
+				+ ", uuid=" + uuid + ", generarTxt=" + generarTxt + ", generarPdf=" + generarPdf + ", generarCbb="
+				+ generarCbb + "]";
 	}
 
 }

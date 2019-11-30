@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
-import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
-import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
+import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
+import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 import com.business.unknow.model.ClientDto;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;

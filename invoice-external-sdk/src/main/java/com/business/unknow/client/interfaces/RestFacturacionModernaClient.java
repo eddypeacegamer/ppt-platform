@@ -1,9 +1,12 @@
 package com.business.unknow.client.interfaces;
 
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaClientException;
-import com.business.unknow.client.model.facturacionmoderna.FacturaModernaRequestModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaCancelResponseModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaRequestModel;
+import com.business.unknow.client.facturacionmoderna.model.FacturaModernaResponseModel;
+import com.business.unknow.client.facturacionmoderna.util.FacturaModernaClientException;
 
 public interface RestFacturacionModernaClient {
 
-	public void stamp(FacturaModernaRequestModel requestModel) throws FacturaModernaClientException;
+	public FacturaModernaResponseModel stamp(FacturaModernaRequestModel requestModel) throws FacturaModernaClientException;
+	public FacturaModernaCancelResponseModel cancelar(FacturaModernaRequestModel requestModel) throws FacturaModernaClientException;
 }

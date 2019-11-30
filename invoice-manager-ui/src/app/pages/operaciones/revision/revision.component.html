@@ -10,7 +10,7 @@
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="form-inline">
 
-
+            
             <p class="font-weight-bold">Emisor</p>
             <p>{{factura.rfcEmisor}}</p>
             <p>{{factura.razonSocialEmisor}}</p>
@@ -31,6 +31,7 @@
               (click)="downloadXml(factura.folio)">
               <i class="fa fa-code"></i>
             </button>
+            
             <button type="button" *ngIf="factura.statusFactura != 'Timbrada'" class="btn btn-success"
               (click)="timbrarFactura(factura,dialog)">
               Timbrar

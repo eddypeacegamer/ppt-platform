@@ -1,4 +1,4 @@
-package com.business.unknow.client.model.swsapiens;
+package com.business.unknow.client.swsapiens.model;
 
 public class SwSapiensConstans {
 	public static final int UNPROCESSABLE_ENTITY = 422;

@@ -1,7 +1,7 @@
 package com.business.unknow.client.interfaces;
 
-import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
-import com.business.unknow.client.model.swsapiens.SwSapiensConfig;
+import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
+import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 
 public interface RestSwSapiensClient {
 
