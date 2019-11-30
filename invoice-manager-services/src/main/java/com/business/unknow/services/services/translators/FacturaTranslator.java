@@ -130,7 +130,7 @@ public class FacturaTranslator {
 			Optional<Translado> tempTranslado = impuestos.stream()
 					.filter(a -> a.getImpuesto().equals(translado.getImpuesto())).findFirst();
 			if (tempTranslado.isPresent()) {
-				tempTranslado.get().setImporte(tempTranslado.get().getImporte() + translado.getImporte());
+				tempTranslado.get().setImporte(numberHelper.assignPrecision(tempTranslado.get().getImporte() + translado.getImporte(),Constants.DEFAULT_SCALE));
 			} else {
 				impuestos.add(
 						new Translado(translado.getImpuesto(), translado.getTipoFactor(), translado.getTasaOCuota(),
