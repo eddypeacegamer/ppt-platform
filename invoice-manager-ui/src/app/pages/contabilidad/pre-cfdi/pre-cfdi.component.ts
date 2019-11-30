@@ -290,7 +290,9 @@ export class PreCfdiComponent implements OnInit {
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
-    return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+    if(impuestos!=null && impuestos!= undefined){
+      return impuestos.map(i => i.impuesto).reduce((total, value) => total + value);
+    }
   }
 
   solicitarCfdi() {
@@ -370,15 +372,14 @@ export class PreCfdiComponent implements OnInit {
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
     fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
-
     this.dialogService.open(dialog, { context: factura })
       .onClose.subscribe(invoice => {
         console.log('Timbrando:',invoice);
         if (invoice != undefined) {
-          this.invoiceService.timbrarFactura(fact.folio, fact)
+          this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => { 
               console.log('factura timbrada correctamente');
-              this.getInvoiceByFolio(invoice.folioPadre || invoice.folio);},
+              this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
               (error: HttpErrorResponse) => {
                 this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
               });
