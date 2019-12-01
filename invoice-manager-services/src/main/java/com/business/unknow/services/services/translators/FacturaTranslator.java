@@ -54,11 +54,15 @@ public class FacturaTranslator {
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
 				Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
 				cfdi.getConceptos().add(concepto);
-				totalImpuestos = calculaImpuestos(impuestos, concepto, totalImpuestos);
+				if (!conceptoDto.getImpuestos().isEmpty()) {
+					totalImpuestos = calculaImpuestos(impuestos, concepto, totalImpuestos);
+				}
 			}
-			cfdi.getImpuestos().setTotalImpuestosTrasladados(
-					numberHelper.assignPrecision(totalImpuestos, Constants.DEFAULT_SCALE));
-			cfdi.getImpuestos().setTranslados(impuestos);
+			if (!impuestos.isEmpty()) {
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(
+						numberHelper.assignPrecision(totalImpuestos, Constants.DEFAULT_SCALE));
+				cfdi.getImpuestos().setTranslados(impuestos);
+			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
 			return context;

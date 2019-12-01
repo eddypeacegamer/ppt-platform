@@ -1,5 +1,7 @@
 package com.business.unknow.services.mapper.decorator;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaConstants;
@@ -47,15 +49,18 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 		if (conpeto.getDescuento() != null) {
 			conpeto.setDescuento(numberHelper.assignPrecision(conpeto.getDescuento(), Constants.DEFAULT_SCALE));
 		}
-		Impuesto impuesto = new Impuesto();
-		for (ImpuestoDto impuestoDto : dto.getImpuestos()) {
-			Translado traslado = delegate.cfdiImpuesto(impuestoDto);
-			traslado.setImporte(numberHelper.assignPrecision(traslado.getImporte(), Constants.DEFAULT_SCALE));
-			traslado.setBase(numberHelper.assignPrecision(traslado.getBase(), Constants.DEFAULT_SCALE));
-			traslado.setTasaOCuota(String.format("%05f", Double.valueOf(traslado.getTasaOCuota())));
-			impuesto.getTranslados().add(traslado);
+		if (!dto.getImpuestos().isEmpty()) {
+			Impuesto impuesto = new Impuesto();
+			impuesto.setTranslados(new ArrayList<>());
+			for (ImpuestoDto impuestoDto : dto.getImpuestos()) {
+				Translado traslado = delegate.cfdiImpuesto(impuestoDto);
+				traslado.setImporte(numberHelper.assignPrecision(traslado.getImporte(), Constants.DEFAULT_SCALE));
+				traslado.setBase(numberHelper.assignPrecision(traslado.getBase(), Constants.DEFAULT_SCALE));
+				traslado.setTasaOCuota(String.format("%05f", Double.valueOf(traslado.getTasaOCuota())));
+				impuesto.getTranslados().add(traslado);
+			}
+			conpeto.setImpuestos(impuesto);
 		}
-		conpeto.setImpuestos(impuesto);
 		return conpeto;
 	}
 

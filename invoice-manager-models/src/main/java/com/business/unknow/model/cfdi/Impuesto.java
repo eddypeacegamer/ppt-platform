@@ -1,6 +1,5 @@
 package com.business.unknow.model.cfdi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,7 +20,6 @@ public class Impuesto {
 	private List<Translado> translados;
 
 	public Impuesto() {
-		translados= new ArrayList<>();
 	}
 	
 	public Double getTotalImpuestosTrasladados() {
