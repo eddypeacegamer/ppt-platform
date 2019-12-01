@@ -14,7 +14,9 @@ import com.business.unknow.services.entities.Pago;
 
 public class FacturaDefaultValues {
 
-	public static void assignaDefaultsFactura(FacturaDto facturaDto) throws InvoiceManagerException {
+	private FacturaCalculator facturaCalculator = new FacturaCalculator();
+
+	public void assignaDefaultsFactura(FacturaDto facturaDto) throws InvoiceManagerException {
 		facturaDto.setFechaCreacion(new Date());
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
@@ -25,13 +27,13 @@ public class FacturaDefaultValues {
 		} else {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		}
-		FacturaCalculator.assignFolioInFacturaDto(facturaDto);
-		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
+		facturaCalculator.assignFolioInFacturaDto(facturaDto);
 	}
 
-	public static Pago assignaDefaultsFacturaPPD(FacturaDto facturaDto) {
+	public Pago assignaDefaultsFacturaPPD(FacturaDto facturaDto) {
 		Pago payment = new Pago();// TODO move this logic to other place
 		payment.setBanco("N/A");
+		payment.setCreateUser("Sistema");
 		payment.setComentarioPago("Pago Automatico por sistema");
 		payment.setFechaPago(new Date());
 		payment.setFolio(facturaDto.getFolio());
@@ -47,13 +49,13 @@ public class FacturaDefaultValues {
 		return payment;
 	}
 
-	public static void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {
+	public void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {
 		facturaDto.setFechaCreacion(new Date());
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
-		FacturaCalculator.assignFolioInFacturaDto(facturaDto);
-		facturaDto.setFolio(FacturaCalculator.folioEncrypt(facturaDto));
+		facturaCalculator.assignFolioInFacturaDto(facturaDto);
+		facturaDto.setFolio(facturaCalculator.folioEncrypt(facturaDto));
 	}
 }

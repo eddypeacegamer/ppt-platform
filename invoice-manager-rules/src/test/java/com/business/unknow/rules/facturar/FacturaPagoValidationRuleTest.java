@@ -15,6 +15,7 @@ import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.AbstractRuleTest;
+import com.business.unknow.rules.timbrado.FacturaPagoValidationRule;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;

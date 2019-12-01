@@ -26,6 +26,7 @@ public class PagoDto implements Serializable {
 	private Boolean revision2;
 	private String comentarioPago;
 	private String tipoPago;
+	private String cuenta;
 	private String formaPago;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaPago;
@@ -35,6 +36,7 @@ public class PagoDto implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	private String ultimoUsuario;
+	private String createUser;
 
 	public Integer getId() {
 		return id;
@@ -180,13 +182,30 @@ public class PagoDto implements Serializable {
 		this.ultimoUsuario = ultimoUsuario;
 	}
 
+	public String getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(String cuenta) {
+		this.cuenta = cuenta;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
 	@Override
 	public String toString() {
 		return "PagoDto [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
 				+ ", tipoDeCambio=" + tipoDeCambio + ", banco=" + banco + ", monto=" + monto + ", statusPago="
 				+ statusPago + ", revision1=" + revision1 + ", revision2=" + revision2 + ", comentarioPago="
-				+ comentarioPago + ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
-				+ ", documento=" + documento + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", ultimoUsuario=" + ultimoUsuario + "]";
+				+ comentarioPago + ", tipoPago=" + tipoPago + ", cuenta=" + cuenta + ", formaPago=" + formaPago
+				+ ", fechaPago=" + fechaPago + ", documento=" + documento + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", ultimoUsuario=" + ultimoUsuario + ", createUser="
+				+ createUser + "]";
 	}
 }

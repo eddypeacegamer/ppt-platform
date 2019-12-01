@@ -13,8 +13,9 @@ import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.CancelacionSuite;
-import com.business.unknow.rules.suites.FacturarSuite;
+import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
+import com.business.unknow.rules.suites.FacturaSuite;
 
 /**
  * @author eej000f
@@ -33,8 +34,12 @@ public class ServicesApplication {
 	}
 
 	@Bean
-	public FacturarSuite getFacturarSuite() {
-		return new FacturarSuite();
+	public FacturaSuite getFacturaSuite() {
+		return new FacturaSuite();
+	}
+	@Bean
+	public TimbradoSuite getFacturarSuite() {
+		return new TimbradoSuite();
 	}
 
 	@Bean

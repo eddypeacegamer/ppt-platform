@@ -3,6 +3,7 @@ package com.business.unknow.model.context;
 import java.io.Serializable;
 import java.util.List;
 
+import com.business.unknow.model.ClientDto;
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
@@ -23,6 +24,7 @@ public class FacturaContext implements Serializable {
 	private String ruleErrorDesc;
 	private String suiteError;
 	private EmpresaDto empresaDto;
+	private ClientDto clientDto;
 	private Cfdi cfdi;
 	private List<FacturaFileDto> facturaFilesDto;
 	private String xml;
@@ -152,13 +154,22 @@ public class FacturaContext implements Serializable {
 		this.ctdadComplementos = ctdadComplementos;
 	}
 
+	public ClientDto getClientDto() {
+		return clientDto;
+	}
+
+	public void setClientDto(ClientDto clientDto) {
+		this.clientDto = clientDto;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaContext [tipoFactura=" + tipoFactura + ", tipoDocumento=" + tipoDocumento + ", facturaDto="
 				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
 				+ pagos + ", pagoCredito=" + pagoCredito + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc
-				+ ", suiteError=" + suiteError + ", empresaDto=" + empresaDto + ", cfdi=" + cfdi + ", facturaFilesDto="
-				+ facturaFilesDto + ", xml=" + xml + "]";
+				+ ", suiteError=" + suiteError + ", empresaDto=" + empresaDto + ", clientDto=" + clientDto + ", cfdi="
+				+ cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml=" + xml + ", ctdadComplementos="
+				+ ctdadComplementos + "]";
 	}
 
 }

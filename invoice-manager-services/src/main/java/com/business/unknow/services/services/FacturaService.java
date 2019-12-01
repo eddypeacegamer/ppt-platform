@@ -1,7 +1,6 @@
 package com.business.unknow.services.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,6 @@ import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
-import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -34,27 +32,25 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
+import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.cfdi.Cfdi;
-import com.business.unknow.services.entities.cfdi.Concepto;
-import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
-import com.business.unknow.services.mapper.ConceptoMapper;
+import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
-import com.business.unknow.services.mapper.ImpuestoMapper;
+import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
-import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
-import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
-import com.business.unknow.services.services.evaluations.FacturaServiceEvaluator;
+import com.business.unknow.services.services.evaluations.CfdiEvaluatorService;
+import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
+import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
 import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
@@ -70,12 +66,6 @@ public class FacturaService {
 	private CfdiRepository cfdiRepository;
 
 	@Autowired
-	private ConceptoRepository conceptoRepository;
-
-	@Autowired
-	private ImpuestoRepository impuestoRepository;
-
-	@Autowired
 	private PagoRepository pagoRepository;
 
 	@Autowired
@@ -85,39 +75,46 @@ public class FacturaService {
 	private EmpresaMapper empresaMapper;
 
 	@Autowired
+	private ClientRepository clientRepository;
+
+	@Autowired
+	private ClientMapper clientMapper;
+
+	@Autowired
 	private FacturaMapper mapper;
 
 	@Autowired
 	private CfdiMapper cfdiMapper;
 
 	@Autowired
-	private ConceptoMapper conceptoMapper;
+	private TimbradoEvaluatorService timbradoServiceEvaluator;
 
 	@Autowired
-	private ImpuestoMapper impuestoMapper;
+	private FacturaEvaluatorService facturaServiceEvaluator;
 
 	@Autowired
-	private FacturaServiceEvaluator facturaServiceEvaluation;
+	private CfdiEvaluatorService cfdiEvaluatorService;
 
 	private FacturaValidator validator = new FacturaValidator();
+	private FacturaDefaultValues facturaDefaultValues = new FacturaDefaultValues();
 
 	public List<FacturaDto> getComplementos(String folioPadre) {
 		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
 	}
-	//rfcEmisor, rfcRemitente, folio, status, start, end, page, size
+
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
-			Optional<String> folio, String status, Date since,Date to, int page,int size) {
-		
-		Date start = (since==null) ? new DateTime().minusYears(1).toDate():since;
+			Optional<String> folio, String status, Date since, Date to, int page, int size) {
+		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(page, size));
 		} else if (rfcEmisor.isPresent()) {
-			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()), String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
+			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()),
+					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else if (rfcRemitente.isPresent()) {
-			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()), String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
+			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()),
+					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else {
 			result = repository.findAll(PageRequest.of(page, size));
 		}
@@ -134,16 +131,12 @@ public class FacturaService {
 		return dto;
 	}
 
-	public FacturaDto insertNewFactura(FacturaDto dto) throws InvoiceManagerException {
-		validator.validatePostFactura(dto);
-		dto.setFechaCreacion(new Date());
-		dto.setFechaActualizacion(new Date());
-		dto.setFolio(FacturaCalculator.folioEncrypt(dto));
-		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
+	public CfdiDto insertNewCfdi(String folio, CfdiDto cfdi) {
+		return cfdiEvaluatorService.insertNewCfdi(folio, cfdi);
 	}
 
 	public FacturaDto insertNewComplemento(FacturaDto dto, String folio) throws InvoiceManagerException {
-		FacturaDefaultValues.assignaDefaultsFactura(dto);
+		facturaDefaultValues.assignaDefaultsComplemento(dto);
 		validator.validatePosComplementoDto(dto, folio);
 		Factura factura = repository.findByFolio(dto.getFolioPadre())
 				.orElseThrow(() -> new InvoiceManagerException("Error al crear Complemento",
@@ -152,20 +145,23 @@ public class FacturaService {
 				.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(factura)).setTipoFactura(factura.getMetodoPago())
 				.setComplementos(mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(dto.getFolioPadre()))).build();
-		facturaServiceEvaluation.facturaComplementoValidation(facturaContext);
+		timbradoServiceEvaluator.facturaComplementoValidation(facturaContext);
 		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(dto);
-		FacturaDefaultValues.assignaDefaultsFactura(dto);
-		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
-		dto.setCfdi(insertNewCfdi(dto.getFolio(), dto.getCfdi()));
-		if (dto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
-			pagoRepository.save(FacturaDefaultValues.assignaDefaultsFacturaPPD(facturaDto));
-		}
-		return facturaDto;
+		Empresa empresa = empresaRepository.findByRfc(dto.getRfcEmisor())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El emisor no exite",
+						Constants.BAD_REQUEST));
+		Client client = clientRepository.findByRfc(dto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
+						Constants.BAD_REQUEST));
+		FacturaContext facturaContext = new FacturaContextBuilder().setFacturaDto(dto)
+				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+				.setClientDto(clientMapper.getClientDtoFromEntity(client)).build();
+		return facturaServiceEvaluator.facturaEvaluation(facturaContext).getFacturaDto();
 	}
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
@@ -199,25 +195,6 @@ public class FacturaService {
 		cfdiRepository.delete(entity);
 	}
 
-	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) {
-		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
-		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
-		for (ConceptoDto conceptoDto : dto.getConceptos()) {
-			Concepto tempConcepto = conceptoMapper.getEntityFromClientDto(conceptoDto);
-			tempConcepto.setCfdi(cfdiTemp);
-			tempConcepto = conceptoRepository.save(tempConcepto);
-			cfdiDto.getConceptos().add(conceptoMapper.getClientDtoFromEntity(tempConcepto));
-			List<ImpuestoDto> impuestos = new ArrayList<>();
-			for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
-				Impuesto impuestoTemp = impuestoMapper.getEntityFromClientDto(impuestoDto);
-				impuestoTemp.setConcepto(tempConcepto);
-				impuestos.add(impuestoMapper.getClientDtoFromEntity(impuestoRepository.save(impuestoTemp)));
-			}
-			conceptoDto.setImpuestos(impuestos);
-		}
-		return cfdiDto;
-	}
-
 	public List<PagoDto> getPagos(String folio) {
 		return mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre(folio));
 	}
@@ -227,6 +204,7 @@ public class FacturaService {
 		Factura factura = repository.findByFolio(folio)
 				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
 						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
+		pago.setCreateUser(pago.getUltimoUsuario());
 		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
 			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
 					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
@@ -237,16 +215,13 @@ public class FacturaService {
 			FacturaDto complemento = insertNewComplemento(facturaBuilder.build(), factura.getFolio());
 			pago.setFolio(complemento.getFolio());
 			pago.setFolioPadre(complemento.getFolioPadre());
-
 			List<Pago> pagos = pagoRepository.findByFolioPadre(complemento.getFolioPadre());
-
 			Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
 					.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
 							String.format("Verificar consitencia de pagos del folio %s", folio),
 							HttpStatus.NOT_FOUND.value()));
 			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
 			pagoRepository.save(pagoPadre);
-
 		}
 		if (pago.getDocumento() != null) {
 			ResourceFile resource = new ResourceFile();
@@ -265,7 +240,8 @@ public class FacturaService {
 		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
 
-		if (entity.getUltimoUsuario().equalsIgnoreCase(pago.getUltimoUsuario())) {
+		if (entity.getUltimoUsuario().equalsIgnoreCase(pago.getUltimoUsuario())
+				|| entity.getCreateUser().equalsIgnoreCase(pago.getUltimoUsuario())) {
 			throw new InvoiceManagerException("Mismo usuario no puede actualizar el pago",
 					"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
 					HttpStatus.CONFLICT.value());
@@ -319,10 +295,9 @@ public class FacturaService {
 								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
-		FacturaDto currentFacturaDto=mapper.getFacturaDtoFromEntity(folioEnity);
+		FacturaDto currentFacturaDto = mapper.getFacturaDtoFromEntity(folioEnity);
 		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
-		FacturaContext facturaContext = new FacturaContextBuilder()
-				.setFacturaDto(currentFacturaDto)
+		FacturaContext facturaContext = new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
 				.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null)
 				.setEmpresaDto(empresaDto)
@@ -335,7 +310,7 @@ public class FacturaService {
 								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
 						.size())
 				.build();
-		return facturaServiceEvaluation.facturaTimbradoValidation(facturaContext);
+		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
@@ -355,7 +330,7 @@ public class FacturaService {
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
 				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
-		return facturaServiceEvaluation.facturaCancelacionValidation(facturaContext);
+		return timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
 	}
 
 }

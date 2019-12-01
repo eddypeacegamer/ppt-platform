@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -42,7 +41,7 @@ public class Pago implements Serializable {
 	@NotEmpty
 	@Column(name = "MONEDA")
 	private String moneda;
-	
+
 	@NotEmpty
 	@Column(name = "BANCO")
 	private String banco;
@@ -50,7 +49,6 @@ public class Pago implements Serializable {
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
 	private Double tipoDeCambio;
-
 
 	@Column(name = "MONTO")
 	private Double monto;
@@ -90,9 +88,15 @@ public class Pago implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
-	@Column(name="MODIF_USER")
+
+	@Column(name = "MODIF_USER")
 	private String ultimoUsuario;
+
+	@Column(name = "CREATE_USER")
+	private String createUser;
+
+	@Column(name = "CUENTA")
+	private String cuenta;
 
 	public Integer getId() {
 		return id;
@@ -230,6 +234,22 @@ public class Pago implements Serializable {
 		this.ultimoUsuario = ultimoUsuario;
 	}
 
+	public String getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(String cuenta) {
+		this.cuenta = cuenta;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda + ", banco="
@@ -237,7 +257,7 @@ public class Pago implements Serializable {
 				+ ", revision2=" + revision2 + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
 				+ ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", ultimoUsuario="
-				+ ultimoUsuario + "]";
+				+ ultimoUsuario + ", createUser=" + createUser + ", cuenta=" + cuenta + "]";
 	}
 
 }

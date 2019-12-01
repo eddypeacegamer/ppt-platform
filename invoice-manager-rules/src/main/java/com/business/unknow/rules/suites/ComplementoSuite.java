@@ -11,7 +11,6 @@ public class ComplementoSuite implements InvoiceManagerSuite {
 
 	public ComplementoSuite() {
 		rules.register(new FacturaPadreComplementoRule());
-//		rules.register(new FacturaPadrePagosRule());
 		rules.register(new FacturaPadreStatusRule());
 	}
 

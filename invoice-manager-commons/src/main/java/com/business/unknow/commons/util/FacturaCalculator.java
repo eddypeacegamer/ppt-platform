@@ -9,10 +9,11 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculator {
-	private final static String DATE_FORMAT = "yyyy-MM-dd-hh:mm:ss";
 
-	public static String folioEncrypt(FacturaDto dto) throws InvoiceManagerException {
-		SimpleDateFormat dt1 = new SimpleDateFormat(DATE_FORMAT);
+	private DateHelper dateHelper = new DateHelper();
+
+	public String folioEncrypt(FacturaDto dto) throws InvoiceManagerException {
+		SimpleDateFormat dt1 = new SimpleDateFormat(Constants.DATE_STANDAR_FORMAT);
 		String cadena = String.format("%s|%s|%s", dto.getRfcEmisor(), dto.getRfcRemitente(),
 				dt1.format(dto.getFechaCreacion()));
 		try {
@@ -27,11 +28,35 @@ public class FacturaCalculator {
 			throw new InvoiceManagerException(e.getMessage(), e.getCause().toString(), Constants.INTERNAL_ERROR);
 		}
 	}
-	
-	public static void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
-		String folio =folioEncrypt(dto);
+
+	public void assignFolioInFacturaDtoEncrypt(FacturaDto dto) throws InvoiceManagerException {
+		String folio = folioEncrypt(dto);
 		dto.setFolio(folio);
-		if(dto.getCfdi()!=null) {
+		if (dto.getCfdi() != null) {
+			dto.getCfdi().setFolio(folio);
+		}
+	}
+
+	public void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
+		String date = dateHelper.getStringFromFecha(dto.getFechaActualizacion(), Constants.DATE_FOLIO_FORMAT);
+		String emisor;
+		String receptor;
+		if (dto.getRfcEmisor() != null && dto.getRfcEmisor().length() > 4) {
+			emisor = dto.getRfcEmisor().substring(0, 4);
+		} else {
+			throw new InvoiceManagerException("Error generando Folio unico",
+					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
+		}
+		if (dto.getRfcRemitente() != null && dto.getRfcRemitente().length() > 4) {
+			receptor = dto.getRfcRemitente().substring(0, 4);
+		} else {
+			throw new InvoiceManagerException("Error generando Folio unico",
+					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
+		}
+		String folio = emisor.concat("_").concat(receptor).concat("_").concat(date).concat("_")
+				.concat(dto.getMetodoPago());
+		dto.setFolio(folio);
+		if (dto.getCfdi() != null) {
 			dto.getCfdi().setFolio(folio);
 		}
 	}

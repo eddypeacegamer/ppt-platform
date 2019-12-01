@@ -3,35 +3,65 @@ package com.business.unknow.services.services.evaluations;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.mapper.CfdiMapper;
+import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
+import com.business.unknow.services.mapper.ImpuestoMapper;
+import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
+import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
+import com.business.unknow.services.util.FacturaDefaultValues;;
 
 public class AbstractFacturaServiceEvaluator {
 
 	@Autowired
-	private FacturaRepository repository;
+	protected FacturaRepository repository;
 
 	@Autowired
-	private FacturaFileRepository facturaFileRepository;
+	protected FacturaFileRepository facturaFileRepository;
 
 	@Autowired
-	private CfdiRepository cfdiRepository;
+	protected CfdiRepository cfdiRepository;
 
 	@Autowired
-	private FacturaMapper mapper;
+	protected ConceptoRepository conceptoRepository;
 
 	@Autowired
-	private FilesMapper filesMapper;
+	protected ImpuestoRepository impuestoRepository;
 
 	@Autowired
-	private CfdiMapper cfdiMapper;
+	protected PagoRepository pagoRepository;
+
+	@Autowired
+	protected FacturaMapper mapper;
+
+	@Autowired
+	protected FilesMapper filesMapper;
+
+	@Autowired
+	protected CfdiMapper cfdiMapper;
+
+	@Autowired
+	protected ConceptoMapper conceptoMapper;
+
+	@Autowired
+	protected ImpuestoMapper impuestoMapper;
+
+	@Autowired
+	protected PagoMapper pagoMapper;
+	
+	protected FacturaCalculator facturaCalculator= new FacturaCalculator();
+	
+	protected FacturaDefaultValues facturaDefaultValues = new FacturaDefaultValues();
 
 	protected void validateFacturaContext(FacturaContext facturaContexrt) throws InvoiceManagerException {
 		if (!facturaContexrt.isValid()) {
@@ -56,5 +86,7 @@ public class AbstractFacturaServiceEvaluator {
 	protected void updateCanceladoValues(FacturaContext context) {
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
+
+	
 
 }

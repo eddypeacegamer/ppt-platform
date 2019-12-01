@@ -12,13 +12,13 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
-import com.business.unknow.rules.suites.FacturarSuite;
+import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 
 @Service
-public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
+public class TimbradoEvaluatorService extends AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private ComplementoSuite complementoSuite;
@@ -27,7 +27,7 @@ public class FacturaServiceEvaluator extends AbstractFacturaServiceEvaluator {
 	private CancelacionSuite cancelacionSuite;
 
 	@Autowired
-	private FacturarSuite FacturarSuite;
+	private TimbradoSuite FacturarSuite;
 
 	@Autowired
 	private FacturaTranslator facturaTranslator;

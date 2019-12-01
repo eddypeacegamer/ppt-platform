@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.AbstractRuleTest;
+import com.business.unknow.rules.timbrado.FacturaPadreStatusValidationRule;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
