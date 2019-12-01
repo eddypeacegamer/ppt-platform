@@ -207,6 +207,7 @@ public class FacturaService {
 		pago.setCreateUser(pago.getUltimoUsuario());
 		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
 			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
+					.setPackFacturacion(factura.getPackFacturacion())
 					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
 					.setRfcRemitente(factura.getRfcRemitente()).setRazonSocialEmisor(factura.getRazonSocialEmisor())
 					.setRazonSocialRemitente(factura.getRazonSocialRemitente()).setTotal(pago.getMonto())

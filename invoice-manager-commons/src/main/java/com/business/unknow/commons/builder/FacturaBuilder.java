@@ -53,6 +53,11 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		return this;
 	}
 	
+	public FacturaBuilder setPackFacturacion(String packFacturacion) {
+		instance.setPackFacturacion(packFacturacion);
+		return this;
+	}
+	
 	public FacturaBuilder setTipoDocumento(String tipoDocumento) {
 		instance.setTipoDocumento(tipoDocumento);
 		return this;

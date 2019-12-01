@@ -56,6 +56,5 @@ public class FacturaDefaultValues {
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
-		facturaDto.setFolio(facturaCalculator.folioEncrypt(facturaDto));
 	}
 }
