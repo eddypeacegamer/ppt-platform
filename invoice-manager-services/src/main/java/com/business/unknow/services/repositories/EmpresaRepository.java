@@ -16,6 +16,9 @@ import com.business.unknow.services.entities.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 
 	public Page<Empresa> findAll(Pageable pageable);
+	
+	@Query("select e from Empresa e where upper(e.tipo) like upper(:linea)")
+	public Page<Empresa> findAllWithLinea(@Param("linea") String linea ,Pageable pageable);
 
 	@Query("select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.informacionFiscal.rfc) like upper(:rfc)")
 	public Page<Empresa> findByRfcIgnoreCaseContaining(@Param("rfc") String rfc ,@Param("linea") String linea, Pageable pageable);
