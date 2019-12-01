@@ -19,6 +19,10 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	public Page<Factura> findAll(Pageable pageable);
 
 	public Optional<Factura> findByFolio(String folio);
+	
+	
+	@Query("select f from Factura f where  f.statusFactura like upper(:status) and f.fechaCreacion between :since and :to")
+	public Page<Factura> findAllWithStatusAndDates(@Param("status") String status,@Param("since") Date since, @Param("to") Date to,Pageable pageable);
 
 	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura) like upper(:status) and f.fechaCreacion between :since and :to")
 	public Page<Factura> findByRfcEmisorWithOtherParams(@Param("rfcEmisor") String rfc,

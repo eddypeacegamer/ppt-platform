@@ -35,7 +35,6 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.regimenFiscal = '*';
     this.companyInfo.giro = '*';
     this.companyInfo.tipo = '*';
-    this.companyInfo.activo = '*';
     this.errorMessages = [];
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {
@@ -87,7 +86,7 @@ export class EmpresaComponent implements OnInit {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
-      if(file.size > 20000){
+      if(file.size > 200000){
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
       }else{
         reader.readAsDataURL(file);
@@ -130,7 +129,7 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = [];
     this.formInfo.success ='';
     this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc,this.companyInfo)
-    .subscribe((data:Empresa) => {this.formInfo.success='Empresa actualizada correctamente';},
+    .subscribe((data:Empresa) => {this.router.navigate([`./pages/contablidad/empresas`]);},
     (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
     );
   }

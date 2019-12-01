@@ -32,7 +32,7 @@ public class EmpresaService {
 			String linea, int page, int size) {
 		Page<Empresa> result;
 		if (!razonSocial.isPresent() && !rfc.isPresent()) {
-			result = repository.findAll(PageRequest.of(page, size));
+			result = repository.findAllWithLinea(String.format("%%%s%%", linea), PageRequest.of(page, size));
 		} else if (rfc.isPresent()) {
 			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()),String.format("%%%s%%", linea), PageRequest.of(page, size));
 		}else {
@@ -52,6 +52,7 @@ public class EmpresaService {
 	}
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresa) {
+		empresa.setActivo(false);
 		return mapper.getEmpresaDtoFromEntity(repository.save(mapper.getEntityFromEmpresaDto(empresa)));
 	}
 

@@ -119,7 +119,7 @@ public class FacturaService {
 		} else if (rfcRemitente.isPresent()) {
 			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()), String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else {
-			result = repository.findAll(PageRequest.of(page, size));
+			result = repository.findAllWithStatusAndDates(String.format("%%%s%%", status), start, end,PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());

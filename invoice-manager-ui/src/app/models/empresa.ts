@@ -11,7 +11,7 @@ export class Empresa{
     public correo:string;
     public encabezado: string;
     public piePagina: string;
-    public activo : string;
+    public activo : boolean;
     public tipo: string;
     public giro : string;
     public logotipo: string; 

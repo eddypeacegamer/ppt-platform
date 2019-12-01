@@ -45,6 +45,7 @@ export class EmpresasComponent implements OnInit {
             record.giro = this.girosCat.find(g=>g.clave==Number(r.giro)).nombre;
             record.tipo = r.tipo;
             record.correo = r.correo;
+            record.activo = (r.activo)?'SI':'NO';
             record.web = r.web;
             record.fechaCreacion = r.fechaCreacion;
             record.fechaActualizacion = r.fechaActualizacion;
