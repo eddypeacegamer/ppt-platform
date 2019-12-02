@@ -107,7 +107,7 @@ public class FacturaService {
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
 		if (folio.isPresent()) {
-			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(page, size));
+			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(0, 10));
 		} else if (rfcEmisor.isPresent()) {
 			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()),
 					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
