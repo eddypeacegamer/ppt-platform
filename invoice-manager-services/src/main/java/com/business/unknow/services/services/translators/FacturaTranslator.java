@@ -119,7 +119,6 @@ public class FacturaTranslator {
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-		System.out.println(xml);
 		context.setXml(cdfiHelper.signXML(xml,
 				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
 						? context.getFacturaDto().getFechaActualizacion()

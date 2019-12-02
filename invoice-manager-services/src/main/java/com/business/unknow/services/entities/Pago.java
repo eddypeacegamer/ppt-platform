@@ -102,6 +102,7 @@ public class Pago implements Serializable {
 		return id;
 	}
 
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -242,13 +243,16 @@ public class Pago implements Serializable {
 		this.cuenta = cuenta;
 	}
 
+
 	public String getCreateUser() {
 		return createUser;
 	}
 
+
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
 	}
+
 
 	@Override
 	public String toString() {

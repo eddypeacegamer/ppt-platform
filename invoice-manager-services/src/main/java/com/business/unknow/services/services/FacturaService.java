@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
-import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.validator.FacturaValidator;
@@ -284,34 +283,7 @@ public class FacturaService {
 
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
-		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
-		Factura folioEnity = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
-						String.format("Folio with the name %s not found", facturaDto.getFolio()),
-						HttpStatus.NOT_FOUND.value()));
-		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
-		EmpresaDto empresaDto = empresaMapper
-				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
-						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()))));
-		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
-				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
-		FacturaDto currentFacturaDto = mapper.getFacturaDtoFromEntity(folioEnity);
-		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
-		FacturaContext facturaContext = new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
-				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
-				.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null)
-				.setEmpresaDto(empresaDto)
-				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
-				.setFacturaPadreDto(
-						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
-				.setCtdadComplementos(repository
-						.findByFolioPadre(
-								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
-						.size())
-				.build();
-		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
+		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaDto,folio);
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {

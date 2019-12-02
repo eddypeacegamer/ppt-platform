@@ -51,17 +51,8 @@ public class Empresa implements Serializable {
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
 
-	@Column(name = "LOGOTIPO")
-	private String logotipo;
-
-	@Column(name = "LLAVE_PRIVADA")
-	private String llavePrivada;
-
 	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
-
-	@Column(name = "CERTIFICADO")
-	private String certificado;
 
 	@Column(name = "PW_SAT")
 	private String pwSat;
@@ -151,30 +142,6 @@ public class Empresa implements Serializable {
 
 	public void setLugarExpedicion(String lugarExpedicion) {
 		this.lugarExpedicion = lugarExpedicion;
-	}
-
-	public String getLogotipo() {
-		return logotipo;
-	}
-
-	public void setLogotipo(String logotipo) {
-		this.logotipo = logotipo;
-	}
-
-	public String getLlavePrivada() {
-		return llavePrivada;
-	}
-
-	public void setLlavePrivada(String llavePrivada) {
-		this.llavePrivada = llavePrivada;
-	}
-
-	public String getCertificado() {
-		return certificado;
-	}
-
-	public void setCertificado(String certificado) {
-		this.certificado = certificado;
 	}
 
 	public String getPwSat() {
@@ -285,10 +252,10 @@ public class Empresa implements Serializable {
 	public String toString() {
 		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
-				+ ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", noCertificado=" + noCertificado
-				+ ", certificado=" + certificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web
+				+ ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web
 				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
 				+ activo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
 	}
+
 }

@@ -6,10 +6,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 
-public class FacturaValidator {
-
-	private static final String ATTRIBUTE_REQUIRED = "Attribute required.";
-	private static final String ATTRIBUTE_REQUIRED_MESSAGE = "Error, attribute [%s] can't be null.";
+public class FacturaValidator extends AbstractValidator{
 
 	public void validatePostFactura(FacturaDto dto) throws InvoiceManagerException {
 		checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
@@ -65,11 +62,6 @@ public class FacturaValidator {
 		}
 	}
 
-	public void checkNotNull(Object var, String attribute) throws InvoiceManagerException {
-		if (var == null) {
-			throw new InvoiceManagerException(ATTRIBUTE_REQUIRED, String.format(ATTRIBUTE_REQUIRED_MESSAGE, attribute),
-					Constants.BAD_REQUEST);
-		}
-	}
+	
 
 }

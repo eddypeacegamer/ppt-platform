@@ -1,15 +1,15 @@
 package com.business.unknow.enums;
 
-public enum TipoArchivoEnum {
+public enum TipoRecursoEnum {
 
-	XML(1, "XML"),
-	QR(2, "QR"),
-	PDF(3, "PDF");
+	EMPRESA(1, "EMPRESA"),
+	FACTURA(2, "FACTURA"),
+	PAGO(3, "PAGO");
 
 	private Integer valor;
 	private String descripcion;
 
-	private TipoArchivoEnum(Integer valor, String descripcion) {
+	private TipoRecursoEnum(Integer valor, String descripcion) {
 		this.valor = valor;
 		this.descripcion = descripcion;
 	}
