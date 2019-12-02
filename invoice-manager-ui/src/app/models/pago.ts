@@ -3,6 +3,7 @@ export class Pago{
     public id: number;
     public folio: string;
     public folioPadre : string;
+    public cuenta : string;
     public moneda: string;
     public banco: string;
 	public documento:string;

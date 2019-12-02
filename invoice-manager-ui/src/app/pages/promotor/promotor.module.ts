@@ -13,7 +13,8 @@ import {
   NbUserModule,
   NbStepperModule,
   NbDialogModule,
-  NbIconModule
+  NbIconModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 import { PromotorRoutingModule } from './promotor-routing.module';
@@ -47,6 +48,7 @@ import { DownloadInvoiceFilesService } from '../../@core/back-services/download-
     NbUserModule,
     NbStepperModule,
     NbDialogModule,
+    NbSpinnerModule
   ],
   providers:[DownloadCsvService,DownloadInvoiceFilesService]
 })

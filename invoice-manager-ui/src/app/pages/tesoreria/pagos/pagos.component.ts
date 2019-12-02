@@ -17,7 +17,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class PagosComponent implements OnInit {
 
   public userEmail : string;
-  public paymentForm : any = {'payType':'*','status':'*','bank':'*','monto':0}
+  public filterParams: any = { folio:'',formaPago: '*', status: '*', banco: '*', since: '', to: '' };
   public errors : string[]=[];
 
   public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Tipo pago', 'Forma de pago', 'Fecha pago','Actualizado por'];
@@ -27,6 +27,7 @@ export class PagosComponent implements OnInit {
   constructor(
     private userService : UsersData,
     private paymentService : PaymentsData,
+    private donwloadService: DownloadCsvService,
     private dialogService: NbDialogService
     ) {}
 
@@ -38,12 +39,18 @@ export class PagosComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.paymentService.getAllPayments(pageValue,sizeValue)
+    this.paymentService.getAllPayments(pageValue,sizeValue, this.filterParams)
       .subscribe((result:GenericPage<any>) => this.page = result);
   }
 
   public onChangePageSize(pageSize: number) {
     this.updateDataTable(this.page.number, pageSize);
+  }
+
+  public downloadHandler() {
+    this.paymentService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Pagos')
+    });
   }
 
   openDialog(payment:Pago) {
@@ -61,18 +68,10 @@ export class PagosComponent implements OnInit {
       }
       });
   }
+
+  
  
-  public onPaymentTypeSelected(event){
-    console.log(event);
-  }
-
-  public onPaymentStatusSelected(event){
-    console.log(event);
-  }
-
-  public onPaymentBankSelected(event){
-    console.log(event);
-  }
+  
 
   
 

@@ -7,56 +7,59 @@
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
         <div *ngIf="folioParam != '*'">
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
-          <div class="form-inline">
-
-
-            <p class="font-weight-bold">Emisor</p>
-            <p>{{factura.rfcEmisor}}</p>
-            <p>{{factura.razonSocialEmisor}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Receptor</p>
-            <p>{{factura.rfcRemitente}}</p>
-            <p>{{factura.razonSocialRemitente}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Solicitante</p>
-            <p>{{factura.solicitante}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <span class="badge badge-primary">{{factura.statusFactura}}</span>
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
-              (click)="downloadPdf(factura.folio)">
-              <i class="fa fa-file-pdf"></i>
-            </button>
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
-              (click)="downloadXml(factura.folio)">
-              <i class="fa fa-code"></i>
-            </button>
-            <button type="button" *ngIf="factura.statusFactura != 'Timbrada'" class="btn btn-success"
-              (click)="timbrarFactura(factura,dialog)">
-              Timbrar
-            </button>
-            <button type="button" class="btn btn-danger" (click)="cancelarFactura(factura)">
-              Cancelar factura
-            </button>
-
+            <p class="font-weight-bold">Información Emisor y Receptor</p>
+            <div class="form-inline">
+              <p class="font-weight-bold">Emisor</p>
+              <p>{{factura.rfcEmisor}}</p>
+              <p>{{factura.razonSocialEmisor}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Receptor</p>
+              <p>{{factura.rfcRemitente}}</p>
+              <p>{{factura.razonSocialRemitente}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Promotor</p>
+              <p>{{factura.solicitante}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <span class="badge badge-primary">{{factura.statusFactura}}</span>
+            </div>
+        
+            <p class="font-weight-bold">Información CFDI</p>
+            <br>
+            <div class="form-inline">
+              <p class="font-weight-bold">Uso CFDI</p>
+              <p>{{factura.cfdi.usoCfdi}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Moneda</p>
+              <p>{{factura.cfdi.moneda}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Metodo de Pago</p>
+              <p>{{factura.metodoPago}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Forma de Pago</p>
+              <p>{{factura.formaPago}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
+                class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
+                <i class="fa fa-file-pdf"></i>
+              </button>
+              &nbsp;&nbsp;
+              <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
+                class="btn btn-outline-primary" (click)="downloadXml(factura.folio)">
+                <i class="fa fa-code"></i>
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button nbButton status="success" size="large" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading"
+                nbSpinnerStatus="success" nbSpinnerSize="large" nbSpinnerMessage="">
+                Timbrar
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button nbButton status="danger" size="large" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading" 
+              nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="">
+                Cancelar
+              </button>
+              
+            </div>
           </div>
-          <p class="font-weight-bold">Información CFDI</p>
-          <br>
-          <div class="form-inline">
-            <p class="font-weight-bold">Uso CFDI</p>
-            <p>{{factura.cfdi.usoCfdi}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Moneda</p>
-            <p>{{factura.cfdi.moneda}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Metodo de Pago</p>
-            <p>{{factura.metodoPago}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Forma de Pago</p>
-            <p>{{factura.formaPago}}</p>
-
-          </div>
-        </div>
         <div *ngIf="folioParam === '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="row">
@@ -263,7 +266,7 @@
           {{successMessage}}
         </div>
 
-        <div *ngIf="factura.metodoPago=='PPD'">
+        <div *ngIf="factura.metodoPago=='PPD' && complementos.length>0">
           <p class="font-weight-bold">Complementos</p>
           <br>
           <div class="table-responsive">
@@ -284,30 +287,26 @@
               <tbody>
                 <tr *ngFor="let complemento of complementos">
                   <td scope="row" class="text-center">
-                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                      [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
-                      (click)="downloadPdf(complemento.folio)">
-                      <i class="fa fa-file-pdf"></i>
-                    </button>&nbsp;&nbsp;
-                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                      [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
-                      (click)="downloadXml(complemento.folio)">
-                      <i class="fa fa-code"></i>
-                    </button>&nbsp;&nbsp;
-                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                      [disabled]="complemento.statusFactura =='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
-                      (click)="timbrarFactura(complemento,dialog)">
-                      <i class="fa fa-check-circle"></i>
-                    </button>&nbsp;&nbsp;
-                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                      [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-danger':complemento.statusFactura =='Timbrada'}"
-                      (click)="cancelarFactura(complemento)">
-                      <i class="fa fa-calendar-times"></i>
-                    </button>
+                        <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
+                          [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                          (click)="downloadPdf(complemento.folio)">
+                          <i class="fa fa-file-pdf"></i>
+                        </button>&nbsp;&nbsp;
+                        <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
+                          [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                          (click)="downloadXml(complemento.folio)">
+                          <i class="fa fa-code"></i>
+                        </button>&nbsp;&nbsp;
+                        <button type="button" [disabled]="complemento.statusFactura != 'Validacion operaciones' || loading" class="btn"
+                          [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
+                          (click)="timbrarFactura(complemento,dialog)">
+                          <i class="fa fa-check-circle"></i>
+                        </button>&nbsp;&nbsp;
+                        <button type="button" [disabled]="complemento.statusFactura !='Timbrada' || loading" class="btn"
+                          [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-danger':complemento.statusFactura =='Timbrada'}"
+                          (click)="cancelarFactura(complemento)">
+                          <i class="fa fa-calendar-times"></i>
+                        </button>
                   </td>
                   <td scope="row" class="text-center">{{complemento.folio}}</td>
                   <td scope="row" class="text-center">{{complemento.rfcEmisor}}</td>
@@ -324,110 +323,126 @@
         </div>
 
         <div *ngIf="factura.folio!=undefined">
-          <p class="font-weight-bold">Lista de pagos</p>
-          <br>
-          <div class="row">
-            <div class="col-sm-1">
-              <label for="inputPayCoin" class="label">Moneda</label>
-              <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
-                [(ngModel)]="paymentForm.coin" (change)="onPaymentCoinSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
-                <option value="MXN">Peso MX</option>
-                <option value="USD">Dollar US</option>
-              </select>
+          
+          
+            <div class="row" *ngIf="factura.total > paymentSum">
+              <div class="col-sm-2">
+                <label for="inputPayCoin" class="label">Moneda</label>
+                <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.coin" (change)="onPaymentCoinSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="MXN">Peso MX</option>
+                  <option value="USD">Dollar US</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <label for="inputPayType" class="label">Forma de Pago</label>
+                <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="CHEQUE">Cheque nominativo</option>
+                  <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
+                  <option value="DEPOSITO">Deposito bancario</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <label for="inputPayType" class="label">Banco receptor</label>
+                <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                  [(ngModel)]="paymentForm.bank" (change)="onPaymentBankSelected($event.target.value)">
+                  <option value="*">Seleccionar</option>
+                  <option value="BBVA">BBVA</option>
+                  <option value="HSBC">HSBC</option>
+                  <option value="BANORTE">BANORTE</option>
+                  <option value="BANAMEX">BANAMEX</option>
+                  <option value="N/A">NO APLICA</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <label for="accountAmmount" class="label">Cuenta de Pago</label>
+                <input id="accountAmmount" class="form-control" fullWidth type="text"  placeholder="Cuenta receptora"
+                  [(ngModel)]="newPayment.cuenta">
+              </div>
+              <div class="col-sm-2">
+                <label for="payAmmount" class="label">Monto Pago</label>
+                <input id="payAmmount" class="form-control" fullWidth type="number" min="0" placeholder="Monto"
+                  [(ngModel)]="newPayment.monto">
+              </div>
+              <div class="col-sm-2" *ngIf="newPayment.moneda == 'USD'">
+                  <label for="payChangeType" class="label">Tipo de Cambio</label>
+                  <input id="payChangeType" class="form-control" fullWidth type="number" min="0" placeholder="Tipo de cambio"
+                    [(ngModel)]="newPayment.tipoDeCambio">
+                </div>
             </div>
-            <div class="col-sm-2">
-              <label for="inputPayType" class="label">Forma de Pago</label>
-              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-                [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
-                <option value="EFECTIVO">Efectivo</option>
-                <option value="CHEQUE">Cheque nominativo</option>
-                <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
-                <option value="DEPOSITO">Deposito bancario</option>
-                <option value="CREDITO">Credito Despacho</option>
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <label for="inputPayType" class="label">Banco receptor</label>
-              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-                [(ngModel)]="paymentForm.bank" (change)="onPaymentBankSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
-                <option value="BBVA">BBVA</option>
-                <option value="HSBC">HSBC</option>
-                <option value="BANORTE">BANORTE</option>
-                <option value="BANAMEX">BANAMEX</option>
-                <option value="N/A">NO APLICA</option>
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <label for="payAmmount" class="label">Monto Pago</label>
-              <input id="payAmmount" class="form-control" fullWidth type="number" placeholder="Monto"
-                [(ngModel)]="newPayment.monto">
-            </div>
-            <div class="col-md-2">
-              <label for="payAmmount" class="label">Fecha de pago</label>
-              <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
-                [(ngModel)]="newPayment.fechaPago">
-              <nb-datepicker #formpicker></nb-datepicker>
-            </div>
-            <div class="form-group col-md-3">
-              <label for="payFile" class="label">Comprobante de pago</label>
-              <div class="input-group">
-                <div class="custom-file" id="payFile">
-                  <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"
-                    (change)="fileUploadListener($event)" style="display:block;"
-                    aria-describedby="inputGroupFileAddon01">
-                  <label class="custom-file-label" for="inputGroupFile01">{{paymentForm.filename}}</label>
+            <div class="row" *ngIf="factura.total > paymentSum">
+              <div class="col-md-3">
+                    <label for="payAmmount" class="label">Fecha de pago</label>
+                    <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
+                      [(ngModel)]="newPayment.fechaPago">
+                    <nb-datepicker #formpicker></nb-datepicker>
+              </div>
+              <div class="form-group col-md-8">
+                <label for="payFile" class="label">Comprobante de pago</label>
+                <div class="input-group">
+                  <div class="custom-file" id="payFile">
+                    <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"
+                      (change)="fileUploadListener($event)" style="display:block;"
+                      aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">{{paymentForm.filename}}</label>
+                  </div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button type="button" nbButton status="primary" (click)="sendPayment()">Enviar Pago</button>
                 </div>
               </div>
+              
             </div>
-          </div>
-          <br>
-          <div class="row d-flex justify-content-center">
-            <button type="button" nbButton status="primary" (click)="sendPayment()">Enviar Pago</button>
-            <div class="alert alert-success" *ngIf="paymentForm.successPayment == true" role="alert">
-              Pago exitosamente enviado.
+            <br>
+            <div class="row d-flex justify-content-center">
+              <div class="alert alert-success" *ngIf="paymentForm.successPayment == true" role="alert">
+                Pago exitosamente enviado.
+              </div>
             </div>
+            <div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">
+              <p *ngFor="let message of payErrorMessages">{{message}}</p>
+            </div>
+            <br>
+            
+            <!--TABLA PAGOS-->
+            <p class="font-weight-bold" *ngIf="invoicePayments.length>0">Lista de pagos</p>
+            <table class="table" *ngIf="invoicePayments.length>0">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="text-center">Acciones</th>
+                  <th scope="col" class="text-center">Moneda</th>
+                  <th scope="col" class="text-center">Forma de pago</th>
+                  <th scope="col" class="text-center">Banco</th>
+                  <th scope="col" class="text-center">Monto</th>
+                  <th scope="col" class="text-center">Fecha de Pago</th>
+                  <th scope="col" class="text-center">Cuenta</th>
+                  <th scope="col" class="text-center">Validacion</th>
+                  <th scope="col" class="text-center">Comentarios</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let payment of invoicePayments; let i = index">
+                  <td scope="row" class="text-center">
+                    <button type="button" class="btn"
+                      [ngClass]="{'btn-outline-secondary': payment.statusPago =='ACEPTADO', 'btn-outline-danger':payment.statusPago !='ACEPTADO'}"
+                      [disabled]="payment.statusPago =='ACEPTADO'" (click)="deletePayment(payment.id)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                  <td scope="row" class="text-center">{{payment.moneda}}</td>
+                  <td scope="row" class="text-center">{{payment.formaPago}}</td>
+                  <td scope="row" class="text-center">{{payment.banco}}</td>
+                  <td scope="row" class="text-center">{{payment.monto | currency}}</td>
+                  <td scope="row" class="text-center">{{payment.fechaPago}}</td>
+                  <td scope="row" class="text-center">{{payment.cuenta}}</td>
+                  <td scope="row" class="text-center">{{payment.statusPago}}</td>
+                  <td scope="row" class="text-center">{{payment.comentarioPago}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">
-            <p *ngFor="let message of payErrorMessages">{{message}}</p>
-          </div>
-          <br>
-          <!--TABLA PAGOS-->
-          <table class="table" *ngIf="invoicePayments.length>0">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col" class="text-center">Acciones</th>
-                <th scope="col" class="text-center">Moneda</th>
-                <th scope="col" class="text-center">Forma de pago</th>
-                <th scope="col" class="text-center">Banco</th>
-                <th scope="col" class="text-center">Monto</th>
-                <th scope="col" class="text-center">Fecha de Pago</th>
-                <th scope="col" class="text-center">Validacion</th>
-                <th scope="col" class="text-center">Comentarios</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let payment of invoicePayments; let i = index">
-                <td scope="row" class="text-center">
-                  <button type="button" class="btn"
-                    [ngClass]="{'btn-outline-secondary': payment.statusPago =='ACEPTADO', 'btn-outline-danger':payment.statusPago !='ACEPTADO'}"
-                    [disabled]="payment.statusPago =='ACEPTADO'" (click)="deletePayment(payment.id)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-                <td scope="row" class="text-center">{{payment.moneda}}</td>
-                <td scope="row" class="text-center">{{payment.formaPago}}</td>
-                <td scope="row" class="text-center">{{payment.banco}}</td>
-                <td scope="row" class="text-center">{{payment.monto | currency}}</td>
-                <td scope="row" class="text-center">{{payment.fechaPago}}</td>
-                <td scope="row" class="text-center">{{payment.statusPago}}</td>
-                <td scope="row" class="text-center">{{payment.comentarioPago}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
 
         <!--div class="row">
