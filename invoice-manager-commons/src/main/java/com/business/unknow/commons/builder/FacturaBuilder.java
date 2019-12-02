@@ -62,5 +62,5 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		instance.setTipoDocumento(tipoDocumento);
 		return this;
 	}
-
+	
 }

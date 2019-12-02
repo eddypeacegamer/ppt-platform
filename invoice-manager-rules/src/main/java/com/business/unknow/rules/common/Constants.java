@@ -19,6 +19,14 @@ public class Constants {
 		public static final String RECEPTOR_VALIDATION_RULE_DESC = "La informacion del receptor no es valida";
 		
 	}
+	
+	public class PagoPpdSuite {
+		public static final String PAGO_PPD_SUITE = "FacturaSuite";
+		
+		public static final String MONTO_PAGO_VALIDATION = "MontoPagoValidation";
+		public static final String MONTO_PAGO_VALIDATION_RULE = "MontoPagoValidationRule";
+		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "El monto del pago actual contiene una incongruencia con su credito";
+	}
 
 	public class Prevalidations {
 		public static final String PREVALIDATION_SUITE = "PrevalidationSuite";

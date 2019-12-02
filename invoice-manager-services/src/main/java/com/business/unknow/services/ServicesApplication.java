@@ -16,6 +16,8 @@ import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.ComplementoSuite;
 import com.business.unknow.rules.suites.FacturaSuite;
+import com.business.unknow.rules.suites.PagoPpdSuite;
+import com.business.unknow.rules.suites.PagoPueSuite;
 
 /**
  * @author eej000f
@@ -37,9 +39,20 @@ public class ServicesApplication {
 	public FacturaSuite getFacturaSuite() {
 		return new FacturaSuite();
 	}
+	
 	@Bean
 	public TimbradoSuite getFacturarSuite() {
 		return new TimbradoSuite();
+	}
+	
+	@Bean
+	public PagoPueSuite getPagoPueSuite() {
+		return new PagoPueSuite();
+	}
+	
+	@Bean
+	public PagoPpdSuite getPagoPpdSuite() {
+		return new PagoPpdSuite();
 	}
 
 	@Bean

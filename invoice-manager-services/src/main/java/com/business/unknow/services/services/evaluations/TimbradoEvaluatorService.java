@@ -17,7 +17,6 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.suites.CancelacionSuite;
-import com.business.unknow.rules.suites.ComplementoSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.cfdi.Cfdi;
@@ -29,8 +28,6 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 @Service
 public class TimbradoEvaluatorService extends AbstractFacturaServiceEvaluator {
 
-	@Autowired
-	private ComplementoSuite complementoSuite;
 
 	@Autowired
 	private CancelacionSuite cancelacionSuite;
@@ -49,14 +46,6 @@ public class TimbradoEvaluatorService extends AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private RulesEngine rulesEngine;
-
-	public FacturaContext facturaComplementoValidation(FacturaContext facturaContext) throws InvoiceManagerException {
-		Facts facts = new Facts();
-		facts.put("facturaContext", facturaContext);
-		rulesEngine.fire(complementoSuite.getSuite(), facts);
-		validateFacturaContext(facturaContext);
-		return facturaContext;
-	}
 
 	public FacturaContext facturaCancelacionValidation(FacturaContext facturaContext) throws InvoiceManagerException {
 		Facts facts = new Facts();

@@ -18,13 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.Constants;
-import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
@@ -36,7 +33,6 @@ import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
@@ -46,20 +42,16 @@ import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
-import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import com.business.unknow.services.services.evaluations.CfdiEvaluatorService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
+import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
-import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
 public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
-
-	@Autowired
-	private ResourceFileRepository resourceRepo;
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
@@ -92,10 +84,12 @@ public class FacturaService {
 	private FacturaEvaluatorService facturaServiceEvaluator;
 
 	@Autowired
+	private PagoEvaluatorService pagoEvaluatorService;
+
+	@Autowired
 	private CfdiEvaluatorService cfdiEvaluatorService;
 
 	private FacturaValidator validator = new FacturaValidator();
-	private FacturaDefaultValues facturaDefaultValues = new FacturaDefaultValues();
 
 	public List<FacturaDto> getComplementos(String folioPadre) {
 		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
@@ -115,7 +109,8 @@ public class FacturaService {
 			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()),
 					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
 		} else {
-			result = repository.findAllWithStatusAndDates(String.format("%%%s%%", status), start, end,PageRequest.of(page, size));
+			result = repository.findAllWithStatusAndDates(String.format("%%%s%%", status), start, end,
+					PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -132,20 +127,6 @@ public class FacturaService {
 
 	public CfdiDto insertNewCfdi(String folio, CfdiDto cfdi) {
 		return cfdiEvaluatorService.insertNewCfdi(folio, cfdi);
-	}
-
-	public FacturaDto insertNewComplemento(FacturaDto dto, String folio) throws InvoiceManagerException {
-		facturaDefaultValues.assignaDefaultsComplemento(dto);
-		validator.validatePosComplementoDto(dto, folio);
-		Factura factura = repository.findByFolio(dto.getFolioPadre())
-				.orElseThrow(() -> new InvoiceManagerException("Error al crear Complemento",
-						"La factura padre no existe", Constants.BAD_REQUEST));
-		FacturaContext facturaContext = new FacturaContextBuilder().setFacturaDto(dto)
-				.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(factura)).setTipoFactura(factura.getMetodoPago())
-				.setComplementos(mapper.getFacturaDtosFromEntities(repository.findByFolioPadre(dto.getFolioPadre())))
-				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(dto.getFolioPadre()))).build();
-		timbradoServiceEvaluator.facturaComplementoValidation(facturaContext);
-		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(dto)));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -199,39 +180,8 @@ public class FacturaService {
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public PagoDto insertNewPago(String folio, PagoDto pago) throws InvoiceManagerException {
-		Factura factura = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
-						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
-		pago.setCreateUser(pago.getUltimoUsuario());
-		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
-			FacturaBuilder facturaBuilder = new FacturaBuilder().setFolioPadre(factura.getFolio())
-					.setPackFacturacion(factura.getPackFacturacion())
-					.setMetodoPago(factura.getMetodoPago()).setRfcEmisor(factura.getRfcEmisor())
-					.setRfcRemitente(factura.getRfcRemitente()).setRazonSocialEmisor(factura.getRazonSocialEmisor())
-					.setRazonSocialRemitente(factura.getRazonSocialRemitente()).setTotal(pago.getMonto())
-					.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-					.setFormaPago(factura.getFormaPago());
-			FacturaDto complemento = insertNewComplemento(facturaBuilder.build(), factura.getFolio());
-			pago.setFolio(complemento.getFolio());
-			pago.setFolioPadre(complemento.getFolioPadre());
-			List<Pago> pagos = pagoRepository.findByFolioPadre(complemento.getFolioPadre());
-			Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
-					.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-							String.format("Verificar consitencia de pagos del folio %s", folio),
-							HttpStatus.NOT_FOUND.value()));
-			pagoPadre.setMonto(pagoPadre.getMonto() - pago.getMonto());
-			pagoRepository.save(pagoPadre);
-		}
-		if (pago.getDocumento() != null) {
-			ResourceFile resource = new ResourceFile();
-			resource.setData(pago.getDocumento().getBytes());
-			resource.setReferencia(pago.getFolio());
-			resource.setTipoRecurso("PAGO");
-			resource.setTipoArchivo("IMAGEN");
-			resourceRepo.save(resource);
-		}
-		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(pago)));
+	public PagoDto insertNewPago(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		return pagoEvaluatorService.validatePagoCreation(folio,pagoDto);
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -283,7 +233,7 @@ public class FacturaService {
 
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
-		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaDto,folio);
+		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaDto, folio);
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
