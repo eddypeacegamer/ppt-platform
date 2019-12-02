@@ -19,7 +19,7 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Pago } from '../../../models/pago';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Status } from '../../../models/catalogos/status';
-import { map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
@@ -46,11 +46,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
-  public userEmail : string;
+  public userEmail: string;
 
   public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
-  public successMessage : string;
+  public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
@@ -58,21 +58,24 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
+  public loading: boolean = false;
 
   /** PAYMENT SECCTION**/
 
   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
   public newPayment: Pago;
-  public invoicePayments = [];
+  public invoicePayments: Pago[] = [];
+  public paymentSum: number = 0;
+
 
   constructor(private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService : PaymentsData,
-    private userService : UsersData,
-    private filesService : FilesData,
+    private paymentsService: PaymentsData,
+    private userService: UsersData,
+    private filesService: FilesData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute,
     private router: Router) { }
@@ -80,46 +83,23 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
     this.initVariables();
-    this.route.paramMap.subscribe(route=>{
+    this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
       console.log(`recovering ${this.folioParam} information`);
       this.catalogsService.getInvoiceCatalogs()
-      .toPromise().then(results=>{
-        this.girosCat = results[0];
-        this.claveUnidadCat = results[1];
-        this.usoCfdiCat = results[2];
-        this.payCat = results[3];
-        this.devolutionCat = results[4];
-        this.validationCat = results[5];
-      }).then(()=>{
-          if(this.folioParam!='*'){
-            this.invoiceService.getComplementosInvoice(this.folioParam)
-            .pipe(
-              map((facturas:Factura[]) =>{
-                return facturas.map(record=>{
-                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                  record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
-                  return record;})
-              }))
-            .subscribe(complementos => this.complementos = complementos);
-            this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => this.invoicePayments = payments);
-            this.invoiceService.getInvoiceByFolio(this.folioParam).pipe(
-              map((fac: Factura) => {
-                fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-                fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-                fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-                fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-                fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
-                return fac;
-              })).subscribe(invoice => this.factura = invoice, 
-                error => {
-                console.error('Info cant found, creating a new invoice:', error)
-                this.initVariables();
-              });
+        .toPromise().then(results => {
+          this.girosCat = results[0];
+          this.claveUnidadCat = results[1];
+          this.usoCfdiCat = results[2];
+          this.payCat = results[3];
+          this.devolutionCat = results[4];
+          this.validationCat = results[5];
+        }).then(() => {
+          if (this.folioParam != '*') {
+            this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => { this.invoicePayments = payments; this.calculatePayments() });
+            this.getInvoiceByFolio(this.folioParam);
           }
-      });
+        });
     });
   }
 
@@ -130,12 +110,45 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura = new Factura();
   }
 
+  public getInvoiceByFolio(folio: string) {
+    this.invoiceService.getInvoiceByFolio(folio).pipe(
+      map((fac: Factura) => {
+        fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
+        fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
+        return fac;
+      })).subscribe(invoice => {
+      this.factura = invoice;
+        if (invoice.metodoPago == 'PPD') {
+          this.invoiceService.getComplementosInvoice(folio)
+            .pipe(
+              map((facturas: Factura[]) => {
+                return facturas.map(record => {
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
+                  record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
+                  return record;
+                })
+              }))
+            .subscribe(complementos => this.complementos = complementos);
+        }
+      },
+        error => {
+          console.error('Info cant found, creating a new invoice:', error)
+          this.initVariables();
+        });
+  }
+
   public initVariables() {
     /** INIT VARIABLES **/
     this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.errorMessages = [];
+    this.loading = false;
   }
 
   onDeleteConfirm(event): void {
@@ -151,13 +164,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   onGiroSelection(giroId: string) {
-   let  value = +giroId;
-   if(isNaN(value)){
-    this.companiesCat = [];
-   }else{
-    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-   }
+    let value = +giroId;
+    if (isNaN(value)) {
+      this.companiesCat = [];
+    } else {
+      this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
   }
 
   onCompanySelected(companyId: number) {
@@ -248,20 +261,20 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
       validConcept = false;
     }
-    if(this.newConcep.valorUnitario<=0){
+    if (this.newConcep.valorUnitario <= 0) {
       this.conceptoMessages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
       validConcept = false;
     }
-  
+
     if (validConcept) {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
-      
-      if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
+
+      if (this.newConcep.iva) { this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)]; }//IVA is harcoded
       this.factura.cfdi.conceptos.push({ ... this.newConcep });
       this.calcularImportes();
-      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+      if (this.factura.formaPago === '01' && this.factura.total > 2000) {
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
         this.factura.cfdi.conceptos.pop();
       }
@@ -271,7 +284,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
-  calcularImportes(){
+  calcularImportes() {
     this.factura.total = 0;
     this.factura.subtotal = 0;
     for (const concepto of this.factura.cfdi.conceptos) {
@@ -280,16 +293,16 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.subtotal += base;
       let impuesto = 0;
       for (const imp of concepto.impuestos) {
-        impuesto = (imp.importe*3 + impuesto * 3) / 3;
+        impuesto = (imp.importe * 3 + impuesto * 3) / 3;
       }
-      this.factura.total += (base *3 + impuesto * 3)/3;
+      this.factura.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
     }
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
-    if(impuestos.length>0){
+    if (impuestos.length > 0) {
       return impuestos.map(i => i.importe).reduce((total, value) => total + value);
-    }else{
+    } else {
       return 0;
     }
   }
@@ -344,25 +357,37 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (validCdfi) {
       this.factura.cfdi = this.factura.cfdi;
       this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => { this.router.navigate([`./pages/promotor/precfdi/${invoice.folio}`])},(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
+        (invoice: Factura) => { this.router.navigate([`./pages/promotor/reportes`]) }, (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
     }
   }
 
 
-  public downloadPdf(folio:string){
-    this.filesService.getFacturaFile(folio,'PDF').subscribe(
-      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,'application/pdf;')
+  public downloadPdf(folio: string) {
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
     )
   }
-  public downloadXml(folio:string){
-    this.filesService.getFacturaFile(folio,'XML').subscribe(
-      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,'text/xml;charset=utf8;')
+  public downloadXml(folio: string) {
+    this.filesService.getFacturaFile(folio, 'XML').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
     )
   }
 
 
   /******* PAGOS ********/
 
+  calculatePayments() {
+    if (this.invoicePayments.length == 0) {
+      this.paymentSum = 0;
+    } else {
+      let payments: Pago[] = this.invoicePayments.filter(p => p.formaPago != 'CREDITO');
+      if (payments.length == 0) {
+        this.paymentSum = 0;
+      } else {
+        this.paymentSum = payments.map((p: Pago) => p.monto).reduce((total, p) => total + p);
+      }
+    }
+  }
 
   onPaymentCoinSelected(clave: string) {
     this.newPayment.moneda = clave;
@@ -380,19 +405,19 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
-      if(file.size > 100000){
+      if (file.size > 100000) {
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
-      }else{
-      reader.readAsDataURL(file);
-      reader.onload = () => { this.paymentForm.filename = file.name + " " + file.type; this.newPayment.documento = reader.result.toString() }
-      reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
+      } else {
+        reader.readAsDataURL(file);
+        reader.onload = () => { this.paymentForm.filename = file.name + " " + file.type; this.newPayment.documento = reader.result.toString() }
+        reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
       }
     }
   }
 
   deletePayment(paymentId) {
     this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments); },
+      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => { this.invoicePayments = payments; this.calculatePayments() }); },
       (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
@@ -435,21 +460,24 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if (this.invoicePayments.length > 0 && this.invoicePayments.reduce((total, p) => (total) + p.monto) + this.newPayment.monto > this.factura.total) {
+    if ((this.paymentSum + this.newPayment.monto) > this.factura.total) {
       validPayment = false;
-      this.payErrorMessages.push('El pago actual o la suma de los pagos no puede ser superior al monto total de la factura.');
+      this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
 
     if (validPayment) {
+      this.loading = true;
       this.newPayment.tipoPago = 'INGRESO';
       this.newPayment.ultimoUsuario = this.userEmail;
-      this.paymentsService.insertNewPayment(this.factura.folio, this.newPayment).subscribe(
+      const payment = { ... this.newPayment };
+      this.newPayment = new Pago();
+      this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
-          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
+          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => { this.invoicePayments = payments; this.calculatePayments(); this.loading = false; });
           this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
         },
-        (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+        (error: HttpErrorResponse) => { this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false; });
     }
   }
 

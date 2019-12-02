@@ -13,7 +13,8 @@ import {
   NbUserModule,
   NbStepperModule,
   NbDialogModule,
-  NbIconModule
+  NbIconModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 import { OperacionesRoutingModule } from './operaciones-routing.module';
@@ -44,7 +45,8 @@ import { ClienteComponent } from './cliente/cliente.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule
+    NbDialogModule,
+    NbSpinnerModule
   ]
 })
 export class OperacionesModule { }

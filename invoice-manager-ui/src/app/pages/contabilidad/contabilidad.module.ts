@@ -14,7 +14,8 @@ import {
   NbUserModule,
   NbStepperModule,
   NbDialogModule,
-  NbIconModule
+  NbIconModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 import { ContabilidadRoutingModule } from './contabilidad-routing.module';
@@ -44,7 +45,8 @@ import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule
+    NbDialogModule,
+    NbSpinnerModule
   ]
 })
 export class ContabilidadModule { }
