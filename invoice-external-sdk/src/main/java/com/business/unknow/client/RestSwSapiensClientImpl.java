@@ -45,7 +45,6 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		T result = null;
 		int status = response.getStatus();
 		log.info("Status {}", status);
-		System.out.println();
 		try {
 			String content = response.readEntity(String.class);
 			ObjectMapper mapper = new ObjectMapper();
@@ -107,6 +106,18 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
 		headers.add(SwSapiensConstans.TOKEN_PARAMETER, token);
 		String endpoint = SwSapiensEndpoints.getValidateRfcEndpoint(rfc);
+		Response response = get(endpoint, MediaType.APPLICATION_JSON, headers);
+		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
+		});
+	}
+	
+	@Override
+	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
+		log.info("Validating rfc.");
+		authenticate();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
+		headers.add(SwSapiensConstans.TOKEN_PARAMETER, token);
+		String endpoint = SwSapiensEndpoints.getValidateLcoEndpoint(noCertificado);
 		Response response = get(endpoint, MediaType.APPLICATION_JSON, headers);
 		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
 		});

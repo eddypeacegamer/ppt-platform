@@ -9,9 +9,15 @@ public class SwSapiensEndpoints {
 	private static final String STAMP = "/stamp";
 	private static final String CANCEL = "/cancel";
 	private static final String CSD = "/csd";
+	private static final String LCO = "/lco";
+	
 	
 	public static String getAuthenticateEndpoint() {
 		return SECURITY.concat(AUTHENTICATE);
+	}
+	
+	public static String getValidateLcoEndpoint(String noCertificado) {
+		return LCO.concat("/").concat(noCertificado);
 	}
 
 	public static String getValidateRfcEndpoint(String rfc) {

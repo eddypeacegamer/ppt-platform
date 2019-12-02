@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
 
 import io.swagger.annotations.Api;
@@ -53,7 +54,7 @@ public class EmpresaController {
 	public ResponseEntity<EmpresaDto> updateClient(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getEmpresaByRfc(rfc), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/lineas/{linea}/giros/{giro}/empresas")
 	@ApiOperation(value = "Get all companies by linea and giro")
 	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea,
@@ -63,7 +64,8 @@ public class EmpresaController {
 
 	@PostMapping("/empresas")
 	@ApiOperation(value = "insert a new empresa into the system")
-	public ResponseEntity<EmpresaDto> insertClient(@RequestBody @Valid EmpresaDto empresa) {
+	public ResponseEntity<EmpresaDto> insertClient(@RequestBody @Valid EmpresaDto empresa)
+			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewEmpresa(empresa), HttpStatus.CREATED);
 	}
 

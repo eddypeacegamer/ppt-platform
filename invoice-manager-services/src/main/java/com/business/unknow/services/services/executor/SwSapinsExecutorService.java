@@ -74,6 +74,10 @@ public class SwSapinsExecutorService {
 	public SwSapiensConfig validateRfc(String rfc) throws SwSapiensClientException {
 		return swSapiensClient.getSwSapiensClient().validateRfc(rfc);
 	}
+	
+	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
+		return swSapiensClient.getSwSapiensClient().validateLco(noCertificado);
+	}
 
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {

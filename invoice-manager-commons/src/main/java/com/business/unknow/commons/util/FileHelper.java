@@ -19,6 +19,10 @@ public class FileHelper {
 		}
 	}
 
+	public String getStringFileSource(byte[] source) {
+		return new String(source, StandardCharsets.UTF_8);
+	}
+	
 	public String stringEncodeBase64(String cadena) {
 		return Base64.getEncoder().encodeToString(cadena.getBytes());
 	}

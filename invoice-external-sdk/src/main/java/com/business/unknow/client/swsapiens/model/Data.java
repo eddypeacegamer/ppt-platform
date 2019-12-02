@@ -19,6 +19,12 @@ public class Data {
 	private String cfdi;
 	private Boolean sncf;
 	private Boolean subcontratacion;
+	private String noCertificado;
+	private String rfc;
+	private String validezObligaciones;
+	private String estatusCertificado;
+	private Date fechaFinal;
+	private Date fechaInicio;
 
 	public String getToken() {
 		return token;
@@ -148,6 +154,54 @@ public class Data {
 		this.acuse = acuse;
 	}
 
+	public String getNoCertificado() {
+		return noCertificado;
+	}
+
+	public void setNoCertificado(String noCertificado) {
+		this.noCertificado = noCertificado;
+	}
+
+	public String getRfc() {
+		return rfc;
+	}
+
+	public void setRfc(String rfc) {
+		this.rfc = rfc;
+	}
+
+	public String getValidezObligaciones() {
+		return validezObligaciones;
+	}
+
+	public void setValidezObligaciones(String validezObligaciones) {
+		this.validezObligaciones = validezObligaciones;
+	}
+
+	public String getEstatusCertificado() {
+		return estatusCertificado;
+	}
+
+	public void setEstatusCertificado(String estatusCertificado) {
+		this.estatusCertificado = estatusCertificado;
+	}
+
+	public Date getFechaFinal() {
+		return fechaFinal;
+	}
+
+	public void setFechaFinal(Date fechaFinal) {
+		this.fechaFinal = fechaFinal;
+	}
+
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
 	@Override
 	public String toString() {
 		return "Data [token=" + token + ", expires_in=" + expires_in + ", tokeny_type=" + tokeny_type
@@ -155,7 +209,9 @@ public class Data {
 				+ ", noCertificadoSAT=" + noCertificadoSAT + ", noCertificadoCFDI=" + noCertificadoCFDI + ", uuid="
 				+ uuid + ", acuse=" + acuse + ", selloSAT=" + selloSAT + ", selloCFDI=" + selloCFDI + ", fechaTimbrado="
 				+ fechaTimbrado + ", qrCode=" + qrCode + ", cfdi=" + cfdi + ", sncf=" + sncf + ", subcontratacion="
-				+ subcontratacion + "]";
+				+ subcontratacion + ", noCertificado=" + noCertificado + ", rfc=" + rfc + ", validezObligaciones="
+				+ validezObligaciones + ", estatusCertificado=" + estatusCertificado + ", fechaFinal=" + fechaFinal
+				+ ", fechaInicio=" + fechaInicio + "]";
 	}
 
 }
