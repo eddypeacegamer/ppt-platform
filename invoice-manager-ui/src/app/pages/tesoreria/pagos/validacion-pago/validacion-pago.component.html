@@ -31,7 +31,7 @@
   </nb-card-body>
   <nb-card-footer>
       
-    <button nbButton status="success" (click)="onValidarPago()" [disabled]="pago.revision1==true || pago.revision2==true">Validar</button>
+    <button nbButton status="success" (click)="onValidarPago()" [disabled]="pago.revision1==true && pago.revision2==true">Validar</button>
     &nbsp;&nbsp;&nbsp;
     <button class="cancel" nbButton status="danger" (click)="onRecahzarPago()">Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
