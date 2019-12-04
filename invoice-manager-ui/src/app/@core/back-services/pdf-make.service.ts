@@ -16,7 +16,7 @@ export class PdfMakeService {
     console.log('generating PDF of ', factura);
 
     const documentDefinition = { content: [
-      {
+        {
         table: {
           widths: [100, '*', 300],
           body: [
@@ -41,24 +41,28 @@ export class PdfMakeService {
       },
       {
         table: {
-          widths: [150, 300],
+          widths: ['*', '*'],
           body: [
             [{text: 'LINEAS AEREAS NACIONALES SA. DE CV.', style: 'tableHeader', colSpan: 2, alignment: 'left'},{}],
-            [{text:'R.F.C',bold:true},{text:'LAN7008173R5',alignment: 'left'}],
-            [{text:'REGIMEN FISCAL',bold:true},{text:'601 - GENERAL DE LEY PERSONAS MORALES',alignment: 'left'}],
-            [{text:'LUGAR DE EXPEDICION',bold:true},{text:'08630',alignment: 'left'}]
+            [{text:'R.F.C',bold:true,style:'normal'},{text:'LAN7008173R5',alignment: 'left',style:'normal'}],
+            [{text:'REGIMEN FISCAL',bold:true,style:'normal'},{text:'601 - GENERAL DE LEY PERSONAS MORALES',alignment: 'left',style:'normal'}],
+            [{text:'LUGAR DE EXPEDICION',bold:true,style:'normal'},{text:'08630',alignment: 'left',style:'normal'}]
           ]
+        },  
+      }
+    ],
+    styles: {
+        normal: {
+          fontSize: 8,
+          color: 'black'
         },
-        styles: {
-          
-          tableHeader: {
-            bold: true,
-            fontSize: 13,
-            color: 'black'
-          }
+        tableHeader: {
+          bold: true,
+          fontSize: 11,
+          color: 'black'
         }
       }
-    ]};
+    };
     pdfMake.createPdf(documentDefinition).open();
    }
 }
