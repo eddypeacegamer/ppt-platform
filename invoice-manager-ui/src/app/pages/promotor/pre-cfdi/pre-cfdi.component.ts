@@ -25,6 +25,7 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { of } from 'rxjs';
+import { PdfMakeService } from '../../../@core/back-services/pdf-make.service';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -77,6 +78,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private userService: UsersData,
     private filesService: FilesData,
     private downloadService: DownloadInvoiceFilesService,
+    private pdfMakeService: PdfMakeService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -363,9 +365,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
 
   public downloadPdf(folio: string) {
-    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+    console.log('calling pdfMakeService for :', folio)
+    this.pdfMakeService.generatePdf(this.factura);
+    /*this.filesService.getFacturaFile(folio, 'PDF').subscribe(
       file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
-    )
+    )*/
   }
   public downloadXml(folio: string) {
     this.filesService.getFacturaFile(folio, 'XML').subscribe(

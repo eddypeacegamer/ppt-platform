@@ -68,6 +68,7 @@
     "normalize.css": "6.0.0",
     "npm": "^6.11.3",
     "pace-js": "1.0.2",
+    "pdfmake": "^0.1.62",
     "roboto-fontface": "0.8.0",
     "rxjs": "6.5.2",
     "rxjs-compat": "6.3.0",
