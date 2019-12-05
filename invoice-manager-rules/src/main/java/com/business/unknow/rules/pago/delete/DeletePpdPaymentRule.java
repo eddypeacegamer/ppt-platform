@@ -20,9 +20,9 @@ public class DeletePpdPaymentRule {
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		Optional<PagoDto> pagoDto = fc.getPagos().stream().findFirst();
 		return !pagoDto.isPresent()
-				&& (pagoDto.get().getStatusPago().equals(RevisionPagosEnum.ACEPTADO.getDescripcion())
+				|| pagoDto.get().getStatusPago().equals(RevisionPagosEnum.ACEPTADO.getDescripcion())
 						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
-						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor()));
+						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor());
 	}
 
 	@Action

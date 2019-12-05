@@ -20,6 +20,7 @@ import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
+import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
 import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
 import com.business.unknow.rules.suites.pagos.PagoPueSuite;
 import com.business.unknow.services.entities.Pago;
@@ -30,6 +31,9 @@ public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
 
 	@Autowired
 	private PagoPpdSuite pagoPpdSuite;
+	
+	@Autowired
+	private DeletePagoSuite deletePagoSuite;
 
 	@Autowired
 	private PagoPueSuite pagoPueSuite;
@@ -53,11 +57,12 @@ public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
 				.setFacturaDto(mapper.getFacturaDtoFromEntity(factura));
 		FacturaContext context;
 		Facts facts = new Facts();
-		facts.put("facturaContext", fcb);
+		
 		switch (TipoDocumentoEnum.findByDesc(factura.getTipoDocumento())) {
 		case FACRTURA:
-			rulesEngine.fire(pagoPpdSuite.getSuite(), facts);
+			rulesEngine.fire(deletePagoSuite.getSuite(), facts);
 			context = fcb.build();
+			facts.put("facturaContext", context);
 			validateFacturaContext(context);
 			break;
 		case COMPLEMENTO:
@@ -71,10 +76,13 @@ public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
 							HttpStatus.NOT_FOUND.value()));
 			fcb.setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre));
 			fcb.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(facturaPadre));
-			rulesEngine.fire(pagoPpdSuite.getSuite(), facts);
 			context = fcb.build();
+			facts.put("facturaContext", context);
+			rulesEngine.fire(deletePagoSuite.getSuite(), facts);
 			validateFacturaContext(context);
 			repository.delete(factura);
+			pagoPadre.setMonto(pagoPadre.getMonto()+pago.getMonto());
+			pagoRepository.save(pagoPadre);
 			break;
 		default:
 			new InvoiceManagerException("Tipo de documento not suported",
