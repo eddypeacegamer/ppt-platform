@@ -224,11 +224,8 @@ public class FacturaService {
 
 	}
 
-	public void deletePago(Integer id) {
-		Pago pago = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format("El pago con el id %d no existe", id)));
-		// TODO implement logic to delete complements linked to the payments
-		pagoRepository.delete(pago);
+	public void deletePago(Integer id) throws InvoiceManagerException {
+		pagoEvaluatorService.validatePagoDeleting(id);
 	}
 
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {

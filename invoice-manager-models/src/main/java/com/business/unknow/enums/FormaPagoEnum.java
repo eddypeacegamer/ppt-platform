@@ -2,7 +2,7 @@ package com.business.unknow.enums;
 
 public enum FormaPagoEnum {
 	CHEQUE_NORMATIVO(1, "Sin Cheque nominativo", "CHEQUE", "02"),
-	TRANSFERENCIA_ELECTRONICA(2, "Transferencia electrónica de fondos", "TRANSFERENCIA", "03"),
+	TRANSFERENCIA_ELECTRONICA(2, "Transferencia electrónica de fondos", "TRANSFERENCA", "03"),
 	EFECTIVO(3, "Efectivo", "EFECTIVO", "01"),
 	DEPOSITO(4, "Deposito Bancario", "DEPOSITO", "02"),
 	CREDITO(5, "Credito Despacho", "CREDITO", "12"),

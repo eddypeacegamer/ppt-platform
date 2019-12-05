@@ -9,7 +9,7 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.rules.suites.FacturaSuite;
+import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
 @Service
 public class FacturaEvaluatorService extends AbstractFacturaServiceEvaluator {
