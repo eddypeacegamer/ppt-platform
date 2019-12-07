@@ -1,4 +1,4 @@
-package com.business.unknow.rules.pago.ppd;
+package com.business.unknow.rules.pago.create.ppd;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.PagoPpdSuite;
 
-@Rule(name = PagoPpdSuite.MONTO_PAGO_VALIDATION, description = PagoPpdSuite.MONTO_PAGO_VALIDATION)
+@Rule(name = PagoPpdSuite.MONTO_PAGO_VALIDATION_RULE, description = PagoPpdSuite.MONTO_PAGO_VALIDATION)
 public class MontoPagoValidationRule {
 
 	@Condition

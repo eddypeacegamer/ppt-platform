@@ -20,6 +20,19 @@ public class Constants {
 		
 	}
 	
+	
+	public class DeletePagoSuite {
+		public static final String DELETE_PAGO_SUITE = "DeletePagoSuite";
+		
+		public static final String DELETE_PPD_PAYMENT = "DeletePpdPayment";
+		public static final String DELETE_PPD_PAYMENT_RULE = "DeletePpdPaymentRule";
+		public static final String DELETE_PPD_PAYMENT_RULE_DESC = "No se puede borrar el pago por que hay incosistencias";
+		
+		public static final String DELETE_PAYMENT = "DeletePpdPayment";
+		public static final String DELETE_PAYMENT_RULE = "DeletePpdPaymentRule";
+		public static final String DELETE_PAYMENT_RULE_DESC = "No se puede borrar el pago por que hay incosistencias";
+	}
+	
 	public class PagoPpdSuite {
 		public static final String PAGO_PPD_SUITE = "FacturaSuite";
 		

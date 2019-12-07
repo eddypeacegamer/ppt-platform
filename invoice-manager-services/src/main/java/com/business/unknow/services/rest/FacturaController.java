@@ -127,7 +127,7 @@ public class FacturaController {
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "Deletes an existing payment")
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) {
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) throws InvoiceManagerException {
 		service.deletePago(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

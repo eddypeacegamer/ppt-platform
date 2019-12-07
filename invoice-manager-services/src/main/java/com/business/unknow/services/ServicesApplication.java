@@ -12,12 +12,13 @@ import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.StringHelper;
-import com.business.unknow.rules.suites.CancelacionSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
-import com.business.unknow.rules.suites.ComplementoSuite;
-import com.business.unknow.rules.suites.FacturaSuite;
-import com.business.unknow.rules.suites.PagoPpdSuite;
-import com.business.unknow.rules.suites.PagoPueSuite;
+import com.business.unknow.rules.suites.facturas.CancelacionSuite;
+import com.business.unknow.rules.suites.facturas.ComplementoSuite;
+import com.business.unknow.rules.suites.facturas.FacturaSuite;
+import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
+import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
+import com.business.unknow.rules.suites.pagos.PagoPueSuite;
 
 /**
  * @author eej000f
@@ -31,6 +32,11 @@ public class ServicesApplication {
 	}
 
 	@Bean
+	public DeletePagoSuite getDeletePagoSuite() {
+		return new DeletePagoSuite();
+	}
+
+	@Bean
 	public ComplementoSuite getComplementoSuite() {
 		return new ComplementoSuite();
 	}
@@ -39,17 +45,17 @@ public class ServicesApplication {
 	public FacturaSuite getFacturaSuite() {
 		return new FacturaSuite();
 	}
-	
+
 	@Bean
 	public TimbradoSuite getFacturarSuite() {
 		return new TimbradoSuite();
 	}
-	
+
 	@Bean
 	public PagoPueSuite getPagoPueSuite() {
 		return new PagoPueSuite();
 	}
-	
+
 	@Bean
 	public PagoPpdSuite getPagoPpdSuite() {
 		return new PagoPpdSuite();
@@ -59,7 +65,7 @@ public class ServicesApplication {
 	public CancelacionSuite getCancelacionSuite() {
 		return new CancelacionSuite();
 	}
-	
+
 	@Bean
 	public RulesEngine getRulesEngine() {
 		return new DefaultRulesEngine();
@@ -84,12 +90,12 @@ public class ServicesApplication {
 	public NumberHelper getNumberHelper() {
 		return new NumberHelper();
 	}
-	
+
 	@Bean
 	public FileHelper getFileHelper() {
 		return new FileHelper();
 	}
-	
+
 	@Bean
 	public StringHelper getStringHelper() {
 		return new StringHelper();
