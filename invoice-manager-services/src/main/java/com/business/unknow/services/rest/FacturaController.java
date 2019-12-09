@@ -50,10 +50,12 @@ public class FacturaController {
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
 			@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, status, since, to, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(
+				service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, status, since, to, page, size),
+				HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")
@@ -104,8 +106,6 @@ public class FacturaController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	
-
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
@@ -127,7 +127,8 @@ public class FacturaController {
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "Deletes an existing payment")
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id) throws InvoiceManagerException {
+	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
+			throws InvoiceManagerException {
 		service.deletePago(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

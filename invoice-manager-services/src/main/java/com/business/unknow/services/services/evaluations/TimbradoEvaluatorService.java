@@ -26,7 +26,7 @@ import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 
 @Service
-public class TimbradoEvaluatorService extends AbstractFacturaServiceEvaluator {
+public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 
 
 	@Autowired

@@ -12,7 +12,7 @@ import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
 @Service
-public class FacturaEvaluatorService extends AbstractFacturaServiceEvaluator {
+public class FacturaEvaluatorService extends AbstractEvaluatorService {
 
 	@Autowired
 	private FacturaSuite facturaSuite;

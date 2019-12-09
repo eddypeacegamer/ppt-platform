@@ -13,7 +13,7 @@ import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.DeletePagoSuite;
 
-@Rule(name = DeletePagoSuite.DELETE_PAYMENT_RULE, description = DeletePagoSuite.DELETE_PAYMENT)
+@Rule(name = DeletePagoSuite.DELETE_PPD_PAYMENT_RULE, description = DeletePagoSuite.DELETE_PPD_PAYMENT)
 public class DeletePpdPaymentRule {
 
 	@Condition
@@ -27,7 +27,7 @@ public class DeletePpdPaymentRule {
 
 	@Action
 	public void execute(@Fact("facturaContext") FacturaContext fc) {
-		fc.setRuleErrorDesc(DeletePagoSuite.DELETE_PAYMENT_RULE_DESC);
+		fc.setRuleErrorDesc(DeletePagoSuite.DELETE_PPD_PAYMENT_RULE_DESC);
 		fc.setSuiteError(String.format("Error durante : %s", DeletePagoSuite.DELETE_PAGO_SUITE));
 		fc.setValid(false);
 	}

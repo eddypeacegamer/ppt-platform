@@ -20,6 +20,7 @@ public class FacturaContext implements Serializable {
 	private List<FacturaDto> complementos;
 	private List<PagoDto> pagos;
 	private PagoDto pagoCredito;
+	private PagoDto currentPago;
 	private boolean valid;
 	private String ruleErrorDesc;
 	private String suiteError;
@@ -162,14 +163,22 @@ public class FacturaContext implements Serializable {
 		this.clientDto = clientDto;
 	}
 
+	public PagoDto getCurrentPago() {
+		return currentPago;
+	}
+
+	public void setCurrentPago(PagoDto currentPago) {
+		this.currentPago = currentPago;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaContext [tipoFactura=" + tipoFactura + ", tipoDocumento=" + tipoDocumento + ", facturaDto="
 				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
-				+ pagos + ", pagoCredito=" + pagoCredito + ", valid=" + valid + ", ruleErrorDesc=" + ruleErrorDesc
-				+ ", suiteError=" + suiteError + ", empresaDto=" + empresaDto + ", clientDto=" + clientDto + ", cfdi="
-				+ cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml=" + xml + ", ctdadComplementos="
-				+ ctdadComplementos + "]";
+				+ pagos + ", pagoCredito=" + pagoCredito + ", currentPago=" + currentPago + ", valid=" + valid
+				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + ", empresaDto=" + empresaDto
+				+ ", clientDto=" + clientDto + ", cfdi=" + cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml="
+				+ xml + ", ctdadComplementos=" + ctdadComplementos + "]";
 	}
 
 }

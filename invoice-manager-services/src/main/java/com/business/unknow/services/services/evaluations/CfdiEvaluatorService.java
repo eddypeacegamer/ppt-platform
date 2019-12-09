@@ -13,7 +13,7 @@ import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 
 @Service
-public class CfdiEvaluatorService extends AbstractFacturaServiceEvaluator{
+public class CfdiEvaluatorService extends AbstractEvaluatorService{
 
 	
 	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) {

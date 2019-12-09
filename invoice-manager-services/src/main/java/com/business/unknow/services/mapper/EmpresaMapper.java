@@ -11,7 +11,7 @@ import com.business.unknow.services.entities.Empresa;
  * @author eej000f
  *
  */
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface EmpresaMapper {
 
 	EmpresaDto getEmpresaDtoFromEntity(Empresa entity);

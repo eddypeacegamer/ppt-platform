@@ -1,6 +1,7 @@
 package com.business.unknow.services.services.evaluations;
 
 import org.apache.http.HttpStatus;
+import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.commons.util.FacturaCalculator;
@@ -23,20 +24,12 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
-import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
-import com.business.unknow.services.repositories.files.FacturaFileRepository;
-import com.business.unknow.services.repositories.files.ResourceFileRepository;
+import com.business.unknow.services.services.AbstractService;
 import com.business.unknow.services.util.FacturaDefaultValues;;
 
-public class  AbstractFacturaServiceEvaluator{
-
-	@Autowired
-	protected FacturaRepository repository;
-
-	@Autowired
-	protected FacturaFileRepository facturaFileRepository;
+public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	protected CfdiRepository cfdiRepository;
@@ -49,12 +42,9 @@ public class  AbstractFacturaServiceEvaluator{
 
 	@Autowired
 	protected PagoRepository pagoRepository;
-	
+
 	@Autowired
 	protected EmpresaRepository empresaRepository;
-	
-	@Autowired
-	protected ResourceFileRepository resourceFileRepository;
 
 	@Autowired
 	protected FacturaMapper mapper;
@@ -73,15 +63,18 @@ public class  AbstractFacturaServiceEvaluator{
 
 	@Autowired
 	protected PagoMapper pagoMapper;
-	
+
 	@Autowired
 	protected EmpresaMapper empresaMapper;
-	
-	protected FacturaCalculator facturaCalculator= new FacturaCalculator();
-	
+
+	@Autowired
+	protected RulesEngine rulesEngine;
+
+	protected FacturaCalculator facturaCalculator = new FacturaCalculator();
+
 	protected FacturaDefaultValues facturaDefaultValues = new FacturaDefaultValues();
-	
-	protected FileHelper fileHelper= new FileHelper();
+
+	protected FileHelper fileHelper = new FileHelper();
 
 	protected void validateFacturaContext(FacturaContext facturaContexrt) throws InvoiceManagerException {
 		if (!facturaContexrt.isValid()) {
@@ -107,27 +100,16 @@ public class  AbstractFacturaServiceEvaluator{
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
 
-	protected void createResourceFile(String data,String referncia,String tipoRecurso,String tipoArchivo) {
-		if(data!=null) {
-			ResourceFile resource = new ResourceFile();
-			resource.setData(data.getBytes());
-			resource.setReferencia(referncia);
-			resource.setTipoRecurso(tipoRecurso);
-			resource.setTipoArchivo(tipoArchivo);
-			resourceFileRepository.save(resource);
-		}
-	}
-	
-	protected void getEmpresaFiles(EmpresaDto empresaDto,FacturaDto facturaDto) throws InvoiceManagerException {
+	protected void getEmpresaFiles(EmpresaDto empresaDto, FacturaDto facturaDto) throws InvoiceManagerException {
 		ResourceFile certFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(ResourceFileEnum.CERT.getDescripcion(),
-						facturaDto.getRfcEmisor(), TipoRecursoEnum.EMPRESA.getDescripcion())
+				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.getDescripcion(),
+						facturaDto.getRfcEmisor(), ResourceFileEnum.CERT.getDescripcion())
 				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
 						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
 						HttpStatus.SC_NOT_FOUND));
 		ResourceFile keyFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(ResourceFileEnum.KEY.getDescripcion(),
-						facturaDto.getRfcEmisor(), TipoRecursoEnum.EMPRESA.getDescripcion())
+				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.getDescripcion(),
+						facturaDto.getRfcEmisor(), ResourceFileEnum.KEY.getDescripcion())
 				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
 						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
 						HttpStatus.SC_NOT_FOUND));
