@@ -468,8 +468,9 @@ export class RevisionComponent implements OnInit {
 
   deletePayment(paymentId) {
     this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => {this.invoicePayments = payments;this.calculatePayments()});},
-      (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => {this.invoicePayments = payments;this.calculatePayments()});
+      this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
+      },(error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
   sendPayment() {
