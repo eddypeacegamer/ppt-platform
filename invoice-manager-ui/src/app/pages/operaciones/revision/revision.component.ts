@@ -513,7 +513,7 @@ export class RevisionComponent implements OnInit {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if ((this.paymentSum+this.newPayment.monto) > this.factura.total) {
+    if ((this.paymentSum + this.newPayment.monto - this.factura.total) > 0.01 ) {
       validPayment = false;
       this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
