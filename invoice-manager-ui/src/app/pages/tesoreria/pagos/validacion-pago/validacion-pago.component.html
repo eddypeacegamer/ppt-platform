@@ -31,11 +31,11 @@
   </nb-card-body>
   <nb-card-footer>
       
-    <button nbButton status="success" (click)="onValidarPago()" [disabled]="pago.revision1==true && pago.revision2==true">Validar</button>
+    <button  class="btn btn-success" (click)="onValidarPago()" [disabled]="pago.revision1==true && pago.revision2==true">Validar</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="cancel" nbButton status="danger" (click)="onRecahzarPago()">Rechazar Pago</button>
+    <button class="btn btn-danger" (click)="onRecahzarPago()" [disabled]="pago.statusPago == 'ACEPTADO'">Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="cancel" nbButton status="warning" (click)="cancel()">Salir</button>
+    <button class="btn btn-warning" (click)="cancel()">Salir</button>
     
   </nb-card-footer>
 </nb-card>

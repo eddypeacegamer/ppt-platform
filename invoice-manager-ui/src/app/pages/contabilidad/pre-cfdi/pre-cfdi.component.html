@@ -48,12 +48,12 @@
                 <i class="fa fa-code"></i>
               </button>
               &nbsp;&nbsp;&nbsp;
-              <button nbButton status="success" size="large" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading"
+              <button nbButton status="success" size="large" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Validacion operaciones'"
                 nbSpinnerStatus="success" nbSpinnerSize="large" nbSpinnerMessage="">
                 Timbrar
               </button>
               &nbsp;&nbsp;&nbsp;
-              <button nbButton status="danger" size="large" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading" 
+              <button nbButton status="danger" size="large" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'"
               nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="">
                 Cancelar
               </button>
