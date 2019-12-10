@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.EmpresaDto;
@@ -73,6 +74,8 @@ public class AbstractEvaluatorService extends AbstractService {
 	protected FacturaCalculator facturaCalculator = new FacturaCalculator();
 
 	protected FacturaDefaultValues facturaDefaultValues = new FacturaDefaultValues();
+	
+	protected NumberHelper numberHelper = new NumberHelper();
 
 	protected FileHelper fileHelper = new FileHelper();
 

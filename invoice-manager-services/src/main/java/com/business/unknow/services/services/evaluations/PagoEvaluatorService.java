@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.Constants;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
@@ -171,7 +172,9 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 		facturaContext.getCurrentPago().setFolioPadre(facturaContext.getFacturaDto().getFolioPadre());
 		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
 		facturaContext.getPagoCredito()
-				.setMonto(facturaContext.getPagoCredito().getMonto() - facturaContext.getCurrentPago().getMonto());
+				.setMonto(numberHelper.assignPrecision(
+						facturaContext.getPagoCredito().getMonto() - facturaContext.getCurrentPago().getMonto(),
+						Constants.DEFAULT_SCALE));
 		return pagoExecutorService.creaPapoPpdExecutor(facturaContext);
 	}
 
