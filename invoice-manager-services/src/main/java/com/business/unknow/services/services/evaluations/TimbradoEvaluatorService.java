@@ -28,7 +28,6 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 @Service
 public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 
-
 	@Autowired
 	private CancelacionSuite cancelacionSuite;
 
@@ -108,6 +107,7 @@ public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
 						String.format("Folio with the name %s not found", facturaDto.getFolio()),
 						HttpStatus.SC_NOT_FOUND));
+		validatePackFacturacion(facturaDto, folioPadreEntity);
 		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
 		EmpresaDto empresaDto = empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
@@ -134,4 +134,14 @@ public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 				.build();
 	}
 
+	private void validatePackFacturacion(FacturaDto currentFacturaDto, Optional<Factura> facturaPadre)
+			throws InvoiceManagerException {
+		if (facturaPadre.isPresent()
+				&& !facturaPadre.get().getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
+			throw new InvoiceManagerException("El pack del complemento debe ser el mismo",
+					String.format("El pack de facturacion del complemento %s no es el correcto",
+							currentFacturaDto.getPackFacturacion()),
+					HttpStatus.SC_BAD_REQUEST);
+		}
+	}
 }
