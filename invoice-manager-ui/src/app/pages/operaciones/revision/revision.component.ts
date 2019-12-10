@@ -478,6 +478,7 @@ export class RevisionComponent implements OnInit {
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
+
     let validPayment = true;
     if (this.newPayment.banco == undefined) {
       validPayment = false;
@@ -503,7 +504,7 @@ export class RevisionComponent implements OnInit {
       validPayment = false;
       this.payErrorMessages.push('El tipo de pago es requerido.');
     }
-    if (this.newPayment.formaPago != 'EFECTIVO' && this.newPayment.documento == undefined) {
+    if (this.newPayment.formaPago != 'CREDITO' && this.newPayment.documento == undefined) {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
@@ -522,7 +523,6 @@ export class RevisionComponent implements OnInit {
       this.newPayment.tipoPago = 'INGRESO';
       this.newPayment.ultimoUsuario = this.userEmail;
       const payment = {... this.newPayment};
-      this.newPayment = new Pago();
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
@@ -541,6 +541,8 @@ export class RevisionComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false;});
     }
+    this.newPayment = new Pago();
+    this.paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
   }
 
 }

@@ -50,12 +50,12 @@
               <i class="fa fa-code"></i>
             </button>
             &nbsp;&nbsp;&nbsp;
-            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading"
+            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Validacion operaciones'"
               nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
               Timbrar
             </button>
             &nbsp;&nbsp;&nbsp;
-            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading" 
+            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading"  *ngIf="factura.statusFactura == 'Timbrada'"
             nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
             </button>
@@ -344,7 +344,7 @@
                 <option value="CHEQUE">Cheque nominativo</option>
                 <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
                 <option value="DEPOSITO">Deposito bancario</option>
-                <option value="CREDITO">Credito despacho</option>
+                <option *ngIf="factura.metodoPago!='PPD'" value="CREDITO">Credito despacho</option>
               </select>
             </div>
             <div class="col-sm-2">
