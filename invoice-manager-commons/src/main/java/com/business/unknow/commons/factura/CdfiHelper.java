@@ -65,9 +65,8 @@ public class CdfiHelper {
 
 	public String signXML(String xml, Date fechaTimbrado, EmpresaDto empresa) throws InvoiceCommonException {
 		SignHelper si = new SignHelper();
-		String xmlDateChanged = changeDate(xml, fechaTimbrado);
-		String sello = si.getSign(si.getCadena(xmlDateChanged), empresa.getPwSat(), empresa.getLlavePrivada());
-		return putsSign(xmlDateChanged, sello);
+		String sello = si.getSign(si.getCadena(xml), empresa.getPwSat(), empresa.getLlavePrivada());
+		return putsSign(xml, sello);
 	}
 
 	public String putsSign(String xml, String sello) throws InvoiceCommonException {
