@@ -26,6 +26,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
+import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.services.FacturaService;
 
 import io.swagger.annotations.Api;
@@ -43,6 +44,7 @@ public class FacturaController {
 	@Autowired
 	private FacturaService service;
 
+	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
 			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
@@ -82,6 +84,7 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
 	}
 
+	// CFDI
 	@GetMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);
@@ -106,6 +109,7 @@ public class FacturaController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
+	// PAGOS
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
@@ -133,6 +137,7 @@ public class FacturaController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	// TIMBRADO
 	@PostMapping("/{folio}/timbrar")
 	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
@@ -143,6 +148,20 @@ public class FacturaController {
 	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
+	}
+
+	// CONCEPTOS
+	@PostMapping("/{folio}/conceptos")
+	public ResponseEntity<ConceptoDto> insertConcepto(@PathVariable String folio,
+			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertConcepto(folio, conceptoDto), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{folio}/conceptos/{id}")
+	public ResponseEntity<Void> deleteConcepto(@PathVariable String folio, @PathVariable Integer id)
+			throws InvoiceManagerException {
+		service.deleteconcepto(id, folio);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

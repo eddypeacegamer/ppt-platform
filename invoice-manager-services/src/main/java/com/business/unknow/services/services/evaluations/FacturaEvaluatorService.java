@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
@@ -23,7 +24,8 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 	@Autowired
 	private CfdiEvaluatorService cfdiEvaluatorService;
 
-	public FacturaContext facturaEvaluation(FacturaContext facturaContext) throws InvoiceManagerException {
+	public FacturaContext facturaEvaluation(FacturaDto facturaDto) throws InvoiceManagerException {
+		FacturaContext facturaContext = buildFacturaContextCreateFactura(facturaDto);
 		facturaDefaultValues.assignaDefaultsFactura(facturaContext.getFacturaDto());
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);

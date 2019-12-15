@@ -31,7 +31,6 @@ public class FacturaValidator extends AbstractValidator{
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
 	}
 	
-	
 	public void validateTimbrado(FacturaDto dto,String folio) throws InvoiceManagerException {
 		checkNotNull(dto.getFolio(), "folio ");
 		if(!folio.equals(dto.getFolio())) {

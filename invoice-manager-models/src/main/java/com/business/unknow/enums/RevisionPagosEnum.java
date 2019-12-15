@@ -2,7 +2,8 @@ package com.business.unknow.enums;
 
 public enum RevisionPagosEnum {
 
-	VALIDACION(1, "VALIDACION"), ACEPTADO(2, "ACEPTADO");
+	VALIDACION(1, "VALIDACION"), ACEPTADO(2, "ACEPTADO")
+	, RECHAZADO(3, "RECHAZADO");
 
 	private Integer valor;
 	private String descripcion;

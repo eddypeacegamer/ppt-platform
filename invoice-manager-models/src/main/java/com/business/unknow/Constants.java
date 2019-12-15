@@ -7,6 +7,7 @@ public class Constants {
 	public static final String DATE_FOLIO_FORMAT = "yyyyMMddhhmm";
 	public static final String SUCCESS = "success";
 
+	public static final Integer HTTP_SSTATUS_CONFLICT = 409;
 	public static final Integer INTERNAL_ERROR = 500;
 	public static final Integer MILISECONDS = 1000;
 	public static final Integer BAD_REQUEST = 400;

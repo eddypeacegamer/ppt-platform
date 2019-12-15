@@ -20,10 +20,10 @@ public class CfdiEvaluatorService extends AbstractEvaluatorService{
 		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
 		for (ConceptoDto conceptoDto : dto.getConceptos()) {
-			Concepto tempConcepto = conceptoMapper.getEntityFromClientDto(conceptoDto);
+			Concepto tempConcepto = conceptoMapper.getEntityFromConceptoDto(conceptoDto);
 			tempConcepto.setCfdi(cfdiTemp);
 			tempConcepto = conceptoRepository.save(tempConcepto);
-			cfdiDto.getConceptos().add(conceptoMapper.getClientDtoFromEntity(tempConcepto));
+			cfdiDto.getConceptos().add(conceptoMapper.getConceptoDtoFromEntity(tempConcepto));
 			List<ImpuestoDto> impuestos = new ArrayList<>();
 			for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
 				Impuesto impuestoTemp = impuestoMapper.getEntityFromClientDto(impuestoDto);
