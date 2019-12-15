@@ -62,6 +62,10 @@ public class EmpresaService {
 	public List<EmpresaDto> getEmpresasByGiroAndLinea(String tipo, Integer giro) {
 		return mapper.getEmpresaDtosFromEntities(repository.findByTipoAndGiro(tipo, giro));
 	}
+	
+	public List<EmpresaDto> getEmpresaByLineaAndRfc(String linea, String rfc){
+		return mapper.getEmpresaDtosFromEntities(repository.findEmpresasByTipoAndRfcIgnoreCaseContaining(linea, rfc));
+	}
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		empresaDto.setActivo(false);

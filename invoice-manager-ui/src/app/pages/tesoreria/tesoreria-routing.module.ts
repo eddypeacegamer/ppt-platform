@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { TesoreriaComponent } from './tesoreria.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { PagosComponent } from './pagos/pagos.component';
+import { TransferenciasComponent } from './transferencias/transferencias.component';
 
 const routes: Routes = [{
   path: '',
@@ -15,6 +16,10 @@ const routes: Routes = [{
     {
       path: 'devoluciones',
       component: DevolucionesComponent,
+    },
+    {
+      path: 'transferencias',
+      component: TransferenciasComponent,
     }
   ]
 

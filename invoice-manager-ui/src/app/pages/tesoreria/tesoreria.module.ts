@@ -23,9 +23,10 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 
 import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
 import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago.component';
+import { TransferenciasComponent } from './transferencias/transferencias.component';
 
 @NgModule({
-  declarations: [TesoreriaComponent,PagosComponent,DevolucionesComponent, ValidacionPagoComponent],
+  declarations: [TesoreriaComponent,PagosComponent,DevolucionesComponent, ValidacionPagoComponent, TransferenciasComponent],
   imports: [
     TesoreriaRoutingModule,
 

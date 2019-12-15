@@ -31,5 +31,8 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 	public Optional<Empresa> findByRfc( @Param("rfc") String rfc);
 	
 	public List<Empresa> findByTipoAndGiro(String tipo,Integer giroId);
+	
+	@Query("select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.informacionFiscal.rfc) like upper(:rfc)")
+	public List<Empresa> findEmpresasByTipoAndRfcIgnoreCaseContaining(@Param("linea") String linea, @Param("rfc") String rfc);
 
 }
