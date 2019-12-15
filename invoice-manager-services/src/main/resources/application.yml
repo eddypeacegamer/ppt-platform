@@ -24,6 +24,7 @@ spring:
   resources:
     static-locations: 
     - classpath:/static/
+    - classpath:/samples/
   security:
     oauth2:
       client:

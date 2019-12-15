@@ -85,7 +85,7 @@ public class UserService {
 			user.setActivo(userInfo.get().isActivo());
 			user.setRoles(userInfo.get().getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList()));
 		} else {
-			user.setActivo(false);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", email));
 		}
 		return setMenuItems(user);
 	}

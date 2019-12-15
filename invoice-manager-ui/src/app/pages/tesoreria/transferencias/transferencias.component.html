@@ -3,14 +3,84 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro de transferencias</nb-card-header>
       <nb-card-body>
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
+          
           <div class="row">
-
+              <div class="col-sm-2">
+                  <label for="inputRetiro" class="label">Linea retiro</label>
+                  <select id="inputRetiro" style="display:block;" class="form-control"
+                    [(ngModel)]="params.lineaRetiro">
+                    <option value="A">Linea A</option>
+                    <option value="B">Linea B</option>
+                    <option value="C">Linea C</option>
+                    <option value="D">Linea D</option>
+                  </select>
+              </div>
+              <div class="col-sm-2">
+                  <label for="inputDeposito" class="label">Linea deposito</label>
+                  <select id="inputDeposito" style="display:block;" class="form-control"
+                    [(ngModel)]="params.lineaDeposito">
+                    <option value="A">Linea A</option>
+                    <option value="B">Linea B</option>
+                    <option value="C">Linea C</option>
+                    <option value="D">Linea D</option>
+                  </select>
+              </div>
+              <div class="col-sm-8">
+                  <label for="payFile" class="label">Carga de transferencias</label>
+                  <div class="input-group">
+                  <div class="custom-file" id="uploadFile">
+                      <input #fileInput type="file" class="custom-file-input" id="uploadFile01" accept=".xls,.xlsx"
+                        (change)="onFileChange($event.target.files)" style="display:block;"
+                        aria-describedby="uploadFile">
+                      <label class="custom-file-label" for="uploadFile01">{{params.filename}}</label>
+                  </div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button class="btn btn-primary" (click)="clean()">Limpiar</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button class="btn btn-success" (click)="validarInformacion()">Validar</button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button class="btn btn-success" (click)="validarInformacion()"  [disabled]="!params.dataValid">Cargar</button>
+                  </div>
+              </div>
           </div>
           <br>
           <br>
-          <div class="row">
-            
+          
+          <br>
+          <br>
+          <div class="table-responsive" *ngIf="transfers.length > 0">
+              <table class="table table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">Banco retiro</th>
+                    <th scope="col" class="text-center">RFC retiro</th>
+                    <th scope="col" class="text-center">Cuenta retiro</th>
+                    <th scope="col" class="text-center">Banco deposito</th>
+                    <th scope="col" class="text-center">RFC deposito</th>
+                    <th scope="col" class="text-center">Cuenta deposito</th>
+                    <th scope="col" class="text-center">Importe</th>
+                    <th scope="col" class="text-center">Observaciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let fila of transfers">
+                    <td scope="row" class="text-center">{{fila.BANCO_RETIRO}}</td>
+                    <td scope="row" class="text-center">{{fila.RFC_RETIRO}}</td>
+                    <td scope="row" class="text-center">{{fila.CUENTA_RETIRO}}</td>
+                    <td scope="row" class="text-center">{{fila.BANCO_DEPOSITO}}</td>
+                    <td scope="row" class="text-center">{{fila.RFC_DEPOSITO}}</td>
+                    <td scope="row" class="text-center">{{fila.CUENTA_DEPOSITO}}</td>
+                    <td scope="row" class="text-right">{{fila.MONTO | currency}}</td>
+                    <td scope="row" class="text-right">{{fila.observaciones | json}}</td>
+                  </tr>
+                  <tr class="table-active">
+                      <td colspan="5"></td>
+                      <td class="text-right"><p class="font-weight-bold">TOTAL</p></td>
+                      <td class="text-right"><p class="font-weight-bold">{{calcularTotal() | currency}}</p></td>
+                      <td ></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
       </nb-card-body>
     </nb-card>

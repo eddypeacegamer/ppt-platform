@@ -462,7 +462,7 @@ export class PreCfdiComponent implements OnInit {
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
       }else{
       reader.readAsDataURL(file);
-      reader.onload = () => { this.paymentForm.filename = file.name + " " + file.type; this.newPayment.documento = reader.result.toString() }
+      reader.onload = () => { this.paymentForm.filename = file.name; this.newPayment.documento = reader.result.toString() }
       reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
       }
     }

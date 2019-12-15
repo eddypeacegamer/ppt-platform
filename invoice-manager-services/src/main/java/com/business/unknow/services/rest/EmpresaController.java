@@ -62,12 +62,6 @@ public class EmpresaController {
 		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro), HttpStatus.OK);
 	}
 	
-	@GetMapping("/lineas/{linea}/empresas")
-	@ApiOperation(value = "Get all companies by linea and giro")
-	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea,
-			@RequestParam(name = "rfc", required = true) String rfc) {
-		return new ResponseEntity<>(service.getEmpresaByLineaAndRfc(linea, rfc), HttpStatus.OK);
-	}
 
 	@PostMapping("/empresas")
 	@ApiOperation(value = "insert a new empresa into the system")

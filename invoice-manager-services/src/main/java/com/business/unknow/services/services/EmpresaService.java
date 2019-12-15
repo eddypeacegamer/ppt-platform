@@ -63,9 +63,6 @@ public class EmpresaService {
 		return mapper.getEmpresaDtosFromEntities(repository.findByTipoAndGiro(tipo, giro));
 	}
 	
-	public List<EmpresaDto> getEmpresaByLineaAndRfc(String linea, String rfc){
-		return mapper.getEmpresaDtosFromEntities(repository.findEmpresasByTipoAndRfcIgnoreCaseContaining(linea, rfc));
-	}
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		empresaDto.setActivo(false);
@@ -79,9 +76,6 @@ public class EmpresaService {
 		empresa.setReferencia(empresaDto.getReferencia());
 		empresa.setWeb(empresaDto.getWeb());
 		empresa.setSucursal(empresaDto.getSucursal());
-//		empresa.setLogotipo(empresaDto.getLogotipo());
-//		empresa.setLlavePrivada(empresaDto.getLlavePrivada());
-//		empresa.setCertificado(empresaDto.getCertificado());
 		empresa.setPwSat(empresaDto.getPwSat());
 		empresa.setCorreo(empresaDto.getCorreo());
 		empresa.setPwCorreo(empresa.getPwCorreo());

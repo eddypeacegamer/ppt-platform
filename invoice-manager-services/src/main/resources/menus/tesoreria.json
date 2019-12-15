@@ -3,12 +3,16 @@
     "icon": "layout-outline",
     "children": [
       {
-        "title": "pagos",
+        "title": "Pagos",
         "link": "/pages/tesoreria/pagos"
       },
       {
-        "title": "devoluciones",
+        "title": "Devoluciones",
         "link": "/pages/tesoreria/devoluciones"
+      },
+      {
+        "title": "Transferencias",
+        "link": "/pages/tesoreria/transferencias"
       }
     ]
   }
