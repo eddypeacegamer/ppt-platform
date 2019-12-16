@@ -27,9 +27,10 @@ import { EmpresaComponent } from './empresa/empresa.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
+import { InvoiceRequestComponent } from './invoice-generator/invoice-request/invoice-request.component';
 
 @NgModule({
-  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent],
+  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent, InvoiceRequestComponent],
   imports: [
     ContabilidadRoutingModule,
     CommonModule,
@@ -45,8 +46,9 @@ import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule,
+    NbDialogModule.forChild(),
     NbSpinnerModule
-  ]
+  ],
+  entryComponents:[InvoiceRequestComponent]
 })
 export class ContabilidadModule { }

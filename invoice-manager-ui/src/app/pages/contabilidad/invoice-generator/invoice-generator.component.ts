@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { TransferData } from '../../../@core/data/transfers-data';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service';
+import { NbDialogService } from '@nebular/theme';
+import { Transferencia } from '../../../models/transferencia';
+import { InvoiceRequestComponent } from './invoice-request/invoice-request.component';
 
 @Component({
   selector: 'ngx-invoice-generator',
@@ -16,7 +19,8 @@ export class InvoiceGeneratorComponent implements OnInit {
   public filterParams: any = { tipoEmisor: 'A', tipoReceptor: 'B', since: '', to: '' };
 
   constructor(private tranferService:TransferData,
-    private donwloadService: DownloadCsvService) { }
+    private donwloadService: DownloadCsvService,
+    private dialogService: NbDialogService) { }
 
   ngOnInit() {
     this.filterParams = { tipoEmisor: 'A', tipoReceptor: 'B', since: '', to: '' };
@@ -39,6 +43,14 @@ export class InvoiceGeneratorComponent implements OnInit {
     this.tranferService.getAllTransfers(0, 10000, this.filterParams).subscribe(result => {
       console.log(result.content);
       this.donwloadService.exportCsv(result.content, 'Transferencias');
+    });
+  }
+
+  public openDialog(transferencia:Transferencia){
+    this.dialogService.open(InvoiceRequestComponent, {
+      context: {
+        transfer: transferencia,
+      },
     });
   }
 

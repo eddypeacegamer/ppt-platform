@@ -79,7 +79,7 @@
               <tbody>
                 <tr *ngFor="let fila of page.content">
                   <td scope="row" class="text-center"> 
-                    <button class="btn btn-outline-primary"><i class="fa fa-search"></i>
+                    <button class="btn btn-outline-primary" (click)="openDialog(fila)"><i class="fa fa-edit"></i>
                     </button> 
                   </td>
                   <td scope="row">{{fila.rfcRetiro}}</td>
