@@ -26,10 +26,10 @@ import { EmpresasComponent } from './empresas/empresas.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
+import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
 
 @NgModule({
-  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, CargaMasivaComponent],
+  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent],
   imports: [
     ContabilidadRoutingModule,
     CommonModule,

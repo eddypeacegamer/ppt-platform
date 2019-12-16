@@ -39,13 +39,20 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <button class="btn btn-success" (click)="validarInformacion()">Validar</button>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button class="btn btn-success" (click)="validarInformacion()"  [disabled]="!params.dataValid">Cargar</button>
+                  <button class="btn btn-success" (click)="cargarTransferencias()"  [disabled]="!params.dataValid">Cargar</button>
                   </div>
               </div>
           </div>
           <br>
           <br>
-          
+          <div class="row d-flex justify-content-center">
+              <div class="alert alert-success" *ngIf="params.successMessage != undefined" role="alert">
+                {{params.successMessage}}
+              </div>
+          </div>
+          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+              <p *ngFor="let message of errorMessages">{{message}}</p>
+          </div>
           <br>
           <br>
           <div class="table-responsive" *ngIf="transfers.length > 0">
@@ -71,7 +78,7 @@
                     <td scope="row" class="text-center">{{fila.RFC_DEPOSITO}}</td>
                     <td scope="row" class="text-center">{{fila.CUENTA_DEPOSITO}}</td>
                     <td scope="row" class="text-right">{{fila.MONTO | currency}}</td>
-                    <td scope="row" class="text-right">{{fila.observaciones | json}}</td>
+                    <td scope="row" class="text-center">{{fila.observaciones }}</td>
                   </tr>
                   <tr class="table-active">
                       <td colspan="5"></td>

@@ -1,0 +1,110 @@
+<div class="row">
+    <div class="col-md-12">
+      <nb-card class="inline-form-card">
+        <nb-card-header>Generacion facturas desde transferencias</nb-card-header>
+        <nb-card-body>
+          <div class="row">
+              <div class="col-sm-2">
+                  <label for="inputRetiro" class="label">Linea emisor</label>
+                  <select id="inputRetiro" style="display:block;" class="form-control"
+                    [(ngModel)]="filterParams.tipoEmisor">
+                    <option value="A">Linea A</option>
+                    <option value="B">Linea B</option>
+                    <option value="C">Linea C</option>
+                    <option value="D">Linea D</option>
+                  </select>
+              </div>
+              <div class="col-sm-2">
+                  <label for="inputDeposito" class="label">Linea receptor</label>
+                  <select id="inputDeposito" style="display:block;" class="form-control"
+                    [(ngModel)]="filterParams.tipoReceptor">
+                    <option value="A">Linea A</option>
+                    <option value="B">Linea B</option>
+                    <option value="C">Linea C</option>
+                    <option value="D">Linea D</option>
+                  </select>
+              </div>
+              <div class="col-sm-3">
+                  <label for="inputDesde" class="label">Desde</label>
+                  <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
+                  [(ngModel)]="filterParams.since">
+                  <nb-datepicker #sincepicker></nb-datepicker>
+              </div>
+              <div class="col-sm-3">
+                <label for="inputHasta" class="label">Hasta</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
+                [(ngModel)]="filterParams.to">
+                <nb-datepicker #topicker></nb-datepicker>
+              </div>
+              <div class="col-md-2">
+                  <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+              </div>
+          </div>
+          
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+  
+  
+  <div class="row">
+    <div class="col-md-12">
+      <nb-card>
+        <nb-card-header>Transferencias</nb-card-header>
+        <nb-card-body>
+  
+          <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+            No se encontraron resultados
+          </div>
+          <div class="clearfix">
+            <strong>Resultados</strong>
+            <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+  
+            <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+              id="inputPageSize" class="float-right">
+              <nb-option value="10">10</nb-option>
+              <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+              <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
+            </nb-select>
+          </div>
+          <div class="table-responsive" *ngIf="page.empty == false">
+            
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th class="text-center">Acciones</th>
+                  <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of page.content">
+                  <td scope="row" class="text-center"> 
+                    <button class="btn btn-outline-primary"><i class="fa fa-search"></i>
+                    </button> 
+                  </td>
+                  <td scope="row">{{fila.rfcRetiro}}</td>
+                  <td scope="row">{{fila.rfcDeposito}}</td>
+                  <td scope="row">{{fila.lineaRetiro}}</td>
+                  <td scope="row">{{fila.lineaDeposito}}</td>
+                  <td scope="row">{{fila.importe | currency}}</td>
+                  <td scope="row">{{fila.fechaCreacion}}</td>
+                </tr>
+              </tbody>
+            </table>
+  
+            <ul class="pagination" *ngIf="page.totalElements > 1">
+              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                  (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+              <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                  (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+            </ul>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
