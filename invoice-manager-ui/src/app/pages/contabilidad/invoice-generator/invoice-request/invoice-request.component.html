@@ -5,98 +5,24 @@
               <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
                 <p *ngFor="let message of errorMessages">{{message}}</p>
               </div>
-              <div *ngIf="folioParam != '*'">
+              
+              <div>
+
                 <p class="font-weight-bold">Información Emisor y Receptor</p>
                 <div class="form-inline">
-      
-      
                   <p class="font-weight-bold">Emisor</p>
                   <p>{{factura.rfcEmisor}}</p>
-                  <p>{{factura.razonSocialEmisor}}</p>
                   <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                  <p>{{factura.razonSocialEmisor}}</p>
+                  <p>&nbsp;&nbsp;&nbsp;</p>
                   <p class="font-weight-bold">Receptor</p>
+                  <p>&nbsp;&nbsp;&nbsp;</p>
                   <p>{{factura.rfcRemitente}}</p>
                   <p>{{factura.razonSocialRemitente}}</p>
                   <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <p class="font-weight-bold">Promotor</p>
-                  <p>{{factura.solicitante}}</p>
-                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <span class="badge badge-primary">{{factura.statusFactura}}</span>
+              
                 </div>
-            
-                <p class="font-weight-bold">Información CFDI</p>
-                <br>
-                <div class="form-inline">
-                  <p class="font-weight-bold">Uso CFDI</p>
-                  <p>{{factura.cfdi.usoCfdi}}</p>
-                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <p class="font-weight-bold">Moneda</p>
-                  <p>{{factura.cfdi.moneda}}</p>
-                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <p class="font-weight-bold">Metodo de Pago</p>
-                  <p>{{factura.metodoPago}}</p>
-                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <p class="font-weight-bold">Forma de Pago</p>
-                  <p>{{factura.formaPago}}</p>
-                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                  <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                    class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
-                    <i class="fa fa-file-pdf"></i>
-                  </button>
-                  &nbsp;&nbsp;
-                  <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                    class="btn btn-outline-primary" (click)="downloadXml(factura.folio)">
-                    <i class="fa fa-code"></i>
-                  </button>
-                  &nbsp;&nbsp;&nbsp;
-                  <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading"
-                    nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
-                    Timbrar
-                  </button>
-                  &nbsp;&nbsp;&nbsp;
-                  <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading" 
-                  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
-                    Cancelar
-                  </button>
-                  
-                </div>
-              </div>
-              <div *ngIf="folioParam === '*'">
-                <p class="font-weight-bold">Información Emisor y Receptor</p>
-                <div class="row">
-      
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label for="inputGiro" class="label">Giro Empresa</label>
-                      <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
-                        style="display:block;" [(ngModel)]="formInfo.giro">
-                        <option value="*">Seleccionar</option>
-                        <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="inputEmpresa" class="label">Empresa</label>
-                    <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
-                      [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
-                      <option value="*">Seleccionar</option>
-                      <option *ngFor="let company of companiesCat" [(value)]="company.id">
-                        {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="col-md-4">
-                    <label for="inputCliente" class="label">RFC cliente</label>
-                    <div class="row form-inline">
-                      <input type="text" [(ngModel)]="formInfo.clientRfc" fullWidth class="form-control"
-                        placeholder="RFC CLIENTE">
-                      <button type="button" nbButton status="primary" (click)="buscarClientInfo()">BUSCAR</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">
-                  {{clientInfo.rfc}} - {{clientInfo.razonSocial}}
-                </div>
+
                 <br>
                 <p class="font-weight-bold">Información CFDI</p>
                 <div class="row">
@@ -117,10 +43,8 @@
                   <div class="col-sm-1">
                     <label for="inputCoin" class="label">Moneda</label>
                     <select selected="1" id="inputCoin" style="display:block;" class="form-control"
-                      [(ngModel)]="formInfo.moneda" (change)="onMonedaSelected($event.target.value)">
-                      <option value="*">Seleccionar</option>
+                      [(ngModel)]="this.factura.cfdi.moneda">
                       <option value="MXN">Peso MX</option>
-                      <option value="USD">Dollar US</option>
                     </select>
                   </div>
                   <div class="col-sm-3">
@@ -147,7 +71,7 @@
               <br>
               <p class="font-weight-bold">Conceptos factura</p>
       
-              <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
+              <div class="row" *ngIf="factura.folio==undefined">
                 <div class="col-sm-4">
                   <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
                   <div class="form-inline">
@@ -192,17 +116,18 @@
                   <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
                     [(ngModel)]="newConcep.valorUnitario">
                 </div>
-                <!--div class="col-sm-2">
-                        <label for="inputDescuento" class="label">Descuento</label>
-                        <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
-                          [(ngModel)]="newConcep.descuento">
-                      </div-->
-                <div class="col-sm-4">
+                
+                <div class="col-sm-6">
                   <label for="inputImpuesto" class="label"></label>
                   <div class="row form-inline">
+                    <p>&nbsp;&nbsp;&nbsp;</p>
                     <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
                     <label class="form-check-label" for="iva">IVA</label>
+                    <p>&nbsp;&nbsp;&nbsp;</p>
+                    <button class="btn btn-success" (click)="calcularPrecioUnitario(newConcep)">Calcular Precio Unitario</button>
+                    <p>&nbsp;&nbsp;&nbsp;</p>
                     <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
+                    
                   </div>
                 </div>
       
@@ -258,10 +183,7 @@
               </table>
               <br>
       
-              <div class="form-inline" *ngIf="this.factura.folio == undefined">
-                <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
-                <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
-              </div>
+              
               <br>
               <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
                 {{successMessage}}
@@ -322,6 +244,15 @@
                 </div>
               </div>
       
+              <br>
+              <br>
+              <div class="alert alert-warning" role="alert" *ngIf="!validarRestante()">
+                El monto requerido de la factura es de {{transfer.importe | currency}} el monto faltante es de {{(transfer.importe - factura.total) | currency}}
+              </div>
+
+              <div class="alert alert-success" role="alert" *ngIf="validarRestante()">
+                Muy bien el monto de la factura se cuadro correctamente
+              </div>
               
           
       
@@ -329,36 +260,12 @@
     </nb-card-body>
     <nb-card-footer>
         
-      <button class="cancel" nbButton status="danger">Solicitar</button>
-      &nbsp;&nbsp;&nbsp;
-      <button class="cancel" nbButton status="warning">Salir</button>
-      
+      <div class="form-inline" *ngIf="this.factura.folio == undefined">
+        <button type="button" class="btn btn-success" [disabled]= "!validarRestante()" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+        &nbsp;&nbsp;&nbsp;
+        <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
+      </div>
     </nb-card-footer>
   </nb-card>
 
-  <ng-template #dialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>Seleccione Pack Facturacion</nb-card-header>
-      <nb-card-body>
-        <div class="row" style="width: 300 px;">
-          <div class="col-sm-12">
-  
-            <label for="inputGiro" class="label">Pack de facturacion</label>
-            <select id="inputGiro" fullWidth class="form-control" style="display:block;"
-              [(ngModel)]="data.packFacturacion">
-              <option value="SW_SAPIENS">SW Sapiens</option>
-              <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
-            </select>
-  
-          </div>
-  
-        </div>
-  
-      </nb-card-body>
-      <nb-card-footer>
-        <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
-        &nbsp;&nbsp;
-        <button class="btn btn-success" (click)="ref.close(data)">Timbrar</button>
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
+ 

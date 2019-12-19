@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { NbDialogRef, NbDialogService } from '@nebular/theme';
-import { DomSanitizer } from '@angular/platform-browser';
+import { NbDialogRef } from '@nebular/theme';
 import { Transferencia } from '../../../../models/transferencia';
 import { Giro } from '../../../../models/catalogos/giro';
 import { Empresa } from '../../../../models/empresa';
@@ -10,20 +9,14 @@ import { UsoCfdi } from '../../../../models/catalogos/uso-cfdi';
 import { Status } from '../../../../models/catalogos/status';
 import { Concepto } from '../../../../models/factura/concepto';
 import { Factura } from '../../../../models/factura/factura';
-import { Contribuyente } from '../../../../models/contribuyente';
 import { CatalogsData } from '../../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../../@core/data/clients-data';
 import { CompaniesData } from '../../../../@core/data/companies-data';
 import { InvoicesData } from '../../../../@core/data/invoices-data';
-import { PaymentsData } from '../../../../@core/data/payments-data';
-import { FilesData } from '../../../../@core/data/files-data';
 import { UsersData } from '../../../../@core/data/users-data';
-import { DownloadInvoiceFilesService } from '../../../../@core/back-services/download-invoice-files';
-import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Impuesto } from '../../../../models/factura/impuesto';
 import { Cfdi } from '../../../../models/factura/cfdi';
-import { Client } from '../../../../models/client';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -59,8 +52,6 @@ export class InvoiceRequestComponent implements OnInit {
   public payErrorMessages: string[] = [];
 
   public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
-  public clientInfo: Contribuyente;
-  public companyInfo: Empresa;
 
   public loading : boolean = false;
 
@@ -68,39 +59,38 @@ export class InvoiceRequestComponent implements OnInit {
 
 
   constructor(protected ref: NbDialogRef<InvoiceRequestComponent>,
-    private sanitizer: DomSanitizer,
-    private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
-    private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService: PaymentsData,
-    private filesService: FilesData,
     private userService: UsersData,
-    private downloadService: DownloadInvoiceFilesService,
-    private route: ActivatedRoute) {}
+    ) {}
 
 
     ngOnInit() {
+      
       this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
       this.initVariables();
-      this.route.paramMap.subscribe(route=>{
-        this.folioParam = route.get('folio');
-        console.log(`recovering ${this.folioParam} information`);
         this.catalogsService.getInvoiceCatalogs()
-        .toPromise().then(results=>{
+        .subscribe(results=>{
           this.girosCat = results[0];
           this.claveUnidadCat = results[1];
           this.usoCfdiCat = results[2];
           this.payCat = results[3];
           this.devolutionCat = results[4];
           this.validationCat = results[5];
-        }).then(()=>{
-            if(this.folioParam!='*'){
-              this.getInvoiceByFolio(this.folioParam);
-            }
-        });
-      });
+        })
+      this.companiesService.getCompanyByRFC(this.transfer.rfcRetiro).subscribe(
+        emisor => {this.factura.rfcEmisor = emisor.informacionFiscal.rfc;
+          this.factura.razonSocialEmisor = emisor.informacionFiscal.razonSocial;
+          this.factura.cfdi.regimenFiscal = emisor.regimenFiscal;},
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
+      );
+
+      this.companiesService.getCompanyByRFC(this.transfer.rfcDeposito).subscribe(
+        receptor => {this.factura.rfcRemitente = receptor.informacionFiscal.rfc;
+          this.factura.razonSocialRemitente = receptor.informacionFiscal.razonSocial;},
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
+      );
     }
   
     ngOnDestroy() {
@@ -146,6 +136,7 @@ export class InvoiceRequestComponent implements OnInit {
       this.factura = new Factura();
       this.errorMessages = [];
       this.loading = false;
+      this.factura.cfdi.moneda = 'MXN';
     }
   
     onDeleteConfirm(event): void {
@@ -156,9 +147,7 @@ export class InvoiceRequestComponent implements OnInit {
       }
     }
   
-    openBuscadorSAT(dialog: TemplateRef<any>) {
-      this.dialogService.open(dialog);
-    }
+  
   
     onGiroSelection(giroId: string) {
       let value = +giroId;
@@ -170,10 +159,6 @@ export class InvoiceRequestComponent implements OnInit {
       }
     }
   
-    onCompanySelected(companyId: number) {
-      this.companyInfo = this.companiesCat.find(c => c.id == companyId);
-    }
-  
     buscarClaveProdServSelected() {
       this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => {
         this.prodServCat = claves;
@@ -183,20 +168,10 @@ export class InvoiceRequestComponent implements OnInit {
       });
     }
   
-    buscarClientInfo() {
-      this.errorMessages = [];
-      this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-        (client: Client) => { this.clientInfo = client.informacionFiscal },
-        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    }
-  
     onUsoCfdiSelected(clave: string) {
       this.factura.cfdi.usoCfdi = clave;
     }
   
-    onMonedaSelected(clave: string) {
-      this.factura.cfdi.moneda = clave;
-    }
   
     onMetodoDePagoSelected(clave: string) {
       this.factura.metodoPago = clave;
@@ -225,9 +200,7 @@ export class InvoiceRequestComponent implements OnInit {
     }
   
     limpiarForma() {
-      this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
-      this.clientInfo = undefined;
-      this.companyInfo = undefined;
+      this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' };
       this.newConcep = new Concepto();
       this.factura = new Factura();
       this.factura.cfdi = new Cfdi();
@@ -303,30 +276,29 @@ export class InvoiceRequestComponent implements OnInit {
         return 0;
       }
     }
+
+    calcularPrecioUnitario(concepto : Concepto){
+      if(concepto.cantidad < 1){
+        alert('NO es posible calcular montos unitarios para valores menores a 1');
+      }else{
+        const restante  = this.transfer.importe - this.factura.total;
+        if(concepto.iva == true){
+          concepto.valorUnitario = restante/(1.16 * concepto.cantidad)
+        }else{
+          concepto.valorUnitario = restante / concepto.cantidad;
+        }
+      }
+    }
+
+   validarRestante():boolean{
+     return Math.abs(this.transfer.importe - this.factura.total)<0.01
+   }
   
     solicitarCfdi() {
       this.errorMessages = [];
       this.successMessage = undefined;
       let validCdfi = true;
-      if (this.companyInfo == undefined) {
-        this.errorMessages.push('La empresa emisora es requerida.');
-        validCdfi = false;
-      } else {
-        this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-        this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-        this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
-        this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-        this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-      }
-  
-      if (this.clientInfo == undefined) {
-        this.errorMessages.push('La información del cliente es un valor solicitado');
-        validCdfi = false;
-      } else {
-        this.factura.rfcRemitente = this.clientInfo.rfc;
-        this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
-      }
-  
+      this.factura.solicitante = this.userEmail;
       if (this.factura.cfdi.usoCfdi == undefined) {
         this.errorMessages.push('El uso del CFDI es un campo requerido.');
         validCdfi = false;
@@ -360,68 +332,4 @@ export class InvoiceRequestComponent implements OnInit {
           }, (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
       }
     }
-  
-    public downloadPdf(folio: string) {
-      this.filesService.getFacturaFile(folio, 'PDF').subscribe(
-        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
-      )
-    }
-    public downloadXml(folio: string) {
-      this.filesService.getFacturaFile(folio, 'XML').subscribe(
-        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
-      )
-    }
-  
-  
-    public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
-      this.loading = true;
-      this.successMessage = undefined;
-      this.errorMessages = [];
-      let fact = { ...factura };
-      
-      fact.cfdi = null;
-      fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-      fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-      fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-      fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
-  
-      this.dialogService.open(dialog, { context: fact })
-        .onClose.subscribe(invoice => {
-          console.log('Timbrando:',invoice);
-          if (invoice != undefined) {
-            this.invoiceService.timbrarFactura(fact.folio, invoice)
-              .subscribe(result => { 
-                this.loading = false;
-                console.log('factura timbrada correctamente');
-                this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
-                (error: HttpErrorResponse) => {
-                  this.loading = false;
-                  this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
-                });
-          }
-        }
-        );
-    }
-  
-    public cancelarFactura(factura: Factura) {
-      this.loading = true;
-      this.successMessage = undefined;
-      this.errorMessages = [];
-      let fact = { ...factura };
-      fact.cfdi = null;
-      fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-      fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-      fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-      fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
-  
-      this.invoiceService.cancelarFactura(fact.folio, fact)
-        .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; 
-        this.getInvoiceByFolio(fact.folioPadre || fact.folio);
-        this.loading = false;},
-          (error: HttpErrorResponse) => { 
-            this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`); 
-            this.loading = false;
-            console.error(this.errorMessages); });
-    }
-
 }
