@@ -20,13 +20,12 @@ import { TesoreriaRoutingModule } from './tesoreria-routing.module';
 import { TesoreriaComponent } from './tesoreria.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import { TransferenciasComponent } from './transferencias/transferencias.component';
 import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
 import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago.component';
 
 
 @NgModule({
-  declarations: [TesoreriaComponent,PagosComponent,DevolucionesComponent, ValidacionPagoComponent, TransferenciasComponent],
+  declarations: [TesoreriaComponent,PagosComponent,DevolucionesComponent, ValidacionPagoComponent],
   imports: [
     TesoreriaRoutingModule,
 

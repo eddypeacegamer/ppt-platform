@@ -28,9 +28,10 @@ import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
 import { InvoiceRequestComponent } from './invoice-generator/invoice-request/invoice-request.component';
+import { TransferenciasComponent } from './transferencias/transferencias.component';
 
 @NgModule({
-  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent, InvoiceRequestComponent],
+  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent, InvoiceRequestComponent, TransferenciasComponent],
   imports: [
     ContabilidadRoutingModule,
     CommonModule,

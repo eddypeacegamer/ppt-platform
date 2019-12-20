@@ -8,6 +8,7 @@ import { EmpresaComponent } from './empresa/empresa.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
+import { TransferenciasComponent } from './transferencias/transferencias.component';
 
 const routes: Routes = [{
   path: '',
@@ -35,8 +36,11 @@ const routes: Routes = [{
       path: 'cfdi/:folio',
       component : PreCfdiComponent,
     },{
-      path: 'generacion-facturas',
+      path: 'carga-facturas',
       component : InvoiceGeneratorComponent,
+    },{
+      path:'transferencias',
+      component : TransferenciasComponent
     }
   ]
 }];
