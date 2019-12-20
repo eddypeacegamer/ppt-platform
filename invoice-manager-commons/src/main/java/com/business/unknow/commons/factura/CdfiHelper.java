@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,23 +36,13 @@ public class CdfiHelper {
 	public String changeDate(String xml, Date fechaTimbrado) throws InvoiceCommonException {
 		try {
 			SimpleDateFormat format = new SimpleDateFormat(FacturaConstants.FACTURA_DATE_FORMAT);
-			long unixTime = System.currentTimeMillis() / 1000L;
 			String datetime = format.format(fechaTimbrado);
 			DocumentBuilderFactory factory = newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
-			UUID uuid = UUID.randomUUID();
-			String randomUUIDString = uuid.toString().replace(FacturaConstants.FACTURA_DATE_FORMAT, "");
 			Document doc = builder.parse(new InputSource(new StringReader(xml)));
 			doc.getDocumentElement().setAttribute(FacturaConstants.FECHA_ATTRIBUTE, datetime);
-			if (getRandomBoolean()) {
-				doc.getDocumentElement().setAttribute(FacturaConstants.FOLIO_ATTRIBUTE,
-						unixTime + FacturaConstants.UNIX_CONSTANT);
-			} else {
-				doc.getDocumentElement().setAttribute(FacturaConstants.FOLIO_ATTRIBUTE,
-						randomUUIDString + FacturaConstants.UNIX_CONSTANT);
-			}
 			StringWriter writer = new StringWriter();
 			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 			String output = writer.getBuffer().toString();
@@ -65,9 +54,9 @@ public class CdfiHelper {
 
 	public String signXML(String xml, Date fechaTimbrado, EmpresaDto empresa) throws InvoiceCommonException {
 		SignHelper si = new SignHelper();
-		String xmlDateChanged = changeDate(xml, fechaTimbrado);
-		String sello = si.getSign(si.getCadena(xmlDateChanged), empresa.getPwSat(), empresa.getLlavePrivada());
-		return putsSign(xmlDateChanged, sello);
+		String xmlModified=changeDate(xml,fechaTimbrado);
+		String sello = si.getSign(si.getCadena(xmlModified), empresa.getPwSat(), empresa.getLlavePrivada());
+		return putsSign(xmlModified, sello);
 	}
 
 	public String putsSign(String xml, String sello) throws InvoiceCommonException {

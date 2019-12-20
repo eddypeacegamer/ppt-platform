@@ -76,7 +76,6 @@ public class FacturaTranslator {
 		try {
 			context.getFacturaDto().setCfdi(new CfdiDto());
 			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
-
 			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto(),
 					context.getEmpresaDto());
 			context.getFacturaDto().getCfdi().setSerie("");

@@ -2,34 +2,42 @@ package com.business.unknow.services.services.evaluations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.jeasy.rules.api.Facts;
-import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.commons.builder.FacturaBuilder;
+import com.business.unknow.Constants;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
+import com.business.unknow.commons.validator.PagoValidator;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.ResourceFileEnum;
+import com.business.unknow.enums.PagoStatusEnum;
+import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.rules.suites.ComplementoSuite;
-import com.business.unknow.rules.suites.PagoPpdSuite;
-import com.business.unknow.rules.suites.PagoPueSuite;
+import com.business.unknow.rules.suites.facturas.ComplementoSuite;
+import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
+import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
+import com.business.unknow.rules.suites.pagos.PagoPueSuite;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.services.executor.PagoExecutorService;
 
 @Service
-public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
+public class PagoEvaluatorService extends AbstractEvaluatorService {
 
 	@Autowired
 	private PagoPpdSuite pagoPpdSuite;
+
+	@Autowired
+	private DeletePagoSuite deletePagoSuite;
 
 	@Autowired
 	private PagoPueSuite pagoPueSuite;
@@ -38,49 +46,103 @@ public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
 	private ComplementoSuite complementoSuite;
 
 	@Autowired
-	private RulesEngine rulesEngine;
+	private PagoExecutorService pagoExecutorService;
+	
+	private PagoValidator pagoValidator=new PagoValidator();
+
+	public void validatePagoDeleting(Integer id) throws InvoiceManagerException {
+		Pago pago = pagoRepository.findById(id)
+				.orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
+						String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value()));
+		Factura factura = repository.findByFolio(pago.getFolio())
+				.orElseThrow(() -> new InvoiceManagerException("No existe la factura del pago",
+						String.format("Folio with the name %s not found", pago.getFolio()),
+						HttpStatus.NOT_FOUND.value()));
+		switch (TipoDocumentoEnum.findByDesc(factura.getTipoDocumento())) {
+		case FACRTURA:
+			deletePagoPue(factura, pago, id);
+			break;
+		case COMPLEMENTO:
+			deletePagoPpd(factura, pago, id);
+			break;
+		default:
+			new InvoiceManagerException("Tipo de documento not suported",
+					String.format("Documento %s not suported", factura.getTipoDocumento()),
+					HttpStatus.CONFLICT.value());
+			break;
+		}
+	}
+
+	public void deletePagoPpd(Factura factura, Pago pago, int id) throws InvoiceManagerException {
+		Pago pagoPadre = pagoRepository.findByFolio(factura.getFolioPadre()).stream().findFirst()
+				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
+						String.format("Verificar consitencia de pagos del folio %s", factura.getFolioPadre()),
+						HttpStatus.NOT_FOUND.value()));
+		PagoDto pagoDto=mapper.getPagoDtoFromEntity(pago);
+		FacturaContext context = new FacturaContextBuilder()
+				.setPagos(Arrays.asList(pagoDto))
+				.setCurrentPago(pagoDto)
+				.setFacturaDto(mapper.getFacturaDtoFromEntity(factura))
+				.setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre)).build();
+		Facts facts = new Facts();
+		facts.put("facturaContext", context);
+		rulesEngine.fire(deletePagoSuite.getSuite(), facts);
+		validateFacturaContext(context);
+		deleteComplementoValidation(context);
+		pagoExecutorService.deletePagoPpdExecutor(context);
+	}
+
+	public void deletePagoPue(Factura factura, Pago pago, int id) throws InvoiceManagerException {
+		List<Pago> pagos = pagoRepository.findByFolio(factura.getFolio());
+		Optional<Pago> pagoCredito = pagos.stream()
+				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
+		FacturaContext context = new FacturaContextBuilder().setCurrentPago(pagoMapper.getPagoDtoFromEntity(pago))
+				.setPagos(pagoMapper.getPagosDtoFromEntities(pagos))
+				.setFacturaDto(mapper.getFacturaDtoFromEntity(factura))
+				.setPagoCredito(pagoCredito.isPresent() ? pagoMapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
+				.build();
+		Facts facts = new Facts();
+		facts.put("facturaContext", context);
+		rulesEngine.fire(deletePagoSuite.getSuite(), facts);
+		validateFacturaContext(context);
+		pagoExecutorService.deletePagoPueExecutor(context);
+	}
 
 	public PagoDto validatePagoCreation(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		FacturaContext facturaContext;
 		Factura factura = repository.findByFolio(folio)
 				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
 						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
-		FacturaContext facturaContext;
 		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
 		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
-			facturaContext=validatePagoPpdCreation(folio, pagoDto, factura);
+			facturaContext = validatePagoPpdCreation(folio, pagoDto, factura);
 		} else if (factura.getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())) {
-			facturaContext=validatePagoPueCreation(folio, pagoDto);
+			facturaContext = validatePagoPueCreation(folio, pagoDto);
 		} else {
 			throw new InvoiceManagerException("Metodo de pago no soportado",
 					String.format("El metodo de pago %s no es valido", factura.getMetodoPago()),
 					HttpStatus.BAD_REQUEST.value());
 		}
-		if (pagoDto.getDocumento() != null) {
-			createResourceFile(pagoDto.getDocumento(), pagoDto.getFolio(), TipoRecursoEnum.PAGO.getDescripcion(),
-					ResourceFileEnum.IMAGEN.getDescripcion());
-		}
-		return mapper.getPagoDtoFromEntity(
-				pagoRepository.save(mapper.getEntityFromPagoDto(facturaContext.getPagos().stream().findFirst().get())));
+		return pagoExecutorService.PagoCreation(facturaContext);
 	}
 
 	private FacturaContext validatePagoPpdCreation(String folio, PagoDto pagoDto, Factura factura)
 			throws InvoiceManagerException {
-		Factura facturaPadre = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
-						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
-		List<Pago> pagos = pagoRepository.findByFolioPadre(pagoDto.getFolioPadre());
-		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
-				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-						String.format("Verificar consitencia de pagos del folio %s", folio),
-						HttpStatus.NOT_FOUND.value()));
-		FacturaContext facturaContext = new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto))
-				.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(facturaPadre))
-				.setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre)).build();
+		FacturaContext facturaContext=buildFacturaContextPagoPpdCreation(pagoDto, folio);
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(pagoPpdSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		return buildFacturaContextPagoPpdCreation(folio, facturaContext, pagoDto);
+		facturaContext.setFacturaDto(buildFacturaDtoPagoPpdCreation(facturaContext));
+		facturaContext = createNewComplementoValidation(facturaContext, facturaContext.getFacturaPadreDto().getFolio());
+		facturaContext.getCurrentPago().setFolio(facturaContext.getFacturaDto().getFolio());
+		facturaContext.getCurrentPago().setFolioPadre(facturaContext.getFacturaDto().getFolioPadre());
+		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
+		facturaContext.getPagoCredito()
+				.setMonto(numberHelper.assignPrecision(
+						facturaContext.getPagoCredito().getMonto() - facturaContext.getCurrentPago().getMonto(),
+						Constants.DEFAULT_SCALE));
+		return pagoExecutorService.creaPapoPpdExecutor(facturaContext);
 	}
 
 	private FacturaContext validatePagoPueCreation(String folio, PagoDto pagoDto) throws InvoiceManagerException {
@@ -89,43 +151,60 @@ public class PagoEvaluatorService extends AbstractFacturaServiceEvaluator {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(pagoPueSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
+		if (facturaContext.getPagoCredito() != null) {
+			facturaContext.getPagoCredito().setMonto(facturaContext.getPagoCredito().getMonto() - pagoDto.getMonto());
+			pagoExecutorService.creaPapoPueExecutor(facturaContext);
+		}
 		return facturaContext;
 	}
 
-	private FacturaContext buildFacturaContextPagoPpdCreation(String folio, FacturaContext facturaContext,
-			PagoDto pagoDto) throws InvoiceManagerException {
-		FacturaBuilder facturaBuilder = new FacturaBuilder()
-				.setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
-				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
-				.setMetodoPago(facturaContext.getFacturaPadreDto().getMetodoPago())
-				.setRfcEmisor(facturaContext.getFacturaPadreDto().getRfcEmisor())
-				.setRfcRemitente(facturaContext.getFacturaPadreDto().getRfcRemitente())
-				.setRazonSocialEmisor(facturaContext.getFacturaPadreDto().getRazonSocialEmisor())
-				.setRazonSocialRemitente(facturaContext.getFacturaPadreDto().getRazonSocialRemitente())
-				.setTotal(pagoDto.getMonto()).setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				.setFormaPago(FormaPagoEnum.findByDesc(pagoDto.getFormaPago()).getClave());
-		facturaContext.setFacturaDto(facturaBuilder.build());
-		facturaContext = createNewComplemento(facturaContext, folio);
-		pagoDto.setFolio(facturaContext.getFacturaDto().getFolio());
-		pagoDto.setFolioPadre(facturaContext.getFacturaDto().getFolioPadre());
-		facturaContext.setPagos(Arrays.asList(pagoDto));
-		facturaContext.getPagoCredito().setMonto(facturaContext.getPagoCredito().getMonto() - pagoDto.getMonto());
-		pagoRepository.save(pagoMapper.getEntityFromPagoDto(facturaContext.getPagoCredito()));
-		return facturaContext;
-	}
 
-	private FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto) {
-		return new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto)).build();
-	}
-
-	public FacturaContext createNewComplemento(FacturaContext facturaContext, String folio) throws InvoiceManagerException {
+	private FacturaContext createNewComplementoValidation(FacturaContext facturaContext, String folio)
+			throws InvoiceManagerException {
 		Facts facts = new Facts();
 		facturaDefaultValues.assignaDefaultsComplemento(facturaContext.getFacturaDto());
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(complementoSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-		facturaContext
-				.setFacturaDto(mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(facturaContext.getFacturaDto()))));
 		return facturaContext;
 	}
+
+	private FacturaContext deleteComplementoValidation(FacturaContext context) throws InvoiceManagerException {
+		Facts facts = new Facts();
+		facts.put("facturaContext", context);
+		rulesEngine.fire(deletePagoSuite.getSuite(), facts);
+		validateFacturaContext(context);
+		return context;
+	}
+	
+	public PagoDto validatePagoUpdate(PagoDto pago, Integer id) throws InvoiceManagerException {
+		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El pago con el id %d no existe", id)));
+		pagoValidator.validatePagoCreator(pago, pagoMapper.getPagoDtoFromEntity(entity));
+		// Bank, Document, payForm and pay type can't be updated
+		entity.setComentarioPago(pago.getComentarioPago());
+		entity.setRevision1(pago.getRevision1());
+		entity.setRevision2(pago.getRevision2());
+		entity.setUltimoUsuario(pago.getUltimoUsuario());
+		entity.setStatusPago(pago.getStatusPago());
+		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.getDescripcion())) {
+			Factura factura = repository.findByFolio(pago.getFolio())
+					.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+							"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+			factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+			repository.save(factura);
+		} else {
+			if (pago.getRevision1() && pago.getRevision2()) {
+				entity.setStatusPago(RevisionPagosEnum.ACEPTADO.getDescripcion());
+				Factura factura = repository.findByFolio(pago.getFolio())
+						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
+				factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+				repository.save(factura);
+			}
+		}
+		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
+	}
+
 }

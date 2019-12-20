@@ -12,12 +12,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.services.services.PagoService;
+import com.business.unknow.services.test.Animal;
+import com.business.unknow.services.test.AnimalDispatcher;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +38,8 @@ public class PagosController {
 	@Autowired
 	private PagoService service;
 	
+	@Autowired
+	private AnimalDispatcher dispatcher;
 	
 	
 	@GetMapping
@@ -51,6 +57,13 @@ public class PagosController {
 		Page<PagoDto> pagos = service.getPaginatedPayments(folio, formaPago, status, banco, since, to, page, size);
 		
 		return new ResponseEntity<>(pagos,HttpStatus.OK);
+	}
+	
+	@GetMapping("/{folio}")
+	public ResponseEntity<Animal> getFactura(@PathVariable String folio) throws InvoiceCommonException {
+		Animal animal=dispatcher.getAnimal(folio);
+		animal.imprime();
+		return new ResponseEntity<>(animal, HttpStatus.OK);
 	}
 
 }

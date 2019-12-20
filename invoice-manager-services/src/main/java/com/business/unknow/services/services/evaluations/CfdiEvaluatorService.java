@@ -13,17 +13,17 @@ import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 
 @Service
-public class CfdiEvaluatorService extends AbstractFacturaServiceEvaluator{
+public class CfdiEvaluatorService extends AbstractEvaluatorService{
 
 	
 	public CfdiDto insertNewCfdi(String folio, CfdiDto dto) {
 		Cfdi cfdiTemp = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto));
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiTemp);
 		for (ConceptoDto conceptoDto : dto.getConceptos()) {
-			Concepto tempConcepto = conceptoMapper.getEntityFromClientDto(conceptoDto);
+			Concepto tempConcepto = conceptoMapper.getEntityFromConceptoDto(conceptoDto);
 			tempConcepto.setCfdi(cfdiTemp);
 			tempConcepto = conceptoRepository.save(tempConcepto);
-			cfdiDto.getConceptos().add(conceptoMapper.getClientDtoFromEntity(tempConcepto));
+			cfdiDto.getConceptos().add(conceptoMapper.getConceptoDtoFromEntity(tempConcepto));
 			List<ImpuestoDto> impuestos = new ArrayList<>();
 			for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
 				Impuesto impuestoTemp = impuestoMapper.getEntityFromClientDto(impuestoDto);

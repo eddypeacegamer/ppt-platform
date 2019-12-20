@@ -59,6 +59,7 @@ public class SignHelper {
 			transformer.transform(xmlSource, out);
 			byte[] cadenaOriginalArray = baos.toByteArray();
 			String cadOrig = new String(cadenaOriginalArray, FacturaConstants.SYSTEM_CODIFICATION);
+			System.out.println(cadOrig);
 			return cadOrig;
 		} catch (UnsupportedEncodingException | TransformerException e) {
 			throw new InvoiceCommonException(e.getMessage());

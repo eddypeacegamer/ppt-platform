@@ -20,12 +20,45 @@ public class Constants {
 		
 	}
 	
+	public class DeletePagoSuite {
+		public static final String DELETE_PAGO_SUITE = "DeletePagoSuite";
+		
+		public static final String DELETE_PPD_PAYMENT = "DeletePpdPayment";
+		public static final String DELETE_PPD_PAYMENT_RULE = "DeletePpdPaymentRule";
+		public static final String DELETE_PPD_PAYMENT_RULE_DESC = "No se puede borrar el pago ppd por que hay incosistencias";
+		
+		public static final String DELETE_PAYMENT = "DeletePayment";
+		public static final String DELETE_PAYMENT_RULE = "DeletePaymentRule";
+		public static final String DELETE_PAYMENT_RULE_DESC = "No se puede borrar el pago por que hay incosistencias";
+		
+		public static final String DELETE_CREDIT_PAYMANT = "DeleteCreditPaymant";
+		public static final String DELETE_CREDIT_PAYMANT_RULE = "DeleteCreditPaymantRule";
+		public static final String DELETE_CREDIT_PAYMANT_RULE_DESC = "No se puede borrar el credito , hay un pago regular";
+	}
+	
 	public class PagoPpdSuite {
-		public static final String PAGO_PPD_SUITE = "FacturaSuite";
+		public static final String PAGO_PPD_SUITE = "PagoPpdSuite";
 		
 		public static final String MONTO_PAGO_VALIDATION = "MontoPagoValidation";
 		public static final String MONTO_PAGO_VALIDATION_RULE = "MontoPagoValidationRule";
 		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "El monto del pago actual contiene una incongruencia con su credito";
+		
+	}
+	
+	public class PagoPueSuite {
+		public static final String PAGO_PUE_SUITE = "PagoPueSuite";
+		
+		public static final String PAYMENT_CREDIT_PUE= "PaymantPueWithCredit";
+		public static final String PAYMENT_CREDIT_PUE_RULE = "PaymantPueWithCreditRule";
+		public static final String PAYMENT_CREDIT_PUE_RULE_DESC = "El Credito requerido para tu factura PUE esta mal";
+		
+		public static final String PAYMENT_PUE_NOT_CREDIT= "PaymentPueNotCredit";
+		public static final String PAYMENT_PUE_NOT_CREDIT_RULE = "PaymentPueNotCreditRule";
+		public static final String PAYMENT_PUE_NOT_CREDIT_RULE_DESC = "Los datos del pago de la factura pue son incorrectos";
+		
+		public static final String CREATE_CREDIT_VALIDATION = "CreateCreditValidation";
+		public static final String CREATE_CREDIT_VALIDATION_RULE = "CreateCreditValidationRule";
+		public static final String CREATE_CREDIT_VALIDATION_RULE_DESC = "Los datos de credito Pue son incorrectos";
 	}
 
 	public class Prevalidations {

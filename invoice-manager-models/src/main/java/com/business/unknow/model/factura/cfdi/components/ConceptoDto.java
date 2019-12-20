@@ -120,6 +120,73 @@ public class ConceptoDto implements Serializable {
 	public void setRetenciones(List<RetencionDto> retenciones) {
 		this.retenciones = retenciones;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cantidad == null) ? 0 : cantidad.hashCode());
+		result = prime * result + ((claveProdServ == null) ? 0 : claveProdServ.hashCode());
+		result = prime * result + ((claveUnidad == null) ? 0 : claveUnidad.hashCode());
+		result = prime * result + ((descripcion == null) ? 0 : descripcion.hashCode());
+		result = prime * result + ((importe == null) ? 0 : importe.hashCode());
+		result = prime * result + ((impuestos == null) ? 0 : impuestos.hashCode());
+		result = prime * result + ((unidad == null) ? 0 : unidad.hashCode());
+		result = prime * result + ((valorUnitario == null) ? 0 : valorUnitario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConceptoDto other = (ConceptoDto) obj;
+		if (cantidad == null) {
+			if (other.cantidad != null)
+				return false;
+		} else if (!cantidad.equals(other.cantidad))
+			return false;
+		if (claveProdServ == null) {
+			if (other.claveProdServ != null)
+				return false;
+		} else if (!claveProdServ.equals(other.claveProdServ))
+			return false;
+		if (claveUnidad == null) {
+			if (other.claveUnidad != null)
+				return false;
+		} else if (!claveUnidad.equals(other.claveUnidad))
+			return false;
+		if (descripcion == null) {
+			if (other.descripcion != null)
+				return false;
+		} else if (!descripcion.equals(other.descripcion))
+			return false;
+		if (importe == null) {
+			if (other.importe != null)
+				return false;
+		} else if (!importe.equals(other.importe))
+			return false;
+		if (impuestos == null) {
+			if (other.impuestos != null)
+				return false;
+		} else if (!impuestos.equals(other.impuestos))
+			return false;
+		if (unidad == null) {
+			if (other.unidad != null)
+				return false;
+		} else if (!unidad.equals(other.unidad))
+			return false;
+		if (valorUnitario == null) {
+			if (other.valorUnitario != null)
+				return false;
+		} else if (!valorUnitario.equals(other.valorUnitario))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {

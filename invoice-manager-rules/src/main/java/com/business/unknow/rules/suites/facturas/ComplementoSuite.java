@@ -1,9 +1,10 @@
-package com.business.unknow.rules.suites;
+package com.business.unknow.rules.suites.facturas;
 
 import org.jeasy.rules.api.Rules;
 
 import com.business.unknow.rules.complemento.FacturaPadreComplementoRule;
 import com.business.unknow.rules.complemento.FacturaPadreStatusRule;
+import com.business.unknow.rules.suites.InvoiceManagerSuite;
 
 public class ComplementoSuite implements InvoiceManagerSuite {
 

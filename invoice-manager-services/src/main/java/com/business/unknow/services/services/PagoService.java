@@ -33,10 +33,7 @@ public class PagoService {
 	@Autowired
 	private PagoMapper mapper;
 	
-	
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
-
-	
 	
 	public Page<PagoDto> getPaginatedPayments(Optional<String> folio,String formaPago,String status,String banco,Date since, Date to,  int page,int size){
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;

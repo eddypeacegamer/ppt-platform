@@ -468,8 +468,9 @@ export class RevisionComponent implements OnInit {
 
   deletePayment(paymentId) {
     this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => {this.invoicePayments = payments;this.calculatePayments()});},
-      (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      result => { this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => {this.invoicePayments = payments;this.calculatePayments()});
+      this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
+      },(error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
   sendPayment() {
@@ -477,6 +478,7 @@ export class RevisionComponent implements OnInit {
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
+
     let validPayment = true;
     if (this.newPayment.banco == undefined) {
       validPayment = false;
@@ -502,7 +504,7 @@ export class RevisionComponent implements OnInit {
       validPayment = false;
       this.payErrorMessages.push('El tipo de pago es requerido.');
     }
-    if (this.newPayment.formaPago != 'EFECTIVO' && this.newPayment.documento == undefined) {
+    if (this.newPayment.formaPago != 'CREDITO' && this.newPayment.documento == undefined) {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
@@ -511,7 +513,7 @@ export class RevisionComponent implements OnInit {
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if ((this.paymentSum+this.newPayment.monto) > this.factura.total) {
+    if ((this.paymentSum + this.newPayment.monto - this.factura.total) > 0.01 ) {
       validPayment = false;
       this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
@@ -521,7 +523,6 @@ export class RevisionComponent implements OnInit {
       this.newPayment.tipoPago = 'INGRESO';
       this.newPayment.ultimoUsuario = this.userEmail;
       const payment = {... this.newPayment};
-      this.newPayment = new Pago();
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
@@ -540,6 +541,8 @@ export class RevisionComponent implements OnInit {
         },
         (error: HttpErrorResponse) => {this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false;});
     }
+    this.newPayment = new Pago();
+    this.paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
   }
 
 }

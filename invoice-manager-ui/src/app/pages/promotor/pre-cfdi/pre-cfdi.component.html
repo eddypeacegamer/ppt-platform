@@ -297,7 +297,7 @@
                   <td scope="row" class="text-center">{{complemento.metodoPago}}</td>
                   <td scope="row" class="text-center">{{complemento.statusFactura}}</td>
                   <td scope="row" class="text-center">{{complemento.statusPago}}</td>
-                  <td scope="row" class="text-center">{{complemento.total}}</td>
+                  <td scope="row" class="text-center">{{complemento.total | currency}}</td>
                   <td scope="row" class="text-center">{{complemento.fechaCreacion}}</td>
                 </tr>
               </tbody>
@@ -324,7 +324,7 @@
                 [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="CHEQUE">Cheque nominativo</option>
-                <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
+                <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
                 <option value="DEPOSITO">Deposito bancario</option>
               </select>
             </div>

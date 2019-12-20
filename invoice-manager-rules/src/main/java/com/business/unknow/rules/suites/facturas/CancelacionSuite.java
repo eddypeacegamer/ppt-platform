@@ -1,8 +1,9 @@
-package com.business.unknow.rules.suites;
+package com.business.unknow.rules.suites.facturas;
 
 import org.jeasy.rules.api.Rules;
 
 import com.business.unknow.rules.cancelar.CancelarStatusValidationRule;
+import com.business.unknow.rules.suites.InvoiceManagerSuite;
 
 public class CancelacionSuite implements InvoiceManagerSuite {
 

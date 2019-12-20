@@ -11,8 +11,8 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 
 @Service
-public class EmpresaEvaluatorService extends AbstractFacturaServiceEvaluator {
-
+public class EmpresaEvaluatorService extends AbstractEvaluatorService {
+	
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
@@ -20,11 +20,11 @@ public class EmpresaEvaluatorService extends AbstractFacturaServiceEvaluator {
 		try {
 			swSapinsExecutorService.validateLco(empresaDto.getNoCertificado());
 			createResourceFile(empresaDto.getCertificado(), empresaDto.getInformacionFiscal().getRfc(),
-					ResourceFileEnum.CERT.getDescripcion(), TipoRecursoEnum.EMPRESA.getDescripcion());
+					TipoRecursoEnum.EMPRESA.getDescripcion(),ResourceFileEnum.CERT.getDescripcion());
 			createResourceFile(empresaDto.getLlavePrivada(), empresaDto.getInformacionFiscal().getRfc(),
-					ResourceFileEnum.KEY.getDescripcion(), TipoRecursoEnum.EMPRESA.getDescripcion());
+					TipoRecursoEnum.EMPRESA.getDescripcion(),ResourceFileEnum.KEY.getDescripcion());
 			createResourceFile(empresaDto.getLogotipo(), empresaDto.getInformacionFiscal().getRfc(),
-					ResourceFileEnum.LOGO.getDescripcion(), TipoRecursoEnum.EMPRESA.getDescripcion());
+					TipoRecursoEnum.EMPRESA.getDescripcion(),ResourceFileEnum.LOGO.getDescripcion());
 			return empresaMapper
 					.getEmpresaDtoFromEntity(empresaRepository.save(empresaMapper.getEntityFromEmpresaDto(empresaDto)));
 		} catch (SwSapiensClientException e) {

@@ -7,6 +7,10 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 	public FacturaBuilder() {
 		super(new FacturaDto());
 	}
+	
+	public FacturaBuilder(FacturaDto facturaDto) {
+		super(facturaDto);
+	}
 
 	public FacturaBuilder setRfcEmisor(String rfcEmisor) {
 		instance.setRfcEmisor(rfcEmisor);
