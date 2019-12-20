@@ -365,11 +365,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
 
   public downloadPdf(folio: string) {
-    console.log('calling pdfMakeService for :', folio)
-    this.pdfMakeService.generatePdf(this.factura);
-    /*this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+    //console.log('calling pdfMakeService for :', folio)
+    //this.pdfMakeService.generatePdf(this.factura);
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
       file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
-    )*/
+    );
   }
   public downloadXml(folio: string) {
     this.filesService.getFacturaFile(folio, 'XML').subscribe(
