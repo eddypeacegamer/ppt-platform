@@ -64,7 +64,9 @@ export class PagosComponent implements OnInit {
         pago.ultimoUsuario = this.userEmail;
         this.paymentService.updatePayment(pago.folio,pago.id,pago).toPromise()
         .then(success=>console.log(success), (error:HttpErrorResponse)=>this.errors.push(error.error.message || `${error.statusText} : ${error.message}`))
-        .then(()=>this.updateDataTable())
+        .then(()=>this.updateDataTable(this.page.number, this.page.size))
+      }else{
+        this.updateDataTable(this.page.number, this.page.size);
       }
       });
   }

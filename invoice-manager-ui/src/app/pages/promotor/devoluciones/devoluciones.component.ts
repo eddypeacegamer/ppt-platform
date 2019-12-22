@@ -53,4 +53,8 @@ export class DevolucionesComponent implements OnInit {
     this.router.navigate([`./pages/promotor/precfdi/${folio}`])
   }
 
+  public redirectToPago(id:number){
+    console.log("searching payment with id :"+ id);
+  }
+
 }

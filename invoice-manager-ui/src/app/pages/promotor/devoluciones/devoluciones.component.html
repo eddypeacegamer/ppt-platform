@@ -78,7 +78,9 @@
                 <td scope="row">{{fila.tipoReceptor}}</td>
                 <td scope="row">{{fila.receptor}}</td>
                 <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row" *ngIf="fila.idPago!=undefined"><nb-icon icon="search" pack="fa" style="cursor: pointer;" (click)="redirectToPago(fila.idPago)"></nb-icon></td>
+                <td scope="row" *ngIf="fila.idPago!=undefined">
+                  <button class="btn btn-outline-primary btn-sm" (click)="redirectToPago(fila.idPago)"><i class="fa fa-search"></i></button>
+                </td>
                 <td scope="row" *ngIf="fila.idPago==undefined">Sin&nbsp;referencia</td>
                 <td scope="row">{{fila.monto | currency}}</td>
               </tr>

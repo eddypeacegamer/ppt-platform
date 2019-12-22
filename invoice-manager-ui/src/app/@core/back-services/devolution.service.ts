@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
+import { Pago } from '../../models/pago';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,9 @@ export class DevolutionService {
     return this.httpClient.get('../api/devoluciones',{params:pageParams});
   }
 
+
+  public generateDevolutions(payment:Pago):Observable<any>{
+    return this.httpClient.post('../api/devoluciones', payment);
+  }
 
 }
