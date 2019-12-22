@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.factura.CdfiHelper;
+import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.NumberHelper;
@@ -45,6 +46,9 @@ public class FacturaTranslator {
 
 	@Autowired
 	private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
+	
+	@Autowired
+	private SignHelper signHelper;
 
 	public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
@@ -109,21 +113,24 @@ public class FacturaTranslator {
 		System.out.println(xml);
 		xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
 		xml = xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
-		context.setXml(cdfiHelper.signXML(xml,
-				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-						? context.getFacturaDto().getFechaActualizacion()
-						: new Date(),
-				context.getEmpresaDto()));
+		xml=cdfiHelper.changeDate(xml,dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
+				? context.getFacturaDto().getFechaActualizacion()
+				: new Date());
+		String cadenaOriginal=signHelper.getCadena(xml);
+		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(), context.getEmpresaDto().getLlavePrivada());
+		context.setXml(cdfiHelper.putsSign(xml, sello));
+		context.getFacturaDto().getCfdi().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-		context.setXml(cdfiHelper.signXML(xml,
-				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-						? context.getFacturaDto().getFechaActualizacion()
-						: new Date(),
-				context.getEmpresaDto()));
-		System.out.println(context.getXml());
+		xml=cdfiHelper.changeDate(xml,dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
+				? context.getFacturaDto().getFechaActualizacion()
+				: new Date());
+		String cadenaOriginal=signHelper.getCadena(xml);
+		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(), context.getEmpresaDto().getLlavePrivada());
+		context.setXml(cdfiHelper.putsSign(xml, sello));
+		context.getFacturaDto().getCfdi().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {

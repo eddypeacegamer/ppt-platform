@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.business.unknow.commons.factura.CdfiHelper;
+import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
@@ -99,6 +100,11 @@ public class ServicesApplication {
 	@Bean
 	public StringHelper getStringHelper() {
 		return new StringHelper();
+	}
+	
+	@Bean
+	public SignHelper getSignHelper() {
+		return new SignHelper();
 	}
 
 }

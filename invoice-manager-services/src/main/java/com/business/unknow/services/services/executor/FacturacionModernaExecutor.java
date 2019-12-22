@@ -49,9 +49,7 @@ public class FacturacionModernaExecutor {
 					true);
 			FacturaModernaResponseModel response = client.getFacturacionModernaClient().stamp(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
-			System.out.println(fileHelper.stringDecodeBase64(response.getXml()));
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(response.getXml()));
-		
 			context.getFacturaDto()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
