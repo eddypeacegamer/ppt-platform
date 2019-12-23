@@ -106,4 +106,31 @@ public class Constants {
 		
 		
 	}
+
+	public class DevolucionSuite {
+		public static final String DEVOLUCION_SUITE = "DevolucionSuite";
+		
+		public static final String CLIENT_VALIDATION = "ClientValidation";
+		public static final String CLIENT_VALIDATION_RULE = "ClientValidationRule";
+		public static final String CLIENT_VALIDATION_RULE_DESC = "No se pueden generar devoluciones a clientes inactivos.";
+		
+		public static final String FACTURA_VALIDATION = "FacturaValidation";
+		public static final String FACTURA_VALIDATION_RULE = "FacturaValidationRule";
+		public static final String FACTURA_VALIDATION_RULE_DESC = "La factura debe estar timbrada para solicitar la devolucion.";
+		
+		public static final String FACTURA_PUE_STATUS_DEVOLUCION = "FacturaPueStatusDevolucion";
+		public static final String FACTURA_PUE_STATUS_DEVOLUCION_RULE = "FacturaPueStatusDevolucionRule";
+		public static final String FACTURA_PUE_STATUS_DEVOLUCION_RULE_DESC = "El estatus de devolucion de la factura Pue es incorrecto.";
+		
+		public static final String FACTURA_PPD_STATUS_DEVOLUCION = "FacturaPpdStatusDevolucion";
+		public static final String FACTURA_PPD_STATUS_DEVOLUCION_RULE = "FacturaPpdStatusDevolucionRule";
+		public static final String FACTURA_PPD_STATUS_DEVOLUCION_RULE_DESC = "El estatus de devolucion deL complemento es incorrecto.";
+		
+		public static final String PAGO_DEVOLUCION = "PagoDevolcuion";
+		public static final String PAGO_DEVOLUCION_RULE = "PagoDevolcuionRule";
+		public static final String PAGO_DEVOLUCION_RULE_DESC = "El estatus del pago es incorrecto.";
+		
+		
+		
+	}
 }

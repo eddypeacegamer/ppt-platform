@@ -24,7 +24,9 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>
 	
 	public Page<Devolucion> findAll(Pageable pageable);
 	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and upper(d.statusPago) like upper(:payStatus)")
-	public Page<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("payStatus")String payStatus,Pageable pageable);
+	public Page<Devolucion> findDevolucionesByParamsWithPayStatus(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("payStatus")String payStatus,Pageable pageable);
+	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor ")
+	public Page<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,Pageable pageable);
 	public List<Devolucion> findByFolio(String folio);
 	public Optional<Devolucion> findById(Integer id);
 	public Optional<Devolucion> findByIdPago(Integer id);

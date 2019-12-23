@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaComplemento;
+import com.business.unknow.commons.builder.DevolucionDtoBuilder;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.commons.util.FacturaCalculator;
@@ -27,6 +28,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.cfdi.Cfdi;
@@ -35,6 +37,7 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
+import com.business.unknow.services.mapper.DevolucionMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
@@ -94,8 +97,11 @@ public class AbstractEvaluatorService extends AbstractService {
 	protected ClientMapper clientMapper;
 
 	@Autowired
+	private DevolucionMapper devolucionMapper;
+
+	@Autowired
 	protected RulesEngine rulesEngine;
-	
+
 	protected FacturaValidator validator = new FacturaValidator();
 
 	protected FacturaCalculator facturaCalculator = new FacturaCalculator();
@@ -200,8 +206,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
 	}
 
-	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto)
-			throws InvoiceManagerException {
+	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
 		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El emisor no exite",
 						Constants.BAD_REQUEST));
@@ -212,16 +217,16 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
 				.setClientDto(clientMapper.getClientDtoFromEntity(client)).build();
 	}
-	
-	protected FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto,String folio) throws InvoiceManagerException{
+
+	protected FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, String folio)
+			throws InvoiceManagerException {
 		Factura facturaPadre = repository.findByFolio(folio)
 				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
 						String.format("Folio with the name %s not found", folio), HttpStatus.SC_NOT_FOUND));
 		List<Pago> pagos = pagoRepository.findByFolioPadre(pagoDto.getFolioPadre());
 		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
 				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-						String.format("Verificar consitencia de pagos del folio %s", folio),
-						HttpStatus.SC_NOT_FOUND));
+						String.format("Verificar consitencia de pagos del folio %s", folio), HttpStatus.SC_NOT_FOUND));
 		return new FacturaContextBuilder().setPagos(pagoMapper.getPagosDtoFromEntities(pagos))
 				.setFacturaPadreDto(mapper.getFacturaDtoFromEntity(facturaPadre))
 				.setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre)).setCurrentPago(pagoDto).build();
@@ -249,7 +254,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
 		return new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto))
 				.setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setCurrentPago(pagoDto)
-				.setFacturaDto(factura.isPresent() ? mapper.getFacturaDtoFromEntity(factura.get()): null)
+				.setFacturaDto(factura.isPresent() ? mapper.getFacturaDtoFromEntity(factura.get()) : null)
 				.setPagoCredito(pagoCredito.isPresent() ? pagoMapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.build();
 	}
@@ -263,6 +268,14 @@ public class AbstractEvaluatorService extends AbstractService {
 							currentFacturaDto.getPackFacturacion()),
 					HttpStatus.SC_BAD_REQUEST);
 		}
+	}
+
+	protected Devolucion buildDevolucion(String foliofFact, Integer idPago, Double montoBase, Integer porcentaje,
+			String receptor, String tipoReceptor) {
+		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
+				.setMonto(numberHelper.assignPrecision((montoBase * porcentaje / 16), Constants.DEFAULT_SCALE))
+				.setFolio(foliofFact).setIdPago(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
+				.setStatusPago("PENDIENTE").build());
 	}
 
 }
