@@ -20,7 +20,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	public List<Pago> findByFolio(String folio);
 	public List<Pago> findByFolioPadre(String folio);
 	
-	@Query("select p from Pago p where p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaPago between :since and :to")
+	@Query("select p from Pago p where p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
 	public Page<Pago> findPagosByFilterParams(@Param("status") String status,@Param("formaPago") String formaPago,@Param("banco") String banco, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 	
 	
@@ -32,7 +32,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	@Query("select p from Pago p where p.tipoPago='INGRESO' and p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaPago between :since and :to")
 	public Page<Pago> findIngresosByFilterParams(@Param("status") String status,@Param("formaPago") String formaPago,@Param("banco") String banco, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 	
-	@Query("select p from Pago p where p.tipoPago='EGRESO' and p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaPago between :since and :to")
+	@Query("select p from Pago p where p.tipoPago='EGRESO' and p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
 	public Page<Pago> findEgresosByFilterParams(@Param("status") String status,@Param("formaPago") String formaPago,@Param("banco") String banco, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 	
 }

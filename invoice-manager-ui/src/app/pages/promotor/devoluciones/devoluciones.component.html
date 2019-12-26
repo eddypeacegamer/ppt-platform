@@ -57,13 +57,12 @@
         <div class="table-responsive" *ngIf="devolutions.length > 0">
           <div class="clearfix">
             <strong>Resultados</strong>
-            <button type="button" (click)="solicitudDevoluciones()" class="btn btn-primary float-right">Solicitud devolucion</button>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
           </div>
           <table class="table">
             <thead class="thead-light">
               <tr>
-                <th scope="col" class="text-center">Folio</th>
+                <th scope="col" class="text-center">Folio Factura</th>
                 <th scope="col" class="text-center">Tipo Receptor</th>
                 <th scope="col" class="text-center">Receptor</th>
                 <th scope="col" class="text-center">Estatus</th>
@@ -80,7 +79,7 @@
                 <td scope="row" *ngIf="fila.idPagoDestino!=undefined" class="text-center">
                   <button class="btn btn-outline-primary btn-sm" (click)="redirectToPago(fila.idPago)"><i class="fa fa-search"></i></button>
                 </td>
-                <td scope="row" *ngIf="fila.idPago==undefined" class="text-center">
+                <td scope="row" *ngIf="fila.idPagoDestino==undefined" class="text-center">
                   <button class="btn btn-sm btn-outline-primary" *ngIf="!fila.solicitud" (click)="addDevolucion(fila)"><i class="fa fa-square"></i></button> 
                   <button class="btn btn-sm btn-outline-primary" *ngIf="fila.solicitud"  (click)="addDevolucion(fila)"><i class="fa fa-check-square"></i></button>  
                 </td>
