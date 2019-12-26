@@ -21,7 +21,7 @@ public class DevolucionDto implements Serializable {
 	private Integer idPagoOrigen;
 	private Integer idPagoDestino;
 	private String folio;
-	private String statusPago;
+	private String statusDevolucion;
 	private Double monto;
 	private String receptor;
 	private String tipoReceptor;
@@ -53,11 +53,11 @@ public class DevolucionDto implements Serializable {
 	public void setFolio(String folio) {
 		this.folio = folio;
 	}
-	public String getStatusPago() {
-		return statusPago;
+	public String getStatusDevolucion() {
+		return statusDevolucion;
 	}
-	public void setStatusPago(String statusPago) {
-		this.statusPago = statusPago;
+	public void setStatusDevolucion(String statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
 	}
 	public Double getMonto() {
 		return monto;
@@ -92,7 +92,7 @@ public class DevolucionDto implements Serializable {
 	@Override
 	public String toString() {
 		return "DevolucionDto [id=" + id + ", idPagoOrigen=" + idPagoOrigen + ", idPagoDestino=" + idPagoDestino
-				+ ", folio=" + folio + ", statusPago=" + statusPago + ", monto=" + monto + ", receptor=" + receptor
+				+ ", folio=" + folio + ", statusPago=" + statusDevolucion + ", monto=" + monto + ", receptor=" + receptor
 				+ ", tipoReceptor=" + tipoReceptor + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
 				+ fechaActualizacion + "]";
 	}

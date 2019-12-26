@@ -122,7 +122,7 @@ public class PagoService {
 							String.format("La devolucion con id %d no esiste en el sistema", devolucion.getId()),
 							HttpStatus.CONFLICT.value()));
 			dev.setIdPagoDestino(pago.getId());
-			dev.setStatusPago("SOLICITUD");
+			dev.setStatusDevolucion("SOLICITUD");
 			devRepository.save(dev);
 		}
 		return pago;

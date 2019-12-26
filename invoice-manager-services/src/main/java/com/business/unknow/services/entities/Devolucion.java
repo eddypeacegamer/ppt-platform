@@ -51,7 +51,7 @@ public class Devolucion {
 	private String folio;
 
 	@Column(name = "STATUS_DEVOLUCION")
-	private String statusPago;
+	private String statusDevolucion;
 	
 	@NotNull
 	@Column(name = "MONTO")
@@ -114,12 +114,12 @@ public class Devolucion {
 		this.folio = folio;
 	}
 
-	public String getStatusPago() {
-		return statusPago;
+	public String getStatusDevolucion() {
+		return statusDevolucion;
 	}
 
-	public void setStatusPago(String statusPago) {
-		this.statusPago = statusPago;
+	public void setStatusDevolucion(String statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
 	}
 
 	public Double getMonto() {
@@ -165,7 +165,7 @@ public class Devolucion {
 	@Override
 	public String toString() {
 		return "Devolucion [id=" + id + ", idPagoOrigen=" + idPagoOrigen + ", idPagoDestino=" + idPagoDestino
-				+ ", folio=" + folio + ", statusPago=" + statusPago + ", monto=" + monto + ", receptor=" + receptor
+				+ ", folio=" + folio + ", statusPago=" + statusDevolucion + ", monto=" + monto + ", receptor=" + receptor
 				+ ", tipoReceptor=" + tipoReceptor + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
 				+ fechaActualizacion + "]";
 	}

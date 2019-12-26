@@ -23,10 +23,13 @@ import com.business.unknow.services.entities.Devolucion;
 public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>{
 	
 	public Page<Devolucion> findAll(Pageable pageable);
-	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and upper(d.statusPago) like upper(:payStatus)")
-	public Page<Devolucion> findDevolucionesByParamsWithPayStatus(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("payStatus")String payStatus,Pageable pageable);
+	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and upper(d.statusDevolucion) like upper(:status)")
+	public Page<Devolucion> findDevolucionesByParamsWithStatus(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("status")String status,Pageable pageable);
 	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor ")
 	public Page<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,Pageable pageable);
+	
+	@Query("select d from Devolucion d where d.statusDevolucion='PENDIENTE' and d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
+	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
 	
 	public List<Devolucion> findByIdPagoDestino(Integer idPagoDest);
 	public List<Devolucion> findByFolio(String folio);

@@ -39,7 +39,6 @@ import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.DevolucionMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
-import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.mapper.PagoMapper;
@@ -71,9 +70,6 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	protected ClientRepository clientRepository;
-
-	@Autowired
-	protected FacturaMapper mapper;
 
 	@Autowired
 	protected FilesMapper filesMapper;
@@ -274,7 +270,7 @@ public class AbstractEvaluatorService extends AbstractService {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
 				.setMonto(numberHelper.assignPrecision((montoBase * porcentaje / 16), Constants.DEFAULT_SCALE))
 				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
-				.setStatusPago("PENDIENTE").build());
+				.setStatusDevolucion("PENDIENTE").build());
 	}
 
 }

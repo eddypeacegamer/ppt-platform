@@ -24,8 +24,8 @@ public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto>{
 		return this;
 	}
 	
-	public DevolucionDtoBuilder setStatusPago(String statusPago) {
-		instance.setStatusPago(statusPago);
+	public DevolucionDtoBuilder setStatusDevolucion(String statusDevolucion) {
+		instance.setStatusDevolucion(statusDevolucion);
 		return this;
 	}
 	

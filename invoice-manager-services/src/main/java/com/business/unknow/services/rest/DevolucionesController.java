@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.rest;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +51,15 @@ public class DevolucionesController {
 		return new ResponseEntity<>(service.getDevolucionesByParams(tipoReceptor,idReceptor,statusPago,page, size),
 				HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("/receptor/{tipoReceptor}/{idReceptor}")
+	public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
+			@PathVariable(name = "tipoReceptor") String tipoReceptor, 
+			@PathVariable(name = "idReceptor") String idReceptor){
+		return new ResponseEntity<>(service.getDevolucionesPorReceptor(tipoReceptor, idReceptor), HttpStatus.OK);
+	}
+	
 	
 	
 	@PostMapping

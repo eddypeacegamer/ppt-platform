@@ -55,20 +55,23 @@ public class DevolucionService {
 			result = repository.findDevolucionesByParams(receptorType.get(), idReceptor.get(),
 					PageRequest.of(page, size));
 		} else {
-			result = repository.findDevolucionesByParamsWithPayStatus(receptorType.get(), idReceptor.get(),
+			result = repository.findDevolucionesByParamsWithStatus(receptorType.get(), idReceptor.get(),
 					String.format("%%%s%%", statusPay.get()), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 	
+	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor){
+		return mapper.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor));
+	}
 	
 	public List<DevolucionDto> getDevolucionesByPagoDestino(Integer idPagoDestino){
 		return mapper.getDevolucionesDtoFromEntities(repository.findByIdPagoDestino(idPagoDestino));
 	}
 
 	public DevolucionDto insertDevolution(DevolucionDto devolucion) {
-		devolucion.setStatusPago("VALIDACION");
+		devolucion.setStatusDevolucion("PENDIENTE");
 		return mapper.getDevolucionDtoFromEntity(repository.save(mapper.getEntityFromDevolucionDto(devolucion)));
 	}
 
