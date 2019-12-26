@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { GenericPage } from '../../../models/generic-page';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service';
 import { Router } from '@angular/router';
+import { UsersData } from '../../../@core/data/users-data';
+import { SolicitudDevolucion } from '../../../models/solicitud-devolucion';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -12,22 +13,33 @@ import { Router } from '@angular/router';
 })
 export class DevolucionesComponent implements OnInit {
 
-  public headers: string[] = ['Folio', 'Tipo Receptor','Receptor', 'Estatus Pago','Pago', 'Monto'];
-  public page: GenericPage<Devolucion> = new GenericPage();
-  public pageSize = '10';
-  public filterParams : any;
+  public devolutions: Devolucion[]=[];
+  public userEmail:string;
+  public montoDevolucion : number;
+  public solicitud : SolicitudDevolucion = new SolicitudDevolucion();
+  public filterParams : any = {tipoReceptor:'PROMOTOR',idReceptor:'promotor@gmail.com',statusDevolucion:'*'};
 
   constructor(private devolutionService:DevolutionData,
               private donwloadService:DownloadCsvService,
+              private userService: UsersData,
               private router: Router) { }
 
   ngOnInit() {
-    this.filterParams= {tipoReceptor:'PROMOTOR',idReceptor:'promotor@gmail.com',statusPago:'*'};
-    this.updateDataTable(0,10,this.filterParams);
+    this.montoDevolucion = 0.0;
+    this.solicitud = new SolicitudDevolucion();
+    this.solicitud.formaPago = 'TRANSFERENCIA';
+    this.solicitud.banco = 'BBVA';
+    this.userService.getUserInfo()
+      .subscribe(user => {
+        this.userEmail = user.email;
+        this.solicitud.user = user.email;
+        this.filterParams= {tipoReceptor:'PROMOTOR',idReceptor:this.userEmail,statusDevolucion:'PENDIENTE'};
+        this.updateDataTable();
+      });
   }
 
   public onReceptorTypeSelected(type:string){
-    if(type=='PROMOTOR'){ this.filterParams.idReceptor ='promotor@gmail.com' }
+    if(type=='PROMOTOR'){ this.filterParams.idReceptor = this.userEmail}
     else{ this.filterParams.idReceptor = ''}
     this.filterParams.tipoReceptor = type;
   }
@@ -36,17 +48,41 @@ export class DevolucionesComponent implements OnInit {
     this.filterParams.statusPago= status;
   }
 
-  public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
-    const pageValue = currentPage || 0;
-    const sizeValue = pageSize || 10;
-    this.devolutionService.getDevolutions(pageValue,sizeValue,filterParams)
-          .subscribe((result:GenericPage<Devolucion>) => this.page = result);
+  public updateDataTable() {
+    this.devolutionService.getDevolutionsByReceptor(this.filterParams.tipoReceptor,this.filterParams.idReceptor,this.filterParams.statusDevolucion)
+          .subscribe((result:Devolucion[]) => this.devolutions = result);
   }
 
   public downloadHandler() {
-    this.devolutionService.getDevolutions(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content,'Devoluciones')
+    this.devolutionService.getDevolutionsByReceptor(this.filterParams.tipoReceptor, this.filterParams.idReceptor,this.filterParams.statusDevolucion).subscribe(result => {
+      this.donwloadService.exportCsv(result,'Devoluciones')
     });
+  }
+
+  public addDevolucion(devolucion:Devolucion){
+    devolucion.solicitud  = !devolucion.solicitud;
+    if(devolucion.solicitud === true){
+      devolucion.solicitud = true;
+      this.solicitud.devoluciones.push(devolucion);
+    }else{
+      devolucion.solicitud = false;
+      let index =this.solicitud.devoluciones.findIndex(e=> e.id == devolucion.id);
+      if(index > -1){
+        this.solicitud.devoluciones.splice(index,1);
+      }
+    }
+    if(this.solicitud.devoluciones!=undefined && this.solicitud.devoluciones.length>0){
+      this.montoDevolucion = this.solicitud.devoluciones.map(d=>d.monto).reduce((a,c)=>a+c);
+    }else{
+      this.montoDevolucion = 0.0;
+    }
+    
+  }
+
+
+  public solicitudDevoluciones(){
+    this.devolutionService.requestMultipleDevolution(this.solicitud)
+      .subscribe(pago=>{this.updateDataTable();console.log(pago)});
   }
 
   public redirectToCfdi(folio:string){

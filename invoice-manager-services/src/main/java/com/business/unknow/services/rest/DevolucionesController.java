@@ -45,10 +45,10 @@ public class DevolucionesController {
 	public ResponseEntity<Page<DevolucionDto>> getAllDevolutions(
 			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
 			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,
-			@RequestParam(name = "statusPago", required = false) Optional<String> statusPago,
+			@RequestParam(name = "statusDevolucion", required = false) Optional<String> statusDevolucion,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getDevolucionesByParams(tipoReceptor,idReceptor,statusPago,page, size),
+		return new ResponseEntity<>(service.getDevolucionesByParams(tipoReceptor,idReceptor,statusDevolucion,page, size),
 				HttpStatus.OK);
 	}
 	
@@ -56,8 +56,9 @@ public class DevolucionesController {
 	@GetMapping("/receptor/{tipoReceptor}/{idReceptor}")
 	public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
 			@PathVariable(name = "tipoReceptor") String tipoReceptor, 
-			@PathVariable(name = "idReceptor") String idReceptor){
-		return new ResponseEntity<>(service.getDevolucionesPorReceptor(tipoReceptor, idReceptor), HttpStatus.OK);
+			@PathVariable(name = "idReceptor") String idReceptor,
+			@RequestParam(name = "statusDevolucion", defaultValue = "") String statusDevolucion){
+		return new ResponseEntity<>(service.getDevolucionesPorReceptor(tipoReceptor, idReceptor, statusDevolucion), HttpStatus.OK);
 	}
 	
 	

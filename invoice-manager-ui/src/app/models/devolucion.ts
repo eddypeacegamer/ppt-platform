@@ -1,13 +1,21 @@
 
 export class Devolucion{
 
-    private id:number;
-	private idPago:number;
-	private folio:string;
-	private statusPago:string;
-	private monto:number;
-	private receptor:string;
-	private tipoReceptor:string;
-	private fechaCreacion:Date;
-	private fechaActualizacion:Date;
+    public id:number;
+	public idPagoOrigen:number;
+	public idPagoDestino:number;
+	public folio:string;
+	public statusDevolucion:string;
+	public monto:number;
+	public receptor:string;
+	public tipoReceptor:string;
+	public fechaCreacion:Date;
+	public fechaActualizacion:Date;
+
+	public solicitud:boolean;
+
+	constructor(){
+		this.solicitud = false;
+	}
 }
+

@@ -29,13 +29,13 @@
             <label for="inputDevolutionStatus" class="label">Estatus devolucion</label>
             <div class="row form-inline">
               <select selected="*" id="inputDevolutionStatus" style="display:block;width: 300px;" class="form-control"
-                (change)="onDevolutionStatusSelected($event.target.value)" [(ngModel)]="filterParams.statusPago">
-                <option value="*">TODOS</option>
-                <option value="PAGADA">Pagadas</option>
+                (change)="onDevolutionStatusSelected($event.target.value)" [(ngModel)]="filterParams.statusDevolucion">
                 <option value="PENDIENTE">Pendientes</option>
+                <option value="SOLICITUD">En solicitud</option>
+                <option value="PAGADA">Pagadas</option>
               </select>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+              <button class="btn btn-primary" (click)="updateDataTable()">BUSCAR</button>
             </div>
           </div>
         </div>
@@ -51,53 +51,93 @@
       <nb-card-header>Reporte devoluciones</nb-card-header>
       <nb-card-body>
 
-        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+        <div *ngIf="devolutions.length < 1" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="table-responsive" *ngIf="page.empty == false">
+        <div class="table-responsive" *ngIf="devolutions.length > 0">
           <div class="clearfix">
             <strong>Resultados</strong>
+            <button type="button" (click)="solicitudDevoluciones()" class="btn btn-primary float-right">Solicitud devolucion</button>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-
-            <nb-select *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
-              id="inputPageSize" class="float-right">
-              <nb-option value="10">10</nb-option>
-              <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
-              <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
-            </nb-select>
           </div>
           <table class="table">
             <thead class="thead-light">
               <tr>
-                <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                <th scope="col" class="text-center">Folio</th>
+                <th scope="col" class="text-center">Tipo Receptor</th>
+                <th scope="col" class="text-center">Receptor</th>
+                <th scope="col" class="text-center">Estatus</th>
+                <th scope="col" class="text-center">Pago/Solicitud</th>
+                <th scope="col" class="text-center">Monto</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let fila of page.content">
-                <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
-                <td scope="row">{{fila.tipoReceptor}}</td>
-                <td scope="row">{{fila.receptor}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row" *ngIf="fila.idPago!=undefined">
+              <tr *ngFor="let fila of devolutions">
+                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
+                <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
+                <td scope="row" class="text-center">{{fila.receptor}}</td>
+                <td scope="row" class="text-center">{{fila.statusDevolucion}}</td>
+                <td scope="row" *ngIf="fila.idPagoDestino!=undefined" class="text-center">
                   <button class="btn btn-outline-primary btn-sm" (click)="redirectToPago(fila.idPago)"><i class="fa fa-search"></i></button>
                 </td>
-                <td scope="row" *ngIf="fila.idPago==undefined">Sin&nbsp;referencia</td>
-                <td scope="row">{{fila.monto | currency}}</td>
+                <td scope="row" *ngIf="fila.idPago==undefined" class="text-center">
+                  <button class="btn btn-sm btn-outline-primary" *ngIf="!fila.solicitud" (click)="addDevolucion(fila)"><i class="fa fa-square"></i></button> 
+                  <button class="btn btn-sm btn-outline-primary" *ngIf="fila.solicitud"  (click)="addDevolucion(fila)"><i class="fa fa-check-square"></i></button>  
+                </td>
+                <td scope="row" class="text-right">{{fila.monto | currency}}</td>
               </tr>
+
             </tbody>
           </table>
-
-          <ul class="pagination" *ngIf="page.totalElements > 1">
-            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
-            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
-            <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
-            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
-            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-          </ul>
+        </div>
+        <div class="row" *ngIf="solicitud.devoluciones.length > 0">
+          <div class="col-sm-1">
+            <label for="inputPayCoin" class="label">Moneda</label>
+            <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
+              [(ngModel)]="solicitud.moneda">
+              <option value="MXN">Peso MXN</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="inputPayType" class="label">Forma de Pago</label>
+            <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+              [(ngModel)]="solicitud.formaPago">
+              <option value="CHEQUE">Cheque nominativo</option>
+              <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+              <option value="DEPOSITO">Deposito bancario</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="inputPayType" class="label">Banco receptor</label>
+            <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+              [(ngModel)]="solicitud.banco" >
+              <option value="BBVA">BBVA</option>
+              <option value="HSBC">HSBC</option>
+              <option value="BANORTE">BANORTE</option>
+              <option value="BANAMEX">BANAMEX</option>
+              <option value="N/A">NO APLICA</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="accountAmmount" class="label">Cuenta/CLABE</label>
+            <input id="accountAmmount" class="form-control" fullWidth type="text"  placeholder="Cuenta receptora"
+              [(ngModel)]="solicitud.cuenta">
+          </div>
+          <div class="col-sm-3">
+            <label for="accountOwner" class="label">Nombre Beneficiario</label>
+            <input id="accountOwner" class="form-control" fullWidth type="text"  placeholder="Nombre Beneficiario"
+              [(ngModel)]="solicitud.beneficiario">
+          </div>
+          <div class="col-sm-2">
+            <label for="payAmmount" class="label">Monto Pago</label>
+            <div class="input-group">
+              <strong>{{montoDevolucion | currency}}</strong>
+              &nbsp;&nbsp;
+              <button class="btn btn-sm btn-success" (click)= "solicitudDevoluciones()">Solicitar Devolucion</button>
+            </div>
+            
+          </div>
+          
         </div>
       </nb-card-body>
     </nb-card>

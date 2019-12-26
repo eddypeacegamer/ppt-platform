@@ -72,7 +72,7 @@ public class PagoService {
 			int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		log.info("Search payments by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
+		log.info("Search ingresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findIngresosByFilterParams(String.format("%%%s%%", status),
 				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
@@ -86,7 +86,7 @@ public class PagoService {
 			int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		log.info("Search payments by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
+		log.info("Search egresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findEgresosByFilterParams(String.format("%%%s%%", status),
 				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,

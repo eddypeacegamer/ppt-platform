@@ -62,8 +62,8 @@ public class DevolucionService {
 				result.getTotalElements());
 	}
 	
-	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor){
-		return mapper.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor));
+	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor, String statusDevolucion){
+		return mapper.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor,String.format("%%%s%%",statusDevolucion)));
 	}
 	
 	public List<DevolucionDto> getDevolucionesByPagoDestino(Integer idPagoDestino){

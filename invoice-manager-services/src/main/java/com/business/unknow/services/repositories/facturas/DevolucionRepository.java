@@ -28,8 +28,8 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>
 	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor ")
 	public Page<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,Pageable pageable);
 	
-	@Query("select d from Devolucion d where d.statusDevolucion='PENDIENTE' and d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
-	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
+	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and upper(d.statusDevolucion) like upper(:status)")
+	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("status")String status);
 	
 	public List<Devolucion> findByIdPagoDestino(Integer idPagoDest);
 	public List<Devolucion> findByFolio(String folio);
