@@ -4,6 +4,7 @@
 package com.business.unknow.services.services;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -59,6 +60,11 @@ public class DevolucionService {
 		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	
+	public List<DevolucionDto> getDevolucionesByPagoDestino(Integer idPagoDestino){
+		return mapper.getDevolucionesDtoFromEntities(repository.findByIdPagoDestino(idPagoDestino));
 	}
 
 	public DevolucionDto insertDevolution(DevolucionDto devolucion) {

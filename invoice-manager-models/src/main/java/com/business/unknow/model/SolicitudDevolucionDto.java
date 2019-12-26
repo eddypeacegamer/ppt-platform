@@ -17,7 +17,12 @@ public class SolicitudDevolucionDto implements Serializable{
 	private String banco;
 	private String user;
 	private String beneficiario;
+	private String formaPago;
+	private String moneda;
+	private Double tipoCambio;
 	private List<DevolucionDto> devoluciones;
+	
+	
 	public String getCuenta() {
 		return cuenta;
 	}
@@ -42,6 +47,24 @@ public class SolicitudDevolucionDto implements Serializable{
 	public void setBeneficiario(String beneficiario) {
 		this.beneficiario = beneficiario;
 	}
+	public String getFormaPago() {
+		return formaPago;
+	}
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
+	}
+	public String getMoneda() {
+		return moneda;
+	}
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
+	public Double getTipoCambio() {
+		return tipoCambio;
+	}
+	public void setTipoCambio(Double tipoCambio) {
+		this.tipoCambio = tipoCambio;
+	}
 	public List<DevolucionDto> getDevoluciones() {
 		return devoluciones;
 	}
@@ -51,6 +74,7 @@ public class SolicitudDevolucionDto implements Serializable{
 	@Override
 	public String toString() {
 		return "SolicitudDevolucionDto [cuenta=" + cuenta + ", banco=" + banco + ", user=" + user + ", beneficiario="
-				+ beneficiario + ", devoluciones=" + devoluciones + "]";
+				+ beneficiario + ", formaPago=" + formaPago + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio
+				+ ", devoluciones=" + devoluciones + "]";
 	}
 }

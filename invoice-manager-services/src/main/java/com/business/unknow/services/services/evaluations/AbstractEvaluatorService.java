@@ -246,8 +246,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.build();
 	}
 
-	protected FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto)
-			throws InvoiceManagerException {
+	protected FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto){
 		List<Pago> pagos = pagoRepository.findByFolio(folio);
 		Optional<Factura> factura = repository.findByFolio(folio);
 		Optional<Pago> pagoCredito = pagos.stream()
@@ -274,7 +273,7 @@ public class AbstractEvaluatorService extends AbstractService {
 			String receptor, String tipoReceptor) {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
 				.setMonto(numberHelper.assignPrecision((montoBase * porcentaje / 16), Constants.DEFAULT_SCALE))
-				.setFolio(foliofFact).setIdPago(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
+				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
 				.setStatusPago("PENDIENTE").build());
 	}
 

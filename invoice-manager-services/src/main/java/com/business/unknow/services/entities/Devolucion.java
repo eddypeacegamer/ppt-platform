@@ -38,8 +38,11 @@ public class Devolucion {
 	/*
 	 * Este ID es llenado al momento de hacer el pago de la devolucion, el diseño permite que un pago pueda ligar multiples devoluciones.
 	 */
-	@Column(name = "ID_PAGO")
-	private Integer idPago;
+	@Column(name = "ID_PAGO_ORIGEN")
+	private Integer idPagoOrigen;
+	
+	@Column(name = "ID_PAGO_DESTINO")
+	private Integer idPagoDestino;
 	/*
 	 *Folio de complemento si es PPD o folio factura si es PUE 
 	 */
@@ -79,119 +82,91 @@ public class Devolucion {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-
 	public Integer getId() {
 		return id;
 	}
-
-
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
-
-	public Integer getIdPago() {
-		return idPago;
+	public Integer getIdPagoOrigen() {
+		return idPagoOrigen;
 	}
 
-
-
-	public void setIdPago(Integer idPago) {
-		this.idPago = idPago;
+	public void setIdPagoOrigen(Integer idPagoOrigen) {
+		this.idPagoOrigen = idPagoOrigen;
 	}
 
+	public Integer getIdPagoDestino() {
+		return idPagoDestino;
+	}
 
+	public void setIdPagoDestino(Integer idPagoDestino) {
+		this.idPagoDestino = idPagoDestino;
+	}
 
 	public String getFolio() {
 		return folio;
 	}
 
-
-
 	public void setFolio(String folio) {
 		this.folio = folio;
 	}
-
-
 
 	public String getStatusPago() {
 		return statusPago;
 	}
 
-
-
 	public void setStatusPago(String statusPago) {
 		this.statusPago = statusPago;
 	}
-
-
 
 	public Double getMonto() {
 		return monto;
 	}
 
-
-
 	public void setMonto(Double monto) {
 		this.monto = monto;
 	}
-
-
 
 	public String getReceptor() {
 		return receptor;
 	}
 
-
-
 	public void setReceptor(String receptor) {
 		this.receptor = receptor;
 	}
-
-
 
 	public String getTipoReceptor() {
 		return tipoReceptor;
 	}
 
-
-
 	public void setTipoReceptor(String tipoReceptor) {
 		this.tipoReceptor = tipoReceptor;
 	}
-	
 
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-
-
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-
-
 
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
 
-
-
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "Devolucion [id=" + id + ", idPago=" + idPago + ", folio=" + folio + ", statusPago=" + statusPago
-				+ ", monto=" + monto + ", receptor=" + receptor + ", tipoReceptor=" + tipoReceptor + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "Devolucion [id=" + id + ", idPagoOrigen=" + idPagoOrigen + ", idPagoDestino=" + idPagoDestino
+				+ ", folio=" + folio + ", statusPago=" + statusPago + ", monto=" + monto + ", receptor=" + receptor
+				+ ", tipoReceptor=" + tipoReceptor + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
-
 }

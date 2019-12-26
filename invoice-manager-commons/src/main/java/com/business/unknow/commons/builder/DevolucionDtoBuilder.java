@@ -9,8 +9,13 @@ public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto>{
 	}
 
 	
-	public DevolucionDtoBuilder setIdPago(int idPago) {
-		instance.setIdPago(idPago);
+	public DevolucionDtoBuilder setIdPagoOrigen(int idPagoOrigen) {
+		instance.setIdPagoOrigen(idPagoOrigen);
+		return this;
+	}
+	
+	public DevolucionDtoBuilder setIdPagoDestino(int idPagoDestino) {
+		instance.setIdPagoDestino(idPagoDestino);
 		return this;
 	}
 	
