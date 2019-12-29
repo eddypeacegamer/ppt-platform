@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TesoreriaComponent } from './tesoreria.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import { PagosComponent } from './pagos/pagos.component';
+import { ValidacionPagosComponent } from './validacion-pagos/validacion-pagos.component';
+
 
 const routes: Routes = [{
   path: '',
@@ -10,7 +11,7 @@ const routes: Routes = [{
   children:[
     {
       path: 'pagos',
-      component: PagosComponent,
+      component: ValidacionPagosComponent,
     },
     {
       path: 'devoluciones',

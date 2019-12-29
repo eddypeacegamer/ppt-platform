@@ -10,11 +10,11 @@ import { Pago } from '../../../models/pago';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'ngx-pagos',
-  templateUrl: './pagos.component.html',
-  styleUrls: ['./pagos.component.scss']
+  selector: 'ngx-valiudacion-pagos',
+  templateUrl: './validacion-pagos.component.html',
+  styleUrls: ['./validacion-pagos.component.scss']
 })
-export class PagosComponent implements OnInit {
+export class ValidacionPagosComponent implements OnInit {
 
   public userEmail : string;
   public filterParams: any = { folio:'',formaPago: '*', status: '*', banco: '*', since: '', to: '' };
