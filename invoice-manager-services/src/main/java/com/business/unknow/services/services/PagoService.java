@@ -103,7 +103,7 @@ public class PagoService {
 				(s, d) -> s + d);
 		Pago payment = new Pago();
 		payment.setBanco(solicitud.getBanco());
-		payment.setComentarioPago("Solicitud devolucion.");
+		payment.setComentarioPago(solicitud.getBeneficiario());
 		payment.setCreateUser(solicitud.getUser());
 		payment.setCuenta(solicitud.getCuenta());
 		payment.setFormaPago(solicitud.getFormaPago());
@@ -126,6 +126,12 @@ public class PagoService {
 			devRepository.save(dev);
 		}
 		return pago;
+	}
+	
+	public PagoDto upadtePayment(Integer paymentId,PagoDto payment) throws InvoiceManagerException {
+		log.info("Updating Payment : {}", payment);
+		repository.findById(paymentId).orElseThrow(()->new InvoiceManagerException("Payment Id not found",String.format("The payment with id %d was not found", paymentId) , HttpStatus.NOT_FOUND.value()));
+		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
 	}
 
 }

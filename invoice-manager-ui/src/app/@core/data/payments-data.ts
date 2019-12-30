@@ -10,8 +10,15 @@ export abstract class PaymentsData {
 
     abstract deletePayment(folio : string, paymentId : number): Observable<Pago>;
 
-    abstract updatePayment(folio : string, paymentId : number, payment : Pago) : Observable<Pago>;
+    abstract updatePaymentWithValidation(folio : string, paymentId : number, payment : Pago) : Observable<Pago>;
 
     abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
+
+    abstract getIncomes(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
+
+    abstract getExpenses(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
+
+
+    abstract updatePayment(payment:Pago):Observable<Pago>;
 
 }

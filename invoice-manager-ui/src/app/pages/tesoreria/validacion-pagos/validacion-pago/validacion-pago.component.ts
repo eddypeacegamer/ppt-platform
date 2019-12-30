@@ -14,8 +14,8 @@ export class ValidacionPagoComponent implements OnInit {
 
 
   @Input() pago: Pago;
-  public updatedPayment : Pago;
   public comprobanteUrl:SafeUrl;
+  public updatedPayment : Pago;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
     private filesService : FilesData,

@@ -3,12 +3,24 @@
     "icon": "layout-outline",
     "children": [
       {
-        "title": "pagos",
-        "link": "/pages/tesoreria/pagos"
+        "title": "Validacion pagos",
+        "link": "/pages/tesoreria/validacion-pagos"
       },
       {
-        "title": "devoluciones",
+        "title": "Devoluciones",
         "link": "/pages/tesoreria/devoluciones"
+      },
+      {
+        "title": "Ingresos",
+        "link": "/pages/tesoreria/ingresos"
+      },
+      {
+        "title": "Egresos",
+        "link": "/pages/tesoreria/egresos"
+      },
+      {
+        "title": "Conciiacion",
+        "link": "/pages/tesoreria/conciliacion"
       }
     ]
   }

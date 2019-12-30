@@ -1,0 +1,71 @@
+<nb-card>
+  <nb-card-header>Detalles devolucion</nb-card-header>
+  <nb-card-body>
+
+    <p class="font-weight-bold">Información del pago</p>
+    <div class="form-inline">
+      <p class="font-weight-bold">Beneficiario</p>
+      <p>{{pago.comentarioPago}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Forma de Pago</p>
+      <p>{{pago.formaPago}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Monto</p>
+      <p>{{pago.monto | currency}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Cuenta/CLABE</p>
+      <p>{{pago.cuenta}}</p>
+    </div>
+    <div class="form-inline">
+      <p class="font-weight-bold">Solicitante</p>
+      <p>{{pago.createUser}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Fecha Solicitud</p>
+      <p>{{pago.fechaCreacion}}</p>
+    </div>
+    <div class="row">
+      <div class="table-responsive" *ngIf="devoluciones.length > 0">
+        <div class="clearfix">
+          <strong>Resultados</strong>
+        </div>
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col" class="text-center">Folio Factura</th>
+              <th scope="col" class="text-center">Tipo Receptor</th>
+              <th scope="col" class="text-center">Receptor</th>
+              <th scope="col" class="text-center">Estatus</th>
+              <th scope="col" class="text-center">Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of devoluciones">
+              <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
+              <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
+              <td scope="row" class="text-center">{{fila.receptor}}</td>
+              <td scope="row" class="text-center">{{fila.statusDevolucion}}</td>
+              <td scope="row" class="text-right">{{fila.monto | currency}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    
+
+
+    
+  </nb-card-body>
+  <nb-card-footer>
+      
+    <button class="btn btn-success" (click)="updatePaymentStatus()">Actualizar a Pagado</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-warning" (click)="exit()">Salir</button>
+    
+  </nb-card-footer>
+</nb-card>
+
+
+
+

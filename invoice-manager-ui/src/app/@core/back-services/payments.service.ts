@@ -22,11 +22,12 @@ export class PaymentsService {
     return this.httpClient.delete(`../api/facturas/${folio}/pagos/${paymentId}`);
   }
 
-  public updatePayment(folio: string, paymentId: number, payment: Pago): Observable<any> {
+  public updatePaymentWithValidation(folio: string, paymentId: number, payment: Pago): Observable<any> {
     return this.httpClient.put(`../api/facturas/${folio}/pagos/${paymentId}`, payment);
   }
 
-  public getAllPayments(page: number, size: number, filterParams?: any): Observable<Object> {
+
+  public getAllIncomes(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
     for (const key in filterParams) {
       let value : string;
@@ -41,5 +42,44 @@ export class PaymentsService {
       }
     }
     return this.httpClient.get('../api/pagos', { params: pageParams });
+  }
+
+
+  public getIncomes(page: number, size: number, filterParams?: any): Observable<Object> {
+    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+    for (const key in filterParams) {
+      let value : string;
+      if(filterParams[key] instanceof Date){
+        let date : Date = filterParams[key] as Date; 
+        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+      }else{
+        value = filterParams[key];
+      }
+      if(value.length>0){
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
+      }
+    }
+    return this.httpClient.get('../api/pagos/ingresos', { params: pageParams });
+  }
+
+  public getExpenses(page: number, size: number, filterParams?: any): Observable<Object> {
+    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+    for (const key in filterParams) {
+      let value : string;
+      if(filterParams[key] instanceof Date){
+        let date : Date = filterParams[key] as Date; 
+        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+      }else{
+        value = filterParams[key];
+      }
+      if(value.length>0){
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
+      }
+    }
+    return this.httpClient.get('../api/pagos/egresos', { params: pageParams });
+  }
+
+  public updatePayment(payment : Pago) : Observable<any>{
+    return this.httpClient.put(`../api/pagos/${payment.id}`,payment);
   }
 }

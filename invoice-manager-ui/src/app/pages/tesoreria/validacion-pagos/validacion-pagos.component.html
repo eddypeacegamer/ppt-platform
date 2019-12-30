@@ -9,27 +9,30 @@
                 <label for="inputPayType" class="label">Forma de Pago</label>
                 <select id="inputPayType" style="display:block;" class="form-control"
                   [(ngModel)]="filterParams.formaPago" >
-                  <option value="*">Seleccionar</option>
+                  <option value="*">TODAS</option>
                   <option value="EFECTIVO">Efectivo</option>
                   <option value="CHEQUE">Cheque nominativo</option>
-                  <option value="TRANSFERENCA">Transferencia electrónica de fondos</option>
+                  <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
                   <option value="DEPOSITO">Deposito bancario</option>
                   <option value="CREDITO">Credito</option>
                 </select>
               </div>
-              <div class="col-sm-1">
-                  <label for="inputValidationStatus" class="label">Estatus</label>
-                  <select  id="inputValidationStatus" style="display:block;" class="form-control"
-                    [(ngModel)]="filterParams.status" >
-                    <option value="*">TODOS</option>
-                    <option value="VALIDACION">En Validacion</option>
-                    <option value="ACEPTADO">Aceptado</option>
-                    <option value="RECHAZADO">Rechazado</option>
-                  </select>
-                </div>
-              <div class="col-sm-2">
+              <div class="col-md-2">
+                  <label for="formpicker1" class="label">Desde</label>
+                  <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;" class="form-control"
+                    [(ngModel)]="filterParams.since">
+                  <nb-datepicker #formpicker1></nb-datepicker>
+              </div>
+              <div class="col-md-2">
+                <label for="formpicker2" class="label">Hasta</label>
+                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;" class="form-control"
+                  [(ngModel)]="filterParams.to">
+                <nb-datepicker #formpicker2></nb-datepicker>
+              </div>
+              <div class="col-sm-4">
                 <label for="inputBank" class="label">Banco receptor</label>
-                <select  id="inputBank" style="display:block;" class="form-control"
+                <div class="form-inline">
+                <select  id="inputBank" style="display:block;" class="form-control" style="display:block;width: 250px;"
                   [(ngModel)]="filterParams.banco" >
                   <option value="*">TODOS</option>
                   <option value="BBVA">BBVA</option>
@@ -38,29 +41,12 @@
                   <option value="BANAMEX">BANAMEX</option>
                   <option value="N/A">NO APLICA</option>
                 </select>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <button type="button" class="btn btn-primary align-bottom"  (click)="updateDataTable()" status="primary">BUSCAR</button>
               </div>
-              <div class="col-md-2">
-                  <label for="payAmmount" class="label">Desde</label>
-                  <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;" class="form-control"
-                    [(ngModel)]="filterParams.since">
-                  <nb-datepicker #formpicker1></nb-datepicker>
               </div>
-              <div class="col-md-2">
-                <label for="payAmmount" class="label">Hasta</label>
-                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;" class="form-control"
-                  [(ngModel)]="filterParams.to">
-                <nb-datepicker #formpicker2></nb-datepicker>
-              </div>
-              <div class="col-sm-3">
-                  <label for="inputFolio" class="label">Folio</label>
-                  <div class="row form-inline">
-                      <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio"  id="inputFolio" placeholder="Folio CFDI">
-                      &nbsp;&nbsp;&nbsp;&nbsp;
-                      <button type="button" class="btn btn-primary"  (click)="updateDataTable()" status="primary">BUSCAR</button>
-                  </div>
-                  
-              </div>
-              
+
+            
             </div>
       </nb-card-body>
     </nb-card>
@@ -93,13 +79,21 @@
           <table class="table">
             <thead class="thead-light">
               <tr>
-                <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                <th scope="col">Folio</th>
+                <th scope="col">Moneda</th>
+                <th scope="col">Banco</th>
+                <th scope="col">Monto</th>
+                <th scope="col">Estatus Pago</th>
+                <th scope="col">Tipo pago</th>
+                <th scope="col">Forma de pago</th>
+                <th scope="col">Fecha pago</th>
+                <th scope="col">Actualizado por</th>
                 <th scope="col">Validar</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">{{fila.folio}}</td>
+                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
                 <td scope="row">{{fila.moneda}}</td>
                 <td scope="row">{{fila.banco}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>

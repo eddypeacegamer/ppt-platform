@@ -41,4 +41,8 @@ export class DevolutionService {
     return this.httpClient.post('../api/devoluciones', payment);
   }
 
+  public getDevolutionsByPayment(payment:number):Observable<any>{
+    return this.httpClient.get(`../api/pagos/${payment}/devoluciones`);
+  }
+
 }

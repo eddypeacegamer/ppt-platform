@@ -14,4 +14,6 @@ export abstract class DevolutionData{
     abstract generateDevolutions(payment:Pago):Observable<any>;
 
     abstract requestMultipleDevolution(solicitud:SolicitudDevolucion):Observable<Pago>;
+
+    abstract getDevolutionsByPayment(payment:number):Observable<Devolucion[]>;
 }

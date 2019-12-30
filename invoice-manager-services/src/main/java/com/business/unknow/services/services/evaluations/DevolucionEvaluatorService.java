@@ -54,7 +54,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 						context.getClientDto().getPorcentajePromotor(), context.getClientDto().getCorreoPromotor(),
 						ContactoDevolucionEnum.PROMOTOR.getDescripcion()));
 		devolucionRepository
-				.save(buildDevolucion(context.getFacturaDto().getFolio(), context.getCurrentPago().getId(),
+				.save(buildDevolucion(context.getFacturaDto().getFolioPadre(), context.getCurrentPago().getId(),
 						numberHelper.assignPrecision(pagoDto.getMonto() * porcentajeComisiones,
 								Constants.DEFAULT_SCALE),
 						context.getClientDto().getPorcentajeDespacho(), "invoice-manager@gmail.com",
