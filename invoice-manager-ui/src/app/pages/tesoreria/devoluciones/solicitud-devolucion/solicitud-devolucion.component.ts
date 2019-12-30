@@ -27,7 +27,7 @@ export class SolicitudDevolucionComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-  
+    this.errorMesage = undefined;
     this.devolutionsService.getDevolutionsByPayment(this.pago.id)
       .subscribe(devolutions=>this.devoluciones = devolutions);
 
@@ -38,6 +38,7 @@ export class SolicitudDevolucionComponent implements OnInit {
   }
 
   updatePaymentStatus(){
+    this.errorMesage = undefined;
     this.pago.statusPago='PAGADO';
     this.pagosService.updatePayment(this.pago)
       .subscribe(success =>{console.log(success); this.ref.close();},

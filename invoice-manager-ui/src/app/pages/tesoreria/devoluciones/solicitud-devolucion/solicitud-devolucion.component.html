@@ -2,6 +2,10 @@
   <nb-card-header>Detalles devolucion</nb-card-header>
   <nb-card-body>
 
+    <div class="alert alert-warning" role="alert" *ngIf="errorMesage!=undefined">
+      {{errorMesage}}
+    </div>
+
     <p class="font-weight-bold">Información del pago</p>
     <div class="form-inline">
       <p class="font-weight-bold">Beneficiario</p>

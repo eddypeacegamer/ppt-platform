@@ -82,7 +82,7 @@ export class DevolucionesComponent implements OnInit {
 
   public solicitudDevoluciones(){
     this.devolutionService.requestMultipleDevolution(this.solicitud)
-      .subscribe(pago=>{this.updateDataTable();console.log(pago)});
+      .subscribe(pago=>{this.updateDataTable(); this.solicitud= new SolicitudDevolucion()});
   }
 
   public redirectToCfdi(folio:string){
