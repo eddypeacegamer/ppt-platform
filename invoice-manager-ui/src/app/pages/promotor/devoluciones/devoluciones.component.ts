@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/back-services/download-csv.service';
 import { Router } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
 import { SolicitudDevolucion } from '../../../models/solicitud-devolucion';
+import { NbDialogService } from '@nebular/theme';
+import { PaymentsService } from '../../../@core/back-services/payments.service';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -19,10 +21,12 @@ export class DevolucionesComponent implements OnInit {
   public solicitud : SolicitudDevolucion = new SolicitudDevolucion();
   public filterParams : any = {tipoReceptor:'POR SOLICITAR',idReceptor:'promotor@gmail.com',statusDevolucion:'*'};
 
-  constructor(private devolutionService:DevolutionData,
-              private donwloadService:DownloadCsvService,
-              private userService: UsersData,
-              private router: Router) { }
+  constructor(private dialogService: NbDialogService,
+            private devolutionService:DevolutionData,
+            private paymentsService : PaymentsService,
+            private donwloadService:DownloadCsvService,
+            private userService: UsersData,
+            private router: Router) { }
 
   ngOnInit() {
     this.montoDevolucion = 0.0;
@@ -91,6 +95,14 @@ export class DevolucionesComponent implements OnInit {
 
   public redirectToPago(id:number){
     console.log("searching payment with id :"+ id);
+  }
+
+  public openPaymentDetails(dialog: TemplateRef<any>, destPayment:number) {
+    this.paymentsService.getPaymentById(destPayment)
+      .subscribe(payment=>{
+        this.dialogService.open(dialog, { context: payment })
+        .onClose.subscribe(()=>this.updateDataTable())
+      })
   }
 
 }

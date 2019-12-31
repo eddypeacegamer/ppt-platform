@@ -86,6 +86,15 @@ public class PagoService {
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
+	
+	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
+		Optional<Pago> payment = repository.findById(id);
+		if(payment.isPresent()) {
+			return mapper.getPagoDtoFromEntity(payment.get());
+		}else {
+			throw new InvoiceManagerException("Pago no encontrado",String.format("El pago con id %d no fu encontrado.", id), HttpStatus.NOT_FOUND.value());
+		}
+	}
 
 	
 	public PagoDto insertNewPayment(PagoDto payment) {

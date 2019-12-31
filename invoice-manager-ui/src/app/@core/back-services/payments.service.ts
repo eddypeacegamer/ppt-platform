@@ -14,6 +14,11 @@ export class PaymentsService {
     return this.httpClient.get(`../api/facturas/${folio}/pagos`);
   }
 
+  public getPaymentById(id:number) : Observable<any>{
+    return this.httpClient.get(`../api/pagos/${id}`)
+  }
+
+
   public insertNewPayment(folio: string, payment: Pago): Observable<any> {
     return this.httpClient.post(`../api/facturas/${folio}/pagos`, payment);
   }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.DevolucionDto;
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.PagoService;
 
@@ -90,6 +91,11 @@ public class PagosController {
 		Page<PagoDto> pagos = service.getEgresosPaginados(formaPago, status, banco, since, to, page, size);
 		
 		return new ResponseEntity<>(pagos,HttpStatus.OK);
+	}
+	
+	@GetMapping("/{idPago}")
+	public ResponseEntity<PagoDto> getPagoById(@PathVariable(name = "idPago")Integer idPago) throws InvoiceManagerException{
+		return new ResponseEntity<>(service.getPaymentById(idPago),HttpStatus.OK);
 	}
 	
 	
