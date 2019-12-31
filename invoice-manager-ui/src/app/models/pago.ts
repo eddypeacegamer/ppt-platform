@@ -18,7 +18,9 @@ export class Pago{
     public revision1:boolean;
     public revision2:boolean;
     public ultimoUsuario:string;
+    public createUser:string;
     public comentarioPago: string;
+
 
 
     constructor(){
