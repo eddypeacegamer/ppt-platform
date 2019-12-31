@@ -68,6 +68,8 @@ public class FacturaService {
 
 	@Autowired
 	private CfdiEvaluatorService cfdiEvaluatorService;
+	
+	
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -172,7 +174,8 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
-		return pagoEvaluatorService.validatePagoUpdate(pago, id);
+		return  pagoEvaluatorService.validatePagoUpdate(pago,id);
+		
 	}
 
 	public void deletePago(Integer id) throws InvoiceManagerException {

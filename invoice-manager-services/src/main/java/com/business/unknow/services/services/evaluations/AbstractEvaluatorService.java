@@ -228,7 +228,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre)).setCurrentPago(pagoDto).build();
 	}
 
-	protected FacturaDto buildFacturaDtoPagoPpdCreation(FacturaContext facturaContext) throws InvoiceManagerException {
+	protected FacturaDto buildFacturaDtoPagoPpdCreation(FacturaContext facturaContext){
 		return new FacturaBuilder().setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
 				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
 				.setMetodoPago(facturaContext.getFacturaPadreDto().getMetodoPago())
@@ -270,7 +270,7 @@ public class AbstractEvaluatorService extends AbstractService {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
 				.setMonto(numberHelper.assignPrecision((montoBase * porcentaje / 16), Constants.DEFAULT_SCALE))
 				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
-				.setStatusDevolucion("PENDIENTE").build());
+				.setStatusDevolucion("POR SOLICITAR").build());
 	}
 
 }

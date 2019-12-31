@@ -14,17 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.DevolucionDto;
 import com.business.unknow.model.PagoDto;
-import com.business.unknow.model.SolicitudDevolucionDto;
-import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.PagoService;
 
@@ -103,21 +98,7 @@ public class PagosController {
 		return new ResponseEntity<>(devolucionService.getDevolucionesByPagoDestino(idPagoDestino),HttpStatus.OK);
 	}	
 	
-	
-	
-	@PostMapping("/devoluciones")
-	public ResponseEntity<PagoDto> solicitudDevolucion(@RequestBody SolicitudDevolucionDto solicitud) throws InvoiceManagerException{
-		return new ResponseEntity<PagoDto>(service.solicitudDevolucion(solicitud), HttpStatus.CREATED);
-	}
-	
-	@PutMapping("/{idPago}")
-	public ResponseEntity<PagoDto> updatePago(@PathVariable(name = "idPago")Integer idPago,@RequestBody PagoDto pago) throws InvoiceManagerException{
-		return new ResponseEntity<>(service.upadtePayment(idPago, pago), HttpStatus.OK);
-	}
-	
-	
-	
-	
+
 //	@GetMapping("/{folio}")
 //	public ResponseEntity<Animal> getFactura(@PathVariable String folio) throws InvoiceCommonException {
 //		Animal animal=dispatcher.getAnimal(folio);

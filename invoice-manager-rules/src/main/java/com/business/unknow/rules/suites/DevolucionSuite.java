@@ -14,7 +14,7 @@ public class DevolucionSuite  implements InvoiceManagerSuite {
 
 	public DevolucionSuite() {
 		rules.register(new ClientValidationRule());
-		rules.register(new FacturaValidationRule());
+		//rules.register(new FacturaValidationRule()); the devolution can be generated even if the invoice is not stamped
 		rules.register(new FacturaPpdStatusDevolucionRule());
 		rules.register(new FacturaPueStatusDevolucionRule());
 		rules.register(new PagoDevolcuionRule());

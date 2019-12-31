@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.DevolucionDto;
 import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.SolicitudDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 
@@ -62,12 +63,14 @@ public class DevolucionesController {
 	}
 	
 	
-	
 	@PostMapping
-	public ResponseEntity<Void> generarDevoluiones(@RequestBody PagoDto pago) throws InvoiceManagerException{
-		service.generarDevolucionesPorPago(pago);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<PagoDto> solicitudDevolucion(@RequestBody SolicitudDevolucionDto solicitud) throws InvoiceManagerException{
+		return new ResponseEntity<>(service.solicitudDevolucion(solicitud), HttpStatus.CREATED);
 	}
 	
-	
+	@PostMapping("/pago")
+	public ResponseEntity<PagoDto> pagoSolicitud(@RequestBody PagoDto pago) throws InvoiceManagerException{
+		return new ResponseEntity<>(service.pagoSolicitudDevolucion(pago), HttpStatus.OK);
+	}
+
 }
