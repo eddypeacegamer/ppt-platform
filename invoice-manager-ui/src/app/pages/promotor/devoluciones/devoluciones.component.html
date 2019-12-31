@@ -30,7 +30,7 @@
             <div class="row form-inline">
               <select selected="*" id="inputDevolutionStatus" style="display:block;width: 300px;" class="form-control"
                 (change)="onDevolutionStatusSelected($event.target.value)" [(ngModel)]="filterParams.statusDevolucion">
-                <option value="PENDIENTE">Pendientes</option>
+                <option value="POR SOLICITAR">Por solicitar</option>
                 <option value="SOLICITUD">En solicitud</option>
                 <option value="PAGADA">Pagadas</option>
               </select>

@@ -33,16 +33,14 @@ export class DevolutionService {
   }
 
   public requestMultipleDevolution(solicitud:SolicitudDevolucion):Observable<any>{
-    return this.httpClient.post('../api/pagos/devoluciones',solicitud);
-  }
-
-
-  public generateDevolutions(payment:Pago):Observable<any>{
-    return this.httpClient.post('../api/devoluciones', payment);
+    return this.httpClient.post('../api/devoluciones',solicitud);
   }
 
   public getDevolutionsByPayment(payment:number):Observable<any>{
     return this.httpClient.get(`../api/pagos/${payment}/devoluciones`);
   }
 
+  public updateDevolutionAsPaid(payment:Pago):Observable<any>{
+    return this.httpClient.post('../api/devoluciones/pago',payment);
+  }
 }

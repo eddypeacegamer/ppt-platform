@@ -22,7 +22,6 @@ export class SolicitudDevolucionComponent implements OnInit {
   public errorMesage : string;
   
   constructor(protected ref: NbDialogRef<SolicitudDevolucionComponent>,
-    private pagosService : PaymentsData,
     private devolutionsService : DevolutionData,
     private router: Router) { }
 
@@ -40,7 +39,7 @@ export class SolicitudDevolucionComponent implements OnInit {
   updatePaymentStatus(){
     this.errorMesage = undefined;
     this.pago.statusPago='PAGADO';
-    this.pagosService.updatePayment(this.pago)
+    this.devolutionsService.updateDevolutionAsPaid(this.pago)
       .subscribe(success =>{console.log(success); this.ref.close();},
       (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`)
   }

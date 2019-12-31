@@ -17,7 +17,7 @@ export class DevolucionesComponent implements OnInit {
   public userEmail:string;
   public montoDevolucion : number;
   public solicitud : SolicitudDevolucion = new SolicitudDevolucion();
-  public filterParams : any = {tipoReceptor:'PROMOTOR',idReceptor:'promotor@gmail.com',statusDevolucion:'*'};
+  public filterParams : any = {tipoReceptor:'POR SOLICITAR',idReceptor:'promotor@gmail.com',statusDevolucion:'*'};
 
   constructor(private devolutionService:DevolutionData,
               private donwloadService:DownloadCsvService,
@@ -33,7 +33,7 @@ export class DevolucionesComponent implements OnInit {
       .subscribe(user => {
         this.userEmail = user.email;
         this.solicitud.user = user.email;
-        this.filterParams= {tipoReceptor:'PROMOTOR',idReceptor:this.userEmail,statusDevolucion:'PENDIENTE'};
+        this.filterParams= {tipoReceptor:'PROMOTOR',idReceptor:this.userEmail,statusDevolucion:'POR SOLICITAR'};
         this.updateDataTable();
       });
   }

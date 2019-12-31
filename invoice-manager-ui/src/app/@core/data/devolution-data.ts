@@ -11,9 +11,10 @@ export abstract class DevolutionData{
     
     abstract getDevolutions(page: number, size: number,filterParams?:any): Observable<GenericPage<Devolucion>>;
 
-    abstract generateDevolutions(payment:Pago):Observable<any>;
 
     abstract requestMultipleDevolution(solicitud:SolicitudDevolucion):Observable<Pago>;
 
     abstract getDevolutionsByPayment(payment:number):Observable<Devolucion[]>;
+
+    abstract updateDevolutionAsPaid(payment:Pago):Observable<Pago>;
 }

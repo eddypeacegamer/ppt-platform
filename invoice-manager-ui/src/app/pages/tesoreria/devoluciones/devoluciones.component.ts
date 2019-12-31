@@ -56,7 +56,7 @@ export class DevolucionesComponent implements OnInit {
         context: {
           pago: payment,
         },
-      });
+      }).onClose.subscribe(()=>this.updateDataTable(this.page.number,this.page.size));
     }
 
 }
