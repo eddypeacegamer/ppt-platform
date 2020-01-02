@@ -67,6 +67,23 @@ export class PaymentsService {
     return this.httpClient.get('../api/pagos/ingresos', { params: pageParams });
   }
 
+  public getIncomesSum(filterParams?: any): Observable<Object> {
+    let pageParams : HttpParams =  new HttpParams();
+    for (const key in filterParams) {
+      let value : string;
+      if(filterParams[key] instanceof Date){
+        let date : Date = filterParams[key] as Date; 
+        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+      }else{
+        value = filterParams[key];
+      }
+      if(value.length>0){
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
+      }
+    }
+    return this.httpClient.get('../api/pagos/ingresos/total', { params: pageParams });
+  }
+
   public getExpenses(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
     for (const key in filterParams) {
@@ -82,6 +99,23 @@ export class PaymentsService {
       }
     }
     return this.httpClient.get('../api/pagos/egresos', { params: pageParams });
+  }
+
+  public getExpensesSum(filterParams?: any): Observable<Object> {
+    let pageParams : HttpParams =  new HttpParams();
+    for (const key in filterParams) {
+      let value : string;
+      if(filterParams[key] instanceof Date){
+        let date : Date = filterParams[key] as Date; 
+        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+      }else{
+        value = filterParams[key];
+      }
+      if(value.length>0){
+        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
+      }
+    }
+    return this.httpClient.get('../api/pagos/egresos/total', { params: pageParams });
   }
 
   public updatePayment(payment : Pago) : Observable<any>{

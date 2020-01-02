@@ -16,6 +16,10 @@ export abstract class PaymentsData {
 
     abstract getIncomes(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
+    abstract getIncomesSum(filterParams?: any) : Observable<number>;
+    
+    abstract getExpensesSum(filterParams?: any) : Observable<number>;
+
     abstract getExpenses(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
 

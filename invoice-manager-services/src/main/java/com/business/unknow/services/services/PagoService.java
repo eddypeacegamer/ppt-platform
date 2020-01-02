@@ -59,32 +59,43 @@ public class PagoService {
 				result.getTotalElements());
 	}
 
-	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, Date since, Date to,
+	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, String cuenta,Date since, Date to,
 			int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		log.info("Search ingresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findIngresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end,
 				PageRequest.of(page, size));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 	
-	public Page<PagoDto> getEgresosPaginados(String formaPago, String status, String banco, Date since, Date to,
+	public Page<PagoDto> getEgresosPaginados(String formaPago, String status, String banco, String cuenta, Date since, Date to,
 			int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		log.info("Search egresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findEgresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end,
 				PageRequest.of(page, size));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
+	}
+	
+	public Double getSumaIngresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
+		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
+		Date end = (to == null) ? new Date() : to;
+		return repository.sumIngresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end);
+	}
+	public Double getSumaEgresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
+		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
+		Date end = (to == null) ? new Date() : to;
+		return repository.sumEgresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end);
 	}
 	
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
