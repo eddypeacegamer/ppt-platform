@@ -3,6 +3,7 @@ import { NbDialogRef } from '@nebular/theme';
 import { Pago } from '../../../../models/pago';
 import { FilesData } from '../../../../@core/data/files-data';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DevolutionData } from '../../../../@core/data/devolution-data';
 
 @Component({
   selector: 'ngx-validacion-pago',
@@ -13,8 +14,8 @@ export class ValidacionPagoComponent implements OnInit {
 
 
   @Input() pago: Pago;
-  public updatedPayment : Pago;
   public comprobanteUrl:SafeUrl;
+  public updatedPayment : Pago;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
     private filesService : FilesData,
@@ -46,5 +47,7 @@ export class ValidacionPagoComponent implements OnInit {
   onValidarPago() {
     this.ref.close(this.updatedPayment);
   }
+
+  
 
 }
