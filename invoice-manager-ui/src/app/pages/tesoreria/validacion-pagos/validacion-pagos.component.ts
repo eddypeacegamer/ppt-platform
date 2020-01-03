@@ -8,19 +8,18 @@ import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
 import { Pago } from '../../../models/pago';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'ngx-pagos',
-  templateUrl: './pagos.component.html',
-  styleUrls: ['./pagos.component.scss']
+  selector: 'ngx-valiudacion-pagos',
+  templateUrl: './validacion-pagos.component.html',
+  styleUrls: ['./validacion-pagos.component.scss']
 })
-export class PagosComponent implements OnInit {
+export class ValidacionPagosComponent implements OnInit {
 
   public userEmail : string;
-  public filterParams: any = { folio:'',formaPago: '*', status: '*', banco: '*', since: '', to: '' };
+  public filterParams: any = { formaPago: '*', status: 'VALIDACION', banco: '*', since: '', to: '' };
   public errors : string[]=[];
-
-  public headers: string[] = ['Folio', 'Moneda', 'Banco', 'Monto','Estatus Pago','Tipo pago', 'Forma de pago', 'Fecha pago','Actualizado por'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
@@ -28,18 +27,20 @@ export class PagosComponent implements OnInit {
     private userService : UsersData,
     private paymentService : PaymentsData,
     private donwloadService: DownloadCsvService,
+    private router: Router,
     private dialogService: NbDialogService
     ) {}
 
   ngOnInit() {
     this.updateDataTable();
+    this.filterParams= { formaPago: '*', status: 'VALIDACION', banco: '*', since: '', to: '' };
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.paymentService.getAllPayments(pageValue,sizeValue, this.filterParams)
+    this.paymentService.getIncomes(pageValue,sizeValue, this.filterParams)
       .subscribe((result:GenericPage<any>) => this.page = result);
   }
 
@@ -48,7 +49,7 @@ export class PagosComponent implements OnInit {
   }
 
   public downloadHandler() {
-    this.paymentService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
+    this.paymentService.getIncomes(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Pagos')
     });
   }
@@ -62,11 +63,17 @@ export class PagosComponent implements OnInit {
     }).onClose.subscribe(pago => {
       if(pago!=undefined){
         pago.ultimoUsuario = this.userEmail;
-        this.paymentService.updatePayment(pago.folio,pago.id,pago).toPromise()
+        this.paymentService.updatePaymentWithValidation(pago.folio,pago.id,pago).toPromise()
         .then(success=>console.log(success), (error:HttpErrorResponse)=>this.errors.push(error.error.message || `${error.statusText} : ${error.message}`))
-        .then(()=>this.updateDataTable())
+        .then(()=>this.updateDataTable(this.page.number, this.page.size))
+      }else{
+        this.updateDataTable(this.page.number, this.page.size);
       }
       });
+  }
+
+  public redirectToCfdi(folio:string){
+    this.router.navigate([`./pages/promotor/precfdi/${folio}`])
   }
 
   

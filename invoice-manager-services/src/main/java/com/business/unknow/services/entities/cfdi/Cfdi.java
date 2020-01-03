@@ -63,6 +63,9 @@ public class Cfdi implements Serializable {
 
 	@Column(name = "SELLO_SAT")
 	private String selloSat;
+	
+	@Column(name = "CADENA_ORIGINAL")
+	private String cadenaOriginal;
 
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
@@ -193,6 +196,14 @@ public class Cfdi implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public String getCadenaOriginal() {
+		return cadenaOriginal;
+	}
+
+	public void setCadenaOriginal(String cadenaOriginal) {
+		this.cadenaOriginal = cadenaOriginal;
 	}
 
 	@Override

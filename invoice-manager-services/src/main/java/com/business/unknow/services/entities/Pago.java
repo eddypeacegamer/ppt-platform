@@ -30,8 +30,7 @@ public class Pago implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PAGO")
 	private Integer id;
-
-	@NotNull
+	
 	@Column(name = "FOLIO")
 	private String folio;
 
@@ -53,11 +52,9 @@ public class Pago implements Serializable {
 	@Column(name = "MONTO")
 	private Double monto;
 
-	@NotNull
 	@Column(name = "REVISION_1")
 	private Boolean revision1;
 
-	@NotNull
 	@Column(name = "REVISION_2")
 	private Boolean revision2;
 

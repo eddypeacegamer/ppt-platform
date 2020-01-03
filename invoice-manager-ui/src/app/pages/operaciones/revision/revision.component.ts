@@ -76,8 +76,7 @@ export class RevisionComponent implements OnInit {
     private filesService: FilesData,
     private userService: UsersData,
     private downloadService: DownloadInvoiceFilesService,
-    private route: ActivatedRoute,
-    private router: Router) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
@@ -156,9 +155,6 @@ export class RevisionComponent implements OnInit {
     }
   }
 
-  openBuscadorSAT(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog);
-  }
 
   onGiroSelection(giroId: string) {
     let value = +giroId;

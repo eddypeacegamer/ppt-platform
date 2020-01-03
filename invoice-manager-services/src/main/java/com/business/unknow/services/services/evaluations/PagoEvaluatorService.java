@@ -28,6 +28,7 @@ import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
 import com.business.unknow.rules.suites.pagos.PagoPueSuite;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.services.executor.PagoExecutorService;
 
 @Service
@@ -47,6 +48,12 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 
 	@Autowired
 	private PagoExecutorService pagoExecutorService;
+	
+	@Autowired
+	private DevolucionEvaluatorService devolucionService;
+	
+	@Autowired
+	private FacturaMapper facturaMapper;
 	
 	private PagoValidator pagoValidator=new PagoValidator();
 
@@ -202,6 +209,8 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
 				factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 				repository.save(factura);
+				
+				devolucionService.generarDevolucionesPorPago(facturaMapper.getFacturaDtoFromEntity(factura),pago);
 			}
 		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));

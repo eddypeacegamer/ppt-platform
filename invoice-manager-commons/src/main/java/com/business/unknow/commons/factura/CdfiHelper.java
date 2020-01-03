@@ -23,7 +23,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.business.unknow.Constants.FacturaConstants;
-import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 
 public class CdfiHelper {
@@ -50,13 +49,6 @@ public class CdfiHelper {
 		} catch (ParserConfigurationException | IOException | TransformerException | SAXException e) {
 			throw new InvoiceCommonException(e.getMessage());
 		}
-	}
-
-	public String signXML(String xml, Date fechaTimbrado, EmpresaDto empresa) throws InvoiceCommonException {
-		SignHelper si = new SignHelper();
-		String xmlModified=changeDate(xml,fechaTimbrado);
-		String sello = si.getSign(si.getCadena(xmlModified), empresa.getPwSat(), empresa.getLlavePrivada());
-		return putsSign(xmlModified, sello);
 	}
 
 	public String putsSign(String xml, String sello) throws InvoiceCommonException {

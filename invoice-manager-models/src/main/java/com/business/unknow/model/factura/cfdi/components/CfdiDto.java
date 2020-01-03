@@ -27,6 +27,7 @@ public class CfdiDto implements Serializable {
 	private String selloCfd;
 	private String noCertificadoSat;
 	private String selloSat;
+	private String cadenaOriginal;
 	private List<ConceptoDto> conceptos = new ArrayList<>();
 
 	public String getVersion() {
@@ -157,13 +158,22 @@ public class CfdiDto implements Serializable {
 		this.id = id;
 	}
 
+	public String getCadenaOriginal() {
+		return cadenaOriginal;
+	}
+
+	public void setCadenaOriginal(String cadenaOriginal) {
+		this.cadenaOriginal = cadenaOriginal;
+	}
+
 	@Override
 	public String toString() {
-		return "CfdiDto [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
-				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello="
+				+ sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
 				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
-				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
+				+ noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal=" + cadenaOriginal + ", conceptos="
+				+ conceptos + "]";
 	}
 
 }

@@ -24,7 +24,7 @@ public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 	private CancelacionSuite cancelacionSuite;
 
 	@Autowired
-	private TimbradoSuite FacturarSuite;
+	private TimbradoSuite facturarSuite;
 
 	@Autowired
 	private FacturaTranslator facturaTranslator;
@@ -65,7 +65,7 @@ public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 		FacturaContext facturaContext = buildFacturaContextTimbrado(facturaDto, folio);
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);
-		rulesEngine.fire(FacturarSuite.getSuite(), facts);
+		rulesEngine.fire(facturarSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
 		case FACRTURA:

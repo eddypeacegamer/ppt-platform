@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.business.unknow.commons.factura.CdfiHelper;
+import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.StringHelper;
+import com.business.unknow.rules.suites.DevolucionSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.facturas.CancelacionSuite;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
@@ -60,6 +62,11 @@ public class ServicesApplication {
 	public PagoPpdSuite getPagoPpdSuite() {
 		return new PagoPpdSuite();
 	}
+	
+	@Bean
+	public DevolucionSuite getDevolucionSuite() {
+		return new DevolucionSuite();
+	}
 
 	@Bean
 	public CancelacionSuite getCancelacionSuite() {
@@ -99,6 +106,11 @@ public class ServicesApplication {
 	@Bean
 	public StringHelper getStringHelper() {
 		return new StringHelper();
+	}
+	
+	@Bean
+	public SignHelper getSignHelper() {
+		return new SignHelper();
 	}
 
 }
