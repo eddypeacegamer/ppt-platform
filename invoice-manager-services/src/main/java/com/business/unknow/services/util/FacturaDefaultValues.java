@@ -21,7 +21,9 @@ public class FacturaDefaultValues {
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.getNombre());
-		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+		if (facturaDto.getStatusFactura() == null) {
+			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+		}
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
 	}
 
