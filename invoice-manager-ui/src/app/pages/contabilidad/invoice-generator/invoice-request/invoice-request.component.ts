@@ -298,6 +298,8 @@ export class InvoiceRequestComponent implements OnInit {
       this.errorMessages = [];
       this.successMessage = undefined;
       let validCdfi = true;
+      this.factura.lineaEmisor = this.transfer.lineaRetiro;
+      this.factura.lineaRemitente = this.transfer.lineaDeposito;
       this.factura.solicitante = this.userEmail;
       if (this.factura.cfdi.usoCfdi == undefined) {
         this.errorMessages.push('El uso del CFDI es un campo requerido.');
