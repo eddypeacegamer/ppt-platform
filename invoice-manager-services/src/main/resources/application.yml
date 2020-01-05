@@ -15,7 +15,10 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:mem:mydb
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/invoice_manager
+    username: root
+    password: W4lm4rt
   jpa:
     show-sql: true
     hibernate:

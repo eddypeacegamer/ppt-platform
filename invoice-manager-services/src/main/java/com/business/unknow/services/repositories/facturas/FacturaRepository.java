@@ -20,19 +20,15 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
 	public Optional<Factura> findByFolio(String folio);
 	
+	public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
 	
-	@Query("select f from Factura f where  f.statusFactura like upper(:status) and f.fechaCreacion between :since and :to")
-	public Page<Factura> findAllWithStatusAndDates(@Param("status") String status,@Param("since") Date since, @Param("to") Date to,Pageable pageable);
+	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor='A' and f.statusFactura = upper(:status) and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
+	public Page<Factura> findBySolicitanteWithParams(@Param("solicitante") String solicitante,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
+	
+	@Query("select f from Factura f where f.lineaEmisor=:lineaEmisor and upper(f.statusFactura) = upper(:status) and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
+	public Page<Factura> findByLineaEmisorWithParams(@Param("lineaEmisor") String lineaEmisor,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
 
-	@Query("select f from Factura f where upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.statusFactura) like upper(:status) and f.fechaCreacion between :since and :to")
-	public Page<Factura> findByRfcEmisorWithOtherParams(@Param("rfcEmisor") String rfc,
-			@Param("status") String status, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
-
-	@Query("select f from Factura f where upper(f.rfcRemitente) like upper(:rfcRemitente) and upper(f.statusFactura) like upper(:status) and f.fechaCreacion between :since and :to")
-	public Page<Factura> findByRfcRemitenteWithOtherParams(@Param("rfcRemitente") String rfc,
-			@Param("status") String status, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
-
-	public Page<Factura> findByFolioIgnoreCaseContaining(String rfc, Pageable pageable);
+	
 	
 	@Query("select f from Factura f where folioPadre= :folioPadre")
 	public List<Factura> findComplementosByFolioPadre(@Param("folioPadre") String folioPadre);

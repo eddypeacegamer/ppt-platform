@@ -212,7 +212,7 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
 		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
-				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El emisor no exite",
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
 						Constants.BAD_REQUEST));
 		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
 				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
