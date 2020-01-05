@@ -22,16 +22,13 @@ public class AbstractDevolucionesEvaluatorService extends AbstractEvaluatorServi
 	protected DevolucionRepository devolucionRepository;
 
 	public FacturaContext buildFacturaContextForPueDevolution(FacturaDto facturaDto, PagoDto pagoDto) {
-		FacturaContextBuilder fcb = new FacturaContextBuilder()
-				.setClientDto(clientService.getClientByRFC(facturaDto.getRfcRemitente())).setFacturaDto(facturaDto)
-				.setCurrentPago(pagoDto);
+		FacturaContextBuilder fcb = new FacturaContextBuilder().setFacturaDto(facturaDto).setCurrentPago(pagoDto);
 		return fcb.build();
 	}
 
 	public FacturaContext buildFacturaContextForComplementoDevolution(FacturaDto facturaDto, PagoDto pagoDto) {
-		FacturaContextBuilder fcb = new FacturaContextBuilder()
-				.setClientDto(clientService.getClientByRFC(facturaDto.getRfcRemitente())).setFacturaDto(facturaDto)
-				.setCurrentPago(pagoDto).setFacturaPadreDto(facturaService.getfacturaByFolio(pagoDto.getFolioPadre()));
+		FacturaContextBuilder fcb = new FacturaContextBuilder().setFacturaDto(facturaDto).setCurrentPago(pagoDto)
+				.setFacturaPadreDto(facturaService.getfacturaByFolio(pagoDto.getFolioPadre()));
 		return fcb.build();
 	}
 }

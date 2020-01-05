@@ -207,7 +207,7 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
 								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
 				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
-				factura.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 				repository.save(factura);
 				
 				devolucionService.generarDevolucionesPorPago(facturaMapper.getFacturaDtoFromEntity(factura),pago);

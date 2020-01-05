@@ -4,10 +4,12 @@ public enum FacturaStatusEnum {
 	
 	VALIDACION_TESORERIA(1,"Validacion tesoreria"),
 	VALIDACION_OPERACIONES(2,"Validacion operaciones"),
-	TIMBRADA(3,"Timbrada"),
-	RECHAZO_TESORERIA(4,"Rechazo tesoreria"),
-	RECHAZO_OPERACIONES(5,"Rechazo Operaciones"),
-	CANCELADA(6,"Cancelada");
+	POR_TIMBRAR(3,"Por Timbrar"),
+	TIMBRADA(4,"Timbrada"),
+	RECHAZO_TESORERIA(5,"Rechazo tesoreria"),
+	RECHAZO_OPERACIONES(6,"Rechazo Operaciones"),
+	CANCELADA(7,"Cancelada");
+	
 
 	private Integer valor;
 	private String descripcion;

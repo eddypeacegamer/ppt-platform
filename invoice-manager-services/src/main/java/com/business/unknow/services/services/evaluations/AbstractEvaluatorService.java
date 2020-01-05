@@ -27,7 +27,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.files.FacturaFileDto;
-import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
@@ -37,6 +37,7 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.DevolucionMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
@@ -98,6 +99,9 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	private DevolucionMapper devolucionMapper;
+	
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 
 	@Autowired
 	protected RulesEngine rulesEngine;
@@ -210,12 +214,12 @@ public class AbstractEvaluatorService extends AbstractService {
 		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
 						Constants.BAD_REQUEST));
-		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
-				.orElseThrow(() -> new InvoiceManagerException("Receptor de la factura no esta dado de alta", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcRemitente()),
+		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
 						Constants.BAD_REQUEST));
 		return new FacturaContextBuilder().setFacturaDto(facturaDto)
 				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-				.setClientDto(clientMapper.getClientDtoFromEntity(client)).build();
+				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
 	}
 
 	protected FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, String folio)
