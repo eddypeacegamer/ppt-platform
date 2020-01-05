@@ -15,7 +15,6 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.suites.DevolucionSuite;
 import com.business.unknow.services.entities.Devolucion;
-import com.business.unknow.services.entities.Pago;
 
 @Service
 public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorService {
@@ -78,7 +77,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 							context.getClientDto().getPorcentajeContacto(), context.getClientDto().getCorreoContacto(),
 							ContactoDevolucionEnum.CONTACTO.getDescripcion()));
 		}
-		Pago payment = pagoRepository.findById(context.getCurrentPago().getId())
+		pagoRepository.findById(context.getCurrentPago().getId())
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
 						String.format("El pago %s  no existe", context.getCurrentPago().toString()),
 						HttpStatus.CONFLICT.value()));
@@ -116,7 +115,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 					context.getCurrentPago().getId(), baseComisiones, context.getClientDto().getPorcentajeContacto(),
 					context.getClientDto().getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.getDescripcion()));
 		}
-		Pago payment = pagoRepository.findById(context.getCurrentPago().getId())
+		pagoRepository.findById(context.getCurrentPago().getId())
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
 						String.format("El pago %s  no existe", context.getCurrentPago().toString()),
 						HttpStatus.CONFLICT.value()));
