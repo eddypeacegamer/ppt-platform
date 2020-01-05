@@ -313,6 +313,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.errorMessages = [];
     let validCdfi = true;
     this.factura.solicitante = this.userEmail;
+    this.factura.lineaEmisor = 'A';
+      this.factura.lineaRemitente = 'CLIENTE';
     if (this.companyInfo == undefined) {
       this.errorMessages.push('La empresa emisora es requerida.');
       validCdfi = false;
