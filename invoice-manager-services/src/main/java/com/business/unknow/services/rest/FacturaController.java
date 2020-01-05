@@ -47,17 +47,18 @@ public class FacturaController {
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
-			@RequestParam(name = "emisor", required = false) Optional<String> rfcEmisor,
-			@RequestParam(name = "remitente", required = false) Optional<String> rfcRemitente,
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
-			@RequestParam(name = "status", defaultValue = "") String status,
+			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante,//linea A by default
+			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
+			@RequestParam(name = "emisor", defaultValue = "") String rfcEmisor,
+			@RequestParam(name = "remitente", defaultValue = "") String rfcRemitente,
+			@RequestParam(name = "status", defaultValue = "1") String status,
 			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(
-				service.getFacturasByParametros(rfcEmisor, rfcRemitente, folio, status, since, to, page, size),
-				HttpStatus.OK);
+				service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to, rfcEmisor, rfcRemitente, page, size),HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")

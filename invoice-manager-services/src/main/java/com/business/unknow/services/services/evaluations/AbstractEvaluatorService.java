@@ -43,6 +43,7 @@ import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
@@ -70,6 +71,9 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	protected ClientRepository clientRepository;
+	
+	@Autowired
+	protected ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
 	protected FilesMapper filesMapper;
@@ -204,10 +208,10 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
 		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
-				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El emisor no exite",
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
 						Constants.BAD_REQUEST));
 		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
-				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
+				.orElseThrow(() -> new InvoiceManagerException("Receptor de la factura no esta dado de alta", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcRemitente()),
 						Constants.BAD_REQUEST));
 		return new FacturaContextBuilder().setFacturaDto(facturaDto)
 				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))

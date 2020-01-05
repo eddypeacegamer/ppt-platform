@@ -18,6 +18,7 @@
           <p class="font-weight-bold">Receptor</p>
           <p>&nbsp;&nbsp;&nbsp;</p>
           <p>{{factura.rfcRemitente}}</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
           <p>{{factura.razonSocialRemitente}}</p>
           <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 
@@ -136,10 +137,18 @@
         </div>
 
       </div>
-      <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
-        <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
+      
+
+      <br>
+      <br>
+      <div class="alert alert-warning" role="alert" *ngIf="!validarRestante()">
+        El monto requerido de la factura es de {{transfer.importe | currency}} el monto faltante es de
+        {{(transfer.importe - factura.total) | currency}}
       </div>
 
+      <div class="alert alert-success" role="alert" *ngIf="validarRestante()">
+        Muy bien el monto de la factura se cuadro correctamente
+      </div>
 
       <br>
       <!--TABLA CONCEPTOS-->
@@ -186,7 +195,9 @@
         </tbody>
       </table>
       <br>
-
+      <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
+        <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
+      </div>
 
       <br>
       
@@ -247,16 +258,7 @@
         </div>
       </div>
 
-      <br>
-      <br>
-      <div class="alert alert-warning" role="alert" *ngIf="!validarRestante()">
-        El monto requerido de la factura es de {{transfer.importe | currency}} el monto faltante es de
-        {{(transfer.importe - factura.total) | currency}}
-      </div>
-
-      <div class="alert alert-success" role="alert" *ngIf="validarRestante()">
-        Muy bien el monto de la factura se cuadro correctamente
-      </div>
+      
 
 
 
