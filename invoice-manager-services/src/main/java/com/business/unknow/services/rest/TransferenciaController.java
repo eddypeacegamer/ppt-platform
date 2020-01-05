@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,16 @@ public class TransferenciaController {
 	
 	@GetMapping
 	public ResponseEntity<Page<TransferenciaDto>> getpaginatedTransfers(
+			@RequestParam(name = "tipoEmisor", defaultValue = "") String tipoEmisor,
+			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size){
+		
+		return new ResponseEntity<>(service.getTransferenciasPaginated(tipoEmisor, tipoReceptor, page, size), HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Page<TransferenciaDto>> updateTransferencia(
 			@RequestParam(name = "tipoEmisor", defaultValue = "") String tipoEmisor,
 			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
 			@RequestParam(name = "page", defaultValue = "0") int page,

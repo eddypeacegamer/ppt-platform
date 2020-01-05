@@ -26,8 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "TRANSFERENCIAS")
-public class Transferencia implements Serializable{
-
+public class Transferencia implements Serializable {
 
 	private static final long serialVersionUID = 1152989539957300970L;
 
@@ -35,34 +34,37 @@ public class Transferencia implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TRANSFER")
 	private Integer id;
-	
+
 	@Column(name = "BANCO_RETIRO")
 	private String bancoRetiro;
-	
+
 	@Column(name = "RFC_RETIRO")
 	private String rfcRetiro;
-	
+
 	@Column(name = "CUENTA_RETIRO")
 	private String cuentaRetiro;
-	
+
 	@Column(name = "LINEA_RETIRO")
 	private String lineaRetiro;
-	
+
 	@Column(name = "BANCO_DEPOSITO")
 	private String bancoDeposito;
-	
+
 	@Column(name = "RFC_DEPOSITO")
 	private String rfcDeposito;
-	
+
 	@Column(name = "CUENTA_DEPOSITO")
 	private String cuentaDeposito;
-	
+
 	@Column(name = "LINEA_DEPOSITO")
 	private String lineaDeposito;
-	
+
+	@Column(name = "FOLIO")
+	private String folio;
+
 	@Column(name = "IMPORTE")
 	private Double importe;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -156,12 +158,21 @@ public class Transferencia implements Serializable{
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public String getFolio() {
+		return folio;
+	}
+
+	public void setFolio(String folio) {
+		this.folio = folio;
+	}
+
 	@Override
 	public String toString() {
 		return "Transferencia [id=" + id + ", bancoRetiro=" + bancoRetiro + ", rfcRetiro=" + rfcRetiro
 				+ ", cuentaRetiro=" + cuentaRetiro + ", lineaRetiro=" + lineaRetiro + ", bancoDeposito=" + bancoDeposito
 				+ ", rfcDeposito=" + rfcDeposito + ", cuentaDeposito=" + cuentaDeposito + ", lineaDeposito="
-				+ lineaDeposito + ", importe=" + importe + ", fechaCreacion=" + fechaCreacion + "]";
+				+ lineaDeposito + ", folio=" + folio + ", importe=" + importe + ", fechaCreacion=" + fechaCreacion
+				+ "]";
 	}
 
 }

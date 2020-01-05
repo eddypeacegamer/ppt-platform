@@ -5,7 +5,6 @@ import java.util.Date;
 import com.business.unknow.commons.util.FacturaCalculator;
 import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -22,11 +21,7 @@ public class FacturaDefaultValues {
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.getNombre());
-		if (facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre()) && facturaDto.getFolioPadre() == null) {
-			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
-		} else {
-			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
-		}
+		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
 	}
 

@@ -3,7 +3,6 @@ package com.business.unknow.rules.suites.facturas;
 import org.jeasy.rules.api.Rules;
 
 import com.business.unknow.rules.factura.EmisorValidationRule;
-import com.business.unknow.rules.factura.ReceptorValidationRule;
 import com.business.unknow.rules.suites.InvoiceManagerSuite;
 
 
@@ -13,7 +12,6 @@ public class FacturaSuite implements InvoiceManagerSuite {
 
 	public FacturaSuite() {
 		rules.register(new EmisorValidationRule());
-		rules.register(new ReceptorValidationRule());
 	}
 
 	@Override
