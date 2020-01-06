@@ -41,7 +41,7 @@ export class Factura{
 		this.subtotal  = 0;	
 		this.descuento = 0;
 		this.statusFactura ='1';
-		this.statusDetail = '1';
+		this.statusDetail = '';
 		this.statusPago = '1';
 		this.statusDevolucion = '1';
 		this.lineaEmisor = 'A';

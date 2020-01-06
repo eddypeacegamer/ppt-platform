@@ -56,20 +56,20 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*', prodServ: '*', unidad: '*' }
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
 
   /** PAYMENT SECCTION**/
 
-  public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
+  public paymentForm = { coin: 'MXN', payType: '*', bank: '*', filename: '', successPayment: false };
   public newPayment: Pago;
   public invoicePayments: Pago[] = [];
   public paymentSum: number = 0;
 
 
-  constructor(private dialogService: NbDialogService,
+  constructor(
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
@@ -151,6 +151,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura = new Factura();
     this.errorMessages = [];
     this.loading = false;
+    this.factura.cfdi.moneda='MXN'
+    this.factura.metodoPago = 'PUE'
   }
 
   onDeleteConfirm(event): void {
@@ -161,9 +163,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
-  openBuscadorSAT(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog);
-  }
 
   onGiroSelection(giroId: string) {
     let value = +giroId;
@@ -191,20 +190,16 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   buscarClientInfo() {
     this.errorMessages = [];
     this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-      (client: Client) => { this.clientInfo = client.informacionFiscal },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      (client: Client) => { if(client.activo == true){
+        this.clientInfo = client.informacionFiscal
+        }else{ 
+          alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentar activo en el sistema`);
+          this.formInfo.clientRfc='';
+        }},(error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
   onUsoCfdiSelected(clave: string) {
     this.factura.cfdi.usoCfdi = clave;
-  }
-
-  onMonedaSelected(clave: string) {
-    this.factura.cfdi.moneda = clave;
-  }
-
-  onMetodoDePagoSelected(clave: string) {
-    this.factura.metodoPago = clave;
   }
 
   onFormaDePagoSelected(clave: string) {
@@ -230,7 +225,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   limpiarForma() {
-    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*',payType: '*', prodServ: '*', unidad: '*' }
     this.clientInfo = undefined;
     this.companyInfo = undefined;
     this.newConcep = new Concepto();
@@ -487,7 +482,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         (error: HttpErrorResponse) => { this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false; });
     }
     this.newPayment = new Pago();
-    this.paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
+    this.paymentForm = { coin: 'MXN', payType: '*', bank: '*', filename: '', successPayment: false };
   }
 
 }

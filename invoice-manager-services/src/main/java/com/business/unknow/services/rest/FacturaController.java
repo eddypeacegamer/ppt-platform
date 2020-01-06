@@ -75,8 +75,7 @@ public class FacturaController {
 
 	@PutMapping("/{folio}")
 	@ApiOperation(value = "update an existing in the system")
-	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura)
-			throws InvoiceManagerException {
+	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura) {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
 

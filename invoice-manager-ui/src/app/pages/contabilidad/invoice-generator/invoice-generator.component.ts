@@ -51,7 +51,7 @@ export class InvoiceGeneratorComponent implements OnInit {
       context: {
         transfer: transferencia,
       },
-    });
+    }).onClose.subscribe(()=>this.updateDataTable(this.page.number,this.page.size,this.filterParams));
   }
 
 }

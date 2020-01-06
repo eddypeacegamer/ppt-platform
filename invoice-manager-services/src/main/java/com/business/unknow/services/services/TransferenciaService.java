@@ -39,11 +39,11 @@ public class TransferenciaService {
 	}
 
 	public TransferenciaDto updateTransferencia(TransferenciaDto transferenciaDto) throws InvoiceManagerException {
-		Transferencia result = repository.findById(transferenciaDto.getId())
+		repository.findById(transferenciaDto.getId())
 				.orElseThrow(() -> new InvoiceManagerException("Error al la transferencia de carga masiva",
 						String.format("La transferencia de carga masiva por el id %d", transferenciaDto.getId()),
 						HttpStatus.NOT_FOUND.value()));
-		return mapper.getTransferenciaDtoFromEntity(result);
+		return  mapper.getTransferenciaDtoFromEntity(repository.save(mapper.getEntityFromTransferenciaDto(transferenciaDto)));
 	}
 
 	public List<TransferenciaDto> saveTransferencias(List<TransferenciaDto> transferencias) {

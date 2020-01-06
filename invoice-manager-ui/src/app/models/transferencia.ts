@@ -11,4 +11,5 @@ export class Transferencia{
     public lineaDeposito : string;
     public importe : number;
     public fechaCreacion : Date;
+    public folio : string;
 }

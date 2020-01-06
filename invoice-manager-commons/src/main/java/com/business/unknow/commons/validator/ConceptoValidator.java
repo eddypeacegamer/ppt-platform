@@ -19,7 +19,7 @@ public class ConceptoValidator extends AbstractValidator {
 
 	public void validateDeleteConcepto(CfdiDto dto) throws InvoiceManagerException {
 		if (dto.getConceptos().size() == 1) {
-			throw new InvoiceManagerException("No se puede borrar el Concepto", "La Factura no puede tener 0 conceptos",
+			throw new InvoiceManagerException("La Factura no puede tener 0 conceptos","Una  vez creada no es posible tener una factura sin conceptos",
 					Constants.BAD_REQUEST);
 		}
 	}

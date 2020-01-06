@@ -7,4 +7,6 @@ export abstract class TransferData{
     abstract getAllTransfers(page: number, size: number, filterParams?: any) : Observable<GenericPage<Transferencia>>;
 
     abstract saveAllTransfers(transferencias: Transferencia[]) : Observable<Transferencia[]>;
+
+    abstract updateTranfer(transfer : Transferencia): Observable<Transferencia>;
 }

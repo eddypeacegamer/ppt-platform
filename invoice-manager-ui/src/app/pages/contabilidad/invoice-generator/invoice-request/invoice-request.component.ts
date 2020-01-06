@@ -10,7 +10,6 @@ import { Status } from '../../../../models/catalogos/status';
 import { Concepto } from '../../../../models/factura/concepto';
 import { Factura } from '../../../../models/factura/factura';
 import { CatalogsData } from '../../../../@core/data/catalogs-data';
-import { ClientsData } from '../../../../@core/data/clients-data';
 import { CompaniesData } from '../../../../@core/data/companies-data';
 import { InvoicesData } from '../../../../@core/data/invoices-data';
 import { UsersData } from '../../../../@core/data/users-data';
@@ -18,6 +17,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Impuesto } from '../../../../models/factura/impuesto';
 import { Cfdi } from '../../../../models/factura/cfdi';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { TransferData } from '../../../../@core/data/transfers-data';
 
 @Component({
   selector: 'ngx-invoice-request',
@@ -63,6 +64,8 @@ export class InvoiceRequestComponent implements OnInit {
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private userService: UsersData,
+    private transferService : TransferData,
+    private router : Router
     ) {}
 
 
@@ -97,6 +100,10 @@ export class InvoiceRequestComponent implements OnInit {
       /** CLEAN VARIABLES **/
       this.newConcep = new Concepto();
       this.factura = new Factura();
+    }
+
+    exit() {
+      this.ref.close();
     }
   
     public getInvoiceByFolio(folio:string){
@@ -264,7 +271,6 @@ export class InvoiceRequestComponent implements OnInit {
         for (const imp of concepto.impuestos) {
           impuesto = (imp.importe*3 + impuesto * 3) / 3;
         }
-        console.log('impuesto',impuesto);
         this.factura.total += (base *3 + impuesto * 3)/3;
       }
     }
@@ -331,7 +337,11 @@ export class InvoiceRequestComponent implements OnInit {
         this.invoiceService.insertNewInvoice(this.factura).subscribe(
           (invoice: Factura) => {
             this.factura.folio = invoice.folio; 
-            this.successMessage = `La solicitud del CFDI ha sido generada correctamente con el folio ${invoice.folio}`;
+            this.transfer.folio = invoice.folio;
+            this.transferService.updateTranfer(this.transfer).subscribe(
+             (transfer)=> this.ref.close(),
+             (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`)}
+            )
           }, (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
       }
     }

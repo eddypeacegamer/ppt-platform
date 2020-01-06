@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.TransferenciaDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.TransferenciaService;
 
 @RestController
@@ -38,13 +39,8 @@ public class TransferenciaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Page<TransferenciaDto>> updateTransferencia(
-			@RequestParam(name = "tipoEmisor", defaultValue = "") String tipoEmisor,
-			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size){
-		
-		return new ResponseEntity<>(service.getTransferenciasPaginated(tipoEmisor, tipoReceptor, page, size), HttpStatus.OK);
+	public ResponseEntity<TransferenciaDto> updateTransferencia(@RequestBody TransferenciaDto tranferencia) throws InvoiceManagerException{
+		return new ResponseEntity<>(service.updateTransferencia(tranferencia), HttpStatus.OK);
 	}
 	
 	@PostMapping("/bulk")

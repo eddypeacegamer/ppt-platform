@@ -30,4 +30,8 @@ export class TransferService {
   public saveAllTransfers(transferencias: Transferencia[]) : Observable<any>{
     return this.httpClient.post('../api/transferencias/bulk', transferencias);
   }
+
+  public updateTranfer(transfer : Transferencia): Observable<any>{
+    return this.httpClient.put(`../api/transferencias/${transfer.id}`, transfer);
+  }
 }

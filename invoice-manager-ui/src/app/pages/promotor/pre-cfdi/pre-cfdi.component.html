@@ -107,17 +107,14 @@
             <div class="col-sm-1">
               <label for="inputCoin" class="label">Moneda</label>
               <select selected="1" id="inputCoin" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.moneda" (change)="onMonedaSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="factura.cfdi.moneda">
                 <option value="MXN">Peso MX</option>
-                <option value="USD">Dollar US</option>
               </select>
             </div>
             <div class="col-sm-3">
               <label for="inputPayMethod" class="label">Metodo de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.payMethod" (change)="onMetodoDePagoSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="factura.metodoPago">
                 <option value="PUE">Pago en una sola exhibición</option>
                 <option value="PPD">Pago en parcialidades o diferido</option>
               </select>
@@ -137,7 +134,7 @@
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
 
-        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined">
           <div class="col-sm-4">
             <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
             <div class="form-inline">
@@ -163,7 +160,7 @@
         </div>
 
 
-        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined">
           <div class="col-sm-2">
             <label for="inputunidad" class="label">Unidad Medida</label>
             <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
@@ -208,17 +205,12 @@
         <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
           <thead class="thead-light">
             <tr>
-              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
-                class="text-center">Acciones</th>
               <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
-                class="text-center">
-                <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
-              </td>
+              
               <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
               <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
@@ -229,19 +221,13 @@
               <td scope="row" class="text-center">{{fila.importe | currency}}</td>
             </tr>
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
-              </td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
-              </td>
+              <td colspan="6"></td>
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
 
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
-              </td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
-              </td>
+              <td colspan="6"></td>
               <td class="text-center">Total</td>
               <td class="text-center">{{factura.total | currency}}</td>
             </tr>
@@ -305,17 +291,15 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined">
+        <div *ngIf="factura.folio!=undefined && factura.statusFactura!='Validacion operaciones'">
           
           
           <div class="row" *ngIf="factura.total > paymentSum">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
-                [(ngModel)]="paymentForm.coin" (change)="onPaymentCoinSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="paymentForm.coin">
                 <option value="MXN">Peso MX</option>
-                <option value="USD">Dollar US</option>
               </select>
             </div>
             <div class="col-sm-2">

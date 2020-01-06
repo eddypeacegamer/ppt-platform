@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Factura } from '../../models/factura/factura';
+import { Concepto } from '../../models/factura/concepto';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,15 @@ export class InvoicesService {
   }
 
   public updateInvoice(invoice : Factura) : Observable<any>{
-    return this.httpClient.put('../api/facturas',invoice);
+    return this.httpClient.put(`../api/facturas/${invoice.folio}`,invoice);
+  }
+
+  public insertConcepto(folio:string,concepto:Concepto) : Observable<any>{
+    return this.httpClient.post(`../api/facturas/${folio}/conceptos`,concepto);
+  }
+
+  public deleteConcepto(folio:string,conceptoId:number) : Observable<any>{
+    return this.httpClient.delete(`../api/facturas/${folio}/conceptos/${conceptoId}`);
   }
   
 }

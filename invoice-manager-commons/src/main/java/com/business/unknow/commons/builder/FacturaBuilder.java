@@ -16,9 +16,24 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		instance.setRfcEmisor(rfcEmisor);
 		return this;
 	}
+	
+	public FacturaBuilder setLineaEmisor(String lineaEmisor) {
+		instance.setLineaEmisor(lineaEmisor);
+		return this;
+	}
 
 	public FacturaBuilder setRfcRemitente(String rfcRemitente) {
 		instance.setRfcRemitente(rfcRemitente);
+		return this;
+	}
+	
+	public FacturaBuilder setLineaRemitente(String lineaRemitente) {
+		instance.setLineaRemitente(lineaRemitente);
+		return this;
+	}
+	
+	public FacturaBuilder setSolicitante(String solicitante) {
+		instance.setSolicitante(solicitante);
 		return this;
 	}
 
