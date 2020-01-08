@@ -31,6 +31,8 @@ import { DevolutionService } from './back-services/devolution.service';
 import { PaymentsService } from './back-services/payments.service';
 import { FilesData } from './data/files-data';
 import { FilesService } from './back-services/files.service';
+import { TransferData } from './data/transfers-data';
+import { TransferService } from './back-services/transfer.service';
 
 
 const DATA_SERVICES = [
@@ -40,6 +42,7 @@ const DATA_SERVICES = [
   {provide: InvoicesData, useClass: InvoicesService},
   {provide: PaymentsData, useClass : PaymentsService},
   {provide: DevolutionData, useClass: DevolutionService},
+  {provide: TransferData , useClass: TransferService},
   {provide: FilesData, useClass : FilesService},
   {provide: UsersData, useClass: UsersService },
 ];

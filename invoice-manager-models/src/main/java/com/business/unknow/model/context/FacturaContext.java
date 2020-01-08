@@ -3,7 +3,7 @@ package com.business.unknow.model.context;
 import java.io.Serializable;
 import java.util.List;
 
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.ContribuyenteDto;
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
@@ -25,7 +25,7 @@ public class FacturaContext implements Serializable {
 	private String ruleErrorDesc;
 	private String suiteError;
 	private EmpresaDto empresaDto;
-	private ClientDto clientDto;
+	private ContribuyenteDto contribuyenteDto;
 	private Cfdi cfdi;
 	private List<FacturaFileDto> facturaFilesDto;
 	private String xml;
@@ -155,16 +155,16 @@ public class FacturaContext implements Serializable {
 		this.ctdadComplementos = ctdadComplementos;
 	}
 
-	public ClientDto getClientDto() {
-		return clientDto;
-	}
-
-	public void setClientDto(ClientDto clientDto) {
-		this.clientDto = clientDto;
-	}
-
 	public PagoDto getCurrentPago() {
 		return currentPago;
+	}
+
+	public ContribuyenteDto getContribuyenteDto() {
+		return contribuyenteDto;
+	}
+
+	public void setContribuyenteDto(ContribuyenteDto contribuyenteDto) {
+		this.contribuyenteDto = contribuyenteDto;
 	}
 
 	public void setCurrentPago(PagoDto currentPago) {
@@ -177,8 +177,8 @@ public class FacturaContext implements Serializable {
 				+ facturaDto + ", facturaPadreDto=" + facturaPadreDto + ", complementos=" + complementos + ", pagos="
 				+ pagos + ", pagoCredito=" + pagoCredito + ", currentPago=" + currentPago + ", valid=" + valid
 				+ ", ruleErrorDesc=" + ruleErrorDesc + ", suiteError=" + suiteError + ", empresaDto=" + empresaDto
-				+ ", clientDto=" + clientDto + ", cfdi=" + cfdi + ", facturaFilesDto=" + facturaFilesDto + ", xml="
-				+ xml + ", ctdadComplementos=" + ctdadComplementos + "]";
+				+ ", contribuyenteDto=" + contribuyenteDto + ", cfdi=" + cfdi + ", facturaFilesDto=" + facturaFilesDto
+				+ ", xml=" + xml + ", ctdadComplementos=" + ctdadComplementos + "]";
 	}
 
 }

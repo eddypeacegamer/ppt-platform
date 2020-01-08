@@ -49,10 +49,10 @@ public class ConceptoEvaluatorService extends AbstractEvaluatorService {
 	
 	public void validateConceptoDelete(int id, String folio) throws InvoiceManagerException {
 		FacturaDto facturaDto = mapper.getFacturaDtoFromEntity(
-				repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("La factura no exite",
+				repository.findByFolio(folio).orElseThrow(() -> new InvoiceManagerException("La factura no exite en el sistema",
 						String.format("La factura con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value())));
 		CfdiDto cfdiDto = cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+				.orElseThrow(() -> new InvoiceManagerException("Error al obtener  informacion del CFDI",
 						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value())));
 		conceptoValidator.validateDeleteConcepto(cfdiDto);
 		Concepto concepto = conceptoRepository.findById(id)

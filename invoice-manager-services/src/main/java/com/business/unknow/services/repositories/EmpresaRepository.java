@@ -31,5 +31,5 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
 	public Optional<Empresa> findByRfc( @Param("rfc") String rfc);
 	
 	public List<Empresa> findByTipoAndGiro(String tipo,Integer giroId);
-
+	
 }

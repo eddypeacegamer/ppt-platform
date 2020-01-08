@@ -50,15 +50,15 @@
               <i class="fa fa-code"></i>
             </button>
             &nbsp;&nbsp;&nbsp;
-            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Validacion operaciones'"
+            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
               nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
               Timbrar
             </button>
-            &nbsp;&nbsp;&nbsp;
+            <!--&nbsp;&nbsp;&nbsp;
             <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading"  *ngIf="factura.statusFactura == 'Timbrada'"
             nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
-            </button>
+            </button-->
             
           </div>
         </div>
@@ -258,11 +258,15 @@
           </tbody>
         </table>
         <br>
-
-        <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
-          <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
+        <p class="font-weight-bold" *ngIf="this.factura.statusFactura=='Validacion operaciones'">Aceptacion / rechazo factura</p>
+        <div class="form-inline" *ngIf="this.factura.statusFactura=='Validacion operaciones'">
+          <button type="button" class="btn btn-success" (click)="aceptarFactura()">ACEPTAR</button>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+          <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;">
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+          <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail == undefined || factura.statusDetail.lenght<3" (click)="rechazarFactura()">RECHAZAR</button>
         </div>
+
         <br>
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
@@ -325,7 +329,8 @@
 
         <div *ngIf="factura.folio!=undefined">
 
-
+          <p class="font-weight-bold">Pagos</p>
+      
           <div class="row" *ngIf="factura.total > paymentSum">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>

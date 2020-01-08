@@ -7,7 +7,9 @@ export class Factura{
 	public id:number;
 	//obligatorio
 	public rfcEmisor : string;
-    public rfcRemitente : string ;
+	public lineaEmisor : string;
+	public rfcRemitente : string ;
+	public lineaRemitente : string;
     public razonSocialEmisor : string;
     public razonSocialRemitente : string;
 	public solicitante : string;
@@ -38,10 +40,12 @@ export class Factura{
 		this.total = 0;
 		this.subtotal  = 0;	
 		this.descuento = 0;
-		this.statusFactura ='';
+		this.statusFactura ='1';
 		this.statusDetail = '';
-		this.statusPago = '';
-		this.statusDevolucion = '';
+		this.statusPago = '1';
+		this.statusDevolucion = '1';
+		this.lineaEmisor = 'A';
+		this.rfcRemitente = 'CLIENTE';
 		this.cfdi = new Cfdi();
 	}
 }

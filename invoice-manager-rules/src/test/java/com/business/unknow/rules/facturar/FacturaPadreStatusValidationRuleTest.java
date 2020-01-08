@@ -1,7 +1,6 @@
 package com.business.unknow.rules.facturar;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,18 +23,6 @@ public class FacturaPadreStatusValidationRuleTest extends AbstractRuleTest {
 		rules.register(new FacturaPadreStatusValidationRule());
 	}
 
-	@Test
-	public void timbrarComplementoTest() throws JsonParseException, JsonMappingException, IOException {
-		FacturaDto dto = objectMapper.readValue(new File("src/test/resources/factura/dto/facturaPadre.json"),
-				FacturaDto.class);
-		FacturaContext fc = new FacturaContext();
-		fc.setFacturaPadreDto(dto);
-		Facts facts = new Facts();
-		facts.put("facturaContext", fc);
-		rulesEngine.fire(rules, facts);
-		assertTrue(fc.isValid());
-	}
-	
 	@Test
 	public void timbrarComplementoTest_failNoTimbrada() throws JsonParseException, JsonMappingException, IOException {
 		FacturaDto dto = objectMapper.readValue(new File("src/test/resources/factura/dto/facturaPadre.json"),

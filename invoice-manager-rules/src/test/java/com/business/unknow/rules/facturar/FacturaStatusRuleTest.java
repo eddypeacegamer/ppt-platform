@@ -37,19 +37,6 @@ public class FacturaStatusRuleTest extends AbstractRuleTest {
 	}
 	
 	@Test
-	public void timbrarPueTest_failTimbrado() throws JsonParseException, JsonMappingException, IOException {
-		FacturaDto dto = objectMapper.readValue(new File("src/test/resources/factura/dto/facturaPUE.json"),
-				FacturaDto.class);
-		dto.setStatusFactura(3);
-		FacturaContext fc = new FacturaContext();
-		fc.setFacturaDto(dto);
-		Facts facts = new Facts();
-		facts.put("facturaContext", fc);
-		rulesEngine.fire(rules, facts);
-		assertFalse(fc.isValid());
-	}
-	
-	@Test
 	public void timbrarPueTest_failCancelado() throws JsonParseException, JsonMappingException, IOException {
 		FacturaDto dto = objectMapper.readValue(new File("src/test/resources/factura/dto/facturaPUE.json"),
 				FacturaDto.class);

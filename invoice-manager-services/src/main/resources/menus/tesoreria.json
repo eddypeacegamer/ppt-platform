@@ -11,6 +11,10 @@
         "link": "/pages/tesoreria/devoluciones"
       },
       {
+        "title": "Transferencias",
+        "link": "/pages/tesoreria/transferencias"
+      },
+      {
         "title": "Ingresos",
         "link": "/pages/tesoreria/ingresos"
       },

@@ -6,7 +6,6 @@ package com.business.unknow.services.services;
 import java.util.Date;
 import java.util.Optional;
 
-
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,63 +58,66 @@ public class PagoService {
 				result.getTotalElements());
 	}
 
-	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, String cuenta,Date since, Date to,
-			int page, int size) {
+	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, String cuenta, Date since,
+			Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		log.info("Search ingresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findIngresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end,
-				PageRequest.of(page, size));
+				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
+				start, end, PageRequest.of(page, size));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
-	public Page<PagoDto> getEgresosPaginados(String formaPago, String status, String banco, String cuenta, Date since, Date to,
-			int page, int size) {
+
+	public Page<PagoDto> getEgresosPaginados(String formaPago, String status, String banco, String cuenta, Date since,
+			Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		log.info("Search egresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
 				start, end);
 		Page<Pago> result = repository.findEgresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end,
-				PageRequest.of(page, size));
+				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
+				start, end, PageRequest.of(page, size));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
+
 	public Double getSumaIngresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		return repository.sumIngresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end);
+		return repository.sumIngresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
+				String.format("%%%s%%", cuenta), start, end);
 	}
+
 	public Double getSumaEgresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		return repository.sumEgresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),String.format("%%%s%%", cuenta), start, end);
+		return repository.sumEgresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
+				String.format("%%%s%%", cuenta), start, end);
 	}
-	
+
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
 		Optional<Pago> payment = repository.findById(id);
-		if(payment.isPresent()) {
+		if (payment.isPresent()) {
 			return mapper.getPagoDtoFromEntity(payment.get());
-		}else {
-			throw new InvoiceManagerException("Pago no encontrado",String.format("El pago con id %d no fu encontrado.", id), HttpStatus.NOT_FOUND.value());
+		} else {
+			throw new InvoiceManagerException("Pago no encontrado",
+					String.format("El pago con id %d no fu encontrado.", id), HttpStatus.NOT_FOUND.value());
 		}
 	}
 
-	
 	public PagoDto insertNewPayment(PagoDto payment) {
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
 	}
-	
-	
-	public PagoDto upadtePayment(Integer paymentId,PagoDto payment) throws InvoiceManagerException {
+
+	public PagoDto upadtePayment(Integer paymentId, PagoDto payment) throws InvoiceManagerException {
 		log.info("Updating Payment : {}", payment);
-		repository.findById(paymentId).orElseThrow(()->new InvoiceManagerException("Payment Id not found",String.format("The payment with id %d was not found", paymentId) , HttpStatus.NOT_FOUND.value()));
+		repository.findById(paymentId).orElseThrow(() -> new InvoiceManagerException("Payment Id not found",
+				String.format("The payment with id %d was not found", paymentId), HttpStatus.NOT_FOUND.value()));
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
 	}
 

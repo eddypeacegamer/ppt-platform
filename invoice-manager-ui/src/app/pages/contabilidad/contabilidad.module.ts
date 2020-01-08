@@ -26,10 +26,12 @@ import { EmpresasComponent } from './empresas/empresas.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
+import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
+import { InvoiceRequestComponent } from './invoice-generator/invoice-request/invoice-request.component';
+import { TransferenciasComponent } from './transferencias/transferencias.component';
 
 @NgModule({
-  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, CargaMasivaComponent],
+  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent, InvoiceRequestComponent, TransferenciasComponent],
   imports: [
     ContabilidadRoutingModule,
     CommonModule,
@@ -45,8 +47,9 @@ import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule,
+    NbDialogModule.forChild(),
     NbSpinnerModule
-  ]
+  ],
+  entryComponents:[InvoiceRequestComponent]
 })
 export class ContabilidadModule { }

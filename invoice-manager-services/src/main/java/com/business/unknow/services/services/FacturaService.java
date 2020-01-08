@@ -74,22 +74,17 @@ public class FacturaService {
 	private FacturaValidator validator = new FacturaValidator();
 
 	//FACTURAS
-	public Page<FacturaDto> getFacturasByParametros(Optional<String> rfcEmisor, Optional<String> rfcRemitente,
-			Optional<String> folio, String status, Date since, Date to, int page, int size) {
+	public Page<FacturaDto> getFacturasByParametros( Optional<String> folio,Optional<String> solicitante, 
+			String lineaEmisor ,String status,Date since, Date to,String rfcEmisor,String rfcRemitente, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(0, 10));
-		} else if (rfcEmisor.isPresent()) {
-			result = repository.findByRfcEmisorWithOtherParams(String.format("%%%s%%", rfcEmisor.get()),
-					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
-		} else if (rfcRemitente.isPresent()) {
-			result = repository.findByRfcRemitenteWithOtherParams(String.format("%%%s%%", rfcRemitente.get()),
-					String.format("%%%s%%", status), start, end, PageRequest.of(page, size));
+		} else if ( solicitante.isPresent()) {
+			result = repository.findBySolicitanteWithParams(solicitante.get(), status, start, end,String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente), PageRequest.of(page, size));
 		} else {
-			result = repository.findAllWithStatusAndDates(String.format("%%%s%%", status), start, end,
-					PageRequest.of(page, size));
+			result = repository.findByLineaEmisorWithParams(lineaEmisor, status, start, end, String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente),PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());

@@ -12,7 +12,11 @@
 		},
 		{
 			"title": "Carga Masiva",
-			"link": "/pages/contabilidad/carga-masiva"
+			"link": "/pages/contabilidad/transferencias"
+		},
+		{
+			"title": "Carga Facturas",
+			"link": "/pages/contabilidad/carga-facturas"
 		},
 		{
 			"title": "Reportes",

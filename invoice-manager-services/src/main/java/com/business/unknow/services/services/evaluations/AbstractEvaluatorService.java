@@ -27,7 +27,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.files.FacturaFileDto;
-import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
@@ -37,12 +37,14 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.mapper.ConceptoMapper;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.DevolucionMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
@@ -70,6 +72,9 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	protected ClientRepository clientRepository;
+	
+	@Autowired
+	protected ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
 	protected FilesMapper filesMapper;
@@ -94,6 +99,9 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	private DevolucionMapper devolucionMapper;
+	
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 
 	@Autowired
 	protected RulesEngine rulesEngine;
@@ -204,14 +212,14 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
 		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
-				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El emisor no exite",
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema", String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
 						Constants.BAD_REQUEST));
-		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
+		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
 				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
 						Constants.BAD_REQUEST));
 		return new FacturaContextBuilder().setFacturaDto(facturaDto)
 				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-				.setClientDto(clientMapper.getClientDtoFromEntity(client)).build();
+				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
 	}
 
 	protected FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, String folio)
@@ -232,11 +240,14 @@ public class AbstractEvaluatorService extends AbstractService {
 		return new FacturaBuilder().setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
 				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
 				.setMetodoPago(facturaContext.getFacturaPadreDto().getMetodoPago())
+				.setLineaEmisor(facturaContext.getFacturaPadreDto().getLineaEmisor())
 				.setRfcEmisor(facturaContext.getFacturaPadreDto().getRfcEmisor())
 				.setRfcRemitente(facturaContext.getFacturaPadreDto().getRfcRemitente())
+				.setLineaRemitente(facturaContext.getFacturaPadreDto().getLineaRemitente())
 				.setRazonSocialEmisor(facturaContext.getFacturaPadreDto().getRazonSocialEmisor())
 				.setRazonSocialRemitente(facturaContext.getFacturaPadreDto().getRazonSocialRemitente())
 				.setTotal(facturaContext.getCurrentPago().getMonto())
+				.setSolicitante(facturaContext.getFacturaPadreDto().getSolicitante())
 				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
 				.setFormaPago(FormaPagoEnum.findByDesc(facturaContext.getCurrentPago().getFormaPago()).getClave())
 				.build();

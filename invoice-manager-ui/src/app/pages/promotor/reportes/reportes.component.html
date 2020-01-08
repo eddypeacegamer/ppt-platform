@@ -31,7 +31,6 @@
             </div>
             <div class="col-md-2">
               <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
-                <option value="*">Todas</option>
                 <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</option>
               </select>
             </div>
@@ -52,7 +51,7 @@
             <nb-datepicker #topicker></nb-datepicker>
           </div>
             <div class="col-md-1">
-              <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+              <button type="button" (click)="updateDataTable(0,10)" nbButton status="primary">BUSCAR</button>
             </div>
           </div>
   

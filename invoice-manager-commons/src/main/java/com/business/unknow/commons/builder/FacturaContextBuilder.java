@@ -2,7 +2,7 @@ package com.business.unknow.commons.builder;
 
 import java.util.List;
 
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.ContribuyenteDto;
 import com.business.unknow.model.EmpresaDto;
 import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
@@ -45,8 +45,8 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		return this;
 	}
 	
-	public FacturaContextBuilder setClientDto(ClientDto clientDto) {
-		instance.setClientDto(clientDto);
+	public FacturaContextBuilder setContribuyenteDto(ContribuyenteDto contribuyenteDto) {
+		instance.setContribuyenteDto(contribuyenteDto);
 		return this;
 	}
 	

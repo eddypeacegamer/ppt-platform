@@ -48,7 +48,7 @@
                 <i class="fa fa-code"></i>
               </button>
               &nbsp;&nbsp;&nbsp;
-              <button nbButton status="success" size="large" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Validacion operaciones'"
+              <button nbButton status="success" size="large" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
                 nbSpinnerStatus="success" nbSpinnerSize="large" nbSpinnerMessage="">
                 Timbrar
               </button>

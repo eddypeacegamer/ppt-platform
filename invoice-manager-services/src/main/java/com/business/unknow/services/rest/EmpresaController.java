@@ -61,6 +61,7 @@ public class EmpresaController {
 			@PathVariable(name = "giro") Integer giro) {
 		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro), HttpStatus.OK);
 	}
+	
 
 	@PostMapping("/empresas")
 	@ApiOperation(value = "insert a new empresa into the system")

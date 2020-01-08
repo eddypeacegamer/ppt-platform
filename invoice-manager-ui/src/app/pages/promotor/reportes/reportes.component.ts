@@ -8,6 +8,7 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Factura } from '../../../models/factura/factura';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { UsersData } from '../../../@core/data/users-data';
 
 
 @Component({
@@ -21,14 +22,17 @@ export class ReportesComponent implements OnInit {
   public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Tipo','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams : any = {emisor:'',remitente:'',folio:'',status:'*',since:'',to:''};
+  public filterParams : any = {emisor:'',remitente:'',folio:'',status:'1',since:'',to:''};
 
   public validationCat : Status[] = [];
   public payCat : Status[] = [];
   public devolutionCat : Status[] = [];
 
+  public userEmail: string;
+
   constructor(private invoiceService: InvoicesData,
     private catalogService : CatalogsData,
+    private userService: UsersData,
     private donwloadService:DownloadCsvService,
     private router: Router) {}
 
@@ -36,7 +40,18 @@ export class ReportesComponent implements OnInit {
       this.catalogService.getStatusValidacion().subscribe(cat=>this.validationCat = cat);
       this.catalogService.getStatusPago().subscribe(cat=>this.payCat = cat);
       this.catalogService.getStatusDevolucion().toPromise()
-        .then(cat=>this.devolutionCat = cat).then(()=>this.updateDataTable());
+        .then(cat=>this.devolutionCat = cat).then(()=>{
+          if(this.userEmail==undefined){
+            this.userService.getUserInfo().subscribe((user)=>{
+              this.userEmail = user.email;
+              this.filterParams.solicitante = user.email;
+              this.updateDataTable();
+            });
+          }else{
+            this.filterParams.solicitante = this.userEmail;
+            this.updateDataTable()
+          }
+        });
     }
   
 
@@ -46,7 +61,6 @@ export class ReportesComponent implements OnInit {
 
     public onValidationStatus(validationStatus:string){
         this.filterParams.status=validationStatus;
-        console.log(this.filterParams);
     }
 
     public redirectToCfdi(folio:string){
@@ -72,10 +86,10 @@ export class ReportesComponent implements OnInit {
       )
     }
 
-    public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
+    public updateDataTable(currentPage?: number, pageSize?: number) {
       const pageValue = currentPage || 0;
       const sizeValue = pageSize || 10;
-      this.getInvoiceData(pageValue,sizeValue,filterParams)
+      this.getInvoiceData(pageValue,sizeValue,this.filterParams)
         .subscribe((result:GenericPage<any>) => this.page = result);
     }
 

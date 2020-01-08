@@ -1,6 +1,7 @@
 import { Factura } from '../../models/factura/factura';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
+import { Concepto } from '../../models/factura/concepto';
 
 export abstract class InvoicesData {
 
@@ -19,6 +20,10 @@ export abstract class InvoicesData {
     abstract insertNewInvoice(invoice : Factura) : Observable<Factura>;
 
     abstract updateInvoice(invoice : Factura) : Observable<Factura>;
+
+    abstract insertConcepto(folio:string,concepto:Concepto) : Observable<Concepto>;
+
+    abstract deleteConcepto(folio:string,conceptoId:number) : Observable<any>;
 
     
 }

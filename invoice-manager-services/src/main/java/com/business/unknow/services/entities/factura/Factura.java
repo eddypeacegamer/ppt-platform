@@ -36,9 +36,15 @@ public class Factura implements Serializable {
 
 	@Column(name = "RAZON_SOCIAL_EMISOR")
 	private String razonSocialEmisor;
+	
+	@Column(name = "LINEA_EMISOR")
+	private String lineaEmisor;
 
 	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String razonSocialRemitente;
+	
+	@Column(name = "LINEA_REMITENTE")
+	private String lineaRemitente;
 	
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
@@ -104,6 +110,14 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getRfcEmisor() {
 		return rfcEmisor;
 	}
@@ -118,6 +132,46 @@ public class Factura implements Serializable {
 
 	public void setRfcRemitente(String rfcRemitente) {
 		this.rfcRemitente = rfcRemitente;
+	}
+
+	public String getRazonSocialEmisor() {
+		return razonSocialEmisor;
+	}
+
+	public void setRazonSocialEmisor(String razonSocialEmisor) {
+		this.razonSocialEmisor = razonSocialEmisor;
+	}
+
+	public String getLineaEmisor() {
+		return lineaEmisor;
+	}
+
+	public void setLineaEmisor(String lineaEmisor) {
+		this.lineaEmisor = lineaEmisor;
+	}
+
+	public String getRazonSocialRemitente() {
+		return razonSocialRemitente;
+	}
+
+	public void setRazonSocialRemitente(String razonSocialRemitente) {
+		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
+	public String getLineaRemitente() {
+		return lineaRemitente;
+	}
+
+	public void setLineaRemitente(String lineaRemitente) {
+		this.lineaRemitente = lineaRemitente;
+	}
+
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 
 	public String getFolio() {
@@ -142,14 +196,6 @@ public class Factura implements Serializable {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Integer getStatusPago() {
@@ -208,6 +254,14 @@ public class Factura implements Serializable {
 		this.metodoPago = metodoPago;
 	}
 
+	public String getPackFacturacion() {
+		return packFacturacion;
+	}
+
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
+	}
+
 	public String getNotas() {
 		return notas;
 	}
@@ -222,46 +276,6 @@ public class Factura implements Serializable {
 
 	public void setTotal(Double total) {
 		this.total = total;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Date getFechaTimbrado() {
-		return fechaTimbrado;
-	}
-
-	public void setFechaTimbrado(Date fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
-	}
-
-	public String getRazonSocialEmisor() {
-		return razonSocialEmisor;
-	}
-
-	public void setRazonSocialEmisor(String razonSocialEmisor) {
-		this.razonSocialEmisor = razonSocialEmisor;
-	}
-
-	public String getRazonSocialRemitente() {
-		return razonSocialRemitente;
-	}
-
-	public void setRazonSocialRemitente(String razonSocialRemitente) {
-		this.razonSocialRemitente = razonSocialRemitente;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Double getSubtotal() {
@@ -280,12 +294,20 @@ public class Factura implements Serializable {
 		this.descuento = descuento;
 	}
 
-	public String getPackFacturacion() {
-		return packFacturacion;
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
 
-	public void setPackFacturacion(String packFacturacion) {
-		this.packFacturacion = packFacturacion;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaTimbrado() {
+		return fechaTimbrado;
+	}
+
+	public void setFechaTimbrado(Date fechaTimbrado) {
+		this.fechaTimbrado = fechaTimbrado;
 	}
 
 	public Date getFechaCancelacion() {
@@ -295,26 +317,26 @@ public class Factura implements Serializable {
 	public void setFechaCancelacion(Date fechaCancelacion) {
 		this.fechaCancelacion = fechaCancelacion;
 	}
-	
-	public String getSolicitante() {
-		return solicitante;
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
 	}
 
-	public void setSolicitante(String solicitante) {
-		this.solicitante = solicitante;
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
-				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
-				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago
-				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
-				+ statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago=" + formaPago + ", metodoPago="
-				+ metodoPago + ", packFacturacion=" + packFacturacion + ", solicitante=" + solicitante + ", total=" + total
-				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion="
-				+ fechaCreacion + "]";
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
+				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
+				+ ", solicitante=" + solicitante + ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid
+				+ ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
+				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
+				+ formaPago + ", metodoPago=" + metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas
+				+ ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion
+				+ ", fechaCreacion=" + fechaCreacion + "]";
 	}
-
 }
