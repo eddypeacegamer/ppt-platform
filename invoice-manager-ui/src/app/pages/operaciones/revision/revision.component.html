@@ -148,7 +148,7 @@
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
 
-        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
           <div class="col-sm-4">
             <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
             <div class="form-inline">
@@ -174,7 +174,7 @@
         </div>
 
 
-        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
           <div class="col-sm-2">
             <label for="inputunidad" class="label">Unidad Medida</label>
             <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
@@ -183,12 +183,12 @@
               <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">{{clave.nombre}}</option>
             </select>
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-1">
             <label for="inputCantidad" class="label">Cantidad</label>
             <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad"
               [(ngModel)]="newConcep.cantidad">
           </div>
-          <div class="col-sm-2">
+          <div class="col-sm-1">
             <label for="inputPrecio" class="label">Precio Unitario</label>
             <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
               [(ngModel)]="newConcep.valorUnitario">
@@ -198,12 +198,16 @@
                   <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
                     [(ngModel)]="newConcep.descuento">
                 </div-->
-          <div class="col-sm-4">
+          <div class="col-sm-8" >
             <label for="inputImpuesto" class="label"></label>
             <div class="row form-inline">
               <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
               <label class="form-check-label" for="iva">IVA</label>
-              <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
+              <button class="btn btn-primary" (click)="agregarConcepto()">Agregar Concepto</button>
+              <button type="button" class="btn btn-success" (click)="aceptarFactura()">ACEPTAR FACTURA</button>
+              <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;"/>
+              <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()">RECHAZAR FACTURA</button>
+           
             </div>
           </div>
 
@@ -218,14 +222,14 @@
         <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
           <thead class="thead-light">
             <tr>
-              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
+              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
                 class="text-center">Acciones</th>
               <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura.includes('Validacion')"
+              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
                 class="text-center">
                 <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
               </td>
@@ -239,18 +243,18 @@
               <td scope="row" class="text-center">{{fila.importe | currency}}</td>
             </tr>
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
+              <td *ngIf="this.factura.folio != undefined && factura.statusFactura!='Validacion operaciones'" colspan="6">
               </td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
               </td>
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
 
             <tr>
-              <td *ngIf="this.factura.folio != undefined && !factura.statusFactura.includes('Validacion')" colspan="6">
+              <td *ngIf="this.factura.folio != undefined && factura.statusFactura!='Validacion operaciones'" colspan="6">
               </td>
-              <td *ngIf="this.factura.folio == undefined || factura.statusFactura.includes('Validacion')" colspan="7">
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
               </td>
               <td class="text-center">Total</td>
               <td class="text-center">{{factura.total | currency}}</td>
@@ -258,14 +262,7 @@
           </tbody>
         </table>
         <br>
-        <p class="font-weight-bold" *ngIf="this.factura.statusFactura=='Validacion operaciones'">Aceptacion / rechazo factura</p>
-        <div class="form-inline" *ngIf="this.factura.statusFactura=='Validacion operaciones'">
-          <button type="button" class="btn btn-success" (click)="aceptarFactura()">ACEPTAR</button>
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-          <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;">
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-          <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail == undefined || factura.statusDetail.lenght<3" (click)="rechazarFactura()">RECHAZAR</button>
-        </div>
+        
 
         <br>
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
@@ -293,24 +290,19 @@
                 <tr *ngFor="let complemento of complementos">
                   <td scope="row" class="text-center">
                     <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
                       (click)="downloadPdf(complemento.folio)">
                       <i class="fa fa-file-pdf"></i>
                     </button>&nbsp;&nbsp;
                     <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-success':complemento.statusFactura =='Timbrada'}"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
                       (click)="downloadXml(complemento.folio)">
                       <i class="fa fa-code"></i>
                     </button>&nbsp;&nbsp;
-                    <button type="button" [disabled]="complemento.statusFactura != 'Validacion operaciones' || loading" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
+                    <button type="button" [disabled]="complemento.statusFactura != 'Por Timbrar' || loading" class="btn"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Por Timbrar', 'btn-outline-success':complemento.statusFactura =='Por Timbrar'}"
                       (click)="timbrarFactura(complemento,dialog)">
                       <i class="fa fa-check-circle"></i>
-                    </button>&nbsp;&nbsp;
-                    <button type="button" [disabled]="complemento.statusFactura !='Timbrada' || loading" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-danger':complemento.statusFactura =='Timbrada'}"
-                      (click)="cancelarFactura(complemento)">
-                      <i class="fa fa-calendar-times"></i>
                     </button>
                   </td>
                   <td scope="row" class="text-center">{{complemento.folio}}</td>
@@ -327,7 +319,7 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined">
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Timbrada' || factura.statusFactura=='Por Timbrar')">
 
           <p class="font-weight-bold">Pagos</p>
       

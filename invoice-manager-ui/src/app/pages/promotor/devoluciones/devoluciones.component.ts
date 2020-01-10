@@ -85,8 +85,19 @@ export class DevolucionesComponent implements OnInit {
 
 
   public solicitudDevoluciones(){
-    this.devolutionService.requestMultipleDevolution(this.solicitud)
-      .subscribe(pago=>{this.updateDataTable(); this.solicitud= new SolicitudDevolucion()});
+    if(this.solicitud.cuenta == undefined || this.solicitud.cuenta.length<8){
+      alert('El numero de cuenta/CLABE es un valor requerido');
+    }else if(this.solicitud.beneficiario== undefined || this.solicitud.beneficiario.length<5){
+      alert('El nombre del beneficiario es un valor requerido');
+    }else{
+      let solicitud = {... this.solicitud};
+    this.devolutionService.requestMultipleDevolution(solicitud)
+      .subscribe(pago=>{this.updateDataTable();});
+      this.solicitud= new SolicitudDevolucion();
+      this.solicitud.formaPago = 'TRANSFERENCIA';
+      this.solicitud.banco = 'BBVA';
+    }
+    
   }
 
   public redirectToCfdi(folio:string){

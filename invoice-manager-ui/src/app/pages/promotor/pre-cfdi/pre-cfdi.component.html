@@ -291,8 +291,8 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined && factura.statusFactura!='Validacion operaciones'">
-          
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Timbrada' || factura.statusFactura=='Por Timbrar')">
+          <p class="font-weight-bold">Pagos</p>
           
           <div class="row" *ngIf="factura.total > paymentSum">
             <div class="col-sm-2">
