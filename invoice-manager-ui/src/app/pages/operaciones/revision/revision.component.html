@@ -129,8 +129,8 @@
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.payMethod" (change)="onMetodoDePagoSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
-                <option value="PUE">Pago en una sola exhibición</option>
-                <option value="PPD">Pago en parcialidades o diferido</option>
+                <option value="PUE">Factura pagada (PUE)</option>
+                <option value="PPD">Factura pago por definir(PPD)</option>
               </select>
             </div>
             <div class="col-sm-2">
@@ -152,20 +152,19 @@
           <div class="col-sm-4">
             <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
             <div class="form-inline">
-              <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
+              <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ" (ngModelChange)="buscarClaveProductoServicio($event)"
                 placeholder="palabra clave producto servicio">
-              <button class="btn btn-primary" (click)="buscarClaveProdServSelected()">Buscar</button>
+              <button class="btn btn-primary" (click)="openSatCatalog(dialog)"> Catalogo SAT</button>
             </div>
           </div>
-          <div class="col-sm-2" *ngIf="prodServCat.length>0">
+          <div class="col-sm-4">
             <label for="inputProdServ" class="label">Selección clave producto servicio</label>
             <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
               (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
-              <option value="*">Seleccionar</option>
-              <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
+              <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.clave}} - {{clave.descripcion}}</option>
             </select>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-4">
             <label for="inputdesc" class="label">Descripción</label>
             <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion"
               placeholder="Descripción del producto">
@@ -183,35 +182,32 @@
               <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">{{clave.nombre}}</option>
             </select>
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-2">
             <label for="inputCantidad" class="label">Cantidad</label>
             <input id="inputCantidad" class="form-control" fullWidth type="number" placeholder="Cantidad"
               [(ngModel)]="newConcep.cantidad">
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-2">
             <label for="inputPrecio" class="label">Precio Unitario</label>
             <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
               [(ngModel)]="newConcep.valorUnitario">
           </div>
+
           <!--div class="col-sm-2">
-                  <label for="inputDescuento" class="label">Descuento</label>
-                  <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
-                    [(ngModel)]="newConcep.descuento">
-                </div-->
-          <div class="col-sm-8" >
+                <label for="inputDescuento" class="label">Descuento</label>
+                <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
+                  [(ngModel)]="newConcep.descuento">
+              </div-->
+          <div class="col-sm-4">
             <label for="inputImpuesto" class="label"></label>
             <div class="row form-inline">
               <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
               <label class="form-check-label" for="iva">IVA</label>
-              <button class="btn btn-primary" (click)="agregarConcepto()">Agregar Concepto</button>
-              <button type="button" class="btn btn-success" (click)="aceptarFactura()">ACEPTAR FACTURA</button>
-              <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;"/>
-              <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()">RECHAZAR FACTURA</button>
-           
+              <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
             </div>
           </div>
-
         </div>
+        
         <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
           <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
         </div>
@@ -233,7 +229,7 @@
                 class="text-center">
                 <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
               </td>
-              <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
+              <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
               <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
               <td scope="row" class="text-center">{{fila.unidad}}</td>

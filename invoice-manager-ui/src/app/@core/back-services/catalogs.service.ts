@@ -23,6 +23,10 @@ export class CatalogsService {
     let params : HttpParams =  new HttpParams().append('descripcion',description);
     return this.httpClient.get("/api/catalogs/producto-servicios",{params:params});
   }
+  public getProductoServiciosByClave(clave:string){
+    let params : HttpParams =  new HttpParams().append('clave',clave);
+    return this.httpClient.get("/api/catalogs/producto-servicios",{params:params});
+  }
   public getClaveUnidadByName(name:string) {
     let params : HttpParams =  new HttpParams().append('nombre',name);
     return this.httpClient.get("/api/catalogs/clave-unidad",{params:params});

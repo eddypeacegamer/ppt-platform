@@ -3,13 +3,17 @@
  */
 package com.business.unknow.services.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
@@ -72,8 +76,20 @@ public class CatalogsService {
 	@Autowired
 	private CatalogsMapper mapper;
 
-	public List<ClaveProductoServicioDto> getProductoServicioByDescription(String description) {
-		return mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContainingIgnoreCase(description));
+	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<Integer> clave) {
+		List<ClaveProductoServicioDto> mappings= new ArrayList<>();
+		if(description.isPresent()) {
+			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
+		}
+		if(clave.isPresent()) {
+			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(clave.get()));
+			
+		}
+		if(mappings.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No se encontraron resultados");
+		}else {
+			return mappings;
+		}
 	}
 
 	public Page<ClaveProductoServicioDto> getAllProductoServicioClaves(int page, int size) {

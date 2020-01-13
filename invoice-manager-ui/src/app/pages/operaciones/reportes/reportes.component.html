@@ -31,6 +31,7 @@
           </div>
           <div class="col-md-2">
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+              <option value="*">Todos</option>
               <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</option>
             </select>
           </div>

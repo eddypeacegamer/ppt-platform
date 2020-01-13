@@ -6,6 +6,7 @@ export class Concepto{
 	public noIdentificacion : string;
 	public cantidad : number;
 	public claveUnidad : string;
+	public descripcionCUPS: string;
 	public unidad : string;
 	public descripcion : string;
 	public valorUnitario : number;

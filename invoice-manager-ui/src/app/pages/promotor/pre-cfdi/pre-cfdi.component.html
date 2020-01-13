@@ -114,16 +114,15 @@
             <div class="col-sm-3">
               <label for="inputPayMethod" class="label">Metodo de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
-                [(ngModel)]="factura.metodoPago">
-                <option value="PUE">Pago en una sola exhibición</option>
-                <option value="PPD">Pago en parcialidades o diferido</option>
+                [(ngModel)]="factura.metodoPago" (change)="onPayMethodSelected($event.target.value)">
+                <option value="PUE">Factura pagada (PUE)</option>
+                <option value="PPD">Factura pago por definir(PPD)</option>
               </select>
             </div>
             <div class="col-sm-2">
               <label for="inputPaytype" class="label">Forma de Pago</label>
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="formInfo.payType">
                 <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
               </select>
             </div>
@@ -134,24 +133,23 @@
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
 
-        <div class="row" *ngIf="factura.folio==undefined">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
           <div class="col-sm-4">
             <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
             <div class="form-inline">
-              <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
+              <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ" (ngModelChange)="buscarClaveProductoServicio($event)"
                 placeholder="palabra clave producto servicio">
-              <button class="btn btn-primary" (click)="buscarClaveProdServSelected()">Buscar</button>
+              <button class="btn btn-primary" (click)="openSatCatalog(dialog)"> Catalogo SAT</button>
             </div>
           </div>
-          <div class="col-sm-2" *ngIf="prodServCat.length>0">
+          <div class="col-sm-4">
             <label for="inputProdServ" class="label">Selección clave producto servicio</label>
             <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
               (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
-              <option value="*">Seleccionar</option>
-              <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
+              <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.clave}} - {{clave.descripcion}}</option>
             </select>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-4">
             <label for="inputdesc" class="label">Descripción</label>
             <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="newConcep.descripcion"
               placeholder="Descripción del producto">
@@ -160,7 +158,7 @@
         </div>
 
 
-        <div class="row" *ngIf="factura.folio==undefined">
+        <div class="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
           <div class="col-sm-2">
             <label for="inputunidad" class="label">Unidad Medida</label>
             <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
@@ -205,13 +203,18 @@
         <table class="table" *ngIf="factura.cfdi.conceptos.length>0">
           <thead class="thead-light">
             <tr>
+              <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
+                class="text-center">Acciones</th>
               <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-              
-              <td scope="row" class="text-center">{{fila.claveProdServ}}</td>
+              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
+                class="text-center">
+                <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
+              </td>
+              <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
               <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
               <td scope="row" class="text-center">{{fila.unidad}}</td>
@@ -221,13 +224,19 @@
               <td scope="row" class="text-center">{{fila.importe | currency}}</td>
             </tr>
             <tr>
-              <td colspan="6"></td>
+              <td *ngIf="this.factura.folio != undefined && factura.statusFactura!='Validacion operaciones'" colspan="6">
+              </td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
+              </td>
               <td class="text-center">Subtotal</td>
               <td class="text-center">{{factura.subtotal | currency}}</td>
             </tr>
 
             <tr>
-              <td colspan="6"></td>
+              <td *ngIf="this.factura.folio != undefined && factura.statusFactura!='Validacion operaciones'" colspan="6">
+              </td>
+              <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
+              </td>
               <td class="text-center">Total</td>
               <td class="text-center">{{factura.total | currency}}</td>
             </tr>
@@ -291,7 +300,7 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined && (factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Timbrada' || factura.statusFactura=='Por Timbrar')">
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo tesoreria' || factura.statusFactura=='Rechazo Operaciones' || factura.statusFactura=='Cancelada')">
           <p class="font-weight-bold">Pagos</p>
           
           <div class="row" *ngIf="factura.total > paymentSum">
@@ -420,3 +429,18 @@
     </nb-card>
   </div>
 </div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Catalogo producto servicio SAT</nb-card-header>
+    <nb-card-body>
+      <div style="width: 90vw; height: 80vh;">
+        <iframe width="100%" height="100%" src="http://pys.sat.gob.mx/PyS/catPyS.aspx"></iframe>  
+      </div>
+      
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

@@ -75,16 +75,26 @@ public class FacturaService {
 
 	//FACTURAS
 	public Page<FacturaDto> getFacturasByParametros( Optional<String> folio,Optional<String> solicitante, 
-			String lineaEmisor ,String status,Date since, Date to,String rfcEmisor,String rfcRemitente, int page, int size) {
+			String lineaEmisor ,Optional<String> status,Date since, Date to,String rfcEmisor,String rfcRemitente, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(0, 10));
 		} else if ( solicitante.isPresent()) {
-			result = repository.findBySolicitanteWithParams(solicitante.get(), status, start, end,String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente), PageRequest.of(page, size));
+			if(status.isPresent() && status.get().length()>0) {
+				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente), PageRequest.of(page, size));
+			}else {
+				result = repository.findBySolicitanteWithParams(solicitante.get(), start, end,String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente), PageRequest.of(page, size));
+			}
+			
 		} else {
-			result = repository.findByLineaEmisorWithParams(lineaEmisor, status, start, end, String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente),PageRequest.of(page, size));
+			if(status.isPresent() && status.get().length()>0) {
+				result = repository.findByLineaEmisorAndStatusWithParams(lineaEmisor, status.get(), start, end, String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente),PageRequest.of(page, size));
+			}else {
+				result = repository.findByLineaEmisorWithParams(lineaEmisor, start, end, String.format("%%%s%%",rfcEmisor),String.format("%%%s%%",rfcRemitente),PageRequest.of(page, size));
+			}
+			
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());

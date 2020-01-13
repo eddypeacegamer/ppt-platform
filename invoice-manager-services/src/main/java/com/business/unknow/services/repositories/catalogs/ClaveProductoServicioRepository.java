@@ -15,5 +15,7 @@ public interface ClaveProductoServicioRepository extends JpaRepository<ClaveProd
 	public Page<ClaveProductoServicio> findAll(Pageable pageable);
 	
 	public List<ClaveProductoServicio> findByDescripcionContainingIgnoreCase(String description);
+	
+	public List<ClaveProductoServicio> findByClave(Integer clave);
 
 }

@@ -52,7 +52,7 @@ public class FacturaController {
 			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
 			@RequestParam(name = "emisor", defaultValue = "") String rfcEmisor,
 			@RequestParam(name = "remitente", defaultValue = "") String rfcRemitente,
-			@RequestParam(name = "status", defaultValue = "1") String status,
+			@RequestParam(name = "status") Optional<String> status,
 			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,

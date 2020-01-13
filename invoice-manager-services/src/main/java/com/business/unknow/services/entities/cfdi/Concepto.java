@@ -26,6 +26,8 @@ public class Concepto implements Serializable {
 
 	@Column(name = "CLAVE_PROD_SERV")
 	private String claveProdServ;
+	@Column(name = "DESCRIPCION_CLAVE_UNIDAD")
+	private String descripcionCUPS;
 
 	@Column(name = "NO_IDENTIFICACION")
 	private String noIdentificacion;
@@ -83,6 +85,14 @@ public class Concepto implements Serializable {
 
 	public void setCantidad(Integer cantidad) {
 		this.cantidad = cantidad;
+	}
+	
+	public String getDescripcionCUPS() {
+		return descripcionCUPS;
+	}
+
+	public void setDescripcionCUPS(String descripcionCUPS) {
+		this.descripcionCUPS = descripcionCUPS;
 	}
 
 	public String getClaveUnidad() {

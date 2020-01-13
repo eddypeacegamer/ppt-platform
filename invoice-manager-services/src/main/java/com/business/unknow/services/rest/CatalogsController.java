@@ -4,6 +4,7 @@
 package com.business.unknow.services.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,8 +37,9 @@ public class CatalogsController {
 
 	@GetMapping("/producto-servicios")
 	public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
-			@RequestParam(name = "descripcion", required = true) String description){
-		return new ResponseEntity<>(service.getProductoServicioByDescription(description), HttpStatus.OK);
+			@RequestParam(name = "descripcion") Optional<String> description,
+			@RequestParam(name = "clave") Optional<Integer> clave){
+		return new ResponseEntity<>(service.getProductoServicio(description, clave), HttpStatus.OK);
 	}
 
 	@GetMapping("/clave-unidad")

@@ -240,8 +240,6 @@ export class RevisionComponent implements OnInit {
       this.factura.cfdi.conceptos.splice(index, 1);
       this.calcularImportes();
     },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
-    
-    
   }
 
   agregarConcepto() {

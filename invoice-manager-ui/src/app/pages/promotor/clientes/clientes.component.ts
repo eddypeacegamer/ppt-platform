@@ -61,8 +61,7 @@ export class ClientesComponent implements OnInit {
   }
 
   public zipCodeInfo(zipcode: String) {
-    let zc = new String(zipcode);
-    if (zc.length > 4 && zc.length < 6) {
+    if (zipcode.length > 4 && zipcode.length < 6) {
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zipcode).subscribe(
         (data: ZipCodeInfo) => {
