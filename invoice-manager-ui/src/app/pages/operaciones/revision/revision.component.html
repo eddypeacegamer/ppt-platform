@@ -30,16 +30,16 @@
           <div class="form-inline">
             <p class="font-weight-bold">Uso CFDI</p>
             <p>{{factura.cfdi.usoCfdi}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            &nbsp;&nbsp;
             <p class="font-weight-bold">Moneda</p>
             <p>{{factura.cfdi.moneda}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            &nbsp;&nbsp;
             <p class="font-weight-bold">Metodo de Pago</p>
             <p>{{factura.metodoPago}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            &nbsp;&nbsp;
             <p class="font-weight-bold">Forma de Pago</p>
             <p>{{factura.formaPago}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            &nbsp;&nbsp;
             <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
               class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
               <i class="fa fa-file-pdf"></i>
@@ -49,16 +49,22 @@
               class="btn btn-outline-primary" (click)="downloadXml(factura.folio)">
               <i class="fa fa-code"></i>
             </button>
-            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;
             <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
               nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
               Timbrar
             </button>
-            <!--&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;
             <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading" [disabled]="loading"  *ngIf="factura.statusFactura == 'Timbrada'"
             nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
-            </button-->
+            </button>
+            <button type="button" class="btn btn-success" (click)="aceptarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
+            &nbsp;&nbsp;
+            <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;" *ngIf="factura.statusFactura == 'Validacion operaciones'"/>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Rechazar</button>
+
             
           </div>
         </div>
@@ -137,7 +143,6 @@
               <label for="inputPaytype" class="label">Forma de Pago</label>
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
                 <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
               </select>
             </div>
@@ -154,7 +159,7 @@
             <div class="form-inline">
               <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ" (ngModelChange)="buscarClaveProductoServicio($event)"
                 placeholder="palabra clave producto servicio">
-              <button class="btn btn-primary" (click)="openSatCatalog(dialog)"> Catalogo SAT</button>
+              <button class="btn btn-primary" (click)="openSatCatalog(satDialog)"> Catalogo SAT</button>
             </div>
           </div>
           <div class="col-sm-4">
@@ -206,12 +211,11 @@
               <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
             </div>
           </div>
+
         </div>
-        
         <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
           <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
         </div>
-
 
         <br>
         <!--TABLA CONCEPTOS-->
@@ -315,7 +319,7 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined && (factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Timbrada' || factura.statusFactura=='Por Timbrar')">
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo tesoreria' && factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
 
           <p class="font-weight-bold">Pagos</p>
       
@@ -445,6 +449,21 @@
     </nb-card>
   </div>
 </div>
+
+<ng-template #satDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Catalogo producto servicio SAT</nb-card-header>
+    <nb-card-body>
+      <div style="width: 90vw; height: 80vh;">
+        <iframe width="100%" height="100%" src="http://pys.sat.gob.mx/PyS/catPyS.aspx"></iframe>  
+      </div>
+      
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>

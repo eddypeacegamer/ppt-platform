@@ -268,11 +268,16 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   removeConcepto(index: number) {
     this.errorMessages = [];
     this.successMessage = undefined;
-    this.invoiceService.deleteConcepto(this.factura.folio,this.factura.cfdi.conceptos[index].id)
+    if(this.factura.folio!=undefined){
+      this.invoiceService.deleteConcepto(this.factura.folio,this.factura.cfdi.conceptos[index].id)
       .subscribe(()=>{this.successMessage = 'Se ha borrado exitosamente el concepto';
       this.factura.cfdi.conceptos.splice(index, 1);
       this.calcularImportes();
     },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
+    }else{
+      this.factura.cfdi.conceptos.splice(index, 1);
+      this.calcularImportes();
+    }
   }
 
   agregarConcepto() {
@@ -309,6 +314,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       if(this.factura.formaPago ==='01' && this.factura.total >2000){
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
       }
+      if(this.factura.folio!=undefined){
       this.invoiceService.insertConcepto(this.factura.folio,{ ... this.newConcep })
         .subscribe((concepto)=>{console.log(concepto);
           this.factura.cfdi.conceptos.push(concepto);
@@ -316,7 +322,15 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
           this.formInfo.unidad = '*';
           this.newConcep = new Concepto();
           this.successMessage = 'Se agrego el concepto exitosamente';
+          this.calcularImportes();
         },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
+      }else{
+        this.factura.cfdi.conceptos.push(this.newConcep);
+          this.formInfo.prodServ = '*';
+          this.formInfo.unidad = '*';
+          this.newConcep = new Concepto();
+          this.calcularImportes();
+      }
       
     }
   }

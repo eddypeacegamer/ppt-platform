@@ -109,6 +109,18 @@ export class RevisionComponent implements OnInit {
     this.factura = new Factura();
   }
 
+  public initVariables() {
+    /** INIT VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.errorMessages = [];
+    this.loading = false;
+    this.factura.cfdi.moneda = 'MXN'
+    this.factura.metodoPago = 'PUE'
+    this.formInfo.payType = this.payTypeCat[0].id;
+  }
+
   public getInvoiceByFolio(folio:string){
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
@@ -140,23 +152,31 @@ export class RevisionComponent implements OnInit {
         });
   }
 
-  public initVariables() {
-    /** INIT VARIABLES **/
-    this.newPayment = new Pago();
-    this.newConcep = new Concepto();
-    this.factura = new Factura();
-    this.errorMessages = [];
-    this.loading = false;
-  }
-
-  onDeleteConfirm(event): void {
-    if (window.confirm('Estas seguro de borar el elemento?')) {
-      event.confirm.resolve();
+  public buscarClaveProductoServicio(claveProdServ: string) {
+    this.conceptoMessages = [];
+    let value = +claveProdServ;
+    if (isNaN(value)) {
+      if (claveProdServ.length > 5) {
+        console.log('Buscando clave producto servicio por descripcion', claveProdServ)
+        this.catalogsService.getProductoServiciosByDescription(claveProdServ).subscribe(claves => {
+          this.prodServCat = claves;
+          this.formInfo.prodServ = claves[0].clave.toString();
+          this.newConcep.claveProdServ = claves[0].clave.toString();
+          this.newConcep.descripcionCUPS = claves[0].descripcion;
+        }, (error: HttpErrorResponse) => { this.conceptoMessages = []; this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`) });
+      }
     } else {
-      event.confirm.reject();
+      if (claveProdServ.length > 5) {
+        console.log('Buscanco clave producto servicio por Id', claveProdServ);
+        this.catalogsService.getProductoServiciosByClave(claveProdServ).subscribe(claves => {
+          this.prodServCat = claves;
+          this.formInfo.prodServ = claves[0].clave.toString();
+          this.newConcep.claveProdServ = claves[0].clave.toString();
+          this.newConcep.descripcionCUPS = claves[0].descripcion;
+        }, (error: HttpErrorResponse) => { this.conceptoMessages = []; this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`) });
+      }
     }
   }
-
 
   onGiroSelection(giroId: string) {
     let value = +giroId;
@@ -172,20 +192,39 @@ export class RevisionComponent implements OnInit {
     this.companyInfo = this.companiesCat.find(c => c.id == companyId);
   }
 
-  buscarClaveProdServSelected() {
-    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => {
-      this.prodServCat = claves;
-      if (claves.length < 1) {
-        alert(`No se encontro ninguna clave que coincida con ${this.formInfo.claveProdServ}`);
-      }
-    });
+  onPayMethodSelected(clave: string) {
+    if (clave === 'PPD') {
+      this.payTypeCat = [new Status('99', 'Por definir')];
+      this.factura.formaPago= '99';
+      this.factura.metodoPago = 'PPD';
+    } else {
+      this.factura.metodoPago = 'PUE';
+      this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
+      this.factura.formaPago = '01';
+    }
+    this.formInfo.payType = this.payTypeCat[0].id;
   }
 
   buscarClientInfo() {
     this.errorMessages = [];
     this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-      (client: Client) => { this.clientInfo = client.informacionFiscal },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      (client: Client) => {
+        if (client.activo == true) {
+          this.clientInfo = client.informacionFiscal
+        } else {
+          alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+          this.formInfo.clientRfc = '';
+        }
+      }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
+  onClaveProdServSelected(clave: string) {
+    this.newConcep.claveProdServ = clave;
+    this.newConcep.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
+  }
+
+  openSatCatalog(dialog: TemplateRef<any>) {
+    this.dialogService.open(dialog);
   }
 
   onUsoCfdiSelected(clave: string) {
@@ -204,10 +243,6 @@ export class RevisionComponent implements OnInit {
     this.factura.formaPago = clave;
   }
 
-  onClaveProdServSelected(clave: string) {
-    this.newConcep.claveProdServ = clave;
-
-  }
 
   onImpuestoSelected(clave: string) {
     if (clave === '002') {

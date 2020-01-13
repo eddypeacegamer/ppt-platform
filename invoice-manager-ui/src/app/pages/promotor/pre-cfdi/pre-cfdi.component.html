@@ -50,7 +50,7 @@
                 <i class="fa fa-code"></i>
               </button>
             </div>
-          </div>
+        </div>
         <div *ngIf="folioParam === '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="row">
@@ -122,7 +122,7 @@
             <div class="col-sm-2">
               <label for="inputPaytype" class="label">Forma de Pago</label>
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.payType">
+                [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
                 <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
               </select>
             </div>
@@ -300,7 +300,7 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo tesoreria' || factura.statusFactura=='Rechazo Operaciones' || factura.statusFactura=='Cancelada')">
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo tesoreria' && factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
           <p class="font-weight-bold">Pagos</p>
           
           <div class="row" *ngIf="factura.total > paymentSum">
