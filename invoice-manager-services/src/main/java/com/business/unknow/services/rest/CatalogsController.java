@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.catalogs.GiroDto;
 import com.business.unknow.model.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.catalogs.StatusFacturaDto;
@@ -35,6 +37,12 @@ public class CatalogsController {
 	@Autowired
 	private CatalogsService service;
 
+	@GetMapping("/codigo-postal/{cp}")
+	public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(
+			@PathVariable Integer cp){
+		return new ResponseEntity<>(service.getCodigosPostaleByCode(cp), HttpStatus.OK);
+	}
+	
 	@GetMapping("/producto-servicios")
 	public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
 			@RequestParam(name = "descripcion") Optional<String> description,

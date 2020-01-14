@@ -10,12 +10,14 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.catalogs.CodigoPostalDto;
 import com.business.unknow.model.catalogs.GiroDto;
 import com.business.unknow.model.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
+import com.business.unknow.services.entities.catalogs.CodigoPostal;
 import com.business.unknow.services.entities.catalogs.Giro;
 import com.business.unknow.services.entities.catalogs.RegimenFiscal;
 import com.business.unknow.services.entities.catalogs.StatusDevolucion;
@@ -31,7 +33,15 @@ import com.business.unknow.services.entities.catalogs.UsoCfdi;
  */
 @Mapper
 public interface CatalogsMapper {
+	
+	List<CodigoPostalDto> getCodigoPostalUiDtoFromEntity(List<CodigoPostal> codigoPostales);
+	
+	CodigoPostalDto getCodigoPostalDtoFromEntity(CodigoPostal codigoPostal);
+	
+	CodigoPostal getCodigoPostalFromDto(CodigoPostalDto codigoPostalDto);
 
+	List<CodigoPostalDto> getCodigoPostalDtosFromEntities(List<CodigoPostal> codigoPostalDto);
+	
 	ClaveProductoServicioDto getClaveProdServDtoFromEntity(ClaveProductoServicio prodServicio);
 
 	List<ClaveProductoServicioDto> getClaveProdServDtosFromEntities(List<ClaveProductoServicio> prodServicio);

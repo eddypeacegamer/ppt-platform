@@ -18,16 +18,19 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.model.StatusCatalogoDto;
 import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.catalogs.GiroDto;
 import com.business.unknow.model.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
+import com.business.unknow.services.entities.catalogs.CodigoPostal;
 import com.business.unknow.services.mapper.CatalogsMapper;
 import com.business.unknow.services.repositories.catalogs.ClaveProductoServicioRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
+import com.business.unknow.services.repositories.catalogs.CodigoPostalRepository;
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusDevolucionRepository;
 import com.business.unknow.services.repositories.catalogs.StatusEventoRepository;
@@ -57,16 +60,16 @@ public class CatalogsService {
 
 	@Autowired
 	private StatusFacturaRepository statusFacturaRepo;
-	
+
 	@Autowired
 	private StatusEventoRepository statusEventoRepo;
-	
+
 	@Autowired
 	private StatusPagoRepository statusPagoRepo;
-	
+
 	@Autowired
 	private StatusDevolucionRepository statusDevoluicionRepo;
-	
+
 	@Autowired
 	private StatusRevisionRepository statusRevisionRepo;
 
@@ -74,20 +77,36 @@ public class CatalogsService {
 	private GiroRepository giroRepo;
 
 	@Autowired
+	private CodigoPostalRepository codigoPostalRepository;
+
+	@Autowired
 	private CatalogsMapper mapper;
 
+	public CodigoPostalUiDto getCodigosPostaleByCode(Integer codigo) {
+		List<CodigoPostal> codigos = codigoPostalRepository.findByCodigoPostal(codigo);
+		CodigoPostal codigoÇostal = codigos.stream().findFirst()
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados"));
+		CodigoPostalUiDto dto = new CodigoPostalUiDto(String.format("%05d", codigoÇostal.getCodigoPostal()),
+				codigoÇostal.getMunicipio(), codigoÇostal.getEstado());
+		for(CodigoPostal cod:codigos) {
+			dto.getColonias().add(cod.getColonia());
+		}
+		return dto;
+	}
+
 	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<Integer> clave) {
-		List<ClaveProductoServicioDto> mappings= new ArrayList<>();
-		if(description.isPresent()) {
-			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
+		List<ClaveProductoServicioDto> mappings = new ArrayList<>();
+		if (description.isPresent()) {
+			mappings = mapper.getClaveProdServDtosFromEntities(
+					productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
 		}
-		if(clave.isPresent()) {
+		if (clave.isPresent()) {
 			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(clave.get()));
-			
+
 		}
-		if(mappings.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No se encontraron resultados");
-		}else {
+		if (mappings.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados");
+		} else {
 			return mappings;
 		}
 	}
@@ -103,8 +122,8 @@ public class CatalogsService {
 		return new PageImpl<>(mapper.getClaveUnidadDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
-	public List<ClaveUnidadDto> getCalveUnidadByNombre(String nombre){
+
+	public List<ClaveUnidadDto> getCalveUnidadByNombre(String nombre) {
 		return mapper.getClaveUnidadDtosFromEntities(unidadRepo.findByNombreContainingIgnoreCase(nombre));
 	}
 
@@ -127,20 +146,19 @@ public class CatalogsService {
 	public List<GiroDto> getAllGiros() {
 		return mapper.getGiroDtosFromEntities(giroRepo.findAll());
 	}
-	
+
 	public List<StatusCatalogoDto> getAllStatusEvento() {
 		return mapper.getStatusEventoDtosFromEntities(statusEventoRepo.findAll());
 	}
-	
-	
+
 	public List<StatusCatalogoDto> getAllStatusPago() {
 		return mapper.getStatusPagoDtosFromEntities(statusPagoRepo.findAll());
 	}
-	
+
 	public List<StatusCatalogoDto> getAllStatusDevoluicion() {
 		return mapper.getStatusDevolucionDtosFromEntities(statusDevoluicionRepo.findAll());
 	}
-	
+
 	public List<StatusCatalogoDto> getAllStatusRevision() {
 		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
 	}

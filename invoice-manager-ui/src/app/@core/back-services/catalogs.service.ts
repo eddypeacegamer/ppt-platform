@@ -16,7 +16,7 @@ export class CatalogsService {
 
   public getZipCodeInfo(zipCode:String){
     console.log('fetching zipCode info for :', zipCode);
-    return this.httpClient.get(`https://api-codigos-postales.herokuapp.com/v2/codigo_postal/${zipCode}`)
+    return this.httpClient.get(`/api/catalogs/codigo-postal/${zipCode}`);
   }
 
   public getProductoServiciosByDescription(description:string) {
