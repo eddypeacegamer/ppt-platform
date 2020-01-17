@@ -121,6 +121,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN'
     this.factura.metodoPago = 'PUE'
+    this.factura.formaPago = '01';
     this.formInfo.payType = this.payTypeCat[0].id;
   }
 
@@ -256,9 +257,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   limpiarForma() {
-    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*', prodServ: '*', unidad: '*' }
+    this.initVariables();
     this.clientInfo = undefined;
     this.companyInfo = undefined;
+    this.conceptoMessages = [];
+    this.successMessage = undefined;
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.factura.cfdi = new Cfdi();
@@ -289,7 +292,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validConcept = false;
     }
     if (this.newConcep.claveProdServ == undefined) {
-      this.conceptoMessages.push('La clave producto servicio del conepto es un valor requerido.');
+      this.conceptoMessages.push('La clave producto servicio del concepto es un valor requerido.');
       validConcept = false;
     }
     if (this.newConcep.claveUnidad == undefined) {
@@ -310,28 +313,29 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       const impuesto = base * 0.16;
       
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
+      this.factura.cfdi.conceptos.push(this.newConcep);
       this.calcularImportes();
       if(this.factura.formaPago ==='01' && this.factura.total >2000){
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
-      }
-      if(this.factura.folio!=undefined){
-      this.invoiceService.insertConcepto(this.factura.folio,{ ... this.newConcep })
-        .subscribe((concepto)=>{console.log(concepto);
-          this.factura.cfdi.conceptos.push(concepto);
-          this.formInfo.prodServ = '*';
-          this.formInfo.unidad = '*';
-          this.newConcep = new Concepto();
-          this.successMessage = 'Se agrego el concepto exitosamente';
-          this.calcularImportes();
-        },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
+        this.factura.cfdi.conceptos.pop();//remove last concept
+        this.calcularImportes();
       }else{
-        this.factura.cfdi.conceptos.push(this.newConcep);
-          this.formInfo.prodServ = '*';
-          this.formInfo.unidad = '*';
-          this.newConcep = new Concepto();
-          this.calcularImportes();
+        if(this.factura.folio!=undefined){
+          this.invoiceService.insertConcepto(this.factura.folio,{ ... this.newConcep })
+            .subscribe((concepto)=>{
+              this.formInfo.prodServ = '*';
+              this.formInfo.unidad = '*';
+              this.successMessage = 'Se agrego el concepto exitosamente';
+            },(error: HttpErrorResponse) => { 
+              this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+              this.factura.cfdi.conceptos.pop();//remove last concept
+              this.calcularImportes();
+            });
+          }
       }
-      
+      this.formInfo.prodServ = '*';
+      this.formInfo.unidad = '*';
+      this.newConcep = new Concepto();
     }
   }
 
@@ -348,6 +352,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       }
       this.factura.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
     }
+    console.log('Importe factura',this.factura.total)
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
