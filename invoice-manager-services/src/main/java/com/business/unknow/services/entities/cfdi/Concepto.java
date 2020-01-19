@@ -3,6 +3,7 @@ package com.business.unknow.services.entities.cfdi;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,10 +58,10 @@ public class Concepto implements Serializable {
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
 
-	@OneToMany(mappedBy = "concepto")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "concepto",orphanRemoval = true)
 	private List<Impuesto> impuestos;
 
-	@OneToMany(mappedBy = "concepto")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "concepto",orphanRemoval = true)
 	private List<Retencion> retenciones;
 
 	public Integer getId() {

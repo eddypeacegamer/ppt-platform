@@ -37,7 +37,7 @@ public class FacturaDefaultValues {
 		payment.setFolioPadre(facturaDto.getFolio());
 		payment.setFormaPago("CREDITO");
 		payment.setMoneda("MXN");
-		payment.setMonto(facturaDto.getTotal());
+		payment.setMonto(facturaDto.getCfdi().getTotal().doubleValue());
 		payment.setRevision1(false);
 		payment.setRevision2(false);
 		payment.setTipoDeCambio(1.00D);

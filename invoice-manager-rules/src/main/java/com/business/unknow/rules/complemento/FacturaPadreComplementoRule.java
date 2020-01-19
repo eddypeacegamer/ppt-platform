@@ -16,7 +16,7 @@ public class FacturaPadreComplementoRule extends AbstractPrevalidations {
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return (fc.getFacturaPadreDto() == null|| fc.getFacturaDto() == null
 				|| fc.getFacturaPadreDto().getFechaTimbrado() == null
-				|| !fc.getFacturaPadreDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())
+				|| !fc.getFacturaPadreDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())
 				|| fc.getFacturaPadreDto().getUuid() == null);
 	}
 

@@ -31,13 +31,16 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(facturaSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
+		
 		CfdiDto cfdiDto = facturaContext.getFacturaDto().getCfdi();
+		
 		facturaContext.setFacturaDto(mapper.getFacturaDtoFromEntity(
 				repository.save(mapper.getEntityFromFacturaDto(facturaContext.getFacturaDto()))));
 		facturaContext.getFacturaDto().setCfdi(cfdiDto);
+		
 		facturaContext.getFacturaDto().setCfdi(cfdiEvaluatorService
 				.insertNewCfdi(facturaContext.getFacturaDto().getFolio(), facturaContext.getFacturaDto().getCfdi()));
-		if (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
+		if (facturaContext.getFacturaDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
 			pagoRepository.save(facturaDefaultValues.assignaDefaultsFacturaPPD(facturaContext.getFacturaDto()));
 		}
 		return facturaContext;

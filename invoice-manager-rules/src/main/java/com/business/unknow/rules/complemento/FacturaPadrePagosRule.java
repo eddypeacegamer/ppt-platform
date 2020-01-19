@@ -1,5 +1,6 @@
 package com.business.unknow.rules.complemento;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.jeasy.rules.annotation.Action;
@@ -16,7 +17,7 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		if (fc.getPagos().isEmpty() || fc.getFacturaDto().getTotal() == null || fc.getFacturaDto().getTotal() == 0) {
+		if (fc.getPagos().isEmpty() || fc.getFacturaDto().getCfdi().getTotal() == null || fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO)==0) {
 			return true;
 		} else {
 			double pagos = 0.0f;
@@ -25,7 +26,7 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 //			Optional<PagoDto> pagoDto = fc.getPagos().stream().filter(p->p.getId().compareTo(fc.getComlpemento().getIdPago())==0)
 //					.findFirst();
 			Optional<PagoDto> pagoDto = fc.getPagos().stream()
-					.filter(a -> a.getMonto().compareTo(fc.getFacturaDto().getTotal()) == 0 // TODO review this logic
+					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.valueOf(a.getMonto()))==0// TODO review this logic
 																							// here is a potential
 																							// issue when the
 																							// complement will be
@@ -33,7 +34,7 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 																							// ammount equal to a
 																							// previous ammount
 					).findFirst();
-			return (fc.getFacturaDto().getTotal() == 0 || pagos == 0
+			return (fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO)==0 || pagos == 0
 			// || pagos > fc.getFacturaDto().getTotal() //validate how to handle this
 			// condition, this is not allowing generate complements
 					|| !pagoDto.isPresent());

@@ -26,11 +26,11 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "facturaDto.rfcRemitente", target = "receptor.rfc"),
 			@Mapping(source = "facturaDto.razonSocialRemitente", target = "receptor.nombre"),
 			@Mapping(source = "facturaDto.cfdi.usoCfdi", target = "receptor.usoCfdi"),
-			@Mapping(source = "facturaDto.formaPago", target = "formaPago"),
-			@Mapping(source = "facturaDto.metodoPago", target = "metodoPago"),
-			@Mapping(source = "facturaDto.total", target = "total"),
-			@Mapping(source = "facturaDto.subtotal", target = "subtotal"),
-			@Mapping(source = "facturaDto.descuento", target = "descuento"),
+			@Mapping(source = "facturaDto.cfdi.formaPago", target = "formaPago"),
+			@Mapping(source = "facturaDto.cfdi.metodoPago", target = "metodoPago"),
+			@Mapping(source = "facturaDto.cfdi.total", target = "total"),
+			@Mapping(source = "facturaDto.cfdi.subtotal", target = "subtotal"),
+			@Mapping(source = "facturaDto.cfdi.descuento", target = "descuento"),
 			@Mapping(source = "facturaDto.cfdi.moneda", target = "moneda"),
 			@Mapping(source = "facturaDto.cfdi.tipoDeComprobante", target = "tipoDeComprobante"),
 			@Mapping(source = "empresaDto.certificado", target = "certificado"),
@@ -68,11 +68,11 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(constant = "0", target = "valorUnitario") })
 	public Concepto complementoConcepto(ConceptoDto dto);
 
-	@Mappings({ @Mapping(target = "formaDePago", source = "facturaDto.formaPago"),
+	@Mappings({ @Mapping(target = "formaDePago", source = "facturaDto.cfdi.formaPago"),
 			@Mapping(target = "moneda", source = "pagoDto.moneda"),
 			@Mapping(target = "complementoDocRelacionado.folio", source = "facturaDto.folioPadre"),
 			@Mapping(target = "complementoDocRelacionado.idDocumento", source = "facturaDto.uuid"),
-			@Mapping(target = "complementoDocRelacionado.metodoDePagoDR", source = "facturaDto.metodoPago"),
+			@Mapping(target = "complementoDocRelacionado.metodoDePagoDR", source = "facturaDto.cfdi.metodoPago"),
 			@Mapping(target = "complementoDocRelacionado.monedaDR", source = "pagoDto.moneda"),
 			@Mapping(target = "complementoDocRelacionado.serie", constant = "PFP")})
 	public ComplementoPago complementoComponente(FacturaDto facturaDto,PagoDto pagoDto);

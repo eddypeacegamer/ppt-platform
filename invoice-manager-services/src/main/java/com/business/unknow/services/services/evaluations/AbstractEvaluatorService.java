@@ -183,7 +183,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
+				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
 				.setCtdadComplementos(repository
 						.findByFolioPadre(
 								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
@@ -207,7 +207,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
+				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
 	}
 
 	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
@@ -239,7 +239,7 @@ public class AbstractEvaluatorService extends AbstractService {
 	protected FacturaDto buildFacturaDtoPagoPpdCreation(FacturaContext facturaContext){
 		return new FacturaBuilder().setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
 				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
-				.setMetodoPago(facturaContext.getFacturaPadreDto().getMetodoPago())
+				.setMetodoPago(facturaContext.getFacturaPadreDto().getCfdi().getMetodoPago())
 				.setLineaEmisor(facturaContext.getFacturaPadreDto().getLineaEmisor())
 				.setRfcEmisor(facturaContext.getFacturaPadreDto().getRfcEmisor())
 				.setRfcRemitente(facturaContext.getFacturaPadreDto().getRfcRemitente())
