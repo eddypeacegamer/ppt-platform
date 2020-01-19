@@ -34,7 +34,7 @@ public class Concepto implements Serializable {
 	private String noIdentificacion;
 
 	@Column(name = "CANTIDAD")
-	private Integer cantidad;
+	private Double cantidad;
 
 	@Column(name = "CLAVE_UNIDAD")
 	private String claveUnidad;
@@ -80,14 +80,14 @@ public class Concepto implements Serializable {
 		this.noIdentificacion = noIdentificacion;
 	}
 
-	public Integer getCantidad() {
+	public Double getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Integer cantidad) {
+	public void setCantidad(Double cantidad) {
 		this.cantidad = cantidad;
 	}
-	
+
 	public String getDescripcionCUPS() {
 		return descripcionCUPS;
 	}

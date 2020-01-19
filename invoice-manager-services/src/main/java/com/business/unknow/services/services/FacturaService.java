@@ -30,7 +30,6 @@ import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
-import com.business.unknow.services.services.evaluations.CfdiEvaluatorService;
 import com.business.unknow.services.services.evaluations.ConceptoEvaluatorService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
@@ -66,9 +65,6 @@ public class FacturaService {
 	@Autowired
 	private ConceptoEvaluatorService conceptoEvaluatorService;
 
-	@Autowired
-	private CfdiEvaluatorService cfdiEvaluatorService;
-	
 	
 
 	private FacturaValidator validator = new FacturaValidator();
@@ -112,7 +108,8 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		return facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto();
+		//TODO IF CFDI is PPD generates automatic payment
+		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto())));
 	}
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
@@ -139,7 +136,7 @@ public class FacturaService {
 	}
 	
 	public CfdiDto insertNewCfdi(String folio, CfdiDto cfdi) {
-		return cfdiEvaluatorService.insertNewCfdi(folio, cfdi);
+		return  new CfdiDto();//.insertNewCfdi(folio, cfdi);
 	}
 
 	public CfdiDto updateFacturaCfdi(String folio, Integer id, CfdiDto dto) throws InvoiceManagerException {
@@ -188,15 +185,15 @@ public class FacturaService {
 	}
 	
 	
-	//CONCEPTOS
+	//CONCEPTOS In refactor transition
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public ConceptoDto insertConcepto(String folio, ConceptoDto conceptoDto) throws InvoiceManagerException {
-		return conceptoEvaluatorService.validateConceptoCreation(conceptoDto,folio);
+		return new ConceptoDto();//conceptoEvaluatorService.validateConceptoCreation(conceptoDto,folio);
 	}
 	
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public void deleteconcepto(int id,String folio) throws InvoiceManagerException {
-		conceptoEvaluatorService.validateConceptoDelete(id, folio);
+		//conceptoEvaluatorService.validateConceptoDelete(id, folio);
 	}
 
 }

@@ -16,8 +16,8 @@ public class FacturaDefaultValues {
 	private FacturaCalculator facturaCalculator = new FacturaCalculator();
 
 	public void assignaDefaultsFactura(FacturaDto facturaDto) throws InvoiceManagerException {
-		facturaDto.setFechaCreacion(new Date());
-		facturaDto.setFechaActualizacion(new Date());
+		//facturaDto.setFechaCreacion(new Date()); trust on spring logic 
+		//facturaDto.setFechaActualizacion(new Date()); trust on spring logic
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.getNombre());

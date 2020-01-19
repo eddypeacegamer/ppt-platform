@@ -62,9 +62,19 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		instance.setCfdi(cfdi);
 		return this;
 	}
+	
+	public FacturaBuilder setTipoDocumento(String tipoDocumento) {
+		instance.setTipoDocumento(tipoDocumento);
+		return this;
+	}
 
 	public FacturaBuilder setPackFacturacion(String packFacturacion) {
 		instance.setPackFacturacion(packFacturacion);
+		return this;
+	}
+	
+	public FacturaBuilder setFormaPago(String formaPago) {
+		instance.getCfdi().setFormaPago(formaPago);
 		return this;
 	}
 	

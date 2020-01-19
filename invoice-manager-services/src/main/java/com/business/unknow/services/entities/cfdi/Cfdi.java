@@ -35,26 +35,23 @@ public class Cfdi implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 	
-	@Column(name = "FECHA_TIMBRADO")
-	private Date fecha;
-
 	@Column(name = "SELLO")
 	private String sello;
-
+	
 	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
 
 	@Column(name = "CERTIFICADO")
 	private String certificado;
 	
+	@Column(name = "MONEDA")
+	private String moneda;
+	
 	@Column(name = "SUBTOTAL")
 	private BigDecimal subtotal;
 	
 	@Column(name = "DESCUENTO")
 	private BigDecimal descuento;
-	
-	@Column(name = "MONEDA")
-	private String moneda;
 	
 	@Column(name = "TOTAL")
 	private BigDecimal total;
@@ -77,32 +74,37 @@ public class Cfdi implements Serializable {
 	@Column(name = "USO_CFDI")
 	private String usoCfdi;
 
-	@Column(name = "REGIMEN_FISCAL")
+	@Column(name = "REGIMEN_FISCAL")//EVALUATE if is better get this from emisor
 	private String regimenFiscal;
 
-	@Column(name = "RFC_PROV_CERTIF")
+	@Column(name = "RFC_PROV_CERTIF") //EVALUATE if is better set this at complemento level
 	private String rfcProvCertif;
 
-	@Column(name = "SELLO_CFD")
+	@Column(name = "SELLO_CFD") //EVALUATE if is better set this at complemento level
 	private String selloCfd;
 
-	@Column(name = "NO_CERTIFICADO_SAT")
+	@Column(name = "NO_CERTIFICADO_SAT") //EVALUATE if is better set this at complemento level
 	private String noCertificadoSat;
 
-	@Column(name = "SELLO_SAT")
+	@Column(name = "SELLO_SAT") //EVALUATE if is better set this at complemento level
 	private String selloSat;
 	
-	@Column(name = "CADENA_ORIGINAL")
+	@Column(name = "CADENA_ORIGINAL") //EVALUATE if is better set this at complemento level
 	private String cadenaOriginal;
 	
-	@Column(name = "EMISOR")
+	@Column(name = "RFC_EMISOR")
 	private String emisor;
 	
-	@Column(name = "RECEPTOR")
+	@Column(name = "RFC_RECEPTOR")
 	private String receptor;
+	
+	@Column(name = "FECHA_TIMBRADO")// Review this date, this is request date not stamp date
+	private Date fecha;
 	
 	@Column(name= "ID_FACTURA")
 	private Integer idFactura;
+	
+	
 
 	@OneToMany(cascade = CascadeType.ALL, 
 	        mappedBy = "cfdi", orphanRemoval = true)

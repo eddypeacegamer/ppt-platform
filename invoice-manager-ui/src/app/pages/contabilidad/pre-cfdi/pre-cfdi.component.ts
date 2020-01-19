@@ -45,16 +45,17 @@ export class PreCfdiComponent implements OnInit {
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
-  public userEmail : string;
+  public userEmail: string;
 
   public complementos: Factura[] = [];
   public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
-  public successMessage : string;
+  public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*', statusDetail :'' }
+  
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
 
@@ -72,121 +73,159 @@ export class PreCfdiComponent implements OnInit {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService : PaymentsData,
-    private filesService : FilesData,
-    private userService : UsersData,
+    private paymentsService: PaymentsData,
+    private filesService: FilesData,
+    private userService: UsersData,
     private downloadService: DownloadInvoiceFilesService,
     private route: ActivatedRoute) { }
 
-    ngOnInit() {
-      this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
-      this.initVariables();
-      this.route.paramMap.subscribe(route=>{
-        this.folioParam = route.get('folio');
-        console.log(`recovering ${this.folioParam} information`);
-        this.catalogsService.getInvoiceCatalogs()
-        .toPromise().then(results=>{
-          this.girosCat = results[0];
-          this.claveUnidadCat = results[1];
-          this.usoCfdiCat = results[2];
-          this.payCat = results[3];
-          this.devolutionCat = results[4];
-          this.validationCat = results[5];
-        }).then(()=>{
-            if(this.folioParam!='*'){
-              this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => {this.invoicePayments = payments; this.calculatePayments()});
-              this.getInvoiceByFolio(this.folioParam);
-            }
-        });
-      });
-    }
-  
-    ngOnDestroy() {
-      /** CLEAN VARIABLES **/
-      this.newPayment = new Pago();
-      this.newConcep = new Concepto();
-      this.factura = new Factura();
-    }
-  
-    public getInvoiceByFolio(folio:string){
-      this.invoiceService.getInvoiceByFolio(folio).pipe(
-        map((fac: Factura) => {
-          fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-          fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-          fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-          fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-          fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
-          return fac;
-        })).subscribe(invoice => {this.factura = invoice;
-          if(invoice.metodoPago == 'PPD'){
-            this.invoiceService.getComplementosInvoice(folio)
-                  .pipe(
-                    map((facturas:Factura[]) =>{
-                      return facturas.map(record=>{
-                        record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
-                        record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
-                        record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                        record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
-                        return record;})
-                    }))
-            .subscribe(complementos => this.complementos = complementos);
+  ngOnInit() {
+    this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
+    this.initVariables();
+    this.route.paramMap.subscribe(route=>{
+      this.folioParam = route.get('folio');
+      console.log(`recovering ${this.folioParam} information`);
+      this.catalogsService.getInvoiceCatalogs()
+      .toPromise().then(results=>{
+        this.girosCat = results[0];
+        this.claveUnidadCat = results[1];
+        this.usoCfdiCat = results[2];
+        this.payCat = results[3];
+        this.devolutionCat = results[4];
+        this.validationCat = results[5];
+      }).then(()=>{
+          if(this.folioParam!='*'){
+            this.paymentsService.getPaymentsByFolio(this.folioParam).subscribe(payments => {this.invoicePayments = payments; this.calculatePayments()});
+            this.getInvoiceByFolio(this.folioParam);
           }
-          },
-          error => {
-            console.error('Info cant found, creating a new invoice:', error)
-            this.initVariables();
-          });
-    }
-  
-    public initVariables() {
-      /** INIT VARIABLES **/
-      this.newPayment = new Pago();
-      this.newConcep = new Concepto();
-      this.factura = new Factura();
-      this.errorMessages = [];
-      this.loading = false;
-    }
-
-  onDeleteConfirm(event): void {
-    if (window.confirm('Estas seguro de borar el elemento?')) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
+      });
+    });
   }
 
-  openBuscadorSAT(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog);
+  ngOnDestroy() {
+    /** CLEAN VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+  }
+
+  public initVariables() {
+    /** INIT VARIABLES **/
+    this.newPayment = new Pago();
+    this.newConcep = new Concepto();
+    this.factura = new Factura();
+    this.errorMessages = [];
+    this.loading = false;
+    this.factura.cfdi.moneda = 'MXN'
+    this.factura.cfdi.metodoPago = 'PUE'
+    this.formInfo.payType = this.payTypeCat[0].id;
+  }
+
+  public getInvoiceByFolio(folio: string) {
+    this.invoiceService.getInvoiceByFolio(folio).pipe(
+      map((fac: Factura) => {
+        fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
+        return fac;
+      })).subscribe(invoice => {
+        this.factura = invoice;
+        if (invoice.cfdi.metodoPago == 'PPD') {
+          this.invoiceService.getComplementosInvoice(folio)
+            .pipe(
+              map((facturas: Factura[]) => {
+                return facturas.map(record => {
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  return record;
+                })
+              }))
+            .subscribe(complementos => this.complementos = complementos);
+        }
+      },
+        error => {
+          console.error('Info cant found, creating a new invoice:', error)
+          this.initVariables();
+        });
+  }
+
+  public buscarClaveProductoServicio(claveProdServ: string) {
+    this.conceptoMessages = [];
+    let value = +claveProdServ;
+    if (isNaN(value)) {
+      if (claveProdServ.length > 5) {
+        console.log('Buscando clave producto servicio por descripcion', claveProdServ)
+        this.catalogsService.getProductoServiciosByDescription(claveProdServ).subscribe(claves => {
+          this.prodServCat = claves;
+          this.formInfo.prodServ = claves[0].clave.toString();
+          this.newConcep.claveProdServ = claves[0].clave.toString();
+          this.newConcep.descripcionCUPS = claves[0].descripcion;
+        }, (error: HttpErrorResponse) => { this.conceptoMessages = []; this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`) });
+      }
+    } else {
+      if (claveProdServ.length > 5) {
+        console.log('Buscanco clave producto servicio por Id', claveProdServ);
+        this.catalogsService.getProductoServiciosByClave(claveProdServ).subscribe(claves => {
+          this.prodServCat = claves;
+          this.formInfo.prodServ = claves[0].clave.toString();
+          this.newConcep.claveProdServ = claves[0].clave.toString();
+          this.newConcep.descripcionCUPS = claves[0].descripcion;
+        }, (error: HttpErrorResponse) => { this.conceptoMessages = []; this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`) });
+      }
+    }
   }
 
   onGiroSelection(giroId: string) {
-    let  value = +giroId;
-    if(isNaN(value)){
-     this.companiesCat = [];
-    }else{
-     this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
-       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    let value = +giroId;
+    if (isNaN(value)) {
+      this.companiesCat = [];
+    } else {
+      this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId)).subscribe(companies => this.companiesCat = companies,
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
-   }
+  }
 
   onCompanySelected(companyId: number) {
     this.companyInfo = this.companiesCat.find(c => c.id == companyId);
   }
 
-  buscarClaveProdServSelected() {
-    this.catalogsService.getProductoServiciosByDescription(this.formInfo.claveProdServ).subscribe(claves => {
-      this.prodServCat = claves;
-      if (claves.length < 1) {
-        alert(`No se encontro ninguna clave que coincida con ${this.formInfo.claveProdServ}`);
-      }
-    });
+  onPayMethodSelected(clave: string) {
+    if (clave === 'PPD') {
+      this.payTypeCat = [new Status('99', 'Por definir')];
+      this.factura.cfdi.formaPago= '99';
+      this.factura.cfdi.metodoPago = 'PPD';
+    } else {
+      this.factura.cfdi.metodoPago = 'PUE';
+      this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
+      this.factura.cfdi.formaPago = '01';
+    }
+    this.formInfo.payType = this.payTypeCat[0].id;
   }
 
   buscarClientInfo() {
     this.errorMessages = [];
     this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-      (client: Client) => { this.clientInfo = client.informacionFiscal },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      (client: Client) => {
+        if (client.activo == true) {
+          this.clientInfo = client.informacionFiscal
+        } else {
+          alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+          this.formInfo.clientRfc = '';
+        }
+      }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
+  onClaveProdServSelected(clave: string) {
+    this.newConcep.claveProdServ = clave;
+    this.newConcep.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
+  }
+
+  openSatCatalog(dialog: TemplateRef<any>) {
+    this.dialogService.open(dialog);
   }
 
   onUsoCfdiSelected(clave: string) {
@@ -198,17 +237,13 @@ export class PreCfdiComponent implements OnInit {
   }
 
   onMetodoDePagoSelected(clave: string) {
-    this.factura.metodoPago = clave;
+    this.factura.cfdi.metodoPago = clave;
   }
 
   onFormaDePagoSelected(clave: string) {
-    this.factura.formaPago = clave;
+    this.factura.cfdi.formaPago = clave;
   }
 
-  onClaveProdServSelected(clave: string) {
-    this.newConcep.claveProdServ = clave;
-
-  }
 
   onImpuestoSelected(clave: string) {
     if (clave === '002') {
@@ -224,7 +259,7 @@ export class PreCfdiComponent implements OnInit {
   }
 
   limpiarForma() {
-    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*' }
+    this.formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', moneda: '*', payMethod: '*', payType: '*', prodServ: '*', unidad: '*', statusDetail :'' }
     this.clientInfo = undefined;
     this.companyInfo = undefined;
     this.newConcep = new Concepto();
@@ -234,12 +269,18 @@ export class PreCfdiComponent implements OnInit {
   }
 
   removeConcepto(index: number) {
-    this.factura.cfdi.conceptos.splice(index, 1);
-    this.calcularImportes();
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    this.invoiceService.deleteConcepto(this.factura.folio,this.factura.cfdi.conceptos[index].id)
+      .subscribe(()=>{this.successMessage = 'Se ha borrado exitosamente el concepto';
+      this.factura.cfdi.conceptos.splice(index, 1);
+      this.calcularImportes();
+    },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
   }
 
   agregarConcepto() {
     this.conceptoMessages = [];
+    this.successMessage = undefined;
     let validConcept = true;
     if (this.newConcep.cantidad < 1) {
       this.conceptoMessages.push('La cantidad requerida debe ser igual o mayor a 1');
@@ -257,42 +298,45 @@ export class PreCfdiComponent implements OnInit {
       this.conceptoMessages.push('La descripción del concepto es un valor requerido.');
       validConcept = false;
     }
-
     if(this.newConcep.valorUnitario<=0){
       this.conceptoMessages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
       validConcept = false;
     }
-    
     if (validConcept) {
       this.newConcep.importe = this.newConcep.cantidad * this.newConcep.valorUnitario;
       const base = this.newConcep.importe - this.newConcep.descuento;
       const impuesto = base * 0.16;
       
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
-      this.factura.cfdi.conceptos.push({ ... this.newConcep });
       this.calcularImportes();
-      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+      if(this.factura.cfdi.formaPago ==='01' && this.factura.cfdi.total >2000){
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
-        this.factura.cfdi.conceptos.pop();
       }
-      this.formInfo.prodServ = '*';
-      this.formInfo.unidad = '*';
-      this.newConcep = new Concepto();
+      this.invoiceService.insertConcepto(this.factura.folio,{ ... this.newConcep })
+        .subscribe((concepto)=>{console.log(concepto);
+          this.factura.cfdi.conceptos.push(concepto);
+          this.formInfo.prodServ = '*';
+          this.formInfo.unidad = '*';
+          this.newConcep = new Concepto();
+          this.successMessage = 'Se agrego el concepto exitosamente';
+        },(error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`) });
+      
     }
   }
 
   calcularImportes(){
-    this.factura.total = 0;
-    this.factura.subtotal = 0;
+    this.factura.cfdi.total = 0;
+    this.factura.cfdi.subtotal = 0;
     for (const concepto of this.factura.cfdi.conceptos) {
 
       const base = concepto.importe - concepto.descuento;
-      this.factura.subtotal += base;
+      this.factura.cfdi.subtotal += base;
       let impuesto = 0;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe*3 + impuesto * 3) / 3;
       }
-      this.factura.total += (base *3 + impuesto * 3)/3;
+      console.log('impuesto',impuesto);
+      this.factura.cfdi.total += (base *3 + impuesto * 3)/3;
     }
   }
 
@@ -304,77 +348,61 @@ export class PreCfdiComponent implements OnInit {
     }
   }
 
-  solicitarCfdi() {
+  public downloadPdf(folio: string) {
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
+    )
+  }
+  public downloadXml(folio: string) {
+    this.filesService.getFacturaFile(folio, 'XML').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
+    )
+  }
+
+  public aceptarFactura(){
+    this.loading = true;
+    this.successMessage = undefined;
     this.errorMessages = [];
-    this.successMessage=undefined;
-    let validCdfi = true;
-    if (this.companyInfo == undefined) {
-      this.errorMessages.push('La empresa emisora es requerida.');
-      validCdfi = false;
-    } else {
-      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-      this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
-      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-      
-      this.factura.statusFactura = this.validationCat.find(v => v.value == this.factura.statusFactura).id;
-      this.factura.statusPago = this.payCat.find(v => v.value == this.factura.statusPago).id;
-      this.factura.statusDevolucion = this.devolutionCat.find(v => v.value == this.factura.statusDevolucion).id;
-      this.factura.formaPago = this.payTypeCat.find(v => v.value == this.factura.formaPago).id;
+    let fact = { ...this.factura };
+    if(fact.cfdi.metodoPago ==='PPD'){
+      fact.statusFactura = '4';// update to por timbrar
+    }else{
+      fact.statusFactura = '2' // update to validacion tesoreria
     }
+    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
-    if (this.clientInfo == undefined) {
-      this.errorMessages.push('La información del cliente es un valor solicitado');
-      validCdfi = false;
-    } else {
-      this.factura.rfcRemitente = this.clientInfo.rfc;
-      this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
-    }
-
-    if (this.factura.cfdi.usoCfdi == undefined) {
-      this.errorMessages.push('El uso del CFDI es un campo requerido.');
-      validCdfi = false;
-    }
-    if (this.factura.cfdi.moneda == undefined) {
-      this.errorMessages.push('La moneda es un campo requerido.');
-      validCdfi = false;
-    }
-
-    if (this.factura.formaPago == undefined) {
-      this.errorMessages.push('La forma de pago es un campo requerido.');
-      validCdfi = false;
-    }
-
-    if (this.factura.metodoPago == undefined) {
-      this.errorMessages.push('El metodo de pago es un campo requerido.');
-      validCdfi = false;
-    }
-
-    if (this.factura.cfdi.conceptos.length < 1) {
-      this.errorMessages.push('La factura debe contener a menos 1 concepto a declarar.');
-      validCdfi = false;
-    }
-
-    if (validCdfi) {
-      this.factura.cfdi = this.factura.cfdi;
-      this.invoiceService.insertNewInvoice(this.factura).subscribe(
-        (invoice: Factura) => { this.factura = invoice; this.newPayment.folio = invoice.folio;
-          this.successMessage = `La solicitud del CFDI ha sido generada correctamente con el folio ${invoice.folio}`;
-          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => this.invoicePayments = payments);
-        },(error: HttpErrorResponse) => {this.errorMessages.push((error.error!=null &&error.error!=undefined)? error.error.message : `${error.statusText} : ${error.message}`)});
-    }
+    
+    this.invoiceService.updateInvoice(fact).subscribe(result => { 
+      this.loading = false;
+      console.log('factura actualizada correctamente');
+      this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+      });
   }
 
-  public downloadPdf(folio:string){
-    this.filesService.getFacturaFile(folio,'PDF').subscribe(
-      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,'application/pdf;')
-    )
-  }
-  public downloadXml(folio:string){
-    this.filesService.getFacturaFile(folio,'XML').subscribe(
-      file => this.downloadService.downloadFile(file.data,`${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,'text/xml;charset=utf8;')
-    )
+  public rechazarFactura(){
+    this.loading = true;
+    this.successMessage = undefined;
+    this.errorMessages = [];
+    let fact = { ...this.factura };
+    fact.statusFactura = '6';// update to recahzo operaciones
+    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+
+    
+    this.invoiceService.updateInvoice(fact).subscribe(result => { 
+      this.loading = false;
+      console.log('factura actualizada correctamente');
+      this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+      });
   }
 
   public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
@@ -387,7 +415,7 @@ export class PreCfdiComponent implements OnInit {
     fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
@@ -416,10 +444,12 @@ export class PreCfdiComponent implements OnInit {
     fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
     this.invoiceService.cancelarFactura(fact.folio, fact)
-      .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; this.loading = false;},
+      .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; 
+      this.getInvoiceByFolio(fact.folioPadre || fact.folio);
+      this.loading = false;},
         (error: HttpErrorResponse) => { 
           this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`); 
           this.loading = false;
@@ -427,9 +457,9 @@ export class PreCfdiComponent implements OnInit {
   }
 
 
-  /******* PAGOS ********/
+   /******* PAGOS ********/
 
-  calculatePayments(){
+   calculatePayments(){
     if(this.invoicePayments.length==0){
         this.paymentSum = 0;
     }else{
@@ -480,6 +510,7 @@ export class PreCfdiComponent implements OnInit {
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.payErrorMessages = [];
+
     let validPayment = true;
     if (this.newPayment.banco == undefined) {
       validPayment = false;
@@ -509,12 +540,12 @@ export class PreCfdiComponent implements OnInit {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
-    if (this.factura.metodoPago == 'PUE' && Math.abs(this.factura.total - this.newPayment.monto) > 0.01) {
+    if (this.factura.cfdi.metodoPago == 'PUE' && Math.abs(this.factura.cfdi.total - this.newPayment.monto) > 0.01) {
       validPayment = false;
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if ((this.paymentSum + this.newPayment.monto - this.factura.total) > 0.01 ) {
+    if ((this.paymentSum + this.newPayment.monto - this.factura.cfdi.total) > 0.01 ) {
       validPayment = false;
       this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
@@ -524,12 +555,21 @@ export class PreCfdiComponent implements OnInit {
       this.newPayment.tipoPago = 'INGRESO';
       this.newPayment.ultimoUsuario = this.userEmail;
       const payment = {... this.newPayment};
-
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.paymentForm.successPayment = true; this.newPayment = new Pago();
           this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments =>{ this.invoicePayments = payments;this.calculatePayments(); this.loading = false;});
-          this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
+          this.invoiceService.getComplementosInvoice(this.folioParam)
+            .pipe(
+              map((facturas:Factura[]) =>{
+                return facturas.map(record=>{
+                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
+                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
+                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  return record;})
+              }))
+            .subscribe(complementos => this.complementos = complementos);
         },
         (error: HttpErrorResponse) => {this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false;});
     }

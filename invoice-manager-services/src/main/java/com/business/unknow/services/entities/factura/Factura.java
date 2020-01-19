@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -64,9 +65,6 @@ public class Factura implements Serializable {
 	@Column(name = "FOLIO_PADRE")
 	private String folioPadre;
 
-	@Column(name = "UUID")
-	private String uuid;
-
 	@Column(name = "STATUS_PAGO")
 	private Integer statusPago;
 
@@ -78,6 +76,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
+	
+	@Column(name = "UUID")
+	private String uuid;
 
 	@Column(name = "PACK_FACTURACION")
 	private String packFacturacion;
@@ -97,7 +98,7 @@ public class Factura implements Serializable {
 	private Date fechaCancelacion;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
+	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 	
@@ -107,7 +108,7 @@ public class Factura implements Serializable {
         name = "facturaCfdiJoin",
         joinColumns = @JoinColumn(
             name = "facturaJoinColum", 
-            referencedColumnName = "ID"),
+            referencedColumnName = "ID_FACTURA"),
         inverseJoinColumns = @JoinColumn(
             name = "cfdiJoinColum", 
             referencedColumnName = "ID_FACTURA")

@@ -120,8 +120,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.errorMessages = [];
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN'
-    this.factura.metodoPago = 'PUE'
-    this.factura.formaPago = '01';
+    this.factura.cfdi.metodoPago = 'PUE'
+    this.factura.cfdi.formaPago = '01';
     this.formInfo.payType = this.payTypeCat[0].id;
   }
 
@@ -132,11 +132,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
         fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
         fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-        fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
         return fac;
       })).subscribe(invoice => {
         this.factura = invoice;
-        if (invoice.metodoPago == 'PPD') {
+        if (invoice.cfdi.metodoPago == 'PPD') {
           this.invoiceService.getComplementosInvoice(folio)
             .pipe(
               map((facturas: Factura[]) => {
@@ -144,7 +144,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
                   record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
-                  record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
                   return record;
                 })
               }))
@@ -203,12 +203,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
       this.payTypeCat = [new Status('99', 'Por definir')];
-      this.factura.formaPago= '99';
-      this.factura.metodoPago = 'PPD';
+      this.factura.cfdi.formaPago= '99';
+      this.factura.cfdi.metodoPago = 'PPD';
     } else {
-      this.factura.metodoPago = 'PUE';
+      this.factura.cfdi.metodoPago = 'PUE';
       this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
-      this.factura.formaPago = '01';
+      this.factura.cfdi.formaPago = '01';
     }
     this.formInfo.payType = this.payTypeCat[0].id;
   }
@@ -235,7 +235,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   onFormaDePagoSelected(clave: string) {
-    this.factura.formaPago = clave;
+    this.factura.cfdi.formaPago = clave;
   }
 
   onClaveProdServSelected(clave: string) {
@@ -315,7 +315,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.factura.cfdi.conceptos.push(this.newConcep);
       this.calcularImportes();
-      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+      if(this.factura.cfdi.formaPago ==='01' && this.factura.cfdi.total >2000){
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
         this.factura.cfdi.conceptos.pop();//remove last concept
         this.calcularImportes();
@@ -340,19 +340,19 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   calcularImportes() {
-    this.factura.total = 0;
-    this.factura.subtotal = 0;
+    this.factura.cfdi.total = 0;
+    this.factura.cfdi.subtotal = 0;
     for (const concepto of this.factura.cfdi.conceptos) {
 
       const base = concepto.importe - concepto.descuento;
-      this.factura.subtotal += base;
+      this.factura.cfdi.subtotal += base;
       let impuesto = 0;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe * 3 + impuesto * 3) / 3;
       }
-      this.factura.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
+      this.factura.cfdi.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
     }
-    console.log('Importe factura',this.factura.total)
+    console.log('Importe factura',this.factura.cfdi.total)
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
@@ -397,12 +397,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validCdfi = false;
     }
 
-    if (this.factura.formaPago == undefined) {
+    if (this.factura.cfdi.formaPago == undefined) {
       this.errorMessages.push('La forma de pago es un campo requerido.');
       validCdfi = false;
     }
 
-    if (this.factura.metodoPago == undefined) {
+    if (this.factura.cfdi.metodoPago == undefined) {
       this.errorMessages.push('El metodo de pago es un campo requerido.');
       validCdfi = false;
     }
@@ -517,12 +517,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
-    if (this.factura.metodoPago == 'PUE' && Math.abs(this.factura.total - this.newPayment.monto) > 0.01) {
+    if (this.factura.cfdi.metodoPago == 'PUE' && Math.abs(this.factura.cfdi.total - this.newPayment.monto) > 0.01) {
       validPayment = false;
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if ((this.paymentSum + this.newPayment.monto - this.factura.total) > 0.01) {
+    if ((this.paymentSum + this.newPayment.monto - this.factura.cfdi.total) > 0.01) {
       validPayment = false;
       this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
