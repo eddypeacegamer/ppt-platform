@@ -145,18 +145,7 @@ public class CfdiService {
 	
 	
 	
-	//CFDI
-//		public CfdiDto getFacturaCdfi(String folio) throws InvoiceManagerException {
-//			Cfdi entity = cfdiRepository.findByFolio(folio)
-//					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-//							String.format("La factura con el folio %s no existe", folio)));
-//			return cfdiMapper.getCfdiDtoFromEntity(entity);
-//		}
-//		
-//		public CfdiDto insertNewCfdi(String folio, CfdiDto cfdi) {
-//			return  new CfdiDto();//.insertNewCfdi(folio, cfdi);
-//		}
-//
+
 //		public CfdiDto updateFacturaCfdi(String folio, Integer id, CfdiDto dto) throws InvoiceManagerException {
 //			validator.validatePostCfdi(dto, folio);
 //			cfdiRepository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
