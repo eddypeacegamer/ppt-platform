@@ -352,7 +352,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       }
       this.factura.cfdi.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
     }
-    console.log('Importe factura',this.factura.cfdi.total)
+    console.log('Importe factura',this.factura.cfdi.total);
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
@@ -378,6 +378,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.emisor = this.companyInfo.informacionFiscal.rfc;
     }
 
     if (this.clientInfo == undefined) {
@@ -386,6 +387,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     } else {
       this.factura.rfcRemitente = this.clientInfo.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
+      this.factura.cfdi.receptor = this.clientInfo.rfc;
     }
 
     if (this.factura.cfdi.usoCfdi == undefined) {

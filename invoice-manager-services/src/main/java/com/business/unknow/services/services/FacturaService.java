@@ -23,11 +23,8 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.FacturaMapper;
-import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.evaluations.ConceptoEvaluatorService;
@@ -42,16 +39,13 @@ public class FacturaService {
 	private FacturaRepository repository;
 
 	@Autowired
-	private CfdiRepository cfdiRepository;
+	private CfdiService cfdiService;
 
 	@Autowired
 	private PagoRepository pagoRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
-
-	@Autowired
-	private CfdiMapper cfdiMapper;
 
 	@Autowired
 	private TimbradoEvaluatorService timbradoServiceEvaluator;
@@ -96,20 +90,22 @@ public class FacturaService {
 				result.getTotalElements());
 	}
 
-	public FacturaDto getfacturaByFolio(String folio) {
-		FacturaDto dto = mapper.getFacturaDtoFromEntity(
-				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+	public FacturaDto getFacturaByFolio(String folio) {
+		FacturaDto factura =   mapper.getFacturaDtoFromEntity(repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
-		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
-		dto.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null);
-		return dto;
+		factura.setCfdi(cfdiService.getCfdiByFolio(folio));
+		return factura;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); //TODO refactor facturaEvaluation class to only make validations
 		//TODO IF CFDI is PPD generates automatic payment
-		return mapper.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto())));
+		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
+		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
+		entity.setIdCfdi(cfdi.getId());
+		return mapper.getFacturaDtoFromEntity(repository.save(entity));
 	}
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
@@ -127,31 +123,6 @@ public class FacturaService {
 		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
 	}
 	
-	//CFDI
-	public CfdiDto getFacturaCdfi(String folio) throws InvoiceManagerException {
-		Cfdi entity = cfdiRepository.findByFolio(folio)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio)));
-		return cfdiMapper.getCfdiDtoFromEntity(entity);
-	}
-	
-	public CfdiDto insertNewCfdi(String folio, CfdiDto cfdi) {
-		return  new CfdiDto();//.insertNewCfdi(folio, cfdi);
-	}
-
-	public CfdiDto updateFacturaCfdi(String folio, Integer id, CfdiDto dto) throws InvoiceManagerException {
-		validator.validatePostCfdi(dto, folio);
-		cfdiRepository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-				String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
-		return cfdiMapper.getCfdiDtoFromEntity(cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(dto)));
-	}
-
-	public void deleteFacturaCfdi(String folio, Integer id) throws InvoiceManagerException {
-		Cfdi entity = cfdiRepository.findById(id)
-				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
-		cfdiRepository.delete(entity);
-	}
 	
 	//TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {

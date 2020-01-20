@@ -1,6 +1,7 @@
 package com.business.unknow.model.factura.cfdi.components;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,11 +12,20 @@ public class ImpuestoDto implements Serializable{
 
 	private static final long serialVersionUID = 3241569278979852126L;
 	private Integer id;
-	private Double base;
+	private BigDecimal base;
 	private String impuesto;
 	private String tipoFactor;
-	private String tasaOCuota;
-	private Double importe;
+	private BigDecimal tasaOCuota;
+	private BigDecimal importe;
+	
+	public ImpuestoDto() {
+	}
+	
+	public ImpuestoDto(BigDecimal base, BigDecimal importe, BigDecimal tasaOcuota) {
+		this.base = base;
+		this.importe = importe;
+		this.tasaOCuota = tasaOcuota;
+	}
 
 	public Integer getId() {
 		return id;
@@ -24,15 +34,6 @@ public class ImpuestoDto implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public Double getBase() {
-		return base;
-	}
-
-	public void setBase(Double base) {
-		this.base = base;
-	}
-
 	public String getImpuesto() {
 		return impuesto;
 	}
@@ -48,20 +49,28 @@ public class ImpuestoDto implements Serializable{
 	public void setTipoFactor(String tipoFactor) {
 		this.tipoFactor = tipoFactor;
 	}
+	
+	public BigDecimal getBase() {
+		return base;
+	}
 
-	public String getTasaOCuota() {
+	public void setBase(BigDecimal base) {
+		this.base = base;
+	}
+
+	public BigDecimal getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(String tasaOCuota) {
+	public void setTasaOCuota(BigDecimal tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 

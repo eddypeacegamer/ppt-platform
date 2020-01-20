@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -101,13 +99,7 @@ public class Cfdi implements Serializable {
 	@Column(name = "FECHA_TIMBRADO")// Review this date, this is request date not stamp date
 	private Date fecha;
 	
-	@Column(name= "ID_FACTURA")
-	private Integer idFactura;
-	
-	
-
-	@OneToMany(cascade = CascadeType.ALL, 
-	        mappedBy = "cfdi", orphanRemoval = true)
+	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
 	
 	
@@ -332,26 +324,17 @@ public class Cfdi implements Serializable {
 	public void setConceptos(List<Concepto> conceptos) {
 		this.conceptos = conceptos;
 	}
-	
-	public Integer getIdFactura() {
-		return idFactura;
-	}
-
-	public void setIdFactura(Integer idFactura) {
-		this.idFactura = idFactura;
-	}
 
 	@Override
 	public String toString() {
-		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha
-				+ ", sello=" + sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado
-				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total
-				+ ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago
-				+ ", condicionesDePago=" + condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", usoCfdi="
-				+ usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd="
-				+ selloCfd + ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal="
-				+ cadenaOriginal + ", emisor=" + emisor + ", receptor=" + receptor + ", idFactura=" + idFactura
-				+ ", conceptos=" + conceptos + "]";
+		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
+				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", usoCfdi=" + usoCfdi
+				+ ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd
+				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal="
+				+ cadenaOriginal + ", emisor=" + emisor + ", receptor=" + receptor + ", fecha=" + fecha + ", conceptos="
+				+ conceptos + "]";
 	}
-
 }

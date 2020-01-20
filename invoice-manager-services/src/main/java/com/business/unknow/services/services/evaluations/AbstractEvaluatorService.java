@@ -53,6 +53,8 @@ import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.AbstractService;
 import com.business.unknow.services.util.FacturaDefaultValues;;
 
+
+//TODO Evaluations should be only evaluate conditions and not save on DB, follow SRP principle
 public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired

@@ -35,10 +35,10 @@
               <p>{{factura.cfdi.moneda}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <p class="font-weight-bold">Metodo de Pago</p>
-              <p>{{factura.metodoPago}}</p>
+              <p>{{factura.cfdi.metodoPago}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <p class="font-weight-bold">Forma de Pago</p>
-              <p>{{factura.formaPago}}</p>
+              <p>{{factura.cfdi.formaPago}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
                 class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
@@ -114,7 +114,7 @@
             <div class="col-sm-3">
               <label for="inputPayMethod" class="label">Metodo de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
-                [(ngModel)]="factura.metodoPago" (change)="onPayMethodSelected($event.target.value)">
+                [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="PUE">Factura pagada (PUE)</option>
                 <option value="PPD">Factura pago por definir(PPD)</option>
               </select>
@@ -229,7 +229,7 @@
               <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
               </td>
               <td class="text-center">Subtotal</td>
-              <td class="text-center">{{factura.subtotal | currency}}</td>
+              <td class="text-center">{{factura.cfdi.subtotal | currency}}</td>
             </tr>
 
             <tr>
@@ -238,7 +238,7 @@
               <td *ngIf="this.factura.folio == undefined || factura.statusFactura=='Validacion operaciones'" colspan="7">
               </td>
               <td class="text-center">Total</td>
-              <td class="text-center">{{factura.total | currency}}</td>
+              <td class="text-center">{{factura.cfdi.total | currency}}</td>
             </tr>
           </tbody>
         </table>

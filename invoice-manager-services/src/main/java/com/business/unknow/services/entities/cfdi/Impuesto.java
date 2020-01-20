@@ -39,7 +39,7 @@ public class Impuesto implements Serializable {
 	private BigDecimal importe;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CONCEPTO", nullable = false)
+	@JoinColumn(name = "ID_CONCEPTO", referencedColumnName = "ID_CONCEPTO")
 	private Concepto concepto;
 	
 	public Integer getId() {

@@ -3,16 +3,12 @@ package com.business.unknow.services.entities.factura;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,8 +16,6 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.business.unknow.services.entities.cfdi.Cfdi;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -102,18 +96,8 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 	
-
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "facturaCfdiJoin",
-        joinColumns = @JoinColumn(
-            name = "facturaJoinColum", 
-            referencedColumnName = "ID_FACTURA"),
-        inverseJoinColumns = @JoinColumn(
-            name = "cfdiJoinColum", 
-            referencedColumnName = "ID_FACTURA")
-    )
-	private Cfdi cfdi;
+	@Column(name = "ID_CFDI")
+	private Integer idCfdi;
 
 	public Integer getId() {
 		return id;
@@ -290,13 +274,13 @@ public class Factura implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-
-	public Cfdi getCfdi() {
-		return cfdi;
+	
+	public Integer getIdCfdi() {
+		return idCfdi;
 	}
 
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
+	public void setIdCfdi(Integer idCfdi) {
+		this.idCfdi = idCfdi;
 	}
 
 	@Override

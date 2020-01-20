@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { NbDialogRef } from '@nebular/theme';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { Transferencia } from '../../../../models/transferencia';
 import { Giro } from '../../../../models/catalogos/giro';
 import { Empresa } from '../../../../models/empresa';
@@ -53,7 +53,8 @@ export class InvoiceRequestComponent implements OnInit {
   public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*', prodServ: '*', unidad: '*' }
   public loading: boolean = false;
 
-  constructor(
+  constructor(protected ref: NbDialogRef<InvoiceRequestComponent>,
+    private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
