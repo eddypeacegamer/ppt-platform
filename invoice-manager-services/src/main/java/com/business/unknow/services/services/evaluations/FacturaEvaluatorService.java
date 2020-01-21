@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
 @Service
@@ -37,7 +37,7 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 		facturaContext.getFacturaDto().setCfdi(cfdiDto);
 		facturaContext.getFacturaDto().setCfdi(cfdiEvaluatorService
 				.insertNewCfdi(facturaContext.getFacturaDto().getFolio(), facturaContext.getFacturaDto().getCfdi()));
-		if (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
+		if (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			pagoRepository.save(facturaDefaultValues.assignaDefaultsFacturaPPD(facturaContext.getFacturaDto()));
 		}
 		return facturaContext;

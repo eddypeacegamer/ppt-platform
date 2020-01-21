@@ -1,10 +1,10 @@
 package com.business.unknow.commons.validator;
 
 import com.business.unknow.Constants;
-import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 
 public class FacturaValidator extends AbstractValidator{
 

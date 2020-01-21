@@ -7,8 +7,8 @@ import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.services.entities.Pago;
 
 public class FacturaDefaultValues {
@@ -20,7 +20,7 @@ public class FacturaDefaultValues {
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
-		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.getNombre());
+		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name());
 		if (facturaDto.getStatusFactura() == null) {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 		}

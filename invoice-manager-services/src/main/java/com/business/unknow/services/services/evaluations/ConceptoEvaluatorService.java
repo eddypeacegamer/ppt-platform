@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 
 import com.business.unknow.Constants;
 import com.business.unknow.commons.validator.ConceptoValidator;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 

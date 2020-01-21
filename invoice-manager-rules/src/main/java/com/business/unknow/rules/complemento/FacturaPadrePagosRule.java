@@ -7,8 +7,8 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.rules.common.Constants.Prevalidations;
 
 @Rule(name = Prevalidations.FACTURA_PADRE_PAGOS_RULE, description = Prevalidations.FACTURA_PADRE_PAGOS)

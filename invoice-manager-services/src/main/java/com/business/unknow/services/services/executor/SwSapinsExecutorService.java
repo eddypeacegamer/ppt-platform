@@ -19,8 +19,8 @@ import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.client.SwSapiensClient;
 
 @Service
@@ -47,15 +47,15 @@ public class SwSapinsExecutorService {
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();
 			qr.setFolio(context.getFacturaDto().getFolio());
-			qr.setTipoArchivo(TipoArchivoEnum.QR.getDescripcion());
+			qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 			qr.setData(swSapiensConfig.getData().getQrCode());
 			FacturaFileDto xml = new FacturaFileDto();
 			xml.setFolio(context.getFacturaDto().getFolio());
-			xml.setTipoArchivo(TipoArchivoEnum.XML.getDescripcion());
+			xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 			xml.setData(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
 			FacturaFileDto pdf = new FacturaFileDto();
 			pdf.setFolio(context.getFacturaDto().getFolio());
-			pdf.setTipoArchivo(TipoArchivoEnum.PDF.getDescripcion());
+			pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
 			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
 			files.add(qr);
 			files.add(xml);

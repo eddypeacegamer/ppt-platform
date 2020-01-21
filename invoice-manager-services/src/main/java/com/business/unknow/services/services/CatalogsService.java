@@ -15,18 +15,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.model.StatusCatalogoDto;
-import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
-import com.business.unknow.model.catalogs.ClaveUnidadDto;
-import com.business.unknow.model.catalogs.CodigoPostalUiDto;
-import com.business.unknow.model.catalogs.GiroDto;
-import com.business.unknow.model.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.catalogs.StatusFacturaDto;
-import com.business.unknow.model.catalogs.UsoCfdiDto;
+import com.business.unknow.model.dto.catalogs.BancoDto;
+import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
+import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
+import com.business.unknow.model.dto.catalogs.GiroDto;
+import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
+import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
+import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
+import com.business.unknow.model.dto.services.StatusCatalogoDto;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.CodigoPostal;
 import com.business.unknow.services.mapper.CatalogsMapper;
+import com.business.unknow.services.repositories.catalogs.BancoRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveProductoServicioRepository;
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
@@ -80,6 +82,9 @@ public class CatalogsService {
 	private CodigoPostalRepository codigoPostalRepository;
 
 	@Autowired
+	private BancoRepository bancoRepository;
+
+	@Autowired
 	private CatalogsMapper mapper;
 
 	public CodigoPostalUiDto getCodigosPostaleByCode(Integer codigo) {
@@ -88,7 +93,7 @@ public class CatalogsService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados"));
 		CodigoPostalUiDto dto = new CodigoPostalUiDto(String.format("%05d", codigoÇostal.getCodigoPostal()),
 				codigoÇostal.getMunicipio(), codigoÇostal.getEstado());
-		for(CodigoPostal cod:codigos) {
+		for (CodigoPostal cod : codigos) {
 			dto.getColonias().add(cod.getColonia());
 		}
 		return dto;
@@ -161,6 +166,15 @@ public class CatalogsService {
 
 	public List<StatusCatalogoDto> getAllStatusRevision() {
 		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
+	}
+
+	public List<BancoDto> getAllBancos() {
+		return mapper.getBancoDtoFromEntities(bancoRepository.findAll());
+	}
+
+	public BancoDto getAllBancoByName(String name) {
+		return mapper.getBancoDtoFromEntity(bancoRepository.findByNombre(name)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados")));
 	}
 
 }

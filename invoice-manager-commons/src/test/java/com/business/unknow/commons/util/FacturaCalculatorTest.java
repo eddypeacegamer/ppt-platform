@@ -6,8 +6,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculatorTest {
 

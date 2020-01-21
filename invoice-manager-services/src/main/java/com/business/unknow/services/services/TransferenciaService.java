@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.model.TransferenciaDto;
+import com.business.unknow.model.dto.services.TransferenciaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Transferencia;
 import com.business.unknow.services.mapper.TransferenciaMapper;

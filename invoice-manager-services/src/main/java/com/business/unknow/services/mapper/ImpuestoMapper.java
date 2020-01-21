@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)

@@ -1,6 +1,6 @@
 package com.business.unknow.commons.builder;
 
-import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.dto.FacturaDto;
 
 public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 

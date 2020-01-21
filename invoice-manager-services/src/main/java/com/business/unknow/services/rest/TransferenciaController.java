@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.TransferenciaDto;
+import com.business.unknow.model.dto.services.TransferenciaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.TransferenciaService;
 

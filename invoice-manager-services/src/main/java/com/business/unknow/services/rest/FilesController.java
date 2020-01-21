@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.files.FacturaFileDto;
-import com.business.unknow.model.files.ResourceFileDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.services.services.FilesService;
 
 import io.swagger.annotations.Api;

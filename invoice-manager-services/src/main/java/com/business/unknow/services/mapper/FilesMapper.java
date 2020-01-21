@@ -6,8 +6,8 @@ package com.business.unknow.services.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.business.unknow.model.files.FacturaFileDto;
-import com.business.unknow.model.files.ResourceFileDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.services.entities.files.FacturaFile;
 import com.business.unknow.services.entities.files.ResourceFile;
 

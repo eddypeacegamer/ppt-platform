@@ -5,8 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 
 import com.business.unknow.Constants;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculator {
 

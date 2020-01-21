@@ -7,16 +7,16 @@ import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.NumberHelper;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Impuesto;
 import com.business.unknow.model.cfdi.Translado;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
 
 public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTranslatorMapper {

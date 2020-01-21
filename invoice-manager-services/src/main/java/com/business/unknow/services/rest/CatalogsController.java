@@ -16,14 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.StatusCatalogoDto;
-import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
-import com.business.unknow.model.catalogs.ClaveUnidadDto;
-import com.business.unknow.model.catalogs.CodigoPostalUiDto;
-import com.business.unknow.model.catalogs.GiroDto;
-import com.business.unknow.model.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.catalogs.StatusFacturaDto;
-import com.business.unknow.model.catalogs.UsoCfdiDto;
+import com.business.unknow.model.dto.catalogs.BancoDto;
+import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
+import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
+import com.business.unknow.model.dto.catalogs.GiroDto;
+import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
+import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
+import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
+import com.business.unknow.model.dto.services.StatusCatalogoDto;
 import com.business.unknow.services.services.CatalogsService;
 
 /**
@@ -38,15 +39,14 @@ public class CatalogsController {
 	private CatalogsService service;
 
 	@GetMapping("/codigo-postal/{cp}")
-	public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(
-			@PathVariable Integer cp){
+	public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(@PathVariable Integer cp) {
 		return new ResponseEntity<>(service.getCodigosPostaleByCode(cp), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/producto-servicios")
 	public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
 			@RequestParam(name = "descripcion") Optional<String> description,
-			@RequestParam(name = "clave") Optional<Integer> clave){
+			@RequestParam(name = "clave") Optional<Integer> clave) {
 		return new ResponseEntity<>(service.getProductoServicio(description, clave), HttpStatus.OK);
 	}
 
@@ -75,22 +75,32 @@ public class CatalogsController {
 	public ResponseEntity<List<GiroDto>> getGiros() {
 		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/bancos")
+	public ResponseEntity<List<BancoDto>> getBancos() {
+		return new ResponseEntity<>(service.getAllBancos(), HttpStatus.OK);
+	}
+
+	@GetMapping("/bancos/{banco}")
+	public ResponseEntity<BancoDto> getBancoByName(@PathVariable String banco) {
+		return new ResponseEntity<>(service.getAllBancoByName(banco), HttpStatus.OK);
+	}
+
 	@GetMapping("/status-evento")
 	public ResponseEntity<List<StatusCatalogoDto>> getStatusEventos() {
 		return new ResponseEntity<>(service.getAllStatusEvento(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/status-pago")
 	public ResponseEntity<List<StatusCatalogoDto>> getStatusPago() {
 		return new ResponseEntity<>(service.getAllStatusPago(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/status-devolucion")
 	public ResponseEntity<List<StatusCatalogoDto>> getAllStatusDevoluicion() {
 		return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/status-revision")
 	public ResponseEntity<List<StatusCatalogoDto>> getAllStatusRevision() {
 		return new ResponseEntity<>(service.getAllStatusRevision(), HttpStatus.OK);
