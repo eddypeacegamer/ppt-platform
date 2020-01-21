@@ -27,7 +27,6 @@ import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
-import com.business.unknow.services.services.evaluations.ConceptoEvaluatorService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
@@ -55,10 +54,6 @@ public class FacturaService {
 
 	@Autowired
 	private PagoEvaluatorService pagoEvaluatorService;
-	
-	@Autowired
-	private ConceptoEvaluatorService conceptoEvaluatorService;
-
 	
 
 	private FacturaValidator validator = new FacturaValidator();
@@ -105,6 +100,7 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		//TODO IF CFDI is PPD generates automatic payment
 		return mapper.getFacturaDtoFromEntity(repository.save(entity));
 	}
 
@@ -156,15 +152,4 @@ public class FacturaService {
 	}
 	
 	
-	//CONCEPTOS In refactor transition
-	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public ConceptoDto insertConcepto(String folio, ConceptoDto conceptoDto) throws InvoiceManagerException {
-		return new ConceptoDto();//conceptoEvaluatorService.validateConceptoCreation(conceptoDto,folio);
-	}
-	
-	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public void deleteconcepto(int id,String folio) throws InvoiceManagerException {
-		//conceptoEvaluatorService.validateConceptoDelete(id, folio);
-	}
-
 }
