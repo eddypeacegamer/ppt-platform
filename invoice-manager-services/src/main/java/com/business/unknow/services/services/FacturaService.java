@@ -22,7 +22,6 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
