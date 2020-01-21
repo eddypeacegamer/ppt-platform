@@ -1,6 +1,7 @@
 package com.business.unknow.commons.builder;
 
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 
 public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 
@@ -56,29 +57,24 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		instance.setFolioPadre(folioPadre);
 		return this;
 	}
-
-	public FacturaBuilder setFormaPago(String formaPago) {
-		instance.setFormaPago(formaPago);
-		return this;
-	}
-
-	public FacturaBuilder setTotal(double total) {
-		instance.setTotal(total);
-		return this;
-	}
 	
-	public FacturaBuilder setMetodoPago(String metodoPago) {
-		instance.setMetodoPago(metodoPago);
-		return this;
-	}
-	
-	public FacturaBuilder setPackFacturacion(String packFacturacion) {
-		instance.setPackFacturacion(packFacturacion);
+	public FacturaBuilder setCfdi(CfdiDto cfdi) {
+		instance.setCfdi(cfdi);
 		return this;
 	}
 	
 	public FacturaBuilder setTipoDocumento(String tipoDocumento) {
 		instance.setTipoDocumento(tipoDocumento);
+		return this;
+	}
+
+	public FacturaBuilder setPackFacturacion(String packFacturacion) {
+		instance.setPackFacturacion(packFacturacion);
+		return this;
+	}
+	
+	public FacturaBuilder setFormaPago(String formaPago) {
+		instance.getCfdi().setFormaPago(formaPago);
 		return this;
 	}
 	

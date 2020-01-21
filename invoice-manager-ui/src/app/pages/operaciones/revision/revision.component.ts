@@ -117,35 +117,36 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN'
-    this.factura.metodoPago = 'PUE'
+    this.factura.cfdi.metodoPago = 'PUE'
     this.formInfo.payType = this.payTypeCat[0].id;
   }
 
-  public getInvoiceByFolio(folio:string){
+  public getInvoiceByFolio(folio: string) {
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
         fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
         fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
         fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
         fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-        fac.formaPago = this.payTypeCat.find(v => v.id == fac.formaPago).value;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
         return fac;
-      })).subscribe(invoice => {this.factura = invoice;
-        console.log(this.factura);
-        if(invoice.metodoPago == 'PPD'){
+      })).subscribe(invoice => {
+        this.factura = invoice;
+        if (invoice.cfdi.metodoPago == 'PPD') {
           this.invoiceService.getComplementosInvoice(folio)
-                .pipe(
-                  map((facturas:Factura[]) =>{
-                    return facturas.map(record=>{
-                      record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
-                      record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
-                      record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                      record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
-                      return record;})
-                  }))
-          .subscribe(complementos => this.complementos = complementos);
+            .pipe(
+              map((facturas: Factura[]) => {
+                return facturas.map(record => {
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  return record;
+                })
+              }))
+            .subscribe(complementos => this.complementos = complementos);
         }
-        },
+      },
         error => {
           console.error('Info cant found, creating a new invoice:', error)
           this.initVariables();
@@ -195,12 +196,12 @@ export class RevisionComponent implements OnInit {
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
       this.payTypeCat = [new Status('99', 'Por definir')];
-      this.factura.formaPago= '99';
-      this.factura.metodoPago = 'PPD';
+      this.factura.cfdi.formaPago= '99';
+      this.factura.cfdi.metodoPago = 'PPD';
     } else {
-      this.factura.metodoPago = 'PUE';
+      this.factura.cfdi.metodoPago = 'PUE';
       this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
-      this.factura.formaPago = '01';
+      this.factura.cfdi.formaPago = '01';
     }
     this.formInfo.payType = this.payTypeCat[0].id;
   }
@@ -236,11 +237,11 @@ export class RevisionComponent implements OnInit {
   }
 
   onMetodoDePagoSelected(clave: string) {
-    this.factura.metodoPago = clave;
+    this.factura.cfdi.metodoPago = clave;
   }
 
   onFormaDePagoSelected(clave: string) {
-    this.factura.formaPago = clave;
+    this.factura.cfdi.formaPago = clave;
   }
 
 
@@ -308,7 +309,7 @@ export class RevisionComponent implements OnInit {
       
       if(this.newConcep.iva){this.newConcep.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];}//IVA is harcoded
       this.calcularImportes();
-      if(this.factura.formaPago ==='01' && this.factura.total >2000){
+      if(this.factura.cfdi.formaPago ==='01' && this.factura.cfdi.total >2000){
         alert('Para pagos en efectivo el monto total de la factura no puede superar los 2000 MXN');
       }
       this.invoiceService.insertConcepto(this.factura.folio,{ ... this.newConcep })
@@ -324,18 +325,18 @@ export class RevisionComponent implements OnInit {
   }
 
   calcularImportes(){
-    this.factura.total = 0;
-    this.factura.subtotal = 0;
+    this.factura.cfdi.total = 0;
+    this.factura.cfdi.subtotal = 0;
     for (const concepto of this.factura.cfdi.conceptos) {
 
       const base = concepto.importe - concepto.descuento;
-      this.factura.subtotal += base;
+      this.factura.cfdi.subtotal += base;
       let impuesto = 0;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe*3 + impuesto * 3) / 3;
       }
       console.log('impuesto',impuesto);
-      this.factura.total += (base *3 + impuesto * 3)/3;
+      this.factura.cfdi.total += (base *3 + impuesto * 3)/3;
     }
   }
 
@@ -358,21 +359,19 @@ export class RevisionComponent implements OnInit {
     )
   }
 
-  public aceptarFactura(){
+  public aceptarFactura() {
     this.loading = true;
     this.successMessage = undefined;
     this.errorMessages = [];
-    let fact = { ...this.factura };
-    if(fact.metodoPago ==='PPD'){
-      fact.statusFactura = '4';// update to por timbrar
-    }else{
-      fact.statusFactura = '2' // update to validacion tesoreria
+    const fact = { ...this.factura };
+    if (fact.cfdi.metodoPago === 'PPD') {
+      fact.statusFactura = '4'; // update to por timbrar
+    }else {
+      fact.statusFactura = '2'; // update to validacion tesoreria
     }
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
-
-    
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
       this.loading = false;
       console.log('factura actualizada correctamente');
@@ -391,7 +390,7 @@ export class RevisionComponent implements OnInit {
     fact.statusFactura = '6';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
     
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
@@ -414,7 +413,7 @@ export class RevisionComponent implements OnInit {
     fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
@@ -443,7 +442,7 @@ export class RevisionComponent implements OnInit {
     fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.formaPago = this.payTypeCat.find(v => v.value == fact.formaPago).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
 
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; 
@@ -539,12 +538,12 @@ export class RevisionComponent implements OnInit {
       validPayment = false;
       this.payErrorMessages.push('La imagen del documento de pago es requerida.');
     }
-    if (this.factura.metodoPago == 'PUE' && Math.abs(this.factura.total - this.newPayment.monto) > 0.01) {
+    if (this.factura.cfdi.metodoPago == 'PUE' && Math.abs(this.factura.cfdi.total - this.newPayment.monto) > 0.01) {
       validPayment = false;
       this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
     }
 
-    if ((this.paymentSum + this.newPayment.monto - this.factura.total) > 0.01 ) {
+    if ((this.paymentSum + this.newPayment.monto - this.factura.cfdi.total) > 0.01 ) {
       validPayment = false;
       this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
@@ -565,7 +564,7 @@ export class RevisionComponent implements OnInit {
                   record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
                   record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
                   record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                  record.formaPago = this.payTypeCat.find(v => v.id == record.formaPago).value;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
                   return record;})
               }))
             .subscribe(complementos => this.complementos = complementos);

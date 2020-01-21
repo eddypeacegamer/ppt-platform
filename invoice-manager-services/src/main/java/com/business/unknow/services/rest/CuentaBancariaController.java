@@ -30,5 +30,6 @@ public class CuentaBancariaController {
 			@RequestParam(name = "banco", required = false) Optional<String> banco) {
 		return new ResponseEntity<>(service.getCuentasBancariasByfilters(banco, empresa), HttpStatus.OK);
 	}
+	
 
 }

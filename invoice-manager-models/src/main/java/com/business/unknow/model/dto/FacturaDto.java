@@ -19,6 +19,7 @@ public class FacturaDto implements Serializable {
 	private String lineaEmisor;
 	private String razonSocialRemitente;
 	private String lineaRemitente;
+	private String tipoDocumento;
 	private String solicitante;
 	private String folio;
 	private String folioPadre;
@@ -27,14 +28,8 @@ public class FacturaDto implements Serializable {
 	private Integer statusDevolucion;
 	private Integer statusFactura;
 	private String statusDetail;
-	private String tipoDocumento;
-	private String formaPago;
-	private String metodoPago;
 	private String packFacturacion;
 	private String notas;
-	private Double total;
-	private Double subtotal;
-	private Double descuento;
 	private Date fechaCreacion;
 	private Date fechaCancelacion;
 	private Date fechaActualizacion;
@@ -75,6 +70,12 @@ public class FacturaDto implements Serializable {
 	}
 	public void setRazonSocialRemitente(String razonSocialRemitente) {
 		this.razonSocialRemitente = razonSocialRemitente;
+	}
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 	public String getLineaRemitente() {
 		return lineaRemitente;
@@ -130,24 +131,6 @@ public class FacturaDto implements Serializable {
 	public void setStatusDetail(String statusDetail) {
 		this.statusDetail = statusDetail;
 	}
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-	public String getFormaPago() {
-		return formaPago;
-	}
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
-	public String getMetodoPago() {
-		return metodoPago;
-	}
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
 	public String getPackFacturacion() {
 		return packFacturacion;
 	}
@@ -159,24 +142,6 @@ public class FacturaDto implements Serializable {
 	}
 	public void setNotas(String notas) {
 		this.notas = notas;
-	}
-	public Double getTotal() {
-		return total;
-	}
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-	public Double getSubtotal() {
-		return subtotal;
-	}
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}
-	public Double getDescuento() {
-		return descuento;
-	}
-	public void setDescuento(Double descuento) {
-		this.descuento = descuento;
 	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
@@ -213,13 +178,12 @@ public class FacturaDto implements Serializable {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
-				+ ", solicitante=" + solicitante + ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid
-				+ ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
-				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
-				+ formaPago + ", metodoPago=" + metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas
-				+ ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaCreacion="
-				+ fechaCreacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
+				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
+				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
+				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
+				+ ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
 	}
 
 }

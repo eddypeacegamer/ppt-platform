@@ -1,10 +1,11 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +34,7 @@ public class Concepto implements Serializable {
 	private String noIdentificacion;
 
 	@Column(name = "CANTIDAD")
-	private Integer cantidad;
+	private Double cantidad;
 
 	@Column(name = "CLAVE_UNIDAD")
 	private String claveUnidad;
@@ -45,23 +46,23 @@ public class Concepto implements Serializable {
 	private String descripcion;
 
 	@Column(name = "VALOR_UNITARIO")
-	private Double valorUnitario;
+	private BigDecimal valorUnitario;
 
 	@Column(name = "IMPORTE")
-	private Double importe;
+	private BigDecimal importe;
 
 	@Column(name = "DESCUENTO")
-	private Double descuento;
+	private BigDecimal descuento;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
 
-	@OneToMany(mappedBy = "concepto")
-	private List<Impuesto> impuestos;
+	@OneToMany(mappedBy = "concepto",orphanRemoval = true)
+	private transient List<Impuesto> impuestos;
 
-	@OneToMany(mappedBy = "concepto")
-	private List<Retencion> retenciones;
+	@OneToMany(mappedBy = "concepto",orphanRemoval = true)
+	private transient List<Retencion> retenciones;
 
 	public Integer getId() {
 		return id;
@@ -79,14 +80,14 @@ public class Concepto implements Serializable {
 		this.noIdentificacion = noIdentificacion;
 	}
 
-	public Integer getCantidad() {
+	public Double getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Integer cantidad) {
+	public void setCantidad(Double cantidad) {
 		this.cantidad = cantidad;
 	}
-	
+
 	public String getDescripcionCUPS() {
 		return descripcionCUPS;
 	}
@@ -118,28 +119,28 @@ public class Concepto implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
-	public Double getValorUnitario() {
+	
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 
-	public Double getDescuento() {
+	public BigDecimal getDescuento() {
 		return descuento;
 	}
 
-	public void setDescuento(Double descuento) {
+	public void setDescuento(BigDecimal descuento) {
 		this.descuento = descuento;
 	}
 
@@ -150,7 +151,7 @@ public class Concepto implements Serializable {
 	public void setClaveProdServ(String claveProdServ) {
 		this.claveProdServ = claveProdServ;
 	}
-
+	
 	public Cfdi getCfdi() {
 		return cfdi;
 	}

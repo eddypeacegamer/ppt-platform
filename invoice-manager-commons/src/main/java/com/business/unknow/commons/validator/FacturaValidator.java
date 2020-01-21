@@ -45,6 +45,10 @@ public class FacturaValidator extends AbstractValidator{
 		checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
 		checkNotNull(dto.getCfdi(), "cfdi");
+		checkNotNull(dto.getCfdi().getReceptor(), "RFC receptor");
+		checkNotNull(dto.getCfdi().getEmisor(), "RFC Emisor");
+		//TODO validate all mandatory fields CFDI here or make a CFDI validator
+		
 	}
 	
 	public void validatePostCfdi(CfdiDto dto,String folio) throws InvoiceManagerException {

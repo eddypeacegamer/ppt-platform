@@ -45,8 +45,9 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 
 	public void generaDevolucionComplemento(FacturaDto facturaDto, PagoDto pagoDto,Client client) throws InvoiceManagerException {
 		FacturaContext context = buildFacturaContextForComplementoDevolution(facturaDto, pagoDto);
-		Double porcentajeComisiones = (context.getFacturaPadreDto().getTotal()
-				- context.getFacturaPadreDto().getSubtotal()) / context.getFacturaPadreDto().getTotal();
+		Double porcentajeComisiones = context.getFacturaPadreDto().getCfdi().getTotal().subtract(context.getFacturaPadreDto().getCfdi().getSubtotal())
+				.divide(context.getFacturaPadreDto().getCfdi().getTotal()).doubleValue();
+			
 		Facts facts = new Facts();
 		facts.put("facturaContext", context);
 		rulesEngine.fire(devolucionSuite.getSuite(), facts);
@@ -94,7 +95,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 	}
 
 	public void generaDevolucionPue(FacturaDto facturaDto, PagoDto pagoDto,Client client) throws InvoiceManagerException {
-		Double baseComisiones = facturaDto.getTotal() - facturaDto.getSubtotal();
+		Double baseComisiones = facturaDto.getCfdi().getTotal().subtract(facturaDto.getCfdi().getSubtotal()).doubleValue();
 		FacturaContext context = buildFacturaContextForPueDevolution(facturaDto, pagoDto);
 		Facts facts = new Facts();
 		facts.put("facturaContext", context);
@@ -111,7 +112,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(),
 					ContactoDevolucionEnum.CLIENTE.name());
-			devolucion.setMonto(context.getFacturaDto().getSubtotal() + devolucion.getMonto());
+			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal().doubleValue() + devolucion.getMonto());
 			devolucionRepository.save(devolucion);
 		}
 		if (client.getPorcentajeContacto() > 0) {

@@ -53,6 +53,8 @@ import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.AbstractService;
 import com.business.unknow.services.util.FacturaDefaultValues;;
 
+
+//TODO Evaluations should be only evaluate conditions and not save on DB, follow SRP principle
 public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
@@ -183,7 +185,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
+				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
 				.setCtdadComplementos(repository
 						.findByFolioPadre(
 								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
@@ -207,7 +209,7 @@ public class AbstractEvaluatorService extends AbstractService {
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
+				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento()).build();
 	}
 
 	protected FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
@@ -239,14 +241,13 @@ public class AbstractEvaluatorService extends AbstractService {
 	protected FacturaDto buildFacturaDtoPagoPpdCreation(FacturaContext facturaContext){
 		return new FacturaBuilder().setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
 				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
-				.setMetodoPago(facturaContext.getFacturaPadreDto().getMetodoPago())
+				.setCfdi(facturaContext.getFacturaPadreDto().getCfdi())
 				.setLineaEmisor(facturaContext.getFacturaPadreDto().getLineaEmisor())
 				.setRfcEmisor(facturaContext.getFacturaPadreDto().getRfcEmisor())
 				.setRfcRemitente(facturaContext.getFacturaPadreDto().getRfcRemitente())
 				.setLineaRemitente(facturaContext.getFacturaPadreDto().getLineaRemitente())
 				.setRazonSocialEmisor(facturaContext.getFacturaPadreDto().getRazonSocialEmisor())
 				.setRazonSocialRemitente(facturaContext.getFacturaPadreDto().getRazonSocialRemitente())
-				.setTotal(facturaContext.getCurrentPago().getMonto())
 				.setSolicitante(facturaContext.getFacturaPadreDto().getSolicitante())
 				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
 				.setFormaPago(FormaPagoEnum.findByDesc(facturaContext.getCurrentPago().getFormaPago()).getClave())

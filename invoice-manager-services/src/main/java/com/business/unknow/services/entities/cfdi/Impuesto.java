@@ -1,6 +1,7 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ public class Impuesto implements Serializable {
 	private Integer id;
 
 	@Column(name = "BASE")
-	private Double base;
+	private BigDecimal base;
 
 	@Column(name = "IMPUESTO")
 	private String impuesto;
@@ -32,15 +33,15 @@ public class Impuesto implements Serializable {
 	private String tipoFactor;
 
 	@Column(name = "TASA_CUOTA")
-	private String tasaOCuota;
+	private BigDecimal tasaOCuota;
 
 	@Column(name = "IMPORTE")
-	private Double importe;
+	private BigDecimal importe;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CONCEPTO", nullable = false)
+	@JoinColumn(name = "ID_CONCEPTO", referencedColumnName = "ID_CONCEPTO")
 	private Concepto concepto;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -49,11 +50,11 @@ public class Impuesto implements Serializable {
 		this.id = id;
 	}
 
-	public Double getBase() {
+	public BigDecimal getBase() {
 		return base;
 	}
 
-	public void setBase(Double base) {
+	public void setBase(BigDecimal base) {
 		this.base = base;
 	}
 
@@ -73,19 +74,19 @@ public class Impuesto implements Serializable {
 		this.tipoFactor = tipoFactor;
 	}
 
-	public String getTasaOCuota() {
+	public BigDecimal getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(String tasaOCuota) {
+	public void setTasaOCuota(BigDecimal tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 

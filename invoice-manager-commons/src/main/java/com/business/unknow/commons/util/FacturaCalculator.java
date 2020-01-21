@@ -3,6 +3,7 @@ package com.business.unknow.commons.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.business.unknow.Constants;
 import com.business.unknow.model.dto.FacturaDto;
@@ -38,7 +39,7 @@ public class FacturaCalculator {
 	}
 
 	public void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
-		String date = dateHelper.getStringFromFecha(dto.getFechaActualizacion(), Constants.DATE_FOLIO_FORMAT);
+		String date = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_FORMAT);
 		String emisor;
 		String receptor;
 		if (dto.getRfcEmisor() != null && dto.getRfcEmisor().length() > 4) {
@@ -54,7 +55,7 @@ public class FacturaCalculator {
 					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
 		}
 		String folio = emisor.concat(receptor).concat(date)
-				.concat(dto.getMetodoPago());
+				.concat(dto.getCfdi().getMetodoPago());
 		dto.setFolio(folio);
 		if (dto.getCfdi() != null) {
 			dto.getCfdi().setFolio(folio);

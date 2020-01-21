@@ -1,8 +1,10 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,48 +29,93 @@ public class Cfdi implements Serializable {
 
 	@Column(name = "SERIE")
 	private String serie;
-
+	
 	@Column(name = "FOLIO")
 	private String folio;
-
+	
 	@Column(name = "SELLO")
 	private String sello;
-
+	
 	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
 
 	@Column(name = "CERTIFICADO")
 	private String certificado;
-
+	
 	@Column(name = "MONEDA")
 	private String moneda;
+	
+	@Column(name = "SUBTOTAL")
+	private BigDecimal subtotal;
+	
+	@Column(name = "DESCUENTO")
+	private BigDecimal descuento;
+	
+	@Column(name = "TOTAL")
+	private BigDecimal total;
 
 	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
-
+	
+	@Column(name = "METODO_PAGO")
+	private String metodoPago;
+	
+	@Column(name = "FORMA_PAGO")
+	private String formaPago;
+	
+	@Column(name = "CONDICIONES_PAGO")
+	private String condicionesDePago;
+	
+	@Column(name = "LUGAR_EXPEDICION")
+	private String lugarExpedicion;
+	
 	@Column(name = "USO_CFDI")
 	private String usoCfdi;
 
-	@Column(name = "REGIMEN_FISCAL")
+	@Column(name = "REGIMEN_FISCAL")//EVALUATE if is better get this from emisor
 	private String regimenFiscal;
 
-	@Column(name = "RFC_PROV_CERTIF")
+	@Column(name = "RFC_PROV_CERTIF") //EVALUATE if is better set this at complemento level
 	private String rfcProvCertif;
 
-	@Column(name = "SELLO_CFD")
+	@Column(name = "SELLO_CFD") //EVALUATE if is better set this at complemento level
 	private String selloCfd;
 
-	@Column(name = "NO_CERTIFICADO_SAT")
+	@Column(name = "NO_CERTIFICADO_SAT") //EVALUATE if is better set this at complemento level
 	private String noCertificadoSat;
 
-	@Column(name = "SELLO_SAT")
+	@Column(name = "SELLO_SAT") //EVALUATE if is better set this at complemento level
 	private String selloSat;
 	
-	@Column(name = "CADENA_ORIGINAL")
+	@Column(name = "CADENA_ORIGINAL") //EVALUATE if is better set this at complemento level
 	private String cadenaOriginal;
-
+	
+	@Column(name = "RFC_EMISOR")
+	private String emisor;
+	
+	@Column(name = "RFC_RECEPTOR")
+	private String receptor;
+	
+	@Column(name = "FECHA_TIMBRADO")// Review this date, this is request date not stamp date
+	private Date fecha;
+	
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
+	
+	
+	//TODO Evaliuate add Complemento and TimbreFicalDigital hierarchie here
+	
+	public Cfdi() {
+		this.conceptos = new ArrayList<Concepto>();
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getVersion() {
 		return version;
@@ -92,6 +139,14 @@ public class Cfdi implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 
 	public String getSello() {
@@ -118,6 +173,22 @@ public class Cfdi implements Serializable {
 		this.certificado = certificado;
 	}
 
+	public BigDecimal getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public BigDecimal getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(BigDecimal descuento) {
+		this.descuento = descuento;
+	}
+
 	public String getMoneda() {
 		return moneda;
 	}
@@ -126,12 +197,52 @@ public class Cfdi implements Serializable {
 		this.moneda = moneda;
 	}
 
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
 	public String getTipoDeComprobante() {
 		return tipoDeComprobante;
 	}
 
 	public void setTipoDeComprobante(String tipoDeComprobante) {
 		this.tipoDeComprobante = tipoDeComprobante;
+	}
+
+	public String getMetodoPago() {
+		return metodoPago;
+	}
+
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
+	}
+
+	public String getFormaPago() {
+		return formaPago;
+	}
+
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
+	}
+
+	public String getCondicionesDePago() {
+		return condicionesDePago;
+	}
+
+	public void setCondicionesDePago(String condicionesDePago) {
+		this.condicionesDePago = condicionesDePago;
+	}
+
+	public String getLugarExpedicion() {
+		return lugarExpedicion;
+	}
+
+	public void setLugarExpedicion(String lugarExpedicion) {
+		this.lugarExpedicion = lugarExpedicion;
 	}
 
 	public String getUsoCfdi() {
@@ -182,22 +293,6 @@ public class Cfdi implements Serializable {
 		this.selloSat = selloSat;
 	}
 
-	public List<Concepto> getConceptos() {
-		return conceptos;
-	}
-
-	public void setConceptos(List<Concepto> conceptos) {
-		this.conceptos = conceptos;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
 	public String getCadenaOriginal() {
 		return cadenaOriginal;
 	}
@@ -206,13 +301,40 @@ public class Cfdi implements Serializable {
 		this.cadenaOriginal = cadenaOriginal;
 	}
 
-	@Override
-	public String toString() {
-		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
-				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
-				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
-				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
-				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
+	public String getEmisor() {
+		return emisor;
 	}
 
+	public void setEmisor(String emisor) {
+		this.emisor = emisor;
+	}
+
+	public String getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
+	}
+
+	public List<Concepto> getConceptos() {
+		return conceptos;
+	}
+
+	public void setConceptos(List<Concepto> conceptos) {
+		this.conceptos = conceptos;
+	}
+
+	@Override
+	public String toString() {
+		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
+				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", usoCfdi=" + usoCfdi
+				+ ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd
+				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal="
+				+ cadenaOriginal + ", emisor=" + emisor + ", receptor=" + receptor + ", fecha=" + fecha + ", conceptos="
+				+ conceptos + "]";
+	}
 }

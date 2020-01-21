@@ -20,6 +20,7 @@ import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
@@ -117,23 +118,23 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 
 	public PagoDto validatePagoCreation(String folio, PagoDto pagoDto) throws InvoiceManagerException {
 		FacturaContext facturaContext;
-		Factura factura = repository.findByFolio(folio)
+		FacturaDto factura = facturaMapper.getFacturaDtoFromEntity(repository.findByFolio(folio)
 				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
-						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value()));
+						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value())));
 		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
-		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
+		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			facturaContext = validatePagoPpdCreation(folio, pagoDto, factura);
-		} else if (factura.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 			facturaContext = validatePagoPueCreation(folio, pagoDto);
 		} else {
 			throw new InvoiceManagerException("Metodo de pago no soportado",
-					String.format("El metodo de pago %s no es valido", factura.getMetodoPago()),
+					String.format("El metodo de pago %s no es valido", factura.getCfdi().getMetodoPago()),
 					HttpStatus.BAD_REQUEST.value());
 		}
 		return pagoExecutorService.PagoCreation(facturaContext);
 	}
 
-	private FacturaContext validatePagoPpdCreation(String folio, PagoDto pagoDto, Factura factura)
+	private FacturaContext validatePagoPpdCreation(String folio, PagoDto pagoDto, FacturaDto factura)
 			throws InvoiceManagerException {
 		FacturaContext facturaContext=buildFacturaContextPagoPpdCreation(pagoDto, folio);
 		Facts facts = new Facts();

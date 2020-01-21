@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,9 @@ public class ConceptoDto implements Serializable {
 	private String descripcionCUPS;
 	private String unidad;
 	private String descripcion;
-	private Double valorUnitario;
-	private Double importe;
-	private Double descuento;
+	private BigDecimal valorUnitario;
+	private BigDecimal importe;
+	private BigDecimal descuento;
 	private List<ImpuestoDto> impuestos = new ArrayList<>();
 	private List<RetencionDto> retenciones = new ArrayList<>();
 	public Integer getId() {
@@ -73,22 +74,22 @@ public class ConceptoDto implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public Double getValorUnitario() {
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
-	public Double getDescuento() {
+	public BigDecimal getDescuento() {
 		return descuento;
 	}
-	public void setDescuento(Double descuento) {
+	public void setDescuento(BigDecimal descuento) {
 		this.descuento = descuento;
 	}
 	public List<ImpuestoDto> getImpuestos() {
