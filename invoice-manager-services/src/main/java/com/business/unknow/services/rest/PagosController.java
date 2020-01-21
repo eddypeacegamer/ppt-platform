@@ -41,11 +41,7 @@ public class PagosController {
 	
 	@Autowired
 	private DevolucionService devolucionService;
-	
-//	@Autowired
-//	private AnimalDispatcher dispatcher;
-	
-	
+
 	@GetMapping
 	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getAllPayments(

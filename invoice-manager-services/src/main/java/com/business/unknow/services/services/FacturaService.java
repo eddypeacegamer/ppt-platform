@@ -66,7 +66,8 @@ public class FacturaService {
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
 		if (folio.isPresent()) {
-			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(0, 10));
+			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
+					PageRequest.of(0, 10, Sort.by("fechaCreacion").descending()));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,
@@ -85,7 +86,7 @@ public class FacturaService {
 			} else {
 				result = repository.findByLineaEmisorWithParams(lineaEmisor, start, end,
 						String.format("%%%s%%", rfcEmisor), String.format("%%%s%%", rfcRemitente),
-						PageRequest.of(page, size));
+						PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 			}
 
 		}

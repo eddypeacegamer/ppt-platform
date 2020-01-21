@@ -9,23 +9,23 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BANCOS")
-public class Banco implements Serializable{
+public class Banco implements Serializable {
 
 	private static final long serialVersionUID = 5619170839532161430L;
 
 	@Id
 	@Column(name = "ID_BANCO")
-	private Integer clave;
+	private Integer id;
 
 	@Column(name = "NOMBRE")
 	private String nombre;
 
-	public Integer getClave() {
-		return clave;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setClave(Integer clave) {
-		this.clave = clave;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getNombre() {
@@ -38,7 +38,7 @@ public class Banco implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Banco [clave=" + clave + ", nombre=" + nombre + "]";
+		return "Catalog [id=" + id + ", nombre=" + nombre + "]";
 	}
 
 }

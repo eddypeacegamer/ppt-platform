@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +45,14 @@ public class PagoService {
 		Page<Pago> result;
 		if (folio.isPresent()) {
 			log.info("Searching PaymentsByFolio {}", folio.get());
-			result = repository.findByFolioIgnoreCaseContaining(folio.get(), PageRequest.of(0, 10));
+			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
+					PageRequest.of(0, 10, Sort.by("fechaCreacion").descending()));
 		} else {
 			log.info("Search payments by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago,
 					banco, start, end);
 			result = repository.findPagosByFilterParams(String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size));
+					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 		}
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
@@ -65,7 +67,7 @@ public class PagoService {
 				start, end);
 		Page<Pago> result = repository.findIngresosByFilterParams(String.format("%%%s%%", status),
 				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
-				start, end, PageRequest.of(page, size));
+				start, end, PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -79,7 +81,7 @@ public class PagoService {
 				start, end);
 		Page<Pago> result = repository.findEgresosByFilterParams(String.format("%%%s%%", status),
 				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
-				start, end, PageRequest.of(page, size));
+				start, end, PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());

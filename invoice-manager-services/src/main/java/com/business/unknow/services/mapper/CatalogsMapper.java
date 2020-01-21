@@ -7,15 +7,13 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.dto.catalogs.BancoDto;
+import com.business.unknow.model.dto.catalogs.CatalogDto;
 import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalDto;
-import com.business.unknow.model.dto.catalogs.GiroDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
-import com.business.unknow.model.dto.services.StatusCatalogoDto;
 import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
@@ -36,10 +34,12 @@ import com.business.unknow.services.entities.catalogs.UsoCfdi;
 @Mapper
 public interface CatalogsMapper {
 
-	List<BancoDto> getBancoDtoFromEntities(List<Banco> bancos);
-
-	BancoDto getBancoDtoFromEntity(Banco banco);
-
+	List<CatalogDto> getBancoDtoFromEntities(List<Banco> bancos);
+	CatalogDto getBancoDtoFromEntity(Banco banco);
+	
+	List<CatalogDto> getGirosDtoFromEntities(List<Giro> giro);
+	CatalogDto getGirosDtoFromEntity(Giro giro);
+	
 	List<CodigoPostalDto> getCodigoPostalUiDtoFromEntity(List<CodigoPostal> codigoPostales);
 
 	CodigoPostalDto getCodigoPostalDtoFromEntity(CodigoPostal codigoPostal);
@@ -68,15 +68,11 @@ public interface CatalogsMapper {
 
 	List<StatusFacturaDto> getStatusFacturaDtosFromEntities(List<StatusFactura> claveUnidad);
 
-	GiroDto getGiroDtoFromEntity(Giro giro);
+	List<CatalogDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
 
-	List<GiroDto> getGiroDtosFromEntities(List<Giro> prodServicio);
+	List<CatalogDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
 
-	List<StatusCatalogoDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
+	List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
 
-	List<StatusCatalogoDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
-
-	List<StatusCatalogoDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
-
-	List<StatusCatalogoDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
+	List<CatalogDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
 }

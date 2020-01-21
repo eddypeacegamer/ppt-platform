@@ -83,31 +83,6 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
 	}
 
-	// CFDI
-//	@GetMapping("/{folio}/cfdi")
-//	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
-//		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);
-//	}
-//
-//	@PostMapping("/{folio}/cfdi")
-//	public ResponseEntity<CfdiDto> insertFacturaCfdi(@PathVariable String folio, @RequestBody @Valid CfdiDto cfdi)
-//			throws InvoiceManagerException {
-//		return new ResponseEntity<>(service.insertNewCfdi(folio, cfdi), HttpStatus.OK);
-//	}
-//
-//	@PutMapping("/{folio}/cfdi/{id}")
-//	public ResponseEntity<CfdiDto> updateFacturaCfdi(@PathVariable String folio, @PathVariable Integer id,
-//			@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
-//		return new ResponseEntity<>(service.updateFacturaCfdi(folio, id, cfdi), HttpStatus.OK);
-//	}
-
-//	@DeleteMapping("/{folio}/cfdi/{id}")
-//	public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable String folio, @PathVariable Integer id)
-//			throws InvoiceManagerException {
-//		service.deleteFacturaCfdi(folio, id);
-//		return new ResponseEntity<Void>(HttpStatus.OK);
-//	}
-
 	// PAGOS
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
