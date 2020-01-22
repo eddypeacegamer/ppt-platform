@@ -5,15 +5,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecorator;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)

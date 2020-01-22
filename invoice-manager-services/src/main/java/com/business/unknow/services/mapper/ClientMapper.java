@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.Client;
 
 /**

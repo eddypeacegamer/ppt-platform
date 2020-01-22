@@ -7,14 +7,14 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.StatusCatalogoDto;
-import com.business.unknow.model.catalogs.ClaveProductoServicioDto;
-import com.business.unknow.model.catalogs.ClaveUnidadDto;
-import com.business.unknow.model.catalogs.CodigoPostalDto;
-import com.business.unknow.model.catalogs.GiroDto;
-import com.business.unknow.model.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.catalogs.StatusFacturaDto;
-import com.business.unknow.model.catalogs.UsoCfdiDto;
+import com.business.unknow.model.dto.catalogs.CatalogDto;
+import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
+import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
+import com.business.unknow.model.dto.catalogs.CodigoPostalDto;
+import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
+import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
+import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
+import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.CodigoPostal;
@@ -33,15 +33,21 @@ import com.business.unknow.services.entities.catalogs.UsoCfdi;
  */
 @Mapper
 public interface CatalogsMapper {
+
+	List<CatalogDto> getBancoDtoFromEntities(List<Banco> bancos);
+	CatalogDto getBancoDtoFromEntity(Banco banco);
+	
+	List<CatalogDto> getGirosDtoFromEntities(List<Giro> giro);
+	CatalogDto getGirosDtoFromEntity(Giro giro);
 	
 	List<CodigoPostalDto> getCodigoPostalUiDtoFromEntity(List<CodigoPostal> codigoPostales);
-	
+
 	CodigoPostalDto getCodigoPostalDtoFromEntity(CodigoPostal codigoPostal);
-	
+
 	CodigoPostal getCodigoPostalFromDto(CodigoPostalDto codigoPostalDto);
 
 	List<CodigoPostalDto> getCodigoPostalDtosFromEntities(List<CodigoPostal> codigoPostalDto);
-	
+
 	ClaveProductoServicioDto getClaveProdServDtoFromEntity(ClaveProductoServicio prodServicio);
 
 	List<ClaveProductoServicioDto> getClaveProdServDtosFromEntities(List<ClaveProductoServicio> prodServicio);
@@ -62,15 +68,11 @@ public interface CatalogsMapper {
 
 	List<StatusFacturaDto> getStatusFacturaDtosFromEntities(List<StatusFactura> claveUnidad);
 
-	GiroDto getGiroDtoFromEntity(Giro giro);
+	List<CatalogDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
 
-	List<GiroDto> getGiroDtosFromEntities(List<Giro> prodServicio);
-	
-	List<StatusCatalogoDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
-	
-	List<StatusCatalogoDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
-	
-	List<StatusCatalogoDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
+	List<CatalogDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
 
-	List<StatusCatalogoDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
+	List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
+
+	List<CatalogDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
 }

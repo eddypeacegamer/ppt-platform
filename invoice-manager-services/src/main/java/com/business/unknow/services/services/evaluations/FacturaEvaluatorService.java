@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
 @Service

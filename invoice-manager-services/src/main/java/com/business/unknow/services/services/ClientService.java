@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;

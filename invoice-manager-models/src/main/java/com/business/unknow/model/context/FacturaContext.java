@@ -3,12 +3,12 @@ package com.business.unknow.model.context;
 import java.io.Serializable;
 import java.util.List;
 
-import com.business.unknow.model.ContribuyenteDto;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.files.FacturaFileDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.services.ContribuyenteDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 
 public class FacturaContext implements Serializable {
 

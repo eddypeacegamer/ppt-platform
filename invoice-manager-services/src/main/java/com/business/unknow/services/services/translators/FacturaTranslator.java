@@ -16,17 +16,17 @@ import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.NumberHelper;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
 
 @Service

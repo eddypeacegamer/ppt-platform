@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.commons.validator.EmpresaValidator;
-import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.mapper.ContribuyenteMapper;

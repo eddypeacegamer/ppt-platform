@@ -17,9 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.model.DevolucionDto;
-import com.business.unknow.model.PagoDto;
-import com.business.unknow.model.SolicitudDevolucionDto;
+import com.business.unknow.model.dto.services.DevolucionDto;
+import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.services.SolicitudDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.mapper.DevolucionMapper;

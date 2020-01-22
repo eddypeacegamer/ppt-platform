@@ -24,7 +24,7 @@ public class FacturaDatosValidationRule {
 			}
 			if(fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 				return fc.getFacturaDto().getFolioPadre() == null 
-						&& fc.getFacturaDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre());
+						&& fc.getFacturaDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name());
 			}
 			return true;//invalid document type
 		}

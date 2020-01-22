@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import com.business.unknow.model.UserDto;
+import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.services.entities.User;
 
 @Mapper

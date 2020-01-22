@@ -19,10 +19,10 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
 import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
@@ -122,9 +122,9 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 				.orElseThrow(() -> new InvoiceManagerException("No se encuentra la factura en el sistema",
 						String.format("Folio with the name %s not found", folio), HttpStatus.NOT_FOUND.value())));
 		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
-		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
+		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			facturaContext = validatePagoPpdCreation(folio, pagoDto, factura);
-		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.getNombre())) {
+		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 			facturaContext = validatePagoPueCreation(folio, pagoDto);
 		} else {
 			throw new InvoiceManagerException("Metodo de pago no soportado",
@@ -195,7 +195,7 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 		entity.setRevision2(pago.getRevision2());
 		entity.setUltimoUsuario(pago.getUltimoUsuario());
 		entity.setStatusPago(pago.getStatusPago());
-		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.getDescripcion())) {
+		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
 			Factura factura = repository.findByFolio(pago.getFolio())
 					.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
 							"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
@@ -203,7 +203,7 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 			repository.save(factura);
 		} else {
 			if (pago.getRevision1() && pago.getRevision2()) {
-				entity.setStatusPago(RevisionPagosEnum.ACEPTADO.getDescripcion());
+				entity.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 				Factura factura = repository.findByFolio(pago.getFolio())
 						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
 								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));

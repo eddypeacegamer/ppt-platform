@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.services.PagoDto;
 
 @Service
 public class PagoExecutorService extends AbstractExecutorService {
@@ -37,7 +37,7 @@ public class PagoExecutorService extends AbstractExecutorService {
 		if (context.getCurrentPago().getDocumento() != null) {
 			createResourceFile(context.getCurrentPago().getDocumento(),
 					context.getFacturaDto().getFolio().concat("_").concat(context.getCurrentPago().getFormaPago()),
-					TipoRecursoEnum.PAGO.getDescripcion(), ResourceFileEnum.IMAGEN.getDescripcion());
+					TipoRecursoEnum.PAGO.name(), ResourceFileEnum.IMAGEN.name());
 		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(context.getCurrentPago())));
 	}
