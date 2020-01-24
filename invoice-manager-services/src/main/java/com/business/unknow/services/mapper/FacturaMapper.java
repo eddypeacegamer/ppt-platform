@@ -6,9 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import com.business.unknow.model.PagoDto;
-import com.business.unknow.model.catalogs.StatusFacturaDto;
-import com.business.unknow.model.factura.FacturaDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.factura.Factura;

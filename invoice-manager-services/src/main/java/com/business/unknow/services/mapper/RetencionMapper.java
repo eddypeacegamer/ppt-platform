@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.factura.cfdi.components.RetencionDto;
+import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.services.entities.cfdi.Retencion;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)

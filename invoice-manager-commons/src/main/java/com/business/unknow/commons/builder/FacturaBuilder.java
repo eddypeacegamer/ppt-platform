@@ -1,7 +1,7 @@
 package com.business.unknow.commons.builder;
 
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 
 public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 

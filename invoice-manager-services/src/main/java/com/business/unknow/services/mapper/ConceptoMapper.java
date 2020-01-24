@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.ClientDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.cfdi.Concepto;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)

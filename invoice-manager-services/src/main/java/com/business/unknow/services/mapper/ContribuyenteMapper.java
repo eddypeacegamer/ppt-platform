@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.ContribuyenteDto;
+import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.services.entities.Contribuyente;
 
 @Mapper

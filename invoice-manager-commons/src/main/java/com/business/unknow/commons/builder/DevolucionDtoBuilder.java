@@ -1,6 +1,6 @@
 package com.business.unknow.commons.builder;
 
-import com.business.unknow.model.DevolucionDto;
+import com.business.unknow.model.dto.services.DevolucionDto;
 
 public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto>{
 

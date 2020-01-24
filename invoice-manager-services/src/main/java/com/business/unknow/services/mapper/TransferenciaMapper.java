@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.TransferenciaDto;
+import com.business.unknow.model.dto.services.TransferenciaDto;
 import com.business.unknow.services.entities.Transferencia;
 
 @Mapper

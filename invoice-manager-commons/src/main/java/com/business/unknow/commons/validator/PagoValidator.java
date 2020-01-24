@@ -1,7 +1,7 @@
 package com.business.unknow.commons.validator;
 
 import com.business.unknow.Constants;
-import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
 public class PagoValidator extends AbstractValidator{

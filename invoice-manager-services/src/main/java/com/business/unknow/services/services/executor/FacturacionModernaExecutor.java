@@ -19,9 +19,9 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.client.FacturacionModernaClient;
 
 @Service
@@ -66,21 +66,21 @@ public class FacturacionModernaExecutor {
 			if (response.getPng() != null) {
 				FacturaFileDto qr = new FacturaFileDto();
 				qr.setFolio(context.getFacturaDto().getFolio());
-				qr.setTipoArchivo(TipoArchivoEnum.QR.getDescripcion());
+				qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 				qr.setData(response.getPng());
 				files.add(qr);
 			}
 			if (response.getXml() != null) {
 				FacturaFileDto xml = new FacturaFileDto();
 				xml.setFolio(context.getFacturaDto().getFolio());
-				xml.setTipoArchivo(TipoArchivoEnum.XML.getDescripcion());
+				xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 				xml.setData(response.getXml());
 				files.add(xml);
 			}
 			if (response.getPdf() != null) {
 				FacturaFileDto pdf = new FacturaFileDto();
 				pdf.setFolio(context.getFacturaDto().getFolio());
-				pdf.setTipoArchivo(TipoArchivoEnum.PDF.getDescripcion());
+				pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
 				pdf.setData(response.getPdf());
 				files.add(pdf);
 			}

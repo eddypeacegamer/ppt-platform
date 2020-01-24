@@ -9,10 +9,10 @@ import com.business.unknow.Constants;
 import com.business.unknow.enums.ContactoDevolucionEnum;
 import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.rules.suites.DevolucionSuite;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.entities.Devolucion;
@@ -57,20 +57,20 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 						numberHelper.assignPrecision(pagoDto.getMonto() * porcentajeComisiones,
 								Constants.DEFAULT_SCALE),
 						client.getPorcentajePromotor(), client.getCorreoPromotor(),
-						ContactoDevolucionEnum.PROMOTOR.getDescripcion()));
+						ContactoDevolucionEnum.PROMOTOR.name()));
 		devolucionRepository
 				.save(buildDevolucion(context.getFacturaDto().getFolioPadre(), context.getCurrentPago().getId(),
 						numberHelper.assignPrecision(pagoDto.getMonto() * porcentajeComisiones,
 								Constants.DEFAULT_SCALE),
 						client.getPorcentajeDespacho(), "invoice-manager@gmail.com",
-						ContactoDevolucionEnum.DESPACHO.getDescripcion()));
+						ContactoDevolucionEnum.DESPACHO.name()));
 		if (client.getPorcentajeCliente() > 0) {
 			Devolucion devolucion = buildDevolucion(context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(),
 					numberHelper.assignPrecision(pagoDto.getMonto() * porcentajeComisiones, Constants.DEFAULT_SCALE),
 					client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(),
-					ContactoDevolucionEnum.CLIENTE.getDescripcion());
+					ContactoDevolucionEnum.CLIENTE.name());
 			devolucion.setMonto(numberHelper.assignPrecision((context.getCurrentPago().getMonto()
 					- (context.getCurrentPago().getMonto() * porcentajeComisiones) + devolucion.getMonto()),
 					Constants.DEFAULT_SCALE));
@@ -82,7 +82,7 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 							numberHelper.assignPrecision(pagoDto.getMonto() * porcentajeComisiones,
 									Constants.DEFAULT_SCALE),
 							client.getPorcentajeContacto(), client.getCorreoContacto(),
-							ContactoDevolucionEnum.CONTACTO.getDescripcion()));
+							ContactoDevolucionEnum.CONTACTO.name()));
 		}
 		pagoRepository.findById(context.getCurrentPago().getId())
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
@@ -103,22 +103,22 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 		validateFacturaContext(context);
 		devolucionRepository.save(buildDevolucion(context.getFacturaDto().getFolio(), context.getFacturaDto().getId(),
 				baseComisiones, client.getPorcentajePromotor(),
-				client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.getDescripcion()));
+				client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
 		devolucionRepository.save(buildDevolucion(context.getFacturaDto().getFolio(), context.getCurrentPago().getId(),
 				baseComisiones, client.getPorcentajeDespacho(), "invoice-manager@gmail.com",
-				ContactoDevolucionEnum.DESPACHO.getDescripcion()));
+				ContactoDevolucionEnum.DESPACHO.name()));
 		if (client.getPorcentajeCliente() > 0) {
 			Devolucion devolucion = buildDevolucion(context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(),
-					ContactoDevolucionEnum.CLIENTE.getDescripcion());
+					ContactoDevolucionEnum.CLIENTE.name());
 			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal().doubleValue() + devolucion.getMonto());
 			devolucionRepository.save(devolucion);
 		}
 		if (client.getPorcentajeContacto() > 0) {
 			devolucionRepository.save(buildDevolucion(context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeContacto(),
-					client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.getDescripcion()));
+					client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.name()));
 		}
 		pagoRepository.findById(context.getCurrentPago().getId())
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",

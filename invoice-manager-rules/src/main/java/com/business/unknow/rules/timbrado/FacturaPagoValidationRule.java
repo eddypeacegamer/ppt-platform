@@ -15,7 +15,7 @@ public class FacturaPagoValidationRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return fc.getPagos() == null || fc.getPagos().isEmpty() || fc.getPagos().stream()
-				.anyMatch(a -> !a.getStatusPago().equals(RevisionPagosEnum.ACEPTADO.getDescripcion()));
+				.anyMatch(a -> !a.getStatusPago().equals(RevisionPagosEnum.ACEPTADO.name()));
 
 	}
 

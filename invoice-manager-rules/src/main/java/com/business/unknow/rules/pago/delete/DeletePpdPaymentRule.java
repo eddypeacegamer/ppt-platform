@@ -9,8 +9,8 @@ import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.rules.common.Constants.DeletePagoSuite;
 
 @Rule(name = DeletePagoSuite.DELETE_PPD_PAYMENT_RULE, description = DeletePagoSuite.DELETE_PPD_PAYMENT)
@@ -20,7 +20,7 @@ public class DeletePpdPaymentRule {
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		Optional<PagoDto> pagoDto = fc.getPagos().stream().findFirst();
 		return !pagoDto.isPresent()
-				|| pagoDto.get().getStatusPago().equals(RevisionPagosEnum.ACEPTADO.getDescripcion())
+				|| pagoDto.get().getStatusPago().equals(RevisionPagosEnum.ACEPTADO.name())
 						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
 						|| fc.getFacturaDto().getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor());
 	}

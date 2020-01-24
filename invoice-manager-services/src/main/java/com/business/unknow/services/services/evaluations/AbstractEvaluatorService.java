@@ -21,12 +21,12 @@ import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.entities.Empresa;
@@ -144,14 +144,14 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	protected void getEmpresaFiles(EmpresaDto empresaDto, FacturaDto facturaDto) throws InvoiceManagerException {
 		ResourceFile certFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.getDescripcion(),
-						facturaDto.getRfcEmisor(), ResourceFileEnum.CERT.getDescripcion())
+				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(),
+						facturaDto.getRfcEmisor(), ResourceFileEnum.CERT.name())
 				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
 						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
 						HttpStatus.SC_NOT_FOUND));
 		ResourceFile keyFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.getDescripcion(),
-						facturaDto.getRfcEmisor(), ResourceFileEnum.KEY.getDescripcion())
+				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(),
+						facturaDto.getRfcEmisor(), ResourceFileEnum.KEY.name())
 				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
 						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
 						HttpStatus.SC_NOT_FOUND));

@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.model.UserDto;
+import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.model.menu.MenuItem;
 import com.business.unknow.model.security.UserDetails;
 import com.business.unknow.services.entities.User;

@@ -2,17 +2,11 @@ package com.business.unknow.enums;
 
 public enum MetodosPagoEnum {
 	
-	PUE("PUE"),
-	PPD("PPD");
+	PUE,
+	PPD;
 	
-	private MetodosPagoEnum(String nombre) {
-		this.nombre=nombre;
+	private MetodosPagoEnum() {
 	}
 	
-	private String nombre;
-
-	public String getNombre() {
-		return nombre;
-	}
 
 }

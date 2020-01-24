@@ -2,23 +2,9 @@ package com.business.unknow.enums;
 
 public enum TipoArchivoEnum {
 
-	XML(1, "XML"),
-	QR(2, "QR"),
-	PDF(3, "PDF");
+	XML, QR, PDF;
 
-	private Integer valor;
-	private String descripcion;
-
-	private TipoArchivoEnum(Integer valor, String descripcion) {
-		this.valor = valor;
-		this.descripcion = descripcion;
+	private TipoArchivoEnum() {
 	}
 
-	public Integer getValor() {
-		return valor;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
 }

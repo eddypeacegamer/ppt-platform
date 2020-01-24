@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.rules.AbstractRuleTest;
 import com.business.unknow.rules.timbrado.FacturaPagoValidationRule;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -46,7 +46,7 @@ public class FacturaPagoValidationRuleTest extends AbstractRuleTest {
 				new TypeReference<List<PagoDto>>() {
 				});
 		FacturaContext fc = new FacturaContext();
-		dtos.forEach(a -> a.setStatusPago(RevisionPagosEnum.VALIDACION.getDescripcion()));
+		dtos.forEach(a -> a.setStatusPago(RevisionPagosEnum.VALIDACION.name()));
 		fc.setPagos(dtos);
 		Facts facts = new Facts();
 		facts.put("facturaContext", fc);
