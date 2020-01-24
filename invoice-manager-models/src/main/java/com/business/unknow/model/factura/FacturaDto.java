@@ -34,6 +34,7 @@ public class FacturaDto implements Serializable {
 	private Date fechaCancelacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
+	private Integer idCfdi;
 	private CfdiDto cfdi;
 	public Integer getId() {
 		return id;
@@ -166,6 +167,12 @@ public class FacturaDto implements Serializable {
 	}
 	public void setFechaTimbrado(Date fechaTimbrado) {
 		this.fechaTimbrado = fechaTimbrado;
+	}
+	public Integer getIdCfdi() {
+		return idCfdi;
+	}
+	public void setIdCfdi(Integer idCfdi) {
+		this.idCfdi = idCfdi;
 	}
 	public CfdiDto getCfdi() {
 		return cfdi;

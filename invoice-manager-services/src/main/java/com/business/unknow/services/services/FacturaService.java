@@ -22,6 +22,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.model.factura.FacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
+import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
@@ -113,10 +114,18 @@ public class FacturaService {
 		}
 	}
 	
-	//COMPLEMNENTOS
-	public List<FacturaDto> getComplementos(String folioPadre) {
-		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
+	//Conceptos
+	public CfdiDto getCfdiByFolio(String folio) {
+		return cfdiService.getCfdiByFolio(folio);
 	}
+	
+	public CfdiDto insertNewConcepto(String folio, ConceptoDto concepto) throws InvoiceManagerException {
+		cfdiService.insertNewConceptoToCfdi(folio, concepto);
+		return cfdiService.getCfdiByFolio(folio);
+		
+	}
+	
+	
 	
 	
 	//TIMBRADO
