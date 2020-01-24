@@ -21,11 +21,9 @@ import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
@@ -107,12 +105,8 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); // TODO
-																											// refactor
-																											// facturaEvaluation
-																											// class to
-																											// only make
-																											// validations
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); 
+		// TODO refactor facturaEvaluation class to only make validations
 		// TODO IF CFDI is PPD generates automatic payment
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
@@ -130,7 +124,7 @@ public class FacturaService {
 					String.format("La factura con el folio %s no existe", folio));
 		}
 	}
-	//Conceptos
+	//CFDI
 	public CfdiDto getCfdiByFolio(String folio) {
 		return cfdiService.getCfdiByFolio(folio);
 	}

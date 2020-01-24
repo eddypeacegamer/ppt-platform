@@ -113,7 +113,7 @@ public class FacturaController {
 	@PostMapping("/{folio}/conceptos")
 	public ResponseEntity<CfdiDto> insertConcepto(@PathVariable String folio,
 			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewConcepto(folio, conceptoDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(cfdiService.insertNewConceptoToCfdi(folio, conceptoDto), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/conceptos/{id}")
