@@ -125,10 +125,10 @@ export class RevisionComponent implements OnInit {
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
         fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).nombre;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).nombre;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).nombre;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).nombre;
         return fac;
       })).subscribe(invoice => {
         this.factura = invoice;
@@ -137,10 +137,10 @@ export class RevisionComponent implements OnInit {
             .pipe(
               map((facturas: Factura[]) => {
                 return facturas.map(record => {
-                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).nombre;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).nombre;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).nombre;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).nombre;
                   return record;
                 })
               }))
@@ -369,9 +369,9 @@ export class RevisionComponent implements OnInit {
     }else {
       fact.statusFactura = '2'; // update to validacion tesoreria
     }
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
       this.loading = false;
       console.log('factura actualizada correctamente');
@@ -388,9 +388,9 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...this.factura };
     fact.statusFactura = '6';// update to recahzo operaciones
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
@@ -410,10 +410,10 @@ export class RevisionComponent implements OnInit {
     let fact = { ...factura };
     
     fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
@@ -439,10 +439,10 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; 
@@ -561,10 +561,10 @@ export class RevisionComponent implements OnInit {
             .pipe(
               map((facturas:Factura[]) =>{
                 return facturas.map(record=>{
-                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).nombre;
+                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).nombre;
+                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).nombre;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).nombre;
                   return record;})
               }))
             .subscribe(complementos => this.complementos = complementos);

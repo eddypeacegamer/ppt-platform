@@ -3,21 +3,21 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  public getUsers():Observable<any>{
+  public getUsers(): Observable<any> {
     return this.httpClient.get('../api/users');
   }
 
-  public getUserInfo():Observable<any>{
+  public getUserInfo(): Observable<any> {
     return this.httpClient.get('../api/users/myInfo');
   }
 
-  public logout():Observable<any>{
+  public logout(): Observable<any> {
     return this.httpClient.get('../api/logout');
   }
 }

@@ -188,7 +188,8 @@
             <div class="row form-inline">
               <input type="checkbox" [(ngModel)]="newConcep.iva" class="form-check-input" id="iva">
               <label class="form-check-label" for="iva">IVA</label>
-              <button class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
+              <button *ngIf="newConcep.id === undefined" class="btn btn-success" (click)="agregarConcepto()">Agregar Concepto</button>
+              <button *ngIf="newConcep.id !== undefined" class="btn btn-success" (click)="agregarConcepto(newConcep.id)">Actualizar Concepto</button>
             </div>
           </div>
 
@@ -205,14 +206,21 @@
             <tr>
               <th scope="col" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
                 class="text-center">Acciones</th>
-              <th scope="col" *ngFor="let header of headers" class="text-center">{{header}}</th>
+              <th scope="col" class="text-center">Producto Servicio</th>
+              <th scope="col" class="text-center">Cantidad</th>
+              <th scope="col" class="text-center">Clave Unidad</th>
+              <th scope="col" class="text-center">Unidad</th>
+              <th scope="col" class="text-center">Descripcion</th>
+              <th scope="col" class="text-center">Valor Unitario</th>
+              <th scope="col" class="text-center">Impuesto</th>
+              <th scope="col" class="text-center">Importe</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
-              <td scope="row" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'"
-                class="text-center">
+              <td scope="row" class="text-center" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
                 <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
               </td>
               <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
@@ -303,7 +311,7 @@
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo tesoreria' && factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
           <p class="font-weight-bold">Pagos</p>
           
-          <div class="row" *ngIf="factura.total > paymentSum">
+          <div class="row" *ngIf="factura.cfdi.total > paymentSum">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select selected="*" id="inputPayCoin" style="display:block;" class="form-control"
@@ -349,7 +357,7 @@
                   [(ngModel)]="newPayment.tipoDeCambio">
             </div>
           </div>
-          <div class="row" *ngIf="factura.total > paymentSum">
+          <div class="row" *ngIf="factura.cfdi.total > paymentSum">
             <div class="col-md-3">
                   <label for="payAmmount" class="label">Fecha de pago</label>
                   <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
@@ -421,6 +429,7 @@
               </tr>
             </tbody>
           </table>
+
         </div>
 
 
