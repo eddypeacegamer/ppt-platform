@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { GenericPage } from '../../../models/generic-page';
-import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router } from '@angular/router';
-import { Status } from '../../../models/catalogos/status';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Factura } from '../../../models/factura/factura';
 import { map } from 'rxjs/operators';
@@ -22,9 +22,9 @@ export class ReportesComponent implements OnInit {
   public pageSize = '10';
   public filterParams: any = {emisor: '', remitente: '', folio: '', status: '*', since: '', to: ''};
 
-  public validationCat: Status[] = [];
-  public payCat: Status[] = [];
-  public devolutionCat: Status[] = [];
+  public validationCat: Catalogo[] = [];
+  public payCat: Catalogo[] = [];
+  public devolutionCat: Catalogo[] = [];
 
   public userEmail: string;
 

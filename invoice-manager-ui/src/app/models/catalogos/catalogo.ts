@@ -1,4 +1,4 @@
-export class Status {
+export class Catalogo {
 
     public id: string;
     public nombre: string;

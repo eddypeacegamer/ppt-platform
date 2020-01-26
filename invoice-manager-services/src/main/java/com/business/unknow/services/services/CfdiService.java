@@ -172,6 +172,10 @@ public class CfdiService {
 			throw new InvoiceManagerException("El CFDI no puede tener 0 conceptos", "Numero de comceptos invalido",
 					HttpStatus.CONFLICT.value());
 		}
+		if(cfdi.getMetodoPago().equals("01")) {
+			throw new InvoiceManagerException("En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos", "Metodo de pago invalido",
+					HttpStatus.CONFLICT.value());
+		}
 		// TODO add more validations here
 	}
 

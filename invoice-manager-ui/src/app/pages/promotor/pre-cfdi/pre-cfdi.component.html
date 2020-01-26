@@ -3,9 +3,6 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI</nb-card-header>
       <nb-card-body>
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
         <div *ngIf="folioParam != '*'">
             <p class="font-weight-bold">Información Emisor y Receptor</p>
             <div class="form-inline">
@@ -61,7 +58,7 @@
                 <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
                   style="display:block;" [(ngModel)]="formInfo.giro">
                   <option value="*">Seleccionar</option>
-                  <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
+                  <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
                 </select>
               </div>
             </div>
@@ -115,6 +112,7 @@
               <label for="inputPayMethod" class="label">Metodo de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
+                <option value="*">Seleccionar</option>
                 <option value="PUE">Factura pagada (PUE)</option>
                 <option value="PPD">Factura pago por definir(PPD)</option>
               </select>
@@ -123,7 +121,8 @@
               <label for="inputPaytype" class="label">Forma de Pago</label>
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
-                <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.nombre}}</option>
               </select>
             </div>
 
@@ -219,8 +218,8 @@
           <tbody>
             <tr *ngFor="let fila of factura.cfdi.conceptos; let i = index">
               <td scope="row" class="text-center" *ngIf="factura.folio==undefined || factura.statusFactura=='Validacion operaciones'">
-                <button class="btn btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
-                <button class="btn btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
+                <button class="btn-sm btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
+                <button class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
               </td>
               <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
               <td scope="row" class="text-center">{{fila.cantidad}}</td>
@@ -251,12 +250,14 @@
           </tbody>
         </table>
         <br>
-
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
         <br>
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
         </div>

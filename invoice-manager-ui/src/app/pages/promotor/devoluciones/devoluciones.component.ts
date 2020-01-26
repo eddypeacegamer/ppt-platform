@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
-import { DownloadCsvService } from '../../../@core/back-services/download-csv.service';
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
 import { SolicitudDevolucion } from '../../../models/solicitud-devolucion';

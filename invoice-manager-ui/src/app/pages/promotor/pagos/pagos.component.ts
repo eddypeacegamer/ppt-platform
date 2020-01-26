@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { GenericPage } from '../../../models/generic-page';
-import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import {DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 
 @Component({
   selector: 'ngx-pagos',

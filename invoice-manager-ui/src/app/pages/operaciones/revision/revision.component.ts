@@ -18,9 +18,9 @@ import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Pago } from '../../../models/pago';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Status } from '../../../models/catalogos/status';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
-import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
+import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
@@ -37,10 +37,10 @@ export class RevisionComponent implements OnInit {
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
-  public validationCat: Status[] = [];
-  public payCat: Status[] = [];
-  public devolutionCat: Status[] = [];
-  public payTypeCat: Status[] = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos'), new Status('99', 'Por definir')];
+  public validationCat: Catalogo[] = [];
+  public payCat: Catalogo[] = [];
+  public devolutionCat: Catalogo[] = [];
+  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
   public newConcep: Concepto;
   public factura: Factura;
@@ -195,12 +195,12 @@ export class RevisionComponent implements OnInit {
 
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
-      this.payTypeCat = [new Status('99', 'Por definir')];
+      this.payTypeCat = [new Catalogo('99', 'Por definir')];
       this.factura.cfdi.formaPago= '99';
       this.factura.cfdi.metodoPago = 'PPD';
     } else {
       this.factura.cfdi.metodoPago = 'PUE';
-      this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
+      this.payTypeCat = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos')]
       this.factura.cfdi.formaPago = '01';
     }
     this.formInfo.payType = this.payTypeCat[0].id;

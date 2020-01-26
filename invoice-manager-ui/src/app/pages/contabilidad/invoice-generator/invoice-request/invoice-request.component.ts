@@ -6,7 +6,7 @@ import { Empresa } from '../../../../models/empresa';
 import { ClaveProductoServicio } from '../../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../../models/catalogos/clave-unidad';
 import { UsoCfdi } from '../../../../models/catalogos/uso-cfdi';
-import { Status } from '../../../../models/catalogos/status';
+import { Catalogo } from '../../../../models/catalogos/catalogo';
 import { Concepto } from '../../../../models/factura/concepto';
 import { Factura } from '../../../../models/factura/factura';
 import { CatalogsData } from '../../../../@core/data/catalogs-data';
@@ -34,10 +34,10 @@ export class InvoiceRequestComponent implements OnInit {
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
-  public validationCat: Status[] = [];
-  public payCat: Status[] = [];
-  public devolutionCat: Status[] = [];
-  public payTypeCat: Status[] = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos'),new Status('99', 'Por definir')];
+  public validationCat: Catalogo[] = [];
+  public payCat: Catalogo[] = [];
+  public devolutionCat: Catalogo[] = [];
+  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'),new Catalogo('99', 'Por definir')];
 
   public newConcep: Concepto;
   public factura: Factura;
@@ -98,10 +98,10 @@ export class InvoiceRequestComponent implements OnInit {
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
         fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).nombre;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).nombre;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).nombre;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).nombre;
         return fac;
       })).subscribe(invoice => {
         this.factura = invoice;
@@ -110,10 +110,10 @@ export class InvoiceRequestComponent implements OnInit {
             .pipe(
               map((facturas: Factura[]) => {
                 return facturas.map(record => {
-                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).nombre;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).nombre;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).nombre;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).nombre;
                   return record;
                 })
               }))
@@ -168,12 +168,12 @@ export class InvoiceRequestComponent implements OnInit {
 
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
-      this.payTypeCat = [new Status('99', 'Por definir')];
+      this.payTypeCat = [new Catalogo('99', 'Por definir')];
       this.factura.cfdi.formaPago= '99';
       this.factura.cfdi.metodoPago = 'PPD';
     } else {
       this.factura.cfdi.metodoPago = 'PUE';
-      this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
+      this.payTypeCat = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos')]
       this.factura.cfdi.formaPago = '01';
     }
     this.formInfo.payType = this.payTypeCat[0].id;
@@ -304,7 +304,7 @@ export class InvoiceRequestComponent implements OnInit {
       }
       this.factura.cfdi.total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
     }
-    console.log('Importe factura',this.factura.cfdi.total)
+    console.log('Importe factura',this.factura.cfdi.total);
   }
 
   getImporteImpuestos(impuestos: Impuesto[]) {
@@ -315,15 +315,14 @@ export class InvoiceRequestComponent implements OnInit {
     }
   }
 
- 
-    calcularPrecioUnitario(concepto : Concepto){
-      if(concepto.cantidad < 1){
+  calcularPrecioUnitario(concepto: Concepto) {
+      if (concepto.cantidad < 1) {
         alert('NO es posible calcular montos unitarios para valores menores a 1');
-      }else{
+      }else {
         const restante  = this.transfer.importe - this.factura.cfdi.total;
-        if(concepto.iva == true){
-          concepto.valorUnitario = restante/(1.16 * concepto.cantidad)
-        }else{
+        if ( concepto.iva === true) {
+          concepto.valorUnitario = restante / (1.16 * concepto.cantidad);
+        }else {
           concepto.valorUnitario = restante / concepto.cantidad;
         }
       }
@@ -344,21 +343,21 @@ export class InvoiceRequestComponent implements OnInit {
       this.factura.rfcEmisor = this.transfer.rfcRetiro;
       this.factura.rfcRemitente = this.transfer.rfcDeposito;
 
-    if (this.factura.cfdi.usoCfdi == undefined) {
+    if (this.factura.cfdi.usoCfdi === undefined) {
       this.errorMessages.push('El uso del CFDI es un campo requerido.');
       validCdfi = false;
     }
-    if (this.factura.cfdi.moneda == undefined) {
+    if (this.factura.cfdi.moneda === undefined) {
       this.errorMessages.push('La moneda es un campo requerido.');
       validCdfi = false;
     }
 
-    if (this.factura.cfdi.formaPago == undefined) {
+    if (this.factura.cfdi.formaPago === undefined) {
       this.errorMessages.push('La forma de pago es un campo requerido.');
       validCdfi = false;
     }
 
-    if (this.factura.cfdi.metodoPago == undefined) {
+    if (this.factura.cfdi.metodoPago === undefined) {
       this.errorMessages.push('El metodo de pago es un campo requerido.');
       validCdfi = false;
     }

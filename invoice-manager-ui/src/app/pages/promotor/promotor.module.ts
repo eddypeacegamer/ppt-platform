@@ -25,8 +25,8 @@ import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component'
 
-import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
-import { DownloadInvoiceFilesService } from '../../@core/back-services/download-invoice-files';
+import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
+import { DownloadInvoiceFilesService } from '../../@core/util-services/download-invoice-files';
 
 
 @NgModule({

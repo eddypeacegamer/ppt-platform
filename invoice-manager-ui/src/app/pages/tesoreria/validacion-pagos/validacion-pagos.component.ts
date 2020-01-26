@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GenericPage } from '../../../models/generic-page';
-import {DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import {DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';

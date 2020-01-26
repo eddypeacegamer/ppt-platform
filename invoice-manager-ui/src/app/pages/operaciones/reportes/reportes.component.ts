@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { GenericPage } from '../../../models/generic-page';
-import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router } from '@angular/router';
-import { Status } from '../../../models/catalogos/status';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Factura } from '../../../models/factura/factura';
 import { map } from 'rxjs/operators';
@@ -22,9 +22,9 @@ export class ReportesComponent implements OnInit {
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '' };
 
-  public validationCat: Status[] = [];
-  public payCat: Status[] = [];
-  public devolutionCat: Status[] = [];
+  public validationCat: Catalogo[] = [];
+  public payCat: Catalogo[] = [];
+  public devolutionCat: Catalogo[] = [];
 
   constructor(private invoiceService: InvoicesData,
     private catalogService: CatalogsData,
@@ -32,10 +32,11 @@ export class ReportesComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.catalogService.getStatusValidacion().subscribe(cat => this.validationCat = cat);
-    this.catalogService.getStatusPago().subscribe(cat => this.payCat = cat);
-    this.catalogService.getStatusDevolucion().toPromise()
-      .then(cat => this.devolutionCat = cat).then(() => this.updateDataTable());
+    this.catalogService.getInvoiceCatalogs().toPromise().then(results => {
+      this.payCat = results[3];
+      this.devolutionCat = results[4];
+      this.validationCat = results[5];
+    }).then(() => this.updateDataTable());
   }
 
 
@@ -61,9 +62,9 @@ export class ReportesComponent implements OnInit {
       .pipe(
         map((page: GenericPage<Factura>) => {
           let records: Factura[] = page.content.map(record => {
-            record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
-            record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
-            record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
+            record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
+            record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
+            record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
             return record;
           });
           page.content = records;
