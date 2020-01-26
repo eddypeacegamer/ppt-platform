@@ -20,12 +20,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
-import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
 import { NbDialogService } from '@nebular/theme';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
+
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -53,20 +53,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
-  public payErrorMessages: string[] = [];
-
+  
   public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*', prodServ: '*', unidad: '*' }
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
-
-  /** PAYMENT SECCTION**/
-
-  public paymentForm = { coin: 'MXN', payType: '*', bank: '*', filename: '', successPayment: false };
-  public newPayment: Pago;
-  public invoicePayments: Pago[] = [];
-  public paymentSum: number = 0;
-
 
   constructor(
     private dialogService: NbDialogService,
@@ -74,7 +65,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService: PaymentsData,
     private cfdiValidator: CfdiValidatorService,
     private userService: UsersData,
     private filesService: FilesData,
@@ -98,8 +88,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
           this.payTypeCat = results[6];
         }).then(() => {
           if (this.folioParam !== '*') {
-            this.paymentsService.getPaymentsByFolio(this.folioParam)
-              .subscribe(payments => { this.invoicePayments = payments; this.calculatePayments(); });
             this.getInvoiceByFolio(this.folioParam);
           }
         });
@@ -108,14 +96,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     /** CLEAN VARIABLES **/
-    this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
   }
 
   public initVariables() {
     /** INIT VARIABLES **/
-    this.newPayment = new Pago();
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.errorMessages = [];
@@ -391,115 +377,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
 
-  /******* PAGOS ********/
-
-  calculatePayments() {
-    if (this.invoicePayments.length === 0) {
-      this.paymentSum = 0;
-    } else {
-      const payments: Pago[] = this.invoicePayments.filter(p => p.formaPago !== 'CREDITO');
-      if (payments.length === 0) {
-        this.paymentSum = 0;
-      } else {
-        this.paymentSum = payments.map((p: Pago) => p.monto).reduce((total, p) => total + p);
-      }
-    }
-  }
-
-  onPaymentCoinSelected(clave: string) {
-    this.newPayment.moneda = clave;
-  }
-
-  onPaymentTypeSelected(clave: string) {
-    this.newPayment.formaPago = clave;
-  }
-
-  onPaymentBankSelected(clave: string) {
-    this.newPayment.banco = clave;
-  }
-
-  fileUploadListener(event: any): void {
-    let reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      if (file.size > 100000) {
-        alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
-      } else {
-        reader.readAsDataURL(file);
-        reader.onload = () => { this.paymentForm.filename = file.name; this.newPayment.documento = reader.result.toString() }
-        reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); console.error(error) };
-      }
-    }
-  }
-
-  deletePayment(paymentId) {
-    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => {
-        this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => { this.invoicePayments = payments; this.calculatePayments() });
-        this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
-      }, (error: HttpErrorResponse) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-  }
-
-  sendPayment() {
-    this.paymentForm.successPayment = false;
-    this.newPayment.folioPadre = this.factura.folio;
-    this.newPayment.folio = this.factura.folio;
-    this.payErrorMessages = [];
-    let validPayment = true;
-    if (this.newPayment.banco === undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('El banco es un valor requerido');
-    }
-    if (this.newPayment.fechaPago === undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('La fecha de pago es un valor requerido');
-    }
-    if (this.newPayment.moneda === undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('Es necesario especificar la moneda con la que se realizo el pago.');
-    }
-    if (this.newPayment.monto === undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('El monto del pago es requerido.');
-    }
-    if (this.newPayment.monto <= 1) {
-      validPayment = false;
-      this.payErrorMessages.push('El monto pagado es invalido');
-    }
-    if (this.newPayment.formaPago === undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('El tipo de pago es requerido.');
-    }
-    if (this.newPayment.formaPago != 'CREDITO' && this.newPayment.documento == undefined) {
-      validPayment = false;
-      this.payErrorMessages.push('La imagen del documento de pago es requerida.');
-    }
-    if (this.factura.cfdi.metodoPago === 'PUE' && Math.abs(this.factura.cfdi.total - this.newPayment.monto) > 0.01) {
-      validPayment = false;
-      this.payErrorMessages.push('Para pagos en una unica exibicion, el monto del pago debe coincidir con el monto total de la factura.');
-    }
-
-    if ((this.paymentSum + this.newPayment.monto - this.factura.cfdi.total) > 0.01) {
-      validPayment = false;
-      this.payErrorMessages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
-    }
-
-    if (validPayment) {
-      this.loading = true;
-      this.newPayment.tipoPago = 'INGRESO';
-      this.newPayment.ultimoUsuario = this.userEmail;
-      const payment = { ... this.newPayment };
-
-      this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
-        result => {
-          this.paymentForm.successPayment = true; this.newPayment = new Pago();
-          this.paymentsService.getPaymentsByFolio(this.factura.folio).subscribe(payments => { this.invoicePayments = payments; this.calculatePayments(); this.loading = false; });
-          this.invoiceService.getComplementosInvoice(this.factura.folio).subscribe(complementos => this.complementos = complementos);
-        },
-        (error: HttpErrorResponse) => { this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); this.loading = false; });
-    }
-    this.newPayment = new Pago();
-    this.paymentForm = { coin: 'MXN', payType: '*', bank: '*', filename: '', successPayment: false };
-  }
+  
 
 }

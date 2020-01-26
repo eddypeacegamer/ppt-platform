@@ -14,33 +14,37 @@ import {
   NbStepperModule,
   NbDialogModule,
   NbIconModule,
-  NbSpinnerModule
+  NbSpinnerModule,
 } from '@nebular/theme';
 
 import { PromotorRoutingModule } from './promotor-routing.module';
 import { PromotorComponent } from './promotor.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
-import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component'
+import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 
 import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { DownloadInvoiceFilesService } from '../../@core/util-services/download-invoice-files';
+import { PagosComponent } from './pre-cfdi/pagos/pagos.component';
 
 
 @NgModule({
-  declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent, DevolucionesComponent],
+  declarations: [PromotorComponent,
+    ClientesComponent,
+    PreCfdiComponent,
+    PagosComponent,
+    ReportesComponent,
+    DevolucionesComponent],
   imports: [
     PromotorRoutingModule,
-    
     CommonModule,
     FormsModule,
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
     NbCheckboxModule,
-    NbDatepickerModule, 
+    NbDatepickerModule,
     NbIconModule,
     NbInputModule,
     NbRadioModule,
@@ -48,8 +52,8 @@ import { DownloadInvoiceFilesService } from '../../@core/util-services/download-
     NbUserModule,
     NbStepperModule,
     NbDialogModule,
-    NbSpinnerModule
+    NbSpinnerModule,
   ],
-  providers:[DownloadCsvService,DownloadInvoiceFilesService]
+  providers: [ DownloadCsvService , DownloadInvoiceFilesService ],
 })
 export class PromotorModule { }

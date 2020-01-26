@@ -9,7 +9,7 @@ import { Impuesto } from '../../models/factura/impuesto';
 })
 export class CfdiValidatorService {
 
-  constructor(private invoiceService: InvoicesData) { }
+  constructor() { }
 
   public buildConcepto(concepto: Concepto): Concepto {
     concepto.importe = concepto.cantidad * concepto.valorUnitario;
