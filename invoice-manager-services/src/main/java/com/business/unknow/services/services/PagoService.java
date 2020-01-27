@@ -21,7 +21,7 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.mapper.PagoMapper;
-import com.business.unknow.services.repositories.facturas.PagoRepository;
+import com.business.unknow.services.repositories.PagoRepository;
 
 /**
  * @author ralfdemoledor

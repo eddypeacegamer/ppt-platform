@@ -11,12 +11,11 @@ export class CatalogsService {
   constructor(private httpClient:HttpClient) { }
 
   public getAllClavesProductoServicio(page:number,size:number): Observable<any> {
-    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
-    return this.httpClient.get('../api/catalogs/producto-servicios',{params:pageParams});
+     const pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
+    return this.httpClient.get('../api/catalogs/producto-servicios', { params: pageParams});
   }
 
   public getZipCodeInfo(zipCode:String): Observable<any> {
-    console.log('fetching zipCode info for :', zipCode);
     return this.httpClient.get(`/api/catalogs/codigo-postal/${zipCode}`);
   }
 

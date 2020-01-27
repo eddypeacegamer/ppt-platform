@@ -1,52 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {
-  NbActionsModule,
-  NbButtonModule,
-  NbCardModule,
-  NbCheckboxModule,
-  NbDatepickerModule,
-  NbInputModule,
-  NbRadioModule,
-  NbSelectModule,
-  NbUserModule,
-  NbStepperModule,
-  NbDialogModule,
-  NbIconModule,
-  NbSpinnerModule
-} from '@nebular/theme';
-
 import { OperacionesRoutingModule } from './operaciones-routing.module';
 import { OperacionesComponent } from './operaciones.component';
-import { ClientesComponent } from './clientes/clientes.component';
-import { EmpresasComponent } from './empresas/empresas.component';
+import { ClientesComponent } from '../commons/clientes/clientes.component';
+import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { RevisionComponent } from './revision/revision.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
-import { EmpresaComponent } from './empresa/empresa.component';
-import { ClienteComponent } from './cliente/cliente.component';
+import { EmpresaComponent } from '../commons/empresa/empresa.component';
+import { ClienteComponent } from '../commons/cliente/cliente.component';
+import { CommonsModule } from '../commons/commons.module';
 
 
 @NgModule({
-  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent, ClienteComponent],
+  declarations: [OperacionesComponent, RevisionComponent, ReportesComponent, CargaXmlComponent ],
   imports: [
-    CommonModule,
-    FormsModule,
     OperacionesRoutingModule,
-    NbActionsModule,
-    NbButtonModule,
-    NbCardModule,
-    NbCheckboxModule,
-    NbDatepickerModule, 
-    NbIconModule,
-    NbInputModule,
-    NbRadioModule,
-    NbSelectModule,
-    NbUserModule,
-    NbStepperModule,
-    NbDialogModule,
-    NbSpinnerModule
-  ]
+    CommonsModule,
+  ],
 })
 export class OperacionesModule { }

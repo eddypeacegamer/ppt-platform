@@ -311,7 +311,7 @@
 
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
           <p class="font-weight-bold">Pagos</p>
-          <ngx-pagos [factura]="factura" [user]="userEmail"></ngx-pagos>
+          <ngx-pagos [factura]="factura" [user]="user"></ngx-pagos>
         </div>
 
 

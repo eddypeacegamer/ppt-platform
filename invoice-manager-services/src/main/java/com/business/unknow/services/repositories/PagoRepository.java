@@ -1,4 +1,4 @@
-package com.business.unknow.services.repositories.facturas;
+package com.business.unknow.services.repositories;
 
 import java.util.Date;
 import java.util.List;

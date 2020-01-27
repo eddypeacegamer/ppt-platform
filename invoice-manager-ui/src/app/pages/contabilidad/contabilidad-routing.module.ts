@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ContabilidadComponent } from './contabilidad.component';
-import { ClientesComponent } from './clientes/clientes.component';
-import { ClienteComponent } from './cliente/cliente.component';
-import { EmpresasComponent } from './empresas/empresas.component';
-import { EmpresaComponent } from './empresa/empresa.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
 import { TransferenciasComponent } from './transferencias/transferencias.component';
+import { ClientesComponent } from '../commons/clientes/clientes.component';
+import { ClienteComponent } from '../commons/cliente/cliente.component';
+import { EmpresasComponent } from '../commons/empresas/empresas.component';
+import { EmpresaComponent } from '../commons/empresa/empresa.component';
 
 const routes: Routes = [{
   path: '',
@@ -40,7 +40,7 @@ const routes: Routes = [{
       component : InvoiceGeneratorComponent,
     },{
       path:'transferencias',
-      component : TransferenciasComponent
+      component : TransferenciasComponent,
     }
   ]
 }];

@@ -1,22 +1,5 @@
 import { NgModule } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {
-  NbActionsModule,
-  NbButtonModule,
-  NbCardModule,
-  NbCheckboxModule,
-  NbDatepickerModule,
-  NbInputModule,
-  NbRadioModule,
-  NbSelectModule,
-  NbUserModule,
-  NbStepperModule,
-  NbDialogModule,
-  NbIconModule,
-  NbSpinnerModule
-} from '@nebular/theme';
+import { NbDialogModule } from '@nebular/theme';
 
 import { ContabilidadRoutingModule } from './contabilidad-routing.module';
 import { ContabilidadComponent } from './contabilidad.component';
@@ -29,26 +12,19 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator.component';
 import { InvoiceRequestComponent } from './invoice-generator/invoice-request/invoice-request.component';
 import { TransferenciasComponent } from './transferencias/transferencias.component';
+import { CommonsModule } from '../commons/commons.module';
 
 @NgModule({
-  declarations: [ContabilidadComponent, ClientesComponent, ClienteComponent, EmpresasComponent, EmpresaComponent, PreCfdiComponent, ReportesComponent, InvoiceGeneratorComponent, InvoiceRequestComponent, TransferenciasComponent],
+  declarations: [ContabilidadComponent,
+    PreCfdiComponent,
+    ReportesComponent,
+    InvoiceGeneratorComponent,
+    InvoiceRequestComponent,
+    TransferenciasComponent],
   imports: [
     ContabilidadRoutingModule,
-    CommonModule,
-    FormsModule,
-    NbActionsModule,
-    NbButtonModule,
-    NbCardModule,
-    NbCheckboxModule,
-    NbDatepickerModule, 
-    NbIconModule,
-    NbInputModule,
-    NbRadioModule,
-    NbSelectModule,
-    NbUserModule,
-    NbStepperModule,
+    CommonsModule,
     NbDialogModule.forChild(),
-    NbSpinnerModule
   ],
   entryComponents:[InvoiceRequestComponent]
 })

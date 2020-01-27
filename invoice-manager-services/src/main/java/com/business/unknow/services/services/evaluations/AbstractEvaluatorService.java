@@ -46,10 +46,10 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
+import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
-import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.AbstractService;
 import com.business.unknow.services.util.FacturaDefaultValues;;
 

@@ -15,12 +15,11 @@ import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { Pago } from '../../../models/pago';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
-import { UsersData } from '../../../@core/data/users-data';
+import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
 import { NbDialogService } from '@nebular/theme';
@@ -47,7 +46,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
-  public userEmail: string;
+  public user: User;
 
   public complementos: Factura[] = [];
   public successMessage: string;
@@ -73,7 +72,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.userService.getUserInfo().subscribe(user => this.userEmail = user.email);
+    this.userService.getUserInfo().subscribe(user => this.user = user as User);
     this.initVariables();
     this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
@@ -338,7 +337,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   solicitarCfdi() {
     this.errorMessages = [];
-    this.factura.solicitante = this.userEmail;
+    this.factura.solicitante = this.user.email;
     this.factura.lineaEmisor = 'A';
     this.factura.lineaRemitente = 'CLIENTE';
     this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
