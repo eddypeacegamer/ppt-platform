@@ -59,11 +59,11 @@ public class Concepto implements Serializable {
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
 
-	@OneToMany(mappedBy = "concepto",orphanRemoval = true)
-	private transient List<Impuesto> impuestos;
+	@OneToMany(mappedBy = "concepto")
+	private List<Impuesto> impuestos;
 
-	@OneToMany(mappedBy = "concepto",orphanRemoval = true)
-	private transient List<Retencion> retenciones;
+	@OneToMany(mappedBy = "concepto")
+	private List<Retencion> retenciones;
 
 	public Integer getId() {
 		return id;

@@ -22,7 +22,7 @@ export class CompaniesService {
     return this.httpClient.get('../api/empresas',{params:pageParams});
   }
 
-  public getCompaniesByLineaAndGiro(linea:string, giro: number){
+  public getCompaniesByLineaAndGiro(linea: string, giro: number){
     return this.httpClient.get(`../api/lineas/${linea}/giros/${giro}/empresas`);
   }
 

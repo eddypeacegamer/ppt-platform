@@ -4,9 +4,9 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Giro } from '../../../models/catalogos/giro';
 import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 
 @Component({
   selector: 'ngx-empresa',
@@ -21,12 +21,12 @@ export class EmpresaComponent implements OnInit {
   public colonias = [];
   public paises = ['México'];
 
-  public girosCat: Giro[] = [];
+  public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
   
   constructor(private router: Router,
-              private catalogsService:CatalogsData,
-              private empresaService:CompaniesData,
+              private catalogsService: CatalogsData,
+              private empresaService: CompaniesData,
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer) { }
 
@@ -41,11 +41,11 @@ export class EmpresaComponent implements OnInit {
         let rfc = route.get('rfc');
         this.empresaService.getCompanyByRFC(rfc)
         .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
-        (error : HttpErrorResponse)=>console.log(error.error.message || `${error.statusText} : ${error.message}`));  
+        (error : HttpErrorResponse)=>console.log(error.error.message || `${error.statusText} : ${error.message}`));
         });
     
     /**** LOADING CAT INFO ****/
-    this.catalogsService.getAllGiros().subscribe((giros: Giro[]) => this.girosCat = giros,
+    this.catalogsService.getAllGiros().subscribe((giros: Catalogo[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Pago } from '../../models/pago';
+import { Catalogo } from '../../models/catalogos/catalogo';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,17 @@ export class PaymentsService {
     return this.httpClient.put(`../api/facturas/${folio}/pagos/${paymentId}`, payment);
   }
 
+  public getFormasPago(roles?: string[]): Observable<any> {
+    const payTypeCat = [ new Catalogo('EFECTIVO', 'Efectivo'),
+      new Catalogo('CHEQUE', 'Cheque nominativo'),
+      new Catalogo('TRANSFERENCIA', 'Transferencia electrónica de fondos'),
+      new Catalogo('DEPOSITO', 'Deposito bancario')];
+
+    if (roles !== undefined && roles.length > 0  && roles.find(r => r === 'OPERADOR') !== undefined) {
+      payTypeCat.push(new Catalogo('CREDITO', 'Credito despacho'));
+    }
+    return of(payTypeCat);
+  }
 
   public getAllIncomes(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());

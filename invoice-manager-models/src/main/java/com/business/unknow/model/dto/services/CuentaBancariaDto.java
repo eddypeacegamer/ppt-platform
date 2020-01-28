@@ -77,5 +77,4 @@ public class CuentaBancariaDto implements Serializable {
 				+ ", clabe=" + clabe + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ "]";
 	}
-
 }

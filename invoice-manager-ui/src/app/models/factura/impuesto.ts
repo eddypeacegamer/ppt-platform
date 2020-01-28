@@ -1,4 +1,4 @@
-export class Impuesto{
+export class Impuesto {
 
     public base : number;
     public importe : number;

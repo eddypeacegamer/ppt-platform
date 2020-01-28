@@ -18,9 +18,9 @@ import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Pago } from '../../../models/pago';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Status } from '../../../models/catalogos/status';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
-import { DownloadInvoiceFilesService } from '../../../@core/back-services/download-invoice-files';
+import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
@@ -37,10 +37,10 @@ export class RevisionComponent implements OnInit {
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
-  public validationCat: Status[] = [];
-  public payCat: Status[] = [];
-  public devolutionCat: Status[] = [];
-  public payTypeCat: Status[] = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos'), new Status('99', 'Por definir')];
+  public validationCat: Catalogo[] = [];
+  public payCat: Catalogo[] = [];
+  public devolutionCat: Catalogo[] = [];
+  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
   public newConcep: Concepto;
   public factura: Factura;
@@ -125,10 +125,10 @@ export class RevisionComponent implements OnInit {
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
         fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave == fac.cfdi.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).value;
-        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).value;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).value;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).value;
+        fac.statusFactura = this.validationCat.find(v => v.id == fac.statusFactura).nombre;
+        fac.statusPago = this.payCat.find(v => v.id == fac.statusPago).nombre;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id == fac.statusDevolucion).nombre;
+        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id == fac.cfdi.formaPago).nombre;
         return fac;
       })).subscribe(invoice => {
         this.factura = invoice;
@@ -137,10 +137,10 @@ export class RevisionComponent implements OnInit {
             .pipe(
               map((facturas: Factura[]) => {
                 return facturas.map(record => {
-                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).value;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  record.statusFactura = this.validationCat.find(v => v.id == record.statusFactura).nombre;
+                  record.statusPago = this.payCat.find(v => v.id == record.statusPago).nombre;
+                  record.statusDevolucion = this.devolutionCat.find(v => v.id == record.statusDevolucion).nombre;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).nombre;
                   return record;
                 })
               }))
@@ -195,12 +195,12 @@ export class RevisionComponent implements OnInit {
 
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
-      this.payTypeCat = [new Status('99', 'Por definir')];
+      this.payTypeCat = [new Catalogo('99', 'Por definir')];
       this.factura.cfdi.formaPago= '99';
       this.factura.cfdi.metodoPago = 'PPD';
     } else {
       this.factura.cfdi.metodoPago = 'PUE';
-      this.payTypeCat = [new Status('01', 'Efectivo'), new Status('02', 'Cheque nominativo'), new Status('03', 'Transferencia electrónica de fondos')]
+      this.payTypeCat = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos')]
       this.factura.cfdi.formaPago = '01';
     }
     this.formInfo.payType = this.payTypeCat[0].id;
@@ -369,9 +369,9 @@ export class RevisionComponent implements OnInit {
     }else {
       fact.statusFactura = '2'; // update to validacion tesoreria
     }
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
       this.loading = false;
       console.log('factura actualizada correctamente');
@@ -388,9 +388,9 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...this.factura };
     fact.statusFactura = '6';// update to recahzo operaciones
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
@@ -410,10 +410,10 @@ export class RevisionComponent implements OnInit {
     let fact = { ...factura };
     
     fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
@@ -439,10 +439,10 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.value === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.value === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.value == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.value == fact.cfdi.formaPago).id;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
+    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
 
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada'; 
@@ -561,10 +561,10 @@ export class RevisionComponent implements OnInit {
             .pipe(
               map((facturas:Factura[]) =>{
                 return facturas.map(record=>{
-                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).value;
-                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).value;
-                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).value;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).value;
+                  record.statusFactura = this.validationCat.find(v=>v.id==record.statusFactura).nombre;
+                  record.statusPago = this.payCat.find(v=>v.id==record.statusPago).nombre;
+                  record.statusDevolucion = this.devolutionCat.find(v=>v.id==record.statusDevolucion).nombre;
+                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id == record.cfdi.formaPago).nombre;
                   return record;})
               }))
             .subscribe(complementos => this.complementos = complementos);

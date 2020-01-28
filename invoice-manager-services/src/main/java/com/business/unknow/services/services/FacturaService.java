@@ -21,12 +21,13 @@ import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
+import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
-import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
@@ -104,7 +105,9 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); // TODO// refactor
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); 
+		// TODO refactor facturaEvaluation class to only make validations
+		// TODO IF CFDI is PPD generates automatic payment
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
@@ -125,6 +128,17 @@ public class FacturaService {
 					String.format("La factura con el folio %s no existe", folio));
 		}
 	}
+	//CFDI
+	public CfdiDto getCfdiByFolio(String folio) {
+		return cfdiService.getCfdiByFolio(folio);
+	}
+
+	public CfdiDto insertNewConcepto(String folio, ConceptoDto concepto) throws InvoiceManagerException {
+		cfdiService.insertNewConceptoToCfdi(folio, concepto);
+		return cfdiService.getCfdiByFolio(folio);
+
+	}
+
 
 	// COMPLEMNENTOS
 	public List<FacturaDto> getComplementos(String folioPadre) {

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
-import { DownloadCsvService } from '../../../@core/back-services/download-csv.service'
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router } from '@angular/router';
 
 @Component({
