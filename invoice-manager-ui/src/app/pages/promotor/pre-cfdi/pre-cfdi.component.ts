@@ -35,8 +35,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public girosCat: Giro[] = [];
   public companiesCat: Empresa[] = [];
-  public prodServCat: ClaveProductoServicio[] = [];
-  public claveUnidadCat: ClaveUnidad[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];
@@ -51,15 +49,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public complementos: Factura[] = [];
   public successMessage: string;
   public errorMessages: string[] = [];
-  public conceptoMessages: string[] = [];
-  
-  public formInfo = { clientRfc: '', companyRfc: '', claveProdServ: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*', prodServ: '*', unidad: '*' }
+  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*'};
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
 
   constructor(
-    private dialogService: NbDialogService,
+    
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
@@ -79,7 +75,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.catalogsService.getInvoiceCatalogs()
         .toPromise().then(results => {
           this.girosCat = results[0];
-          this.claveUnidadCat = results[1];
           this.usoCfdiCat = results[2];
           this.payCat = results[3];
           this.devolutionCat = results[4];
@@ -143,35 +138,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
 
 
-  public buscarClaveProductoServicio(claveProdServ: string) {
-    this.conceptoMessages = [];
-    const value = +claveProdServ;
-    if (isNaN(value)) {
-      if (claveProdServ.length > 5) {
-        this.catalogsService.getProductoServiciosByDescription(claveProdServ).subscribe(claves => {
-          this.prodServCat = claves;
-          this.formInfo.prodServ = claves[0].clave.toString();
-          this.newConcep.claveProdServ = claves[0].clave.toString();
-          this.newConcep.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => {
-          this.conceptoMessages = [];
-          this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
-        });
-      }
-    } else {
-      if (claveProdServ.length > 5) {
-        this.catalogsService.getProductoServiciosByClave(claveProdServ).subscribe(claves => {
-          this.prodServCat = claves;
-          this.formInfo.prodServ = claves[0].clave.toString();
-          this.newConcep.claveProdServ = claves[0].clave.toString();
-          this.newConcep.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => {
-          this.conceptoMessages = [];
-          this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
-          });
-      }
-    }
-  }
+ 
 
 
   onGiroSelection(giroId: string) {
@@ -218,9 +185,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
-  openSatCatalog(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog);
-  }
+
 
   onUsoCfdiSelected(clave: string) {
     this.factura.cfdi.usoCfdi = clave;
@@ -230,29 +195,19 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.formaPago = clave;
   }
 
-  onClaveProdServSelected(clave: string) {
-    this.newConcep.claveProdServ = clave;
-    this.newConcep.descripcionCUPS = this.prodServCat.find(c => c.clave === clave).descripcion;
-  }
-
+ 
   onImpuestoSelected(clave: string) {
     if (clave === '002') {
       this.newConcep.impuestos = [new Impuesto(clave, '0.160000')]
     }
   }
 
-  onSelectUnidad(clave: string) {
-    if (clave != '*') {
-      this.newConcep.claveUnidad = clave;
-      this.newConcep.unidad = this.claveUnidadCat.find(u => u.clave === clave).nombre;
-    }
-  }
+  
 
   limpiarForma() {
     this.initVariables();
     this.clientInfo = undefined;
     this.companyInfo = undefined;
-    this.conceptoMessages = [];
     this.successMessage = undefined;
     this.newConcep = new Concepto();
     this.factura = new Factura();
@@ -261,79 +216,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.errorMessages = [];
   }
 
-  removeConcepto(index: number) {
-    this.errorMessages = [];
-    this.conceptoMessages = [];
-    this.successMessage = undefined;
-    if (this.factura.folio !== undefined) {
-      this.invoiceService.deleteConcepto(this.factura.folio, this.factura.cfdi.conceptos[index].id)
-      .subscribe((cfdi: Cfdi) => this.factura.cfdi = cfdi,
-      (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error !== undefined)
-          ? error.error.message : `${error.statusText} : ${error.message}`)});
-    }else {
-      this.factura.cfdi.conceptos.splice(index, 1);
-      this.factura.cfdi = this.cfdiValidator.calcularImportes(this.factura.cfdi);
-    }
-  }
 
-  updateConcepto(concepto: Concepto) {
-    this.newConcep = {... concepto};
-    if (concepto.impuestos.length > 0 ) {
-      this.newConcep.iva = true;
-    }
-    this.formInfo.unidad = concepto.claveUnidad;
-    this.formInfo.claveProdServ = concepto.claveProdServ;
-    this.buscarClaveProductoServicio(concepto.claveProdServ);
-  }
-
-  agregarConcepto(id?: number) {
-    this.conceptoMessages = [];
-    this.errorMessages = [];
-    this.successMessage = undefined;
-    const concepto = this.cfdiValidator.buildConcepto({... this.newConcep});
-    this.conceptoMessages = this.cfdiValidator.validarConcepto(concepto);
-    if (this.conceptoMessages.length === 0) {
-      if (this.factura.folio !== undefined) {
-        let promise;
-        if (id === undefined) {
-          promise = this.invoiceService.insertConcepto(this.factura.folio, concepto).toPromise();
-        }else {
-          promise = this.invoiceService.updateConcepto(this.factura.folio, id, concepto).toPromise();
-        }
-        promise.then((cfdi) => {
-              this.formInfo.prodServ = '*';
-              this.formInfo.unidad = '*';
-              this.newConcep = new Concepto();
-            }, (error: HttpErrorResponse) => {
-              this.conceptoMessages.push((error.error != null && error.error !== undefined)
-                ? error.error.message : `${error.statusText} : ${error.message}`);
-            }).then(() => {
-              this.invoiceService.getCfdiByFolio(this.factura.folio)
-              .subscribe((cfdi: Cfdi) => this.factura.cfdi = cfdi,
-              (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error !== undefined) 
-                  ? error.error.message : `${error.statusText} : ${error.message}`)});
-            });
-      }else {
-        this.factura.cfdi.conceptos.push(concepto);
-        this.factura.cfdi = this.cfdiValidator.calcularImportes(this.factura.cfdi);
-        this.formInfo.prodServ = '*';
-        this.formInfo.unidad = '*';
-        this.newConcep = new Concepto();
-      }
-    }else {
-      this.formInfo.prodServ = '*';
-      this.formInfo.unidad = '*';
-      this.newConcep = new Concepto();
-    }
-  }
-
-  public getImporteImpuestos(impuestos: Impuesto[]): number {
-    if (impuestos.length > 0) {
-      return impuestos.map(i => i.importe).reduce((total, value) => total + value);
-    } else {
-      return 0;
-    }
-  }
 
   solicitarCfdi() {
     this.errorMessages = [];
