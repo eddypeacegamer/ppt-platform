@@ -22,13 +22,15 @@ import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
+import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
-import com.business.unknow.services.mapper.CfdiMapper;
-import com.business.unknow.services.mapper.ConceptoMapper;
-import com.business.unknow.services.mapper.ImpuestoMapper;
+import com.business.unknow.services.entities.cfdi.Receptor;
+import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
+import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
+import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 
 /**
  * @author hha0009
@@ -42,18 +44,18 @@ public class CfdiService {
 
 	@Autowired
 	private ConceptoRepository conceptoRepository;
-
+	
+	@Autowired
+	private EmisorRepository emisorRepository;
+	
+	@Autowired
+	private ReceptorRepository receptorReceptor;
+	
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
 
 	@Autowired
 	private CfdiMapper mapper;
-
-	@Autowired
-	private ConceptoMapper conceptoMapper;
-
-	@Autowired
-	private ImpuestoMapper impuestoMapper;
 
 	private static final Logger log = LoggerFactory.getLogger(CfdiService.class);
 
@@ -68,12 +70,18 @@ public class CfdiService {
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
 		Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));
+		Emisor emisor =mapper.getEntityFromEmisorDto(cfdi.getEmisor());
+		emisor.setCfdi(entity);
+		emisorRepository.save(emisor);
+		Receptor receptor = mapper.getEntityFromEmisorDto(cfdi.getReceptor());
+		receptor.setCfdi(entity);
+		receptorReceptor.save(receptor);
 		for (ConceptoDto concepto : cfdi.getConceptos()) {
-			Concepto conceptoEntity = conceptoMapper.getEntityFromConceptoDto(concepto);
+			Concepto conceptoEntity = mapper.getEntityFromConceptoDto(concepto);
 			conceptoEntity.setCfdi(entity);
 			conceptoEntity = conceptoRepository.save(conceptoEntity);
 			for (ImpuestoDto impuesto : concepto.getImpuestos()) {
-				Impuesto imp = impuestoMapper.getEntityFromClientDto(impuesto);
+				Impuesto imp = mapper.getEntityFromImpuestoDto(impuesto);
 				imp.setConcepto(conceptoEntity);
 				impuestoRepository.save(imp);
 			}
@@ -114,11 +122,11 @@ public class CfdiService {
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
 		Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));// Update CFDI ammounts
-		Concepto conceptoEntity = conceptoMapper.getEntityFromConceptoDto(newConcept);
+		Concepto conceptoEntity = mapper.getEntityFromConceptoDto(newConcept);
 		conceptoEntity.setCfdi(entity);
 		conceptoEntity = conceptoRepository.save(conceptoEntity);
 		for (ImpuestoDto impuesto : newConcept.getImpuestos()) {
-			Impuesto imp = impuestoMapper.getEntityFromClientDto(impuesto);
+			Impuesto imp = mapper.getEntityFromImpuestoDto(impuesto);
 			imp.setConcepto(conceptoEntity);
 			impuestoRepository.save(imp);
 		}
@@ -156,11 +164,11 @@ public class CfdiService {
 						String.format("No se encontro concepto con id %d", conceptoId)));
 		// 2.- Update concepto and its references
 		for (ImpuestoDto impuesto : concepto.getImpuestos()) {
-			Impuesto imp = impuestoMapper.getEntityFromClientDto(impuesto);
+			Impuesto imp = mapper.getEntityFromImpuestoDto(impuesto);
 			imp.setConcepto(conceptoEntity);
 			impuestoRepository.save(imp);
 		}
-		conceptoRepository.save(conceptoMapper.getEntityFromConceptoDto(concepto));
+		conceptoRepository.save(mapper.getEntityFromConceptoDto(concepto));
 		// 3.- Get CFDI info with conceptos
 		CfdiDto cfdi = mapper.getCfdiDtoFromEntity(repository.findByFolio(folio).orElseThrow(() -> // propagate
 																									// InvoiceManagerException

@@ -11,7 +11,7 @@ public class CuentaBancariaDto implements Serializable {
 	private String empresa;
 	private String banco;
 	private String cuenta;
-	private String clave;
+	private String clabe;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
@@ -47,12 +47,12 @@ public class CuentaBancariaDto implements Serializable {
 		this.cuenta = cuenta;
 	}
 
-	public String getClave() {
-		return clave;
+	public String getClabe() {
+		return clabe;
 	}
 
-	public void setClave(String clave) {
-		this.clave = clave;
+	public void setClabe(String clabe) {
+		this.clabe = clabe;
 	}
 
 	public Date getFechaCreacion() {
@@ -74,7 +74,7 @@ public class CuentaBancariaDto implements Serializable {
 	@Override
 	public String toString() {
 		return "CuentaBancariaDto [id=" + id + ", empresa=" + empresa + ", banco=" + banco + ", cuenta=" + cuenta
-				+ ", clave=" + clave + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", clabe=" + clabe + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
 				+ "]";
 	}
 

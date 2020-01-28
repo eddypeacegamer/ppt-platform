@@ -3,14 +3,15 @@ package com.business.unknow.services.entities.cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,86 +30,62 @@ public class Cfdi implements Serializable {
 
 	@Column(name = "SERIE")
 	private String serie;
-	
+
 	@Column(name = "FOLIO")
 	private String folio;
-	
+
 	@Column(name = "SELLO")
 	private String sello;
-	
+
 	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
 
 	@Column(name = "CERTIFICADO")
 	private String certificado;
-	
+
 	@Column(name = "MONEDA")
 	private String moneda;
-	
-	@Column(name = "SUBTOTAL")
+
+	@Column(name = "SUB_TOTAL")
 	private BigDecimal subtotal;
-	
+
 	@Column(name = "DESCUENTO")
 	private BigDecimal descuento;
-	
+
 	@Column(name = "TOTAL")
 	private BigDecimal total;
 
 	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
-	
+
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
-	
+
 	@Column(name = "FORMA_PAGO")
 	private String formaPago;
-	
+
 	@Column(name = "CONDICIONES_PAGO")
 	private String condicionesDePago;
-	
+
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
-	
-	@Column(name = "USO_CFDI")
-	private String usoCfdi;
 
-	@Column(name = "REGIMEN_FISCAL")//EVALUATE if is better get this from emisor
-	private String regimenFiscal;
-
-	@Column(name = "RFC_PROV_CERTIF") //EVALUATE if is better set this at complemento level
-	private String rfcProvCertif;
-
-	@Column(name = "SELLO_CFD") //EVALUATE if is better set this at complemento level
-	private String selloCfd;
-
-	@Column(name = "NO_CERTIFICADO_SAT") //EVALUATE if is better set this at complemento level
-	private String noCertificadoSat;
-
-	@Column(name = "SELLO_SAT") //EVALUATE if is better set this at complemento level
-	private String selloSat;
-	
-	@Column(name = "CADENA_ORIGINAL") //EVALUATE if is better set this at complemento level
-	private String cadenaOriginal;
-	
-	@Column(name = "RFC_EMISOR")
-	private String emisor;
-	
-	@Column(name = "RFC_RECEPTOR")
-	private String receptor;
-	
-	@Column(name = "FECHA_TIMBRADO")// Review this date, this is request date not stamp date
-	private Date fecha;
-	
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
-	
-	
-	//TODO Evaliuate add Complemento and TimbreFicalDigital hierarchie here
-	
+
+	@OneToOne(mappedBy = "cfdi")
+	private Complemento complemento;
+
+	@OneToOne(mappedBy = "cfdi")
+	private Receptor receptor;
+
+	@OneToOne(mappedBy = "cfdi")
+	private Emisor emisor;
+
 	public Cfdi() {
 		this.conceptos = new ArrayList<Concepto>();
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -139,14 +116,6 @@ public class Cfdi implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	public String getSello() {
@@ -245,75 +214,15 @@ public class Cfdi implements Serializable {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public String getUsoCfdi() {
-		return usoCfdi;
-	}
-
-	public void setUsoCfdi(String usoCfdi) {
-		this.usoCfdi = usoCfdi;
-	}
-
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
-
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
-
-	public String getRfcProvCertif() {
-		return rfcProvCertif;
-	}
-
-	public void setRfcProvCertif(String rfcProvCertif) {
-		this.rfcProvCertif = rfcProvCertif;
-	}
-
-	public String getSelloCfd() {
-		return selloCfd;
-	}
-
-	public void setSelloCfd(String selloCfd) {
-		this.selloCfd = selloCfd;
-	}
-
-	public String getNoCertificadoSat() {
-		return noCertificadoSat;
-	}
-
-	public void setNoCertificadoSat(String noCertificadoSat) {
-		this.noCertificadoSat = noCertificadoSat;
-	}
-
-	public String getSelloSat() {
-		return selloSat;
-	}
-
-	public void setSelloSat(String selloSat) {
-		this.selloSat = selloSat;
-	}
-
-	public String getCadenaOriginal() {
-		return cadenaOriginal;
-	}
-
-	public void setCadenaOriginal(String cadenaOriginal) {
-		this.cadenaOriginal = cadenaOriginal;
-	}
-
-	public String getEmisor() {
+	public Emisor getEmisor() {
 		return emisor;
 	}
 
-	public void setEmisor(String emisor) {
+	public void setEmisor(Emisor emisor) {
 		this.emisor = emisor;
 	}
 
-	public String getReceptor() {
-		return receptor;
-	}
-
-	public void setReceptor(String receptor) {
+	public void setReceptor(Receptor receptor) {
 		this.receptor = receptor;
 	}
 
@@ -325,16 +234,26 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
+	public Complemento getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(Complemento complemento) {
+		this.complemento = complemento;
+	}
+
+	public Receptor getReceptor() {
+		return receptor;
+	}
+
 	@Override
 	public String toString() {
 		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
 				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
-				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", usoCfdi=" + usoCfdi
-				+ ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd
-				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal="
-				+ cadenaOriginal + ", emisor=" + emisor + ", receptor=" + receptor + ", fecha=" + fecha + ", conceptos="
-				+ conceptos + "]";
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", conceptos=" + conceptos
+				+ ", complemento=" + complemento + ", receptor=" + receptor + ", emisor=" + emisor + "]";
 	}
+
 }

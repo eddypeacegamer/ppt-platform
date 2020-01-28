@@ -37,12 +37,15 @@ public class SwSapinsExecutorService {
 		try {
 			SwSapiensConfig swSapiensConfig = swSapiensClient.getSwSapiensClient().stamp(context.getXml(),
 					SwSapiensVersionEnum.V4.getValue());
-			context.getFacturaDto().setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
+			context.getFacturaDto().getCfdi().getComplemento()
+					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			context.getFacturaDto().setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().setSelloSat(swSapiensConfig.getData().getSelloSAT());
-			context.getFacturaDto().getCfdi().setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().setSelloCfd(swSapiensConfig.getData().getSelloCFDI());
+			context.getFacturaDto().getCfdi().getComplemento().setUuid(swSapiensConfig.getData().getUuid());
+			context.getFacturaDto().getCfdi().getComplemento().setSelloSat(swSapiensConfig.getData().getSelloSAT());
+			context.getFacturaDto().getCfdi().getComplemento()
+					.setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
+			context.getFacturaDto().getCfdi().getComplemento().setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();
@@ -74,11 +77,10 @@ public class SwSapinsExecutorService {
 	public SwSapiensConfig validateRfc(String rfc) throws SwSapiensClientException {
 		return swSapiensClient.getSwSapiensClient().validateRfc(rfc);
 	}
-	
+
 	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
 		return swSapiensClient.getSwSapiensClient().validateLco(noCertificado);
 	}
-
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {

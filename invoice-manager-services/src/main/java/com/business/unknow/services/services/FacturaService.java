@@ -24,7 +24,7 @@ import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.PagoRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
@@ -104,18 +104,16 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); // TODO
-																											// refactor
-																											// facturaEvaluation
-																											// class to
-																											// only make
-																											// validations
-		// TODO IF CFDI is PPD generates automatic payment
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); // TODO// refactor
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
-		// TODO IF CFDI is PPD generates automatic payment
-		return mapper.getFacturaDtoFromEntity(repository.save(entity));
+		return saveFactura(entity);
+	}
+	
+	
+	private FacturaDto saveFactura(Factura factura) {
+		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {

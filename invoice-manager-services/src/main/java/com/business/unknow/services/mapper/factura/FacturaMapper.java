@@ -1,4 +1,4 @@
-package com.business.unknow.services.mapper;
+package com.business.unknow.services.mapper.factura;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface FacturaMapper {

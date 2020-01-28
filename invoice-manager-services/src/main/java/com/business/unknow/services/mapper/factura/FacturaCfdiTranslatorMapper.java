@@ -1,4 +1,4 @@
-package com.business.unknow.services.mapper;
+package com.business.unknow.services.mapper.factura;
 
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
@@ -14,6 +14,7 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecorator;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
@@ -21,11 +22,12 @@ import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecora
 public interface FacturaCfdiTranslatorMapper {
 
 	@Mappings({ @Mapping(source = "facturaDto.folio", target = "folio"),
-			@Mapping(source = "facturaDto.rfcEmisor", target = "emisor.rfc"),
-			@Mapping(source = "facturaDto.razonSocialEmisor", target = "emisor.nombre"),
-			@Mapping(source = "facturaDto.rfcRemitente", target = "receptor.rfc"),
-			@Mapping(source = "facturaDto.razonSocialRemitente", target = "receptor.nombre"),
-			@Mapping(source = "facturaDto.cfdi.usoCfdi", target = "receptor.usoCfdi"),
+			@Mapping(source = "facturaDto.cfdi.emisor.rfc", target = "emisor.rfc"),
+			@Mapping(source = "facturaDto.cfdi.emisor.nombre", target = "emisor.nombre"),	
+			@Mapping(source = "empresaDto.regimenFiscal", target = "emisor.regimenFiscal"),
+			@Mapping(source = "facturaDto.cfdi.receptor.rfc", target = "receptor.rfc"),
+			@Mapping(source = "facturaDto.cfdi.receptor.nombre", target = "receptor.nombre"),
+			@Mapping(source = "facturaDto.cfdi.receptor.usoCfdi", target = "receptor.usoCfdi"),
 			@Mapping(source = "facturaDto.cfdi.formaPago", target = "formaPago"),
 			@Mapping(source = "facturaDto.cfdi.metodoPago", target = "metodoPago"),
 			@Mapping(source = "facturaDto.cfdi.total", target = "total"),
@@ -36,8 +38,8 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "empresaDto.certificado", target = "certificado"),
 			@Mapping(source = "empresaDto.noCertificado", target = "noCertificado"),
 			@Mapping(source = "facturaDto.cfdi.sello", target = "sello"),
-			@Mapping(source = "empresaDto.informacionFiscal.cp", target = "lugarExpedicion"),
-			@Mapping(source = "empresaDto.regimenFiscal", target = "emisor.regimenFiscal") })
+			@Mapping(source = "empresaDto.informacionFiscal.cp", target = "lugarExpedicion")
+			 })
 	public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
 
 	@Mappings({ @Mapping(source = "facturaDto.folio", target = "folio"),

@@ -27,6 +27,7 @@ public class Concepto implements Serializable {
 
 	@Column(name = "CLAVE_PROD_SERV")
 	private String claveProdServ;
+	
 	@Column(name = "DESCRIPCION_CLAVE_UNIDAD")
 	private String descripcionCUPS;
 

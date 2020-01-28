@@ -15,10 +15,10 @@ public class ConceptoDto implements Serializable {
 	private static final long serialVersionUID = 1690079459401358817L;
 	private Integer id;
 	private String claveProdServ;
+	private String descripcionCUPS;
 	private String noIdentificacion;
 	private Integer cantidad;
 	private String claveUnidad;
-	private String descripcionCUPS;
 	private String unidad;
 	private String descripcion;
 	private BigDecimal valorUnitario;

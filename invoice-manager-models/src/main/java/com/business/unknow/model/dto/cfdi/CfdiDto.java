@@ -3,7 +3,6 @@ package com.business.unknow.model.dto.cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,7 +17,6 @@ public class CfdiDto implements Serializable {
 	private String version;
 	private String serie;
 	private String folio;
-	private Date fecha;
 	private String sello;
 	private String noCertificado;
 	private String certificado;
@@ -31,19 +29,11 @@ public class CfdiDto implements Serializable {
 	private String formaPago;
 	private String condicionesDePago;
 	private String lugarExpedicion;
-	private String usoCfdi;
-	private String regimenFiscal;
-	private String rfcProvCertif;
-	private String selloCfd;
-	private String noCertificadoSat;
-	private String selloSat;
-	private String cadenaOriginal;
-	private String emisor;
-	private String receptor;
 	private List<ConceptoDto> conceptos;
-	
-	//TODO Evaliuate add Complemento and TimbreFicalDigital hierarchie here
-	
+	private ComplementoDto complemento;
+	private EmisorDto emisor;
+	private ReceptorDto receptor;
+
 	public CfdiDto() {
 		this.conceptos = new ArrayList<>();
 	}
@@ -78,14 +68,6 @@ public class CfdiDto implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	public String getSello() {
@@ -184,76 +166,12 @@ public class CfdiDto implements Serializable {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public String getUsoCfdi() {
-		return usoCfdi;
+	public ComplementoDto getComplemento() {
+		return complemento;
 	}
 
-	public void setUsoCfdi(String usoCfdi) {
-		this.usoCfdi = usoCfdi;
-	}
-
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
-
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
-
-	public String getRfcProvCertif() {
-		return rfcProvCertif;
-	}
-
-	public void setRfcProvCertif(String rfcProvCertif) {
-		this.rfcProvCertif = rfcProvCertif;
-	}
-
-	public String getSelloCfd() {
-		return selloCfd;
-	}
-
-	public void setSelloCfd(String selloCfd) {
-		this.selloCfd = selloCfd;
-	}
-
-	public String getNoCertificadoSat() {
-		return noCertificadoSat;
-	}
-
-	public void setNoCertificadoSat(String noCertificadoSat) {
-		this.noCertificadoSat = noCertificadoSat;
-	}
-
-	public String getSelloSat() {
-		return selloSat;
-	}
-
-	public void setSelloSat(String selloSat) {
-		this.selloSat = selloSat;
-	}
-
-	public String getCadenaOriginal() {
-		return cadenaOriginal;
-	}
-
-	public void setCadenaOriginal(String cadenaOriginal) {
-		this.cadenaOriginal = cadenaOriginal;
-	}
-
-	public String getEmisor() {
-		return emisor;
-	}
-
-	public void setEmisor(String emisor) {
-		this.emisor = emisor;
-	}
-
-	public String getReceptor() {
-		return receptor;
-	}
-
-	public void setReceptor(String receptor) {
-		this.receptor = receptor;
+	public void setComplemento(ComplementoDto complemento) {
+		this.complemento = complemento;
 	}
 
 	public List<ConceptoDto> getConceptos() {
@@ -264,16 +182,30 @@ public class CfdiDto implements Serializable {
 		this.conceptos = conceptos;
 	}
 
+	public EmisorDto getEmisor() {
+		return emisor;
+	}
+
+	public void setEmisor(EmisorDto emisor) {
+		this.emisor = emisor;
+	}
+
+	public ReceptorDto getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(ReceptorDto receptor) {
+		this.receptor = receptor;
+	}
+	
 	@Override
 	public String toString() {
-		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha="
-				+ fecha + ", sello=" + sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado
-				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total
-				+ ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago
-				+ ", condicionesDePago=" + condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", usoCfdi="
-				+ usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd="
-				+ selloCfd + ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", cadenaOriginal="
-				+ cadenaOriginal + ", emisor=" + emisor + ", receptor=" + receptor + ", conceptos=" + conceptos + "]";
+		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello="
+				+ sello + ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", subtotal=" + subtotal
+				+ ", descuento=" + descuento + ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante="
+				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", conceptos=" + conceptos
+				+ ", complemento=" + complemento + ", emisor=" + emisor + ", receptor=" + receptor + "]";
 	}
 
 }

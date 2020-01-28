@@ -29,7 +29,7 @@ import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
 import com.business.unknow.rules.suites.pagos.PagoPueSuite;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.services.executor.PagoExecutorService;
 
 @Service

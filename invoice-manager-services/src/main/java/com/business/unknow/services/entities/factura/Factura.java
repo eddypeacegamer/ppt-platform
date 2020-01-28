@@ -37,19 +37,19 @@ public class Factura implements Serializable {
 
 	@Column(name = "RAZON_SOCIAL_EMISOR")
 	private String razonSocialEmisor;
-	
+
 	@Column(name = "LINEA_EMISOR")
 	private String lineaEmisor;
 
 	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String razonSocialRemitente;
-	
+
 	@Column(name = "LINEA_REMITENTE")
 	private String lineaRemitente;
-	
+
 	@Column(name = "TIPO_DOCUMENTO")
 	private String tipoDocumento;
-	
+
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
 
@@ -58,6 +58,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "FOLIO_PADRE")
 	private String folioPadre;
+
+	@Column(name = "METODO_PAGO")
+	private String metodoPago;
 
 	@Column(name = "STATUS_PAGO")
 	private Integer statusPago;
@@ -70,7 +73,7 @@ public class Factura implements Serializable {
 
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
-	
+
 	@Column(name = "UUID")
 	private String uuid;
 
@@ -85,17 +88,17 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Column(name = "FECHA_TIMBRADO")
-	private Date fechaTimbrado;
-
 	@Column(name = "FECHA_CANCELADO")
 	private Date fechaCancelacion;
+
+	@Column(name = "STATUS_CANCELADO")
+	private Date statusCancelado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
-	
+
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
 
@@ -154,7 +157,7 @@ public class Factura implements Serializable {
 	public void setLineaRemitente(String lineaRemitente) {
 		this.lineaRemitente = lineaRemitente;
 	}
-	
+
 	public String getTipoDocumento() {
 		return tipoDocumento;
 	}
@@ -251,14 +254,6 @@ public class Factura implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Date getFechaTimbrado() {
-		return fechaTimbrado;
-	}
-
-	public void setFechaTimbrado(Date fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
-	}
-
 	public Date getFechaCancelacion() {
 		return fechaCancelacion;
 	}
@@ -274,7 +269,7 @@ public class Factura implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	
+
 	public Integer getIdCfdi() {
 		return idCfdi;
 	}
@@ -283,16 +278,33 @@ public class Factura implements Serializable {
 		this.idCfdi = idCfdi;
 	}
 
+	public String getMetodoPago() {
+		return metodoPago;
+	}
+
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
+	}
+
+	public Date getStatusCancelado() {
+		return statusCancelado;
+	}
+
+	public void setStatusCancelado(Date statusCancelado) {
+		this.statusCancelado = statusCancelado;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
-				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion
-				+ ", fechaCreacion=" + fechaCreacion + "]";
+				+ ", folioPadre=" + folioPadre + ", metodoPago=" + metodoPago + ", statusPago=" + statusPago
+				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", uuid=" + uuid + ", packFacturacion=" + packFacturacion + ", notas=" + notas
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion
+				+ ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion + ", idCfdi=" + idCfdi
+				+ "]";
 	}
 }

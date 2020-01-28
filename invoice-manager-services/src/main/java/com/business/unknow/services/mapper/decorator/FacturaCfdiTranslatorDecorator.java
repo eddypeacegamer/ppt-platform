@@ -17,7 +17,7 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.dto.services.PagoDto;
-import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
+import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
 
 public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTranslatorMapper {
 

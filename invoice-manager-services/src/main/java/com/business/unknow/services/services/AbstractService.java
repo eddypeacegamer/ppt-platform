@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.services.entities.files.ResourceFile;
-import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;

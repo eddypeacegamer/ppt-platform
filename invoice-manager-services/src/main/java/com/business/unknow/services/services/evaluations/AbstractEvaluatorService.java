@@ -34,15 +34,13 @@ import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.entities.files.ResourceFile;
-import com.business.unknow.services.mapper.CfdiMapper;
 import com.business.unknow.services.mapper.ClientMapper;
-import com.business.unknow.services.mapper.ConceptoMapper;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.DevolucionMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.FilesMapper;
-import com.business.unknow.services.mapper.ImpuestoMapper;
 import com.business.unknow.services.mapper.PagoMapper;
+import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
@@ -83,12 +81,6 @@ public class AbstractEvaluatorService extends AbstractService {
 
 	@Autowired
 	protected CfdiMapper cfdiMapper;
-
-	@Autowired
-	protected ConceptoMapper conceptoMapper;
-
-	@Autowired
-	protected ImpuestoMapper impuestoMapper;
 
 	@Autowired
 	protected PagoMapper pagoMapper;
