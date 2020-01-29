@@ -3,6 +3,7 @@ import { Cfdi } from './cfdi';
 import { Pago } from '../pago';
 
 export class Factura {
+
 	public id: number;
 	public rfcEmisor: string;
 	public razonSocialEmisor: string;
@@ -12,6 +13,7 @@ export class Factura {
 	public razonSocialRemitente: string;
 	public tipoDocumento: string;
 	public solicitante: string;
+	public metodoPago: string;
 	public folio: string;
 	public folioPadre: string;
 	public uuid: string;
@@ -20,10 +22,12 @@ export class Factura {
 	public statusDevolucion: string;
 	public statusFactura: string;
 	public statusDetail: string;
+	public statusCancelacion: string;
 	public fechaCancelacion: string;
 	public fechaCreacion: Date;
 	public fechaActualizacion: Date;
 	public fechaTimbrado: Date;
+	public packFacturacion : string;
 	public cfdi: Cfdi;
 	public complementos: Factura[];
 	

@@ -21,7 +21,6 @@ import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
@@ -111,14 +110,9 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
-		return saveFactura(entity);
+		return mapper.getFacturaDtoFromEntity(repository.save(entity));
 	}
 	
-	
-	private FacturaDto saveFactura(Factura factura) {
-		return mapper.getFacturaDtoFromEntity(repository.save(factura));
-	}
-
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
 		if (repository.findByFolio(folio).isPresent()) {
 			Factura entity = mapper.getEntityFromFacturaDto(factura);
@@ -127,16 +121,6 @@ public class FacturaService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("La factura con el folio %s no existe", folio));
 		}
-	}
-	//CFDI
-	public CfdiDto getCfdiByFolio(String folio) {
-		return cfdiService.getCfdiByFolio(folio);
-	}
-
-	public CfdiDto insertNewConcepto(String folio, ConceptoDto concepto) throws InvoiceManagerException {
-		cfdiService.insertNewConceptoToCfdi(folio, concepto);
-		return cfdiService.getCfdiByFolio(folio);
-
 	}
 
 

@@ -59,13 +59,13 @@ export class CfdiValidatorService {
 
   public validarCfdi(cfdi: Cfdi): string[] {
     const messages: string[] = [];
-    if (cfdi.receptor === undefined  || cfdi.receptor.length < 8) {
+    if (cfdi.receptor === undefined || cfdi.receptor.rfc === undefined  || cfdi.receptor.rfc.length < 8) {
       messages.push('La información del receptor es un valor solicitado');
     }
-    if (cfdi.emisor === undefined  || cfdi.emisor.length < 8) {
+    if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined || cfdi.emisor.rfc.length < 8) {
       messages.push('La información del emisor es un valor solicitado');
     }
-    if (cfdi.usoCfdi === undefined) {
+    if (cfdi.receptor.usoCfdi === undefined) {
       messages.push('El uso del CFDI es un campo requerido.');
     }
     if (cfdi.moneda === undefined) {

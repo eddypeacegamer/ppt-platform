@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
@@ -6,10 +6,7 @@ import { Giro } from '../../../models/catalogos/giro';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
-import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { Concepto } from '../../../models/factura/concepto';
-import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { Impuesto } from '../../../models/factura/impuesto';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
@@ -29,7 +26,7 @@ import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validato
 @Component({
   selector: 'ngx-pre-cfdi',
   templateUrl: './pre-cfdi.component.html',
-  styleUrls: ['./pre-cfdi.component.scss']
+  styleUrls: ['./pre-cfdi.component.scss'],
 })
 export class PreCfdiComponent implements OnInit, OnDestroy {
 
@@ -55,7 +52,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public loading: boolean = false;
 
   constructor(
-    
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
@@ -107,7 +103,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public getInvoiceByFolio(folio: string) {
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
-        fac.cfdi.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.usoCfdi).descripcion;
+        fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
         fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
@@ -136,11 +132,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         });
   }
 
-
-
- 
-
-
   onGiroSelection(giroId: string) {
     const value = +giroId;
     if (isNaN(value)) {
@@ -165,7 +156,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       if (clave === 'PPD') {
         this.factura.cfdi.formaPago = '99';
         this.factura.cfdi.metodoPago = 'PPD';
+        this.factura.metodoPago = 'PPD';
       } else {
+        this.factura.metodoPago = 'PUE';
         this.factura.cfdi.metodoPago = 'PUE';
         this.factura.cfdi.formaPago = '01';
       }
@@ -185,24 +178,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
-
-
   onUsoCfdiSelected(clave: string) {
-    this.factura.cfdi.usoCfdi = clave;
+    this.factura.cfdi.receptor.usoCfdi = clave;
   }
 
   onFormaDePagoSelected(clave: string) {
     this.factura.cfdi.formaPago = clave;
   }
-
- 
-  onImpuestoSelected(clave: string) {
-    if (clave === '002') {
-      this.newConcep.impuestos = [new Impuesto(clave, '0.160000')]
-    }
-  }
-
-  
 
   limpiarForma() {
     this.initVariables();
@@ -215,9 +197,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
   }
-
-
-
+ 
   solicitarCfdi() {
     this.errorMessages = [];
     this.factura.solicitante = this.user.email;
@@ -225,13 +205,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.lineaRemitente = 'CLIENTE';
     this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
     this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.cfdi.regimenFiscal = this.companyInfo.regimenFiscal;
+    this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
     this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
     this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.cfdi.emisor = this.companyInfo.informacionFiscal.rfc;
+    this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
     this.factura.rfcRemitente = this.clientInfo.rfc;
     this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
-    this.factura.cfdi.receptor = this.clientInfo.rfc;
+    this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
     this.errorMessages = this.cfdiValidator.validarCfdi({...this.factura.cfdi});
     if (this.errorMessages.length < 1) {
       this.invoiceService.insertNewInvoice(this.factura)
@@ -243,8 +223,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       });
     }
   }
-
-
   public downloadPdf(folio: string) {
     //console.log('calling pdfMakeService for :', folio)
     //this.pdfMakeService.generatePdf(this.factura);
@@ -257,8 +235,4 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
     )
   }
-
-
-  
-
 }

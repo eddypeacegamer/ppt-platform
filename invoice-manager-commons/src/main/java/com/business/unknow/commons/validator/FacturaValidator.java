@@ -44,6 +44,8 @@ public class FacturaValidator extends AbstractValidator {
 		checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
 		checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
 		checkNotNull(dto.getCfdi(), "cfdi");
+		checkNotNull(dto.getCfdi().getReceptor(),"Receptor Info");
+		checkNotNull(dto.getCfdi().getEmisor(),"Emisor Info");
 		checkNotNull(dto.getCfdi().getReceptor().getRfc(), "RFC receptor");
 		checkNotNull(dto.getCfdi().getEmisor().getRfc(), "RFC Emisor");
 	}

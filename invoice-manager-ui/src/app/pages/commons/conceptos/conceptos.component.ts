@@ -32,6 +32,7 @@ export class ConceptosComponent implements OnInit {
     private cfdiValidator: CfdiValidatorService ) { }
 
   ngOnInit() {
+    this.catalogsService.getClaveUnidadByName('').subscribe(unidadCat => this.claveUnidadCat = unidadCat);
   }
 
 
