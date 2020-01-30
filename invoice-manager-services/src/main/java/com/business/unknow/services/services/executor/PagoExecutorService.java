@@ -8,6 +8,7 @@ import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.PagoRepository;
@@ -27,7 +28,7 @@ public class PagoExecutorService extends AbstractService {
 	protected PagoMapper pagoMapper;
 
 	@Autowired
-	protected CfdiMapper cfdMapper;
+	protected CfdiMapper cfdiMapper;
 
 	public void deletePagoPpdExecutor(FacturaContext context) {
 		repository.delete(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
@@ -61,10 +62,12 @@ public class PagoExecutorService extends AbstractService {
 	}
 
 	public FacturaContext creaPagoPpdExecutor(FacturaContext context) {
+		Cfdi cfdi= cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
+		
 		context.setFacturaDto(mapper
 				.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()))));
-		context.getFacturaDto().setCfdi(cfdMapper.getCfdiDtoFromEntity(
-				cfdiRepository.save(cfdMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()))));
+		context.getFacturaDto().setCfdi(cfdiMapper.getCfdiDtoFromEntity(
+				cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()))));
 		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
 		return context;
 	}

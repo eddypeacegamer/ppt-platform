@@ -32,7 +32,6 @@ public class FacturaDto implements Serializable {
 	private String metodoPago;
 	private String notas;
 	private Date fechaCreacion;
-	private Date fechaCancelado;
 	private String statusCancelacion;
 	private Date fechaCancelacion;
 	private Date fechaActualizacion;
@@ -240,14 +239,6 @@ public class FacturaDto implements Serializable {
 		this.metodoPago = metodoPago;
 	}
 
-	public Date getFechaCancelado() {
-		return fechaCancelado;
-	}
-
-	public void setFechaCancelado(Date fechaCancelado) {
-		this.fechaCancelado = fechaCancelado;
-	}
-
 	public String getStatusCancelacion() {
 		return statusCancelacion;
 	}
@@ -265,9 +256,9 @@ public class FacturaDto implements Serializable {
 				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
 				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
 				+ ", packFacturacion=" + packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaCancelado=" + fechaCancelado + ", statusCancelacion="
-				+ statusCancelacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", cfdi=" + cfdi + "]";
+				+ ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
+				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaTimbrado=" + fechaTimbrado + ", idCfdi=" + idCfdi + ", cfdi=" + cfdi + "]";
 	}
 
 }
