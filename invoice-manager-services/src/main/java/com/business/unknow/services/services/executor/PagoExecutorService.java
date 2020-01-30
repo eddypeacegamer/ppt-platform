@@ -1,5 +1,6 @@
 package com.business.unknow.services.services.executor;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +63,11 @@ public class PagoExecutorService extends AbstractService {
 	}
 
 	public FacturaContext creaPagoPpdExecutor(FacturaContext context) {
-		Cfdi cfdi= cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
-		
+		Cfdi cfdi = cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
+		cfdi.setPagos(
+				cfdiMapper.getEntityFromCdfiPagosDtos(context.getFacturaDto().getCfdi().getComplemento().getPagos()));
+		cfdi.setComplemento(cfdiMapper
+				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()));
 		context.setFacturaDto(mapper
 				.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()))));
 		context.getFacturaDto().setCfdi(cfdiMapper.getCfdiDtoFromEntity(

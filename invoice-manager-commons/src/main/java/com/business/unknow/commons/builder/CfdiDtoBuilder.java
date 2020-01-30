@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
@@ -107,6 +108,14 @@ public class CfdiDtoBuilder extends AbstractBuilder<CfdiDto> {
 
 	public CfdiDtoBuilder setReceptor(ReceptorDto receptor) {
 		instance.setReceptor(receptor);
+		return this;
+	}
+	
+	public CfdiDtoBuilder setPagos(List<CfdiPagoDto> pagos) {
+		if(instance.getComplemento()!=null) {
+			instance.setComplemento(new ComplementoDto());
+		}
+		instance.getComplemento().setPagos(pagos);
 		return this;
 	}
 	
