@@ -38,7 +38,7 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = [];
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {
-        let rfc = route.get('rfc');
+        const rfc = route.get('rfc');
         this.empresaService.getCompanyByRFC(rfc)
         .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
         (error : HttpErrorResponse)=>console.log(error.error.message || `${error.statusText} : ${error.message}`));  
