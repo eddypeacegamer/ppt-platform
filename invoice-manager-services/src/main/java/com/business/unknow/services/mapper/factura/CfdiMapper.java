@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.TimbradoFiscalDigitialDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
@@ -15,6 +16,7 @@ import com.business.unknow.model.dto.cfdi.ReceptorDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.cfdi.Cfdi;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
@@ -35,6 +37,11 @@ public interface CfdiMapper {
 
 	@Mappings({ @Mapping(target = "cfdi", ignore = true) })
 	TimbradoFiscalDigitial getEntityFromComplementoDto(TimbradoFiscalDigitialDto dto);
+	
+	List<CfdiPago> getEntityFromCdfiPagosDtos(List<CfdiPagoDto> dtos);
+	
+	List<CfdiPagoDto> getCfdiPagosDtoFromEntities(List<CfdiPago> entities);
+	
 
 	EmisorDto getEmisorDtoFromEntity(Emisor entity);
 

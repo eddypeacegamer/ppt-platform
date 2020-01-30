@@ -9,6 +9,17 @@ public class ReceptorDto implements Serializable {
 	private String nombre;
 	private String usoCfdi;
 
+	public ReceptorDto() {
+		super();
+	}
+
+	public ReceptorDto(String rfc, String nombre, String usoCfdi) {
+		super();
+		this.rfc = rfc;
+		this.nombre = nombre;
+		this.usoCfdi = usoCfdi;
+	}
+
 	public String getRfc() {
 		return rfc;
 	}
@@ -31,6 +42,11 @@ public class ReceptorDto implements Serializable {
 
 	public void setUsoCfdi(String usoCfdi) {
 		this.usoCfdi = usoCfdi;
+	}
+
+	@Override
+	public String toString() {
+		return "ReceptorDto [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
 	}
 
 }

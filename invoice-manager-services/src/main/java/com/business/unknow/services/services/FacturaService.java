@@ -183,7 +183,7 @@ public class FacturaService {
 		FacturaDto factura = getFacturaByFolio(folio);
 		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
 		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto, folio);
+			facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto,getFacturaByFolio(folio), folio);
 			pagoEvaluatorService.validatePagoPpdCreation(facturaContext);
 			createComplemento(facturaContext);
 			pagoExecutorService.creaPagoPpdExecutor(facturaContext);
