@@ -255,10 +255,7 @@ export class RevisionComponent implements OnInit {
     let fact = { ...this.factura };
     fact.statusFactura = '6';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
-
-    
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
       this.loading = false;
       console.log('factura actualizada correctamente');
@@ -274,12 +271,12 @@ export class RevisionComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...factura };
-    
     fact.cfdi = null;
+    console.log(this.payTypeCat)
+
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {

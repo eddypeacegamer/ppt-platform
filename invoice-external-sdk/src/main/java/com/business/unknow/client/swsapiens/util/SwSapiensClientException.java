@@ -9,7 +9,7 @@ public class SwSapiensClientException extends Exception {
 	private Integer httpStatus;
 
 	public SwSapiensClientException(SwSapiensErrorMessage errorMessage, Integer httpStatus) {
-		super();
+		super(errorMessage.getMessage());
 		this.errorMessage = errorMessage;
 		this.httpStatus = httpStatus;
 	}

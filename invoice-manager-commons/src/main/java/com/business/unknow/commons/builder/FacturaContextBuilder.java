@@ -25,6 +25,7 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		return this;
 	}
 	
+	
 	public FacturaContextBuilder setCfdi(CfdiDto cfdiDto) {
 		instance.getFacturaDto().setCfdi(cfdiDto);
 		return this;

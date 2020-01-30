@@ -21,21 +21,21 @@
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
           </div>
-      
           <p class="font-weight-bold">Información CFDI</p>
           <br>
+          
           <div class="form-inline">
             <p class="font-weight-bold">Uso CFDI</p>
-            <p>{{factura.cfdi.usoCfdi}}</p>
+            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Moneda</p>
             <p>{{factura.cfdi.moneda}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Metodo de Pago</p>
-            <p>{{factura.metodoPago}}</p>
+            <p>{{factura.cfdi.metodoPago}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Forma de Pago</p>
-            <p>{{factura.formaPago}}</p>
+            <p>{{factura.cfdi.formaPago}}</p>
             &nbsp;&nbsp;
             <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
               class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">

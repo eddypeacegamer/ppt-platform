@@ -32,7 +32,7 @@ public class Receptor implements Serializable {
 	private String usoCfdi;
 
 	@OneToOne
-	@JoinColumn(name = "ID_CFDI")
+	@JoinColumn(name = "ID_CFDI", referencedColumnName = "ID_CFDI")
 	private Cfdi cfdi;
 
 	public String getRfc() {

@@ -24,6 +24,7 @@ import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
@@ -135,6 +136,9 @@ public class FacturaTranslator {
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
+		
+		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());//TODO validate if this not breakes somthing
+		
 		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 

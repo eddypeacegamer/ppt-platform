@@ -6,6 +6,7 @@ import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
@@ -63,6 +64,7 @@ public class TimbradoEvaluatorService extends AbstractEvaluatorService {
 	public FacturaContext facturaTimbradoValidation(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
 		FacturaContext facturaContext = buildFacturaContextTimbrado(facturaDto, folio);
+
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(facturarSuite.getSuite(), facts);
