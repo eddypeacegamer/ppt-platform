@@ -25,22 +25,22 @@ public class DevolucionEvaluatorService extends AbstractDevolucionesEvaluatorSer
 	private DevolucionSuite devolucionSuite;
 
 	public void generarDevolucionesPorPago(FacturaDto facturaDto, PagoDto pagoDto) throws InvoiceManagerException {
-		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
-				.orElseThrow(() -> new InvoiceManagerException("The type of document not supported",
-						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
-						HttpStatus.BAD_REQUEST.value()));
-		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
-		case FACRTURA:
-			generaDevolucionPue(facturaDto, pagoDto, client);
-			break;
-		case COMPLEMENTO:
-			generaDevolucionComplemento(facturaDto, pagoDto, client);
-			break;
-		default:
-			throw new InvoiceManagerException("The type of document not supported",
-					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
-					HttpStatus.BAD_REQUEST.value());
-		}
+//		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente()) //this functionality will be rewrited
+//				.orElseThrow(() -> new InvoiceManagerException("The type of document not supported",
+//						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+//						HttpStatus.BAD_REQUEST.value()));
+//		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
+//		case FACRTURA:
+//			generaDevolucionPue(facturaDto, pagoDto, client);
+//			break;
+//		case COMPLEMENTO:
+//			generaDevolucionComplemento(facturaDto, pagoDto, client);
+//			break;
+//		default:
+//			throw new InvoiceManagerException("The type of document not supported",
+//					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+//					HttpStatus.BAD_REQUEST.value());
+//		}
 
 	}
 

@@ -16,7 +16,7 @@ public class FacturaDatosValidationRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 
-		if (fc.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().getFechaTimbrado() != null
+		if (fc.getFacturaDto().getCfdi().getComplemento()!=null && fc.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().getFechaTimbrado() != null
 				|| fc.getFacturaDto().getUuid() != null) {
 			return true;
 		} else {

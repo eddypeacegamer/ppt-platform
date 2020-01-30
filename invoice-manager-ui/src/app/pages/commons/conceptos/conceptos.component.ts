@@ -72,7 +72,7 @@ export class ConceptosComponent implements OnInit {
 
 
   onSelectUnidad(clave: string) {
-    if (clave != '*') {
+    if (clave !== '*') {
       this.concepto.claveUnidad = clave;
       this.concepto.unidad = this.claveUnidadCat.find(u => u.clave === clave).nombre;
     }
@@ -80,7 +80,7 @@ export class ConceptosComponent implements OnInit {
 
   onClaveProdServSelected(clave: string) {
     this.concepto.claveProdServ = clave;
-    this.concepto.descripcionCUPS = this.prodServCat.find(c => c.clave === clave).descripcion;
+    this.concepto.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
   }
 
 

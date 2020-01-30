@@ -88,8 +88,10 @@ public class FacturacionModernaExecutor {
 			}
 			context.setFacturaFilesDto(files);
 		} catch (FacturaModernaClientException | InvoiceCommonException e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
-			throw new InvoiceManagerException("Error Stamping in facturacion moderna", e.getMessage(),
+			
+			throw new InvoiceManagerException(e.getMessage(),String.format("Error Stamping in facturacion moderna: %s",e.getLocalizedMessage()),
 					HttpStatus.SC_CONFLICT);
 		}
 		return context;

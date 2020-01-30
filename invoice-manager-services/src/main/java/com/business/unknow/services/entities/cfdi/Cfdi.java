@@ -263,7 +263,7 @@ public class Cfdi implements Serializable {
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
 				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
-				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", conceptos=" + conceptos
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion //+", conceptos=" + conceptos
 				+ ", complemento=" + complemento + ", receptor=" + receptor + ", emisor=" + emisor + "]";
 	}
 

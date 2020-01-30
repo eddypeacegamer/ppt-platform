@@ -38,7 +38,10 @@ export class PagosComponent implements OnInit {
     this.newPayment.moneda = 'MXN';
     if (this.factura.folio !== undefined) {
       this.paymentsService.getPaymentsByFolio(this.factura.folio)
-              .subscribe(payments => this.invoicePayments = payments);
+              .subscribe(payments => {
+                this.invoicePayments = payments; 
+                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
+                });
       this.paymentsService.getFormasPago(this.user.roles).subscribe(payTypes => this.payTypeCat = payTypes);
     }
   }
@@ -92,7 +95,8 @@ export class PagosComponent implements OnInit {
         this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe(payments => {
             this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments); });
+            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
+          });
         this.invoiceService.getComplementosInvoice(this.factura.folio)
           .subscribe(complementos => this.factura.complementos = complementos);
       }, (error: HttpErrorResponse) =>

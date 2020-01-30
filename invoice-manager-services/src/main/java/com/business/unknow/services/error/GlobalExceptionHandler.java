@@ -74,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
 		logger.error("Exception ocurred", ex);
 		return handleExceptionInternal(ex,
-				new ErrorMessage(ex.getMessage(), "Unknown error has occurred: " + ex.getMessage(),
+				new ErrorMessage("Unknown error has occurred: " + ex.getMessage(),
 						HttpStatus.INTERNAL_SERVER_ERROR.value()),
 				new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}

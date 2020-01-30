@@ -69,7 +69,7 @@ public class SwSapinsExecutorService {
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException("Error durante el timbrado", e.getMessage(), HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		} catch (IOException e) {
 			throw new InvoiceManagerException("Error durante la creacion de archivos", e.getMessage(),
 					HttpStatus.SC_CONFLICT);

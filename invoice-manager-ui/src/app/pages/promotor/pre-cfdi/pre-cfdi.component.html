@@ -131,13 +131,11 @@
         </div>
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
-          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
-        <br>
+        <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
-        <br>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
@@ -193,12 +191,9 @@
         </div>
 
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
-          <p class="font-weight-bold">Pagos</p>
           <ngx-pagos [factura]="factura" [user]="user"></ngx-pagos>
         </div>
-
-
-
+        
       </nb-card-body>
     </nb-card>
   </div>

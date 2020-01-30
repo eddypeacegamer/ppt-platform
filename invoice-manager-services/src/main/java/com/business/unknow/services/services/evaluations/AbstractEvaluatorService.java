@@ -154,6 +154,8 @@ public class AbstractEvaluatorService extends AbstractService {
 						HttpStatus.SC_NOT_FOUND));
 		validatePackFacturacion(facturaDto, folioPadreEntity);
 		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
+		
+		
 		EmpresaDto empresaDto = empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 						.orElseThrow(() -> new InvoiceManagerException("Empresa not found",
@@ -162,6 +164,7 @@ public class AbstractEvaluatorService extends AbstractService {
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
 		FacturaDto currentFacturaDto = mapper.getFacturaDtoFromEntity(folioEnity);
+		facturaDto.setCfdi(cfdiMapper.getCfdiDtoFromEntity(cfdi.get()));
 		getEmpresaFiles(empresaDto, currentFacturaDto);
 		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
 		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)

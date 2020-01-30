@@ -82,9 +82,7 @@ export class RevisionComponent implements OnInit {
     ngOnInit() {
       this.userService.getUserInfo().subscribe(user => this.user = user as User);
       this.initVariables();
-      this.route.paramMap.subscribe(route => {
-        this.folioParam = route.get('folio');
-        this.catalogsService.getInvoiceCatalogs()
+      this.catalogsService.getInvoiceCatalogs()
           .toPromise().then(results => {
             this.girosCat = results[0];
             this.usoCfdiCat = results[2];
@@ -93,13 +91,17 @@ export class RevisionComponent implements OnInit {
             this.validationCat = results[5];
             this.payTypeCat = results[6];
           }).then(() => {
-            if (this.folioParam !== '*') {
-              this.getInvoiceByFolio(this.folioParam);
-            }
+            this.route.paramMap.subscribe(route => {
+              this.folioParam = route.get('folio');
+              if (this.folioParam !== '*') {
+                this.getInvoiceByFolio(this.folioParam);
+              }else {
+                this.initVariables();
+              }
+            });
           });
-      });
     }
-  
+    
     ngOnDestroy() {
       /** CLEAN VARIABLES **/
       this.newConcep = new Concepto();
@@ -253,10 +255,7 @@ export class RevisionComponent implements OnInit {
     let fact = { ...this.factura };
     fact.statusFactura = '6';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
-
-    
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => { 
       this.loading = false;
       console.log('factura actualizada correctamente');
@@ -272,12 +271,12 @@ export class RevisionComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...factura };
-    
     fact.cfdi = null;
+    console.log(this.payTypeCat)
+
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
+    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
