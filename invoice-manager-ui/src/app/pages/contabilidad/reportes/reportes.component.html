@@ -19,13 +19,13 @@
             <label for="inputEmisor" class="label">Emisor</label>
           </div>
           <div class="col-md-3">
-            <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
+            <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="Razon Social Emisor">
           </div>
           <div class="col-md-1">
             <label for="InputReceptor" class="label">Receptor</label>
           </div>
           <div class="col-md-3">
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="Razon Social Receptor">
           </div>
 
         </div>
