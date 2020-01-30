@@ -39,11 +39,13 @@ public class ClientController {
 	@GetMapping
 	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<ClientDto>> getClientsByParameters(
-			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
-			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
+			@RequestParam(name = "promotor") Optional<String> promotor,
+			@RequestParam(name = "status", defaultValue = "") String status,
+			@RequestParam(name = "razonSocial", defaultValue = "") String razonSocial,
+			@RequestParam(name = "rfc", defaultValue = "") String rfc,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getClientsByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getClientsByParametros(promotor,status, rfc, razonSocial, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/{rfc}")

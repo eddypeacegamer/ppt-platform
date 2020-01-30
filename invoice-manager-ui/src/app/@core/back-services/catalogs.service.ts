@@ -15,7 +15,7 @@ export class CatalogsService {
     return this.httpClient.get('../api/catalogs/producto-servicios', { params: pageParams});
   }
 
-  public getZipCodeInfo(zipCode:String): Observable<any> {
+  public getZipCodeInfo(zipCode: String): Observable<any> {
     return this.httpClient.get(`/api/catalogs/codigo-postal/${zipCode}`);
   }
 

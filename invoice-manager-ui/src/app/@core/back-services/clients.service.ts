@@ -4,18 +4,20 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Client } from '../../models/client';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClientsService {
 
   constructor(private httpClient:HttpClient) { }
 
-  public getClients(page:number,size:number, filterParams?: any) : Observable<Object>{
-    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+  public getClients(page:number,size:number, filterParams?: any): Observable<Object> {
+    let pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
-      const value : string = filterParams[key];
-      if(value.length>0){
-        pageParams = pageParams.append(key, filterParams[key]);
+      if (filterParams[key] !== undefined) {
+        const value: string = filterParams[key];
+        if( value.length > 0 && value !== '*') {
+          pageParams = pageParams.append(key, value);
+        }
       }
     }
     return this.httpClient.get('../api/clientes',{params:pageParams});

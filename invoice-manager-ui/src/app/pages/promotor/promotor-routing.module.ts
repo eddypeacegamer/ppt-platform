@@ -5,6 +5,7 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { ClienteComponent } from '../commons/cliente/cliente.component';
 
 const routes: Routes = [{
   path: '',
@@ -16,6 +17,9 @@ const routes: Routes = [{
     }, {
       path: 'clientes',
       component: ClientesComponent,
+    }, {
+      path: 'cliente/:rfc',
+      component: ClienteComponent,
     }, {
       path: 'reportes',
       component: ReportesComponent,

@@ -5,6 +5,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router } from '@angular/router';
+import { UsersData, User } from '../../../@core/data/users-data';
 
 @Component({
   selector: 'ngx-clientes',
@@ -13,19 +14,28 @@ import { Router } from '@angular/router';
 })
 export class ClientesComponent implements OnInit {
 
-
-  public headers: string[] = ['RFC', 'Razon Social', 'Activo','Promotor', 'Email', 'No Ext', 'Calle', 'Localidad', 'Municipio', 'C.Postal'];
+  public user: User;
+  public paths: string[] = [];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
-  public filterParams : any = {razonSocial:'',rfc:''};
-   
-  constructor(private clientService: ClientsData,
+  public filterParams: any = {razonSocial: '', rfc: '', status: '*', promotor: ''};
+
+  constructor(
+    private userService: UsersData,
+    private clientService: ClientsData,
     private donwloadService: DownloadCsvService,
     private router: Router) { }
 
   ngOnInit() {
-    this.updateDataTable(0,10);
+    this.paths = this.router.url.split('/');
+    this.userService.getUserInfo().toPromise()
+      .then((user) => {
+        this.user = user as User;
+        if (this.paths[2] === 'promotor')  {
+          this.filterParams.promotor = user.email;
+        }
+      }).then(() => this.updateDataTable(0, 10, this.filterParams));
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
@@ -41,13 +51,13 @@ export class ClientesComponent implements OnInit {
 
 
   public downloadHandler() {
-    this.clientService.getClients(0, 10000, this.filterParams).subscribe((result:GenericPage<Client>) => {
-      this.donwloadService.exportCsv(result.content.map(r=>r.informacionFiscal),'Clientes')
+    this.clientService.getClients(0, 10000, this.filterParams).subscribe((result: GenericPage<Client>) => {
+      this.donwloadService.exportCsv(result.content.map(r => r.informacionFiscal), 'Clientes');
     });
   }
 
-  public redirectToCliente(rfc:string){
-    this.router.navigate([`./pages/operaciones/cliente/${rfc}`])
+  public redirectToCliente(rfc: string) {
+    this.router.navigate([`./pages/${this.paths[2]}/cliente/${rfc}`]);
   }
 
 }
