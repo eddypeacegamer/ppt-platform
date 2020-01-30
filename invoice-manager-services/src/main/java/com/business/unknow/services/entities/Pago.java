@@ -1,6 +1,7 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -47,10 +48,10 @@ public class Pago implements Serializable {
 
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
-	private Double tipoDeCambio;
+	private BigDecimal tipoDeCambio;
 
 	@Column(name = "MONTO")
-	private Double monto;
+	private BigDecimal monto;
 
 	@Column(name = "REVISION_1")
 	private Boolean revision1;
@@ -128,19 +129,19 @@ public class Pago implements Serializable {
 		this.banco = banco;
 	}
 
-	public Double getTipoDeCambio() {
+	public BigDecimal getTipoDeCambio() {
 		return tipoDeCambio;
 	}
 
-	public void setTipoDeCambio(Double tipoDeCambio) {
+	public void setTipoDeCambio(BigDecimal tipoDeCambio) {
 		this.tipoDeCambio = tipoDeCambio;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

@@ -166,14 +166,6 @@ public class CfdiDto implements Serializable {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public ComplementoDto getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(ComplementoDto complemento) {
-		this.complemento = complemento;
-	}
-
 	public List<ConceptoDto> getConceptos() {
 		return conceptos;
 	}
@@ -197,7 +189,15 @@ public class CfdiDto implements Serializable {
 	public void setReceptor(ReceptorDto receptor) {
 		this.receptor = receptor;
 	}
-	
+
+	public ComplementoDto getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(ComplementoDto complemento) {
+		this.complemento = complemento;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiDto [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello="

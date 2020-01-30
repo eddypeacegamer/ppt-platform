@@ -21,6 +21,7 @@ import com.business.unknow.rules.suites.facturas.FacturaSuite;
 import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
 import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
 import com.business.unknow.rules.suites.pagos.PagoPueSuite;
+import com.business.unknow.services.util.FacturaDefaultValues;
 
 /**
  * @author eej000f
@@ -111,6 +112,11 @@ public class ServicesApplication {
 	@Bean
 	public SignHelper getSignHelper() {
 		return new SignHelper();
+	}
+	
+	@Bean
+	public FacturaDefaultValues getFacturaDefaultValues() {
+		return new FacturaDefaultValues();
 	}
 
 }

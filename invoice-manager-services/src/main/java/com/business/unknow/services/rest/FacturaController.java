@@ -47,7 +47,7 @@ public class FacturaController {
 
 	@Autowired
 	private CfdiService cfdiService;
-
+	
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(

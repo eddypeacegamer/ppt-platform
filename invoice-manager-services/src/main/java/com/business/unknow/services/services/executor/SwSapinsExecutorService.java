@@ -37,15 +37,18 @@ public class SwSapinsExecutorService {
 		try {
 			SwSapiensConfig swSapiensConfig = swSapiensClient.getSwSapiensClient().stamp(context.getXml(),
 					SwSapiensVersionEnum.V4.getValue());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			context.getFacturaDto().setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().setSelloSat(swSapiensConfig.getData().getSelloSAT());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setUuid(swSapiensConfig.getData().getUuid());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setSelloSat(swSapiensConfig.getData().getSelloSAT());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().getComplemento().setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();

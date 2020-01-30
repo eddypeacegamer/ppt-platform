@@ -55,7 +55,7 @@ public class FacturaCalculator {
 					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
 		}
 		String folio = emisor.concat(receptor).concat(date)
-				.concat(dto.getCfdi().getMetodoPago());
+				.concat(dto.getMetodoPago());
 		dto.setFolio(folio);
 		if (dto.getCfdi() != null) {
 			dto.getCfdi().setFolio(folio);

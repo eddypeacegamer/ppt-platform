@@ -1,5 +1,6 @@
 package com.business.unknow.services.services.executor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.enums.FormaPagoEnum;
@@ -7,13 +8,30 @@ import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.services.mapper.PagoMapper;
+import com.business.unknow.services.mapper.factura.CfdiMapper;
+import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.services.AbstractService;
 
 @Service
-public class PagoExecutorService extends AbstractExecutorService {
+public class PagoExecutorService extends AbstractService {
+
+	@Autowired
+	protected PagoRepository pagoRepository;
+
+	@Autowired
+	protected CfdiRepository cfdiRepository;
+
+	@Autowired
+	protected PagoMapper pagoMapper;
+
+	@Autowired
+	protected CfdiMapper cfdMapper;
 
 	public void deletePagoPpdExecutor(FacturaContext context) {
 		repository.delete(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
-		context.getPagoCredito().setMonto(context.getPagoCredito().getMonto() + context.getCurrentPago().getMonto());
+		context.getPagoCredito().setMonto(context.getPagoCredito().getMonto().add(context.getCurrentPago().getMonto()));
 		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
 		pagoRepository.delete(pagoMapper.getEntityFromPagoDto(context.getCurrentPago()));
 		deleteAllResourceFileByFolio(
@@ -25,7 +43,7 @@ public class PagoExecutorService extends AbstractExecutorService {
 		if (!context.getCurrentPago().getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())
 				&& context.getPagoCredito() != null) {
 			context.getPagoCredito()
-					.setMonto(context.getPagoCredito().getMonto() + context.getCurrentPago().getMonto());
+					.setMonto(context.getPagoCredito().getMonto().add(context.getCurrentPago().getMonto()));
 			context.setPagoCredito(pagoMapper.getPagoDtoFromEntity(
 					pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()))));
 		}
@@ -42,14 +60,16 @@ public class PagoExecutorService extends AbstractExecutorService {
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(context.getCurrentPago())));
 	}
 
-	public FacturaContext creaPapoPpdExecutor(FacturaContext context) {
+	public FacturaContext creaPagoPpdExecutor(FacturaContext context) {
 		context.setFacturaDto(mapper
 				.getFacturaDtoFromEntity(repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()))));
+		context.getFacturaDto().setCfdi(cfdMapper.getCfdiDtoFromEntity(
+				cfdiRepository.save(cfdMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()))));
 		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
 		return context;
 	}
 
-	public FacturaContext creaPapoPueExecutor(FacturaContext context) {
+	public FacturaContext creaPagoPueExecutor(FacturaContext context) {
 		if (context.getPagoCredito() != null) {
 			pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
 		}

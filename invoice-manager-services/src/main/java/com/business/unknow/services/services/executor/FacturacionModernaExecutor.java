@@ -50,18 +50,18 @@ public class FacturacionModernaExecutor {
 			FacturaModernaResponseModel response = client.getFacturacionModernaClient().stamp(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(response.getXml()));
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
 							FacturaConstants.FACTURA_DATE_FORMAT));
 			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setNoCertificadoSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().getComplemento()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloCFD(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
 			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
 			List<FacturaFileDto> files = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.business.unknow.commons.builder;
 
+import java.math.BigDecimal;
+
 import com.business.unknow.model.dto.services.DevolucionDto;
 
 public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto>{
@@ -29,7 +31,7 @@ public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto>{
 		return this;
 	}
 	
-	public DevolucionDtoBuilder setMonto(Double monto) {
+	public DevolucionDtoBuilder setMonto(BigDecimal monto) {
 		instance.setMonto(monto);
 		return this;
 	}

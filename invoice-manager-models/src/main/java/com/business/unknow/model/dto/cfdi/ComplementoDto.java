@@ -1,104 +1,31 @@
 package com.business.unknow.model.dto.cfdi;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+public class ComplementoDto {
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ComplementoDto implements Serializable {
+	private TimbradoFiscalDigitialDto timbreFiscal;
+	private List<CfdiPagoDto> pagos;
 
-	private static final long serialVersionUID = -4190291824199086095L;
-
-	private Integer id;
-	private String version;
-	private String uuid;
-	private Date fechaTimbrado;
-	private String rfcProvCertif;
-	private String selloCFD;
-	private String noCertificadoSat;
-	private String cadenaOriginal;
-	private String selloSat;
-
-	public Integer getId() {
-		return id;
+	public TimbradoFiscalDigitialDto getTimbreFiscal() {
+		return timbreFiscal;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setTimbreFiscal(TimbradoFiscalDigitialDto timbreFiscal) {
+		this.timbreFiscal = timbreFiscal;
 	}
 
-	public String getVersion() {
-		return version;
+	public List<CfdiPagoDto> getPagos() {
+		return pagos;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	public Date getFechaTimbrado() {
-		return fechaTimbrado;
-	}
-
-	public void setFechaTimbrado(Date fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
-	}
-
-	public String getRfcProvCertif() {
-		return rfcProvCertif;
-	}
-
-	public void setRfcProvCertif(String rfcProvCertif) {
-		this.rfcProvCertif = rfcProvCertif;
-	}
-
-	public String getSelloCFD() {
-		return selloCFD;
-	}
-
-	public void setSelloCFD(String selloCFD) {
-		this.selloCFD = selloCFD;
-	}
-
-	public String getNoCertificadoSat() {
-		return noCertificadoSat;
-	}
-
-	public void setNoCertificadoSat(String noCertificadoSat) {
-		this.noCertificadoSat = noCertificadoSat;
-	}
-
-	public String getSelloSat() {
-		return selloSat;
-	}
-
-	public void setSelloSat(String selloSat) {
-		this.selloSat = selloSat;
-	}
-
-	public String getCadenaOriginal() {
-		return cadenaOriginal;
-	}
-
-	public void setCadenaOriginal(String cadenaOriginal) {
-		this.cadenaOriginal = cadenaOriginal;
+	public void setPagos(List<CfdiPagoDto> pagos) {
+		this.pagos = pagos;
 	}
 
 	@Override
 	public String toString() {
-		return "Complemento [id=" + id + ", version=" + version + ", uuid=" + uuid + ", fechaTimbrado=" + fechaTimbrado
-				+ ", rfcProvCertif=" + rfcProvCertif + ", selloCFD=" + selloCFD + ", noCertificadoSat="
-				+ noCertificadoSat + ", selloSat=" + selloSat + "]";
+		return "ComplementoDto [timbreFiscal=" + timbreFiscal + ", pagos=" + pagos + "]";
 	}
 
 }
