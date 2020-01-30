@@ -82,9 +82,7 @@ export class RevisionComponent implements OnInit {
     ngOnInit() {
       this.userService.getUserInfo().subscribe(user => this.user = user as User);
       this.initVariables();
-      this.route.paramMap.subscribe(route => {
-        this.folioParam = route.get('folio');
-        this.catalogsService.getInvoiceCatalogs()
+      this.catalogsService.getInvoiceCatalogs()
           .toPromise().then(results => {
             this.girosCat = results[0];
             this.usoCfdiCat = results[2];
@@ -93,13 +91,17 @@ export class RevisionComponent implements OnInit {
             this.validationCat = results[5];
             this.payTypeCat = results[6];
           }).then(() => {
-            if (this.folioParam !== '*') {
-              this.getInvoiceByFolio(this.folioParam);
-            }
+            this.route.paramMap.subscribe(route => {
+              this.folioParam = route.get('folio');
+              if (this.folioParam !== '*') {
+                this.getInvoiceByFolio(this.folioParam);
+              }else {
+                this.initVariables();
+              }
+            });
           });
-      });
     }
-  
+    
     ngOnDestroy() {
       /** CLEAN VARIABLES **/
       this.newConcep = new Concepto();

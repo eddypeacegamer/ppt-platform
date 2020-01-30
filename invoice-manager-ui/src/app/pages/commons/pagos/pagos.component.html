@@ -1,4 +1,6 @@
 <div *ngIf="factura">
+
+  <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum">Pagos</p>
   <div class="row" *ngIf="factura.cfdi.total > paymentSum">
     <div class="col-sm-2">
       <label for="inputPayCoin" class="label">Moneda</label>

@@ -54,7 +54,7 @@ export class ClienteComponent implements OnInit {
     this. validatePercentages();
     this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
       .then(() => {
-        this.clientService.insertNewClient(this.clientInfo).subscribe(success => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
+        this.clientService.insertNewClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
           (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
       });
   }
