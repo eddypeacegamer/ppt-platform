@@ -4,6 +4,7 @@
 package com.business.unknow.model.dto.services;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,7 +23,7 @@ public class DevolucionDto implements Serializable {
 	private Integer idPagoDestino;
 	private String folio;
 	private String statusDevolucion;
-	private Double monto;
+	private BigDecimal monto;
 	private String receptor;
 	private String tipoReceptor;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
@@ -59,10 +60,10 @@ public class DevolucionDto implements Serializable {
 	public void setStatusDevolucion(String statusDevolucion) {
 		this.statusDevolucion = statusDevolucion;
 	}
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 	public String getReceptor() {

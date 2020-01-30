@@ -59,7 +59,11 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 	}
 	
 	public FacturaBuilder setCfdi(CfdiDto cfdi) {
-		instance.setCfdi(cfdi);
+		if(cfdi==null) {
+			instance.setCfdi(new CfdiDto());
+		}else {
+			instance.setCfdi(cfdi);
+		}
 		return this;
 	}
 	
@@ -75,6 +79,11 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 	
 	public FacturaBuilder setFormaPago(String formaPago) {
 		instance.getCfdi().setFormaPago(formaPago);
+		return this;
+	}
+	
+	public FacturaBuilder setMetodoPago(String metodoPago) {
+		instance.setMetodoPago(metodoPago);
 		return this;
 	}
 	

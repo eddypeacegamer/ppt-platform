@@ -1,5 +1,6 @@
 package com.business.unknow.services.services.translators;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,9 +95,9 @@ public class FacturaTranslator {
 				complementoComponente.getComplementoDocRelacionado()
 						.setIdDocumento(context.getFacturaPadreDto().getUuid());
 				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f",
-						context.getPagoCredito().getMonto() + Double.valueOf(complementoComponente.getMonto())));
-				complementoComponente.getComplementoDocRelacionado().setImpSaldoInsoluto(String.format("%.2f",
-						numberHelper.assignPrecision(context.getPagoCredito().getMonto(), Constants.DEFAULT_SCALE)));
+						context.getPagoCredito().getMonto().add(new BigDecimal(complementoComponente.getMonto()))));
+				complementoComponente.getComplementoDocRelacionado()
+						.setImpSaldoInsoluto(String.format("%.2f", context.getPagoCredito().getMonto()));
 				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
 			}
 			cfdi.setComplemento(complemento);
@@ -121,7 +122,7 @@ public class FacturaTranslator {
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		context.getFacturaDto().getCfdi().getComplemento().setCadenaOriginal(cadenaOriginal);
+		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
@@ -134,7 +135,7 @@ public class FacturaTranslator {
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		context.getFacturaDto().getCfdi().getComplemento().setCadenaOriginal(cadenaOriginal);
+		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {

@@ -1,5 +1,7 @@
 package com.business.unknow.rules.pago.delete;
 
+import java.math.BigDecimal;
+
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
@@ -15,7 +17,7 @@ public class DeletePaymentRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				&& (fc.getPagoCredito() == null || fc.getPagoCredito().getMonto() == 0);
+				&& (fc.getPagoCredito() == null || fc.getPagoCredito().getMonto().compareTo(BigDecimal.ZERO) == 0);
 	}
 
 	@Action

@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.cfdi.ComplementoDto;
+import com.business.unknow.model.dto.cfdi.TimbradoFiscalDigitialDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
@@ -15,7 +15,7 @@ import com.business.unknow.model.dto.cfdi.ReceptorDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.cfdi.Cfdi;
-import com.business.unknow.services.entities.cfdi.Complemento;
+import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
@@ -31,10 +31,10 @@ public interface CfdiMapper {
 		@Mapping(target = "emisor", ignore = true), @Mapping(target = "receptor", ignore = true) })
 	Cfdi getEntityFromCfdiDto(CfdiDto dto);
 
-	ComplementoDto getComplementoDtoFromEntity(Complemento entity);
+	TimbradoFiscalDigitialDto getComplementoDtoFromEntity(TimbradoFiscalDigitial entity);
 
 	@Mappings({ @Mapping(target = "cfdi", ignore = true) })
-	Complemento getEntityFromComplementoDto(ComplementoDto dto);
+	TimbradoFiscalDigitial getEntityFromComplementoDto(TimbradoFiscalDigitialDto dto);
 
 	EmisorDto getEmisorDtoFromEntity(Emisor entity);
 

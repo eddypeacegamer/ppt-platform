@@ -74,13 +74,16 @@ public class Cfdi implements Serializable {
 	private List<Concepto> conceptos;
 
 	@OneToOne(mappedBy = "cfdi")
-	private Complemento complemento;
+	private TimbradoFiscalDigitial complemento;
 
 	@OneToOne(mappedBy = "cfdi")
 	private Receptor receptor;
 
 	@OneToOne(mappedBy = "cfdi")
 	private Emisor emisor;
+
+	@OneToMany(mappedBy = "cfdi")
+	private List<CfdiPago> pagos;
 
 	public Cfdi() {
 		this.conceptos = new ArrayList<Concepto>();
@@ -234,16 +237,24 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
-	public Complemento getComplemento() {
+	public TimbradoFiscalDigitial getComplemento() {
 		return complemento;
 	}
 
-	public void setComplemento(Complemento complemento) {
+	public void setComplemento(TimbradoFiscalDigitial complemento) {
 		this.complemento = complemento;
 	}
 
 	public Receptor getReceptor() {
 		return receptor;
+	}
+
+	public List<CfdiPago> getPagos() {
+		return pagos;
+	}
+
+	public void setPagos(List<CfdiPago> pagos) {
+		this.pagos = pagos;
 	}
 
 	@Override

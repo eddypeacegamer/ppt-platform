@@ -1,55 +1,26 @@
-package com.business.unknow.services.entities.cfdi;
+package com.business.unknow.model.dto.cfdi;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Entity
-@Table(name = "CFDI_COMPLEMENTOS")
-public class Complemento implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TimbradoFiscalDigitialDto implements Serializable {
 
-	private static final long serialVersionUID = 6434301858121874015L;
+	private static final long serialVersionUID = -4190291824199086095L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_COMPLEMENTO")
 	private Integer id;
-
-	@Column(name = "VERSION")
 	private String version;
-
-	@Column(name = "UUID")
 	private String uuid;
-
-	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
-
-	@Column(name = "RFC_PROV_CERTIF")
 	private String rfcProvCertif;
-
-	@Column(name = "SELLO_CFD")
 	private String selloCFD;
-
-	@Column(name = "NO_CERTIFICADO_SAT")
 	private String noCertificadoSat;
-
-	@Column(name = "SELLO_SAT")
-	private String selloSat;
-
-	@Column(name = "CADENA_ORIGINAL")
 	private String cadenaOriginal;
-
-	@OneToOne
-	@JoinColumn(name = "ID_CFDI")
-	private Cfdi cfdi;
+	private String selloSat;
 
 	public Integer getId() {
 		return id;
@@ -121,14 +92,6 @@ public class Complemento implements Serializable {
 
 	public void setCadenaOriginal(String cadenaOriginal) {
 		this.cadenaOriginal = cadenaOriginal;
-	}
-
-	public Cfdi getCfdi() {
-		return cfdi;
-	}
-
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
 	}
 
 	@Override

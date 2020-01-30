@@ -17,26 +17,26 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		if (fc.getPagos().isEmpty() || fc.getFacturaDto().getCfdi().getTotal() == null || fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO)==0) {
+		if (fc.getPagos().isEmpty() || fc.getFacturaDto().getCfdi().getTotal() == null
+				|| fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO) == 0) {
 			return true;
 		} else {
-			double pagos = 0.0f;
+			BigDecimal pagos = new BigDecimal("0");
 			for (PagoDto pago : fc.getPagos())
-				pagos += pago.getMonto();
-//			Optional<PagoDto> pagoDto = fc.getPagos().stream().filter(p->p.getId().compareTo(fc.getComlpemento().getIdPago())==0)
-//					.findFirst();
+				pagos.add(pago.getMonto());
 			Optional<PagoDto> pagoDto = fc.getPagos().stream()
-					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.valueOf(a.getMonto()))==0// TODO review this logic
-																							// here is a potential
-																							// issue when the
-																							// complement will be
-																							// created with one
-																							// ammount equal to a
-																							// previous ammount
+					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(a.getMonto()) == 0// TODO
+					// here is a potential
+					// issue when the
+					// complement will be
+					// created with one
+					// ammount equal to a
+					// previous ammount
 					).findFirst();
-			return (fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO)==0 || pagos == 0
-			// || pagos > fc.getFacturaDto().getTotal() //validate how to handle this
-			// condition, this is not allowing generate complements
+			return (fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO) == 0
+					|| pagos.compareTo(BigDecimal.ZERO) == 0
+					// || pagos > fc.getFacturaDto().getTotal() //validate how to handle this
+					// condition, this is not allowing generate complements
 					|| !pagoDto.isPresent());
 		}
 

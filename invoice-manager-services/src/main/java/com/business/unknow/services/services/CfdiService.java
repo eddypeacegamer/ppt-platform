@@ -56,7 +56,7 @@ public class CfdiService {
 
 	@Autowired
 	private CfdiMapper mapper;
-
+	
 	private static final Logger log = LoggerFactory.getLogger(CfdiService.class);
 
 	public CfdiDto getCfdiByFolio(String folio) {

@@ -1,6 +1,7 @@
 package com.business.unknow.services.services;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
@@ -31,6 +33,8 @@ import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
+import com.business.unknow.services.services.executor.PagoExecutorService;
+import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
 public class FacturaService {
@@ -48,6 +52,9 @@ public class FacturaService {
 	private FacturaMapper mapper;
 
 	@Autowired
+	private PagoService pagoService;
+
+	@Autowired
 	private TimbradoEvaluatorService timbradoServiceEvaluator;
 
 	@Autowired
@@ -55,6 +62,15 @@ public class FacturaService {
 
 	@Autowired
 	private PagoEvaluatorService pagoEvaluatorService;
+
+	@Autowired
+	private PagoExecutorService pagoExecutorService;
+
+	@Autowired
+	private FacturaBuilderService facturaBuilderService;
+
+	@Autowired
+	private FacturaDefaultValues facturaDefaultValues;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -105,16 +121,16 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto(); 
-		// TODO refactor facturaEvaluation class to only make validations
-		// TODO IF CFDI is PPD generates automatic payment
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto();
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
+			pagoService.insertNewPayment(facturaDefaultValues.assignaDefaultsPagoPPD(cfdi));
+		}
 		return saveFactura(entity);
 	}
-	
-	
+
 	private FacturaDto saveFactura(Factura factura) {
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
@@ -128,7 +144,8 @@ public class FacturaService {
 					String.format("La factura con el folio %s no existe", folio));
 		}
 	}
-	//CFDI
+
+	// CFDI
 	public CfdiDto getCfdiByFolio(String folio) {
 		return cfdiService.getCfdiByFolio(folio);
 	}
@@ -138,7 +155,6 @@ public class FacturaService {
 		return cfdiService.getCfdiByFolio(folio);
 
 	}
-
 
 	// COMPLEMNENTOS
 	public List<FacturaDto> getComplementos(String folioPadre) {
@@ -163,7 +179,40 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPago(String folio, PagoDto pagoDto) throws InvoiceManagerException {
-		return pagoEvaluatorService.validatePagoCreation(folio, pagoDto);
+		FacturaContext facturaContext;
+		FacturaDto factura = getFacturaByFolio(folio);
+		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
+		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
+			facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto, folio);
+			pagoEvaluatorService.validatePagoPpdCreation(facturaContext);
+			createComplemento(facturaContext);
+			pagoExecutorService.creaPagoPpdExecutor(facturaContext);
+		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+			facturaContext = facturaBuilderService.buildFacturaContextPagoPueCreation(folio, pagoDto);
+			pagoEvaluatorService.validatePagoPueCreation(facturaContext);
+			if (facturaContext.getPagoCredito() != null) {
+				facturaContext.getPagoCredito().setMonto(facturaContext.getPagoCredito().getMonto()
+						.subtract(facturaContext.getCurrentPago().getMonto()));
+				pagoExecutorService.creaPagoPueExecutor(facturaContext);
+			}
+		} else {
+			throw new InvoiceManagerException("Metodo de pago no soportado",
+					String.format("El metodo de pago %s no es valido", factura.getCfdi().getMetodoPago()),
+					HttpStatus.BAD_REQUEST.value());
+		}
+		return pagoExecutorService.PagoCreation(facturaContext);
+	}
+
+	private void createComplemento(FacturaContext facturaContext) throws InvoiceManagerException {
+		facturaContext.setFacturaDto(facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaContext));
+		facturaContext.getFacturaDto().setCfdi(facturaBuilderService.buildFacturaComplementoCreation(facturaContext));
+		facturaDefaultValues.assignaDefaultsComplemento(facturaContext.getFacturaDto());
+		facturaServiceEvaluator.complementoValidation(facturaContext);
+		facturaContext.getCurrentPago().setFolio(facturaContext.getFacturaDto().getFolio());
+		facturaContext.getCurrentPago().setFolioPadre(facturaContext.getFacturaDto().getFolioPadre());
+		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
+		facturaContext.getPagoCredito().setMonto(
+				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

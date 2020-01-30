@@ -20,7 +20,16 @@ public enum FormaPagoEnum {
 		this.clave = clave;
 	}
 
-	public static FormaPagoEnum findByDesc(String pagoValue) {
+	public static FormaPagoEnum findByDesc(String descripcion) {
+		for (FormaPagoEnum v : values()) {
+			if (v.getDescripcion().equals(descripcion)) {
+				return v;
+			}
+		}
+		return NOT_VALID;
+	}
+	
+	public static FormaPagoEnum findByPagoValue(String pagoValue) {
 		for (FormaPagoEnum v : values()) {
 			if (v.getPagoValue().equals(pagoValue)) {
 				return v;

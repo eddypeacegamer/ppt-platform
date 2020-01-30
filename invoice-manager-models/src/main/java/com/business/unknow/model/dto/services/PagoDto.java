@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.services;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -18,9 +19,9 @@ public class PagoDto implements Serializable {
 	private String folio;
 	private String folioPadre;
 	private String moneda;
-	private Double tipoDeCambio;
+	private BigDecimal tipoDeCambio;
 	private String banco;
-	private Double monto;
+	private BigDecimal monto;
 	private String statusPago;
 	private Boolean revision1;
 	private Boolean revision2;
@@ -62,11 +63,11 @@ public class PagoDto implements Serializable {
 		this.moneda = moneda;
 	}
 
-	public Double getTipoDeCambio() {
+	public BigDecimal getTipoDeCambio() {
 		return tipoDeCambio;
 	}
 
-	public void setTipoDeCambio(Double tipoDeCambio) {
+	public void setTipoDeCambio(BigDecimal tipoDeCambio) {
 		this.tipoDeCambio = tipoDeCambio;
 	}
 
@@ -78,11 +79,11 @@ public class PagoDto implements Serializable {
 		this.banco = banco;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

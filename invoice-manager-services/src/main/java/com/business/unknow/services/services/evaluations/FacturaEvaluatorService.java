@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 
 @Service
@@ -15,6 +16,9 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 
 	@Autowired
 	private FacturaSuite facturaSuite;
+	
+	@Autowired
+	private ComplementoSuite complementoSuite;
 
 	@Autowired
 	private RulesEngine rulesEngine;
@@ -26,19 +30,15 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(facturaSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
-//		Commenting not validation methods
-//		CfdiDto cfdiDto = facturaContext.getFacturaDto().getCfdi();
-//		
-//		facturaContext.setFacturaDto(mapper.getFacturaDtoFromEntity(
-//				repository.save(mapper.getEntityFromFacturaDto(facturaContext.getFacturaDto()))));
-//		facturaContext.getFacturaDto().setCfdi(cfdiDto);
-//		
-//		facturaContext.getFacturaDto().setCfdi(cfdiEvaluatorService
-//				.insertNewCfdi(facturaContext.getFacturaDto().getFolio(), facturaContext.getFacturaDto().getCfdi()));
-//		if (facturaContext.getFacturaDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre())) {
-//			pagoRepository.save(facturaDefaultValues.assignaDefaultsFacturaPPD(facturaContext.getFacturaDto()));//GENERACION PAGO SISTEMA PPD
-//		}
 		return facturaContext;
+	}
+	
+	public void complementoValidation(FacturaContext facturaContext)
+			throws InvoiceManagerException {
+		Facts facts = new Facts();
+		facts.put("facturaContext", facturaContext);
+		rulesEngine.fire(complementoSuite.getSuite(), facts);
+		validateFacturaContext(facturaContext);
 	}
 
 }
