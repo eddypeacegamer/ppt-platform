@@ -311,13 +311,11 @@ public class FacturaService {
 		} else {
 			if (pago.getRevision1() && pago.getRevision2()) {
 				entity.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
-				Factura factura = repository.findByFolio(pago.getFolio())
-						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
-								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
-				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
-				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
-				repository.save(factura);
-				devolucionService.generarDevolucionesPorPago(mapper.getFacturaDtoFromEntity(factura), pago);
+				FacturaDto facturaDto= getFacturaByFolio(pago.getFolio());
+				facturaDto.setStatusPago(PagoStatusEnum.PAGADA.getValor());
+				facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+				repository.save(mapper.getEntityFromFacturaDto(facturaDto));
+				devolucionService.generarDevolucionesPorPago(facturaDto, pago);
 			}
 		}
 		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));

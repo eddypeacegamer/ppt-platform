@@ -20,6 +20,7 @@ public class DevolucionesBuilderService {
 	@Autowired
 	private FacturaService facturaService;
 	
+	@Autowired
 	private DevolucionMapper devolucionMapper;
 
 	public Devolucion buildDevolucion(String foliofFact, Integer idPago, BigDecimal montoBase, Integer porcentaje,
