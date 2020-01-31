@@ -22,17 +22,18 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	
 	public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
 	
-	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor='A' and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
-	public Page<Factura> findBySolicitanteWithParams(@Param("solicitante") String solicitante,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
+	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor='A' and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
+	public Page<Factura> findBySolicitanteWithParams(@Param("solicitante") String solicitante,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);
 	
-	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor='A' and f.statusFactura = upper(:status) and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
-	public Page<Factura> findBySolicitanteAndStatusWithParams(@Param("solicitante") String solicitante,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
+	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor='A' and f.statusFactura = upper(:status) and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
+	public Page<Factura> findBySolicitanteAndStatusWithParams(@Param("solicitante") String solicitante,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);
 	
-	@Query("select f from Factura f where f.lineaEmisor=:lineaEmisor and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
-	public Page<Factura> findByLineaEmisorWithParams(@Param("lineaEmisor") String lineaEmisor,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
 	
-	@Query("select f from Factura f where f.lineaEmisor=:lineaEmisor and upper(f.statusFactura) = upper(:status) and f.fechaCreacion between :since and :to and upper(f.rfcEmisor) like upper(:rfcEmisor) and upper(f.rfcRemitente) like upper(:rfcRemitente)")
-	public Page<Factura> findByLineaEmisorAndStatusWithParams(@Param("lineaEmisor") String lineaEmisor,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("rfcEmisor") String rfcEmisor,@Param("rfcRemitente") String rfcRemitente,Pageable pageable);
+	@Query("select f from Factura f where f.lineaEmisor=:lineaEmisor and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
+	public Page<Factura> findByLineaEmisorWithParams(@Param("lineaEmisor") String lineaEmisor,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);
+	
+	@Query("select f from Factura f where f.lineaEmisor=:lineaEmisor and upper(f.statusFactura) = upper(:status) and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
+	public Page<Factura> findByLineaEmisorAndStatusWithParams(@Param("lineaEmisor") String lineaEmisor,@Param("status") String status,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);
 
 	
 	

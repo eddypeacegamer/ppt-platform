@@ -114,7 +114,7 @@ public class FacturaService {
 
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
-			String lineaEmisor, Optional<String> status, Date since, Date to, String rfcEmisor, String rfcRemitente,
+			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor,
 			int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
@@ -125,21 +125,21 @@ public class FacturaService {
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,
-						String.format("%%%s%%", rfcEmisor), String.format("%%%s%%", rfcRemitente),
+						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 			} else {
 				result = repository.findBySolicitanteWithParams(solicitante.get(), start, end,
-						String.format("%%%s%%", rfcEmisor), String.format("%%%s%%", rfcRemitente),
+						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 			}
 		} else {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findByLineaEmisorAndStatusWithParams(lineaEmisor, status.get(), start, end,
-						String.format("%%%s%%", rfcEmisor), String.format("%%%s%%", rfcRemitente),
+						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 			} else {
 				result = repository.findByLineaEmisorWithParams(lineaEmisor, start, end,
-						String.format("%%%s%%", rfcEmisor), String.format("%%%s%%", rfcRemitente),
+						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 			}
 

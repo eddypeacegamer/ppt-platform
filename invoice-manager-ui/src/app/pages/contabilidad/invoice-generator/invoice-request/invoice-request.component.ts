@@ -3,8 +3,6 @@ import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { Transferencia } from '../../../../models/transferencia';
 import { Giro } from '../../../../models/catalogos/giro';
 import { Empresa } from '../../../../models/empresa';
-import { ClaveProductoServicio } from '../../../../models/catalogos/producto-servicio';
-import { ClaveUnidad } from '../../../../models/catalogos/clave-unidad';
 import { UsoCfdi } from '../../../../models/catalogos/uso-cfdi';
 import { Catalogo } from '../../../../models/catalogos/catalogo';
 import { Concepto } from '../../../../models/factura/concepto';
@@ -14,16 +12,9 @@ import { CompaniesData } from '../../../../@core/data/companies-data';
 import { InvoicesData } from '../../../../@core/data/invoices-data';
 import { UsersData, User } from '../../../../@core/data/users-data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Impuesto } from '../../../../models/factura/impuesto';
 import { Cfdi } from '../../../../models/factura/cfdi';
 import { map } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
-import { TransferData } from '../../../../@core/data/transfers-data';
-import { ClientsData } from '../../../../@core/data/clients-data';
 import { CfdiValidatorService } from '../../../../@core/util-services/cfdi-validator.service';
-import { FilesData } from '../../../../@core/data/files-data';
-import { DownloadInvoiceFilesService } from '../../../../@core/util-services/download-invoice-files';
-import { PdfMakeService } from '../../../../@core/util-services/pdf-make.service';
 import { Contribuyente } from '../../../../models/contribuyente';
 
 @Component({
@@ -51,40 +42,51 @@ export class InvoiceRequestComponent implements OnInit {
   public complementos: Factura[] = [];
   public successMessage: string;
   public errorMessages: string[] = [];
-  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*'};
+  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*' };
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
 
   constructor(
+    protected ref: NbDialogRef<InvoiceRequestComponent>,
     private catalogsService: CatalogsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private cfdiValidator: CfdiValidatorService,
     private userService: UsersData,
-    private filesService: FilesData,
-    private downloadService: DownloadInvoiceFilesService,
-    private pdfMakeService: PdfMakeService,
-    private route: ActivatedRoute) { }
+    ) { }
 
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.user = user as User);
     this.initVariables();
-    this.route.paramMap.subscribe(route => {
-      this.folioParam = route.get('folio');
-      this.catalogsService.getInvoiceCatalogs()
-        .toPromise().then(results => {
-          this.girosCat = results[0];
-          this.usoCfdiCat = results[2];
-          this.payCat = results[3];
-          this.devolutionCat = results[4];
-          this.validationCat = results[5];
-          this.payTypeCat = results[6];
-        }).then(() => {
-          if (this.folioParam !== '*') {
-            this.getInvoiceByFolio(this.folioParam);
-          }
-        });
+    this.companiesService.getCompanyByRFC(this.transfer.rfcRetiro).subscribe(
+      emisor => {
+        this.factura.rfcEmisor = emisor.informacionFiscal.rfc;
+        this.factura.razonSocialEmisor = emisor.informacionFiscal.razonSocial;
+        this.factura.cfdi.emisor.rfc = emisor.informacionFiscal.rfc;
+        this.factura.cfdi.emisor.nombre = emisor.informacionFiscal.razonSocial;
+        this.factura.cfdi.emisor.regimenFiscal = emisor.regimenFiscal;
+      },
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
+    );
+
+    this.companiesService.getCompanyByRFC(this.transfer.rfcDeposito).subscribe(
+      receptor => {
+        this.factura.rfcRemitente = receptor.informacionFiscal.rfc;
+        this.factura.razonSocialRemitente = receptor.informacionFiscal.razonSocial;
+        this.factura.cfdi.receptor.rfc = receptor.informacionFiscal.rfc;
+        this.factura.cfdi.receptor.nombre = receptor.informacionFiscal.razonSocial;
+      },
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
+    );
+
+    this.catalogsService.getInvoiceCatalogs().subscribe(results => {
+      this.girosCat = results[0];
+      this.usoCfdiCat = results[2];
+      this.payCat = results[3];
+      this.devolutionCat = results[4];
+      this.validationCat = results[5];
+      this.payTypeCat = results[6];
     });
   }
 
@@ -102,6 +104,31 @@ export class InvoiceRequestComponent implements OnInit {
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';
+  }
+
+  exit() {
+    this.ref.close();
+  }
+
+  public validarRestante(): boolean {
+    if (Math.abs(this.transfer.importe - this.factura.cfdi.total) < 0.01 && this.factura.folio === undefined) {
+      this.successMessage = 'Muy bien el monto de la factura se cuadro correctamente';
+      return true;
+    }else {
+      return false;
+    }
+  }
+  public calcularPrecioUnitario(concepto: Concepto) {
+    if (concepto.cantidad < 1) {
+      alert('NO es posible calcular montos unitarios para valores menores a 1');
+    }else {
+      const restante  = this.transfer.importe - this.factura.cfdi.total;
+      if (concepto.iva === true){
+        concepto.valorUnitario = restante / (1.16 * concepto.cantidad);
+      }else{
+        concepto.valorUnitario = restante / concepto.cantidad;
+      }
+    }
   }
 
   public getInvoiceByFolio(folio: string) {
@@ -143,8 +170,8 @@ export class InvoiceRequestComponent implements OnInit {
     } else {
       this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId))
         .subscribe(companies => this.companiesCat = companies,
-        (error: HttpErrorResponse) =>
-          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
   }
 
@@ -154,17 +181,17 @@ export class InvoiceRequestComponent implements OnInit {
 
   onPayMethodSelected(clave: string) {
     this.catalogsService.getFormasPago(clave)
-    .subscribe(cat => {
-      this.payTypeCat = cat;
-      this.formInfo.payType = this.payTypeCat[0].id;
-      if (clave === 'PPD') {
-        this.factura.cfdi.formaPago = '99';
-        this.factura.cfdi.metodoPago = 'PPD';
-      } else {
-        this.factura.cfdi.metodoPago = 'PUE';
-        this.factura.cfdi.formaPago = '01';
-      }
-    });
+      .subscribe(cat => {
+        this.payTypeCat = cat;
+        this.formInfo.payType = this.payTypeCat[0].id;
+        if (clave === 'PPD') {
+          this.factura.cfdi.formaPago = '99';
+          this.factura.cfdi.metodoPago = 'PPD';
+        } else {
+          this.factura.cfdi.metodoPago = 'PUE';
+          this.factura.cfdi.formaPago = '01';
+        }
+      });
   }
 
 
@@ -187,7 +214,7 @@ export class InvoiceRequestComponent implements OnInit {
     this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
   }
- 
+
   solicitarCfdi() {
 
     this.errorMessages = [];
@@ -196,40 +223,19 @@ export class InvoiceRequestComponent implements OnInit {
     this.factura.lineaRemitente = this.transfer.lineaDeposito;
     this.factura.statusFactura = '4';//SET AS DEFAULT POR TIMBRAR
     this.factura.solicitante = this.user.email;
-    this.factura.rfcEmisor = this.transfer.rfcRetiro;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.rfcRemitente = this.transfer.rfcDeposito;
-    this.factura.rfcEmisor = this.transfer.rfcRetiro;
-    this.factura.rfcRemitente = this.transfer.rfcDeposito;
+    this.factura.metodoPago = this.factura.cfdi.metodoPago;
 
-    this.errorMessages = [];
-  
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    
-    this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-   
-    this.errorMessages = this.cfdiValidator.validarCfdi({...this.factura.cfdi});
+    this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     if (this.errorMessages.length < 1) {
-      this.invoiceService.insertNewInvoice(this.factura)
-      .subscribe((invoice: Factura) => {
-        this.factura.folio = invoice.folio;
-        this.successMessage = 'Solicitud de factura enviada correctamente';
-      }, (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error !== undefined) ?
-        error.error.message : `${error.statusText} : ${error.message}`);
-      });
+      this.invoiceService.insertNewInvoice({... this.factura})
+        .subscribe((invoice: Factura) => {
+          this.factura.folio = invoice.folio;
+          this.successMessage = 'Solicitud de factura enviada correctamente';
+        }, (error: HttpErrorResponse) => {
+          this.errorMessages.push((error.error != null && error.error !== undefined) ?
+            error.error.message : `${error.statusText} : ${error.message}`);
+        });
     }
-  }
-  public downloadPdf(folio: string) {
-    //console.log('calling pdfMakeService for :', folio)
-    //this.pdfMakeService.generatePdf(this.factura);
-    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
-      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
-    );
-  }
-  public downloadXml(folio: string) {
-    this.filesService.getFacturaFile(folio, 'XML').subscribe(
-      file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
-    )
   }
 
 }
