@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CFDI_PAGO")
+@Table(name = "CFDI_PAGOS")
 public class CfdiPago implements Serializable {
 
 	private static final long serialVersionUID = -9003721389303480808L;
@@ -37,7 +37,7 @@ public class CfdiPago implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 	@Column(name = "ID_DOCUMENTO")
-	private String id_documento;
+	private String idDocumento;
 	@Column(name = "IMPORTE_PAGADO")
 	private BigDecimal importePagado;
 	@Column(name = "IMPORTE_SALDO_ANTERIOR")
@@ -112,12 +112,12 @@ public class CfdiPago implements Serializable {
 		this.folio = folio;
 	}
 
-	public String getId_documento() {
-		return id_documento;
+	public String getIdDocumento() {
+		return idDocumento;
 	}
 
-	public void setId_documento(String id_documento) {
-		this.id_documento = id_documento;
+	public void setIdDocumento(String idDocumento) {
+		this.idDocumento = idDocumento;
 	}
 
 	public BigDecimal getImportePagado() {
@@ -175,15 +175,22 @@ public class CfdiPago implements Serializable {
 	public void setSerie(String serie) {
 		this.serie = serie;
 	}
-	
+
+	public Cfdi getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(Cfdi cfdi) {
+		this.cfdi = cfdi;
+	}
 
 	@Override
 	public String toString() {
 		return "CfdiPago [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago=" + formaPago
-				+ ", moneda=" + moneda + ", monto=" + monto + ", folio=" + folio + ", id_documento=" + id_documento
+				+ ", moneda=" + moneda + ", monto=" + monto + ", folio=" + folio + ", idDocumento=" + idDocumento
 				+ ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
-				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + "]";
+				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", cfdi=" + cfdi + "]";
 	}
 
 }

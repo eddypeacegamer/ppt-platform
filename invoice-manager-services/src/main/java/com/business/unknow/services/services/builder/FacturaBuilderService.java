@@ -118,7 +118,6 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
 		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION)
-				.setCertificado(facturaContext.getEmpresaDto().getCertificado())
 				.setLugarExpedicion(facturaContext.getEmpresaDto().getInformacionFiscal().getCp())
 				.setMoneda(ComplementoPpdDefaults.MONEDA)
 				.setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
