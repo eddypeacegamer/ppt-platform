@@ -57,16 +57,14 @@ export class InvoiceRequestComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-
-    console.log(this.transfer);
-
-
     this.userService.getUserInfo().subscribe(user => this.user = user as User);
     this.initVariables();
     this.companiesService.getCompanyByRFC(this.transfer.rfcRetiro).subscribe(
       emisor => {
         this.factura.rfcEmisor = emisor.informacionFiscal.rfc;
         this.factura.razonSocialEmisor = emisor.informacionFiscal.razonSocial;
+        this.factura.cfdi.emisor.rfc = emisor.informacionFiscal.rfc;
+        this.factura.cfdi.emisor.nombre = emisor.informacionFiscal.razonSocial;
         this.factura.cfdi.emisor.regimenFiscal = emisor.regimenFiscal;
       },
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
@@ -76,6 +74,8 @@ export class InvoiceRequestComponent implements OnInit {
       receptor => {
         this.factura.rfcRemitente = receptor.informacionFiscal.rfc;
         this.factura.razonSocialRemitente = receptor.informacionFiscal.razonSocial;
+        this.factura.cfdi.receptor.rfc = receptor.informacionFiscal.rfc;
+        this.factura.cfdi.receptor.nombre = receptor.informacionFiscal.razonSocial;
       },
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
     );
@@ -111,7 +111,12 @@ export class InvoiceRequestComponent implements OnInit {
   }
 
   public validarRestante(): boolean {
-    return Math.abs(this.transfer.importe - this.factura.cfdi.total) < 0.01;
+    if (Math.abs(this.transfer.importe - this.factura.cfdi.total) < 0.01 && this.factura.folio === undefined) {
+      this.successMessage = 'Muy bien el monto de la factura se cuadro correctamente';
+      return true;
+    }else {
+      return false;
+    }
   }
   public calcularPrecioUnitario(concepto: Concepto) {
     if (concepto.cantidad < 1) {
@@ -218,21 +223,11 @@ export class InvoiceRequestComponent implements OnInit {
     this.factura.lineaRemitente = this.transfer.lineaDeposito;
     this.factura.statusFactura = '4';//SET AS DEFAULT POR TIMBRAR
     this.factura.solicitante = this.user.email;
-    this.factura.rfcEmisor = this.transfer.rfcRetiro;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.rfcRemitente = this.transfer.rfcDeposito;
-    this.factura.rfcEmisor = this.transfer.rfcRetiro;
-    this.factura.rfcRemitente = this.transfer.rfcDeposito;
-
-    this.errorMessages = [];
-
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-
-    this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
+    this.factura.metodoPago = this.factura.cfdi.metodoPago;
 
     this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     if (this.errorMessages.length < 1) {
-      this.invoiceService.insertNewInvoice(this.factura)
+      this.invoiceService.insertNewInvoice({... this.factura})
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
           this.successMessage = 'Solicitud de factura enviada correctamente';

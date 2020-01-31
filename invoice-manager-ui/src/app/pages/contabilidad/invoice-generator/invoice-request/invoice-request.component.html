@@ -62,9 +62,7 @@
         </div>
 
       </div>      
-      <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
-        {{successMessage}}
-      </div>
+      
       <p class="font-weight-bold">Conceptos factura</p>
       <ngx-conceptos [cfdi]="factura.cfdi" [concepto]="newConcep" [allowEdit]="this.factura.folio === undefined">
       </ngx-conceptos>
@@ -75,10 +73,9 @@
         {{(transfer.importe - factura.cfdi.total) | currency}}
       </div>
 
-      <div class="alert alert-success" role="alert" *ngIf="validarRestante()">
-        Muy bien el monto de la factura se cuadro correctamente
+      <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
+        {{successMessage}}
       </div>
-
 
       <div *ngIf="factura.metodoPago=='PPD' && complementos.length>0">
         <p class="font-weight-bold">Complementos</p>
