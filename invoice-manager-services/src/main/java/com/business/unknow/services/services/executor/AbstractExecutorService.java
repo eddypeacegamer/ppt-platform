@@ -1,19 +1,14 @@
-package com.business.unknow.services.services;
+package com.business.unknow.services.services.executor;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.services.entities.files.ResourceFile;
-import com.business.unknow.services.mapper.factura.FacturaMapper;
-import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 
-public class AbstractService {
-	
-	@Autowired
-	protected FacturaRepository repository;
+public class AbstractExecutorService {
 
 	@Autowired
 	protected FacturaFileRepository facturaFileRepository;
@@ -21,8 +16,7 @@ public class AbstractService {
 	@Autowired
 	protected ResourceFileRepository resourceFileRepository;
 
-	@Autowired
-	protected FacturaMapper mapper;
+	
 	
 	protected void createResourceFile(String data, String referncia, String tipoRecurso, String tipoArchivo) {
 		if (data != null) {

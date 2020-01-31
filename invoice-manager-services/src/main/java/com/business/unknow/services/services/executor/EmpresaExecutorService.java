@@ -1,4 +1,4 @@
-package com.business.unknow.services.services.evaluations;
+package com.business.unknow.services.services.executor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,13 +8,20 @@ import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.executor.SwSapinsExecutorService;
+import com.business.unknow.services.mapper.EmpresaMapper;
+import com.business.unknow.services.repositories.EmpresaRepository;
 
 @Service
-public class EmpresaEvaluatorService extends AbstractEvaluatorService {
+public class EmpresaExecutorService extends AbstractExecutorService{
 	
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
+	
+	@Autowired
+	private EmpresaRepository empresaRepository;
+	
+	@Autowired
+	private EmpresaMapper empresaMapper;
 
 	public EmpresaDto validateEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		try {

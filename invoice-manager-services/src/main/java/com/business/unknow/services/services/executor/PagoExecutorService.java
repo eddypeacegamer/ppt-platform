@@ -12,19 +12,27 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
+import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
-import com.business.unknow.services.services.AbstractService;
+import com.business.unknow.services.repositories.facturas.FacturaRepository;
 
 @Service
-public class PagoExecutorService extends AbstractService {
+public class PagoExecutorService extends AbstractExecutorService {
 
+	
+	@Autowired
+	private FacturaRepository repository;
+	
 	@Autowired
 	protected PagoRepository pagoRepository;
 
 	@Autowired
 	protected CfdiRepository cfdiRepository;
 
+	@Autowired
+	private FacturaMapper mapper;
+	
 	@Autowired
 	protected PagoMapper pagoMapper;
 

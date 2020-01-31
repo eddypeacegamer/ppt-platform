@@ -19,21 +19,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.PagoStatusEnum;
+import com.business.unknow.enums.RevisionPagosEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
+import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.services.builder.FacturaBuilderService;
+import com.business.unknow.services.services.builder.PagoBuilderService;
+import com.business.unknow.services.services.builder.TimbradoBuilderService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
+import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
 import com.business.unknow.services.services.executor.PagoExecutorService;
+import com.business.unknow.services.services.executor.SwSapinsExecutorService;
+import com.business.unknow.services.services.executor.TimbradoExecutorService;
+import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
@@ -44,6 +58,9 @@ public class FacturaService {
 
 	@Autowired
 	private CfdiService cfdiService;
+	
+	@Autowired
+	private DevolucionService devolucionService;
 
 	@Autowired
 	private PagoRepository pagoRepository;
@@ -51,6 +68,9 @@ public class FacturaService {
 	@Autowired
 	private FacturaMapper mapper;
 
+	@Autowired
+	private PagoMapper pagoMapper;
+	
 	@Autowired
 	private PagoService pagoService;
 
@@ -64,10 +84,28 @@ public class FacturaService {
 	private PagoEvaluatorService pagoEvaluatorService;
 
 	@Autowired
+	private FacturaBuilderService facturaBuilderService;
+	
+	@Autowired
+	private  TimbradoBuilderService timbradoBuilderService;
+	
+	@Autowired
+	private PagoBuilderService pagoBuilderService;
+	
+	@Autowired
+	private FacturaTranslator facturaTranslator;
+	
+	@Autowired
 	private PagoExecutorService pagoExecutorService;
+	
+	@Autowired
+	private SwSapinsExecutorService swSapinsExecutorService;
 
 	@Autowired
-	private FacturaBuilderService facturaBuilderService;
+	private FacturacionModernaExecutor facturacionModernaExecutor;
+	
+	@Autowired
+	private TimbradoExecutorService timbradoExecutorService;
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
@@ -121,7 +159,9 @@ public class FacturaService {
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
-		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaDto).getFacturaDto();
+		FacturaContext facturaContext = facturaBuilderService.buildFacturaContextCreateFactura(facturaDto);
+		facturaDefaultValues.assignaDefaultsFactura(facturaContext.getFacturaDto());
+		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaContext).getFacturaDto();
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
@@ -164,12 +204,52 @@ public class FacturaService {
 	// TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
-		return timbradoServiceEvaluator.facturaTimbradoValidation(facturaDto, folio);
+		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
+		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
+		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
+		case FACRTURA:
+			facturaContext = facturaTranslator.translateFactura(facturaContext);
+			break;
+		case COMPLEMENTO:
+			facturaContext = facturaTranslator.translateComplemento(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("The type of document not supported",
+					String.format("The type of document %s not valid", facturaContext.getTipoDocumento()),
+					HttpStatus.BAD_REQUEST.value());
+		}
+		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+		case SW_SAPIENS:
+			swSapinsExecutorService.stamp(facturaContext);
+			break;
+		case FACTURACION_MODERNA:
+			facturacionModernaExecutor.stamp(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+					HttpStatus.BAD_REQUEST.value());
+		}
+		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		return facturaContext;
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
-		return timbradoServiceEvaluator.facturaCancelacionValidation(facturaDto, folio);
+		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
+		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
+		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+		case SW_SAPIENS:
+			swSapinsExecutorService.cancelarFactura(facturaContext);
+			break;
+		case FACTURACION_MODERNA:
+			facturacionModernaExecutor.cancelarFactura(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+					HttpStatus.BAD_REQUEST.value());
+		}
+		timbradoExecutorService.updateCanceladoValues(facturaContext);
+		return facturaContext;
 	}
 
 	// PAGOS
@@ -183,9 +263,10 @@ public class FacturaService {
 		FacturaDto factura = getFacturaByFolio(folio);
 		pagoDto.setCreateUser(pagoDto.getUltimoUsuario());
 		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto,getFacturaByFolio(folio), folio);
+			facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto, getFacturaByFolio(folio),
+					folio);
 			pagoEvaluatorService.validatePagoPpdCreation(facturaContext);
-			createComplemento(facturaContext);
+			buildComplemento(facturaContext);
 			pagoExecutorService.creaPagoPpdExecutor(facturaContext);
 		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 			facturaContext = facturaBuilderService.buildFacturaContextPagoPueCreation(folio, pagoDto);
@@ -203,7 +284,7 @@ public class FacturaService {
 		return pagoExecutorService.PagoCreation(facturaContext);
 	}
 
-	private void createComplemento(FacturaContext facturaContext) throws InvoiceManagerException {
+	private void buildComplemento(FacturaContext facturaContext) throws InvoiceManagerException {
 		facturaContext.setFacturaDto(facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaContext));
 		facturaContext.getFacturaDto().setCfdi(facturaBuilderService.buildFacturaComplementoCreation(facturaContext));
 		facturaDefaultValues.assignaDefaultsComplemento(facturaContext.getFacturaDto());
@@ -217,11 +298,57 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto updatePago(PagoDto pago, Integer id) throws InvoiceManagerException {
-		return pagoEvaluatorService.validatePagoUpdate(pago, id);
-
+		Pago entity = pagoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El pago con el id %d no existe", id)));
+		pagoEvaluatorService.validatePagoCreator(pago, pagoMapper.getPagoDtoFromEntity(entity));
+		pagoBuilderService.buildUpdatePagoEntity(entity, pago);
+		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
+			Factura factura = repository.findByFolio(pago.getFolio())
+					.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+							"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+			factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+			repository.save(factura);
+		} else {
+			if (pago.getRevision1() && pago.getRevision2()) {
+				entity.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+				Factura factura = repository.findByFolio(pago.getFolio())
+						.orElseThrow(() -> new InvoiceManagerException("El pago no tiene  asignada una factura",
+								"Es necesario revisar la integridad de los pagos", HttpStatus.CONFLICT.value()));
+				factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
+				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+				repository.save(factura);
+				devolucionService.generarDevolucionesPorPago(mapper.getFacturaDtoFromEntity(factura), pago);
+			}
+		}
+		return mapper.getPagoDtoFromEntity(pagoRepository.save(entity));
 	}
 
 	public void deletePago(Integer id) throws InvoiceManagerException {
-		pagoEvaluatorService.validatePagoDeleting(id);
+		Pago pago = pagoRepository.findById(id)
+				.orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
+						String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value()));
+		Factura factura = repository.findByFolio(pago.getFolio())
+				.orElseThrow(() -> new InvoiceManagerException("No existe la factura del pago",
+						String.format("Folio with the name %s not found", pago.getFolio()),
+						HttpStatus.NOT_FOUND.value()));
+		FacturaContext context= null;
+		switch (TipoDocumentoEnum.findByDesc(factura.getTipoDocumento())) {
+		case FACRTURA:
+			context=pagoBuilderService.deletePagoPueBuilder(factura, pago, id);
+			pagoEvaluatorService.deletePagoPueValidation(context);
+			pagoEvaluatorService.deleteComplementoValidation(context);
+			pagoExecutorService.deletePagoPueExecutor(context);
+			break;
+		case COMPLEMENTO:
+			context=pagoBuilderService.deletePagoPpdBuilder(factura, pago, id);
+			pagoEvaluatorService.deletePagoPpdValidation(context);
+			pagoExecutorService.deletePagoPpdExecutor(context);
+			break;
+		default:
+			new InvoiceManagerException("Tipo de documento not suported",
+					String.format("Documento %s not suported", factura.getTipoDocumento()),
+					HttpStatus.CONFLICT.value());
+			break;
+		}
 	}
 }

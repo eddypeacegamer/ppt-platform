@@ -18,13 +18,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.DevolucionDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.dto.services.SolicitudDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.mapper.DevolucionMapper;
+import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.facturas.DevolucionRepository;
+import com.business.unknow.services.services.builder.DevolucionesBuilderService;
+import com.business.unknow.services.services.evaluations.DevolucionEvaluatorService;
+import com.business.unknow.services.services.executor.DevolucionExecutorService;
 
 /**
  * @author ralfdemoledor
@@ -35,12 +43,24 @@ public class DevolucionService {
 
 	@Autowired
 	private DevolucionRepository repository;
+	
+	@Autowired
+	private ClientRepository clientRepository;
 
 	@Autowired
 	private PagoService pagosService;
-
+	
 	@Autowired
 	private DevolucionMapper mapper;
+	
+	@Autowired
+	private DevolucionesBuilderService devolucionesBuilderService;
+	
+	@Autowired
+	private DevolucionEvaluatorService devolucionEvaluatorService;
+	
+	@Autowired
+	private DevolucionExecutorService devolucionExecutorService;
 
 	public Page<DevolucionDto> getDevolucionesByParams(Optional<String> receptorType, Optional<String> idReceptor,
 			Optional<String> statusPay, int page, int size) {
@@ -118,4 +138,34 @@ public class DevolucionService {
 		return upadtePayment;
 	}
 
+	public void generarDevolucionesPorPago(FacturaDto facturaDto, PagoDto pagoDto) throws InvoiceManagerException {
+		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("The type of document not supported",
+						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+						HttpStatus.BAD_REQUEST.value()));
+		FacturaContext context;
+		BigDecimal baseComisiones;
+		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
+		case FACRTURA:
+			 baseComisiones = facturaDto.getCfdi().getTotal().subtract(facturaDto.getCfdi().getSubtotal());
+			 context=devolucionesBuilderService.buildFacturaContextForPueDevolution(facturaDto, pagoDto);
+			 devolucionEvaluatorService.devolucionPueValidation(context);
+			 devolucionExecutorService.executeDevolucionForPue(context, client, baseComisiones);
+			break;
+		case COMPLEMENTO:
+			context=devolucionesBuilderService.buildFacturaContextForComplementoDevolution(facturaDto, pagoDto);
+			baseComisiones= context.getFacturaPadreDto().getCfdi().getTotal()
+			.subtract(context.getFacturaPadreDto().getCfdi().getSubtotal())
+			.divide(context.getFacturaPadreDto().getCfdi().getTotal());
+			devolucionEvaluatorService.devolucionPpdValidation(context);
+			devolucionExecutorService.executeDevolucionForPpd(context, client, baseComisiones);
+			break;
+		default:
+			throw new InvoiceManagerException("The type of document not supported",
+					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+					HttpStatus.BAD_REQUEST.value());
+		}
+	}
+	
+	
 }

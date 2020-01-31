@@ -71,6 +71,7 @@ public class FacturaTranslator {
 			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
+			System.out.println(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();

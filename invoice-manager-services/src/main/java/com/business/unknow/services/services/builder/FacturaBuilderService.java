@@ -1,4 +1,4 @@
-package com.business.unknow.services.services;
+package com.business.unknow.services.services.builder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,17 +10,15 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.Constants;
 import com.business.unknow.Constants.ComplementoPpdDefaults;
 import com.business.unknow.commons.builder.CfdiComplementoPagoBuilder;
 import com.business.unknow.commons.builder.CfdiDtoBuilder;
 import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
-import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
@@ -32,19 +30,21 @@ import com.business.unknow.model.dto.cfdi.ReceptorDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Contribuyente;
+import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.entities.files.ResourceFile;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
+import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
-import com.business.unknow.services.repositories.files.ResourceFileRepository;
 
 @Service
-public class FacturaBuilderService {
+public class FacturaBuilderService extends AbstractBuilderService {
 
 	@Autowired
 	private FacturaRepository repository;
@@ -56,7 +56,7 @@ public class FacturaBuilderService {
 	private EmpresaRepository empresaRepository;
 
 	@Autowired
-	private ResourceFileRepository resourceFileRepository;
+	private ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
@@ -67,9 +67,10 @@ public class FacturaBuilderService {
 	@Autowired
 	private EmpresaMapper empresaMapper;
 
-	private FileHelper fileHelper = new FileHelper();
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 
-	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto,FacturaDto facturaPadreDto, String folio)
+	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaPadreDto, String folio)
 			throws InvoiceManagerException {
 		List<Pago> pagos = pagoRepository.findByFolioPadre(facturaPadreDto.getFolio());
 		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
@@ -122,8 +123,7 @@ public class FacturaBuilderService {
 				.setMoneda(ComplementoPpdDefaults.MONEDA)
 				.setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
 				.setSerie(ComplementoPpdDefaults.SERIE).setSubtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
-				.setTotal(new BigDecimal(ComplementoPpdDefaults.TOTAL))
-				.setComplemento(new ComplementoDto())
+				.setTotal(new BigDecimal(ComplementoPpdDefaults.TOTAL)).setComplemento(new ComplementoDto())
 				.setTipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
 				.setEmisor(new EmisorDto(facturaContext.getFacturaPadreDto().getRfcEmisor(),
 						facturaContext.getFacturaPadreDto().getRazonSocialEmisor(),
@@ -131,8 +131,7 @@ public class FacturaBuilderService {
 				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
 						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(),
 						facturaContext.getFacturaPadreDto().getCfdi().getReceptor().getUsoCfdi()))
-				.setConceptos(buildFacturaComplementoConceptos(facturaContext))
-				.setConceptos(null)
+				.setConceptos(buildFacturaComplementoConceptos(facturaContext)).setConceptos(null)
 				.setPagos(buildFacturaComplementoPagos(facturaContext));
 		return cfdiBuilder.build();
 	}
@@ -168,20 +167,17 @@ public class FacturaBuilderService {
 		return pagos;
 	}
 
-	protected void getEmpresaFiles(EmpresaDto empresaDto, FacturaDto facturaDto) throws InvoiceManagerException {
-		ResourceFile certFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), facturaDto.getRfcEmisor(),
-						ResourceFileEnum.CERT.name())
-				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
-						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
-						HttpStatus.SC_NOT_FOUND));
-		ResourceFile keyFile = resourceFileRepository
-				.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), facturaDto.getRfcEmisor(),
-						ResourceFileEnum.KEY.name())
-				.orElseThrow(() -> new InvoiceManagerException("Empresa certificate not found",
-						String.format("La empresa con el rfc no tiene certificado", facturaDto.getRfcEmisor()),
-						HttpStatus.SC_NOT_FOUND));
-		empresaDto.setCertificado(fileHelper.getStringFileSource((certFile.getData())));
-		empresaDto.setLlavePrivada(fileHelper.getStringFileSource((keyFile.getData())));
+	public FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
+		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema",
+						String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
+						Constants.BAD_REQUEST));
+		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
+						Constants.BAD_REQUEST));
+		return new FacturaContextBuilder().setFacturaDto(facturaDto)
+				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
 	}
+
 }
