@@ -137,7 +137,7 @@ export class RevisionComponent implements OnInit {
                     record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
                     record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                     record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-                    record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
+                    //record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
                     return record;
                   })
                 }))

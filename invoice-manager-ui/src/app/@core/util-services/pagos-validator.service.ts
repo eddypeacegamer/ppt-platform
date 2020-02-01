@@ -11,6 +11,7 @@ export class PagosValidatorService {
 
 
   public validatePago(pago: Pago, pagos: Pago[], cfdi: Cfdi): string[] {
+    console.log(pago);
     const messages = [];
     if (pago.banco === undefined) {
       messages.push('El banco es un valor requerido');
