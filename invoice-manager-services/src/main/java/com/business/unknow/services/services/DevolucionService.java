@@ -4,6 +4,7 @@
 package com.business.unknow.services.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -156,7 +157,7 @@ public class DevolucionService {
 			context=devolucionesBuilderService.buildFacturaContextForComplementoDevolution(facturaDto, pagoDto);
 			baseComisiones= context.getFacturaPadreDto().getCfdi().getTotal()
 			.subtract(context.getFacturaPadreDto().getCfdi().getSubtotal())
-			.divide(context.getFacturaPadreDto().getCfdi().getTotal());
+			.divide(context.getFacturaPadreDto().getCfdi().getTotal(), 2, RoundingMode.HALF_UP);
 			devolucionEvaluatorService.devolucionPpdValidation(context);
 			devolucionExecutorService.executeDevolucionForPpd(context, client, baseComisiones);
 			break;
