@@ -109,16 +109,14 @@ export class PagosComponent implements OnInit {
   }
 
   sendPayment() {
-    this.loading = true;
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
     this.newPayment.ultimoUsuario = this.user.email;
     const payment  = {... this.newPayment};
-    this.fileInput.value = '';
     this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
     if (this.payErrorMessages.length === 0) {
-
+      this.loading = true;
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.newPayment = new Pago();
@@ -135,6 +133,6 @@ export class PagosComponent implements OnInit {
     }
     this.newPayment = new Pago();
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
+    this.fileInput.value = '';
   }
-
 }
