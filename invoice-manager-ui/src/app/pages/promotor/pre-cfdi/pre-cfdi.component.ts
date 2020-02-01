@@ -39,11 +39,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public payTypeCat: Catalogo[];
 
   public newConcep: Concepto;
-  public factura: Factura;
+  public factura: Factura = new Factura();
   public folioParam: string;
   public user: User;
 
-  public complementos: Factura[] = [];
   public successMessage: string;
   public errorMessages: string[] = [];
   public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*'};
@@ -121,11 +120,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
+                  //record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
                   return record;
                 })
               }))
-            .subscribe(complementos => this.complementos = complementos);
+            .subscribe(complementos => this.factura.complementos = complementos);
         }
       },
         error => {
