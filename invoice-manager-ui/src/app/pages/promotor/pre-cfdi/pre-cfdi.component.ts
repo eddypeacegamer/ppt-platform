@@ -45,7 +45,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public successMessage: string;
   public errorMessages: string[] = [];
-  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*'};
+  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*' };
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
@@ -66,23 +66,23 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.userService.getUserInfo().subscribe(user => this.user = user as User);
     this.initVariables();
     this.catalogsService.getInvoiceCatalogs()
-        .toPromise().then(results => {
-          this.girosCat = results[0];
-          this.usoCfdiCat = results[2];
-          this.payCat = results[3];
-          this.devolutionCat = results[4];
-          this.validationCat = results[5];
-          this.payTypeCat = results[6];
-        }).then(() => {
-          this.route.paramMap.subscribe(route => {
-            this.folioParam = route.get('folio');
-            if (this.folioParam !== '*') {
-              this.getInvoiceByFolio(this.folioParam);
-            }else {
-              this.initVariables();
-            }
-          });
+      .toPromise().then(results => {
+        this.girosCat = results[0];
+        this.usoCfdiCat = results[2];
+        this.payCat = results[3];
+        this.devolutionCat = results[4];
+        this.validationCat = results[5];
+        this.payTypeCat = results[6];
+      }).then(() => {
+        this.route.paramMap.subscribe(route => {
+          this.folioParam = route.get('folio');
+          if (this.folioParam !== '*') {
+            this.getInvoiceByFolio(this.folioParam);
+          } else {
+            this.initVariables();
+          }
         });
+      });
   }
 
   ngOnDestroy() {
@@ -140,8 +140,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     } else {
       this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId))
         .subscribe(companies => this.companiesCat = companies,
-        (error: HttpErrorResponse) =>
-          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
   }
 
@@ -151,19 +151,19 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   onPayMethodSelected(clave: string) {
     this.catalogsService.getFormasPago(clave)
-    .subscribe(cat => {
-      this.payTypeCat = cat;
-      this.formInfo.payType = this.payTypeCat[0].id;
-      if (clave === 'PPD') {
-        this.factura.cfdi.formaPago = '99';
-        this.factura.cfdi.metodoPago = 'PPD';
-        this.factura.metodoPago = 'PPD';
-      } else {
-        this.factura.metodoPago = 'PUE';
-        this.factura.cfdi.metodoPago = 'PUE';
-        this.factura.cfdi.formaPago = '01';
-      }
-    });
+      .subscribe(cat => {
+        this.payTypeCat = cat;
+        this.formInfo.payType = this.payTypeCat[0].id;
+        if (clave === 'PPD') {
+          this.factura.cfdi.formaPago = '99';
+          this.factura.cfdi.metodoPago = 'PPD';
+          this.factura.metodoPago = 'PPD';
+        } else {
+          this.factura.metodoPago = 'PUE';
+          this.factura.cfdi.metodoPago = 'PUE';
+          this.factura.cfdi.formaPago = '01';
+        }
+      });
   }
 
   buscarClientInfo() {
@@ -198,30 +198,38 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
   }
- 
+
   solicitarCfdi() {
     this.errorMessages = [];
     this.factura.solicitante = this.user.email;
     this.factura.lineaEmisor = 'A';
     this.factura.lineaRemitente = 'CLIENTE';
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-    this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-    this.factura.rfcRemitente = this.clientInfo.rfc;
-    this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
-    this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-    this.errorMessages = this.cfdiValidator.validarCfdi({...this.factura.cfdi});
-    if (this.errorMessages.length < 1) {
+    if (this.clientInfo === undefined && this.clientInfo.rfc != undefined) {
+      this.errorMessages.push('La informacion del cliente es insuficiente o no esta presente.');
+    } else if (this.companyInfo === undefined && this.companyInfo.informacionFiscal !== undefined) {
+      this.errorMessages.push('La informacion de la empresa es insuficiente o no esta presente.');
+    } else {
+      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
+      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
+      this.factura.rfcRemitente = this.clientInfo.rfc;
+      this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
+      this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
+      this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
+    }
+
+    if (this.errorMessages.length === 0) {
       this.invoiceService.insertNewInvoice(this.factura)
-      .subscribe((invoice: Factura) => {
-        this.factura.folio = invoice.folio;
-        this.successMessage = 'Solicitud de factura enviada correctamente';
-      }, (error: HttpErrorResponse) => { this.errorMessages.push((error.error != null && error.error !== undefined) ?
-        error.error.message : `${error.statusText} : ${error.message}`);
-      });
+        .subscribe((invoice: Factura) => {
+          this.factura.folio = invoice.folio;
+          this.successMessage = 'Solicitud de factura enviada correctamente';
+        }, (error: HttpErrorResponse) => {
+          this.errorMessages.push((error.error != null && error.error !== undefined) ?
+            error.error.message : `${error.statusText} : ${error.message}`);
+        });
     }
   }
   public downloadPdf(folio: string) {
