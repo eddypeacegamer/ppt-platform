@@ -83,6 +83,11 @@ public class FacturaController {
 			@RequestBody @Valid FacturaDto factura) {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
+	
+	@GetMapping("/{folio}/complementos")
+	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
+		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
+	}
 
 	// CFDI
 	@GetMapping("/{folio}/cfdi")

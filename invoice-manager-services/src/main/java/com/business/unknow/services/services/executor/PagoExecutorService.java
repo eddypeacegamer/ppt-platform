@@ -17,6 +17,7 @@ import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
+import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -104,7 +105,9 @@ public class PagoExecutorService extends AbstractExecutorService {
 	public FacturaContext creaPagoPpdExecutor(FacturaContext context) {
 		Cfdi cfdi = cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
 		cfdi=cfdiRepository.save(cfdi);
-		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
+		Factura factura=mapper.getEntityFromFacturaDto(context.getFacturaDto());
+		factura.setIdCfdi(cfdi.getId());
+		repository.save(factura);
 		Receptor receptor = cfdiMapper.getEntityFromEmisorDto(context.getFacturaDto().getCfdi().getReceptor());
 		receptor.setCfdi(cfdi);
 		receptorRepository.save(receptor);

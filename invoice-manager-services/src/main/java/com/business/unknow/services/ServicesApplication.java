@@ -11,6 +11,7 @@ import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.DevolucionSuite;
@@ -119,4 +120,9 @@ public class ServicesApplication {
 		return new FacturaDefaultValues();
 	}
 
+	@Bean
+	public MailHelper getMailHelper() {
+		return new MailHelper();
+
+	}
 }
