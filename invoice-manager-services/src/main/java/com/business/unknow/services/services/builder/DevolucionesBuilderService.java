@@ -1,6 +1,7 @@
 package com.business.unknow.services.services.builder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class DevolucionesBuilderService {
 	public Devolucion buildDevolucion(String foliofFact, Integer idPago, BigDecimal montoBase, Integer porcentaje,
 			String receptor, String tipoReceptor) {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
-				.setMonto((montoBase.multiply(new BigDecimal(porcentaje)).divide(new BigDecimal(16))))
+				.setMonto((montoBase.multiply(new BigDecimal(porcentaje)).divide(new BigDecimal(16), 2,
+						RoundingMode.HALF_UP)))
 				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
 				.setStatusDevolucion("POR SOLICITAR").build());
 	}

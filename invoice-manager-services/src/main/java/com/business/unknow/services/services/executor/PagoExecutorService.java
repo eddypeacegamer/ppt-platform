@@ -9,7 +9,9 @@ import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Emisor;
@@ -21,14 +23,19 @@ import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 import com.business.unknow.services.repositories.facturas.TimbradoFiscalDigitialRepository;
+import com.business.unknow.services.services.CfdiService;
 
 @Service
 public class PagoExecutorService extends AbstractExecutorService {
 
+	@Autowired
+	private CfdiService cfdiService;
+	
 	@Autowired
 	private FacturaRepository repository;
 
@@ -37,6 +44,9 @@ public class PagoExecutorService extends AbstractExecutorService {
 
 	@Autowired
 	protected CfdiRepository cfdiRepository;
+	
+	@Autowired
+	protected ConceptoRepository conceptoRepository;
 
 	@Autowired
 	protected ReceptorRepository receptorRepository;
@@ -59,13 +69,14 @@ public class PagoExecutorService extends AbstractExecutorService {
 	@Autowired
 	protected CfdiMapper cfdiMapper;
 
-	public void deletePagoPpdExecutor(FacturaContext context) {
+	public void deletePagoPpdExecutor(FacturaContext context) throws InvoiceManagerException {
 		repository.delete(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		context.getPagoCredito().setMonto(context.getPagoCredito().getMonto().add(context.getCurrentPago().getMonto()));
 		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
 		pagoRepository.delete(pagoMapper.getEntityFromPagoDto(context.getCurrentPago()));
 		deleteAllResourceFileByFolio(
 				context.getFacturaDto().getFolio().concat("_").concat(context.getCurrentPago().getFormaPago()));
+		cfdiService.deleteCfdi(context.getFacturaDto().getFolio());
 	}
 
 	public void deletePagoPueExecutor(FacturaContext context) {
@@ -102,10 +113,14 @@ public class PagoExecutorService extends AbstractExecutorService {
 		emisorRepository.save(emisor);
 		List<CfdiPago> cfdiPagos = cfdiMapper
 				.getEntityFromCdfiPagosDtos(context.getFacturaDto().getCfdi().getComplemento().getPagos());
+		for(ConceptoDto conceptoDto :context.getFacturaDto().getCfdi().getConceptos()) {
+			conceptoRepository.save(conceptoRepository.save(cfdiMapper.getEntityFromConceptoDto(conceptoDto)));
+		}
 		for (CfdiPago pago : cfdiPagos) {
 			pago.setCfdi(cfdi);
 			cfdiPagoRepository.save(pago);
 		}
+		
 		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
 				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
 		timbradoFiscalDigitial.setCfdi(cfdi);

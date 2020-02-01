@@ -1,6 +1,5 @@
 package com.business.unknow.services.services.translators;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,14 +18,14 @@ import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
-import com.business.unknow.model.cfdi.ComplementoPago;
+import com.business.unknow.model.cfdi.ComplementoPagos;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
-import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
@@ -83,24 +82,16 @@ public class FacturaTranslator {
 		try {
 			context.getFacturaDto().setCfdi(new CfdiDto());
 			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
-			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto(),
+			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto().getCfdi(),
 					context.getEmpresaDto());
-			context.getFacturaDto().getCfdi().setSerie("");
-			context.getFacturaDto().getCfdi().setVersion(cfdi.getVersion());
-			cfdi.setImpuestos(null);
-			cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(new ConceptoDto()));
+			for(ConceptoDto concepto:context.getFacturaDto().getCfdi().getConceptos()) {
+				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
+			}
 			Complemento complemento = new Complemento();
-			for (PagoDto pagoDto : context.getPagos()) {
-				ComplementoPago complementoComponente = facturaCfdiTranslatorMapper
-						.complementoComponente(context.getFacturaDto(), pagoDto);
-				complementoComponente.getComplementoDocRelacionado().setNumParcialidad(context.getCtdadComplementos());
-				complementoComponente.getComplementoDocRelacionado()
-						.setIdDocumento(context.getFacturaPadreDto().getUuid());
-				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f",
-						context.getPagoCredito().getMonto().add(new BigDecimal(complementoComponente.getMonto()))));
-				complementoComponente.getComplementoDocRelacionado()
-						.setImpSaldoInsoluto(String.format("%.2f", context.getPagoCredito().getMonto()));
-				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
+			ComplementoPagos complementoPagos = new ComplementoPagos();
+			complemento.setComplemntoPago(complementoPagos);
+			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
+				complementoPagos.getComplementoPagos().add(facturaCfdiTranslatorMapper.complementoComponente(cfdiPago));
 			}
 			cfdi.setComplemento(complemento);
 			context.setCfdi(cfdi);

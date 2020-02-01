@@ -130,7 +130,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
 						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(),
 						facturaContext.getFacturaPadreDto().getCfdi().getReceptor().getUsoCfdi()))
-				.setConceptos(buildFacturaComplementoConceptos(facturaContext)).setConceptos(null)
+				.setConceptos(buildFacturaComplementoConceptos(facturaContext))
 				.setPagos(buildFacturaComplementoPagos(facturaContext));
 		return cfdiBuilder.build();
 	}
