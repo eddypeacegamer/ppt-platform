@@ -16,10 +16,10 @@ public class ClientDto implements Serializable {
 
 	private int id;
 	private Boolean activo;
-	private Integer porcentajePromotor;
-	private Integer porcentajeCliente;
-	private Integer porcentajeDespacho;
-	private Integer porcentajeContacto;
+	private Double porcentajePromotor;
+	private Double porcentajeCliente;
+	private Double porcentajeDespacho;
+	private Double porcentajeContacto;
 	private String correoPromotor;
 	private String correoContacto;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
@@ -39,28 +39,28 @@ public class ClientDto implements Serializable {
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-	public Integer getPorcentajePromotor() {
+	public Double getPorcentajePromotor() {
 		return porcentajePromotor;
 	}
-	public void setPorcentajePromotor(Integer porcentajePromotor) {
+	public void setPorcentajePromotor(Double porcentajePromotor) {
 		this.porcentajePromotor = porcentajePromotor;
 	}
-	public Integer getPorcentajeCliente() {
+	public Double getPorcentajeCliente() {
 		return porcentajeCliente;
 	}
-	public void setPorcentajeCliente(Integer porcentajeCliente) {
+	public void setPorcentajeCliente(Double porcentajeCliente) {
 		this.porcentajeCliente = porcentajeCliente;
 	}
-	public Integer getPorcentajeDespacho() {
+	public Double getPorcentajeDespacho() {
 		return porcentajeDespacho;
 	}
-	public void setPorcentajeDespacho(Integer porcentajeDespacho) {
+	public void setPorcentajeDespacho(Double porcentajeDespacho) {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
-	public Integer getPorcentajeContacto() {
+	public Double getPorcentajeContacto() {
 		return porcentajeContacto;
 	}
-	public void setPorcentajeContacto(Integer porcentajeContacto) {
+	public void setPorcentajeContacto(Double porcentajeContacto) {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 	public String getCorreoPromotor() {

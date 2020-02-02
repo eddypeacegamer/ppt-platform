@@ -22,13 +22,13 @@ export class CfdiValidatorService {
 
   public validarConcepto(concepto: Concepto): string[] {
     const messages: string[] = [];
-    if (concepto.cantidad < 1) {
-      messages.push('La cantidad requerida debe ser igual o mayor a 1');
+    if (concepto.cantidad <= 0) {
+      messages.push('La cantidad requerida debe ser mayor a 0');
     }
-    if (concepto.claveProdServ === undefined) {
+    if (concepto.claveProdServ === undefined || concepto.claveProdServ === '*') {
       messages.push('La clave producto servicio del concepto es un valor requerido.');
     }
-    if (concepto.claveUnidad === undefined) {
+    if (concepto.claveUnidad === undefined || concepto.claveUnidad === '*') {
       messages.push('La clave de unidad y la unidad son campos requeridos.');
     }
     if (concepto.descripcion === undefined || concepto.descripcion.length < 1) {
@@ -65,22 +65,22 @@ export class CfdiValidatorService {
     if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined || cfdi.emisor.rfc.length < 8) {
       messages.push('La información del emisor es un valor solicitado');
     }
-    if (cfdi.receptor.usoCfdi === undefined) {
+    if (cfdi.receptor.usoCfdi === undefined || cfdi.receptor.usoCfdi === '*') {
       messages.push('El uso del CFDI es un campo requerido.');
     }
     if (cfdi.moneda === undefined) {
       messages.push('La moneda es un campo requerido.');
     }
-    if (cfdi.formaPago === undefined || cfdi.metodoPago === '*') {
+    if (cfdi.formaPago === undefined || cfdi.formaPago === '*' ) {
       messages.push('La forma de pago es un campo requerido.');
     }
-    if (cfdi.metodoPago === undefined) {
+    if (cfdi.metodoPago === undefined || cfdi.metodoPago === '*') {
       messages.push('El metodo de pago es un campo requerido.');
     }
     if (cfdi.conceptos.length < 1) {
       messages.push('La factura debe contener a menos 1 concepto a declarar.');
     }
-    if (cfdi.total > 2000 && cfdi.metodoPago === '01') {
+    if (cfdi.total > 2000 && cfdi.formaPago === '01') {
       messages.push('En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos');
     }
     return messages;
