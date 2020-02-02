@@ -14,7 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
+import com.business.unknow.commons.validator.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
@@ -31,6 +33,8 @@ public class ClientService {
 
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
+	
+	private ClienteValidator clientValidator= new ClienteValidator();
 
 	public Page<ClientDto> getClientsByParametros(Optional<String> promotor,String status, String rfc, String razonSocial, int page, int size) {
 		Page<Client> result; 
@@ -54,8 +58,9 @@ public class ClientService {
 		return mapper.getClientDtoFromEntity(client);
 	}
 
-	public ClientDto insertNewClient(ClientDto cliente, boolean validation) {
+	public ClientDto insertNewClient(ClientDto cliente, boolean validation) throws InvoiceManagerException {
 		try {
+			clientValidator.validatePostCliente(cliente);
 			Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());
 			if (entity.isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
