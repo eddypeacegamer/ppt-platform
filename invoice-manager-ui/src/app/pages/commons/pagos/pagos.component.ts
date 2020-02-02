@@ -133,6 +133,8 @@ export class PagosComponent implements OnInit {
     }
     this.newPayment = new Pago();
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-    this.fileInput.value = '';
+    if (this.fileInput !== undefined) {
+      this.fileInput.value = '';
+    }
   }
 }
