@@ -98,7 +98,7 @@ public interface FacturaCfdiTranslatorMapper {
 		@Mapping(source = "descripcion", target = "descripcion"), 
 		@Mapping(source = "claveUnidad", target = "claveUnidad"),
 		@Mapping(source = "importe", target = "importe"), 
-		@Mapping(constant = "valorUnitario", target = "valorUnitario") })
+		@Mapping(source = "valorUnitario", target = "valorUnitario") })
 public Concepto complementoConcepto(ConceptoDto dto);
 
 

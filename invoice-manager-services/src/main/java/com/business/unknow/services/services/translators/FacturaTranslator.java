@@ -22,7 +22,6 @@ import com.business.unknow.model.cfdi.ComplementoPagos;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
@@ -80,8 +79,6 @@ public class FacturaTranslator {
 
 	public FacturaContext translateComplemento(FacturaContext context) throws InvoiceManagerException {
 		try {
-			context.getFacturaDto().setCfdi(new CfdiDto());
-			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
 			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto().getCfdi(),
 					context.getEmpresaDto());
 			for(ConceptoDto concepto:context.getFacturaDto().getCfdi().getConceptos()) {
@@ -94,6 +91,7 @@ public class FacturaTranslator {
 				complementoPagos.getComplementoPagos().add(facturaCfdiTranslatorMapper.complementoComponente(cfdiPago));
 			}
 			cfdi.setComplemento(complemento);
+			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
 			complementoToXmlSigned(context);
 			return context;
