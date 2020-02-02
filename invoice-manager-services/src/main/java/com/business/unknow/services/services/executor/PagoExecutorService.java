@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.ResourceFileEnum;
-import com.business.unknow.enums.TipoRecursoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDto;
@@ -94,16 +92,8 @@ public class PagoExecutorService extends AbstractExecutorService {
 				context.getFacturaDto().getFolio().concat("_").concat(context.getCurrentPago().getFormaPago()));
 	}
 
-	public PagoDto PagoCreation(FacturaContext context) {
-		if (context.getCurrentPago().getDocumento() != null) {
-			createResourceFile(context.getCurrentPago().getDocumento(),
-					context.getFacturaDto().getFolio().concat("_").concat(context.getCurrentPago().getFormaPago()),
-					TipoRecursoEnum.PAGO.name(), ResourceFileEnum.IMAGEN.name());
-		}
-		return mapper.getPagoDtoFromEntity(pagoRepository.save(mapper.getEntityFromPagoDto(context.getCurrentPago())));
-	}
 
-	public FacturaContext creaPagoPpdExecutor(FacturaContext context) {
+	public PagoDto creaPagoPpdExecutor(FacturaContext context) {
 		Cfdi cfdi = cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
 		cfdi=cfdiRepository.save(cfdi);
 		Factura factura=mapper.getEntityFromFacturaDto(context.getFacturaDto());
@@ -131,15 +121,10 @@ public class PagoExecutorService extends AbstractExecutorService {
 				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
 		timbradoFiscalDigitial.setCfdi(cfdi);
 		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
-		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
-		return context;
+		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito())));
+		
 	}
 
-	public FacturaContext creaPagoPueExecutor(FacturaContext context) {
-		if (context.getPagoCredito() != null) {
-			pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
-		}
-		return context;
-	}
+	
 
 }

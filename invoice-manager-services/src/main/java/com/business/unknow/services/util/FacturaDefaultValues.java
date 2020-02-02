@@ -29,14 +29,14 @@ public class FacturaDefaultValues {
 	}
 
 	public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
-		PagoBuilder pb = new PagoBuilder().setBanco(PagoPpdCreditoDefaults.BANCO)
-				.setCreateUser(PagoPpdCreditoDefaults.USER).setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
+		return new PagoBuilder().setBanco(PagoPpdCreditoDefaults.BANCO)
+				.setSolicitante(PagoPpdCreditoDefaults.USER).setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
 				.setFechaPago(new Date()).setFolio(cfdi.getFolio()).setFolioPadre(cfdi.getFolio())
 				.setFormaPago(PagoPpdCreditoDefaults.FORMA_PAGO).setMoneda(PagoPpdCreditoDefaults.MONEDA)
 				.setMonto(cfdi.getTotal()).setRevision1(false).setRevision2(false)
 				.setTipoDeCambio(new BigDecimal(PagoPpdCreditoDefaults.TIPO_CAMBIO))
-				.setStatusPago(PagoPpdCreditoDefaults.STATUS_PAGO).setTipoPago(PagoPpdCreditoDefaults.TIPO_CAMBIO);
-		return pb.build();
+				.setStatusPago(PagoPpdCreditoDefaults.STATUS_PAGO).build();
+		
 	}
 
 	public void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {

@@ -3,7 +3,6 @@ package com.business.unknow.model.dto.services;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,194 +18,160 @@ public class PagoDto implements Serializable {
 	private String folio;
 	private String folioPadre;
 	private String moneda;
-	private BigDecimal tipoDeCambio;
 	private String banco;
+	private String cuenta;
+	private BigDecimal tipoDeCambio;
+	private String formaPago;
 	private BigDecimal monto;
+	private String acredor;
+	private String deudor;
 	private String statusPago;
+	private String comentarioPago;
+	private String solicitante;
 	private Boolean revision1;
 	private Boolean revision2;
-	private String comentarioPago;
-	private String tipoPago;
-	private String cuenta;
-	private String formaPago;
+	private String revisor1;
+	private String revisor2;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaPago;
-	private String documento;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
-	private String ultimoUsuario;
-	private String createUser;
-
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public String getFolio() {
 		return folio;
 	}
-
 	public void setFolio(String folio) {
 		this.folio = folio;
 	}
-
-	public String getMoneda() {
-		return moneda;
-	}
-
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
-
-	public BigDecimal getTipoDeCambio() {
-		return tipoDeCambio;
-	}
-
-	public void setTipoDeCambio(BigDecimal tipoDeCambio) {
-		this.tipoDeCambio = tipoDeCambio;
-	}
-
-	public String getBanco() {
-		return banco;
-	}
-
-	public void setBanco(String banco) {
-		this.banco = banco;
-	}
-
-	public BigDecimal getMonto() {
-		return monto;
-	}
-
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
-	}
-
-	public String getStatusPago() {
-		return statusPago;
-	}
-
-	public void setStatusPago(String statusPago) {
-		this.statusPago = statusPago;
-	}
-
-	public Boolean getRevision1() {
-		return revision1;
-	}
-
-	public void setRevision1(Boolean revision1) {
-		this.revision1 = revision1;
-	}
-
-	public Boolean getRevision2() {
-		return revision2;
-	}
-
-	public void setRevision2(Boolean revision2) {
-		this.revision2 = revision2;
-	}
-
-	public String getComentarioPago() {
-		return comentarioPago;
-	}
-
-	public void setComentarioPago(String comentarioPago) {
-		this.comentarioPago = comentarioPago;
-	}
-
-	public String getTipoPago() {
-		return tipoPago;
-	}
-
-	public void setTipoPago(String tipoPago) {
-		this.tipoPago = tipoPago;
-	}
-
-	public String getFormaPago() {
-		return formaPago;
-	}
-
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
-
-	public Date getFechaPago() {
-		return fechaPago;
-	}
-
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
 	public String getFolioPadre() {
 		return folioPadre;
 	}
-
 	public void setFolioPadre(String folioPadre) {
 		this.folioPadre = folioPadre;
 	}
-
-	public String getUltimoUsuario() {
-		return ultimoUsuario;
+	public String getMoneda() {
+		return moneda;
 	}
-
-	public void setUltimoUsuario(String ultimoUsuario) {
-		this.ultimoUsuario = ultimoUsuario;
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
 	}
-
+	public String getBanco() {
+		return banco;
+	}
+	public void setBanco(String banco) {
+		this.banco = banco;
+	}
 	public String getCuenta() {
 		return cuenta;
 	}
-
 	public void setCuenta(String cuenta) {
 		this.cuenta = cuenta;
 	}
-
-	public String getCreateUser() {
-		return createUser;
+	public BigDecimal getTipoDeCambio() {
+		return tipoDeCambio;
 	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+	public void setTipoDeCambio(BigDecimal tipoDeCambio) {
+		this.tipoDeCambio = tipoDeCambio;
 	}
-
+	public String getFormaPago() {
+		return formaPago;
+	}
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
+	}
+	public BigDecimal getMonto() {
+		return monto;
+	}
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
+	}
+	public String getAcredor() {
+		return acredor;
+	}
+	public void setAcredor(String acredor) {
+		this.acredor = acredor;
+	}
+	public String getDeudor() {
+		return deudor;
+	}
+	public void setDeudor(String deudor) {
+		this.deudor = deudor;
+	}
+	public String getStatusPago() {
+		return statusPago;
+	}
+	public void setStatusPago(String statusPago) {
+		this.statusPago = statusPago;
+	}
+	public String getComentarioPago() {
+		return comentarioPago;
+	}
+	public void setComentarioPago(String comentarioPago) {
+		this.comentarioPago = comentarioPago;
+	}
+	public String getSolicitante() {
+		return solicitante;
+	}
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
+	}
+	public Boolean getRevision1() {
+		return revision1;
+	}
+	public void setRevision1(Boolean revision1) {
+		this.revision1 = revision1;
+	}
+	public Boolean getRevision2() {
+		return revision2;
+	}
+	public void setRevision2(Boolean revision2) {
+		this.revision2 = revision2;
+	}
+	public String getRevisor1() {
+		return revisor1;
+	}
+	public void setRevisor1(String revisor1) {
+		this.revisor1 = revisor1;
+	}
+	public String getRevisor2() {
+		return revisor2;
+	}
+	public void setRevisor2(String revisor2) {
+		this.revisor2 = revisor2;
+	}
+	public Date getFechaPago() {
+		return fechaPago;
+	}
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
+	}
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
 	@Override
 	public String toString() {
 		return "PagoDto [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
-				+ ", tipoDeCambio=" + tipoDeCambio + ", banco=" + banco + ", monto=" + monto + ", statusPago="
-				+ statusPago + ", revision1=" + revision1 + ", revision2=" + revision2 + ", comentarioPago="
-				+ comentarioPago + ", tipoPago=" + tipoPago + ", cuenta=" + cuenta + ", formaPago=" + formaPago
-				+ ", fechaPago=" + fechaPago + ", documento=" + documento + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", ultimoUsuario=" + ultimoUsuario + ", createUser="
-				+ createUser + "]";
+				+ ", banco=" + banco + ", cuenta=" + cuenta + ", tipoDeCambio=" + tipoDeCambio + ", formaPago="
+				+ formaPago + ", monto=" + monto + ", acredor=" + acredor + ", deudor=" + deudor + ", statusPago="
+				+ statusPago + ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1="
+				+ revision1 + ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2
+				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 }
