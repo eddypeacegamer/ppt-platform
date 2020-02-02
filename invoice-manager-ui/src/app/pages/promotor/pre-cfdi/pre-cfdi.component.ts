@@ -204,9 +204,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.solicitante = this.user.email;
     this.factura.lineaEmisor = 'A';
     this.factura.lineaRemitente = 'CLIENTE';
-    if (this.clientInfo === undefined && this.clientInfo.rfc != undefined) {
+    if (this.clientInfo === undefined || this.clientInfo.rfc === undefined) {
       this.errorMessages.push('La informacion del cliente es insuficiente o no esta presente.');
-    } else if (this.companyInfo === undefined && this.companyInfo.informacionFiscal !== undefined) {
+    } else if (this.companyInfo === undefined || this.companyInfo.informacionFiscal === undefined) {
       this.errorMessages.push('La informacion de la empresa es insuficiente o no esta presente.');
     } else {
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
