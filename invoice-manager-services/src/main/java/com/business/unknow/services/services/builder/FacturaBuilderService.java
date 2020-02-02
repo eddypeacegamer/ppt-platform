@@ -84,7 +84,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		getEmpresaFiles(empresaDto, facturaPadreDto);
 		return new FacturaContextBuilder().setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(facturaPadreDto).setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre))
-				.setCurrentPago(pagoDto).build();
+				.setCtdadComplementos(repository.findComplementosByFolioPadre(facturaPadreDto.getFolio()).size()).setCurrentPago(pagoDto).build();
 	}
 
 	public FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto) {
@@ -112,12 +112,12 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setRazonSocialRemitente(facturaContext.getFacturaPadreDto().getRazonSocialRemitente())
 				.setSolicitante(facturaContext.getFacturaPadreDto().getSolicitante())
 				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				.setFormaPago(FormaPagoEnum.findByDesc(facturaContext.getCurrentPago().getFormaPago()).getClave())
+				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
 				.build();
 	}
 
 	public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
-		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION)
+		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION_CFDI)
 				.setLugarExpedicion(facturaContext.getEmpresaDto().getInformacionFiscal().getCp())
 				.setMoneda(ComplementoPpdDefaults.MONEDA)
 				.setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
@@ -128,8 +128,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 						facturaContext.getFacturaPadreDto().getRazonSocialEmisor(),
 						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getRegimenFiscal()))
 				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
-						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(),
-						facturaContext.getFacturaPadreDto().getCfdi().getReceptor().getUsoCfdi()))
+						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI))
 				.setConceptos(buildFacturaComplementoConceptos(facturaContext))
 				.setPagos(buildFacturaComplementoPagos(facturaContext));
 		return cfdiBuilder.build();
@@ -150,7 +149,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		List<CfdiPagoDto> pagos = new ArrayList<CfdiPagoDto>();
 		CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
 				.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(facturaContext.getCurrentPago().getFechaPago())
-				.setFormaPago(FormaPagoEnum.findByDesc(facturaContext.getCurrentPago().getFormaPago()).getClave())
+				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
 				.setMoneda(facturaContext.getCurrentPago().getMoneda())
 				.setMonto(facturaContext.getCurrentPago().getMonto())
 				.setFolio(facturaContext.getFacturaPadreDto().getFolio())
@@ -158,7 +157,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setImportePagado(facturaContext.getCurrentPago().getMonto())
 				.setMonedaDr(facturaContext.getCurrentPago().getMoneda())
 				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
-				.setNumeroParcialidad(facturaContext.getCtdadComplementos())
+				.setNumeroParcialidad(facturaContext.getCtdadComplementos()+1)
 				.setImporteSaldoAnterior(facturaContext.getPagoCredito().getMonto())
 				.setImporteSaldoInsoluto(facturaContext.getPagoCredito().getMonto()
 						.subtract(facturaContext.getCurrentPago().getMonto()));

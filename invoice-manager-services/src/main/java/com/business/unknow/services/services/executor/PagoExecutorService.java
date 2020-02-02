@@ -14,6 +14,7 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
+import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
@@ -116,8 +117,10 @@ public class PagoExecutorService extends AbstractExecutorService {
 		emisorRepository.save(emisor);
 		List<CfdiPago> cfdiPagos = cfdiMapper
 				.getEntityFromCdfiPagosDtos(context.getFacturaDto().getCfdi().getComplemento().getPagos());
-		for(ConceptoDto conceptoDto :context.getFacturaDto().getCfdi().getConceptos()) {
-			conceptoRepository.save(conceptoRepository.save(cfdiMapper.getEntityFromConceptoDto(conceptoDto)));
+		for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
+			Concepto concepto = cfdiMapper.getEntityFromConceptoDto(conceptoDto);
+			concepto.setCfdi(cfdi);
+			conceptoRepository.save(concepto);
 		}
 		for (CfdiPago pago : cfdiPagos) {
 			pago.setCfdi(cfdi);
