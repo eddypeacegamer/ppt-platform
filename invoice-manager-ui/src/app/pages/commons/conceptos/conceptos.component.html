@@ -91,7 +91,7 @@
         <td scope="row" class="text-center"
           *ngIf="allowEdit">
           <button class="btn-sm btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
-          <button class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
+          <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
         </td>
         <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
         <td scope="row" class="text-center">{{fila.cantidad}}</td>

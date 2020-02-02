@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
 import { Pago } from '../../../models/pago';
@@ -20,6 +20,8 @@ export class PagosComponent implements OnInit {
   @Input() factura: Factura;
   @Input() user: User;
 
+  public fileInput: any;
+
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: Pago = new Pago();
   public invoicePayments: Pago[] = [];
@@ -36,7 +38,7 @@ export class PagosComponent implements OnInit {
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
-    if (this.factura.folio !== undefined) {
+    if (this.factura !== undefined && this.factura.folio !== undefined) {
       this.paymentsService.getPaymentsByFolio(this.factura.folio)
               .subscribe(payments => {
                 this.invoicePayments = payments; 
@@ -57,6 +59,8 @@ export class PagosComponent implements OnInit {
     if (clave === 'EFECTIVO' || clave === 'CHEQUE' || clave === '*') {
       this.cuentas = [ new Cuenta('N/A', 'No aplica', 'Sin especificar')];
       this.paymentForm.bankAccount = 'N/A';
+      this.newPayment.banco = 'No aplica';
+            this.newPayment.cuenta = 'Sin especificar';
     }else {
       this.accountsService.getCuentasByCompany(this.factura.rfcEmisor)
           .subscribe(cuentas => {
@@ -73,6 +77,7 @@ export class PagosComponent implements OnInit {
   }
 
   fileUploadListener(event: any): void {
+    this.fileInput = event.target;
     const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -104,7 +109,6 @@ export class PagosComponent implements OnInit {
   }
 
   sendPayment() {
-    this.loading = true;
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
@@ -112,7 +116,7 @@ export class PagosComponent implements OnInit {
     const payment  = {... this.newPayment};
     this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
     if (this.payErrorMessages.length === 0) {
-
+      this.loading = true;
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.newPayment = new Pago();
@@ -129,6 +133,6 @@ export class PagosComponent implements OnInit {
     }
     this.newPayment = new Pago();
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
+    this.fileInput.value = '';
   }
-
 }

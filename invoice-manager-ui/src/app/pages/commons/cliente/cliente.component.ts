@@ -52,11 +52,19 @@ export class ClienteComponent implements OnInit {
     this.formInfo.success = '';
     this.formInfo.message = '';
     this. validatePercentages();
-    this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
+    if(this.clientInfo.porcentajeCliente < 0 ||  this.clientInfo.porcentajeContacto < 0 
+        || this.clientInfo.porcentajeDespacho < 0 || this.clientInfo.porcentajePromotor < 0){
+      this.formInfo.message = 'Alguno o algunos porcentages son invalidos';
+    }else{
+      this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
       .then(() => {
         this.clientService.insertNewClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
           (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
       });
+    }
+
+
+    
   }
 
   public zipCodeInfo(zc: string){

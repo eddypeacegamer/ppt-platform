@@ -24,7 +24,7 @@ public class DevolucionesBuilderService {
 	@Autowired
 	private DevolucionMapper devolucionMapper;
 
-	public Devolucion buildDevolucion(String foliofFact, Integer idPago, BigDecimal montoBase, Integer porcentaje,
+	public Devolucion buildDevolucion(String foliofFact, Integer idPago, BigDecimal montoBase, Double porcentaje,
 			String receptor, String tipoReceptor) {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
 				.setMonto((montoBase.multiply(new BigDecimal(porcentaje)).divide(new BigDecimal(16), 2,

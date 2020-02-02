@@ -62,7 +62,7 @@ export class TransferenciasComponent implements OnInit {
    }
   }
 
-  clean(){
+  clean() {
     this.transfers = [];
     this.transferencias = [];
     this.params.dataValid = false;

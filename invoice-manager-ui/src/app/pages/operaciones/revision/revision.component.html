@@ -157,7 +157,7 @@
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
         </div>
-        <div *ngIf="factura.metodoPago=='PPD' && complementos.length>0">
+        <div *ngIf="factura.complementos!==undefined  && factura.metodoPago=='PPD' && factura.complementos.length>0">
           <p class="font-weight-bold">Complementos</p>
           <br>
           <div class="table-responsive">
@@ -176,7 +176,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let complemento of complementos">
+                <tr *ngFor="let complemento of factura.complementos">
                   <td scope="row" class="text-center">
                     <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
                       [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
