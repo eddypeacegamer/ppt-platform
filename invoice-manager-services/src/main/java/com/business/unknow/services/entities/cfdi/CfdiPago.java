@@ -6,7 +6,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,7 +51,7 @@ public class CfdiPago implements Serializable {
 	private int numeroParcialidad;
 	@Column(name = "SERIE")
 	private String serie;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
 

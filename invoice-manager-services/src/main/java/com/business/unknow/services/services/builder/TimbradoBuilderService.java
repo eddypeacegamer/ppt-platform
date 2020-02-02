@@ -13,15 +13,13 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Pago;
-import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.EmpresaMapper;
-import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
-import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.services.FacturaService;
 
 @Service
 public class TimbradoBuilderService extends AbstractBuilderService{
@@ -36,16 +34,13 @@ public class TimbradoBuilderService extends AbstractBuilderService{
 	private PagoRepository pagoRepository;
 	
 	@Autowired
-	private CfdiRepository cfdiRepository;
-
-	@Autowired
 	private FacturaMapper mapper;
 	
 	@Autowired
 	private EmpresaMapper empresaMapper;
 	
 	@Autowired
-	private CfdiMapper cfdiMapper;
+	private FacturaService facturaService;
 	
 	public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
@@ -69,35 +64,29 @@ public class TimbradoBuilderService extends AbstractBuilderService{
 	
 	public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
-		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
-		Factura folioEnity = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
-						String.format("Folio with the name %s not found", facturaDto.getFolio()),
-						HttpStatus.SC_NOT_FOUND));
-		validatePackFacturacion(facturaDto, folioPadreEntity);
-		Optional<Cfdi> cfdi = cfdiRepository.findByFolio(folio);
+		FacturaDto currentFacturaDto=facturaService.getFacturaByFolio(facturaDto.getFolio());
+		Optional<Factura> folioPadreEntity = repository.findByFolio(currentFacturaDto.getFolioPadre());
+		validatePackFacturacion(currentFacturaDto, folioPadreEntity);
 		EmpresaDto empresaDto = empresaMapper
-				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(currentFacturaDto.getRfcEmisor())
 						.orElseThrow(() -> new InvoiceManagerException("Empresa not found",
-								String.format("La empresa con el rfc no existe", facturaDto.getRfcEmisor()),
+								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
-		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(facturaDto.getFolioPadre(),
+		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(currentFacturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
-		FacturaDto currentFacturaDto = mapper.getFacturaDtoFromEntity(folioEnity);
-		facturaDto.setCfdi(cfdiMapper.getCfdiDtoFromEntity(cfdi.get()));
 		getEmpresaFiles(empresaDto, currentFacturaDto);
-		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
+		currentFacturaDto.setPackFacturacion(currentFacturaDto.getPackFacturacion());
 		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
-				.setCfdi(cfdi.isPresent() ? cfdiMapper.getCfdiDtoFromEntity(cfdi.get()) : null)
+				.setCfdi(currentFacturaDto.getCfdi())
 				.setEmpresaDto(empresaDto)
 				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
+				.setTipoFactura(currentFacturaDto.getCfdi().getMetodoPago()).setTipoDocumento(currentFacturaDto.getTipoDocumento())
 				.setCtdadComplementos(repository
 						.findByFolioPadre(
-								facturaDto.getFolioPadre() != null ? facturaDto.getFolioPadre() : facturaDto.getFolio())
+								currentFacturaDto.getFolioPadre() != null ? currentFacturaDto.getFolioPadre() : currentFacturaDto.getFolio())
 						.size())
 				.build();
 	}
