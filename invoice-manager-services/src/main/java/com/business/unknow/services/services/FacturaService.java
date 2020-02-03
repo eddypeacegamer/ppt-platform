@@ -95,26 +95,26 @@ public class FacturaService {
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
-					PageRequest.of(0, 10, Sort.by("fechaCreacion").descending()));
+					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			} else {
 				result = repository.findBySolicitanteWithParams(solicitante.get(), start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
 		} else {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findByLineaEmisorAndStatusWithParams(lineaEmisor, status.get(), start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			} else {
 				result = repository.findByLineaEmisorWithParams(lineaEmisor, start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
 
 		}
@@ -145,10 +145,11 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		FacturaDto saveFactura = saveFactura(entity);
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			pagoService.insertNewPayment(facturaDefaultValues.assignaDefaultsPagoPPD(cfdi));
+			pagoService.insertNewPaymentWithoutValidation(facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
-		return saveFactura(entity);
+		return saveFactura;
 	}
 
 	private FacturaDto saveFactura(Factura factura) {

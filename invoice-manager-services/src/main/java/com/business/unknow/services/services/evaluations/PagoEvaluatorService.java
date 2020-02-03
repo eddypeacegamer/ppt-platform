@@ -63,16 +63,22 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 	}
 	
 	public void validatePago(PagoDto currentPagoDto,PagoDto dbPagoDto) throws InvoiceManagerException {
-		if(currentPagoDto.getRevisor1().equalsIgnoreCase(dbPagoDto.getSolicitante()) || currentPagoDto.getRevisor1().equalsIgnoreCase(dbPagoDto.getRevisor2())) {
-			throw new InvoiceManagerException("Los pagos deven ser validados por al menos dos usuarios diferentes",
-					"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
-					HttpStatus.CONFLICT.value());
+		if(currentPagoDto.getRevisor1()!=null) {
+			if(currentPagoDto.getRevisor1().equalsIgnoreCase(dbPagoDto.getSolicitante()) || currentPagoDto.getRevisor1().equalsIgnoreCase(dbPagoDto.getRevisor2())) {
+				throw new InvoiceManagerException("Los pagos deven ser validados por al menos dos usuarios diferentes",
+						"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
+						HttpStatus.CONFLICT.value());
+			}
 		}
-		if(currentPagoDto.getRevisor2().equalsIgnoreCase(dbPagoDto.getSolicitante()) || currentPagoDto.getRevisor2().equalsIgnoreCase(dbPagoDto.getRevisor1())) {
-			throw new InvoiceManagerException("Los pagos deven ser validados por al menos dos usuarios diferentes",
-					"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
-					HttpStatus.CONFLICT.value());
+		
+		if(currentPagoDto.getRevisor2()!=null) {
+			if(currentPagoDto.getRevisor2().equalsIgnoreCase(dbPagoDto.getSolicitante()) || currentPagoDto.getRevisor2().equalsIgnoreCase(dbPagoDto.getRevisor1())) {
+				throw new InvoiceManagerException("Los pagos deven ser validados por al menos dos usuarios diferentes",
+						"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
+						HttpStatus.CONFLICT.value());
+			}
 		}
+		
 		if(currentPagoDto.getRevision1() && currentPagoDto.getRevision2() && !dbPagoDto.getRevision1() && !dbPagoDto.getRevision2()) {
 			throw new InvoiceManagerException("Inconsistencia en los estatus de validacion, un pago no puede ser validado doblemente",
 					"La actualizacion del pago no puede ser realizada por el mismo usuario de manera consecutiva",
@@ -83,7 +89,7 @@ public class PagoEvaluatorService extends AbstractEvaluatorService {
 					"Intento de falsificacion de validacion de pagos",
 					HttpStatus.CONFLICT.value());
 		}
-		if(!currentPagoDto.getMonto().equals(dbPagoDto.getMonto()) && dbPagoDto.getId()!=null) {
+		if(dbPagoDto.getId()!=null && currentPagoDto.getMonto().compareTo(dbPagoDto.getMonto())!= 0) {
 			throw new InvoiceManagerException("Inconsistencia en montos pago",
 					"Intento de falsificacion de monto pagos",
 					HttpStatus.CONFLICT.value());

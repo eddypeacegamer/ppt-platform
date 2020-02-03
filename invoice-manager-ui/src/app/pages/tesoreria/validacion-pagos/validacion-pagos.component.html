@@ -3,51 +3,48 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Validacion de Pagos</nb-card-header>
       <nb-card-body>
-          <div class="row">
-             
-              <div class="col-sm-2">
-                <label for="inputPayType" class="label">Forma de Pago</label>
-                <select id="inputPayType" style="display:block;" class="form-control"
-                  [(ngModel)]="filterParams.formaPago" >
-                  <option value="*">TODAS</option>
-                  <option value="EFECTIVO">Efectivo</option>
-                  <option value="CHEQUE">Cheque nominativo</option>
-                  <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
-                  <option value="DEPOSITO">Deposito bancario</option>
-                  <option value="CREDITO">Credito</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                  <label for="formpicker1" class="label">Desde</label>
-                  <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;" class="form-control"
-                    [(ngModel)]="filterParams.since">
-                  <nb-datepicker #formpicker1></nb-datepicker>
-              </div>
-              <div class="col-md-2">
-                <label for="formpicker2" class="label">Hasta</label>
-                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;" class="form-control"
-                  [(ngModel)]="filterParams.to">
-                <nb-datepicker #formpicker2></nb-datepicker>
-              </div>
-              <div class="col-sm-4">
-                <label for="inputBank" class="label">Banco receptor</label>
-                <div class="form-inline">
-                <select  id="inputBank" style="display:block;" class="form-control" style="display:block;width: 250px;"
-                  [(ngModel)]="filterParams.banco" >
-                  <option value="*">TODOS</option>
-                  <option value="BBVA">BBVA</option>
-                  <option value="HSBC">HSBC</option>
-                  <option value="BANORTE">BANORTE</option>
-                  <option value="BANAMEX">BANAMEX</option>
-                  <option value="N/A">NO APLICA</option>
-                </select>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <button type="button" class="btn btn-primary align-bottom"  (click)="updateDataTable()" status="primary">BUSCAR</button>
-              </div>
-              </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="acredor" class="label">Acredor</label>
+            <input id="acredor" class="form-control" fullWidth type="text" placeholder="RFC acredor" [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'> 
+          </div>
+          <div class="col-md-2">
+            <label for="deudor" class="label">Deudor</label>
+            <input id="deudor" class="form-control" fullWidth type="text" placeholder="RFC deudor" [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
+          </div>
 
-            
+          <div class="col-md-2">
+            <label for="formpicker1" class="label">Desde</label>
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;"
+              class="form-control" [(ngModel)]="filterParams.since">
+            <nb-datepicker #formpicker1></nb-datepicker>
+          </div>
+          <div class="col-md-2">
+            <label for="formpicker2" class="label">Hasta</label>
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;"
+              class="form-control" [(ngModel)]="filterParams.to">
+            <nb-datepicker #formpicker2></nb-datepicker>
+          </div>
+          <div class="col-sm-4">
+            <label for="inputBank" class="label">Forma de pago</label>
+            <div class="form-inline">
+              <select id="inputPayType" style="display:block;" class="form-control"
+                [(ngModel)]="filterParams.formaPago">
+                <option value="*">TODAS</option>
+                <option value="EFECTIVO">Efectivo</option>
+                <option value="CHEQUE">Cheque nominativo</option>
+                <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                <option value="DEPOSITO">Deposito bancario</option>
+                <option value="CREDITO">Credito Despacho</option>
+              </select>
+              <p>&nbsp;&nbsp;</p>
+              <button type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
+                status="primary">BUSCAR</button>
             </div>
+          </div>
+
+
+        </div>
       </nb-card-body>
     </nb-card>
   </div>
@@ -64,46 +61,70 @@
           No se encontraron resultados
         </div>
         <div class="clearfix" *ngIf="page.empty == false">
-            <strong>Resultados</strong>
-            <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-  
-            <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
-              id="inputPageSize" class="float-right">
-              <nb-option value="10">10</nb-option>
-              <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
-              <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
-            </nb-select>
+          <strong>Resultados</strong>
+          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+
+          <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize"
+            (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
+            <nb-option value="10">10</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
+          </nb-select>
         </div>
 
         <div class="table-responsive" *ngIf="page.empty == false">
           <table class="table">
             <thead class="thead-light">
               <tr>
-                <th scope="col">Folio</th>
+                <th scope="col">Acciones</th>
                 <th scope="col">Moneda</th>
-                <th scope="col">Banco</th>
                 <th scope="col">Monto</th>
-                <th scope="col">Estatus Pago</th>
-                <th scope="col">Tipo pago</th>
+                <th scope="col">Banco</th>
+                <th scope="col">Cuenta</th>
                 <th scope="col">Forma de pago</th>
                 <th scope="col">Fecha pago</th>
-                <th scope="col">Actualizado por</th>
-                <th scope="col">Validar</th>
+                <th scope="col">Acredor</th>
+                <th scope="col">Deudor</th>
+                <th scope="col">Estatus Pago</th>
+                <th scope="col">Solicitante</th>
+                <th scope="col">Folio</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
+                <td scope="row">
+                  <div class="form-inline" style="width: 150px;">
+                    <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
+                        class="fa fa-search"></i></button>
+                    &nbsp;
+                    <button class="btn-sm"
+                      [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
+                      [disabled]="fila.revision1 && fila.revision2" (click)="openDialog(fila)"><i
+                        class="fa fa-times-circle"></i></button>
+                    &nbsp;
+                    <button class="btn-sm"
+                      [ngClass]="{'btn-outline-secondary': fila.revision1, 'btn-outline-success': !fila.revision1}"
+                      (click)="validar1(fila)" [disabled]="fila.revision1"><i class="fa fa-check-circle"></i></button>
+                    &nbsp;
+                    <button class="btn-sm"
+                      [ngClass]="{'btn-outline-secondary': !fila.revision1 || fila.revision2, 'btn-outline-success': fila.revision1 && !fila.revision2}"
+                      (click)="validar2(fila)" [disabled]="!fila.revision1 || fila.revision2"><i
+                        class="fa fa-check-circle"></i></button>
+                  </div>
+                </td>
+
                 <td scope="row">{{fila.moneda}}</td>
-                <td scope="row">{{fila.banco}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                
-                <td scope="row">{{fila.tipoPago}}</td>
+                <td scope="row">{{fila.banco}}</td>
+                <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.formaPago}}</td>
                 <td scope="row">{{fila.fechaPago}}</td>
-                <td scope="row">{{fila.ultimoUsuario || fila.createUser}}</td>
-                <td scope="row"><button type="button" (click)="openDialog(fila)" class="btn btn-primary"><i class="fa fa-search"></i></button></td>
+                <td scope="row">{{fila.acredor}}</td>
+                <td scope="row">{{fila.deudor}}</td>
+                <td scope="row">{{fila.statusPago}}</td>
+                <td scope="row">{{fila.solicitante}}</td>
+                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
+                    (click)="redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
               </tr>
             </tbody>
           </table>
@@ -123,9 +144,9 @@
 
         <br>
         <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
-            <p *ngFor="let message of errors">{{message}}</p>
+          <p *ngFor="let message of errors">{{message}}</p>
         </div>
-        
+
       </nb-card-body>
     </nb-card>
   </div>

@@ -26,6 +26,4 @@ export abstract class PaymentsData {
     abstract getExpenses(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
 
-    abstract updatePayment(payment:Pago):Observable<Pago>;
-
 }

@@ -121,8 +121,18 @@ public class PagoExecutorService extends AbstractExecutorService {
 				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
 		timbradoFiscalDigitial.setCfdi(cfdi);
 		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
-		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito())));
 		
+		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));//Update credito payment
+		
+		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getCurrentPago())));
+		
+	}
+	
+	public PagoDto creaPagoPueExecutor(FacturaContext context) {
+		if (context.getPagoCredito() != null) {
+			pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));
+		}
+		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getCurrentPago())));
 	}
 
 	

@@ -23,7 +23,7 @@ public class PagoBuilder extends AbstractBuilder<PagoDto> {
 		instance.setFolio(folio);
 	return this; }
 	public PagoBuilder setFolioPadre(String folioPadre) {
-		instance.setFolio(folioPadre);
+		instance.setFolioPadre(folioPadre);
 	return this; }
 	public PagoBuilder setMoneda(String moneda) {
 		instance.setMoneda(moneda);

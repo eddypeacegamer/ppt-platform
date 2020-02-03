@@ -8,21 +8,19 @@ import { DevolutionData } from '../../../../@core/data/devolution-data';
 @Component({
   selector: 'ngx-validacion-pago',
   templateUrl: './validacion-pago.component.html',
-  styleUrls: ['./validacion-pago.component.scss']
+  styleUrls: ['./validacion-pago.component.scss'],
 })
 export class ValidacionPagoComponent implements OnInit {
 
 
   @Input() pago: Pago;
-  public comprobanteUrl:SafeUrl;
-  public updatedPayment : Pago;
+  public comprobanteUrl: SafeUrl;
+  public updatedPayment: Pago;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
-    private filesService : FilesData,
+    private filesService: FilesData,
     private sanitizer: DomSanitizer) {}
 
-  
-  
   ngOnInit() {
     this.mostrarComprobante(this.pago);
     this.updatedPayment = {... this.pago};
@@ -31,8 +29,8 @@ export class ValidacionPagoComponent implements OnInit {
   public mostrarComprobante(pago:Pago){
     this.comprobanteUrl = undefined;
     if(pago.formaPago!='CREDITO'){
-      this.filesService.getResourceFile(`${pago.folio}_${pago.formaPago}`,'PAGO','IMAGEN').subscribe(
-        (file)=> this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
+      this.filesService.getResourceFile(`${pago.id}_${pago.folio}`, 'PAGO', 'IMAGEN').subscribe(
+        (file) => this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
     }
   }
 

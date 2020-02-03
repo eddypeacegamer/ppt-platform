@@ -147,7 +147,7 @@ public class FacturaController {
 	@ApiOperation(value = "insert a new Payment into the system")
 	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.insertNewPago(folio, pago), HttpStatus.CREATED);
+		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")

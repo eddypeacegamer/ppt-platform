@@ -30,7 +30,11 @@ public class FacturaDefaultValues {
 
 	public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
 		return new PagoBuilder().setBanco(PagoPpdCreditoDefaults.BANCO)
-				.setSolicitante(PagoPpdCreditoDefaults.USER).setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
+				.setSolicitante(PagoPpdCreditoDefaults.USER)
+				.setAcredor(cfdi.getEmisor().getRfc())
+				.setDeudor(cfdi.getReceptor().getRfc())
+				.setCuenta(PagoPpdCreditoDefaults.CUENTA)
+				.setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
 				.setFechaPago(new Date()).setFolio(cfdi.getFolio()).setFolioPadre(cfdi.getFolio())
 				.setFormaPago(PagoPpdCreditoDefaults.FORMA_PAGO).setMoneda(PagoPpdCreditoDefaults.MONEDA)
 				.setMonto(cfdi.getTotal()).setRevision1(false).setRevision2(false)
