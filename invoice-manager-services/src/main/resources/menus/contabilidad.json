@@ -3,8 +3,28 @@
 	"icon": "layout-outline",
 	"children": [
 		{
-			"title": "inicio",
-			"link": "/pages/contabilidad"
+			"title": "Clientes",
+			"link": "/pages/contabilidad/clientes"
+		},
+		{
+			"title": "Empresas",
+			"link": "/pages/contabilidad/empresas"
+		},
+		{
+			"title": "Carga Masiva",
+			"link": "/pages/contabilidad/transferencias"
+		},
+		{
+			"title": "Carga Facturas",
+			"link": "/pages/contabilidad/carga-facturas"
+		},
+		{
+			"title": "Reportes",
+			"link": "/pages/contabilidad/reportes"
+		},
+		{
+			"title": "CFDI",
+			"link": "/pages/contabilidad/cfdi/*"
 		}
 	]
 }

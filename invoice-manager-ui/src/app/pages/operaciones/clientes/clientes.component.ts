@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class ClientesComponent implements OnInit {
 
 
-  public headers: string[] = ['RFC', 'Razon Social', 'Contacto', 'Email', 'No Ext', 'Calle', 'Localidad', 'Municipio', 'C.Postal'];
+  public headers: string[] = ['RFC', 'Razon Social', 'Activo','Promotor', 'Email', 'No Ext', 'Calle', 'Localidad', 'Municipio', 'C.Postal'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 

@@ -6,25 +6,33 @@ import { of as observableOf } from 'rxjs';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import {
-  AnalyticsService,
   LayoutService,
   PlayerService,
   StateService,
 } from './utils';
-import { MockDataModule } from './mock/mock-data.module';
+
 
 import { UsersData } from './data/users-data';
-import { CatalogsData } from './data/catalogs-data';
-
-
 import { UsersService } from './back-services/users.service';
-import { CatalogsService } from './back-services/catalogs.service';
-import { ClientsData } from './data/clients-data';
-import { ClientsService } from './back-services/clients.service';
+
+
+import { CatalogsData } from './data/catalogs-data';
 import { CompaniesData } from './data/companies-data';
-import { CompaniesService } from './back-services/companies.service';
 import { InvoicesData } from './data/invoices-data';
+import { DevolutionData } from './data/devolution-data';
+import { ClientsData } from './data/clients-data';
+import { PaymentsData } from './data/payments-data';
+
+import { CatalogsService } from './back-services/catalogs.service';
+import { ClientsService } from './back-services/clients.service';
+import { CompaniesService } from './back-services/companies.service';
 import { InvoicesService } from './back-services/invoices.service';
+import { DevolutionService } from './back-services/devolution.service';
+import { PaymentsService } from './back-services/payments.service';
+import { FilesData } from './data/files-data';
+import { FilesService } from './back-services/files.service';
+import { TransferData } from './data/transfers-data';
+import { TransferService } from './back-services/transfer.service';
 
 
 const DATA_SERVICES = [
@@ -32,7 +40,11 @@ const DATA_SERVICES = [
   {provide: ClientsData, useClass: ClientsService},
   {provide: CompaniesData, useClass: CompaniesService},
   {provide: InvoicesData, useClass: InvoicesService},
-  { provide: UsersData, useClass: UsersService },
+  {provide: PaymentsData, useClass : PaymentsService},
+  {provide: DevolutionData, useClass: DevolutionService},
+  {provide: TransferData , useClass: TransferService},
+  {provide: FilesData, useClass : FilesService},
+  {provide: UsersData, useClass: UsersService },
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {
@@ -43,7 +55,7 @@ export class NbSimpleRoleProvider extends NbRoleProvider {
 }
 
 export const NB_CORE_PROVIDERS = [
-  ...MockDataModule.forRoot().providers,
+  //...MockDataModule.forRoot().providers,
   ...DATA_SERVICES,
   ...NbAuthModule.forRoot({
 
@@ -74,7 +86,6 @@ export const NB_CORE_PROVIDERS = [
   {
     provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
   },
-  AnalyticsService,
   LayoutService,
   PlayerService,
   StateService,

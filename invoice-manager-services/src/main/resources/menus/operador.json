@@ -11,18 +11,6 @@
 			"link": "/pages/operaciones/empresas"
 		},
 		{
-			"title": "revision",
-			"link": "/pages/operaciones/revision"
-		},
-		{
-			"title": "devoluciones",
-			"link": "/pages/operaciones/devoluciones"
-		},
-		{
-			"title": "pagos",
-			"link": "/pages/operaciones/pagos"
-		},
-		{
 			"title": "reportes",
 			"link": "/pages/operaciones/reportes"
 		}

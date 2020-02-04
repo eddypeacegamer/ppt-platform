@@ -1,5 +1,6 @@
 package com.business.unknow.model.catalogs;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -9,8 +10,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GiroDto {
+public class GiroDto implements Serializable {
 
+	private static final long serialVersionUID = 7523191353164448138L;
 	private Integer clave;
 	private String nombre;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)

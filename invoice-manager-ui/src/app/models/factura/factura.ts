@@ -3,23 +3,31 @@ import { Cfdi } from './cfdi';
 
 export class Factura{
 
+	
+	public id:number;
 	//obligatorio
 	public rfcEmisor : string;
-    public rfcRemitente : string ;
+	public lineaEmisor : string;
+	public rfcRemitente : string ;
+	public lineaRemitente : string;
     public razonSocialEmisor : string;
     public razonSocialRemitente : string;
-	public folioPadre : string;
+	public solicitante : string;
 	public tipoDocumento : string;
 	public cfdi : Cfdi;
-	public total : string;
+	public total : number;
+	public subtotal : number;
+	public descuento : number;
 	//opcional
 	public notas : string;
-    
+	public folioPadre : string;
 	//duplicado
 	public formaPago : string;
     public metodoPago : string;
 	//generado
-	public statusFactura : StatusFactura ;
+	public statusPago : string ;
+	public statusDevolucion : string ;
+	public statusFactura : string ;
     public uuid : string;
     public statusDetail : string;
     public fechaCreacion : Date;
@@ -29,9 +37,15 @@ export class Factura{
 
 	constructor(){
 		this.tipoDocumento = 'Factura';
-		this.statusFactura = new StatusFactura(1);
-		this.metodoPago = 'PUE';
-		this.formaPago = '003';
-		this.notas ='campo no obligatorio a remover';
+		this.total = 0;
+		this.subtotal  = 0;	
+		this.descuento = 0;
+		this.statusFactura ='1';
+		this.statusDetail = '';
+		this.statusPago = '1';
+		this.statusDevolucion = '1';
+		this.lineaEmisor = 'A';
+		this.rfcRemitente = 'CLIENTE';
+		this.cfdi = new Cfdi();
 	}
 }

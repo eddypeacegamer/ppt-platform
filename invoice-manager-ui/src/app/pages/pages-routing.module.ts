@@ -37,6 +37,10 @@ const routes: Routes = [{
       loadChildren : () => import('./tesoreria/tesoreria.module')
         .then(m => m.TesoreriaModule ),
     },
+    {path:'administracion',
+      loadChildren:() => import('./administracion/administracion.module')
+        .then(m =>m.AdministracionModule )
+    },
     {
       path: '**',
       component: DashboardComponent,

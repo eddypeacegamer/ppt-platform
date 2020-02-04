@@ -15,6 +15,7 @@ export abstract class CatalogsData {
 
     abstract getAllClavesProductoServicio(page:number,size:number) : Observable<GenericPage<any>>;
     abstract getProductoServiciosByDescription(description:string) : Observable<ClaveProductoServicio[]>;
+    abstract getProductoServiciosByClave(clave:string) : Observable<ClaveProductoServicio[]>;
     abstract getClaveUnidadByName(name:string) : Observable<ClaveUnidad[]>;
     abstract getAllUsoCfdis() : Observable<UsoCfdi[]>;
     abstract getAllRegimenFiscal() : Observable<RegimenFiscal[]>;
@@ -23,4 +24,6 @@ export abstract class CatalogsData {
     abstract getStatusPago() : Observable<Status[]>;
     abstract getStatusValidacion() : Observable<Status[]>;
     abstract getStatusDevolucion() : Observable<Status[]>;
+
+    abstract getInvoiceCatalogs() : Observable<any[]>;
 }

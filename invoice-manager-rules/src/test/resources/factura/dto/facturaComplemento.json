@@ -1,0 +1,20 @@
+{
+	"id": 12,
+	"rfcEmisor": "CACH801090ABC",
+	"rfcRemitente": "MALO800822222",
+	"razonSocialEmisor": "CACHETE SA DE CV",
+	"razonSocialRemitente": "Pepes asociados.",
+	"folio": "756ba55752ef6293ae0cd8e8c54d5006",
+	"folioPadre": "c6d791f6d2a3d518bb361c7edf2c7697",
+	"statusPago": 1,
+	"statusDevolucion": 1,
+	"statusFactura": 6,
+	"statusDetail": "",
+	"tipoDocumento": "Complemento",
+	"formaPago": "03",
+	"metodoPago": "PPD",
+	"packFacturacion": "SW_SAPIENS",
+	"total": 5000.0,
+	"fechaCreacion": "2019-11-09",
+	"fechaActualizacion": "2019-11-09"
+}

@@ -13,9 +13,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.business.unknow.client.model.swsapiens.SwSapiensClientException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public abstract class AbstractClient {
 
 	private String url;
@@ -82,5 +79,4 @@ public abstract class AbstractClient {
 		return client.request(type).headers(headers).post(Entity.entity(entity, type));
 	}
 
-	protected abstract <T> T parseResponse(Response response, TypeReference<T> entityType) throws SwSapiensClientException;
 }

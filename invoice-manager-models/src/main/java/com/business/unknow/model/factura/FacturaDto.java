@@ -3,7 +3,6 @@ package com.business.unknow.model.factura;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.business.unknow.model.catalogs.StatusFacturaDto;
 import com.business.unknow.model.factura.cfdi.components.CfdiDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,28 +11,35 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacturaDto implements Serializable {
 
-	
 	private static final long serialVersionUID = -1019751668989298682L;
 	private Integer id;
 	private String rfcEmisor;
 	private String rfcRemitente;
 	private String razonSocialEmisor;
+	private String lineaEmisor;
 	private String razonSocialRemitente;
+	private String lineaRemitente;
+	private String solicitante;
 	private String folio;
 	private String folioPadre;
 	private String uuid;
-	private StatusFacturaDto statusFactura;
+	private Integer statusPago;
+	private Integer statusDevolucion;
+	private Integer statusFactura;
 	private String statusDetail;
 	private String tipoDocumento;
 	private String formaPago;
 	private String metodoPago;
+	private String packFacturacion;
 	private String notas;
 	private Double total;
+	private Double subtotal;
+	private Double descuento;
 	private Date fechaCreacion;
+	private Date fechaCancelacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 	private CfdiDto cfdi;
-	
 	public Integer getId() {
 		return id;
 	}
@@ -58,11 +64,29 @@ public class FacturaDto implements Serializable {
 	public void setRazonSocialEmisor(String razonSocialEmisor) {
 		this.razonSocialEmisor = razonSocialEmisor;
 	}
+	public String getLineaEmisor() {
+		return lineaEmisor;
+	}
+	public void setLineaEmisor(String lineaEmisor) {
+		this.lineaEmisor = lineaEmisor;
+	}
 	public String getRazonSocialRemitente() {
 		return razonSocialRemitente;
 	}
 	public void setRazonSocialRemitente(String razonSocialRemitente) {
 		this.razonSocialRemitente = razonSocialRemitente;
+	}
+	public String getLineaRemitente() {
+		return lineaRemitente;
+	}
+	public void setLineaRemitente(String lineaRemitente) {
+		this.lineaRemitente = lineaRemitente;
+	}
+	public String getSolicitante() {
+		return solicitante;
+	}
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 	public String getFolio() {
 		return folio;
@@ -82,10 +106,22 @@ public class FacturaDto implements Serializable {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public StatusFacturaDto getStatusFactura() {
+	public Integer getStatusPago() {
+		return statusPago;
+	}
+	public void setStatusPago(Integer statusPago) {
+		this.statusPago = statusPago;
+	}
+	public Integer getStatusDevolucion() {
+		return statusDevolucion;
+	}
+	public void setStatusDevolucion(Integer statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
+	}
+	public Integer getStatusFactura() {
 		return statusFactura;
 	}
-	public void setStatusFactura(StatusFacturaDto statusFactura) {
+	public void setStatusFactura(Integer statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 	public String getStatusDetail() {
@@ -112,6 +148,12 @@ public class FacturaDto implements Serializable {
 	public void setMetodoPago(String metodoPago) {
 		this.metodoPago = metodoPago;
 	}
+	public String getPackFacturacion() {
+		return packFacturacion;
+	}
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
+	}
 	public String getNotas() {
 		return notas;
 	}
@@ -124,11 +166,29 @@ public class FacturaDto implements Serializable {
 	public void setTotal(Double total) {
 		this.total = total;
 	}
+	public Double getSubtotal() {
+		return subtotal;
+	}
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+	public Double getDescuento() {
+		return descuento;
+	}
+	public void setDescuento(Double descuento) {
+		this.descuento = descuento;
+	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+	public Date getFechaCancelacion() {
+		return fechaCancelacion;
+	}
+	public void setFechaCancelacion(Date fechaCancelacion) {
+		this.fechaCancelacion = fechaCancelacion;
 	}
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
@@ -151,12 +211,15 @@ public class FacturaDto implements Serializable {
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
-				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
-				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
+				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
+				+ ", solicitante=" + solicitante + ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid
+				+ ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
 				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
-				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado="
-				+ fechaTimbrado + ", cfdi=" + cfdi + "]";
+				+ formaPago + ", metodoPago=" + metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas
+				+ ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaCreacion="
+				+ fechaCreacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", cfdi=" + cfdi + "]";
 	}
-	
+
 }

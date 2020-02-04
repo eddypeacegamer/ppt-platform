@@ -1,0 +1,47 @@
+<nb-card>
+  <nb-card-header>Validacion Pago</nb-card-header>
+  <nb-card-body>
+    <div class="row" *ngIf="comprobanteUrl!=undefined">
+      <div class="col-sm-12" >
+          <img [src]="comprobanteUrl" style="height: 60vh;">
+      </div>
+    </div>
+    
+    <form>
+      
+      
+      <div class="form-group form-check" *ngIf="pago.revision1==false && pago.revision2 == false">
+        <input type="checkbox" [(ngModel)]="updatedPayment.revision1" class="form-check-input" id="exampleCheck1" [ngModelOptions]="{standalone: true}">
+        <label class="form-check-label" for="exampleCheck1" >Revision 1</label>
+      </div>
+      <div class="form-group form-check" *ngIf="pago.revision1==true && pago.statusPago=='VALIDACION'">
+        <input type="checkbox" [(ngModel)]="updatedPayment.revision2" class="form-check-input" id="exampleCheck2" [ngModelOptions]="{standalone: true}">
+        <label class="form-check-label" for="exampleCheck2">Revision 2</label>
+      </div>
+      <div class="form-group" *ngIf="pago.statusPago=='VALIDACION'">
+        <label for="comments">Comentarios</label>
+        <input type="text" class="form-control" id="comments" placeholder="Comentarios" [(ngModel)]="updatedPayment.comentarioPago" fullWidth  [ngModelOptions]="{standalone: true}">
+        <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago (opcional).</small>
+      </div>
+      
+    </form>
+
+
+    
+  </nb-card-body>
+  <nb-card-footer>
+      
+    <button  class="btn btn-success" (click)="onValidarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Validar</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-danger" (click)="onRecahzarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Rechazar Pago</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-success" (click)="generateDevolutions()" *ngIf="pago.revision1==true && pago.revision2==true">Generar devoluciones</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-warning" (click)="cancel()">Salir</button>
+    
+  </nb-card-footer>
+</nb-card>
+
+
+
+

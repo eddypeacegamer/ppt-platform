@@ -5,21 +5,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.LastModifiedDate;
-
-import com.business.unknow.services.entities.catalogs.StatusFactura;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "FACTURAS")
 public class Factura implements Serializable {
 
@@ -38,9 +36,18 @@ public class Factura implements Serializable {
 
 	@Column(name = "RAZON_SOCIAL_EMISOR")
 	private String razonSocialEmisor;
+	
+	@Column(name = "LINEA_EMISOR")
+	private String lineaEmisor;
 
 	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String razonSocialRemitente;
+	
+	@Column(name = "LINEA_REMITENTE")
+	private String lineaRemitente;
+	
+	@Column(name = "SOLICITANTE")
+	private String solicitante;
 
 	@Column(name = "FOLIO")
 	private String folio;
@@ -51,10 +58,14 @@ public class Factura implements Serializable {
 	@Column(name = "UUID")
 	private String uuid;
 
-	@JoinColumn(name = "ID_STATUS_FACTURA", referencedColumnName = "ID_STATUS_FACTURA") // TODO remove this ID use
-																						// ID_FACTURA
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
-	private StatusFactura statusFactura;
+	@Column(name = "STATUS_PAGO")
+	private Integer statusPago;
+
+	@Column(name = "STATUS_DEVOLUCION")
+	private Integer statusDevolucion;
+
+	@Column(name = "STATUS_FACTURA")
+	private Integer statusFactura;
 
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
@@ -68,22 +79,34 @@ public class Factura implements Serializable {
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
 
+	@Column(name = "PACK_FACTURACION")
+	private String packFacturacion;
+
 	@Column(name = "NOTAS")
 	private String notas;
 
 	@Column(name = "TOTAL")
 	private Double total;
 
-	@Temporal(TemporalType.DATE)
+	@Column(name = "SUBTOTAL")
+	private Double subtotal;
+
+	@Column(name = "DESCUENTO")
+	private Double descuento;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "FECHA_TIMBRADO")
 	private Date fechaTimbrado;
 
-	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA_CANCELADO")
+	private Date fechaCancelacion;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
@@ -111,6 +134,46 @@ public class Factura implements Serializable {
 		this.rfcRemitente = rfcRemitente;
 	}
 
+	public String getRazonSocialEmisor() {
+		return razonSocialEmisor;
+	}
+
+	public void setRazonSocialEmisor(String razonSocialEmisor) {
+		this.razonSocialEmisor = razonSocialEmisor;
+	}
+
+	public String getLineaEmisor() {
+		return lineaEmisor;
+	}
+
+	public void setLineaEmisor(String lineaEmisor) {
+		this.lineaEmisor = lineaEmisor;
+	}
+
+	public String getRazonSocialRemitente() {
+		return razonSocialRemitente;
+	}
+
+	public void setRazonSocialRemitente(String razonSocialRemitente) {
+		this.razonSocialRemitente = razonSocialRemitente;
+	}
+
+	public String getLineaRemitente() {
+		return lineaRemitente;
+	}
+
+	public void setLineaRemitente(String lineaRemitente) {
+		this.lineaRemitente = lineaRemitente;
+	}
+
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
+	}
+
 	public String getFolio() {
 		return folio;
 	}
@@ -135,11 +198,27 @@ public class Factura implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public StatusFactura getStatusFactura() {
+	public Integer getStatusPago() {
+		return statusPago;
+	}
+
+	public void setStatusPago(Integer statusPago) {
+		this.statusPago = statusPago;
+	}
+
+	public Integer getStatusDevolucion() {
+		return statusDevolucion;
+	}
+
+	public void setStatusDevolucion(Integer statusDevolucion) {
+		this.statusDevolucion = statusDevolucion;
+	}
+
+	public Integer getStatusFactura() {
 		return statusFactura;
 	}
 
-	public void setStatusFactura(StatusFactura statusFactura) {
+	public void setStatusFactura(Integer statusFactura) {
 		this.statusFactura = statusFactura;
 	}
 
@@ -175,6 +254,14 @@ public class Factura implements Serializable {
 		this.metodoPago = metodoPago;
 	}
 
+	public String getPackFacturacion() {
+		return packFacturacion;
+	}
+
+	public void setPackFacturacion(String packFacturacion) {
+		this.packFacturacion = packFacturacion;
+	}
+
 	public String getNotas() {
 		return notas;
 	}
@@ -189,6 +276,22 @@ public class Factura implements Serializable {
 
 	public void setTotal(Double total) {
 		this.total = total;
+	}
+
+	public Double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public Double getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Double descuento) {
+		this.descuento = descuento;
 	}
 
 	public Date getFechaActualizacion() {
@@ -207,20 +310,12 @@ public class Factura implements Serializable {
 		this.fechaTimbrado = fechaTimbrado;
 	}
 
-	public String getRazonSocialEmisor() {
-		return razonSocialEmisor;
+	public Date getFechaCancelacion() {
+		return fechaCancelacion;
 	}
 
-	public void setRazonSocialEmisor(String razonSocialEmisor) {
-		this.razonSocialEmisor = razonSocialEmisor;
-	}
-
-	public String getRazonSocialRemitente() {
-		return razonSocialRemitente;
-	}
-
-	public void setRazonSocialRemitente(String razonSocialRemitente) {
-		this.razonSocialRemitente = razonSocialRemitente;
+	public void setFechaCancelacion(Date fechaCancelacion) {
+		this.fechaCancelacion = fechaCancelacion;
 	}
 
 	public Date getFechaCreacion() {
@@ -234,11 +329,14 @@ public class Factura implements Serializable {
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
-				+ ", razonSocialEmisor=" + razonSocialEmisor + ", razonSocialRemitente=" + razonSocialRemitente
-				+ ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusFactura="
+				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
+				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
+				+ ", solicitante=" + solicitante + ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid
+				+ ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
 				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
-				+ formaPago + ", metodoPago=" + metodoPago + ", notas=" + notas + ", total=" + total
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + "]";
+				+ formaPago + ", metodoPago=" + metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas
+				+ ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion
+				+ ", fechaCreacion=" + fechaCreacion + "]";
 	}
-
 }

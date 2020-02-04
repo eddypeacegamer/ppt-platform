@@ -13,7 +13,8 @@ import {
   NbUserModule,
   NbStepperModule,
   NbDialogModule,
-  NbIconModule
+  NbIconModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 import { PromotorRoutingModule } from './promotor-routing.module';
@@ -22,11 +23,14 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import { DevolucionesComponent } from './devoluciones/devoluciones.component'
 
-import {DownloadCsvService } from '../../@core/back-services/download-csv.service'
+import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
+import { DownloadInvoiceFilesService } from '../../@core/back-services/download-invoice-files';
+
 
 @NgModule({
-  declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent],
+  declarations: [PromotorComponent, ClientesComponent, PreCfdiComponent, PagosComponent, ReportesComponent, DevolucionesComponent],
   imports: [
     PromotorRoutingModule,
     
@@ -44,7 +48,8 @@ import {DownloadCsvService } from '../../@core/back-services/download-csv.servic
     NbUserModule,
     NbStepperModule,
     NbDialogModule,
+    NbSpinnerModule
   ],
-  providers:[DownloadCsvService]
+  providers:[DownloadCsvService,DownloadInvoiceFilesService]
 })
 export class PromotorModule { }

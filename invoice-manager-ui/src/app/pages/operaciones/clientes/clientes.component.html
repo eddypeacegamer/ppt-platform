@@ -56,14 +56,19 @@
             <table class="table">
               <thead class="thead-light">
                 <tr>
+                  <th class="text-center">Acciones</th>
                   <th scope="col" *ngFor="let header of headers">{{header}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let fila of page.content">
-                  <td scope="row"><button class="btn btn-outline-primary btn-sm" (click)= "redirectToCliente(fila.informacionFiscal.rfc)">{{fila.informacionFiscal.rfc}}</button></td>
+                  <td scope="row" class="text-center"> <button class="btn btn-outline-primary" (click)= "redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
+                  </td>
+                  <td scope="row">{{fila.informacionFiscal.rfc}}</td>
                   <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
-                  <td scope="row">{{fila.informacionFiscal.nombre}}</td>
+                  <td scope="row" *ngIf="fila.activo">ACTIVO</td>
+                  <td scope="row" *ngIf="!fila.activo">INACTIVO</td>
+                  <td scope="row">{{fila.correoPromotor}}</td>
                   <td scope="row">{{fila.informacionFiscal.correo}}</td>
                   <td scope="row">{{fila.informacionFiscal.noExterior}}</td>
                   <td scope="row">{{fila.informacionFiscal.calle}}</td>

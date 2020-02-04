@@ -18,10 +18,10 @@ export class ClienteComponent implements OnInit {
   public coloniaId: number=0;
   public colonias = [];
   public paises = ['México'];
-  public porcentajes = {promotor:25,cliente:25,despacho:25,contacto:25};
   constructor(private clientService:ClientsData,private catalogsService:CatalogsData,private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.clientInfo = new Client();
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
       let rfc = route.get('rfc');
@@ -34,7 +34,8 @@ export class ClienteComponent implements OnInit {
   public updateClient(){
     this.formInfo.success='';
     this.formInfo.message='';
-    this.clientService.updateClient(this.clientInfo).subscribe(success=> {this.formInfo.success = 'Cliente actualizado exitosamente';},
+    this.validatePercentages();
+    this.clientService.updateClient(this.clientInfo).subscribe(success=> { this.clientInfo = success;this.formInfo.success = 'Cliente actualizado exitosamente';},
     (error : HttpErrorResponse)=>{this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status});
   }
 
@@ -43,10 +44,18 @@ export class ClienteComponent implements OnInit {
     if(zc.length>4 && zc.length <6){
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zipcode).subscribe(
-          (data:ZipCodeInfo) => {this.clientInfo.informacionFiscal.estado = data.estado;
-          this.clientInfo.informacionFiscal.municipio= data.municipio;this.colonias=data.colonias; 
-          this.clientInfo.informacionFiscal.localidad=data.colonias[0];},
-          (error: HttpErrorResponse) => console.error(error));
+          (data:ZipCodeInfo) => {
+            console.log(data)
+          this.clientInfo.informacionFiscal.estado = data.estado;
+          this.clientInfo.informacionFiscal.municipio= data.municipio;
+          this.colonias=data.colonias; 
+          this.clientInfo.informacionFiscal.localidad=data.colonias[0];
+          
+          if(data.colonias.length<1){
+            alert(`No se ha encontrado información pata el codigo postal ${zipcode}`);
+          }
+        
+          },(error: HttpErrorResponse) => alert(error.error.message || error.statusText));
     }
   }
 
@@ -54,5 +63,23 @@ export class ClienteComponent implements OnInit {
     this.clientInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
+  public validatePercentages(){
+    console.log(this.clientInfo)
+    if(this.clientInfo.correoContacto == undefined || this.clientInfo.correoContacto.length<1){
+      this.clientInfo.correoContacto = 'Sin asignar';
+      this.clientInfo.porcentajeContacto = 0;
+      this.clientInfo.porcentajeDespacho = 16 -this.clientInfo.porcentajeCliente -this.clientInfo.porcentajePromotor;
+    }
+  }
+
+  public toggleOn(){
+    this.clientInfo.activo =true;
+    this.updateClient();
+  }
+
+  public toggleOff(){
+    this.clientInfo.activo =false;
+    this.updateClient();
+  }
 
 }

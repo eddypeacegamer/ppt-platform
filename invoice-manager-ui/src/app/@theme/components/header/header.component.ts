@@ -5,6 +5,7 @@ import { UsersData } from '../../../@core/data/users-data';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-header',
@@ -53,7 +54,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.userService.getUserInfo()
       //.pipe(takeUntil(this.destroy$))
-      .subscribe((user: any) => { this.user = user; console.log(user) });
+      .subscribe((user: any) => this.user = user, 
+      (error:HttpErrorResponse) => {console.log(error.status); if(error.status==401){ this.logout()}});
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()

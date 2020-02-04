@@ -7,16 +7,20 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.business.unknow.model.menu.MenuItem;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * @author eej000f
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements Serializable {
 
 	private String email;
 
-	private Boolean activo;
+	private boolean activo;
 
 	private String name;
 

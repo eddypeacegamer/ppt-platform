@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,14 +31,8 @@ public class Cfdi implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "FECHA_SOLICITUD")
-	private Date fecha;
-
 	@Column(name = "SELLO")
 	private String sello;
-
-	@Column(name = "FORMA_PAGO")
-	private String formaPago;
 
 	@Column(name = "NO_CERTIFICADO")
 	private String noCertificado;
@@ -47,38 +40,11 @@ public class Cfdi implements Serializable {
 	@Column(name = "CERTIFICADO")
 	private String certificado;
 
-	@Column(name = "SUBTOTAL")
-	private Double subtotal;
-
-	@Column(name = "DESCUENTO")
-	private Double descuento;
-
 	@Column(name = "MONEDA")
 	private String moneda;
 
-	@Column(name = "TOTAL")
-	private Double total;
-
 	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
-
-	@Column(name = "METODO_PAGO")
-	private String metodoPago;
-
-	@Column(name = "LUGAR_EXPEDICION")
-	private String lugarExpedicion;
-
-	@Column(name = "NOMBRE_EMISOR")
-	private String nombreEmisor;
-
-	@Column(name = "RFC_EMISOR")
-	private String rfcEmisor;
-
-	@Column(name = "NOMBRE_RECEPTOR")
-	private String nombreReceptor;
-
-	@Column(name = "RFC_RECEPTOR")
-	private String rfcReceptor;
 
 	@Column(name = "USO_CFDI")
 	private String usoCfdi;
@@ -89,34 +55,20 @@ public class Cfdi implements Serializable {
 	@Column(name = "RFC_PROV_CERTIF")
 	private String rfcProvCertif;
 
-	@Column(name = "UUID")
-	private String uuid;
-
 	@Column(name = "SELLO_CFD")
 	private String selloCfd;
-
-	@Column(name = "FECHA_TIMBRADO")
-	private Date fechaTimbrado;
 
 	@Column(name = "NO_CERTIFICADO_SAT")
 	private String noCertificadoSat;
 
 	@Column(name = "SELLO_SAT")
 	private String selloSat;
-
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+	
+	@Column(name = "CADENA_ORIGINAL")
+	private String cadenaOriginal;
 
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getVersion() {
 		return version;
@@ -142,28 +94,12 @@ public class Cfdi implements Serializable {
 		this.folio = folio;
 	}
 
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-
 	public String getSello() {
 		return sello;
 	}
 
 	public void setSello(String sello) {
 		this.sello = sello;
-	}
-
-	public String getFormaPago() {
-		return formaPago;
-	}
-
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
 	}
 
 	public String getNoCertificado() {
@@ -182,22 +118,6 @@ public class Cfdi implements Serializable {
 		this.certificado = certificado;
 	}
 
-	public Double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-	public Double getDescuento() {
-		return descuento;
-	}
-
-	public void setDescuento(Double descuento) {
-		this.descuento = descuento;
-	}
-
 	public String getMoneda() {
 		return moneda;
 	}
@@ -206,68 +126,12 @@ public class Cfdi implements Serializable {
 		this.moneda = moneda;
 	}
 
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-
 	public String getTipoDeComprobante() {
 		return tipoDeComprobante;
 	}
 
 	public void setTipoDeComprobante(String tipoDeComprobante) {
 		this.tipoDeComprobante = tipoDeComprobante;
-	}
-
-	public String getMetodoPago() {
-		return metodoPago;
-	}
-
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
-
-	public String getLugarExpedicion() {
-		return lugarExpedicion;
-	}
-
-	public void setLugarExpedicion(String lugarExpedicion) {
-		this.lugarExpedicion = lugarExpedicion;
-	}
-
-	public String getNombreEmisor() {
-		return nombreEmisor;
-	}
-
-	public void setNombreEmisor(String nombreEmisor) {
-		this.nombreEmisor = nombreEmisor;
-	}
-
-	public String getRfcEmisor() {
-		return rfcEmisor;
-	}
-
-	public void setRfcEmisor(String rfcEmisor) {
-		this.rfcEmisor = rfcEmisor;
-	}
-
-	public String getNombreReceptor() {
-		return nombreReceptor;
-	}
-
-	public void setNombreReceptor(String nombreReceptor) {
-		this.nombreReceptor = nombreReceptor;
-	}
-
-	public String getRfcReceptor() {
-		return rfcReceptor;
-	}
-
-	public void setRfcReceptor(String rfcReceptor) {
-		this.rfcReceptor = rfcReceptor;
 	}
 
 	public String getUsoCfdi() {
@@ -294,28 +158,12 @@ public class Cfdi implements Serializable {
 		this.rfcProvCertif = rfcProvCertif;
 	}
 
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
 	public String getSelloCfd() {
 		return selloCfd;
 	}
 
 	public void setSelloCfd(String selloCfd) {
 		this.selloCfd = selloCfd;
-	}
-
-	public Date getFechaTimbrado() {
-		return fechaTimbrado;
-	}
-
-	public void setFechaTimbrado(Date fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
 	}
 
 	public String getNoCertificadoSat() {
@@ -334,14 +182,6 @@ public class Cfdi implements Serializable {
 		this.selloSat = selloSat;
 	}
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
 	public List<Concepto> getConceptos() {
 		return conceptos;
 	}
@@ -350,18 +190,29 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public String getCadenaOriginal() {
+		return cadenaOriginal;
+	}
+
+	public void setCadenaOriginal(String cadenaOriginal) {
+		this.cadenaOriginal = cadenaOriginal;
+	}
+
 	@Override
 	public String toString() {
-		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha
-				+ ", sello=" + sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado
-				+ ", certificado=" + certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda="
-				+ moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago="
-				+ metodoPago + ", lugarExpedicion=" + lugarExpedicion + ", nombreEmisor=" + nombreEmisor
-				+ ", rfcEmisor=" + rfcEmisor + ", nombreReceptor=" + nombreReceptor + ", rfcReceptor=" + rfcReceptor
-				+ ", usoCfdi=" + usoCfdi + ", regimenFiscal=" + regimenFiscal + ", rfcProvCertif=" + rfcProvCertif
-				+ ", uuid=" + uuid + ", selloCfd=" + selloCfd + ", fechaTimbrado=" + fechaTimbrado
-				+ ", noCertificadoSat=" + noCertificadoSat + ", selloSat=" + selloSat + ", fechaActualizacion="
-				+ fechaActualizacion + ", conceptos=" + conceptos + "]";
+		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
+				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
+				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
+				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
 	}
 
 }

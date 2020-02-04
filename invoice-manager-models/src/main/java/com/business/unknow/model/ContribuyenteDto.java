@@ -31,14 +31,6 @@ public class ContribuyenteDto implements Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getRfc() {
 		return rfc;
 	}
@@ -183,13 +175,21 @@ public class ContribuyenteDto implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "ContribuyenteDto [id=" + id + ", rfc=" + rfc + ", giro=" + giro + ", nombre=" + nombre + ", curp="
-				+ curp + ", razonSocial=" + razonSocial + ", calle=" + calle + ", noExterior=" + noExterior
-				+ ", noInterior=" + noInterior + ", municipio=" + municipio + ", localidad=" + localidad + ", estado="
-				+ estado + ", pais=" + pais + ", coo=" + coo + ", cp=" + cp + ", correo=" + correo + ", telefono="
-				+ telefono + "]";
+		return "ContribuyenteDto [rfc=" + rfc + ", giro=" + giro + ", nombre=" + nombre + ", curp=" + curp
+				+ ", razonSocial=" + razonSocial + ", calle=" + calle + ", noExterior=" + noExterior + ", noInterior="
+				+ noInterior + ", municipio=" + municipio + ", localidad=" + localidad + ", estado=" + estado
+				+ ", pais=" + pais + ", coo=" + coo + ", cp=" + cp + ", correo=" + correo + ", telefono=" + telefono
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

@@ -13,7 +13,8 @@ import {
   NbUserModule,
   NbStepperModule,
   NbDialogModule,
-  NbIconModule
+  NbIconModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 import { OperacionesRoutingModule } from './operaciones-routing.module';
@@ -21,8 +22,6 @@ import { OperacionesComponent } from './operaciones.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { EmpresasComponent } from './empresas/empresas.component';
 import { RevisionComponent } from './revision/revision.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import { PagosComponent } from './pagos/pagos.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CargaXmlComponent } from './carga-xml/carga-xml.component';
 import { EmpresaComponent } from './empresa/empresa.component';
@@ -30,7 +29,7 @@ import { ClienteComponent } from './cliente/cliente.component';
 
 
 @NgModule({
-  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, DevolucionesComponent, PagosComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent, ClienteComponent],
+  declarations: [OperacionesComponent, ClientesComponent, EmpresasComponent, RevisionComponent, ReportesComponent, CargaXmlComponent, EmpresaComponent, ClienteComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -46,7 +45,8 @@ import { ClienteComponent } from './cliente/cliente.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule
+    NbDialogModule,
+    NbSpinnerModule
   ]
 })
 export class OperacionesModule { }

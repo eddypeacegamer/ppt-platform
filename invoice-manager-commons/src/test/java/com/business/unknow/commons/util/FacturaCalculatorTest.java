@@ -11,6 +11,7 @@ import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculatorTest {
 
+	private FacturaCalculator facturaCalculator= new FacturaCalculator();
 	
 	 @Test
 	 public void folioCalculatorTest() throws InvoiceManagerException {
@@ -18,8 +19,7 @@ public class FacturaCalculatorTest {
 		 factura.setRfcEmisor("A");
 		 factura.setRfcRemitente("b");
 		 factura.setFechaCreacion(new Date());
-		String cadena= FacturaCalculator.folioEncrypt(factura);
+		String cadena= facturaCalculator.folioEncrypt(factura);
 		assertNotNull(cadena);
-		System.out.println(cadena);
 	 }
 }

@@ -8,12 +8,12 @@ import com.business.unknow.model.ClientDto;
 import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
 import com.business.unknow.services.entities.cfdi.Concepto;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ConceptoMapper {
 
-	ConceptoDto getClientDtoFromEntity(Concepto entity);
-	Concepto getEntityFromClientDto(ConceptoDto dto);
-	List<ClientDto> getClientDtosFromEntities(List<Concepto> entities);
-	List<Concepto> getEntitiesFromClientDtos(List<ConceptoDto> dto);
+	ConceptoDto getConceptoDtoFromEntity(Concepto entity);
+	Concepto getEntityFromConceptoDto(ConceptoDto dto);
+	List<ClientDto> getconceptoDtosFromEntities(List<Concepto> entities);
+	List<Concepto> getEntitiesFromConceptoDtos(List<ConceptoDto> dto);
 	
 }

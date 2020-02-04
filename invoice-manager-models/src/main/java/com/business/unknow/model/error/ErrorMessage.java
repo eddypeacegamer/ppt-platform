@@ -1,5 +1,7 @@
 package com.business.unknow.model.error;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -7,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorMessage {
+public class ErrorMessage implements Serializable{
+
+	private static final long serialVersionUID = -5565590990090533616L;
 	private String developerMessage;
 	private int httpStatus;
 	private String message;
@@ -17,6 +21,10 @@ public class ErrorMessage {
 
 	public ErrorMessage(int httpStatus) {
 		this.httpStatus = httpStatus;
+	}
+	
+	public ErrorMessage(String message) {
+		this.message = message;
 	}
 
 	public ErrorMessage(String message, int httpStatus) {

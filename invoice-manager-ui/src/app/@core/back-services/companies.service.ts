@@ -34,7 +34,7 @@ export class CompaniesService {
     return this.httpClient.post('../api/empresas',empresa);
   }
 
-  public updateCompany(empresa: Empresa): Observable<Object> {
-    return this.httpClient.put(`../api/empresas/${empresa.informacionFiscal.rfc}`,empresa);
+  public updateCompany(rfc:string,empresa: Empresa): Observable<Object> {
+    return this.httpClient.put(`../api/empresas/${rfc}`,empresa);
   }
 }

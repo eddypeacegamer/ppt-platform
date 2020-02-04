@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
 
 import io.swagger.annotations.Api;
@@ -44,24 +45,28 @@ public class EmpresaController {
 			@RequestParam(name = "linea", defaultValue = "") String linea,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial,linea, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getEmpresasByParametros(rfc, razonSocial, linea, page, size),
+				HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/empresas/{rfc}")
 	@ApiOperation(value = "insert a new empresa into the system")
 	public ResponseEntity<EmpresaDto> updateClient(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getEmpresaByRfc(rfc), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/lineas/{linea}/giros/{giro}/empresas")
 	@ApiOperation(value = "Get all companies by linea and giro")
-	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea, @PathVariable(name = "giro") Integer giro){
-		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro),HttpStatus.OK);
+	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea,
+			@PathVariable(name = "giro") Integer giro) {
+		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro), HttpStatus.OK);
 	}
+	
 
 	@PostMapping("/empresas")
 	@ApiOperation(value = "insert a new empresa into the system")
-	public ResponseEntity<EmpresaDto> insertClient(@RequestBody @Valid EmpresaDto empresa) {
+	public ResponseEntity<EmpresaDto> insertClient(@RequestBody @Valid EmpresaDto empresa)
+			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewEmpresa(empresa), HttpStatus.CREATED);
 	}
 
