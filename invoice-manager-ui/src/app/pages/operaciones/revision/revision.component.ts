@@ -283,6 +283,8 @@ export class RevisionComponent implements OnInit {
                 this.loading = false;
                 this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
               });
+        }else{
+          this.loading = false;
         }
       }
       );
