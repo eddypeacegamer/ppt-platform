@@ -19,8 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -48,11 +50,9 @@ public class FacturaService {
 
 	@Autowired
 	private CfdiService cfdiService;
-	
 
 	@Autowired
 	private FacturaMapper mapper;
-
 
 	@Autowired
 	private PagoService pagoService;
@@ -62,22 +62,22 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaEvaluatorService facturaServiceEvaluator;
-	
+
 	@Autowired
 	private FacturaBuilderService facturaBuilderService;
-	
+
 	@Autowired
-	private  TimbradoBuilderService timbradoBuilderService;
-	
+	private TimbradoBuilderService timbradoBuilderService;
+
 	@Autowired
 	private FacturaTranslator facturaTranslator;
-	
+
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
 	@Autowired
 	private FacturacionModernaExecutor facturacionModernaExecutor;
-	
+
 	@Autowired
 	private TimbradoExecutorService timbradoExecutorService;
 
@@ -88,8 +88,8 @@ public class FacturaService {
 
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
-			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor,
-			int page, int size) {
+			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
+			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
@@ -129,7 +129,7 @@ public class FacturaService {
 		factura.setCfdi(cfdiService.getCfdiByFolio(folio));
 		return factura;
 	}
-	
+
 	public FacturaDto getBaseFacturaByFolio(String folio) {
 		return mapper.getFacturaDtoFromEntity(
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -147,7 +147,8 @@ public class FacturaService {
 		entity.setIdCfdi(cfdi.getId());
 		FacturaDto saveFactura = saveFactura(entity);
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			pagoService.insertNewPaymentWithoutValidation(facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
+			pagoService.insertNewPaymentWithoutValidation(
+					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
 		return saveFactura;
 	}
@@ -158,7 +159,12 @@ public class FacturaService {
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
 		if (repository.findByFolio(folio).isPresent()) {
+			if (factura.getStatusPago().equals(PagoStatusEnum.PAGADA.getValor())
+					&& factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
+				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+			}
 			Factura entity = mapper.getEntityFromFacturaDto(factura);
+
 			return mapper.getFacturaDtoFromEntity(repository.save(entity));
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -233,7 +239,6 @@ public class FacturaService {
 		return facturaContext;
 	}
 
-	
 	public void buildComplemento(FacturaContext facturaContext) throws InvoiceManagerException {
 		facturaContext.setFacturaDto(facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaContext));
 		facturaContext.getFacturaDto().setCfdi(facturaBuilderService.buildFacturaComplementoCreation(facturaContext));
@@ -245,9 +250,5 @@ public class FacturaService {
 		facturaContext.getPagoCredito().setMonto(
 				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
 	}
-	
-	
-
-
 
 }

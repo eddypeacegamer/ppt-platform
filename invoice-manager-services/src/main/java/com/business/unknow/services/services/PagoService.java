@@ -74,24 +74,24 @@ public class PagoService {
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
-	public Page<PagoDto> getPaginatedPayments(Optional<String> folio,Optional<String> acredor,Optional<String> deudor, String formaPago, String status, String banco,
-			Date since, Date to, int page, int size) {
-		
+	public Page<PagoDto> getPaginatedPayments(Optional<String> folio, Optional<String> acredor, Optional<String> deudor,
+			String formaPago, String status, String banco, Date since, Date to, int page, int size) {
+
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Pago> result = null;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
 					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
-		} else if(acredor.isPresent()) {
+		} else if (acredor.isPresent()) {
 			result = repository.findPagosAcredorFilteredByParams(acredor.get(), String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		} else if(deudor.isPresent()) {
-			result = repository.findPagosDeudorFilteredByParams(deudor.get(),String.format("%%%s%%", status),
+		} else if (deudor.isPresent()) {
+			result = repository.findPagosDeudorFilteredByParams(deudor.get(), String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		}else {
+		} else {
 			result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
@@ -100,7 +100,7 @@ public class PagoService {
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
+
 	public List<PagoDto> getPagos(String folio) {
 		return mapper.getPagosDtoFromEntities(repository.findByFolioPadre(folio));
 	}
@@ -193,27 +193,29 @@ public class PagoService {
 	public PagoDto updatePago(String folio, Integer id, PagoDto pago) throws InvoiceManagerException {
 		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
-
+		FacturaDto factura = facturaService.getFacturaByFolio(folio);
 		PagoBuilder pagoBuilder = new PagoBuilder(mapper.getPagoDtoFromEntity(entity)) // payment only update revision
-																						// status
 				.setRevision1(pago.getRevision1()).setRevision2(pago.getRevision2()).setRevisor1(pago.getRevisor1())
 				.setRevisor2(pago.getRevisor2());
 		pagoEvaluatorService.validatePago(pago, mapper.getPagoDtoFromEntity(entity));
 
 		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
-			FacturaDto factura = facturaService.getBaseFacturaByFolio(folio);
 			factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 			factura.setStatusDetail(pago.getComentarioPago());
 			facturaService.updateFactura(factura, folio);
 			pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
-		} else if (pago.getRevision1() && pago.getRevision2()) {
+		} else if (pago.getRevision1() && pago.getRevision2()
+				&& (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor())
+						|| factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())
+						|| factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_TESORERIA.getValor()))) {
 			entity.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
-			FacturaDto factura = facturaService.getFacturaByFolio(folio);
 			factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
-			factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+			if (!factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor())) {
+				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+			}
 			facturaService.updateFactura(factura, folio);
 			devolucionService.generarDevolucionesPorPago(factura, pago);
-			//TODO Insertar en tabla de ingresos
+			// TODO Insertar en tabla de ingresos
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 		}
 
