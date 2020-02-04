@@ -1,6 +1,8 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -43,32 +46,56 @@ public class Cfdi implements Serializable {
 	@Column(name = "MONEDA")
 	private String moneda;
 
+	@Column(name = "SUB_TOTAL")
+	private BigDecimal subtotal;
+
+	@Column(name = "DESCUENTO")
+	private BigDecimal descuento;
+
+	@Column(name = "TOTAL")
+	private BigDecimal total;
+
 	@Column(name = "TIPO_COMPROBANTE")
 	private String tipoDeComprobante;
 
-	@Column(name = "USO_CFDI")
-	private String usoCfdi;
+	@Column(name = "METODO_PAGO")
+	private String metodoPago;
 
-	@Column(name = "REGIMEN_FISCAL")
-	private String regimenFiscal;
+	@Column(name = "FORMA_PAGO")
+	private String formaPago;
 
-	@Column(name = "RFC_PROV_CERTIF")
-	private String rfcProvCertif;
+	@Column(name = "CONDICIONES_PAGO")
+	private String condicionesDePago;
 
-	@Column(name = "SELLO_CFD")
-	private String selloCfd;
-
-	@Column(name = "NO_CERTIFICADO_SAT")
-	private String noCertificadoSat;
-
-	@Column(name = "SELLO_SAT")
-	private String selloSat;
-	
-	@Column(name = "CADENA_ORIGINAL")
-	private String cadenaOriginal;
+	@Column(name = "LUGAR_EXPEDICION")
+	private String lugarExpedicion;
 
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
+
+	@OneToOne(mappedBy = "cfdi")
+	private TimbradoFiscalDigitial complemento;
+
+	@OneToOne(mappedBy = "cfdi")
+	private Receptor receptor;
+
+	@OneToOne(mappedBy = "cfdi")
+	private Emisor emisor;
+
+	@OneToMany(mappedBy = "cfdi")
+	private List<CfdiPago> pagos;
+
+	public Cfdi() {
+		this.conceptos = new ArrayList<Concepto>();
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getVersion() {
 		return version;
@@ -118,12 +145,36 @@ public class Cfdi implements Serializable {
 		this.certificado = certificado;
 	}
 
+	public BigDecimal getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public BigDecimal getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(BigDecimal descuento) {
+		this.descuento = descuento;
+	}
+
 	public String getMoneda() {
 		return moneda;
 	}
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 
 	public String getTipoDeComprobante() {
@@ -134,52 +185,48 @@ public class Cfdi implements Serializable {
 		this.tipoDeComprobante = tipoDeComprobante;
 	}
 
-	public String getUsoCfdi() {
-		return usoCfdi;
+	public String getMetodoPago() {
+		return metodoPago;
 	}
 
-	public void setUsoCfdi(String usoCfdi) {
-		this.usoCfdi = usoCfdi;
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
 	}
 
-	public String getRegimenFiscal() {
-		return regimenFiscal;
+	public String getFormaPago() {
+		return formaPago;
 	}
 
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
 	}
 
-	public String getRfcProvCertif() {
-		return rfcProvCertif;
+	public String getCondicionesDePago() {
+		return condicionesDePago;
 	}
 
-	public void setRfcProvCertif(String rfcProvCertif) {
-		this.rfcProvCertif = rfcProvCertif;
+	public void setCondicionesDePago(String condicionesDePago) {
+		this.condicionesDePago = condicionesDePago;
 	}
 
-	public String getSelloCfd() {
-		return selloCfd;
+	public String getLugarExpedicion() {
+		return lugarExpedicion;
 	}
 
-	public void setSelloCfd(String selloCfd) {
-		this.selloCfd = selloCfd;
+	public void setLugarExpedicion(String lugarExpedicion) {
+		this.lugarExpedicion = lugarExpedicion;
 	}
 
-	public String getNoCertificadoSat() {
-		return noCertificadoSat;
+	public Emisor getEmisor() {
+		return emisor;
 	}
 
-	public void setNoCertificadoSat(String noCertificadoSat) {
-		this.noCertificadoSat = noCertificadoSat;
+	public void setEmisor(Emisor emisor) {
+		this.emisor = emisor;
 	}
 
-	public String getSelloSat() {
-		return selloSat;
-	}
-
-	public void setSelloSat(String selloSat) {
-		this.selloSat = selloSat;
+	public void setReceptor(Receptor receptor) {
+		this.receptor = receptor;
 	}
 
 	public List<Concepto> getConceptos() {
@@ -190,29 +237,34 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
-	public Integer getId() {
-		return id;
+	public TimbradoFiscalDigitial getComplemento() {
+		return complemento;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	public String getCadenaOriginal() {
-		return cadenaOriginal;
+	public void setComplemento(TimbradoFiscalDigitial complemento) {
+		this.complemento = complemento;
 	}
 
-	public void setCadenaOriginal(String cadenaOriginal) {
-		this.cadenaOriginal = cadenaOriginal;
+	public Receptor getReceptor() {
+		return receptor;
+	}
+
+	public List<CfdiPago> getPagos() {
+		return pagos;
+	}
+
+	public void setPagos(List<CfdiPago> pagos) {
+		this.pagos = pagos;
 	}
 
 	@Override
 	public String toString() {
-		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
+		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
-				+ ", tipoDeComprobante=" + tipoDeComprobante + ", usoCfdi=" + usoCfdi + ", regimenFiscal="
-				+ regimenFiscal + ", rfcProvCertif=" + rfcProvCertif + ", selloCfd=" + selloCfd + ", noCertificadoSat="
-				+ noCertificadoSat + ", selloSat=" + selloSat + ", conceptos=" + conceptos + "]";
+				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
+				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion //+", conceptos=" + conceptos
+				+ ", complemento=" + complemento + ", receptor=" + receptor + ", emisor=" + emisor + "]";
 	}
 
 }

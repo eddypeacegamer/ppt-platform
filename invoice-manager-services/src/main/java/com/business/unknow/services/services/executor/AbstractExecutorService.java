@@ -1,18 +1,38 @@
 package com.business.unknow.services.services.executor;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.business.unknow.services.mapper.PagoMapper;
-import com.business.unknow.services.repositories.facturas.PagoRepository;
-import com.business.unknow.services.services.AbstractService;
+import com.business.unknow.services.entities.files.ResourceFile;
+import com.business.unknow.services.repositories.files.FacturaFileRepository;
+import com.business.unknow.services.repositories.files.ResourceFileRepository;
 
-public class AbstractExecutorService extends AbstractService{
-
-
-	@Autowired
-	protected PagoRepository pagoRepository;
+public class AbstractExecutorService {
 
 	@Autowired
-	protected PagoMapper pagoMapper;
+	protected FacturaFileRepository facturaFileRepository;
 
+	@Autowired
+	protected ResourceFileRepository resourceFileRepository;
+
+	
+	
+	protected void createResourceFile(String data, String referncia, String tipoRecurso, String tipoArchivo) {
+		if (data != null) {
+			ResourceFile resource = new ResourceFile();
+			resource.setData(data.getBytes());
+			resource.setReferencia(referncia);
+			resource.setTipoRecurso(tipoRecurso);
+			resource.setTipoArchivo(tipoArchivo);
+			resourceFileRepository.save(resource);
+		}
+	}
+	
+	protected void deleteAllResourceFileByFolio(String folio) {
+		if (folio != null) {
+			List<ResourceFile>resources=resourceFileRepository.findByReferencia(folio);
+			resources.stream().forEach(a->resourceFileRepository.delete(a));
+		}
+	}
 }

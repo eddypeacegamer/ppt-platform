@@ -1,51 +1,45 @@
 import { StatusFactura } from '../status-factura';
 import { Cfdi } from './cfdi';
+import { Pago } from '../pago';
 
-export class Factura{
+export class Factura {
 
+	public id: number;
+	public rfcEmisor: string;
+	public razonSocialEmisor: string;
+	public lineaEmisor: string;
+	public rfcRemitente: string;
+	public lineaRemitente: string;
+	public razonSocialRemitente: string;
+	public tipoDocumento: string;
+	public solicitante: string;
+	public metodoPago: string;
+	public folio: string;
+	public folioPadre: string;
+	public uuid: string;
+	public notas: string;
+	public statusPago: string;
+	public statusDevolucion: string;
+	public statusFactura: string;
+	public statusDetail: string;
+	public statusCancelacion: string;
+	public fechaCancelacion: string;
+	public fechaCreacion: Date;
+	public fechaActualizacion: Date;
+	public fechaTimbrado: Date;
+	public packFacturacion : string;
+	public cfdi: Cfdi;
+	public complementos: Factura[];
 	
-	public id:number;
-	//obligatorio
-	public rfcEmisor : string;
-	public lineaEmisor : string;
-	public rfcRemitente : string ;
-	public lineaRemitente : string;
-    public razonSocialEmisor : string;
-    public razonSocialRemitente : string;
-	public solicitante : string;
-	public tipoDocumento : string;
-	public cfdi : Cfdi;
-	public total : number;
-	public subtotal : number;
-	public descuento : number;
-	//opcional
-	public notas : string;
-	public folioPadre : string;
-	//duplicado
-	public formaPago : string;
-    public metodoPago : string;
-	//generado
-	public statusPago : string ;
-	public statusDevolucion : string ;
-	public statusFactura : string ;
-    public uuid : string;
-    public statusDetail : string;
-    public fechaCreacion : Date;
-    public fechaActualizacion : Date;
-    public fechaTimbrado : Date ;
-	public folio : string;
-
-	constructor(){
+	constructor() {
 		this.tipoDocumento = 'Factura';
-		this.total = 0;
-		this.subtotal  = 0;	
-		this.descuento = 0;
-		this.statusFactura ='1';
+		this.statusFactura = '1';
 		this.statusDetail = '';
 		this.statusPago = '1';
 		this.statusDevolucion = '1';
 		this.lineaEmisor = 'A';
-		this.rfcRemitente = 'CLIENTE';
+		this.lineaRemitente = 'CLIENTE';
 		this.cfdi = new Cfdi();
+		this.complementos = [];
 	}
 }

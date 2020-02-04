@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.commons.validator.ClienteValidator;
+import com.business.unknow.model.dto.services.ClientDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
@@ -29,19 +32,21 @@ public class ClientService {
 	private ClientMapper mapper;
 
 	@Autowired
-	private  SwSapinsExecutorService swSapinsExecutorService;
+	private SwSapinsExecutorService swSapinsExecutorService;
 	
-	public Page<ClientDto> getClientsByParametros(Optional<String> rfc, Optional<String> razonSocial, int page,
-			int size) {
-		Page<Client> result;
-		if (!razonSocial.isPresent() && !rfc.isPresent()) {
-			result = repository.findAll(PageRequest.of(page, size));
-		} else if (rfc.isPresent()) {
-			result = repository.findByRfcIgnoreCaseContaining(String.format("%%%s%%", rfc.get()),
-					PageRequest.of(page, size));
-		} else {
-			result = repository.findByRazonSocialIgnoreCaseContaining(String.format("%%%s%%", razonSocial.get()),
-					PageRequest.of(page, size));
+	private ClienteValidator clientValidator= new ClienteValidator();
+
+	public Page<ClientDto> getClientsByParametros(Optional<String> promotor,String status, String rfc, String razonSocial, int page, int size) {
+		Page<Client> result; 
+				
+		if(promotor.isPresent()) {
+			result = repository.findClientsFromPromotorByParms(promotor.get(),String.format("%%%s%%", status),
+					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		}else {
+			result = repository.findClientsByParms(String.format("%%%s%%", status),
+					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -53,8 +58,9 @@ public class ClientService {
 		return mapper.getClientDtoFromEntity(client);
 	}
 
-	public ClientDto insertNewClient(ClientDto cliente, boolean validation) {
+	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
+			clientValidator.validatePostCliente(cliente);
 			Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());
 			if (entity.isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -63,23 +69,24 @@ public class ClientService {
 			}
 			SwSapiensConfig config = swSapinsExecutorService.validateRfc(cliente.getInformacionFiscal().getRfc());
 			if (!config.getStatus().equals(Constants.SUCCESS)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
-						.format("El rfc %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 			}
 			cliente.setActivo(false);
 			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
 		} catch (SwSapiensClientException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El rfc %s no esta dado de alta en el SAt", cliente.getInformacionFiscal().getRfc()));
+					String.format("El RFC %s no esta dado de alta en el SAT", cliente.getInformacionFiscal().getRfc()));
 		}
 	}
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) {
-		if(repository.findByRfc(rfc).isPresent()) {
+		if (repository.findByRfc(rfc).isPresent()) {
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
-		}else {
-			 throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("El cliente con el rfc %s no existe", rfc));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("El cliente con el rfc %s no existe", rfc));
 		}
 	}
 

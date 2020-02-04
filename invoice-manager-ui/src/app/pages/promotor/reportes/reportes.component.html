@@ -14,13 +14,13 @@
               <label for="inputEmisor" class="label">Emisor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="RFC Emisor">
+              <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="Razon Social Emisor">
             </div>
             <div class="col-md-1">
               <label for="InputReceptor" class="label">Receptor</label>
             </div>
             <div class="col-md-3">
-              <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="RFC Receptor">
+              <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="Razon Social Receptor">
             </div>
   
           </div>
@@ -32,7 +32,7 @@
             <div class="col-md-2">
               <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
                 <option value="*">Todos</option>
-                <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.value}}</option>
+                <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.nombre}}</option>
               </select>
             </div>
             <div class="col-md-2">
@@ -90,7 +90,18 @@
               <thead class="thead-light">
                 <tr>
                   <th class="text-center">Acciones</th>
-                  <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-center">RFC Empresa</th>
+                  <th class="text-center">Razon Social Empresa</th>
+                  <th class="text-center">RFC Cliente</th>
+                  <th class="text-center">Razon Social Cliente</th>
+                  <th class="text-center">Tipo Documento</th>
+                  <th class="text-center">Estatus factura</th>
+                  <th class="text-center">Estatus pago</th>
+                  <th class="text-center">Detalle</th>
+                  <th class="text-center">Solicitud</th>
+                  <th class="text-center">Actualizacion</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -105,12 +116,11 @@
                   <td scope="row">{{fila.rfcRemitente}}</td>
                   <td scope="row">{{fila.razonSocialRemitente}}</td>
                   <td scope="row">{{fila.tipoDocumento}}</td>
-                  <td scope="row">{{fila.metodoPago}}</td>
                   <td scope="row">{{fila.statusFactura}}</td>
                   <td scope="row">{{fila.statusPago}}</td>
-                  <td scope="row">{{fila.total | currency}}</td>
+                  <td scope="row">{{fila.statusDetail}}</td>
                   <td scope="row">{{fila.fechaCreacion}}</td>
-                  <td scope="row">{{fila.fechaTimbrado}}</td>
+                  <td scope="row">{{fila.fechaActualizacion}}</td>
                 </tr>
               </tbody>
             </table>

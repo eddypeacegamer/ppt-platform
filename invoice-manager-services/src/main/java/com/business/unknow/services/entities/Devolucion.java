@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -55,7 +56,7 @@ public class Devolucion {
 	
 	@NotNull
 	@Column(name = "MONTO")
-	private Double monto;
+	private BigDecimal monto;
 	
 	/*
 	 *Entidad que recibe pago,en este caso es e correo de promotor,RFC cliente, correo contacto y CASA 
@@ -122,11 +123,11 @@ public class Devolucion {
 		this.statusDevolucion = statusDevolucion;
 	}
 
-	public Double getMonto() {
+	public BigDecimal getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
+	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
 	}
 

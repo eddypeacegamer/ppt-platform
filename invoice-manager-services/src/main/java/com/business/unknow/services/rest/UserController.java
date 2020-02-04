@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.RoleDto;
-import com.business.unknow.model.UserDto;
+import com.business.unknow.model.dto.services.RoleDto;
+import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.services.services.RoleService;
 import com.business.unknow.services.services.UserService;
 

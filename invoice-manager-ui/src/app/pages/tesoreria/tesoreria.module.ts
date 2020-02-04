@@ -19,7 +19,7 @@ import {
 import { TesoreriaRoutingModule } from './tesoreria-routing.module';
 import { TesoreriaComponent } from './tesoreria.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import {DownloadCsvService } from '../../@core/back-services/download-csv.service';
+import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { ValidacionPagoComponent } from './validacion-pagos/validacion-pago/validacion-pago.component';
 import { ValidacionPagosComponent } from './validacion-pagos/validacion-pagos.component';
 import { IngresosComponent } from './ingresos/ingresos.component';

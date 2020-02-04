@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.DevolucionDto;
-import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.dto.services.DevolucionDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.PagoService;
@@ -41,15 +41,13 @@ public class PagosController {
 	
 	@Autowired
 	private DevolucionService devolucionService;
-	
-//	@Autowired
-//	private AnimalDispatcher dispatcher;
-	
-	
+
 	@GetMapping
 	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getAllPayments(
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
+			@RequestParam(name = "acredor", required = false) Optional<String> acredor,
+			@RequestParam(name = "deudor", required = false) Optional<String> deudor,
 			@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "banco", defaultValue = "") String banco,
@@ -58,7 +56,7 @@ public class PagosController {
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		
-		Page<PagoDto> pagos = service.getPaginatedPayments(folio, formaPago, status, banco, since, to, page, size);
+		Page<PagoDto> pagos = service.getPaginatedPayments(folio,acredor,deudor,formaPago, status, banco, since, to, page, size);
 		
 		return new ResponseEntity<>(pagos,HttpStatus.OK);
 	}

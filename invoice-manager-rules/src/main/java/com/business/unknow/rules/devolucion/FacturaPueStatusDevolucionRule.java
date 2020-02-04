@@ -16,7 +16,7 @@ public class FacturaPueStatusDevolucionRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return (fc.getFacturaDto() != null
-				&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())
+				&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
 				&& fc.getFacturaDto().getStatusDevolucion().equals(DevolucionStatusEnum.DEVUELTA.getValor()));
 	}
 

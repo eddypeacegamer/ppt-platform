@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.ContribuyenteDto;
+import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.services.services.ContribuyenteService;
 
 import io.swagger.annotations.Api;

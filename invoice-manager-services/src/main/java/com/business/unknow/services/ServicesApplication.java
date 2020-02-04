@@ -11,6 +11,7 @@ import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.DevolucionSuite;
@@ -21,6 +22,7 @@ import com.business.unknow.rules.suites.facturas.FacturaSuite;
 import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
 import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
 import com.business.unknow.rules.suites.pagos.PagoPueSuite;
+import com.business.unknow.services.util.FacturaDefaultValues;
 
 /**
  * @author eej000f
@@ -112,5 +114,15 @@ public class ServicesApplication {
 	public SignHelper getSignHelper() {
 		return new SignHelper();
 	}
+	
+	@Bean
+	public FacturaDefaultValues getFacturaDefaultValues() {
+		return new FacturaDefaultValues();
+	}
 
+	@Bean
+	public MailHelper getMailHelper() {
+		return new MailHelper();
+
+	}
 }

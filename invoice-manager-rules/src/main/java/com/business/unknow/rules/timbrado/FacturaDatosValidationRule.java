@@ -15,18 +15,19 @@ public class FacturaDatosValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		
-		if(fc.getFacturaDto().getFechaTimbrado() != null || fc.getFacturaDto().getUuid() != null) {
+
+		if (fc.getFacturaDto().getCfdi().getComplemento()!=null && fc.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().getFechaTimbrado() != null
+				|| fc.getFacturaDto().getUuid() != null) {
 			return true;
-		}else {
-			if(fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+		} else {
+			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
 				return fc.getFacturaDto().getFolioPadre() != null;
 			}
-			if(fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
-				return fc.getFacturaDto().getFolioPadre() == null 
-						&& fc.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.getNombre());
+			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+				return fc.getFacturaDto().getFolioPadre() == null
+						&& fc.getFacturaDto().getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name());
 			}
-			return true;//invalid document type
+			return true;// invalid document type
 		}
 	}
 

@@ -11,6 +11,11 @@ public class InvoiceManagerException extends Exception {
 
 	private static final long serialVersionUID = -7900659635841387010L;
 
+	public InvoiceManagerException(String message, int HttpStatus) {
+		super(message);
+		this.errorMessage = new ErrorMessage(message, HttpStatus);
+	}
+	
 	public InvoiceManagerException(String message, String developerMessage, int HttpStatus) {
 		super(message);
 		this.errorMessage = new ErrorMessage(message, developerMessage, HttpStatus);

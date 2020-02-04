@@ -16,18 +16,18 @@ import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.NumberHelper;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
-import com.business.unknow.model.cfdi.ComplementoPago;
+import com.business.unknow.model.cfdi.ComplementoPagos;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
+import com.business.unknow.model.dto.cfdi.ComplementoDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
+import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
 
 @Service
 public class FacturaTranslator {
@@ -46,7 +46,7 @@ public class FacturaTranslator {
 
 	@Autowired
 	private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
-	
+
 	@Autowired
 	private SignHelper signHelper;
 
@@ -69,6 +69,7 @@ public class FacturaTranslator {
 			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
+			System.out.println(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
@@ -78,28 +79,19 @@ public class FacturaTranslator {
 
 	public FacturaContext translateComplemento(FacturaContext context) throws InvoiceManagerException {
 		try {
-			context.getFacturaDto().setCfdi(new CfdiDto());
-			context.getFacturaDto().getCfdi().setFolio(context.getFacturaDto().getFolio());
-			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto(),
+			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto().getCfdi(),
 					context.getEmpresaDto());
-			context.getFacturaDto().getCfdi().setSerie("");
-			context.getFacturaDto().getCfdi().setVersion(cfdi.getVersion());
-			cfdi.setImpuestos(null);
-			cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(new ConceptoDto()));
+			for(ConceptoDto concepto:context.getFacturaDto().getCfdi().getConceptos()) {
+				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
+			}
 			Complemento complemento = new Complemento();
-			for (PagoDto pagoDto : context.getPagos()) {
-				ComplementoPago complementoComponente = facturaCfdiTranslatorMapper
-						.complementoComponente(context.getFacturaDto(), pagoDto);
-				complementoComponente.getComplementoDocRelacionado().setNumParcialidad(context.getCtdadComplementos());
-				complementoComponente.getComplementoDocRelacionado()
-						.setIdDocumento(context.getFacturaPadreDto().getUuid());
-				complementoComponente.getComplementoDocRelacionado().setImpSaldoAnt(String.format("%.2f",
-						context.getPagoCredito().getMonto() + Double.valueOf(complementoComponente.getMonto())));
-				complementoComponente.getComplementoDocRelacionado()
-						.setImpSaldoInsoluto(String.format("%.2f", numberHelper.assignPrecision(context.getPagoCredito().getMonto(), Constants.DEFAULT_SCALE)));
-				complemento.getComplemntoPago().getComplementoPagos().add(complementoComponente);
+			ComplementoPagos complementoPagos = new ComplementoPagos();
+			complemento.setComplemntoPago(complementoPagos);
+			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
+				complementoPagos.getComplementoPagos().add(facturaCfdiTranslatorMapper.complementoComponente(cfdiPago));
 			}
 			cfdi.setComplemento(complemento);
+			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
 			complementoToXmlSigned(context);
 			return context;
@@ -113,24 +105,31 @@ public class FacturaTranslator {
 		System.out.println(xml);
 		xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
 		xml = xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
-		xml=cdfiHelper.changeDate(xml,dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-				? context.getFacturaDto().getFechaActualizacion()
-				: new Date());
-		String cadenaOriginal=signHelper.getCadena(xml);
-		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(), context.getEmpresaDto().getLlavePrivada());
+		xml = cdfiHelper.changeDate(xml,
+				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
+						? context.getFacturaDto().getFechaActualizacion()
+						: new Date());
+		String cadenaOriginal = signHelper.getCadena(xml);
+		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
+				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		context.getFacturaDto().getCfdi().setCadenaOriginal(cadenaOriginal);
+		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-		xml=cdfiHelper.changeDate(xml,dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-				? context.getFacturaDto().getFechaActualizacion()
-				: new Date());
-		String cadenaOriginal=signHelper.getCadena(xml);
-		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(), context.getEmpresaDto().getLlavePrivada());
+		xml = cdfiHelper.changeDate(xml,
+				dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
+						? context.getFacturaDto().getFechaActualizacion()
+						: new Date());
+		String cadenaOriginal = signHelper.getCadena(xml);
+		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
+				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		context.getFacturaDto().getCfdi().setCadenaOriginal(cadenaOriginal);
+		
+		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());//TODO validate if this not breakes somthing
+		
+		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {
@@ -138,7 +137,8 @@ public class FacturaTranslator {
 			Optional<Translado> tempTranslado = impuestos.stream()
 					.filter(a -> a.getImpuesto().equals(translado.getImpuesto())).findFirst();
 			if (tempTranslado.isPresent()) {
-				tempTranslado.get().setImporte(numberHelper.assignPrecision(tempTranslado.get().getImporte() + translado.getImporte(),Constants.DEFAULT_SCALE));
+				tempTranslado.get().setImporte(numberHelper.assignPrecision(
+						tempTranslado.get().getImporte() + translado.getImporte(), Constants.DEFAULT_SCALE));
 			} else {
 				impuestos.add(
 						new Translado(translado.getImpuesto(), translado.getTipoFactor(), translado.getTasaOCuota(),

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.PagoDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.services.entities.Pago;
 
 /**

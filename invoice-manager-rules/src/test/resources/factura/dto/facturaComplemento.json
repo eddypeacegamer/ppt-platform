@@ -12,9 +12,11 @@
 	"statusDetail": "",
 	"tipoDocumento": "Complemento",
 	"formaPago": "03",
-	"metodoPago": "PPD",
 	"packFacturacion": "SW_SAPIENS",
-	"total": 5000.0,
 	"fechaCreacion": "2019-11-09",
-	"fechaActualizacion": "2019-11-09"
+	"fechaActualizacion": "2019-11-09",
+	"cfdi":{
+		"total": 5000.0,
+		"metodoPago": "PPD"
+	}
 }
