@@ -9,6 +9,8 @@ import { CuentasData } from '../../../@core/data/cuentas-data';
 import { User } from '../../../@core/data/users-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
+import { FilesData } from '../../../@core/data/files-data';
+import { ResourceFile } from '../../../models/resource-file';
 
 @Component({
   selector: 'ngx-pagos',
@@ -33,6 +35,7 @@ export class PagosComponent implements OnInit {
 
   constructor(private paymentsService: PaymentsData,
     private accountsService: CuentasData,
+    private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
     private invoiceService: InvoicesData) { }
 
@@ -112,7 +115,9 @@ export class PagosComponent implements OnInit {
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
-    this.newPayment.ultimoUsuario = this.user.email;
+    this.newPayment.acredor = this.factura.rfcEmisor;
+    this.newPayment.deudor = this.factura.rfcRemitente;
+    this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
     this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
     if (this.payErrorMessages.length === 0) {
@@ -120,6 +125,12 @@ export class PagosComponent implements OnInit {
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
           this.newPayment = new Pago();
+          const resourceFile = new ResourceFile();
+          resourceFile.tipoArchivo = 'IMAGEN';
+          resourceFile.tipoRecurso = 'PAGO';
+          resourceFile.referencia  = `${result.id}_${result.folio}`;
+          resourceFile.data = payment.documento;
+          this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe(payments => { this.invoicePayments = payments;
             this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);

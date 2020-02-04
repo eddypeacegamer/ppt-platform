@@ -76,6 +76,7 @@ public class Constants {
 		public static final String MONEDA ="MXN";
 		public static final String TIPO_CAMBIO ="1.0";
 		public static final String STATUS_PAGO ="ACEPTADO";
+		public static final String CUENTA = "CreditoPPD";
 	}
 	
 	public class ComplementoPpdDefaults{

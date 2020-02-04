@@ -98,33 +98,33 @@ public class DevolucionService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto solicitudDevolucion(SolicitudDevolucionDto solicitud) throws InvoiceManagerException {
-
-		BigDecimal montoDevolucion = solicitud.getDevoluciones().stream().map(d -> d.getMonto()).reduce(new BigDecimal(0.0),
-				(s, d) -> s.add(d));
-		PagoDto payment = new PagoDto();
-		payment.setBanco(solicitud.getBanco());
-		payment.setComentarioPago(solicitud.getBeneficiario());
-		payment.setCreateUser(solicitud.getUser());
-		payment.setCuenta(solicitud.getCuenta());
-		payment.setFormaPago(solicitud.getFormaPago());
-		payment.setMoneda(solicitud.getMoneda());
-		payment.setStatusPago("DEVOLUCION");
-		payment.setTipoPago("EGRESO");
-		payment.setTipoDeCambio(new BigDecimal(solicitud.getTipoCambio()));
-		payment.setUltimoUsuario(solicitud.getUser());
-		payment.setMonto(montoDevolucion);
-		PagoDto pago = pagosService.insertNewPayment(payment);
-
-		for (DevolucionDto devolucion : solicitud.getDevoluciones()) {
-			Devolucion dev = repository.findById(devolucion.getId())
-					.orElseThrow(() -> new InvoiceManagerException("Devolucion invalida",
-							String.format("La devolucion con id %d no esiste en el sistema", devolucion.getId()),
-							HttpStatus.CONFLICT.value()));
-			dev.setIdPagoDestino(pago.getId());
-			dev.setStatusDevolucion("SOLICITUD");
-			repository.save(dev);
-		}
-		return pago;
+		throw new InvoiceManagerException("DEvoluciones no soportadas", "EL flujo de devoluciones no se encunarr disponible", HttpStatus.NOT_IMPLEMENTED.value());
+//		BigDecimal montoDevolucion = solicitud.getDevoluciones().stream().map(d -> d.getMonto()).reduce(new BigDecimal(0.0),
+//				(s, d) -> s.add(d));
+//		PagoDto payment = new PagoDto();
+//		payment.setBanco(solicitud.getBanco());
+//		payment.setComentarioPago(solicitud.getBeneficiario());
+//		payment.setCreateUser(solicitud.getUser());
+//		payment.setCuenta(solicitud.getCuenta());
+//		payment.setFormaPago(solicitud.getFormaPago());
+//		payment.setMoneda(solicitud.getMoneda());
+//		payment.setStatusPago("DEVOLUCION");
+//		payment.setTipoPago("EGRESO");
+//		payment.setTipoDeCambio(new BigDecimal(solicitud.getTipoCambio()));
+//		payment.setUltimoUsuario(solicitud.getUser());
+//		payment.setMonto(montoDevolucion);
+//		PagoDto pago = pagosService.insertNewPayment(payment);
+//
+//		for (DevolucionDto devolucion : solicitud.getDevoluciones()) {
+//			Devolucion dev = repository.findById(devolucion.getId())
+//					.orElseThrow(() -> new InvoiceManagerException("Devolucion invalida",
+//							String.format("La devolucion con id %d no esiste en el sistema", devolucion.getId()),
+//							HttpStatus.CONFLICT.value()));
+//			dev.setIdPagoDestino(pago.getId());
+//			dev.setStatusDevolucion("SOLICITUD");
+//			repository.save(dev);
+//		}
+		//return pago;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -147,7 +147,7 @@ public class DevolucionService {
 		FacturaContext context;
 		BigDecimal baseComisiones;
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
-		case FACRTURA:
+		case FACTURA:
 			 baseComisiones = facturaDto.getCfdi().getTotal().subtract(facturaDto.getCfdi().getSubtotal());
 			 context=devolucionesBuilderService.buildFacturaContextForPueDevolution(facturaDto, pagoDto);
 			 devolucionEvaluatorService.devolucionPueValidation(context);

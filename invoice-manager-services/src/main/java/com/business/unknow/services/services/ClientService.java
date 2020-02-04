@@ -42,11 +42,11 @@ public class ClientService {
 		if(promotor.isPresent()) {
 			result = repository.findClientsFromPromotorByParms(promotor.get(),String.format("%%%s%%", status),
 					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
-					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}else {
 			result = repository.findClientsByParms(String.format("%%%s%%", status),
 					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
-					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -58,7 +58,7 @@ public class ClientService {
 		return mapper.getClientDtoFromEntity(client);
 	}
 
-	public ClientDto insertNewClient(ClientDto cliente, boolean validation) throws InvoiceManagerException {
+	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
 			Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());

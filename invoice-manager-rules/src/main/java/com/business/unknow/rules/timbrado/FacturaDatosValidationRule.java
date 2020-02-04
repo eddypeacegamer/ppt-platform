@@ -20,7 +20,7 @@ public class FacturaDatosValidationRule {
 				|| fc.getFacturaDto().getUuid() != null) {
 			return true;
 		} else {
-			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACRTURA.getDescripcion())) {
+			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
 				return fc.getFacturaDto().getFolioPadre() != null;
 			}
 			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {

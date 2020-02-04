@@ -58,10 +58,9 @@ public class ClientController {
 
 	@PostMapping
 	@ApiOperation(value = "insert a new client into the system")
-	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client,
-			@RequestParam(name = "validation", defaultValue = "false") boolean validation)
+	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewClient(client, validation), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{rfc}")

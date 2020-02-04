@@ -46,6 +46,8 @@ public class PagosController {
 	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getAllPayments(
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
+			@RequestParam(name = "acredor", required = false) Optional<String> acredor,
+			@RequestParam(name = "deudor", required = false) Optional<String> deudor,
 			@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "banco", defaultValue = "") String banco,
@@ -54,7 +56,7 @@ public class PagosController {
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		
-		Page<PagoDto> pagos = service.getPaginatedPayments(folio, formaPago, status, banco, since, to, page, size);
+		Page<PagoDto> pagos = service.getPaginatedPayments(folio,acredor,deudor,formaPago, status, banco, since, to, page, size);
 		
 		return new ResponseEntity<>(pagos,HttpStatus.OK);
 	}

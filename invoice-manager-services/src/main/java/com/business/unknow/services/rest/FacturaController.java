@@ -29,6 +29,7 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.PagoService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +48,9 @@ public class FacturaController {
 
 	@Autowired
 	private CfdiService cfdiService;
+	
+	@Autowired
+	private PagoService pagoService;
 	
 	// FACTRURAS
 	@GetMapping
@@ -136,28 +140,28 @@ public class FacturaController {
 	// PAGOS
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
-		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.getPagos(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/pagos")
 	@ApiOperation(value = "insert a new Payment into the system")
 	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewPago(folio, pago), HttpStatus.CREATED);
+		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.updatePago(pagoDto, id), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.updatePago(folio,id,pagoDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "Deletes an existing payment")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		service.deletePago(id);
+		pagoService.deletePago(folio,id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

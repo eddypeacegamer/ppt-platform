@@ -26,7 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Pago implements Serializable {
 
 	private static final long serialVersionUID = 8371622895161409889L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PAGO")
@@ -45,34 +45,51 @@ public class Pago implements Serializable {
 	@NotEmpty
 	@Column(name = "BANCO")
 	private String banco;
+	
+	@NotEmpty
+	@Column(name = "CUENTA")
+	private String cuenta;
 
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
 	private BigDecimal tipoDeCambio;
+	
+	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO */
+	@NotEmpty
+	@Column(name = "FORMA_PAGO")
+	private String formaPago;
 
 	@Column(name = "MONTO")
 	private BigDecimal monto;
+	
+	@NotEmpty
+	@Column(name = "ACREDOR")
+	private String acredor;
+	
+	@NotEmpty
+	@Column(name = "DEUDOR")
+	private String deudor;
+	
+	@Column(name = "STATUS_PAGO")
+	private String statusPago;
 
+	@Column(name = "COMENTARIO_PAGO")
+	private String comentarioPago;
+
+	@Column(name = "SOLICITANTE")
+	private String solicitante;
+	
 	@Column(name = "REVISION_1")
 	private Boolean revision1;
 
 	@Column(name = "REVISION_2")
 	private Boolean revision2;
 
-	@Column(name = "STATUS_PAGO")
-	private String statusPago;
-
-	@Column(name = "COMENTARIO_PAGO")
-	private String comentarioPago;
-	/* INGRESO(pagos facturas) -- EGRESO(devoluciones) */
-	@NotEmpty
-	@Column(name = "TIPO_PAGO")
-	private String tipoPago;
-
-	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO */
-	@NotEmpty
-	@Column(name = "FORMA_PAGO")
-	private String formaPago;
+	@Column(name = "REVISOR_1")
+	private String revisor1;
+	
+	@Column(name = "REVISOR_2")
+	private String revisor2;
 
 	@Column(name = "FECHA_PAGO")
 	private Date fechaPago;
@@ -87,20 +104,10 @@ public class Pago implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Column(name = "MODIF_USER")
-	private String ultimoUsuario;
-
-	@Column(name = "CREATE_USER")
-	private String createUser;
-
-	@Column(name = "CUENTA")
-	private String cuenta;
-
 	public Integer getId() {
 		return id;
 	}
 
-	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -111,6 +118,14 @@ public class Pago implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
+	}
+
+	public String getFolioPadre() {
+		return folioPadre;
+	}
+
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
 	}
 
 	public String getMoneda() {
@@ -129,12 +144,28 @@ public class Pago implements Serializable {
 		this.banco = banco;
 	}
 
+	public String getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(String cuenta) {
+		this.cuenta = cuenta;
+	}
+
 	public BigDecimal getTipoDeCambio() {
 		return tipoDeCambio;
 	}
 
 	public void setTipoDeCambio(BigDecimal tipoDeCambio) {
 		this.tipoDeCambio = tipoDeCambio;
+	}
+
+	public String getFormaPago() {
+		return formaPago;
+	}
+
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
 	}
 
 	public BigDecimal getMonto() {
@@ -145,20 +176,20 @@ public class Pago implements Serializable {
 		this.monto = monto;
 	}
 
-	public Boolean getRevision1() {
-		return revision1;
+	public String getAcredor() {
+		return acredor;
 	}
 
-	public void setRevision1(Boolean revision1) {
-		this.revision1 = revision1;
+	public void setAcredor(String acredor) {
+		this.acredor = acredor;
 	}
 
-	public Boolean getRevision2() {
-		return revision2;
+	public String getDeudor() {
+		return deudor;
 	}
 
-	public void setRevision2(Boolean revision2) {
-		this.revision2 = revision2;
+	public void setDeudor(String deudor) {
+		this.deudor = deudor;
 	}
 
 	public String getStatusPago() {
@@ -177,20 +208,44 @@ public class Pago implements Serializable {
 		this.comentarioPago = comentarioPago;
 	}
 
-	public String getTipoPago() {
-		return tipoPago;
+	public String getSolicitante() {
+		return solicitante;
 	}
 
-	public void setTipoPago(String tipoPago) {
-		this.tipoPago = tipoPago;
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 
-	public String getFormaPago() {
-		return formaPago;
+	public Boolean getRevision1() {
+		return revision1;
 	}
 
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
+	public void setRevision1(Boolean revision1) {
+		this.revision1 = revision1;
+	}
+
+	public Boolean getRevision2() {
+		return revision2;
+	}
+
+	public void setRevision2(Boolean revision2) {
+		this.revision2 = revision2;
+	}
+
+	public String getRevisor1() {
+		return revisor1;
+	}
+
+	public void setRevisor1(String revisor1) {
+		this.revisor1 = revisor1;
+	}
+
+	public String getRevisor2() {
+		return revisor2;
+	}
+
+	public void setRevisor2(String revisor2) {
+		this.revisor2 = revisor2;
 	}
 
 	public Date getFechaPago() {
@@ -217,49 +272,13 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public String getFolioPadre() {
-		return folioPadre;
-	}
-
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
-	}
-
-	public String getUltimoUsuario() {
-		return ultimoUsuario;
-	}
-
-	public void setUltimoUsuario(String ultimoUsuario) {
-		this.ultimoUsuario = ultimoUsuario;
-	}
-
-	public String getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(String cuenta) {
-		this.cuenta = cuenta;
-	}
-
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda + ", banco="
-				+ banco + ", tipoDeCambio=" + tipoDeCambio + ", monto=" + monto + ", revision1=" + revision1
-				+ ", revision2=" + revision2 + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
-				+ ", tipoPago=" + tipoPago + ", formaPago=" + formaPago + ", fechaPago=" + fechaPago
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", ultimoUsuario="
-				+ ultimoUsuario + ", createUser=" + createUser + ", cuenta=" + cuenta + "]";
+				+ banco + ", cuenta=" + cuenta + ", tipoDeCambio=" + tipoDeCambio + ", formaPago=" + formaPago
+				+ ", monto=" + monto + ", acredor=" + acredor + ", deudor=" + deudor + ", statusPago=" + statusPago
+				+ ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1=" + revision1
+				+ ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago="
+				+ fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }
