@@ -1,4 +1,5 @@
 {
     "editor.accessibilityPageSize": 12,
-    "editor.fontSize": 14
+    "editor.fontSize": 14,
+    "workbench.colorTheme": "Visual Studio Light"
 }

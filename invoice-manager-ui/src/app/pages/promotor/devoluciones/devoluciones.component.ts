@@ -23,27 +23,26 @@ export class DevolucionesComponent implements OnInit {
   public banksCat: Catalogo[] = [];
   public refTypesCat: Catalogo[] = [];
   public pageCommissions: GenericPage<Devolucion> = new GenericPage();
-  public pageDevolutions:  GenericPage<PagoDevolucion> = new GenericPage();
+  public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
   public user: User;
   public montoDevolucion: Number = 0;
   public solicitud: PagoDevolucion;
-  public filterParams: any = {tipoReceptor: 'PROMOTOR', idReceptor: ''};
+  public filterParams: any = { tipoReceptor: 'PROMOTOR', idReceptor: '' };
   public messages: string[] = [];
 
   constructor(private dialogService: NbDialogService,
-            private devolutionService: DevolutionData,
-            private catalogService: CatalogsData,
-            private paymentsService: PaymentsService,
-            private donwloadService: DownloadCsvService,
-            private devolutionValidator: DevolucionValidatorService,
-            private userService: UsersData,
-            private router: Router) { }
+    private devolutionService: DevolutionData,
+    private catalogService: CatalogsData,
+    private paymentsService: PaymentsService,
+    private donwloadService: DownloadCsvService,
+    private devolutionValidator: DevolucionValidatorService,
+    private userService: UsersData,
+    private router: Router) { }
 
   ngOnInit() {
     this.montoDevolucion = 0.0;
     this.solicitud = new PagoDevolucion();
-    this.solicitud.formaPago = 'TRANSFERENCIA';
     this.userService.getUserInfo()
       .subscribe(user => {
         this.user = user;
@@ -54,16 +53,20 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public onReceptorTypeSelected(type: string) {
-    if ( type === 'PROMOTOR') {this.filterParams.idReceptor = this.user.email;
+    if (type === 'PROMOTOR') {
+      this.filterParams.idReceptor = this.user.email;
     } else { this.filterParams.idReceptor = ''; }
     this.filterParams.tipoReceptor = type;
   }
 
   public searchDevolutionsData() {
-    this.updateCommissions().subscribe(( result: GenericPage<Devolucion>) => this.pageCommissions = result);
-        this.updateDevolutions().subscribe(( result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result);
-        this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
-            .subscribe(ammount => this.montoDevolucion = ammount);
+    this.messages = [];
+    this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
+      (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,
+      (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
+      .subscribe(ammount => this.montoDevolucion = ammount);
   }
 
   public updateCommissions(page?: number, size?: number) {
@@ -89,24 +92,47 @@ export class DevolucionesComponent implements OnInit {
     });
   }
 
-  public devolutionRequest( solicitud: PagoDevolucion) {
+  public onPayFormSelected(formaPago: string) {
+    if (formaPago !== '*') {
+      this.catalogService.getTiposReferencia(formaPago)
+        .subscribe(types => {
+          this.refTypesCat = types;
+          this.solicitud.tipoReferencia = types[0].id;
+        });
+      if (formaPago === 'TRANSFERENCIA') {
+        this.solicitud.banco = this.banksCat[0].nombre;
+      } else {
+        this.solicitud.banco = 'N/A';
+      }
+    } else {
+      this.solicitud.tipoReferencia = '*';
+      this.solicitud.banco = 'N/A';
+    }
+  }
+
+  public devolutionRequest(solicitud: PagoDevolucion) {
+    this.messages = [];
     solicitud.solicitante = this.user.email;
+    solicitud.tipoReceptor = this.filterParams.tipoReceptor;
+    solicitud.receptor = this.filterParams.idReceptor;
     this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion, solicitud);
-    if ( this.messages.length === 0) {
+    if (this.messages.length === 0) {
       this.devolutionService.requestDevolution(solicitud)
         .subscribe(
-          success => {this.searchDevolutionsData();
+          success => {
+            this.searchDevolutionsData();
             this.solicitud = new PagoDevolucion();
-            this.solicitud.formaPago = 'TRANSFERENCIA'; },
+            this.solicitud.formaPago = 'TRANSFERENCIA';
+          },
           (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
-    }else {
+    } else {
       this.solicitud = new PagoDevolucion();
       this.solicitud.formaPago = 'TRANSFERENCIA';
     }
   }
 
-  public redirectToCfdi(folio: string ) {
+  public redirectToCfdi(folio: string) {
     this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
   }
 
@@ -114,7 +140,7 @@ export class DevolucionesComponent implements OnInit {
     this.paymentsService.getPaymentById(destPayment)
       .subscribe(payment => {
         this.dialogService.open(dialog, { context: payment })
-        .onClose.subscribe(() => this.searchDevolutionsData());
+          .onClose.subscribe(() => this.searchDevolutionsData());
       });
   }
 
