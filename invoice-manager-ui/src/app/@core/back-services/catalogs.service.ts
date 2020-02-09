@@ -64,6 +64,28 @@ export class CatalogsService {
     new Catalogo('99', 'Por definir')]);
   }
 
+  public getBancos(): Observable<any> {
+    return this.httpClient.get('/api/catalogs/bancos');
+  }
+  public getTiposReferencia(formapago: string): Observable<any> {
+    if (formapago === 'EFECTIVO') {
+      return of([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
+    }
+    if (formapago === 'CHEQUE') {
+      return of([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
+    }
+    if (formapago === 'TRANSFERENCIA') {
+      return of([new Catalogo('CLABE', 'CLABE bancaria'),
+      new Catalogo('NO_CUENTA', 'No. cuenta'),
+      new Catalogo('TC', 'Tarjeta de credito'),
+      new Catalogo('TD', 'Tarjeta de debito'),
+    ]); }
+    if (formapago === 'FACTURA') {
+      return of([new Catalogo('FOLIO', 'Folio factura a pagar')]);
+    }
+    return of([]);
+  }
+
   public getInvoiceCatalogs(): Observable<any[]> {
     const giros = this.getAllGiros();
     const claveUnidad = this.getClaveUnidadByName('');

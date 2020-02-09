@@ -1,46 +1,57 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Pago } from '../../models/pago';
-import { SolicitudDevolucion } from '../../models/solicitud-devolucion';
+import { PagoDevolucion } from '../../models/pago-devolucion';
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DevolutionService {
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  public getDevolutions(page: number, size: number, filterParams?: any): Observable<any> {
-    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
+  public findDevolutions(page: number, size: number, filterParams?: any): Observable<any> {
+    let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
-      const value : string = filterParams[key];
-      if(value.length>0){
-        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':filterParams[key]);
+      if (filterParams[key] !== undefined && filterParams[key].length > 0) {
+        if (filterParams[key] instanceof Date) {
+          const date: Date = filterParams[key] as Date;
+          pageParams = pageParams.append(key, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        } else {
+          pageParams = pageParams.append(key, (filterParams[key] === '*') ? '' : filterParams[key]);
+        }
       }
     }
-    return this.httpClient.get('../api/devoluciones',{params:pageParams});
+    return this.httpClient.get('../api/devoluciones', { params: pageParams });
   }
 
-  public getDevolutionsByReceptor(tipoReceptor:string,idReceptor:string,status:string): Observable<any> {
-    if(status ==='*'){
-      return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${idReceptor}`);
-    }else{
-      let pageParams : HttpParams =  new HttpParams().append('statusDevolucion',status);
-      return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${idReceptor}`,{params:pageParams});
-      
+  public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {
+    return of(70985.55);
+  }
+
+  public findDevolutionsRequests(page: number, size: number, filterParams?: any): Observable<any> {
+    let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
+    for (const key in filterParams) {
+      if (filterParams[key] !== undefined && filterParams[key].length > 0) {
+        if (filterParams[key] instanceof Date) {
+          const date: Date = filterParams[key] as Date;
+          pageParams = pageParams.append(key, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        } else {
+          pageParams = pageParams.append(key, (filterParams[key] === '*') ? '' : filterParams[key]);
+        }
+      }
     }
+    return this.httpClient.get('../api/devoluciones/pagos', { params: pageParams });
   }
 
-  public requestMultipleDevolution(solicitud:SolicitudDevolucion):Observable<any>{
-    return this.httpClient.post('../api/devoluciones',solicitud);
+  public requestDevolution(solicitud: PagoDevolucion): Observable<any> {
+    return this.httpClient.post('../api/devoluciones', solicitud);
   }
 
-  public getDevolutionsByPayment(payment:number):Observable<any>{
-    return this.httpClient.get(`../api/pagos/${payment}/devoluciones`);
+  public updateDevolution(id: number, solicitud: PagoDevolucion): Observable<any> {
+    return this.httpClient.put(`../api/devoluciones/${id}`, solicitud);
   }
 
-  public updateDevolutionAsPaid(payment:Pago):Observable<any>{
-    return this.httpClient.post('../api/devoluciones/pago',payment);
-  }
 }

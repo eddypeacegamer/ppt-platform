@@ -2,118 +2,120 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
+import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
 import { Router } from '@angular/router';
-import { UsersData } from '../../../@core/data/users-data';
-import { SolicitudDevolucion } from '../../../models/solicitud-devolucion';
+import { UsersData, User } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsService } from '../../../@core/back-services/payments.service';
+import { PagoDevolucion } from '../../../models/pago-devolucion';
+import { Catalogo } from '../../../models/catalogos/catalogo';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
+import { GenericPage } from '../../../models/generic-page';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-devoluciones',
   templateUrl: './devoluciones.component.html',
-  styleUrls: ['./devoluciones.component.scss']
+  styleUrls: ['./devoluciones.component.scss'],
 })
 export class DevolucionesComponent implements OnInit {
 
-  public devolutions: Devolucion[]=[];
-  public userEmail:string;
-  public montoDevolucion : number;
-  public solicitud : SolicitudDevolucion = new SolicitudDevolucion();
-  public filterParams : any = {tipoReceptor:'POR SOLICITAR',idReceptor:'promotor@gmail.com',statusDevolucion:'*'};
+  public banksCat: Catalogo[] = [];
+  public refTypesCat: Catalogo[] = [];
+  public pageCommissions: GenericPage<Devolucion> = new GenericPage();
+  public pageDevolutions:  GenericPage<PagoDevolucion> = new GenericPage();
+
+  public user: User;
+  public montoDevolucion: Number = 0;
+  public solicitud: PagoDevolucion;
+  public filterParams: any = {tipoReceptor: 'PROMOTOR', idReceptor: ''};
+  public messages: string[] = [];
 
   constructor(private dialogService: NbDialogService,
-            private devolutionService:DevolutionData,
-            private paymentsService : PaymentsService,
-            private donwloadService:DownloadCsvService,
+            private devolutionService: DevolutionData,
+            private catalogService: CatalogsData,
+            private paymentsService: PaymentsService,
+            private donwloadService: DownloadCsvService,
+            private devolutionValidator: DevolucionValidatorService,
             private userService: UsersData,
             private router: Router) { }
 
   ngOnInit() {
     this.montoDevolucion = 0.0;
-    this.solicitud = new SolicitudDevolucion();
+    this.solicitud = new PagoDevolucion();
     this.solicitud.formaPago = 'TRANSFERENCIA';
-    this.solicitud.banco = 'BBVA';
     this.userService.getUserInfo()
       .subscribe(user => {
-        this.userEmail = user.email;
-        this.solicitud.user = user.email;
-        this.filterParams= {tipoReceptor:'PROMOTOR',idReceptor:this.userEmail,statusDevolucion:'POR SOLICITAR'};
-        this.updateDataTable();
+        this.user = user;
+        this.filterParams.idReceptor = user.email;
+        this.searchDevolutionsData();
       });
+    this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
   }
 
-  public onReceptorTypeSelected(type:string){
-    if(type=='PROMOTOR'){ this.filterParams.idReceptor = this.userEmail}
-    else{ this.filterParams.idReceptor = ''}
+  public onReceptorTypeSelected(type: string) {
+    if ( type === 'PROMOTOR') {this.filterParams.idReceptor = this.user.email;
+    } else { this.filterParams.idReceptor = ''; }
     this.filterParams.tipoReceptor = type;
   }
 
-  public onDevolutionStatusSelected(status:string){
-    this.filterParams.statusPago= status;
+  public searchDevolutionsData() {
+    this.updateCommissions().subscribe(( result: GenericPage<Devolucion>) => this.pageCommissions = result);
+        this.updateDevolutions().subscribe(( result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result);
+        this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
+            .subscribe(ammount => this.montoDevolucion = ammount);
   }
 
-  public updateDataTable() {
-    this.devolutionService.getDevolutionsByReceptor(this.filterParams.tipoReceptor,this.filterParams.idReceptor,this.filterParams.statusDevolucion)
-          .subscribe((result:Devolucion[]) => this.devolutions = result);
+  public updateCommissions(page?: number, size?: number) {
+    const p = page || 0;
+    const s = size || 10;
+    return this.devolutionService.findDevolutions(p, s, this.filterParams);
+  }
+  public updateDevolutions(page?: number, size?: number) {
+    const p = page || 0;
+    const s = size || 10;
+    return this.devolutionService.findDevolutionsRequests(p, s, this.filterParams);
   }
 
-  public downloadHandler() {
-    this.devolutionService.getDevolutionsByReceptor(this.filterParams.tipoReceptor, this.filterParams.idReceptor,this.filterParams.statusDevolucion).subscribe(result => {
-      this.donwloadService.exportCsv(result,'Devoluciones')
+  public downloadCommissions() {
+    this.updateCommissions(1, 10000).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Comisiones');
     });
   }
 
-  public addDevolucion(devolucion:Devolucion){
-    devolucion.solicitud  = !devolucion.solicitud;
-    if(devolucion.solicitud === true){
-      devolucion.solicitud = true;
-      this.solicitud.devoluciones.push(devolucion);
-    }else{
-      devolucion.solicitud = false;
-      let index =this.solicitud.devoluciones.findIndex(e=> e.id == devolucion.id);
-      if(index > -1){
-        this.solicitud.devoluciones.splice(index,1);
-      }
-    }
-    if(this.solicitud.devoluciones!=undefined && this.solicitud.devoluciones.length>0){
-      this.montoDevolucion = this.solicitud.devoluciones.map(d=>d.monto).reduce((a,c)=>a+c);
-    }else{
-      this.montoDevolucion = 0.0;
-    }
-    
+  public downloadPagosDevolucion() {
+    this.updateDevolutions(1, 10000).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Devoluciones');
+    });
   }
 
-
-  public solicitudDevoluciones(){
-    if(this.solicitud.cuenta == undefined || this.solicitud.cuenta.length<8){
-      alert('El numero de cuenta/CLABE es un valor requerido');
-    }else if(this.solicitud.beneficiario== undefined || this.solicitud.beneficiario.length<5){
-      alert('El nombre del beneficiario es un valor requerido');
-    }else{
-      let solicitud = {... this.solicitud};
-    this.devolutionService.requestMultipleDevolution(solicitud)
-      .subscribe(pago=>{this.updateDataTable();});
-      this.solicitud= new SolicitudDevolucion();
+  public devolutionRequest( solicitud: PagoDevolucion) {
+    solicitud.solicitante = this.user.email;
+    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion, solicitud);
+    if ( this.messages.length === 0) {
+      this.devolutionService.requestDevolution(solicitud)
+        .subscribe(
+          success => {this.searchDevolutionsData();
+            this.solicitud = new PagoDevolucion();
+            this.solicitud.formaPago = 'TRANSFERENCIA'; },
+          (error: HttpErrorResponse) => this.messages.push(error.error.message
+            || `${error.statusText} : ${error.message}`));
+    }else {
+      this.solicitud = new PagoDevolucion();
       this.solicitud.formaPago = 'TRANSFERENCIA';
-      this.solicitud.banco = 'BBVA';
     }
-    
   }
 
-  public redirectToCfdi(folio:string){
-    this.router.navigate([`./pages/promotor/precfdi/${folio}`])
+  public redirectToCfdi(folio: string ) {
+    this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
   }
 
-  public redirectToPago(id:number){
-    console.log("searching payment with id :"+ id);
-  }
-
-  public openPaymentDetails(dialog: TemplateRef<any>, destPayment:number) {
+  public openPaymentDetails(dialog: TemplateRef<any>, destPayment: number) {
     this.paymentsService.getPaymentById(destPayment)
-      .subscribe(payment=>{
+      .subscribe(payment => {
         this.dialogService.open(dialog, { context: payment })
-        .onClose.subscribe(()=>this.updateDataTable())
-      })
+        .onClose.subscribe(() => this.searchDevolutionsData());
+      });
   }
 
 }
