@@ -272,8 +272,7 @@ export class RevisionComponent implements OnInit {
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
-        console.log('Timbrando:',invoice);
-        if (invoice != undefined) {
+        if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => { 
               this.loading = false;

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { GenericPage } from '../../../models/generic-page';
 import { UsersData, User } from '../../../@core/data/users-data';
+import { DevolutionData } from '../../../@core/data/devolution-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { NbDialogService } from '@nebular/theme';
-import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { ValidacionDevolucionComponent } from './validacion-devolucion/validacion-devolucion.component';
-import { DevolutionData } from '../../../@core/data/devolution-data';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -14,7 +14,6 @@ import { DevolutionData } from '../../../@core/data/devolution-data';
 })
 export class DevolucionesComponent implements OnInit {
 
-  
   public user: User;
   public filterParams: any = { formaPago: '*', status: 'DEVOLUCION', tipoReceptor: '*', beneficiario: '', receptor: '' };
   public errors: string[] = [];
@@ -55,5 +54,4 @@ export class DevolucionesComponent implements OnInit {
         },
       }).onClose.subscribe(() => this.updateDataTable(this.page.number, this.page.size));
     }
-
 }

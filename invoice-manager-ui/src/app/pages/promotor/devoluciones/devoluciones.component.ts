@@ -136,12 +136,8 @@ export class DevolucionesComponent implements OnInit {
     this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
   }
 
-  public openPaymentDetails(dialog: TemplateRef<any>, destPayment: number) {
-    this.paymentsService.getPaymentById(destPayment)
-      .subscribe(payment => {
+  public openPaymentDetails(dialog: TemplateRef<any>, payment: PagoDevolucion) {
         this.dialogService.open(dialog, { context: payment })
           .onClose.subscribe(() => this.searchDevolutionsData());
-      });
   }
-
 }

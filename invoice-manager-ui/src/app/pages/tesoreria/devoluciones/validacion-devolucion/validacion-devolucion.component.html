@@ -1,0 +1,101 @@
+<nb-card>
+  <nb-card-header>
+    <div class="clearfix">
+      <strong class="float-left">Detalles Devolucion</strong>
+      <div class="float-right d-inline p-2 bg-primary text-white">{{payment.status}}</div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="form-inline">
+      <p class="font-weight-bold">Beneficiario</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.beneficiario}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Monto</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.monto | currency}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Forma de Pago</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.formaPago}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">{{payment.tipoReferencia}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p>{{payment.referencia}}</p>
+    </div>
+    <div class="form-inline">
+      <p class="font-weight-bold">Banco</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.banco}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Solicitante</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.solicitante}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Fecha Solicitud</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.fechaCreacion | date}}</p>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      <p class="font-weight-bold">Fecha Pago</p>
+      &nbsp;&nbsp;&nbsp;
+      <p>{{payment.fechaPago | date}}</p>
+    </div>
+    <div class="form-inline">
+      <p>{{payment.comentarios}}</p>
+    </div>
+    <br>
+    <p class="font-weight-bold">Datos de cuenta fondeo</p>
+    <div class="row">
+      <div class="col-sm-3">
+        <label for="inputCompanyType" class="label">Tipo Empresa</label>
+          <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
+            (change)="onCompanySelected($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option value="A">Tipo A</option>
+            <option value="B">Tipo B</option>
+            <option value="C">Tipo C</option>
+          </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="inputRfc" class="label">RFC</label>
+        <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
+          [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
+      </div>
+      <div class="col-md-6">
+        <label for="inputEmpresa" class="label">Empresa</label>
+        <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
+          [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
+          <option value="*">Seleccionar</option>
+          <option *ngFor="let company of companiesCat" [(value)]="company.id">
+            {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-7">
+        <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
+        <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+          [(ngModel)]="paymentForm.bankAccount" (change)="onPaymentBankSelected($event.target.value)">
+          <option value="*">Seleccionar</option>
+          <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} -- {{cuenta.clabe}}</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="payAmmount" class="label">Fecha de pago</label>
+        <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
+          [(ngModel)]="newPayment.fechaPago">
+        <nb-datepicker #formpicker></nb-datepicker>
+      </div>
+    </div>
+    <div class="alert alert-warning" *ngIf="errorMesage.length > 0" role="alert">
+      <p>{{errorMesage}}</p>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="clearfix">
+      <button class="float-left btn btn-warning" (click)="exit()">Salir</button>
+      <button class="float-right btn btn-success" (click)="acceptDevolution()">Validar pago</button>
+    </div>
+  </nb-card-footer>
+</nb-card>
