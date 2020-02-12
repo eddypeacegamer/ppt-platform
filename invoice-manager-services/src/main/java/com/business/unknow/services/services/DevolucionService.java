@@ -166,13 +166,14 @@ public class DevolucionService {
 		}
 	}
 	
-	
-	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> tipoReceptor, Optional<String> idReceptor,int page, int size) {
+	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(String status,String formaPago,String beneficiario,String tipoReceptor, String idReceptor,int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
-		if (tipoReceptor.isPresent() && idReceptor.isPresent()) {
-			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor.get(), idReceptor.get(), PageRequest.of(page, size));
-		} else {
-			result = pagoDevolucionRepository.findAll(PageRequest.of(page, size));
+		if (tipoReceptor.length()>0 && idReceptor.length()>0) {
+			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size));
+		} else if(tipoReceptor.length()>0){
+			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
+		}else {
+			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
 		}
 		return new PageImpl<>(pagoDevolucionMapper.getPagoDevolucionesDtoFromEntities(result.getContent()), result.getPageable(), result.getTotalElements());
 	}
