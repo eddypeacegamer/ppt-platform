@@ -37,6 +37,16 @@ public class DevolucionesBuilderService {
 				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
 				.setTipo("D").build());
 	}
+	
+	
+	public Devolucion buildPagoDevolucion(PagoDevolucionDto dto) {
+		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
+				.setIdPagoOrigen(dto.getId())
+				.setMonto(dto.getMonto())
+				.setReceptor(dto.getReceptor())
+				.setTipoReceptor(dto.getTipoReceptor())
+				.setTipo("C").build());
+	}
 
 	public FacturaContext buildFacturaContextForPueDevolution(FacturaDto facturaDto, PagoDto pagoDto) {
 		FacturaContextBuilder fcb = new FacturaContextBuilder().setFacturaDto(facturaDto).setCurrentPago(pagoDto);
