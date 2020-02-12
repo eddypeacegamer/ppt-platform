@@ -173,7 +173,7 @@ public class DevolucionService {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
 		if (tipoReceptor.length()>0 && idReceptor.length()>0) {
 			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
-		} else if(tipoReceptor.length()>0){
+		} else if(status.length()>0){
 			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}else {
 			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
