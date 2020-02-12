@@ -169,6 +169,14 @@ public class PagoDevolucion implements Serializable {
 	public void setTipoReferencia(String tipoReferencia) {
 		this.tipoReferencia = tipoReferencia;
 	}
+	
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
 
 	public Date getFechaPago() {
 		return fechaPago;
@@ -270,10 +278,11 @@ public class PagoDevolucion implements Serializable {
 	public String toString() {
 		return "PagoDevolucion [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
 				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
-				+ ", tipoReferencia=" + tipoReferencia + ", fechaPago=" + fechaPago + ", status=" + status
-				+ ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante=" + solicitante
-				+ ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa="
-				+ rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
+				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
+				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
+				+ solicitante + ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen
+				+ ", rfcEmpresa=" + rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
+
 }
