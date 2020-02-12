@@ -34,7 +34,6 @@ export class DevolucionesComponent implements OnInit {
   constructor(private dialogService: NbDialogService,
     private devolutionService: DevolutionData,
     private catalogService: CatalogsData,
-    private paymentsService: PaymentsService,
     private donwloadService: DownloadCsvService,
     private devolutionValidator: DevolucionValidatorService,
     private userService: UsersData,
@@ -61,6 +60,7 @@ export class DevolucionesComponent implements OnInit {
 
   public searchDevolutionsData() {
     this.messages = [];
+    this.solicitud = new PagoDevolucion();
     this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
       (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
     this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,

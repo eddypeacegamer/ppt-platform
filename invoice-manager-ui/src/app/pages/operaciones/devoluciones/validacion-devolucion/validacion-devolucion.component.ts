@@ -27,7 +27,7 @@ export class ValidacionDevolucionComponent implements OnInit {
   acceptDevolution() {
     this.errorMesage = '';
     const solicitud = {... this.payment};
-    solicitud.status = 'RECHAZADO';
+    solicitud.status = 'ACEPTADO';
     this.devolutionsService.updateDevolution(this.payment.id, solicitud)
       .subscribe(success => this.ref.close(),
       (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`);
@@ -36,7 +36,7 @@ export class ValidacionDevolucionComponent implements OnInit {
   rejectDevolution() {
     this.errorMesage = '';
     const solicitud = {... this.payment};
-    solicitud.status = 'ACEPTADO';
+    solicitud.status = 'RECHAZADO';
     this.devolutionsService.updateDevolution(this.payment.id, solicitud)
       .subscribe(success => this.ref.close(),
       (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`);

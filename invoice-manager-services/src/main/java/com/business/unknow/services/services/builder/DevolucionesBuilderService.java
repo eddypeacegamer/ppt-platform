@@ -51,7 +51,7 @@ public class DevolucionesBuilderService {
 	
 	public PagoDevolucionDto buildDevolucionPago(PagoDevolucionDto pago) {
 		return  new PagoDevolucionBuilder(pago)
-				.setStatus("Validacion_operaciones").build();
+				.setStatus("VALIDACION").build();
 	}
 
 }
