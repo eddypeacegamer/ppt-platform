@@ -7,12 +7,14 @@ import { DevolutionData } from '../../../../@core/data/devolution-data';
 @Component({
   selector: 'ngx-validacion-devolucion',
   templateUrl: './validacion-devolucion.component.html',
-  styleUrls: ['./validacion-devolucion.component.scss']
+  styleUrls: ['./validacion-devolucion.component.scss'],
 })
 export class ValidacionDevolucionComponent implements OnInit {
 
   @Input() payment: PagoDevolucion;
   public errorMesage: string;
+
+  public formInfo: any = {rfc : '', empresa: '*', cuenta: '*', fechaPago: ''};
 
   constructor(protected ref: NbDialogRef<ValidacionDevolucionComponent>,
     private devolutionsService: DevolutionData) { }
