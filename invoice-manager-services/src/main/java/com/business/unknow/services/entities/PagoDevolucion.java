@@ -56,6 +56,9 @@ public class PagoDevolucion implements Serializable {
 
 	@Column(name = "TIPO_REFERENCIA")
 	private String tipoReferencia;
+	
+	@Column(name = "REFERENCIA")
+	private String referencia;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "FECHA_PAGO")
@@ -68,6 +71,10 @@ public class PagoDevolucion implements Serializable {
 	@NotNull
 	@Column(name = "TIPO_RECEPTOR")
 	private String tipoReceptor;
+	
+	@NotNull
+	@Column(name = "RECEPTOR")
+	private String receptor;
 
 	@NotNull
 	@Column(name = "SOLICITANTE")
@@ -210,6 +217,14 @@ public class PagoDevolucion implements Serializable {
 	public void setTipoReceptor(String tipoReceptor) {
 		this.tipoReceptor = tipoReceptor;
 	}
+	
+	public String getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
+	}
 
 	public String getTipoCuentaOrigen() {
 		return tipoCuentaOrigen;
@@ -256,10 +271,9 @@ public class PagoDevolucion implements Serializable {
 		return "PagoDevolucion [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
 				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
 				+ ", tipoReferencia=" + tipoReferencia + ", fechaPago=" + fechaPago + ", status=" + status
-				+ ", tipoReceptor=" + tipoReceptor + ", solicitante=" + solicitante + ", tipoCuentaOrigen="
-				+ tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa=" + rfcEmpresa
-				+ ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante=" + solicitante
+				+ ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa="
+				+ rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }

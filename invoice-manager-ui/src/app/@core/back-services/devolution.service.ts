@@ -29,11 +29,11 @@ export class DevolutionService {
   }
 
   public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {
-    return of(70985.55);
+    return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${receptor}/saldo`);
   }
 
   public findDevolutionsRequests(page: number, size: number, filterParams?: any): Observable<any> {
-    const pago: PagoDevolucion = new PagoDevolucion();
+    /* const pago: PagoDevolucion = new PagoDevolucion();
     pago.id = 12;
     pago.solicitante = 'aaa@gmail.com';
     pago.banco = 'BBVA';
@@ -56,8 +56,8 @@ export class DevolutionService {
     pageResponse.number = page;
     pageResponse.content = [pago];
     console.log('finding devolutions requests:', filterParams);
-    return of(pageResponse);
-    /* let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
+    return of(pageResponse); */
+    let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
       if (filterParams[key] !== undefined && filterParams[key].length > 0) {
         if (filterParams[key] instanceof Date) {
@@ -68,7 +68,7 @@ export class DevolutionService {
         }
       }
     }
-    return this.httpClient.get('../api/devoluciones/pagos', { params: pageParams }); */
+    return this.httpClient.get('../api/devoluciones/pagos', { params: pageParams });
   }
 
   public requestDevolution(solicitud: PagoDevolucion): Observable<any> {

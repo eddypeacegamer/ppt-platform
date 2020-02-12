@@ -28,6 +28,8 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>
 	
 	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
 	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
+	@Query("select sum(d.monto) from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
+	public Double findMontoByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
 	public List<Devolucion> findByFolio(String folio);
 	public Optional<Devolucion> findById(Integer id);
 	public Optional<Devolucion> findByIdPagoOrigen(Integer id);

@@ -34,7 +34,10 @@
           <div class="col-sm-3">
             <label for="inputSaldo" class="label">Saldo disponible</label>
             <div class="form-inline">
-              <input id="inputSaldo" class="form-control" type="text" [value]="montoDevolucion"  disabled fullWidth>
+              <div class="alert alert-success form-control" role="alert" style="width: 200px;">
+                <p class="font-weight-bold">{{montoDevolucion | currency}}</p>
+              </div>
+              
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <button class="btn btn-primary" (click)="searchDevolutionsData()">BUSCAR</button>
             </div>
@@ -109,7 +112,7 @@
         <strong>Devoluciones</strong>
         <div class="clearfix">
 
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <button type="button" (click)="downloadPagosDevolucion()" class="btn btn-success float-right">Descarga</button>
           <div *ngIf="pageDevolutions.empty" class="alert alert-primary" role="alert">
             No se encontraron resultados
           </div>
@@ -169,7 +172,7 @@
         <strong>Ultimas comisiones / reembolsos generados</strong>
         <div class="clearfix">
 
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <button type="button" (click)="downloadCommissions()" class="btn btn-success float-right">Descarga</button>
           <div *ngIf="pageCommissions.empty" class="alert alert-primary" role="alert">
             No se encontraron resultados
           </div>
@@ -178,32 +181,25 @@
             <table class="table">
               <thead class="thead-light">
                 <tr>
-                  <th scope="col" class="text-center">Folio Factura</th>
-                  <th scope="col" class="text-center">Tipo Receptor</th>
                   <th scope="col" class="text-center">Receptor</th>
-                  <th scope="col" class="text-center">Estatus</th>
-                  <th scope="col" class="text-center">Pago/Solicitud</th>
-                  <th scope="col" class="text-center">Monto</th>
+                  <th scope="col" class="text-center">Folio Factura</th>
+                  <th scope="col" class="text-center">Monto Pago</th>
+                  <th scope="col" class="text-center">Impuestos</th>
+                  <th scope="col" class="text-center">Porcentage comision</th>
+                  <th scope="col" class="text-center">Comision/Reembolso</th>
+                  <th scope="col" class="text-center">Fecha creacion</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let fila of pageCommissions.content">
+                  <td scope="row" class="text-right">{{fila.receptor}}</td>
                   <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
                       (click)="redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
-                  <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
-                  <td scope="row" class="text-center">{{fila.receptor}}</td>
-                  <td scope="row" class="text-center">{{fila.statusDevolucion}}</td>
-                  <td scope="row" *ngIf="fila.idPagoDestino!=undefined" class="text-center">
-                    <button class="btn btn-outline-primary btn-sm"
-                      (click)="openPaymentDetails(dialog,fila.idPagoDestino)"><i class="fa fa-search"></i></button>
-                  </td>
-                  <td scope="row" *ngIf="fila.idPagoDestino==undefined" class="text-center">
-                    <button class="btn btn-sm btn-outline-primary" *ngIf="!fila.solicitud"
-                      (click)="addDevolucion(fila)"><i class="fa fa-square"></i></button>
-                    <button class="btn btn-sm btn-outline-primary" *ngIf="fila.solicitud"
-                      (click)="addDevolucion(fila)"><i class="fa fa-check-square"></i></button>
-                  </td>
+                  <td scope="row" class="text-right">{{fila.pagoMonto | currency}}</td>
+                  <td scope="row" class="text-right">{{fila.impuesto | currency}}</td>
+                  <td scope="row" class="text-right">{{fila.porcentaje/100 | percent}}</td>
                   <td scope="row" class="text-right">{{fila.monto | currency}}</td>
+                  <td scope="row" class="text-right">{{fila.fechaCreacion}}</td>
                 </tr>
 
               </tbody>

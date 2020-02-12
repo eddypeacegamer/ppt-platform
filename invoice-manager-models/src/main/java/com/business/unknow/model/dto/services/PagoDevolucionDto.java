@@ -16,9 +16,11 @@ public class PagoDevolucionDto implements Serializable {
 	private String formaPago;
 	private String banco;
 	private String tipoReferencia;
+	private String referencia;
 	private Date fechaPago;
 	private String status;
 	private String tipoReceptor;
+	private String receptor;
 	private String solicitante;
 	private String tipoCuentaOrigen;
 	private String cuentaOrigen;
@@ -91,6 +93,14 @@ public class PagoDevolucionDto implements Serializable {
 	public void setTipoReferencia(String tipoReferencia) {
 		this.tipoReferencia = tipoReferencia;
 	}
+	
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
 
 	public Date getFechaPago() {
 		return fechaPago;
@@ -114,6 +124,14 @@ public class PagoDevolucionDto implements Serializable {
 
 	public void setTipoReceptor(String tipoReceptor) {
 		this.tipoReceptor = tipoReceptor;
+	}
+	
+	public String getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
 	}
 
 	public String getSolicitante() {
@@ -185,10 +203,10 @@ public class PagoDevolucionDto implements Serializable {
 		return "PagoDevolucionDto [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
 				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
 				+ ", tipoReferencia=" + tipoReferencia + ", fechaPago=" + fechaPago + ", status=" + status
-				+ ", tipoReceptor=" + tipoReceptor + ", solicitante=" + solicitante + ", tipoCuentaOrigen="
-				+ tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa=" + rfcEmpresa
-				+ ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante=" + solicitante
+				+ ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa="
+				+ rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
+				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 
 }

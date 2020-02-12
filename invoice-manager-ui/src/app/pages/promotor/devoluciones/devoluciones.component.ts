@@ -47,7 +47,6 @@ export class DevolucionesComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
         this.filterParams.idReceptor = user.email;
-        console.log(this.filterParams);
         this.searchDevolutionsData();
       });
     this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
@@ -82,13 +81,13 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public downloadCommissions() {
-    this.updateCommissions(1, 10000).subscribe(result => {
+    this.updateCommissions(0, 10000).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Comisiones');
     });
   }
 
   public downloadPagosDevolucion() {
-    this.updateDevolutions(1, 10000).subscribe(result => {
+    this.updateDevolutions(0, 10000).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Devoluciones');
     });
   }

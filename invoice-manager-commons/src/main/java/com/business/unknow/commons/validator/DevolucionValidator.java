@@ -9,6 +9,11 @@ public class DevolucionValidator extends AbstractValidator{
 		checkNotNull(dto.getMoneda(), "Moneda");
 		checkNotNull(dto.getMonto(), "Monto");
 		checkNotNull(dto.getFormaPago(), "Forma de pago");
-		checkNotNull(dto.getFechaPago(), "Fecha Pago");
+		checkNotNull(dto.getBeneficiario(), "Beneficiario");
+		checkNotNull(dto.getTipoReferencia(), "Tipo referencia");
+		checkNotNull(dto.getTipoReceptor(), "Tipo receptor");
+		checkNotNull(dto.getReceptor(), "Receptor");
+		
+		
 	}
 }

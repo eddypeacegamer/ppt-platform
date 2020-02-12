@@ -86,9 +86,13 @@ public class DevolucionService {
 				result.getTotalElements());
 	}
 
-	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor,
-			String statusDevolucion) {
+	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor) {
 		return mapper.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor));
+	}
+	
+	public Double getMontoDevoluciones(String tipoReceptor, String idReceptor) {
+		Double result = repository.findMontoByParams(tipoReceptor, idReceptor);
+		return (result==null)?0.0:result;
 	}
 
 	public DevolucionDto insertDevolution(DevolucionDto devolucion) {
@@ -156,6 +160,17 @@ public class DevolucionService {
 					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
 					HttpStatus.BAD_REQUEST.value());
 		}
+	}
+	
+	
+	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> tipoReceptor, Optional<String> idReceptor,int page, int size) {
+		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
+		if (tipoReceptor.isPresent() && idReceptor.isPresent()) {
+			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor.get(), idReceptor.get(), PageRequest.of(page, size));
+		} else {
+			result = pagoDevolucionRepository.findAll(PageRequest.of(page, size));
+		}
+		return new PageImpl<>(pagoDevolucionMapper.getPagoDevolucionesDtoFromEntities(result.getContent()), result.getPageable(), result.getTotalElements());
 	}
 
 }
