@@ -85,14 +85,16 @@ public class DevolucionesController {
 			@PathVariable(name = "id") Integer id) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.solicitudDevolucionUpdate(solicitud, id), HttpStatus.CREATED);
 	}
-	
 	@GetMapping("/devoluciones/pagos")
 	public ResponseEntity<Page<PagoDevolucionDto>> getDevolucionesByParams(
-			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
-			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,
+			@RequestParam(name = "status", defaultValue = "VALIDACION") String status,
+			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
+			@RequestParam(name = "idReceptor", defaultValue = "") String idReceptor,
+			@RequestParam(name = "beneficiario", defaultValue = "") String beneficiario,
+			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size){
-		return new ResponseEntity<>(service.getPagoDevolucionesByParams(tipoReceptor, idReceptor, page, size),HttpStatus.OK);
+		return new ResponseEntity<>(service.getPagoDevolucionesByParams(status, formaPago, beneficiario, tipoReceptor, idReceptor, page, size),HttpStatus.OK);
 	}
 
 }
