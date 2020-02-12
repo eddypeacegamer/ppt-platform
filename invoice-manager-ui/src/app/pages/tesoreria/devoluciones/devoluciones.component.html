@@ -65,7 +65,7 @@
         </div>
         <div class="clearfix" *ngIf="page.empty == false">
             <strong>Resultados</strong>
-            <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+           <!-- <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>-->
   
             <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
               id="inputPageSize" class="float-right">
@@ -103,7 +103,7 @@
             </tbody>
           </table>
 
-          <ul class="pagination" *ngIf="page.totalElements > 1">
+      <!--    <ul class="pagination" *ngIf="page.totalElements > 1">
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
                 (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
@@ -113,7 +113,7 @@
                 (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
             <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
                 (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-          </ul>
+          </ul>-->
         </div>
 
         <br>

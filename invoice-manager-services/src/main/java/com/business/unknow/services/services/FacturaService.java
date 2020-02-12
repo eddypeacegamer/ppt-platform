@@ -82,6 +82,9 @@ public class FacturaService {
 	private TimbradoExecutorService timbradoExecutorService;
 
 	@Autowired
+	private DevolucionService devolucionService;
+
+	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
 
 	private FacturaValidator validator = new FacturaValidator();
@@ -217,6 +220,12 @@ public class FacturaService {
 					HttpStatus.BAD_REQUEST.value());
 		}
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		if (!(facturaContext.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				&& facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()))) {
+			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
+					facturaContext.getCurrentPago());
+		}
+		// TODO Insertar en tabla de ingresos
 		return facturaContext;
 	}
 

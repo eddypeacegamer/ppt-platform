@@ -4,7 +4,6 @@ import org.jeasy.rules.api.Rules;
 
 import com.business.unknow.rules.devolucion.FacturaPpdStatusDevolucionRule;
 import com.business.unknow.rules.devolucion.FacturaPueStatusDevolucionRule;
-import com.business.unknow.rules.devolucion.PagoDevolcuionRule;
 
 public class DevolucionSuite  implements InvoiceManagerSuite {
 
@@ -13,7 +12,6 @@ public class DevolucionSuite  implements InvoiceManagerSuite {
 	public DevolucionSuite() {
 		rules.register(new FacturaPpdStatusDevolucionRule());
 		rules.register(new FacturaPueStatusDevolucionRule());
-		rules.register(new PagoDevolcuionRule());
 	}
 
 	@Override

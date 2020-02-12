@@ -1,5 +1,6 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +34,13 @@ public class Cfdi {
 	@XmlAttribute(name = "Certificado")
 	private String certificado;
 	@XmlAttribute(name = "SubTotal")
-	private Double subtotal;
+	private BigDecimal subtotal;
 	@XmlAttribute(name = "Descuento")
-	private Double descuento;
+	private BigDecimal descuento;
 	@XmlAttribute(name = "Moneda")
 	private String moneda;
 	@XmlAttribute(name = "Total")
-	private Double total;
+	private BigDecimal total;
 	@XmlAttribute(name = "TipoDeComprobante")
 	private String tipoDeComprobante;
 	@XmlAttribute(name = "MetodoPago")
@@ -127,19 +128,19 @@ public class Cfdi {
 		this.certificado = certificado;
 	}
 
-	public Double getSubtotal() {
+	public BigDecimal getSubtotal() {
 		return subtotal;
 	}
 
-	public void setSubtotal(Double subtotal) {
+	public void setSubtotal(BigDecimal subtotal) {
 		this.subtotal = subtotal;
 	}
 
-	public Double getDescuento() {
+	public BigDecimal getDescuento() {
 		return descuento;
 	}
 
-	public void setDescuento(Double descuento) {
+	public void setDescuento(BigDecimal descuento) {
 		this.descuento = descuento;
 	}
 
@@ -151,11 +152,11 @@ public class Cfdi {
 		this.moneda = moneda;
 	}
 
-	public Double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
-	public void setTotal(Double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 
@@ -232,5 +233,5 @@ public class Cfdi {
 				+ ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor + ", receptor=" + receptor
 				+ ", conceptos=" + conceptos + ", impuestos=" + impuestos + ", complemento=" + complemento + "]";
 	}
-
+	
 }

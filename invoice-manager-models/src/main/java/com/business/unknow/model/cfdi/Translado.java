@@ -1,5 +1,7 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -10,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Translado {
 	
 	@XmlAttribute(name = "Base")
-	private Double base;
+	private BigDecimal base;
 	@XmlAttribute(name = "Impuesto")
 	private String impuesto;
 	@XmlAttribute(name = "TipoFactor")
@@ -18,12 +20,12 @@ public class Translado {
 	@XmlAttribute(name = "TasaOCuota")
 	private String tasaOCuota;
 	@XmlAttribute(name = "Importe")
-	private Double importe;
+	private BigDecimal importe;
 
 	public Translado() {
 	}
 
-	public Translado(String impuesto, String tipoFactor, String tasaOCuota, Double importe) {
+	public Translado(String impuesto, String tipoFactor, String tasaOCuota, BigDecimal importe) {
 		this.impuesto = impuesto;
 		this.tipoFactor = tipoFactor;
 		this.tasaOCuota = tasaOCuota;
@@ -54,19 +56,19 @@ public class Translado {
 		this.tasaOCuota = tasaOCuota;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 
-	public Double getBase() {
+	public BigDecimal getBase() {
 		return base;
 	}
 
-	public void setBase(Double base) {
+	public void setBase(BigDecimal base) {
 		this.base = base;
 	}
 

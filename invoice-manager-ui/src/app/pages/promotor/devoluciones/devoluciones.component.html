@@ -36,7 +36,7 @@
             <div class="form-inline">
               <input id="inputSaldo" class="form-control" type="text" [value]="montoDevolucion" disabled fullWidth>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="updateDataTable()">BUSCAR</button>
+              <!--<button class="btn btn-primary" (click)="updateDataTable()">BUSCAR</button>-->
             </div>
           </div>
 
@@ -104,7 +104,7 @@
         <strong>Devoluciones</strong>
         <div class="clearfix">
 
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <!--<button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>-->
 
           <div class="table-responsive" *ngIf="!pageDevolutions.empty">
             <div *ngIf="pageDevolutions.empty" class="alert alert-primary" role="alert">
@@ -151,7 +151,7 @@
         <strong>Ultimas comisiones / pasivos generados</strong>
         <div class="clearfix">
 
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <!--<button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>-->
 
           <div class="table-responsive" *ngIf="!pageCommissions.empty">
             <div *ngIf="pageCommissions.empty" class="alert alert-primary" role="alert">
