@@ -2,12 +2,12 @@ package com.business.unknow.commons.builder;
 
 import java.util.List;
 
-import com.business.unknow.model.ContribuyenteDto;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.services.ContribuyenteDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 
 public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 
@@ -24,6 +24,7 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		instance.setFacturaDto(factura);
 		return this;
 	}
+	
 	
 	public FacturaContextBuilder setCfdi(CfdiDto cfdiDto) {
 		instance.getFacturaDto().setCfdi(cfdiDto);

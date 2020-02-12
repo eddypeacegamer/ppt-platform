@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.commons.validator.EmpresaValidator;
-import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
-import com.business.unknow.services.services.evaluations.EmpresaEvaluatorService;
+import com.business.unknow.services.services.executor.EmpresaExecutorService;
 
 @Service
 public class EmpresaService {
@@ -33,7 +33,7 @@ public class EmpresaService {
 	private ContribuyenteMapper contribuyenteMapper;
 	
 	@Autowired
-	private EmpresaEvaluatorService empresaEvaluatorService;
+	private EmpresaExecutorService empresaEvaluatorService;
 
 	private EmpresaValidator empresaValidator= new EmpresaValidator();
 

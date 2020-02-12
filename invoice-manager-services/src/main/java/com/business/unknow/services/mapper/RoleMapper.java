@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.RoleDto;
+import com.business.unknow.model.dto.services.RoleDto;
 import com.business.unknow.services.entities.Role;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)

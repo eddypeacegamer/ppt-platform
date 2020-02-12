@@ -17,7 +17,7 @@ public class FacturaModernaClientException extends Exception {
 	}
 	
 	public FacturaModernaClientException(FacturaModernaErrorMessage errorMessage, Integer httpStatus) {
-		super();
+		super(errorMessage.getMessage());
 		this.errorMessage = errorMessage;
 		this.httpStatus = httpStatus;
 	}

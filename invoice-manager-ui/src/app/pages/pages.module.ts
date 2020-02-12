@@ -11,7 +11,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     PagesRoutingModule,
     ThemeModule,
     NbMenuModule,
-    DashboardModule
+    DashboardModule,
   ],
   declarations: [
     PagesComponent,

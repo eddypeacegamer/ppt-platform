@@ -1,6 +1,5 @@
 package com.business.unknow.rules.pago.create.ppd;
 
-
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
@@ -15,7 +14,7 @@ public class MontoPagoValidationRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return fc.getCurrentPago() == null || fc.getPagoCredito() == null
-				|| fc.getCurrentPago().getMonto() > fc.getPagoCredito().getMonto();
+				|| fc.getCurrentPago().getMonto().compareTo(fc.getPagoCredito().getMonto()) > 0;
 	}
 
 	@Action

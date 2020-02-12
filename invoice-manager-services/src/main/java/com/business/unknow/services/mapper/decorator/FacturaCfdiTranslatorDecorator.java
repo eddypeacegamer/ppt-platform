@@ -3,21 +3,22 @@ package com.business.unknow.services.mapper.decorator;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.NumberHelper;
-import com.business.unknow.model.EmpresaDto;
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Impuesto;
 import com.business.unknow.model.cfdi.Translado;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
-import com.business.unknow.model.factura.cfdi.components.ImpuestoDto;
-import com.business.unknow.services.mapper.FacturaCfdiTranslatorMapper;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
 
 public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTranslatorMapper {
 
@@ -63,15 +64,15 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 		}
 		return conpeto;
 	}
-
+	
 	@Override
-	public ComplementoPago complementoComponente(FacturaDto facturaDto, PagoDto pagoDto) {
-		ComplementoPago complementoPago = delegate.complementoComponente(facturaDto, pagoDto);
-		complementoPago.setMonto(String.format("%.2f", pagoDto.getMonto()));
-		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f", pagoDto.getMonto()));
+	public ComplementoPago complementoComponente(CfdiPagoDto cfdiPago) {
+		ComplementoPago complementoPago = delegate.complementoComponente(cfdiPago);
 		complementoPago.setFechaPago(
-				dateHelper.getStringFromFecha(pagoDto.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
+				dateHelper.getStringFromFecha(cfdiPago.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
+		complementoPago.setMonto(String.format("%.2f", cfdiPago.getMonto()));
+		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f", cfdiPago.getMonto()));
 		return complementoPago;
 	}
-	
+
 }

@@ -7,7 +7,6 @@ import { of as observableOf } from 'rxjs';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import {
   LayoutService,
-  PlayerService,
   StateService,
 } from './utils';
 
@@ -33,12 +32,15 @@ import { FilesData } from './data/files-data';
 import { FilesService } from './back-services/files.service';
 import { TransferData } from './data/transfers-data';
 import { TransferService } from './back-services/transfer.service';
+import { CuentasData } from './data/cuentas-data';
+import { CuentasService } from './back-services/cuentas.service';
 
 
 const DATA_SERVICES = [
   {provide: CatalogsData, useClass: CatalogsService},
   {provide: ClientsData, useClass: ClientsService},
   {provide: CompaniesData, useClass: CompaniesService},
+  {provide: CuentasData, useClass: CuentasService},
   {provide: InvoicesData, useClass: InvoicesService},
   {provide: PaymentsData, useClass : PaymentsService},
   {provide: DevolutionData, useClass: DevolutionService},
@@ -87,7 +89,6 @@ export const NB_CORE_PROVIDERS = [
     provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
   },
   LayoutService,
-  PlayerService,
   StateService,
 ];
 

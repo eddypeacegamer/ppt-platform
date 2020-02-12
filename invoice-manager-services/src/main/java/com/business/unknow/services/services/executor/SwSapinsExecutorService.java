@@ -19,8 +19,8 @@ import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.client.SwSapiensClient;
 
 @Service
@@ -37,25 +37,31 @@ public class SwSapinsExecutorService {
 		try {
 			SwSapiensConfig swSapiensConfig = swSapiensClient.getSwSapiensClient().stamp(context.getXml(),
 					SwSapiensVersionEnum.V4.getValue());
-			context.getFacturaDto().setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			context.getFacturaDto().setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().setSelloSat(swSapiensConfig.getData().getSelloSAT());
-			context.getFacturaDto().getCfdi().setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().setSelloCfd(swSapiensConfig.getData().getSelloCFDI());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setUuid(swSapiensConfig.getData().getUuid());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setSelloSat(swSapiensConfig.getData().getSelloSAT());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();
 			qr.setFolio(context.getFacturaDto().getFolio());
-			qr.setTipoArchivo(TipoArchivoEnum.QR.getDescripcion());
+			qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 			qr.setData(swSapiensConfig.getData().getQrCode());
 			FacturaFileDto xml = new FacturaFileDto();
 			xml.setFolio(context.getFacturaDto().getFolio());
-			xml.setTipoArchivo(TipoArchivoEnum.XML.getDescripcion());
+			xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 			xml.setData(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
 			FacturaFileDto pdf = new FacturaFileDto();
 			pdf.setFolio(context.getFacturaDto().getFolio());
-			pdf.setTipoArchivo(TipoArchivoEnum.PDF.getDescripcion());
+			pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
 			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
 			files.add(qr);
 			files.add(xml);
@@ -63,7 +69,7 @@ public class SwSapinsExecutorService {
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException("Error durante el timbrado", e.getMessage(), HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		} catch (IOException e) {
 			throw new InvoiceManagerException("Error durante la creacion de archivos", e.getMessage(),
 					HttpStatus.SC_CONFLICT);
@@ -74,11 +80,10 @@ public class SwSapinsExecutorService {
 	public SwSapiensConfig validateRfc(String rfc) throws SwSapiensClientException {
 		return swSapiensClient.getSwSapiensClient().validateRfc(rfc);
 	}
-	
+
 	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
 		return swSapiensClient.getSwSapiensClient().validateLco(noCertificado);
 	}
-
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.RoleDto;
+import com.business.unknow.model.dto.services.RoleDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.RoleService;
 

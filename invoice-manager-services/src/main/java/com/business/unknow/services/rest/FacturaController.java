@@ -21,13 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.PagoDto;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
-import com.business.unknow.model.factura.cfdi.components.CfdiDto;
-import com.business.unknow.model.factura.cfdi.components.ConceptoDto;
+import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.PagoService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,26 +46,32 @@ public class FacturaController {
 	@Autowired
 	private FacturaService service;
 
+	@Autowired
+	private CfdiService cfdiService;
+	
+	@Autowired
+	private PagoService pagoService;
+	
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
-			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante,//linea A by default
+			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante, // linea A by default
 			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
-			@RequestParam(name = "emisor", defaultValue = "") String rfcEmisor,
-			@RequestParam(name = "remitente", defaultValue = "") String rfcRemitente,
+			@RequestParam(name = "emisor", defaultValue = "") String emisor,
+			@RequestParam(name = "remitente", defaultValue = "") String receptor,
 			@RequestParam(name = "status") Optional<String> status,
 			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(
-				service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to, rfcEmisor, rfcRemitente, page, size),HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to,
+				emisor, receptor, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")
 	public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
-		return new ResponseEntity<>(service.getfacturaByFolio(folio), HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -75,10 +83,11 @@ public class FacturaController {
 
 	@PutMapping("/{folio}")
 	@ApiOperation(value = "update an existing in the system")
-	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio, @RequestBody @Valid FacturaDto factura) {
+	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto factura) {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/{folio}/complementos")
 	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
@@ -87,53 +96,72 @@ public class FacturaController {
 	// CFDI
 	@GetMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getFacturaCdfi(folio), HttpStatus.OK);
+		return new ResponseEntity<>(cfdiService.getCfdiByFolio(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> insertFacturaCfdi(@PathVariable String folio, @RequestBody @Valid CfdiDto cfdi)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewCfdi(folio, cfdi), HttpStatus.OK);
+		return new ResponseEntity<>(cfdiService.insertNewCfdi(cfdi), HttpStatus.OK);
 	}
 
 	@PutMapping("/{folio}/cfdi/{id}")
 	public ResponseEntity<CfdiDto> updateFacturaCfdi(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.updateFacturaCfdi(folio, id, cfdi), HttpStatus.OK);
+		return new ResponseEntity<>(cfdiService.updateCfdiBody(folio, id, cfdi), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/cfdi/{id}")
 	public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		service.deleteFacturaCfdi(folio, id);
+		cfdiService.deleteCfdi(folio);
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	// CONCEPTOS
+	@PostMapping("/{folio}/conceptos")
+	public ResponseEntity<CfdiDto> insertConcepto(@PathVariable String folio,
+			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(cfdiService.insertNewConceptoToCfdi(folio, conceptoDto), HttpStatus.CREATED);
+	}
+
+	@PutMapping("/{folio}/conceptos/{id}")
+	public ResponseEntity<CfdiDto> updateConcepto(@PathVariable String folio, @PathVariable Integer id,
+			@RequestBody @Valid ConceptoDto concepto) throws InvoiceManagerException {
+		return new ResponseEntity<>(cfdiService.updateConceptoFromCfdi(folio, id, concepto), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{folio}/conceptos/{id}")
+	public ResponseEntity<CfdiDto> deleteConcepto(@PathVariable String folio, @PathVariable Integer id)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(cfdiService.removeConceptFromCfdi(folio, id), HttpStatus.NO_CONTENT);
 	}
 
 	// PAGOS
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
-		return new ResponseEntity<>(service.getPagos(folio), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.getPagos(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/pagos")
 	@ApiOperation(value = "insert a new Payment into the system")
 	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertNewPago(folio, pago), HttpStatus.CREATED);
+		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.updatePago(pagoDto, id), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.updatePago(folio,id,pagoDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "Deletes an existing payment")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		service.deletePago(id);
+		pagoService.deletePago(folio,id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -148,20 +176,6 @@ public class FacturaController {
 	public ResponseEntity<FacturaContext> cancelarFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
-	}
-
-	// CONCEPTOS
-	@PostMapping("/{folio}/conceptos")
-	public ResponseEntity<ConceptoDto> insertConcepto(@PathVariable String folio,
-			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.insertConcepto(folio, conceptoDto), HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{folio}/conceptos/{id}")
-	public ResponseEntity<Void> deleteConcepto(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
-		service.deleteconcepto(id, folio);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

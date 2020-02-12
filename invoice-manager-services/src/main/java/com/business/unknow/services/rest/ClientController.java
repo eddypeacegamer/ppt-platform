@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.dto.services.ClientDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.ClientService;
 
 import io.swagger.annotations.Api;
@@ -39,11 +40,14 @@ public class ClientController {
 	@GetMapping
 	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<ClientDto>> getClientsByParameters(
-			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
-			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
+			@RequestParam(name = "promotor") Optional<String> promotor,
+			@RequestParam(name = "status", defaultValue = "") String status,
+			@RequestParam(name = "razonSocial", defaultValue = "") String razonSocial,
+			@RequestParam(name = "rfc", defaultValue = "") String rfc,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getClientsByParametros(rfc, razonSocial, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getClientsByParametros(promotor, status, rfc, razonSocial, page, size),
+				HttpStatus.OK);
 	}
 
 	@GetMapping("/{rfc}")
@@ -54,9 +58,9 @@ public class ClientController {
 
 	@PostMapping
 	@ApiOperation(value = "insert a new client into the system")
-	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client,
-			@RequestParam(name = "validation", defaultValue = "false") boolean validation) {
-		return new ResponseEntity<>(service.insertNewClient(client, validation), HttpStatus.CREATED);
+	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{rfc}")
@@ -64,7 +68,7 @@ public class ClientController {
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client) {
 		return new ResponseEntity<>(service.updateClientInfo(client, rfc), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{rfc}")
 	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<Void> deleteClient(@PathVariable String rfc) {

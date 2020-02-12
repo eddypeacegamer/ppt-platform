@@ -1,6 +1,7 @@
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { Pago } from '../../models/pago';
+import { Catalogo } from '../../models/catalogos/catalogo';
 
 export abstract class PaymentsData {
 
@@ -14,15 +15,15 @@ export abstract class PaymentsData {
 
     abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
+    abstract getFormasPago(roles?: string[]): Observable<Catalogo[]>;
+
     abstract getIncomes(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
     abstract getIncomesSum(filterParams?: any) : Observable<number>;
-    
+
     abstract getExpensesSum(filterParams?: any) : Observable<number>;
 
     abstract getExpenses(page: number, size: number, filterParams?: any) : Observable<GenericPage<Pago>>;
 
-
-    abstract updatePayment(payment:Pago):Observable<Pago>;
 
 }

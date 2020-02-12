@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.model.ContribuyenteDto;
+import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;

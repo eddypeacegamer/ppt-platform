@@ -19,9 +19,9 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.files.FacturaFileDto;
 import com.business.unknow.services.client.FacturacionModernaClient;
 
 @Service
@@ -50,44 +50,48 @@ public class FacturacionModernaExecutor {
 			FacturaModernaResponseModel response = client.getFacturacionModernaClient().stamp(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(response.getXml()));
-			context.getFacturaDto()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
 							FacturaConstants.FACTURA_DATE_FORMAT));
 			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT());
-			context.getFacturaDto().getCfdi()
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setNoCertificadoSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi()
-					.setSelloCfd(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setSelloCFD(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
 			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
 			List<FacturaFileDto> files = new ArrayList<>();
 			if (response.getPng() != null) {
 				FacturaFileDto qr = new FacturaFileDto();
 				qr.setFolio(context.getFacturaDto().getFolio());
-				qr.setTipoArchivo(TipoArchivoEnum.QR.getDescripcion());
+				qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 				qr.setData(response.getPng());
 				files.add(qr);
 			}
 			if (response.getXml() != null) {
 				FacturaFileDto xml = new FacturaFileDto();
 				xml.setFolio(context.getFacturaDto().getFolio());
-				xml.setTipoArchivo(TipoArchivoEnum.XML.getDescripcion());
+				xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 				xml.setData(response.getXml());
 				files.add(xml);
 			}
 			if (response.getPdf() != null) {
 				FacturaFileDto pdf = new FacturaFileDto();
 				pdf.setFolio(context.getFacturaDto().getFolio());
-				pdf.setTipoArchivo(TipoArchivoEnum.PDF.getDescripcion());
+				pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
 				pdf.setData(response.getPdf());
 				files.add(pdf);
 			}
 			context.setFacturaFilesDto(files);
 		} catch (FacturaModernaClientException | InvoiceCommonException e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
-			throw new InvoiceManagerException("Error Stamping in facturacion moderna", e.getMessage(),
+			
+			throw new InvoiceManagerException(e.getMessage(),String.format("Error Stamping in facturacion moderna: %s",e.getLocalizedMessage()),
 					HttpStatus.SC_CONFLICT);
 		}
 		return context;

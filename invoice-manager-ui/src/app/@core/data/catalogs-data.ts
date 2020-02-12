@@ -5,25 +5,26 @@ import { ClaveProductoServicio } from '../../models/catalogos/producto-servicio'
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { RegimenFiscal } from '../../models/catalogos/regimen-fiscal';
-import { Giro } from '../../models/catalogos/giro';
-import { Status } from '../../models/catalogos/status';
+import { Catalogo } from '../../models/catalogos/catalogo';
 
 
 
 
 export abstract class CatalogsData {
 
-    abstract getAllClavesProductoServicio(page:number,size:number) : Observable<GenericPage<any>>;
-    abstract getProductoServiciosByDescription(description:string) : Observable<ClaveProductoServicio[]>;
-    abstract getProductoServiciosByClave(clave:string) : Observable<ClaveProductoServicio[]>;
-    abstract getClaveUnidadByName(name:string) : Observable<ClaveUnidad[]>;
-    abstract getAllUsoCfdis() : Observable<UsoCfdi[]>;
-    abstract getAllRegimenFiscal() : Observable<RegimenFiscal[]>;
-    abstract getAllGiros() : Observable<Giro[]>;
-    abstract getZipCodeInfo(zipCode:String) : Observable<ZipCodeInfo>
-    abstract getStatusPago() : Observable<Status[]>;
-    abstract getStatusValidacion() : Observable<Status[]>;
-    abstract getStatusDevolucion() : Observable<Status[]>;
-
-    abstract getInvoiceCatalogs() : Observable<any[]>;
+    abstract getAllClavesProductoServicio(page:number, size:number): Observable<GenericPage<any>>;
+    abstract getProductoServiciosByDescription(description: string): Observable<ClaveProductoServicio[]>;
+    abstract getProductoServiciosByClave(clave: string) : Observable<ClaveProductoServicio[]>;
+    abstract getClaveUnidadByName(name:string): Observable<ClaveUnidad[]>;
+    abstract getAllUsoCfdis(): Observable<UsoCfdi[]>;
+    abstract getAllRegimenFiscal(): Observable<RegimenFiscal[]>;
+    abstract getAllGiros(): Observable<Catalogo[]>;
+    abstract getZipCodeInfo(zipCode: String): Observable<ZipCodeInfo>;
+    abstract getStatusPago(): Observable<Catalogo[]>;
+    abstract getStatusValidacion(): Observable<Catalogo[]>;
+    abstract getStatusDevolucion(): Observable<Catalogo[]>;
+    abstract getFormasPago(metodo: string): Observable<Catalogo[]>;
+    abstract getInvoiceCatalogs(): Observable<any[]>;
+    abstract getBancos(): Observable<Catalogo[]>;
+    abstract getTiposReferencia(formapago: string): Observable<Catalogo[]>;
 }

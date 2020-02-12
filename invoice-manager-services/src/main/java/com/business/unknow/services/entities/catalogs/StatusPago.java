@@ -19,9 +19,9 @@ public class StatusPago implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_STATUS_PAGO")
 	private Integer id;
-	
+
 	@Column(name = "VALUE")
-	private String value;
+	private String nombre;
 
 	public Integer getId() {
 		return id;
@@ -31,18 +31,17 @@ public class StatusPago implements Serializable {
 		this.id = id;
 	}
 
-	public String getValue() {
-		return value;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	@Override
 	public String toString() {
-		return "StatusPago [id=" + id + ", value=" + value + "]";
+		return "StatusPago [id=" + id + ", nombre=" + nombre + "]";
 	}
-	
-	
+
 }

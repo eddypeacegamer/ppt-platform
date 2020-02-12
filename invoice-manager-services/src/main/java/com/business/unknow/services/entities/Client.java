@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,22 +52,22 @@ public class Client implements Serializable {
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_PROMOTOR")
-	private Integer porcentajePromotor;
+	private Double porcentajePromotor;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CLIENTE")
-	private Integer porcentajeCliente;
+	private Double porcentajeCliente;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_DESPACHO")
-	private Integer porcentajeDespacho;
+	private Double porcentajeDespacho;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CONTACTO")
-	private Integer porcentajeContacto;
+	private Double porcentajeContacto;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -78,7 +79,7 @@ public class Client implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 
@@ -114,35 +115,35 @@ public class Client implements Serializable {
 		this.correoContacto = correoContacto;
 	}
 
-	public Integer getPorcentajePromotor() {
+	public Double getPorcentajePromotor() {
 		return porcentajePromotor;
 	}
 
-	public void setPorcentajePromotor(Integer porcentajePromotor) {
+	public void setPorcentajePromotor(Double porcentajePromotor) {
 		this.porcentajePromotor = porcentajePromotor;
 	}
 
-	public Integer getPorcentajeCliente() {
+	public Double getPorcentajeCliente() {
 		return porcentajeCliente;
 	}
 
-	public void setPorcentajeCliente(Integer porcentajeCliente) {
+	public void setPorcentajeCliente(Double porcentajeCliente) {
 		this.porcentajeCliente = porcentajeCliente;
 	}
 
-	public Integer getPorcentajeDespacho() {
+	public Double getPorcentajeDespacho() {
 		return porcentajeDespacho;
 	}
 
-	public void setPorcentajeDespacho(Integer porcentajeDespacho) {
+	public void setPorcentajeDespacho(Double porcentajeDespacho) {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
 
-	public Integer getPorcentajeContacto() {
+	public Double getPorcentajeContacto() {
 		return porcentajeContacto;
 	}
 
-	public void setPorcentajeContacto(Integer porcentajeContacto) {
+	public void setPorcentajeContacto(Double porcentajeContacto) {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 

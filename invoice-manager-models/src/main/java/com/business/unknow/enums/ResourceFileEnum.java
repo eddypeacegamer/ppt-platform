@@ -2,24 +2,13 @@ package com.business.unknow.enums;
 
 public enum ResourceFileEnum {
 
-	CERT(1, "CERT"),
-	KEY(2, "KEY"),
-	LOGO(3, "LOGO"),
-	IMAGEN(4, "IMAGEN");
+	CERT,
+	KEY,
+	LOGO,
+	IMAGEN;
 
-	private Integer valor;
-	private String descripcion;
 
-	private ResourceFileEnum(Integer valor, String descripcion) {
-		this.valor = valor;
-		this.descripcion = descripcion;
+	private ResourceFileEnum() {
 	}
 
-	public Integer getValor() {
-		return valor;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
 }

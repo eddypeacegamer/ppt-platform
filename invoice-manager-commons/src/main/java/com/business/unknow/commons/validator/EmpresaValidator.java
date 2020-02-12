@@ -1,6 +1,6 @@
 package com.business.unknow.commons.validator;
 
-import com.business.unknow.model.EmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
 public class EmpresaValidator extends AbstractValidator{

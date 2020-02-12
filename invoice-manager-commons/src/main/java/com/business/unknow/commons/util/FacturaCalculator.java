@@ -3,10 +3,11 @@ package com.business.unknow.commons.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.business.unknow.Constants;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.model.factura.FacturaDto;
 
 public class FacturaCalculator {
 
@@ -38,7 +39,7 @@ public class FacturaCalculator {
 	}
 
 	public void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
-		String date = dateHelper.getStringFromFecha(dto.getFechaActualizacion(), Constants.DATE_FOLIO_FORMAT);
+		String date = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_FORMAT);
 		String emisor;
 		String receptor;
 		if (dto.getRfcEmisor() != null && dto.getRfcEmisor().length() > 4) {

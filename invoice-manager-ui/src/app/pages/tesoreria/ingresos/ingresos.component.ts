@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { DownloadCsvService } from '../../../@core/back-services/download-csv.service';
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router } from '@angular/router';
 
 @Component({

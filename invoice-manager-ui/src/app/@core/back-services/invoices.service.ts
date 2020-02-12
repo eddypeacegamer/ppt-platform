@@ -53,16 +53,23 @@ export class InvoicesService {
     return this.httpClient.post('../api/facturas',invoice);
   }
 
-  public updateInvoice(invoice : Factura) : Observable<any>{
-    return this.httpClient.put(`../api/facturas/${invoice.folio}`,invoice);
+  public updateInvoice(invoice: Factura): Observable<any> {
+    return this.httpClient.put(`../api/facturas/${invoice.folio}`, invoice);
   }
 
-  public insertConcepto(folio:string,concepto:Concepto) : Observable<any>{
-    return this.httpClient.post(`../api/facturas/${folio}/conceptos`,concepto);
+  public getCfdiByFolio(folio: string): Observable<any > {
+    return this.httpClient.get(`../api/facturas/${folio}/cfdi`);
   }
 
-  public deleteConcepto(folio:string,conceptoId:number) : Observable<any>{
+  public insertConcepto(folio: string, concepto: Concepto): Observable<any> {
+    return this.httpClient.post(`../api/facturas/${folio}/conceptos`, concepto);
+  }
+
+  public updateConcepto(folio: string, id: number, concepto: Concepto): Observable<any> {
+    return this.httpClient.put(`../api/facturas/${folio}/conceptos/${id}`, concepto);
+  }
+
+  public deleteConcepto(folio: string, conceptoId: number): Observable<any> {
     return this.httpClient.delete(`../api/facturas/${folio}/conceptos/${conceptoId}`);
   }
-  
 }

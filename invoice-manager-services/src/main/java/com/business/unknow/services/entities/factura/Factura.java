@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -36,16 +37,19 @@ public class Factura implements Serializable {
 
 	@Column(name = "RAZON_SOCIAL_EMISOR")
 	private String razonSocialEmisor;
-	
+
 	@Column(name = "LINEA_EMISOR")
 	private String lineaEmisor;
 
 	@Column(name = "RAZON_SOCIAL_REMITENTE")
 	private String razonSocialRemitente;
-	
+
 	@Column(name = "LINEA_REMITENTE")
 	private String lineaRemitente;
-	
+
+	@Column(name = "TIPO_DOCUMENTO")
+	private String tipoDocumento;
+
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
 
@@ -55,8 +59,8 @@ public class Factura implements Serializable {
 	@Column(name = "FOLIO_PADRE")
 	private String folioPadre;
 
-	@Column(name = "UUID")
-	private String uuid;
+	@Column(name = "METODO_PAGO")
+	private String metodoPago;
 
 	@Column(name = "STATUS_PAGO")
 	private Integer statusPago;
@@ -70,14 +74,8 @@ public class Factura implements Serializable {
 	@Column(name = "STATUS_DETAIL")
 	private String statusDetail;
 
-	@Column(name = "TIPO_DOCUMENTO")
-	private String tipoDocumento;
-
-	@Column(name = "FORMA_PAGO")
-	private String formaPago;
-
-	@Column(name = "METODO_PAGO")
-	private String metodoPago;
+	@Column(name = "UUID")
+	private String uuid;
 
 	@Column(name = "PACK_FACTURACION")
 	private String packFacturacion;
@@ -85,30 +83,24 @@ public class Factura implements Serializable {
 	@Column(name = "NOTAS")
 	private String notas;
 
-	@Column(name = "TOTAL")
-	private Double total;
-
-	@Column(name = "SUBTOTAL")
-	private Double subtotal;
-
-	@Column(name = "DESCUENTO")
-	private Double descuento;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@Column(name = "FECHA_TIMBRADO")
-	private Date fechaTimbrado;
-
 	@Column(name = "FECHA_CANCELADO")
 	private Date fechaCancelacion;
 
+	@Column(name = "STATUS_CANCELADO")
+	private Date statusCancelado;
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
+	@CreatedDate
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
+
+	@Column(name = "ID_CFDI")
+	private Integer idCfdi;
 
 	public Integer getId() {
 		return id;
@@ -164,6 +156,14 @@ public class Factura implements Serializable {
 
 	public void setLineaRemitente(String lineaRemitente) {
 		this.lineaRemitente = lineaRemitente;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getSolicitante() {
@@ -230,30 +230,6 @@ public class Factura implements Serializable {
 		this.statusDetail = statusDetail;
 	}
 
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-
-	public String getFormaPago() {
-		return formaPago;
-	}
-
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
-
-	public String getMetodoPago() {
-		return metodoPago;
-	}
-
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
-
 	public String getPackFacturacion() {
 		return packFacturacion;
 	}
@@ -270,44 +246,12 @@ public class Factura implements Serializable {
 		this.notas = notas;
 	}
 
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-
-	public Double getSubtotal() {
-		return subtotal;
-	}
-
-	public void setSubtotal(Double subtotal) {
-		this.subtotal = subtotal;
-	}
-
-	public Double getDescuento() {
-		return descuento;
-	}
-
-	public void setDescuento(Double descuento) {
-		this.descuento = descuento;
-	}
-
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Date getFechaTimbrado() {
-		return fechaTimbrado;
-	}
-
-	public void setFechaTimbrado(Date fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
 	}
 
 	public Date getFechaCancelacion() {
@@ -326,17 +270,41 @@ public class Factura implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public Integer getIdCfdi() {
+		return idCfdi;
+	}
+
+	public void setIdCfdi(Integer idCfdi) {
+		this.idCfdi = idCfdi;
+	}
+
+	public String getMetodoPago() {
+		return metodoPago;
+	}
+
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
+	}
+
+	public Date getStatusCancelado() {
+		return statusCancelado;
+	}
+
+	public void setStatusCancelado(Date statusCancelado) {
+		this.statusCancelado = statusCancelado;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
-				+ ", solicitante=" + solicitante + ", folio=" + folio + ", folioPadre=" + folioPadre + ", uuid=" + uuid
-				+ ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
-				+ statusFactura + ", statusDetail=" + statusDetail + ", tipoDocumento=" + tipoDocumento + ", formaPago="
-				+ formaPago + ", metodoPago=" + metodoPago + ", packFacturacion=" + packFacturacion + ", notas=" + notas
-				+ ", total=" + total + ", subtotal=" + subtotal + ", descuento=" + descuento + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado + ", fechaCancelacion=" + fechaCancelacion
-				+ ", fechaCreacion=" + fechaCreacion + "]";
+				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
+				+ ", folioPadre=" + folioPadre + ", metodoPago=" + metodoPago + ", statusPago=" + statusPago
+				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", uuid=" + uuid + ", packFacturacion=" + packFacturacion + ", notas=" + notas
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion
+				+ ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion + ", idCfdi=" + idCfdi
+				+ "]";
 	}
 }

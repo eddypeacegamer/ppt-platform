@@ -37,8 +37,7 @@ public class FacturacionModernaClientImpl extends AbstractClient implements Rest
 			FacturaModernaErrorModel errorModel = soapRequest.getErrorResponse(content);
 			log.error("Error response: {}", content);
 			throw new FacturaModernaClientException(
-					new FacturaModernaErrorMessage("Error al timbrar en factura moderna",
-							errorModel.getFaultstring().concat(": ").concat(errorModel.getFaultcode())),
+					new FacturaModernaErrorMessage(errorModel.getFaultstring().concat(": ").concat(errorModel.getFaultcode()),"Error al timbrar en factura moderna"),
 					response.getStatus());
 		}
 	}
