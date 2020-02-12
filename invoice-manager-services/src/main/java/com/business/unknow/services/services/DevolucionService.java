@@ -55,6 +55,9 @@ public class DevolucionService {
 
 	@Autowired
 	private PagoDevolucionRepository pagoDevolucionRepository;
+	
+	@Autowired
+	private DevolucionRepository devolucionRepository;
 
 	@Autowired
 	private DevolucionMapper mapper;
@@ -112,6 +115,7 @@ public class DevolucionService {
 	public PagoDevolucionDto solicitudDevolucion(PagoDevolucionDto dto) throws InvoiceManagerException {
 		devolucionValidator.validatePostDevolucionPago(dto);
 		dto = devolucionesBuilderService.buildDevolucionPago(dto);
+		devolucionRepository.save(devolucionesBuilderService.buildPagoDevolucion(dto));
 		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
 				pagoDevolucionRepository.save(pagoDevolucionMapper.getEntityFromPagoDevolucionDto(dto)));
 	}
