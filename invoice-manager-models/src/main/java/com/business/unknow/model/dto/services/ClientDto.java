@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.services;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -16,10 +17,10 @@ public class ClientDto implements Serializable {
 
 	private int id;
 	private Boolean activo;
-	private Double porcentajePromotor;
-	private Double porcentajeCliente;
-	private Double porcentajeDespacho;
-	private Double porcentajeContacto;
+	private BigDecimal porcentajePromotor;
+	private BigDecimal porcentajeCliente;
+	private BigDecimal porcentajeDespacho;
+	private BigDecimal porcentajeContacto;
 	private String correoPromotor;
 	private String correoContacto;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
@@ -39,28 +40,28 @@ public class ClientDto implements Serializable {
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-	public Double getPorcentajePromotor() {
+	public BigDecimal getPorcentajePromotor() {
 		return porcentajePromotor;
 	}
-	public void setPorcentajePromotor(Double porcentajePromotor) {
+	public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
 		this.porcentajePromotor = porcentajePromotor;
 	}
-	public Double getPorcentajeCliente() {
+	public BigDecimal getPorcentajeCliente() {
 		return porcentajeCliente;
 	}
-	public void setPorcentajeCliente(Double porcentajeCliente) {
+	public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
 		this.porcentajeCliente = porcentajeCliente;
 	}
-	public Double getPorcentajeDespacho() {
+	public BigDecimal getPorcentajeDespacho() {
 		return porcentajeDespacho;
 	}
-	public void setPorcentajeDespacho(Double porcentajeDespacho) {
+	public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
-	public Double getPorcentajeContacto() {
+	public BigDecimal getPorcentajeContacto() {
 		return porcentajeContacto;
 	}
-	public void setPorcentajeContacto(Double porcentajeContacto) {
+	public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 	public String getCorreoPromotor() {

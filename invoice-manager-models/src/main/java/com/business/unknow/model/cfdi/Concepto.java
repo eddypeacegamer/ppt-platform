@@ -1,5 +1,7 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -23,11 +25,11 @@ public class Concepto {
 	@XmlAttribute(name = "Descripcion")
 	private String descripcion;
 	@XmlAttribute(name = "ValorUnitario")
-	private Double valorUnitario;
+	private BigDecimal valorUnitario;
 	@XmlAttribute(name = "Importe")
-	private Double importe;
+	private BigDecimal importe;
 	@XmlAttribute(name = "Descuento")
-	private Double descuento;
+	private BigDecimal descuento;
 	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Impuesto impuestos;
 
@@ -71,27 +73,27 @@ public class Concepto {
 		this.descripcion = descripcion;
 	}
 
-	public Double getValorUnitario() {
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 
-	public Double getDescuento() {
+	public BigDecimal getDescuento() {
 		return descuento;
 	}
 
-	public void setDescuento(Double descuento) {
+	public void setDescuento(BigDecimal descuento) {
 		this.descuento = descuento;
 	}
 
