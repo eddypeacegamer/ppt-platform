@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +84,7 @@ public class DevolucionService {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else {
 			result = repository.findDevolucionesByParamsPage(receptorType.get(), idReceptor.get(), "D",
-					PageRequest.of(page, size));
+					PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
@@ -171,11 +172,11 @@ public class DevolucionService {
 	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(String status,String formaPago,String beneficiario,String tipoReceptor, String idReceptor,int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
 		if (tipoReceptor.length()>0 && idReceptor.length()>0) {
-			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		} else if(status.length()>0){
-			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}else {
-			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}
 		return new PageImpl<>(pagoDevolucionMapper.getPagoDevolucionesDtoFromEntities(result.getContent()), result.getPageable(), result.getTotalElements());
 	}
