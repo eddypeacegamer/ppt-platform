@@ -54,5 +54,5 @@ public class DevolucionDtoBuilder extends AbstractBuilder<DevolucionDto> {
 		instance.setTipoReceptor(tipoReceptor);
 		return this;
 	}
-
+	
 }

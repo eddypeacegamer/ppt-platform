@@ -23,11 +23,10 @@ import com.business.unknow.services.entities.Devolucion;
 public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>{
 	
 	public Page<Devolucion> findAll(Pageable pageable);
-	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor ")
-	public Page<Devolucion> findDevolucionesByParamsPage(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,Pageable pageable);
-	
-	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
-	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
+	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and d.tipo=:tipo")
+	public Page<Devolucion> findDevolucionesByParamsPage(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("tipo")String tipo,Pageable pageable);
+	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and d.tipo=:tipo")
+	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("tipo")String tipo);
 	@Query("select sum(d.monto) from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
 	public Double findMontoByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
 	public List<Devolucion> findByFolio(String folio);
