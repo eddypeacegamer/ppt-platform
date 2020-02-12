@@ -27,8 +27,8 @@ export class SolicitudDevolucionComponent implements OnInit {
 
   ngOnInit() {
     this.errorMesage = undefined;
-    //this.devolutionsService.getDevolutionsByPayment(this.pago.id)
-      //.subscribe(devolutions=>this.devoluciones = devolutions);
+    /* this.devolutionsService.getDevolutionsByPayment(this.pago.id)
+      .subscribe(devolutions=>this.devoluciones = devolutions); */
 
   }
 
@@ -39,9 +39,9 @@ export class SolicitudDevolucionComponent implements OnInit {
   updatePaymentStatus(){
     this.errorMesage = undefined;
     this.pago.statusPago='PAGADO';
-    /*this.devolutionsService.updateDevolutionAsPaid(this.pago)
+    /* this.devolutionsService.updateDevolutionAsPaid(this.pago)
       .subscribe(success =>{console.log(success); this.ref.close();},
-      (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`)*/
+      (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`) */
   }
 
   public redirectToCfdi(folio:string){

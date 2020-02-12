@@ -75,8 +75,7 @@ export class CatalogsService {
       return of([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
     }
     if (formapago === 'TRANSFERENCIA') {
-      return of([new Catalogo('CLABE', 'CLABE bancaria'),
-      new Catalogo('NO_CUENTA', 'No. cuenta'),
+      return of([new Catalogo('CLABE', 'CLABE interbacaria'),
       new Catalogo('TC', 'Tarjeta de credito'),
       new Catalogo('TD', 'Tarjeta de debito'),
     ]); }
