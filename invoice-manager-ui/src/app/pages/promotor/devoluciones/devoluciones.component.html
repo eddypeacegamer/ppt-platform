@@ -18,8 +18,8 @@
           </div>
           <div class="col-sm-3" *ngIf="filterParams.tipoReceptor == 'PROMOTOR'">
             <label for="inputPromotor" class="label">Promotor</label>
-            <input id="inputPromotor" class="form-control" type="text" [(ngModel)]="userEmail" disabled
-              placeholder="correo contacto">
+            <input id="inputPromotor" class="form-control" type="text" [(ngModel)]="filterParams.idReceptor" disabled
+              placeholder="correo promotor">
           </div>
           <div class="col-sm-3" *ngIf="filterParams.tipoReceptor == 'CONTACTO'">
             <label for="inputContacto" class="label">Correo contacto</label>

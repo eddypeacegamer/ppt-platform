@@ -47,6 +47,7 @@ export class DevolucionesComponent implements OnInit {
       .subscribe(user => {
         this.user = user;
         this.filterParams.idReceptor = user.email;
+        console.log(this.filterParams);
         this.searchDevolutionsData();
       });
     this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);

@@ -42,11 +42,14 @@ export class DevolucionValidatorService {
         if (solicitud.tipoReferencia === undefined || solicitud.tipoReferencia === '*' ) {
           messages.push('El tipo de referencia es un valor requerido');
         }else {
+          if (solicitud.tipoReferencia === 'CLABE' && solicitud.referencia.length !== 18) {
+            messages.push('La clabe especificada debe de contener 18 digitos');
+          }
           if (solicitud.tipoReferencia === 'TC' && solicitud.referencia.length !== 16) {
-            messages.push('La clabe especificada debe de contener 16 digitos');
+            messages.push('Para pagos con tarjeta de credito son necesarios 16 digitos');
           }
           if (solicitud.tipoReferencia === 'TD' && solicitud.referencia.length !== 16) {
-            messages.push('La clabe especificada debe de contener 16 digitos');
+            messages.push('Para pagos con tarjeta de debito son necesarios 16 digitos');
           }
         }
 

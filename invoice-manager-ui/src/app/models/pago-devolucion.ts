@@ -18,7 +18,7 @@ export class PagoDevolucion {
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
 
-    constructor(){
+    constructor() {
         this.moneda = 'MXN';
         this.tipoCambio = 1.00;
         this.status = 'VALIDACION';
