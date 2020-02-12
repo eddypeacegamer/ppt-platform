@@ -13,6 +13,8 @@ export class ValidacionDevolucionComponent implements OnInit {
 
   @Input() payment: PagoDevolucion;
   public errorMesage: string;
+  public companiesCat = [];
+  public cuentas = [];
 
   public formInfo: any = {rfc : '', empresa: '*', cuenta: '*', fechaPago: ''};
 
@@ -24,6 +26,14 @@ export class ValidacionDevolucionComponent implements OnInit {
 
   exit() {
     this.ref.close();
+  }
+
+  onCompanySelected() {
+
+  }
+
+  onPaymentBankSelected() {
+
   }
 
   acceptDevolution() {
