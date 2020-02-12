@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +84,7 @@ public class DevolucionService {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else {
 			result = repository.findDevolucionesByParamsPage(receptorType.get(), idReceptor.get(), "D",
-					PageRequest.of(page, size));
+					PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
