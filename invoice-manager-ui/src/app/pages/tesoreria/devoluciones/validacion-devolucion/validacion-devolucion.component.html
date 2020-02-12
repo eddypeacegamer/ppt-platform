@@ -58,8 +58,8 @@
       </div>
       <div class="col-sm-3">
         <label for="inputRfc" class="label">RFC</label>
-        <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
-          [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
+        <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.rfc"
+          fullWidth placeholder="RFC Empresa">
       </div>
       <div class="col-md-6">
         <label for="inputEmpresa" class="label">Empresa</label>
@@ -76,7 +76,7 @@
       <div class="col-sm-7">
         <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
         <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-          [(ngModel)]="paymentForm.bankAccount" (change)="onPaymentBankSelected($event.target.value)">
+          [(ngModel)]="formInfo.cuenta" (change)="onPaymentBankSelected($event.target.value)">
           <option value="*">Seleccionar</option>
           <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} -- {{cuenta.clabe}}</option>
         </select>
@@ -84,7 +84,7 @@
       <div class="col-md-4">
         <label for="payAmmount" class="label">Fecha de pago</label>
         <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
-          [(ngModel)]="newPayment.fechaPago">
+          [(ngModel)]="formInfo.fechaPago">
         <nb-datepicker #formpicker></nb-datepicker>
       </div>
     </div>

@@ -16,7 +16,7 @@ export class DevolucionesComponent implements OnInit {
 
   
   public user: User;
-  public filterParams: any = { formaPago: '*', status: 'DEVOLUCION', tipoReceptor: '*', beneficiario: '', receptor: '' };
+  public filterParams: any = { formaPago: '*', status: 'ACEPTADO', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
   public errors: string[] = [];
   public page: GenericPage<PagoDevolucion> = new GenericPage();
   public pageSize = '10';
@@ -30,7 +30,7 @@ export class DevolucionesComponent implements OnInit {
 
     ngOnInit() {
       this.updateDataTable();
-      this.filterParams = { formaPago: '*', status: 'DEVOLUCION', tipoReceptor: '*', beneficiario: '', receptor: '' };
+      this.filterParams = { formaPago: '*', status: 'DEVOLUCION', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
       this.userService.getUserInfo().subscribe(user => this.user = user);
     }
     public updateDataTable(currentPage?: number, pageSize?: number) {
