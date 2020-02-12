@@ -172,11 +172,11 @@ public class DevolucionService {
 	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(String status,String formaPago,String beneficiario,String tipoReceptor, String idReceptor,int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
 		if (tipoReceptor.length()>0 && idReceptor.length()>0) {
-			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		} else if(tipoReceptor.length()>0){
-			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}else {
-			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size));
+			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}
 		return new PageImpl<>(pagoDevolucionMapper.getPagoDevolucionesDtoFromEntities(result.getContent()), result.getPageable(), result.getTotalElements());
 	}
