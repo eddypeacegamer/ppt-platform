@@ -89,10 +89,6 @@ public class PagoDevolucion implements Serializable {
 	@Column(name = "RFC_EMPRESA")
 	private String rfcEmpresa;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "FECHA_PAGO_ORIGEN")
-	private Date fechaPagoOrigen;
-
 	@Column(name = "AUTORIZADOR")
 	private String autorizador;
 
@@ -258,14 +254,6 @@ public class PagoDevolucion implements Serializable {
 		this.rfcEmpresa = rfcEmpresa;
 	}
 
-	public Date getFechaPagoOrigen() {
-		return fechaPagoOrigen;
-	}
-
-	public void setFechaPagoOrigen(Date fechaPagoOrigen) {
-		this.fechaPagoOrigen = fechaPagoOrigen;
-	}
-
 	public String getAutorizador() {
 		return autorizador;
 	}
@@ -281,7 +269,7 @@ public class PagoDevolucion implements Serializable {
 				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
 				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
 				+ solicitante + ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen
-				+ ", rfcEmpresa=" + rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
+				+ ", rfcEmpresa=" + rfcEmpresa + ", autorizador=" + autorizador
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 

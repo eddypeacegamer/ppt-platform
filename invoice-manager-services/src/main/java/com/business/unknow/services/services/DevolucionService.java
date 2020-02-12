@@ -82,7 +82,7 @@ public class DevolucionService {
 		if (!receptorType.isPresent() && !idReceptor.isPresent()) {
 			result = repository.findAll(PageRequest.of(page, size));
 		} else {
-			result = repository.findDevolucionesByParamsPage(receptorType.get(), idReceptor.get(),
+			result = repository.findDevolucionesByParamsPage(receptorType.get(), idReceptor.get(), "D",
 					PageRequest.of(page, size));
 		}
 		return new PageImpl<>(mapper.getDevolucionesDtoFromEntities(result.getContent()), result.getPageable(),
@@ -90,12 +90,13 @@ public class DevolucionService {
 	}
 
 	public List<DevolucionDto> getDevolucionesPorReceptor(String tipoReceptor, String idReceptor) {
-		return mapper.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor));
+		return mapper
+				.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor, "D"));
 	}
-	
+
 	public Double getMontoDevoluciones(String tipoReceptor, String idReceptor) {
 		Double result = repository.findMontoByParams(tipoReceptor, idReceptor);
-		return (result==null)?0.0:result;
+		return (result == null) ? 0.0 : result;
 	}
 
 	public DevolucionDto insertDevolution(DevolucionDto devolucion) {
@@ -115,9 +116,10 @@ public class DevolucionService {
 	public PagoDevolucionDto solicitudDevolucion(PagoDevolucionDto dto) throws InvoiceManagerException {
 		devolucionValidator.validatePostDevolucionPago(dto);
 		dto = devolucionesBuilderService.buildDevolucionPago(dto);
-		devolucionRepository.save(devolucionesBuilderService.buildPagoDevolucion(dto));
-		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
+		PagoDevolucionDto pagoDto = pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
 				pagoDevolucionRepository.save(pagoDevolucionMapper.getEntityFromPagoDevolucionDto(dto)));
+		devolucionRepository.save(devolucionesBuilderService.buildPagoDevolucion(pagoDto));
+		return pagoDto;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

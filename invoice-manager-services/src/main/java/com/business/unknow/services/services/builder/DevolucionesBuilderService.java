@@ -42,7 +42,7 @@ public class DevolucionesBuilderService {
 	public Devolucion buildPagoDevolucion(PagoDevolucionDto dto) {
 		return devolucionMapper.getEntityFromDevolucionDto(new DevolucionDtoBuilder()
 				.setIdPagoOrigen(dto.getId())
-				.setMonto(dto.getMonto())
+				.setMonto(dto.getMonto().negate())
 				.setReceptor(dto.getReceptor())
 				.setTipoReceptor(dto.getTipoReceptor())
 				.setTipo("C").build());

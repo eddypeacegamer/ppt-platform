@@ -25,7 +25,6 @@ public class PagoDevolucionDto implements Serializable {
 	private String tipoCuentaOrigen;
 	private String cuentaOrigen;
 	private String rfcEmpresa;
-	private Date fechaPagoOrigen;
 	private String autorizador;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -166,14 +165,6 @@ public class PagoDevolucionDto implements Serializable {
 		this.rfcEmpresa = rfcEmpresa;
 	}
 
-	public Date getFechaPagoOrigen() {
-		return fechaPagoOrigen;
-	}
-
-	public void setFechaPagoOrigen(Date fechaPagoOrigen) {
-		this.fechaPagoOrigen = fechaPagoOrigen;
-	}
-
 	public String getAutorizador() {
 		return autorizador;
 	}
@@ -205,7 +196,7 @@ public class PagoDevolucionDto implements Serializable {
 				+ ", tipoReferencia=" + tipoReferencia + ", fechaPago=" + fechaPago + ", status=" + status
 				+ ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante=" + solicitante
 				+ ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen + ", rfcEmpresa="
-				+ rfcEmpresa + ", fechaPagoOrigen=" + fechaPagoOrigen + ", autorizador=" + autorizador
+				+ rfcEmpresa + ", autorizador=" + autorizador
 				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 

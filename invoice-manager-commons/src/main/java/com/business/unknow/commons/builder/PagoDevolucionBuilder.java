@@ -90,9 +90,4 @@ public class PagoDevolucionBuilder extends AbstractBuilder<PagoDevolucionDto> {
 		return this;
 	}
 
-	public PagoDevolucionBuilder setFechaPagoOrigen(Date fechaPagoOrigen) {
-		instance.setFechaPagoOrigen(fechaPagoOrigen);
-		return this;
-	}
-
 }
