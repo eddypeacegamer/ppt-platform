@@ -22,7 +22,7 @@ public interface CuentaBancariaRepository extends JpaRepository<CuentaBancaria, 
 	public Optional<CuentaBancaria> findByCuenta(String cuenta);
 	public Optional<CuentaBancaria> findByClabe(String clabe);
 
-	@Query("select c from CuentaBancaria c where c.banco like banco(:banco) and c.empresa like upper(:empresa) and c.clabe like upper(:clabe) and c.fechaCreacion between :since and :to")
+	@Query("select c from CuentaBancaria c where c.banco like upper(:banco) and c.empresa like upper(:empresa) and c.clabe like upper(:clabe) and c.fechaCreacion between :since and :to")
 	public Page<CuentaBancaria> findCuentasByFilterParams(@Param("banco") String banco,@Param("empresa") String empresa,@Param("clabe") String clabe, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 	
 

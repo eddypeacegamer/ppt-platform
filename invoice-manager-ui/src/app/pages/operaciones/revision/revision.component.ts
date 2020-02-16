@@ -65,7 +65,6 @@ export class RevisionComponent implements OnInit {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService: PaymentsData,
     private filesService: FilesData,
     private userService: UsersData,
     private downloadService: DownloadInvoiceFilesService,
