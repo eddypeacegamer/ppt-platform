@@ -58,9 +58,6 @@ public class DevolucionService {
 	private PagoDevolucionRepository pagoDevolucionRepository;
 	
 	@Autowired
-	private DevolucionRepository devolucionRepository;
-
-	@Autowired
 	private DevolucionMapper mapper;
 
 	@Autowired
@@ -117,10 +114,10 @@ public class DevolucionService {
 	public PagoDevolucionDto solicitudDevolucion(PagoDevolucionDto dto) throws InvoiceManagerException {
 		devolucionValidator.validatePostDevolucionPago(dto);
 		dto = devolucionesBuilderService.buildDevolucionPago(dto);
-		PagoDevolucionDto pagoDto = pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
+		Devolucion dev = repository.save(devolucionesBuilderService.buildPagoDevolucion(dto));
+		dto.setIdDevolucion(dev.getId());
+		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
 				pagoDevolucionRepository.save(pagoDevolucionMapper.getEntityFromPagoDevolucionDto(dto)));
-		devolucionRepository.save(devolucionesBuilderService.buildPagoDevolucion(pagoDto));
-		return pagoDto;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -129,6 +126,16 @@ public class DevolucionService {
 		Optional<PagoDevolucion> pagoDevolucion =pagoDevolucionRepository.findById(id);
 		if(pagoDevolucion.isPresent()) {
 			pagoDevolucion.get().setStatus(dto.getStatus());
+			pagoDevolucion.get().setAutorizador(dto.getAutorizador());
+			pagoDevolucion.get().setComentarios(dto.getComentarios());
+			if("RECHAZADO".equalsIgnoreCase(dto.getStatus())) {
+				repository.deleteById(dto.getIdDevolucion()); //returns ammount to account
+			}else {
+				//TODO include here expenses in amounts table
+				pagoDevolucion.get().setFechaPago(dto.getFechaPago());
+				pagoDevolucion.get().setRfcEmpresa(dto.getRfcEmpresa());
+				pagoDevolucion.get().setCuentaPago(dto.getCuentaPago());
+			}
 			return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
 					pagoDevolucionRepository.save(pagoDevolucion.get()));
 		}else {
@@ -174,9 +181,9 @@ public class DevolucionService {
 		if (tipoReceptor.length()>0 && idReceptor.length()>0) {
 			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor, PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		} else if(status.length()>0){
-			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
+			result = pagoDevolucionRepository.findByStatusAndParams(status, String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor),String.format("%%%s%%", tipoReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}else {
-			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
+			result = pagoDevolucionRepository.findByParams(String.format("%%%s%%", formaPago),  String.format("%%%s%%", beneficiario), String.format("%%%s%%", idReceptor),String.format("%%%s%%", tipoReceptor), PageRequest.of(page, size,Sort.by("fechaCreacion").descending()));
 		}
 		return new PageImpl<>(pagoDevolucionMapper.getPagoDevolucionesDtoFromEntities(result.getContent()), result.getPageable(), result.getTotalElements());
 	}

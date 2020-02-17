@@ -75,6 +75,8 @@
               <tr>
                 <th scope="col" class="text-center">Detalle</th>
                 <th scope="col" class="text-center">Folio Devolucion</th>
+                <th scope="col" class="text-center">Tipo receptor</th>
+                <th scope="col" class="text-center">ID Receptor</th>
                 <th scope="col" class="text-center">Beneficiario</th>
                 <th scope="col" class="text-center">Importe</th>
                 <th scope="col" class="text-center">Forma de pago</th>
@@ -93,6 +95,8 @@
                     (click)="openDialog(fila)"><i class="fa fa-search"></i></button>
                 </td>
                 <td scope="row" class="text-center">{{fila.id}}</td>
+                <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
+                <td scope="row" class="text-center">{{fila.receptor}}</td>
                 <td scope="row" class="text-center">{{fila.beneficiario}}</td>
                 <td scope="row" class="text-right">{{fila.monto | currency}}</td>
                 <td scope="row" class="text-center">{{fila.formaPago}}</td>

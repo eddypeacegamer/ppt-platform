@@ -46,44 +46,31 @@
     <br>
     <p class="font-weight-bold">Datos de cuenta fondeo</p>
     <div class="row">
-      <div class="col-sm-3">
+      <!--div class="col-sm-3">
         <label for="inputCompanyType" class="label">Tipo Empresa</label>
-          <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control">
-            <option value="*">Seleccionar</option>
+          <select selected="A" id="inputCompanyType" style="display:block;width: 250px;" class="form-control" [(ngModel)]="formInfo.linea">
             <option value="A">Tipo A</option>
             <option value="B">Tipo B</option>
             <option value="C">Tipo C</option>
           </select>
-      </div>
+      </div-->
       <div class="col-sm-3">
-        <label for="inputRfc" class="label">RFC</label>
-        <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.rfc"
+        <label for="inputRfc" class="label">RFC Empresa retiro</label>
+        <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.rfc" (ngModelChange)="companySearch($event)" 
           fullWidth placeholder="RFC Empresa">
       </div>
-      <div class="col-md-6">
-        <label for="inputEmpresa" class="label">Empresa</label>
-        <select id="inputEmpresa" class="form-control" 
-          [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
-          <option value="*">Seleccionar</option>
-          <!--option *ngFor="let company of companiesCat" [(value)]="company.id">
-            {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
-          </!--option-->
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-7">
+      <div class="col-sm-6">
         <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
         <select selected="1" id="inputPayType" style="display:block;" class="form-control"
           [(ngModel)]="formInfo.cuenta" >
           <option value="*">Seleccionar</option>
-          <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} -- {{cuenta.clabe}}</option>
+          <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{cuenta.empresa}} -- {{cuenta.banco}} -- {{cuenta.cuenta}}</option>
         </select>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <label for="payAmmount" class="label">Fecha de pago</label>
         <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
-          [(ngModel)]="formInfo.fechaPago">
+          [(ngModel)]="payment.fechaPago">
         <nb-datepicker #formpicker></nb-datepicker>
       </div>
     </div>

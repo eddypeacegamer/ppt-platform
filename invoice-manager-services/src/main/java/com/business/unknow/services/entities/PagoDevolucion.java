@@ -80,17 +80,20 @@ public class PagoDevolucion implements Serializable {
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
 
-	@Column(name = "TIPO_CUENTA_ORIGEN")
-	private String tipoCuentaOrigen;
-
-	@Column(name = "CUENTA_ORIGEN")
-	private String cuentaOrigen;
+	@Column(name = "CUENTA_PAGO")
+	private String cuentaPago;
 
 	@Column(name = "RFC_EMPRESA")
 	private String rfcEmpresa;
 
 	@Column(name = "AUTORIZADOR")
 	private String autorizador;
+	
+	@Column(name = "COMENTARIOS")
+	private String comentarios;
+	
+	@Column(name = "ID_DEVOLUCION")
+	private Integer idDevolucion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -165,7 +168,7 @@ public class PagoDevolucion implements Serializable {
 	public void setTipoReferencia(String tipoReferencia) {
 		this.tipoReferencia = tipoReferencia;
 	}
-	
+
 	public String getReferencia() {
 		return referencia;
 	}
@@ -182,12 +185,76 @@ public class PagoDevolucion implements Serializable {
 		this.fechaPago = fechaPago;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getTipoReceptor() {
+		return tipoReceptor;
+	}
+
+	public void setTipoReceptor(String tipoReceptor) {
+		this.tipoReceptor = tipoReceptor;
+	}
+
+	public String getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(String receptor) {
+		this.receptor = receptor;
+	}
+
 	public String getSolicitante() {
 		return solicitante;
 	}
 
 	public void setSolicitante(String solicitante) {
 		this.solicitante = solicitante;
+	}
+
+	public String getCuentaPago() {
+		return cuentaPago;
+	}
+
+	public void setCuentaPago(String cuentaPago) {
+		this.cuentaPago = cuentaPago;
+	}
+
+	public String getRfcEmpresa() {
+		return rfcEmpresa;
+	}
+
+	public void setRfcEmpresa(String rfcEmpresa) {
+		this.rfcEmpresa = rfcEmpresa;
+	}
+
+	public String getAutorizador() {
+		return autorizador;
+	}
+
+	public void setAutorizador(String autorizador) {
+		this.autorizador = autorizador;
+	}
+	
+	public String getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
+
+	public Integer getIdDevolucion() {
+		return idDevolucion;
+	}
+
+	public void setIdDevolucion(Integer idDevolucion) {
+		this.idDevolucion = idDevolucion;
 	}
 
 	public Date getFechaCreacion() {
@@ -206,71 +273,14 @@ public class PagoDevolucion implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getTipoReceptor() {
-		return tipoReceptor;
-	}
-
-	public void setTipoReceptor(String tipoReceptor) {
-		this.tipoReceptor = tipoReceptor;
-	}
-	
-	public String getReceptor() {
-		return receptor;
-	}
-
-	public void setReceptor(String receptor) {
-		this.receptor = receptor;
-	}
-
-	public String getTipoCuentaOrigen() {
-		return tipoCuentaOrigen;
-	}
-
-	public void setTipoCuentaOrigen(String tipoCuentaOrigen) {
-		this.tipoCuentaOrigen = tipoCuentaOrigen;
-	}
-
-	public String getCuentaOrigen() {
-		return cuentaOrigen;
-	}
-
-	public void setCuentaOrigen(String cuentaOrigen) {
-		this.cuentaOrigen = cuentaOrigen;
-	}
-
-	public String getRfcEmpresa() {
-		return rfcEmpresa;
-	}
-
-	public void setRfcEmpresa(String rfcEmpresa) {
-		this.rfcEmpresa = rfcEmpresa;
-	}
-
-	public String getAutorizador() {
-		return autorizador;
-	}
-
-	public void setAutorizador(String autorizador) {
-		this.autorizador = autorizador;
-	}
-
 	@Override
 	public String toString() {
 		return "PagoDevolucion [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
 				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
 				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
 				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
-				+ solicitante + ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen
-				+ ", rfcEmpresa=" + rfcEmpresa + ", autorizador=" + autorizador
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ solicitante + ", cuentaPagop=" + cuentaPago + ", rfcEmpresa=" + rfcEmpresa + ", autorizador="
+				+ autorizador + ", idDevolucion=" + idDevolucion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }

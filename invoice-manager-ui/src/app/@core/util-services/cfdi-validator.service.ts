@@ -50,7 +50,7 @@ export class CfdiValidatorService {
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe * 3 + impuesto * 3) / 3;
       }
-      total += Math.round(100 * (base * 3 + impuesto * 3) / 3) / 100;
+      total += (base * 3 + impuesto * 3) / 3;
     }
     cfdi.total = total;
     cfdi.subtotal = subtotal;

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { GenericPage } from '../../../models/generic-page';
-import { UsersData, User } from '../../../@core/data/users-data';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { NbDialogService } from '@nebular/theme';
@@ -14,14 +13,13 @@ import { ValidacionDevolucionComponent } from './validacion-devolucion/validacio
 })
 export class DevolucionesComponent implements OnInit {
 
-  public user: User;
-  public filterParams: any = { formaPago: '*', status: 'VALIDACION', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
+  public filterParams: any = 
+    { formaPago: '*', status: 'VALIDACION', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
   public errors: string[] = [];
   public page: GenericPage<PagoDevolucion> = new GenericPage();
   public pageSize = '10';
 
   constructor(
-    private userService: UsersData,
     private devolutionsService: DevolutionData,
     private donwloadService: DownloadCsvService,
     private dialogService: NbDialogService,
@@ -30,7 +28,6 @@ export class DevolucionesComponent implements OnInit {
     ngOnInit() {
       this.updateDataTable();
       this.filterParams = { formaPago: '*', status: 'VALIDACION', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
-      this.userService.getUserInfo().subscribe(user => this.user = user);
     }
     public updateDataTable(currentPage?: number, pageSize?: number) {
       const pageValue = currentPage || 0;
