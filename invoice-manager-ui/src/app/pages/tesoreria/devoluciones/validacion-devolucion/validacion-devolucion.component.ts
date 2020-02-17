@@ -23,7 +23,7 @@ export class ValidacionDevolucionComponent implements OnInit {
   public errorMesage: string;
   public cuentas = [];
 
-  public formInfo: any = { rfc: '', empresa: '*', cuenta: '*', fechaPago: '' };
+  public formInfo: any = { rfc: '', empresa: '*', cuenta: '*'};
 
   constructor(protected ref: NbDialogRef<ValidacionDevolucionComponent>,
     private devolutionsService: DevolutionData,
@@ -63,16 +63,14 @@ export class ValidacionDevolucionComponent implements OnInit {
 
   acceptDevolution() {
     this.errorMesage = '';
-
     if (this.cuentas.length > 0) {
       const account: Cuenta = this.cuentas.find(c => c.id === this.formInfo.cuenta);
       const solicitud = { ... this.payment };
 
       solicitud.autorizador = this.user.email;
-      if (this.formInfo.fechaPago === undefined || this.formInfo.fechaPago.length < 1) {
+      if (solicitud.fechaPago === undefined) {
         this.errorMesage = 'La fecha de pago es requerida';
       } else {
-        solicitud.fechaPago = this.formInfo.fechaPago;
         solicitud.status = 'PAGADO';
         solicitud.cuentaPago = account.cuenta;
         solicitud.rfcEmpresa = account.empresa;

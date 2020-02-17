@@ -132,6 +132,7 @@ public class DevolucionService {
 				repository.deleteById(dto.getIdDevolucion()); //returns ammount to account
 			}else {
 				//TODO include here expenses in amounts table
+				pagoDevolucion.get().setFechaPago(dto.getFechaPago());
 				pagoDevolucion.get().setRfcEmpresa(dto.getRfcEmpresa());
 				pagoDevolucion.get().setCuentaPago(dto.getCuentaPago());
 			}

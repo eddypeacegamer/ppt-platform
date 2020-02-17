@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PagoDevolucionDto implements Serializable {
 
 	private static final long serialVersionUID = 5324209502166412941L;
@@ -17,6 +24,7 @@ public class PagoDevolucionDto implements Serializable {
 	private String banco;
 	private String tipoReferencia;
 	private String referencia;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaPago;
 	private String status;
 	private String tipoReceptor;
@@ -27,7 +35,9 @@ public class PagoDevolucionDto implements Serializable {
 	private String autorizador;
 	private String comentarios;
 	private Integer idDevolucion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	public Integer getId() {
 		return id;

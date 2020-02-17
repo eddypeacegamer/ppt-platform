@@ -33,30 +33,6 @@ export class DevolutionService {
   }
 
   public findDevolutionsRequests(page: number, size: number, filterParams?: any): Observable<any> {
-    /* const pago: PagoDevolucion = new PagoDevolucion();
-    pago.id = 12;
-    pago.solicitante = 'aaa@gmail.com';
-    pago.banco = 'BBVA';
-    pago.beneficiario = 'fulanito';
-    pago.formaPago = 'TRANSFERENCIA';
-    pago.monto = 15544.5;
-    pago.receptor = 'aaa@gmail.com';
-    pago.referencia = '098765432112345678';
-    pago.tipoReferencia = 'CLABE';
-    pago.status = 'ACEPTADO';
-    pago.comentarios = 'Loa pagos deberan de hacerse directamente al deposito de la compra de un automovil';
-    pago.fechaActualizacion = new Date();
-    pago.fechaCreacion = new Date();
-    pago.fechaPago = new Date();
-    const pageResponse: GenericPage<PagoDevolucion> = new GenericPage();
-    pageResponse.empty = false;
-    pageResponse.numberOfElements = 1;
-    pageResponse.totalElements = 1;
-    pageResponse.size = size;
-    pageResponse.number = page;
-    pageResponse.content = [pago];
-    console.log('finding devolutions requests:', filterParams);
-    return of(pageResponse); */
     let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
       if (filterParams[key] !== undefined && filterParams[key].length > 0) {
