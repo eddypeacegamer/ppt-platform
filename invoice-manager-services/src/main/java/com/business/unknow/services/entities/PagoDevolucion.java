@@ -80,17 +80,17 @@ public class PagoDevolucion implements Serializable {
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
 
-	@Column(name = "TIPO_CUENTA_ORIGEN")
-	private String tipoCuentaOrigen;
-
-	@Column(name = "CUENTA_ORIGEN")
-	private String cuentaOrigen;
+	@Column(name = "CUENTA_PAGO")
+	private String cuentaPago;
 
 	@Column(name = "RFC_EMPRESA")
 	private String rfcEmpresa;
 
 	@Column(name = "AUTORIZADOR")
 	private String autorizador;
+	
+	@Column(name = "ID_DEVOLUCION")
+	private Integer idDevolucion;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -165,7 +165,7 @@ public class PagoDevolucion implements Serializable {
 	public void setTipoReferencia(String tipoReferencia) {
 		this.tipoReferencia = tipoReferencia;
 	}
-	
+
 	public String getReferencia() {
 		return referencia;
 	}
@@ -180,30 +180,6 @@ public class PagoDevolucion implements Serializable {
 
 	public void setFechaPago(Date fechaPago) {
 		this.fechaPago = fechaPago;
-	}
-
-	public String getSolicitante() {
-		return solicitante;
-	}
-
-	public void setSolicitante(String solicitante) {
-		this.solicitante = solicitante;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public String getStatus() {
@@ -221,7 +197,7 @@ public class PagoDevolucion implements Serializable {
 	public void setTipoReceptor(String tipoReceptor) {
 		this.tipoReceptor = tipoReceptor;
 	}
-	
+
 	public String getReceptor() {
 		return receptor;
 	}
@@ -230,20 +206,20 @@ public class PagoDevolucion implements Serializable {
 		this.receptor = receptor;
 	}
 
-	public String getTipoCuentaOrigen() {
-		return tipoCuentaOrigen;
+	public String getSolicitante() {
+		return solicitante;
 	}
 
-	public void setTipoCuentaOrigen(String tipoCuentaOrigen) {
-		this.tipoCuentaOrigen = tipoCuentaOrigen;
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
 	}
 
-	public String getCuentaOrigen() {
-		return cuentaOrigen;
+	public String getCuentaPago() {
+		return cuentaPago;
 	}
 
-	public void setCuentaOrigen(String cuentaOrigen) {
-		this.cuentaOrigen = cuentaOrigen;
+	public void setCuentaPago(String cuentaPago) {
+		this.cuentaPago = cuentaPago;
 	}
 
 	public String getRfcEmpresa() {
@@ -262,15 +238,38 @@ public class PagoDevolucion implements Serializable {
 		this.autorizador = autorizador;
 	}
 
+	public Integer getIdDevolucion() {
+		return idDevolucion;
+	}
+
+	public void setIdDevolucion(Integer idDevolucion) {
+		this.idDevolucion = idDevolucion;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
 	@Override
 	public String toString() {
 		return "PagoDevolucion [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
 				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
 				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
 				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
-				+ solicitante + ", tipoCuentaOrigen=" + tipoCuentaOrigen + ", cuentaOrigen=" + cuentaOrigen
-				+ ", rfcEmpresa=" + rfcEmpresa + ", autorizador=" + autorizador
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ solicitante + ", cuentaPagop=" + cuentaPago + ", rfcEmpresa=" + rfcEmpresa + ", autorizador="
+				+ autorizador + ", idDevolucion=" + idDevolucion + ", fechaCreacion=" + fechaCreacion
+				+ ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
-
 }

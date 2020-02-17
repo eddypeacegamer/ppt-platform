@@ -65,13 +65,13 @@ public class PagoDevolucionBuilder extends AbstractBuilder<PagoDevolucionDto> {
 		return this;
 	}
 
-	public PagoDevolucionBuilder setTipoCuentaOrigen(String tipoCuentaOrigen) {
-		instance.setTipoCuentaOrigen(tipoCuentaOrigen);
+	public PagoDevolucionBuilder setIdDevolucion(Integer idDevolucion) {
+		instance.setIdDevolucion(idDevolucion);
 		return this;
 	}
 
-	public PagoDevolucionBuilder setCuentaOrigen(String cuentaOrigen) {
-		instance.setCuentaOrigen(cuentaOrigen);
+	public PagoDevolucionBuilder setCuentaPago(String cuentaPago) {
+		instance.setCuentaPago(cuentaPago);
 		return this;
 	}
 
