@@ -48,8 +48,10 @@ public class FacturacionModernaExecutor {
 					context.getFacturaDto().getRfcEmisor(), fileHelper.stringEncodeBase64(context.getXml()), true, true,
 					true);
 			FacturaModernaResponseModel response = client.getFacturacionModernaClient().stamp(requestModel);
+			System.out.println(fileHelper.stringDecodeBase64(response.getXml()));
+			String cfdi=fileHelper.stringDecodeBase64(response.getXml()).replaceAll("xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\"", "");
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
-			Cfdi currentCfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(response.getXml()));
+			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),

@@ -5,14 +5,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "TimbreFiscalDigital",namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
+@XmlRootElement(name = "TimbreFiscalDigital", namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TimbreFiscalDigital {
-
-	@XmlAttribute(name = "tfd=",namespace = "http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/timbrefiscaldigital/TimbreFiscalDigitalv11.xsd")
-	private String timbreDigitalUri;
-	@XmlAttribute(name = "schemaLocation",namespace = "http://www.w3.org/2001/XMLSchema-instance")
-	private String schemaLocationUri;
 	@XmlAttribute(name = "Version")
 	private String version;
 	@XmlAttribute(name = "UUID")
@@ -28,20 +23,20 @@ public class TimbreFiscalDigital {
 	@XmlAttribute(name = "SelloSAT")
 	private String SelloSAT;
 
-	public String getTimbreDigitalUri() {
-		return timbreDigitalUri;
+	public TimbreFiscalDigital() {
+		super();
 	}
 
-	public void setTimbreDigitalUri(String timbreDigitalUri) {
-		this.timbreDigitalUri = timbreDigitalUri;
-	}
-
-	public String getSchemaLocationUri() {
-		return schemaLocationUri;
-	}
-
-	public void setSchemaLocationUri(String schemaLocationUri) {
-		this.schemaLocationUri = schemaLocationUri;
+	public TimbreFiscalDigital(String version, String uuid, String fechaTimbrado, String rfcProvCertif, String selloCFD,
+			String noCertificadoSAT, String selloSAT) {
+		super();
+		this.version = version;
+		this.uuid = uuid;
+		this.fechaTimbrado = fechaTimbrado;
+		this.rfcProvCertif = rfcProvCertif;
+		this.selloCFD = selloCFD;
+		this.noCertificadoSAT = noCertificadoSAT;
+		SelloSAT = selloSAT;
 	}
 
 	public String getVersion() {
@@ -102,10 +97,9 @@ public class TimbreFiscalDigital {
 
 	@Override
 	public String toString() {
-		return "TimbreFiscalDigital [timbreDigitalUri=" + timbreDigitalUri + ", schemaLocationUri=" + schemaLocationUri
-				+ ", version=" + version + ", uuid=" + uuid + ", fechaTimbrado=" + fechaTimbrado + ", rfcProvCertif="
-				+ rfcProvCertif + ", selloCFD=" + selloCFD + ", noCertificadoSAT=" + noCertificadoSAT + ", SelloSAT="
-				+ SelloSAT + "]";
+		return "TimbreFiscalDigital [version=" + version + ", uuid=" + uuid + ", fechaTimbrado=" + fechaTimbrado
+				+ ", rfcProvCertif=" + rfcProvCertif + ", selloCFD=" + selloCFD + ", noCertificadoSAT="
+				+ noCertificadoSAT + ", SelloSAT=" + SelloSAT + "]";
 	}
 
 }

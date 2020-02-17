@@ -223,6 +223,7 @@ public class Cfdi {
 	public void setComplemento(Complemento complemento) {
 		this.complemento = complemento;
 	}
+	
 
 	@Override
 	public String toString() {
