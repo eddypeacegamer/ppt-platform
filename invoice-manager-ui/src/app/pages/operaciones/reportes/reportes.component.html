@@ -90,7 +90,18 @@
             <thead class="thead-light">
               <tr>
                 <th class="text-center">Acciones</th>
-                <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-center">RFC Empresa</th>
+                  <th class="text-center">Razon Social Empresa</th>
+                  <th class="text-center">RFC Cliente</th>
+                  <th class="text-center">Razon Social Cliente</th>
+                  <th class="text-center">Tipo Documento</th>
+                  <th class="text-center">Estatus factura</th>
+                  <th class="text-center">Estatus pago</th>
+                  <th class="text-center">Detalle</th>
+                  <th class="text-center">Promotor</th>
+                  <th class="text-center">Solicitud</th>
+                  <th class="text-center">Actualizacion</th>
               </tr>
             </thead>
             <tbody>
@@ -100,17 +111,17 @@
                   </button> 
                 </td>
                 <td scope="row">{{fila.folio}}</td>
-                <td scope="row">{{fila.rfcEmisor}}</td>
-                <td scope="row">{{fila.razonSocialEmisor}}</td>
-                <td scope="row">{{fila.rfcRemitente}}</td>
-                <td scope="row">{{fila.razonSocialRemitente}}</td>
-                <td scope="row">{{fila.tipoDocumento}}</td>
-                <td scope="row">{{fila.metodoPago}}</td>
-                <td scope="row">{{fila.statusFactura}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.total | currency}}</td>
+                  <td scope="row">{{fila.rfcEmisor}}</td>
+                  <td scope="row">{{fila.razonSocialEmisor}}</td>
+                  <td scope="row">{{fila.rfcRemitente}}</td>
+                  <td scope="row">{{fila.razonSocialRemitente}}</td>
+                  <td scope="row">{{fila.tipoDocumento}}</td>
+                  <td scope="row">{{fila.statusFactura}}</td>
+                  <td scope="row">{{fila.statusPago}}</td>
+                  <td scope="row">{{fila.statusDetail}}</td>
+                  <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
-                <td scope="row">{{fila.fechaTimbrado}}</td>
+                <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>
             </tbody>
           </table>

@@ -89,6 +89,9 @@ public class PagoDevolucion implements Serializable {
 	@Column(name = "AUTORIZADOR")
 	private String autorizador;
 	
+	@Column(name = "COMENTARIOS")
+	private String comentarios;
+	
 	@Column(name = "ID_DEVOLUCION")
 	private Integer idDevolucion;
 
@@ -236,6 +239,14 @@ public class PagoDevolucion implements Serializable {
 
 	public void setAutorizador(String autorizador) {
 		this.autorizador = autorizador;
+	}
+	
+	public String getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
 	}
 
 	public Integer getIdDevolucion() {

@@ -52,8 +52,6 @@ export class CfdiValidatorService {
       }
       total += (base * 3 + impuesto * 3) / 3;
     }
-    console.log(total);
-    console.log(subtotal);
     cfdi.total = total;
     cfdi.subtotal = subtotal;
     return cfdi;

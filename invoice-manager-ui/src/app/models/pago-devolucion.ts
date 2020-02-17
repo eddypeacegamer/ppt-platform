@@ -14,6 +14,10 @@ export class PagoDevolucion {
     public solicitante: string;
     public comentarios: string;
     public receptor: string;
+    public cuentaPago: string;
+    public rfcEmpresa: string;
+    public autorizador: string;
+    public idDevolucion: number;
     public tipoReceptor: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;

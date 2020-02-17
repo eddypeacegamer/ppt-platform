@@ -8,6 +8,8 @@ import { GenericPage } from '../../../../models/generic-page';
 import { Empresa } from '../../../../models/empresa';
 import { Contribuyente } from '../../../../models/contribuyente';
 import { CuentasData } from '../../../../@core/data/cuentas-data';
+import { User, UsersData } from '../../../../@core/data/users-data';
+import { Cuenta } from '../../../../models/cuenta';
 
 @Component({
   selector: 'ngx-validacion-devolucion',
@@ -17,17 +19,20 @@ import { CuentasData } from '../../../../@core/data/cuentas-data';
 export class ValidacionDevolucionComponent implements OnInit {
 
   @Input() payment: PagoDevolucion;
+  public user: User;
   public errorMesage: string;
   public cuentas = [];
 
-  public formInfo: any = {rfc : '', empresa: '*', cuenta: '*', fechaPago: ''};
+  public formInfo: any = { rfc: '', empresa: '*', cuenta: '*', fechaPago: '' };
 
   constructor(protected ref: NbDialogRef<ValidacionDevolucionComponent>,
     private devolutionsService: DevolutionData,
+    private userService: UsersData,
     private accountsService: CuentasData) { }
   ngOnInit() {
     this.errorMesage = '';
     this.getAccountInfo();
+    this.userService.getUserInfo().subscribe(user => this.user = user);
   }
 
 
@@ -35,47 +40,62 @@ export class ValidacionDevolucionComponent implements OnInit {
     this.ref.close();
   }
 
-  onCompanySelected() {
-
-  }
-
-  onPaymentBankSelected() {
-
-  }
-
   companySearch(rfc: string) {
-   if (rfc !== undefined && rfc.length >= 3) {
-    this.getAccountInfo(rfc);
-   }
-   if (rfc !== undefined && rfc.length === 0) {
-    this.getAccountInfo();
-   }
+    if (rfc !== undefined && rfc.length >= 3) {
+      this.getAccountInfo(rfc);
+    }
+    if (rfc !== undefined && rfc.length === 0) {
+      this.getAccountInfo();
+    }
   }
   private getAccountInfo(rfc?: string) {
-    this.accountsService.getAllCuentas(0, 25, {empresa: rfc || ''})
-    .subscribe(accounts => {
-      this.cuentas = accounts.content;
-      if ( !accounts.empty) {
-        this.formInfo.cuenta = this.cuentas[0].id; }
+    this.accountsService.getAllCuentas(0, 25, { empresa: rfc || '' })
+      .subscribe(accounts => {
+        this.cuentas = accounts.content;
+        if (!accounts.empty) {
+          this.formInfo.cuenta = this.cuentas[0].id;
+        } else {
+          this.cuentas = [];
+          this.formInfo.cuenta = '*';
+        }
       });
   }
 
   acceptDevolution() {
     this.errorMesage = '';
-    const solicitud = {... this.payment};
-    solicitud.status = 'RECHAZADO';
-    this.devolutionsService.updateDevolution(this.payment.id, solicitud)
-      .subscribe(success => this.ref.close(),
-      (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`);
+
+    if (this.cuentas.length > 0) {
+      const account: Cuenta = this.cuentas.find(c => c.id === this.formInfo.cuenta);
+      const solicitud = { ... this.payment };
+
+      solicitud.autorizador = this.user.email;
+      if (this.formInfo.fechaPago === undefined || this.formInfo.fechaPago.length < 1) {
+        this.errorMesage = 'La fecha de pago es requerida';
+      } else {
+        solicitud.fechaPago = this.formInfo.fechaPago;
+        solicitud.status = 'PAGADO';
+        solicitud.cuentaPago = account.cuenta;
+        solicitud.rfcEmpresa = account.empresa;
+        this.devolutionsService.updateDevolution(this.payment.id, solicitud)
+          .subscribe(success => this.ref.close(),
+            (error: HttpErrorResponse) => this.errorMesage = error.error.message
+              || `${error.statusText} : ${error.message}`);
+      }
+
+    } else {
+      this.errorMesage = 'No hay informacion de cuentas disponible';
+    }
   }
 
   rejectDevolution() {
     this.errorMesage = '';
-    const solicitud = {... this.payment};
-    solicitud.status = 'ACEPTADO';
+    const solicitud = { ... this.payment };
+    solicitud.autorizador = this.user.email;
+    solicitud.status = 'RECHAZADO';
     this.devolutionsService.updateDevolution(this.payment.id, solicitud)
       .subscribe(success => this.ref.close(),
-      (error: HttpErrorResponse) => this.errorMesage = error.error.message || `${error.statusText} : ${error.message}`);
+        (error: HttpErrorResponse) => this.errorMesage = error.error.message
+            || `${error.statusText} : ${error.message}`);
   }
 
 }

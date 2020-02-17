@@ -25,6 +25,7 @@ public class PagoDevolucionDto implements Serializable {
 	private String cuentaPago;
 	private String rfcEmpresa;
 	private String autorizador;
+	private String comentarios;
 	private Integer idDevolucion;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
@@ -129,6 +130,12 @@ public class PagoDevolucionDto implements Serializable {
 	}
 	public void setAutorizador(String autorizador) {
 		this.autorizador = autorizador;
+	}
+	public String getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
 	}
 	public Integer getIdDevolucion() {
 		return idDevolucion;
