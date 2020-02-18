@@ -33,19 +33,20 @@ public class ClientService {
 
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
-	
-	private ClienteValidator clientValidator= new ClienteValidator();
 
-	public Page<ClientDto> getClientsByParametros(Optional<String> promotor,String status, String rfc, String razonSocial, int page, int size) {
-		Page<Client> result; 
-				
-		if(promotor.isPresent()) {
-			result = repository.findClientsFromPromotorByParms(promotor.get(),String.format("%%%s%%", status),
+	private ClienteValidator clientValidator = new ClienteValidator();
+
+	public Page<ClientDto> getClientsByParametros(Optional<String> promotor, String status, String rfc,
+			String razonSocial, int page, int size) {
+		Page<Client> result;
+
+		if (promotor.isPresent()) {
+			result = repository.findClientsFromPromotorByParms(promotor.get(), String.format("%%%s%%", status),
 					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		}else {
-			result = repository.findClientsByParms(String.format("%%%s%%", status),
-					String.format("%%%s%%", rfc), String.format("%%%s%%", razonSocial),
+		} else {
+			result = repository.findClientsByParms(String.format("%%%s%%", status), String.format("%%%s%%", rfc),
+					String.format("%%%s%%", razonSocial),
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
 		return new PageImpl<>(mapper.getClientDtosFromEntities(result.getContent()), result.getPageable(),
@@ -81,7 +82,8 @@ public class ClientService {
 		}
 	}
 
-	public ClientDto updateClientInfo(ClientDto client, String rfc) {
+	public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
+		clientValidator.validatePostCliente(client);
 		if (repository.findByRfc(rfc).isPresent()) {
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
 		} else {
