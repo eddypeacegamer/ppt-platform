@@ -117,10 +117,10 @@ public class PagoExecutorService extends AbstractExecutorService {
 			cfdiPagoRepository.save(pago);
 		}
 		
-		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
-				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
-		timbradoFiscalDigitial.setCfdi(cfdi);
-		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
+//		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
+//				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
+//		timbradoFiscalDigitial.setCfdi(cfdi);
+//		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
 		
 		pagoRepository.save(pagoMapper.getEntityFromPagoDto(context.getPagoCredito()));//Update credito payment
 		

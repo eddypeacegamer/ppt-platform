@@ -15,11 +15,14 @@ import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.client.swsapiens.model.SwSapiensVersionEnum;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
+import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.SwSapiensClient;
 
@@ -28,6 +31,9 @@ public class SwSapinsExecutorService {
 
 	@Autowired
 	private SwSapiensClient swSapiensClient;
+	
+	@Autowired
+	private FacturaHelper facturaHelper;
 
 	@Autowired
 	private FileHelper fileHelper;
@@ -50,6 +56,11 @@ public class SwSapinsExecutorService {
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
+			String cfdi = fileHelper
+					.stringDecodeBase64(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
+			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();
 			qr.setFolio(context.getFacturaDto().getFolio());
@@ -68,6 +79,9 @@ public class SwSapinsExecutorService {
 			files.add(pdf);
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
+			e.printStackTrace();
+			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
+		}catch (InvoiceCommonException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		} catch (IOException e) {

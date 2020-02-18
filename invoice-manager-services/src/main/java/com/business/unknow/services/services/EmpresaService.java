@@ -67,7 +67,7 @@ public class EmpresaService {
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		empresaDto.setActivo(false);
 		empresaValidator.validatePostEmpresa(empresaDto);
-		return empresaEvaluatorService.validateEmpresa(empresaDto);
+		return empresaEvaluatorService.createEmpresa(empresaDto);
 	}
 
 	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {

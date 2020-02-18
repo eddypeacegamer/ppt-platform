@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.business.unknow.Constants.CfdiConstants;
 
 @XmlRootElement(name = "Comprobante", namespace = "http://www.sat.gob.mx/cfd/3")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Cfdi {
 
 	@XmlAttribute(name = "Version")

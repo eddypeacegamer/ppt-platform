@@ -24,7 +24,6 @@ public class FacturaHelper {
 			jaxbMarshaller.marshal(cfdi, sw);
 			return sw.toString();
 		} catch (JAXBException e) {
-			e.printStackTrace();
 			throw new InvoiceCommonException(e.getMessage());
 		}
 		

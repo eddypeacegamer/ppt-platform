@@ -75,7 +75,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   public onGiroSelection(giro:string){
-    this.companyInfo.giro = giro;
+    this.companyInfo.giro =  this.girosCat.find(g => g.nombre === giro).id.toString();
   }
 
   public onLineaSelected(linea:string){

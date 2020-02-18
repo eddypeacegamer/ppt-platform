@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
+import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -73,7 +74,10 @@ public class CfdiService {
 			conceptoDto.setImpuestos(getImpuestosByConcepto(conceptoDto.getId()));
 		}
 		List<CfdiPagoDto> pagosCfdi = getCfdiPagosByCfdi(cfdiDto.getId());
-		if (cfdiDto.getComplemento() != null) {
+		if (cfdiDto.getComplemento() == null) {
+			cfdiDto.setComplemento(new ComplementoDto());
+		}
+		if(pagosCfdi!=null&&!pagosCfdi.isEmpty()) {
 			cfdiDto.getComplemento().setPagos(pagosCfdi);
 		}
 		return cfdiDto;

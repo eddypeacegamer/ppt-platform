@@ -122,8 +122,7 @@ public class FacturaTranslator {
 		String cadenaOriginal = signHelper.getCadena(xml);
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
-		context.setXml(cdfiHelper.putsSign(xml, sello));
-
+		context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
 		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
 		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
@@ -143,4 +142,5 @@ public class FacturaTranslator {
 		}
 		return totalImpuestos;
 	}
+	
 }

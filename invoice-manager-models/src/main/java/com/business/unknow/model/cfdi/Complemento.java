@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 
 @XmlRootElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Complemento {
 
 	@XmlElement(name = "Pagos", namespace = "http://www.sat.gob.mx/Pagos")
