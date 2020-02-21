@@ -6,6 +6,7 @@ import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
+import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 
 const routes: Routes = [{
   path: '',
@@ -14,6 +15,9 @@ const routes: Routes = [{
     {
       path: 'precfdi/:folio',
       component: PreCfdiComponent,
+    }, {
+      path: 'precfdi/:folio/preferencias',
+      component: DevolutionPreferencesComponent,
     }, {
       path: 'clientes',
       component: ClientesComponent,

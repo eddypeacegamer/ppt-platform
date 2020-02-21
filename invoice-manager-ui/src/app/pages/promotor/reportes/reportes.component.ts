@@ -56,13 +56,18 @@ export class ReportesComponent implements OnInit {
         this.filterParams.payStatus = payStatus;
     }
 
-    public onValidationStatus(validationStatus:string){
+    public onValidationStatus(validationStatus: string) {
         this.filterParams.status = validationStatus;
     }
 
     public redirectToCfdi(folio: string) {
-      this.router.navigate([`./pages/promotor/precfdi/${folio}`])
+      this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
+
+    public redirectToPreferences(folio: string) {
+      this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
+    }
+    
 
     /***     Funciones tabla      ***/
 
