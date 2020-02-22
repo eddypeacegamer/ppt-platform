@@ -25,6 +25,7 @@ export class PagoDevolucion {
     constructor() {
         this.moneda = 'MXN';
         this.tipoCambio = 1.00;
+        this.monto = 0;
         this.status = 'VALIDACION';
         this.banco = 'N/A';
         this.formaPago = '*';

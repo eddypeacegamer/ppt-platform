@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Pago } from '../../models/pago';
 import { PagoDevolucion } from '../../models/pago-devolucion';
-import { GenericPage } from '../../models/generic-page';
 
 
 @Injectable({

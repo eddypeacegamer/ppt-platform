@@ -1,6 +1,4 @@
-import { StatusFactura } from '../status-factura';
 import { Cfdi } from './cfdi';
-import { Pago } from '../pago';
 
 export class Factura {
 

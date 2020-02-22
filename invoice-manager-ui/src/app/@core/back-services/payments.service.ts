@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Observable, of } from 'rxjs';
-import { Pago } from '../../models/pago';
+import { PagoFactura } from '../../models/pago-factura';
 import { Catalogo } from '../../models/catalogos/catalogo';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class PaymentsService {
   }
 
 
-  public insertNewPayment(folio: string, payment: Pago): Observable<any> {
+  public insertNewPayment(folio: string, payment: PagoFactura): Observable<any> {
     return this.httpClient.post(`../api/facturas/${folio}/pagos`, payment);
   }
 
@@ -28,7 +28,7 @@ export class PaymentsService {
     return this.httpClient.delete(`../api/facturas/${folio}/pagos/${paymentId}`);
   }
 
-  public updatePaymentWithValidation(folio: string, paymentId: number, payment: Pago): Observable<any> {
+  public updatePaymentWithValidation(folio: string, paymentId: number, payment: PagoFactura): Observable<any> {
     return this.httpClient.put(`../api/facturas/${folio}/pagos/${paymentId}`, payment);
   }
 
@@ -127,7 +127,7 @@ export class PaymentsService {
     return this.httpClient.get('../api/pagos/egresos/total', { params: pageParams });
   }
 
-  public updatePayment(payment: Pago): Observable<any> {
+  public updatePayment(payment: PagoFactura): Observable<any> {
     return this.httpClient.put(`../api/pagos/${payment.id}`, payment);
   }
 }

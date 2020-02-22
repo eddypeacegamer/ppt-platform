@@ -6,7 +6,7 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
-import { Pago } from '../../../models/pago';
+import { PagoFactura } from '../../../models/pago-factura';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -54,7 +54,7 @@ export class ValidacionPagosComponent implements OnInit {
     });
   }
 
-  public validar1(pago: Pago) {
+  public validar1(pago: PagoFactura) {
     this.errors = [];
     if (pago.solicitante !== this.user.email) {
       pago.revision1 = true;
@@ -67,7 +67,7 @@ export class ValidacionPagosComponent implements OnInit {
     }
   }
 
-  public validar2(pago: Pago) {
+  public validar2(pago: PagoFactura) {
     this.errors = [];
     if (pago.solicitante !== this.user.email && pago.revisor1 !== this.user.email ) {
       pago.revision2 = true;
@@ -81,7 +81,7 @@ export class ValidacionPagosComponent implements OnInit {
   }
 
 
-  openDialog(payment: Pago) {
+  openDialog(payment: PagoFactura) {
     this.errors = [];
     this.dialogService.open(ValidacionPagoComponent, {
       context: {

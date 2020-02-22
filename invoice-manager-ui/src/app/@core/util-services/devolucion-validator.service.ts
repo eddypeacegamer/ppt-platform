@@ -11,7 +11,7 @@ export class DevolucionValidatorService {
   constructor() { }
 
 
-  public calculateDevolutionAmmount(cfdi: Cfdi, client: Client, tipoReceptor: string) {
+  public calculateDevolutionAmmount(cfdi: Cfdi, client: Client, tipoReceptor: string): number {
     if (cfdi.metodoPago === 'PUE') {
       const baseComisiones = cfdi.total - cfdi.subtotal;
       if (tipoReceptor === 'CLIENTE') {
@@ -24,19 +24,16 @@ export class DevolucionValidatorService {
         return baseComisiones * client.porcentajePromotor / 16;
       }
     }else {
-      const importePago = cfdi.complemento.pagos[0].monto;
-      const baseComisiones = importePago / cfdi.total;
-
-      
-
+      const porcentajeImpuestos = (cfdi.total - cfdi.subtotal) / cfdi.total;
+      const baseComisiones = cfdi.complemento.pagos[0].monto * porcentajeImpuestos;
       if (tipoReceptor === 'CLIENTE') {
-        return cfdi.subtotal * client.porcentajeCliente;
+        return cfdi.complemento.pagos[0].monto + baseComisiones * (client.porcentajeCliente / 16 - 1);
       }
       if (tipoReceptor === 'CONTACTO') {
-        return cfdi.subtotal * client.porcentajeContacto;
+        return baseComisiones * client.porcentajeContacto / 16;
       }
       if (tipoReceptor === 'PROMOTOR') {
-        return cfdi.subtotal * client.porcentajePromotor;
+        return baseComisiones * client.porcentajePromotor / 16;
       }
     }
   }

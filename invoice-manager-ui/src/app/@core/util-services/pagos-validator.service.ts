@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Pago } from '../../models/pago';
+import { PagoFactura } from '../../models/pago-factura';
 import { Cfdi } from '../../models/factura/cfdi';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class PagosValidatorService {
   constructor() { }
 
 
-  public validatePago(pago: Pago, pagos: Pago[], cfdi: Cfdi): string[] {
+  public validatePago(pago: PagoFactura, pagos: PagoFactura[], cfdi: Cfdi): string[] {
     const messages = [];
     if (pago.banco === undefined || pago.banco === '*') {
       messages.push('El banco es un valor requerido');
@@ -44,15 +44,15 @@ export class PagosValidatorService {
     return messages;
   }
 
-  getPaymentAmmount(pagos: Pago[]): number {
+  getPaymentAmmount(pagos: PagoFactura[]): number {
     if (pagos.length === 0) {
       return 0;
     } else {
-      const payments: Pago[] = pagos.filter(p => p.formaPago !== 'CREDITO');
+      const payments: PagoFactura[] = pagos.filter(p => p.formaPago !== 'CREDITO');
       if (payments.length === 0) {
         return  0;
       } else {
-        return payments.map((p: Pago) => p.monto).reduce((total, p) => total + p);
+        return payments.map((p: PagoFactura) => p.monto).reduce((total, p) => total + p);
       }
     }
   }
