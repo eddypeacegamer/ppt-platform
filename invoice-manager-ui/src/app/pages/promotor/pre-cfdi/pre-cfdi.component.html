@@ -55,7 +55,7 @@
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="row">
 
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <div class="form-group">
                 <label for="inputGiro" class="label">Giro Empresa</label>
                 <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
@@ -65,7 +65,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="inputEmpresa" class="label">Empresa</label>
               <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
                 [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
@@ -75,13 +75,22 @@
                 </option>
               </select>
             </div>
-            <div class="col-md-4">
-              <label for="inputCliente" class="label">RFC cliente</label>
+            <div class="col-md-3">
+              <label for="inputCliente" class="label">Razon social</label>
               <div class="row form-inline">
-                <input type="text" [(ngModel)]="formInfo.clientRfc" fullWidth class="form-control"
+                <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control" (ngModelChange)="buscarClientInfo($event)"
                   placeholder="RFC CLIENTE">
-                <button type="button" nbButton status="primary" (click)="buscarClientInfo()">BUSCAR</button>
               </div>
+            </div>
+            <div class="col-md-3">
+              <label for="inputClient" class="label">Cliente</label>
+              <select id="inputClient" class="form-control" (change)="onClientSelected($event.target.value)"
+                [(ngModel)]="formInfo.clientRfc" style="display:block;" fullWidth>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let client of clientsCat" [(value)]="client.id">
+                  {{client.informacionFiscal.rfc}}-{{client.informacionFiscal.razonSocial}}
+                </option>
+              </select>
             </div>
           </div>
           <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">

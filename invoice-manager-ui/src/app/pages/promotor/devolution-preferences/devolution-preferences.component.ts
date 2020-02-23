@@ -26,6 +26,7 @@ export class DevolutionPreferencesComponent implements OnInit {
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
+  public facturaPadre: Factura;
   public formParams: any = {tab: 'CLIENTE', filename: ''};
   public solicitud: PagoDevolucion = new PagoDevolucion();
   public banksCat: Catalogo[] = [];
@@ -55,7 +56,9 @@ export class DevolutionPreferencesComponent implements OnInit {
       if (this.folioParam !== '*') {
         this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
-              console.log(this.folioParam,invoice);
+              if ( invoice.tipoDocumento === 'Complemento') {
+                this.invoiceService.getInvoiceByFolio(invoice.folioPadre).subscribe(padre => this.facturaPadre = padre);
+              }
               this.factura = invoice;
               this.clientsService.getClientByRFC(invoice.rfcRemitente)
                 .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); });
@@ -80,6 +83,10 @@ export class DevolutionPreferencesComponent implements OnInit {
         (error: HttpErrorResponse) => {
           this.solicitud = new PagoDevolucion();
           this.solicitud.tipoReceptor = tiporeceptor;
+          if (this.facturaPadre !== undefined) {
+            this.factura.cfdi.total = this.facturaPadre.cfdi.total;
+            this.factura.cfdi.subtotal = this.facturaPadre.cfdi.subtotal;
+          }
           this.solicitud.monto = this.devolutionValidator
               .calculateDevolutionAmmount(this.factura.cfdi, this.clientInfo, tiporeceptor);
               if (tiporeceptor === 'CLIENTE') {

@@ -21,6 +21,7 @@ import { FilesData } from '../../../@core/data/files-data';
 import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
 import { NbDialogService } from '@nebular/theme';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
+import { GenericPage } from '../../../models/generic-page';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public payCat: Catalogo[] = [];
   public devolutionCat: Catalogo[] = [];
   public payTypeCat: Catalogo[];
-
+  public clientsCat: Client[] = [];
   public newConcep: Concepto;
   public factura: Factura = new Factura();
   public folioParam: string;
@@ -45,7 +46,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public successMessage: string;
   public errorMessages: string[] = [];
-  public formInfo = { clientRfc: '', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*' };
+  public formInfo = { clientName: '', clientRfc:'*', companyRfc: '', giro: '*', empresa: '*', usoCfdi: '*', payType: '*' };
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
   public loading: boolean = false;
@@ -166,17 +167,37 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       });
   }
 
-  buscarClientInfo() {
-    this.errorMessages = [];
-    this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-      (client: Client) => {
-        if (client.activo === true) {
-          this.clientInfo = client.informacionFiscal;
-        } else {
-          alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
-          this.formInfo.clientRfc = '';
-        }
-      }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  buscarClientInfo( razonSocial: string) {
+    if ( razonSocial !== undefined && razonSocial.length > 5) {
+      this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
+          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+          .subscribe(clients => {
+            this.clientsCat = clients;
+            if ( clients.length > 0) {
+              this.formInfo.clientRfc = clients[0].id.toString();
+              this.onClientSelected(this.formInfo.clientRfc);
+            }
+          }, (error: HttpErrorResponse) => {
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+            this.clientsCat = [];
+            this.clientInfo = undefined;
+          });
+    }else {
+      this.clientsCat = [];
+      this.clientInfo = undefined;
+    }
+  }
+
+  onClientSelected(id: string) {
+    const value = +id;
+    if (!isNaN(value)) {
+      const client = this.clientsCat.find(c => c.id === Number(value));
+      if (client.activo === true) {
+        this.clientInfo = client.informacionFiscal;
+      } else {
+        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+      }
+    }
   }
 
   onUsoCfdiSelected(clave: string) {
