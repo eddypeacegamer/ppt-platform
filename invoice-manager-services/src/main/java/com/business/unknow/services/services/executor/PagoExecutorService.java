@@ -29,7 +29,6 @@ import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
-import com.business.unknow.services.repositories.facturas.TimbradoFiscalDigitialRepository;
 import com.business.unknow.services.services.CfdiService;
 
 @Service
@@ -62,8 +61,6 @@ public class PagoExecutorService extends AbstractExecutorService {
 	@Autowired
 	private CfdiPagoRepository cfdiPagoRepository;
 
-	@Autowired
-	private TimbradoFiscalDigitialRepository timbradoFiscalDigitialRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
