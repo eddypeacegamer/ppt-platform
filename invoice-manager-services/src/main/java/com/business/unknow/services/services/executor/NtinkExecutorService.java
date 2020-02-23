@@ -27,6 +27,7 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.NtlinkClient;
+import com.business.unknow.services.config.properties.NtlinkProperties;
 
 @Service
 public class NtinkExecutorService {
@@ -43,15 +44,15 @@ public class NtinkExecutorService {
 	@Autowired
 	private DateHelper dateHelper;
 
-	private static final String USR = "edcgamer@gmail.com";
-	private static final String PW = "Factura.2020";
+	@Autowired
+	private NtlinkProperties ntlinkProperties;
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
-			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(USR, PW,
-					context.getFacturaDto().getUuid(), context.getFacturaDto().getRfcEmisor(),
-					context.getFacturaDto().getRfcRemitente());
-			client.getNtlinkClient().cancelar(requestModel);
+			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(ntlinkProperties.getUser(),
+					ntlinkProperties.getPassword(), context.getFacturaDto().getUuid(),
+					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente());
+			client.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext()).cancelar(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;
@@ -65,8 +66,10 @@ public class NtinkExecutorService {
 
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		try {
-			NtlinkRequestModel requestModel = new NtlinkRequestModel(USR, PW, context.getXml());
-			NtlinkResponseModel response = client.getNtlinkClient().stamp(requestModel);
+			NtlinkRequestModel requestModel = new NtlinkRequestModel(ntlinkProperties.getUser(),
+					ntlinkProperties.getPassword(), context.getXml());
+			NtlinkResponseModel response = client
+					.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext()).stamp(requestModel);
 			String cfdi = response.getCfdi();
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);

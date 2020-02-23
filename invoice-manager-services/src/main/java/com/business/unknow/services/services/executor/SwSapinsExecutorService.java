@@ -25,24 +25,29 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.SwSapiensClient;
+import com.business.unknow.services.config.properties.SwProperties;
 
 @Service
 public class SwSapinsExecutorService {
 
 	@Autowired
 	private SwSapiensClient swSapiensClient;
-	
+
 	@Autowired
 	private FacturaHelper facturaHelper;
 
 	@Autowired
 	private FileHelper fileHelper;
 
+	@Autowired
+	private SwProperties swProperties;
+
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		SwSapiensClient swSapiensClient = new SwSapiensClient();
 		try {
-			SwSapiensConfig swSapiensConfig = swSapiensClient.getSwSapiensClient().stamp(context.getXml(),
-					SwSapiensVersionEnum.V4.getValue());
+			SwSapiensConfig swSapiensConfig = swSapiensClient
+					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
+					.stamp(context.getXml(), SwSapiensVersionEnum.V4.getValue());
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
@@ -80,10 +85,10 @@ public class SwSapinsExecutorService {
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
-		}catch (InvoiceCommonException e) {
+			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
+		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(),e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		} catch (IOException e) {
 			throw new InvoiceManagerException("Error durante la creacion de archivos", e.getMessage(),
 					HttpStatus.SC_CONFLICT);
@@ -92,18 +97,24 @@ public class SwSapinsExecutorService {
 	}
 
 	public SwSapiensConfig validateRfc(String rfc) throws SwSapiensClientException {
-		return swSapiensClient.getSwSapiensClient().validateRfc(rfc);
+		return swSapiensClient
+				.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
+				.validateRfc(rfc);
 	}
 
 	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
-		return swSapiensClient.getSwSapiensClient().validateLco(noCertificado);
+		return swSapiensClient
+				.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
+				.validateLco(noCertificado);
 	}
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
-			swSapiensClient.getSwSapiensClient().cancel(context.getFacturaDto().getUuid(),
-					context.getEmpresaDto().getPwSat(), context.getEmpresaDto().getInformacionFiscal().getRfc(),
-					context.getEmpresaDto().getCertificado(), context.getEmpresaDto().getLlavePrivada());
+			swSapiensClient
+					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
+					.cancel(context.getFacturaDto().getUuid(), context.getEmpresaDto().getPwSat(),
+							context.getEmpresaDto().getInformacionFiscal().getRfc(),
+							context.getEmpresaDto().getCertificado(), context.getEmpresaDto().getLlavePrivada());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;

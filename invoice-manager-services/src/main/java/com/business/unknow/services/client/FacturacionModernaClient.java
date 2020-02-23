@@ -8,11 +8,8 @@ import com.business.unknow.client.interfaces.RestFacturacionModernaClient;
 @Component
 public class FacturacionModernaClient {
 
-	private static final String URL = "https://t1demo.facturacionmoderna.com";
-	private static final String CONTEXT = "";
-
-	public RestFacturacionModernaClient getFacturacionModernaClient() {
-		return new FacturacionModernaClientImpl(URL, CONTEXT);
+	public RestFacturacionModernaClient getFacturacionModernaClient(String url, String context) {
+		return new FacturacionModernaClientImpl(url, context);
 	}
 
 }
