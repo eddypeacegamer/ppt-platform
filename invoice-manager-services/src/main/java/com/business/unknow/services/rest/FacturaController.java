@@ -25,9 +25,11 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.services.PagoDevolucionDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
+import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
 
@@ -51,6 +53,9 @@ public class FacturaController {
 	
 	@Autowired
 	private PagoService pagoService;
+	
+	@Autowired
+	private DevolucionService devolucionService;
 	
 	// FACTRURAS
 	@GetMapping
@@ -177,5 +182,12 @@ public class FacturaController {
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
 	}
+	
+	//DEVOLUCIONES
+	@GetMapping("/{folio}/devoluciones/{tipoReceptor}")
+	public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(@PathVariable String folio, @PathVariable String tipoReceptor){
+		return new ResponseEntity<>(devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor), HttpStatus.OK);
+	}
+	
 
 }

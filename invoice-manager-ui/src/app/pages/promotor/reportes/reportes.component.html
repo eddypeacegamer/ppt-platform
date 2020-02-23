@@ -121,7 +121,7 @@
                     <button  type="button" class="btn-sm btn-outline-primary" 
                       [ngClass]="{'btn-outline-secondary': fila.tipoDocumento == 'Factura' && fila.metodoPago == 'PPD', 'btn-outline-primary':fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE'}"
                       [disabled]="fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'"
-                      (click)="redirectToPreferences(fila.folioPadre || fila.folio)"><i class="fa fa-wallet"></i>
+                      (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                     </button>
                 </td>
                 <td scope="row">{{fila.folio}}</td>

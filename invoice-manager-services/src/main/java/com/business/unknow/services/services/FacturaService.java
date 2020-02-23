@@ -224,6 +224,7 @@ public class FacturaService {
 				&& facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()))) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
+			devolucionService.updateSolicitudDevoluciones(folio);
 		}
 		// TODO Insertar en tabla de ingresos
 		return facturaContext;

@@ -26,6 +26,10 @@ export class DevolutionService {
     return this.httpClient.get('../api/devoluciones', { params: pageParams });
   }
 
+  public findDevolutionByFolioFactAndTipoReceptor(folio: string, tiporeceptor: string): Observable<any> {
+    return this.httpClient.get(`../api/facturas/${folio}/devoluciones/${tiporeceptor}`);
+  }
+
   public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {
     return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${receptor}/saldo`);
   }

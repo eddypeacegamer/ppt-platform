@@ -3,7 +3,7 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../../../@core/data/users-data';
+import { User, UsersData } from '../../../@core/data/users-data';
 import { Factura } from '../../../models/factura/factura';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
@@ -23,7 +23,7 @@ import { FilesData } from '../../../@core/data/files-data';
 export class DevolutionPreferencesComponent implements OnInit {
 
   public folioParam: string;
-  public fileInput: any;
+  public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
   public formParams: any = {tab: 'CLIENTE', filename: ''};
@@ -33,24 +33,29 @@ export class DevolutionPreferencesComponent implements OnInit {
   public messages: string[] = [];
   public clientInfo: Client = new Client();
 
-  private referenceFile: ResourceFile = new ResourceFile();
+  private referenceFile: ResourceFile;
 
   constructor(private clientsService: ClientsData,
     private invoiceService: InvoicesData,
     private catalogService: CatalogsData,
     private resourceService: FilesData,
+    private userService: UsersData,
     private devolutionService: DevolutionData,
     private devolutionValidator: DevolucionValidatorService,
     private route: ActivatedRoute) {}
 
 
   ngOnInit() {
+    this.messages = [];
+    this.fileInput.value = '';
+    this.userService.getUserInfo().subscribe(user => this.user = user);
     this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
     this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
       if (this.folioParam !== '*') {
         this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
+              console.log(this.folioParam,invoice);
               this.factura = invoice;
               this.clientsService.getClientByRFC(invoice.rfcRemitente)
                 .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); });
@@ -63,23 +68,31 @@ export class DevolutionPreferencesComponent implements OnInit {
 
   public initVariables() {
     /** INIT VARIABLES **/
+    this.messages = [];
+    this.fileInput.value = '';
   }
 
   public selectTab(tiporeceptor: string) {
+    this.messages = [];
     this.formParams.tab = tiporeceptor;
-    this.solicitud = new PagoDevolucion();
-    this.solicitud.tipoReceptor = tiporeceptor;
-    this.solicitud.monto = this.devolutionValidator
-      .calculateDevolutionAmmount(this.factura.cfdi, this.clientInfo, tiporeceptor);
-    if (tiporeceptor === 'CLIENTE') {
-      this.solicitud.receptor = this.factura.rfcRemitente;
-    }
-    if (tiporeceptor === 'PROMOTOR') {
-      this.solicitud.receptor = this.clientInfo.correoPromotor;
-    }
-    if (tiporeceptor === 'CONTACTO') {
-      this.solicitud.receptor = this.clientInfo.correoContacto;
-    }
+    this.devolutionService.findDevolutionByFolioFactAndTipoReceptor(this.factura.folio, tiporeceptor)
+      .subscribe(solicitud => this.solicitud = solicitud,
+        (error: HttpErrorResponse) => {
+          this.solicitud = new PagoDevolucion();
+          this.solicitud.tipoReceptor = tiporeceptor;
+          this.solicitud.monto = this.devolutionValidator
+              .calculateDevolutionAmmount(this.factura.cfdi, this.clientInfo, tiporeceptor);
+              if (tiporeceptor === 'CLIENTE') {
+                this.solicitud.receptor = this.factura.rfcRemitente;
+              }
+              if (tiporeceptor === 'PROMOTOR') {
+                this.solicitud.receptor = this.clientInfo.correoPromotor;
+              }
+              if (tiporeceptor === 'CONTACTO') {
+                this.solicitud.receptor = this.clientInfo.correoContacto;
+              }
+          this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
+        });
   }
 
   public onPayFormSelected(formaPago: string) {
@@ -111,9 +124,9 @@ export class DevolutionPreferencesComponent implements OnInit {
         reader.readAsDataURL(file);
         reader.onload = () => {
           this.formParams.filename = file.name;
+          this.referenceFile = new ResourceFile();
           this.referenceFile.tipoArchivo = 'ARCHIVO';
           this.referenceFile.tipoRecurso = 'DEVOLUCION';
-          this.referenceFile.referencia  = this.folioParam;
           this.referenceFile.data = reader.result.toString();
         };
         reader.onerror = (error) => { this.messages.push('Error parsing image file'); };
@@ -123,22 +136,23 @@ export class DevolutionPreferencesComponent implements OnInit {
 
   public devolutionRequest(solicitud: PagoDevolucion) {
     this.messages = [];
+    this.fileInput.value = '';
     solicitud.solicitante = this.user.email;
+    solicitud.status = 'SOLICITUD';
+    solicitud.folioFactura = this.factura.folio;
+    if (solicitud.formaPago === 'PAGO_MULTIPLE') {
+      solicitud.referencia = this.formParams.filename;
+    }
     this.messages = this.devolutionValidator.validateDevolution(this.solicitud.monto, solicitud);
     if (this.messages.length === 0) {
-      if (solicitud.formaPago === 'PAGO_MULTIPLE') {
-        this.resourceService.insertResourceFile(this.referenceFile)
-          .subscribe(success => console.log(success),
+      this.devolutionService.requestDevolution(solicitud)
+        .subscribe( request => {this.solicitud = request;
+          this.referenceFile.referencia = request.id.toString();
+          this.resourceService.insertResourceFile(this.referenceFile)
+          .subscribe((resource: ResourceFile) => console.log(resource),
           (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
-        }
-      this.devolutionService.requestDevolution(solicitud)
-        .subscribe(
-          success => {
-            this.solicitud = new PagoDevolucion();
-            this.solicitud.formaPago = 'TRANSFERENCIA';
-          },
-          (error: HttpErrorResponse) => this.messages.push(error.error.message
+        }, (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
     } else {
       this.solicitud = new PagoDevolucion();

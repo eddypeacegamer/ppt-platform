@@ -19,6 +19,7 @@ export class PagoDevolucion {
     public autorizador: string;
     public idDevolucion: number;
     public tipoReceptor: string;
+    public folioFactura: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
 

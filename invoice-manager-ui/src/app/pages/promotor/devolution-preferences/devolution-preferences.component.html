@@ -77,7 +77,47 @@
         <!-- CLIENTE-->
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <form>
+            <div class="d-flex p-2 flex-column" *ngIf="solicitud.id !== undefined && solicitud.status!=='RECHAZADO'">
+              <div class="form-inline">
+                <p class="font-weight-bold">Beneficiario</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.beneficiario}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Monto</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.monto | currency}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Forma de Pago</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.formaPago}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">{{solicitud.tipoReferencia}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>{{solicitud.referencia}}</p>
+              </div>
+              <div class="form-inline">
+                <p class="font-weight-bold">Banco</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.banco}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Solicitante</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.solicitante}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Fecha Solicitud</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.fechaCreacion | date}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Fecha Pago</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.fechaPago | date}}</p>
+              </div>
+              <div class="form-inline">
+                <p>{{solicitud.comentarios}}</p>
+              </div>
+            </div>
+            
+            <form *ngIf="solicitud.id === undefined || solicitud.status ==='RECHAZADO'">
               <div class="form-row">
                 <div class="form-group col-md-8">
                   <label for="inputBenerficario1" class="label">Beneficiario</label>
@@ -138,7 +178,7 @@
                     name="cometarios" placeholder="Observaciones o comentarios adicionales">
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary" (click)="devolutionPreference(cliente)">Solicitar
+              <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)">Solicitar
                 Devolucion</button>
             </form>
           </div>
