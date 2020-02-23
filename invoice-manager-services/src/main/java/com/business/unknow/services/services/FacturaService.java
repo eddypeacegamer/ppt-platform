@@ -37,6 +37,7 @@ import com.business.unknow.services.services.builder.TimbradoBuilderService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
 import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
+import com.business.unknow.services.services.executor.NtinkExecutorService;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
@@ -77,6 +78,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturacionModernaExecutor facturacionModernaExecutor;
+
+	@Autowired
+	private NtinkExecutorService ntinkExecutorService;
 
 	@Autowired
 	private TimbradoExecutorService timbradoExecutorService;
@@ -215,6 +219,9 @@ public class FacturaService {
 		case FACTURACION_MODERNA:
 			facturacionModernaExecutor.stamp(facturaContext);
 			break;
+		case NTLINK:
+			ntinkExecutorService.stamp(facturaContext);
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
@@ -240,6 +247,9 @@ public class FacturaService {
 		case FACTURACION_MODERNA:
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
 			break;
+//		case NTLINK:
+//			facturacionModernaExecutor.cancelarFactura(facturaContext);
+//			break;	
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());

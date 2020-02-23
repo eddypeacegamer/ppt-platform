@@ -2,7 +2,7 @@ package com.business.unknow.enums;
 
 public enum PackFacturarionEnum {
 
-	SW_SAPIENS, FACTURACION_MODERNA, NOT_VALID;
+	SW_SAPIENS, FACTURACION_MODERNA,NTLINK, NOT_VALID;
 
 	private PackFacturarionEnum() {
 	}

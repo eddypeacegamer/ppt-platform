@@ -15,7 +15,6 @@ import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Receptor;
-import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
@@ -27,7 +26,6 @@ import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
-import com.business.unknow.services.repositories.facturas.TimbradoFiscalDigitialRepository;
 import com.business.unknow.services.services.CfdiService;
 
 @Service
@@ -57,8 +55,6 @@ public class PagoExecutorService extends AbstractExecutorService {
 	@Autowired
 	private CfdiPagoRepository cfdiPagoRepository;
 
-	@Autowired
-	private TimbradoFiscalDigitialRepository timbradoFiscalDigitialRepository;
 
 	@Autowired
 	private FacturaMapper mapper;
