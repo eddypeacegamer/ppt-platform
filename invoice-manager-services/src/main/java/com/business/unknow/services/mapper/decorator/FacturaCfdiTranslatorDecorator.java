@@ -61,6 +61,16 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 	}
 	
 	@Override
+	public Concepto complementoConcepto(ConceptoDto dto) {
+		Concepto conpeto = delegate.complementoConcepto(dto);
+		conpeto.setValorUnitario(conpeto.getValorUnitario().setScale(0,BigDecimal.ROUND_DOWN));
+		conpeto.setImporte(conpeto.getImporte().setScale(0,BigDecimal.ROUND_DOWN));
+		return conpeto;
+	}
+	
+	
+	
+	@Override
 	public ComplementoPago complementoComponente(CfdiPagoDto cfdiPago) {
 		ComplementoPago complementoPago = delegate.complementoComponente(cfdiPago);
 		complementoPago.setFechaPago(

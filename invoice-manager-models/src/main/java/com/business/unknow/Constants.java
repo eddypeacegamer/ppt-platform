@@ -36,6 +36,22 @@ public class Constants {
 		public static final String SCHEMA_LOCATION = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd  http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd";
 		public static final String PAGO_LOCATION = "http://www.sat.gob.mx/Pagos";
 	}
+	
+	public class NtlinkModernaRequest{
+		public static final String ISER = "iser";
+		public static final String TIMBRA_CFDI = "TimbraCfdiQr";
+		public static final String USER = "userName";
+		public static final String PASS = "password";
+		public static final String COMPROBANTE = "comprobante";
+		public static final String RFC_EMISOR = "rfc";
+		public static final String RFC_RECEPTOR = "rfcReceptor";
+		public static final String UUID = "uuid";
+		
+		public static final String SOAP_ENV = "soapenv";
+		public static final String SOAP_ENV_URL = "http://schemas.xmlsoap.org/soap/envelope/";
+		
+		public static final String ISER_URL = "https://ntlink.com.mx/IServicioTimbrado";
+	}
 
 	public class FacturacionModernaRequest{
 		public static final String USER_PASS_PARAMETER = "UserPass";

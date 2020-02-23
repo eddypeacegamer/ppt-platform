@@ -30,4 +30,6 @@ public class FileHelper {
 	public String stringDecodeBase64(String cadena) {
 		return new String(Base64.getDecoder().decode(cadena.getBytes()), StandardCharsets.UTF_8);
 	}
+	
+	
 }
