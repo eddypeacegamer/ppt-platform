@@ -96,9 +96,15 @@ public class CfdiService {
 		recalculateCfdiAmmounts(cfdi);
 		Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));
 		Emisor emisor = mapper.getEntityFromEmisorDto(cfdi.getEmisor());
+		if(emisor.getNombre()==null) {
+			emisor.setNombre(emisor.getRfc());
+		}
 		emisor.setCfdi(entity);
 		emisorRepository.save(emisor);
 		Receptor receptor = mapper.getEntityFromEmisorDto(cfdi.getReceptor());
+		if(receptor.getNombre()==null) {
+			receptor.setNombre(receptor.getRfc());
+		}
 		receptor.setCfdi(entity);
 		receptorReceptor.save(receptor);
 		for (ConceptoDto concepto : cfdi.getConceptos()) {
