@@ -8,12 +8,8 @@ import com.business.unknow.client.interfaces.RestSwSapiensClient;
 @Component
 public class SwSapiensClient {
 
-	private static final String URL = "http://services.test.sw.com.mx";
-	private static final String CONTEXT = "";
-	private static final String USR = "demo";
-	private static final String PW = "123456789";
 
-	public RestSwSapiensClient getSwSapiensClient() {
-		return new RestSwSapiensClientImpl(URL, CONTEXT, USR, PW);
+	public RestSwSapiensClient getSwSapiensClient(String url,String context,String usr,String pw) {
+		return new RestSwSapiensClientImpl(url, context, usr, pw);
 	}
 }
