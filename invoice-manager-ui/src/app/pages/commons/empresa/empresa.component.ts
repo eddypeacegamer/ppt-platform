@@ -75,7 +75,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   public onGiroSelection(giro:string){
-    this.companyInfo.giro =  this.girosCat.find(g => g.nombre === giro).id.toString();
+    this.companyInfo.giro =  giro;
   }
 
   public onLineaSelected(linea:string){
@@ -117,6 +117,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   public insertNewCompany():void{
+    this.companyInfo.giro=this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
     this.errorMessages = [];
     this.formInfo.success ='';
     this.empresaService.insertNewCompany(this.companyInfo)
