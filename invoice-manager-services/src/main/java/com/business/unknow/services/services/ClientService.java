@@ -68,7 +68,8 @@ public class ClientService {
 						String.format("La razon social  %s ya esta creada en el sistema",
 								cliente.getInformacionFiscal().getRazonSocial()));
 			}
-			SwSapiensConfig config = swSapinsExecutorService.validateRfc(cliente.getInformacionFiscal().getRfc());
+			SwSapiensConfig config = swSapinsExecutorService
+					.validateRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			if (!config.getStatus().equals(Constants.SUCCESS)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
