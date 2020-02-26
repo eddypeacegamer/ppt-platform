@@ -37,7 +37,6 @@ public class EmpresaService {
 	@Autowired
 	private EmpresaExecutorService empresaEvaluatorService;
 
-
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
@@ -71,10 +70,14 @@ public class EmpresaService {
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		try {
-			empresaDto.setActivo(false);
-			swSapinsExecutorService
-					.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
 			empresaValidator.validatePostEmpresa(empresaDto);
+			empresaDto.setActivo(false);
+			swSapinsExecutorService.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
+			if (repository.findByRfc(empresaDto.getInformacionFiscal().getRfc()).isPresent()) {
+				throw new InvoiceManagerException("Ya existe la empresa",
+						String.format("La empresa %s ya existe", empresaDto.getInformacionFiscal().getRfc()),
+						HttpStatus.BAD_REQUEST.value());
+			}
 			return empresaEvaluatorService.createEmpresa(empresaDto);
 		} catch (SwSapiensClientException e) {
 			throw new InvoiceManagerException("El Rfc no exite", e.getMessage(), HttpStatus.BAD_REQUEST.value());

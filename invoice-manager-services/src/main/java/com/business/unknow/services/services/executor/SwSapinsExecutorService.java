@@ -61,8 +61,7 @@ public class SwSapinsExecutorService {
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
-			String cfdi = fileHelper
-					.stringDecodeBase64(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
+			String cfdi = swSapiensConfig.getData().getCfdi();
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());

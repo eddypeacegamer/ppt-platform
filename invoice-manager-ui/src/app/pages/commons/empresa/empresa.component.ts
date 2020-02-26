@@ -117,13 +117,19 @@ export class EmpresaComponent implements OnInit {
   }
 
   public insertNewCompany():void{
-    this.companyInfo.giro=this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
-    this.errorMessages = [];
-    this.formInfo.success ='';
-    this.empresaService.insertNewCompany(this.companyInfo)
-    .subscribe((empresa:Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]);},
-    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
-    );
+    console.log(this.companyInfo.giro);
+   if (this.companyInfo.giro!=null && this.companyInfo.giro!='*' && this.companyInfo.giro.length>1) {
+      this.companyInfo.giro=this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
+      this.errorMessages = [];
+      this.formInfo.success ='';
+      this.empresaService.insertNewCompany(this.companyInfo)
+      .subscribe((empresa:Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]);},
+      (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
+      );
+    }else{
+      this.errorMessages = [];
+      this.errorMessages.push('Se debe seleccionar un giro');
+    }
   }
 
   public updateCompany():void{
