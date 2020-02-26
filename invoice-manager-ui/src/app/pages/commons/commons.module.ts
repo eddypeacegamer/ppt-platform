@@ -30,7 +30,8 @@ import { ConceptosComponent } from './conceptos/conceptos.component';
     EmpresaComponent,
     EmpresasComponent,
     PagosComponent,
-    ConceptosComponent],
+    ConceptosComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -44,7 +45,7 @@ import { ConceptosComponent } from './conceptos/conceptos.component';
     NbSelectModule,
     NbUserModule,
     NbStepperModule,
-    NbDialogModule,
+    NbDialogModule.forChild(),
     NbIconModule,
     NbSpinnerModule,
   ],
@@ -71,6 +72,5 @@ import { ConceptosComponent } from './conceptos/conceptos.component';
     NbIconModule,
     NbSpinnerModule,
   ]
-
 })
 export class CommonsModule { }

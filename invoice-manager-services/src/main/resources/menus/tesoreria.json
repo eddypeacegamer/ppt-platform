@@ -11,10 +11,6 @@
         "link": "/pages/tesoreria/devoluciones"
       },
       {
-        "title": "Transferencias",
-        "link": "/pages/tesoreria/transferencias"
-      },
-      {
         "title": "Ingresos",
         "link": "/pages/tesoreria/ingresos"
       },
@@ -23,7 +19,7 @@
         "link": "/pages/tesoreria/egresos"
       },
       {
-        "title": "Conciiacion",
+        "title": "Conciliacion",
         "link": "/pages/tesoreria/conciliacion"
       }
     ]

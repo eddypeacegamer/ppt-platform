@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
@@ -65,6 +66,7 @@ public class TimbradoBuilderService extends AbstractBuilderService{
 	public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
 		FacturaDto currentFacturaDto=facturaService.getFacturaByFolio(facturaDto.getFolio());
+		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
 		Optional<Factura> folioPadreEntity = repository.findByFolio(currentFacturaDto.getFolioPadre());
 		validatePackFacturacion(currentFacturaDto, folioPadreEntity);
 		EmpresaDto empresaDto = empresaMapper
@@ -74,12 +76,13 @@ public class TimbradoBuilderService extends AbstractBuilderService{
 								HttpStatus.SC_NOT_FOUND)));
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(currentFacturaDto.getFolioPadre(),
 				FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
+		Optional<Pago> currentPago= pagoRepository.findByFolio(folio).stream().filter(a->!a.getFormaPago().equals(FormaPagoEnum.CREDITO.getDescripcion())).findFirst();
 		getEmpresaFiles(empresaDto, currentFacturaDto);
-		currentFacturaDto.setPackFacturacion(currentFacturaDto.getPackFacturacion());
 		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio)))
 				.setCfdi(currentFacturaDto.getCfdi())
 				.setEmpresaDto(empresaDto)
+				.setCurrentPago(currentPago.isPresent() ? mapper.getPagoDtoFromEntity(currentPago.get()) : null)
 				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)

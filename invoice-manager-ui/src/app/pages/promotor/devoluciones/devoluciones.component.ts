@@ -34,7 +34,6 @@ export class DevolucionesComponent implements OnInit {
   constructor(private dialogService: NbDialogService,
     private devolutionService: DevolutionData,
     private catalogService: CatalogsData,
-    private paymentsService: PaymentsService,
     private donwloadService: DownloadCsvService,
     private devolutionValidator: DevolucionValidatorService,
     private userService: UsersData,
@@ -61,6 +60,7 @@ export class DevolucionesComponent implements OnInit {
 
   public searchDevolutionsData() {
     this.messages = [];
+    this.solicitud = new PagoDevolucion();
     this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
       (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
     this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,
@@ -81,13 +81,13 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public downloadCommissions() {
-    this.updateCommissions(1, 10000).subscribe(result => {
+    this.updateCommissions(0, 10000).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Comisiones');
     });
   }
 
   public downloadPagosDevolucion() {
-    this.updateDevolutions(1, 10000).subscribe(result => {
+    this.updateDevolutions(0, 10000).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Devoluciones');
     });
   }
@@ -136,12 +136,8 @@ export class DevolucionesComponent implements OnInit {
     this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
   }
 
-  public openPaymentDetails(dialog: TemplateRef<any>, destPayment: number) {
-    this.paymentsService.getPaymentById(destPayment)
-      .subscribe(payment => {
+  public openPaymentDetails(dialog: TemplateRef<any>, payment: PagoDevolucion) {
         this.dialogService.open(dialog, { context: payment })
           .onClose.subscribe(() => this.searchDevolutionsData());
-      });
   }
-
 }

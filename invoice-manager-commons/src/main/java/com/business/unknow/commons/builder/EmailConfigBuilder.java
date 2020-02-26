@@ -32,8 +32,16 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 		return this;
 	}
 
-	public EmailConfigBuilder setReceptor(String receptor) {
+	public EmailConfigBuilder setReceptor(List<String> receptor) {
 		instance.setReceptor(receptor);
+		return this;
+	}
+	
+	public EmailConfigBuilder addReceptor(String receptor) {
+		if(instance.getReceptor()==null) {
+			instance.setReceptor(new ArrayList<>());
+		}
+		instance.getReceptor().add(receptor);
 		return this;
 	}
 

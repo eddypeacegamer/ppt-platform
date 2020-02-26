@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.business.unknow.Constants.CfdiConstants;
 
 @XmlRootElement(name = "Pagos",namespace = "http://www.sat.gob.mx/Pagos")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class ComplementoPagos {
 
 	@XmlAttribute(name = "Version")

@@ -8,10 +8,15 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
+import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
   children: [{
+      path: 'devoluciones',
+      component : DevolucionesComponent,
+    },
+    {
       path: 'clientes',
       component: ClientesComponent,
     }, {

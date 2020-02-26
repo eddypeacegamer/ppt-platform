@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Pago } from '../../models/pago';
 import { PagoDevolucion } from '../../models/pago-devolucion';
+import { GenericPage } from '../../models/generic-page';
 
 
 @Injectable({
@@ -28,7 +29,7 @@ export class DevolutionService {
   }
 
   public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {
-    return of(70985.55);
+    return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${receptor}/saldo`);
   }
 
   public findDevolutionsRequests(page: number, size: number, filterParams?: any): Observable<any> {

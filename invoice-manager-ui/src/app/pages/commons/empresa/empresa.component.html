@@ -110,7 +110,7 @@
                     <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)" [disabled]="companyInfo.activo"
                       style="display:block;" [(ngModel)]="companyInfo.giro">
                       <option value="*">Seleccionar</option>
-                      <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
+                      <option *ngFor="let giro of girosCat" [(value)]="giro.nombre">{{giro.nombre}}</option>
                     </select>
             </div>
             <div class="col-sm-3">

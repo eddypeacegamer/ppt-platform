@@ -13,6 +13,10 @@
 		{
 			"title": "reportes",
 			"link": "/pages/operaciones/reportes"
+		},
+		{
+			"title": "devoluciones",
+			"link": "/pages/operaciones/devoluciones"
 		}
 	]
 }

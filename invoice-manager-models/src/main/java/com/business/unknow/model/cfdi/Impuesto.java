@@ -1,5 +1,6 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Impuesto {
 
 	@XmlAttribute(name = "TotalImpuestosTrasladados")
-	private Double totalImpuestosTrasladados;
+	private BigDecimal totalImpuestosTrasladados;
 	@XmlElementWrapper(name = "Traslados", namespace = "http://www.sat.gob.mx/cfd/3")
 	@XmlElement(name = "Traslado", namespace = "http://www.sat.gob.mx/cfd/3")
 	private List<Translado> translados;
@@ -22,11 +23,11 @@ public class Impuesto {
 	public Impuesto() {
 	}
 	
-	public Double getTotalImpuestosTrasladados() {
+	public BigDecimal getTotalImpuestosTrasladados() {
 		return totalImpuestosTrasladados;
 	}
 
-	public void setTotalImpuestosTrasladados(Double totalImpuestosTrasladados) {
+	public void setTotalImpuestosTrasladados(BigDecimal totalImpuestosTrasladados) {
 		this.totalImpuestosTrasladados = totalImpuestosTrasladados;
 	}
 

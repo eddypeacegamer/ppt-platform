@@ -17,7 +17,6 @@ import { Observable } from 'rxjs';
 })
 export class ReportesComponent implements OnInit {
 
-  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Tipo','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '' };

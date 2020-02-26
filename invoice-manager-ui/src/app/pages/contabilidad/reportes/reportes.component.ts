@@ -16,10 +16,9 @@ import { Observable } from 'rxjs';
 })
 export class ReportesComponent implements OnInit {
 
-  public headers: string[] = ['Folio', 'RFC Emisor','Emisor', 'RFC Remitente','Remitente','Tipo','Metodo pago', 'Estatus Validacion', 'Estatus Pago','Total','Fecha Solicitud', 'Fecha Timbrado'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '1', since: '', to: '', lineaEmisor:'B' };
+  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '1', since: '', to: '', lineaEmisor: 'B' };
 
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];
@@ -35,7 +34,7 @@ export class ReportesComponent implements OnInit {
       this.payCat = results[3];
       this.devolutionCat = results[4];
       this.validationCat = results[5];
-    }).then(() => this.updateDataTable());
+    }).then(() => this.updateDataTable(0, 10, this.filterParams));
   }
 
   public onPayStatus(payStatus: string) {
@@ -44,11 +43,10 @@ export class ReportesComponent implements OnInit {
 
   public onValidationStatus(validationStatus: string) {
     this.filterParams.status = validationStatus;
-    console.log(this.filterParams);
   }
 
   public redirectToCfdi(folio: string) {
-    this.router.navigate([`./pages/contabilidad/cfdi/${folio}`])
+    this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
   }
 
 
@@ -74,7 +72,6 @@ export class ReportesComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number, filterParams?: any) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    console.log(filterParams)
     this.getInvoiceData(pageValue, sizeValue, filterParams)
       .subscribe((result: GenericPage<any>) => this.page = result);
   }

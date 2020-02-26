@@ -16,5 +16,4 @@ export abstract class DevolutionData {
 
     abstract updateDevolution(id: number, pago: PagoDevolucion): Observable<GenericPage<Devolucion>>;
 
-
 }

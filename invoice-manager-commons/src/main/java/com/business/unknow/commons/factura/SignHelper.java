@@ -44,6 +44,7 @@ public class SignHelper {
 			signature.update(cadena.getBytes("UTF-8"));
 			return new String(DatatypeConverter.printBase64Binary(signature.sign()));
 		} catch (GeneralSecurityException | IOException e) {
+			e.printStackTrace();
 			throw new InvoiceCommonException(e.getMessage());
 		}
 	}

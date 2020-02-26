@@ -17,12 +17,14 @@ import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.FacturacionModernaClient;
+import com.business.unknow.services.config.properties.FacturacionModernaProperties;
 
 @Service
 public class FacturacionModernaExecutor {
@@ -39,17 +41,22 @@ public class FacturacionModernaExecutor {
 	@Autowired
 	private DateHelper dateHelper;
 
-	private static final String USR = "UsuarioPruebasWS";
-	private static final String PW = "b9ec2afa3361a59af4b4d102d3f704eabdf097d4";
+	@Autowired
+	private FacturacionModernaProperties fmProperties;
 
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		try {
-			FacturaModernaRequestModel requestModel = new FacturaModernaRequestModel(USR, PW,
-					context.getFacturaDto().getRfcEmisor(), fileHelper.stringEncodeBase64(context.getXml()), true, true,
-					true);
-			FacturaModernaResponseModel response = client.getFacturacionModernaClient().stamp(requestModel);
+			if (context.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+				context.setXml(context.getXml().replace("xmlns:pago10=\"http://www.sat.gob.mx/Pagos\"", ""));
+			}
+			FacturaModernaRequestModel requestModel = new FacturaModernaRequestModel(fmProperties.getUser(),
+					fmProperties.getPassword(), context.getFacturaDto().getRfcEmisor(),
+					fileHelper.stringEncodeBase64(context.getXml()), true, true, true);
+			FacturaModernaResponseModel response = client.getFacturacionModernaClient(fmProperties.getHost(), "")
+					.stamp(requestModel);
+			String cfdi = fileHelper.stringDecodeBase64(response.getXml());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
-			Cfdi currentCfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(response.getXml()));
+			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
@@ -64,6 +71,8 @@ public class FacturacionModernaExecutor {
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setSelloCFD(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
 			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
+			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());
 			List<FacturaFileDto> files = new ArrayList<>();
 			if (response.getPng() != null) {
 				FacturaFileDto qr = new FacturaFileDto();
@@ -88,10 +97,9 @@ public class FacturacionModernaExecutor {
 			}
 			context.setFacturaFilesDto(files);
 		} catch (FacturaModernaClientException | InvoiceCommonException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
-			
-			throw new InvoiceManagerException(e.getMessage(),String.format("Error Stamping in facturacion moderna: %s",e.getLocalizedMessage()),
+			throw new InvoiceManagerException(e.getMessage(),
+					String.format("Error Stamping in facturacion moderna: %s", e.getLocalizedMessage()),
 					HttpStatus.SC_CONFLICT);
 		}
 		return context;
@@ -99,9 +107,10 @@ public class FacturacionModernaExecutor {
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
-			FacturaModernaRequestModel requestModel = new FacturaModernaRequestModel(USR, PW,
-					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getUuid());
-			client.getFacturacionModernaClient().cancelar(requestModel);
+			FacturaModernaRequestModel requestModel = new FacturaModernaRequestModel(fmProperties.getUser(),
+					fmProperties.getPassword(), context.getFacturaDto().getRfcEmisor(),
+					context.getFacturaDto().getUuid());
+			client.getFacturacionModernaClient(fmProperties.getHost(), "").cancelar(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;

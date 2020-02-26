@@ -1,5 +1,7 @@
 package com.business.unknow.services.services.translators;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,13 +11,11 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
-import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoPagos;
@@ -41,8 +41,6 @@ public class FacturaTranslator {
 	@Autowired
 	private DateHelper dateHelper;
 
-	@Autowired
-	private NumberHelper numberHelper;
 
 	@Autowired
 	private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
@@ -53,7 +51,7 @@ public class FacturaTranslator {
 	public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
 			Cfdi cfdi = facturaCfdiTranslatorMapper.cdfiRootInfo(context.getFacturaDto(), context.getEmpresaDto());
-			Double totalImpuestos = 0.0;
+			BigDecimal totalImpuestos =new BigDecimal(0);
 			List<Translado> impuestos = new ArrayList<>();
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
 				Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
@@ -63,10 +61,9 @@ public class FacturaTranslator {
 				}
 			}
 			if (!impuestos.isEmpty()) {
-				cfdi.getImpuestos().setTotalImpuestosTrasladados(
-						numberHelper.assignPrecision(totalImpuestos, Constants.DEFAULT_SCALE));
 				cfdi.getImpuestos().setTranslados(impuestos);
 			}
+			cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
 			System.out.println(context.getXml());
@@ -81,7 +78,7 @@ public class FacturaTranslator {
 		try {
 			Cfdi cfdi = facturaCfdiTranslatorMapper.complementoRootInfo(context.getFacturaDto().getCfdi(),
 					context.getEmpresaDto());
-			for(ConceptoDto concepto:context.getFacturaDto().getCfdi().getConceptos()) {
+			for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
 				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
 			}
 			Complemento complemento = new Complemento();
@@ -125,27 +122,25 @@ public class FacturaTranslator {
 		String cadenaOriginal = signHelper.getCadena(xml);
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
-		context.setXml(cdfiHelper.putsSign(xml, sello));
-		
-		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());//TODO validate if this not breakes somthing
-		
+		context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
+		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
 		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
-	public Double calculaImpuestos(List<Translado> impuestos, Concepto concepto, Double totalImpuestos) {
+	public BigDecimal calculaImpuestos(List<Translado> impuestos, Concepto concepto, BigDecimal totalImpuestos) {
 		for (Translado translado : concepto.getImpuestos().getTranslados()) {
 			Optional<Translado> tempTranslado = impuestos.stream()
 					.filter(a -> a.getImpuesto().equals(translado.getImpuesto())).findFirst();
 			if (tempTranslado.isPresent()) {
-				tempTranslado.get().setImporte(numberHelper.assignPrecision(
-						tempTranslado.get().getImporte() + translado.getImporte(), Constants.DEFAULT_SCALE));
+				tempTranslado.get().setImporte(tempTranslado.get().getImporte().add(translado.getImporte()));
 			} else {
 				impuestos.add(
 						new Translado(translado.getImpuesto(), translado.getTipoFactor(), translado.getTasaOCuota(),
-								numberHelper.assignPrecision(translado.getImporte(), Constants.DEFAULT_SCALE)));
+								translado.getImporte()));
 			}
-			totalImpuestos += translado.getImporte();
+			totalImpuestos=totalImpuestos.add(translado.getImporte());
 		}
 		return totalImpuestos;
 	}
+	
 }

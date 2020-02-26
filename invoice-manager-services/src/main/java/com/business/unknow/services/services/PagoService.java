@@ -66,9 +66,6 @@ public class PagoService {
 	@Autowired
 	private FacturaService facturaService;
 
-	@Autowired
-	private DevolucionService devolucionService;
-
 	@Autowired // TODO evaluate remove this dependency when factura context will be disabled
 	private FacturaBuilderService facturaBuilderService;
 
@@ -214,8 +211,6 @@ public class PagoService {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 			}
 			facturaService.updateFactura(factura, folio);
-			devolucionService.generarDevolucionesPorPago(factura, pago);
-			// TODO Insertar en tabla de ingresos
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 		}
 

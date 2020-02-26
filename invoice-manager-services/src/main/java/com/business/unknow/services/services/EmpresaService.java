@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.commons.validator.EmpresaValidator;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -19,6 +20,7 @@ import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.executor.EmpresaExecutorService;
+import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 
 @Service
 public class EmpresaService {
@@ -28,14 +30,17 @@ public class EmpresaService {
 
 	@Autowired
 	private EmpresaMapper mapper;
-	
+
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
-	
+
 	@Autowired
 	private EmpresaExecutorService empresaEvaluatorService;
 
-	private EmpresaValidator empresaValidator= new EmpresaValidator();
+	@Autowired
+	private SwSapinsExecutorService swSapinsExecutorService;
+
+	private EmpresaValidator empresaValidator = new EmpresaValidator();
 
 	public Page<EmpresaDto> getEmpresasByParametros(Optional<String> rfc, Optional<String> razonSocial, String linea,
 			int page, int size) {
@@ -62,12 +67,21 @@ public class EmpresaService {
 	public List<EmpresaDto> getEmpresasByGiroAndLinea(String tipo, Integer giro) {
 		return mapper.getEmpresaDtosFromEntities(repository.findByTipoAndGiro(tipo, giro));
 	}
-	
 
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
-		empresaDto.setActivo(false);
-		empresaValidator.validatePostEmpresa(empresaDto);
-		return empresaEvaluatorService.validateEmpresa(empresaDto);
+		try {
+			empresaValidator.validatePostEmpresa(empresaDto);
+			empresaDto.setActivo(false);
+			swSapinsExecutorService.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
+			if (repository.findByRfc(empresaDto.getInformacionFiscal().getRfc()).isPresent()) {
+				throw new InvoiceManagerException("Ya existe la empresa",
+						String.format("La empresa %s ya existe", empresaDto.getInformacionFiscal().getRfc()),
+						HttpStatus.BAD_REQUEST.value());
+			}
+			return empresaEvaluatorService.createEmpresa(empresaDto);
+		} catch (SwSapiensClientException e) {
+			throw new InvoiceManagerException("El Rfc no exite", e.getMessage(), HttpStatus.BAD_REQUEST.value());
+		}
 	}
 
 	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {

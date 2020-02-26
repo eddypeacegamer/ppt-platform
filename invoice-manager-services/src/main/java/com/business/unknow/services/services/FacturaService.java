@@ -37,6 +37,7 @@ import com.business.unknow.services.services.builder.TimbradoBuilderService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
 import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
+import com.business.unknow.services.services.executor.NtinkExecutorService;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
@@ -79,7 +80,13 @@ public class FacturaService {
 	private FacturacionModernaExecutor facturacionModernaExecutor;
 
 	@Autowired
+	private NtinkExecutorService ntinkExecutorService;
+
+	@Autowired
 	private TimbradoExecutorService timbradoExecutorService;
+
+	@Autowired
+	private DevolucionService devolucionService;
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
@@ -212,11 +219,20 @@ public class FacturaService {
 		case FACTURACION_MODERNA:
 			facturacionModernaExecutor.stamp(facturaContext);
 			break;
+		case NTLINK:
+			ntinkExecutorService.stamp(facturaContext);
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
 		}
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		if (!(facturaContext.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				&& facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()))) {
+			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
+					facturaContext.getCurrentPago());
+		}
+		// TODO Insertar en tabla de ingresos
 		return facturaContext;
 	}
 
@@ -231,6 +247,9 @@ public class FacturaService {
 		case FACTURACION_MODERNA:
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
 			break;
+		case NTLINK:
+			facturacionModernaExecutor.cancelarFactura(facturaContext);
+			break;	
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());

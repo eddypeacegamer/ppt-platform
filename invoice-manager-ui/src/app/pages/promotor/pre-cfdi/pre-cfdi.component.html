@@ -37,6 +37,9 @@
               <p class="font-weight-bold">Forma de Pago</p>
               <p>{{factura.cfdi.formaPago}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <p class="font-weight-bold">Detalles : </p>
+              <p>{{factura.statusDetail}}</p>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
                 class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
                 <i class="fa fa-file-pdf"></i>

@@ -37,6 +37,9 @@
             <p class="font-weight-bold">Forma de Pago</p>
             <p>{{factura.cfdi.formaPago}}</p>
             &nbsp;&nbsp;
+            <p class="font-weight-bold">Detalles : </p>
+            <p>{{factura.statusDetail}}</p>
+            &nbsp;&nbsp;
             <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
               class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
               <i class="fa fa-file-pdf"></i>
@@ -228,6 +231,7 @@
             [(ngModel)]="data.packFacturacion">
             <option value="SW_SAPIENS">SW Sapiens</option>
             <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
+            <option value="NTLINK">NTLINK</option>
           </select>
 
         </div>

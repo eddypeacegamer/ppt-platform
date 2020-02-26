@@ -36,23 +36,29 @@ public class DevolucionExecutorService {
 	@Autowired
 	private DevolucionesBuilderService devolucionesBuilderService;
 
-	public void executeDevolucionForPue(FacturaContext context, Client client, BigDecimal baseComisiones)
+	public void executeDevolucionForPue(FacturaContext context, Client client,BigDecimal total, BigDecimal baseComisiones)
 			throws InvoiceManagerException {
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(),
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 				context.getFacturaDto().getId(), baseComisiones, client.getPorcentajePromotor(),
 				client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(),
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 				context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeDespacho(),
 				"invoice-manager@gmail.com", ContactoDevolucionEnum.DESPACHO.name()));
-		if (client.getPorcentajeCliente() > 0) {
-			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(),
+		if (client.getPorcentajeCliente().compareTo(BigDecimal.ZERO)>0) {
+			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
 			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal().add(devolucion.getMonto()));
 			devolucionRepository.save(devolucion);
+		}else {
+			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
+					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
+					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
+			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal());
+			devolucionRepository.save(devolucion);
 		}
-		if (client.getPorcentajeContacto() > 0) {
-			devolucionRepository.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(),
+		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO)> 0) {
+			devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeContacto(),
 					client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.name()));
 		}
@@ -60,23 +66,20 @@ public class DevolucionExecutorService {
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
 						String.format("El pago %s  no existe", context.getCurrentPago().toString()),
 						HttpStatus.CONFLICT.value()));
-		// payment.setStatusPago("DEVOLUCION");NOT UPDATE PAY STATUS ACEPTADO SHOULD BE
-		// FINAL STATUS
-		// pagoRepository.save(payment);
 		context.getFacturaDto().setStatusDevolucion(DevolucionStatusEnum.DEVUELTA.getValor());
 		facturaRepository.save(facturaMapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
 
-	public void executeDevolucionForPpd(FacturaContext context, Client client, BigDecimal baseComisiones)
+	public void executeDevolucionForPpd(FacturaContext context, Client client,BigDecimal  total, BigDecimal baseComisiones)
 			throws InvoiceManagerException {
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(), context.getFacturaDto().getId(),
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(), context.getFacturaDto().getId(),
 				context.getCurrentPago().getMonto().multiply(baseComisiones), client.getPorcentajePromotor(),
 				client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolioPadre(),
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolioPadre(),
 				context.getCurrentPago().getId(), context.getCurrentPago().getMonto().multiply(baseComisiones),
 				client.getPorcentajeDespacho(), "invoice-manager@gmail.com", ContactoDevolucionEnum.DESPACHO.name()));
-		if (client.getPorcentajeCliente() > 0) {
-			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(),
+		if (client.getPorcentajeCliente().compareTo(BigDecimal.ZERO)> 0) {
+			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), context.getCurrentPago().getMonto().multiply(baseComisiones),
 					client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
 					ContactoDevolucionEnum.CLIENTE.name());
@@ -85,9 +88,9 @@ public class DevolucionExecutorService {
 					.add(devolucion.getMonto()));
 			devolucionRepository.save(devolucion);
 		}
-		if (client.getPorcentajeContacto() > 0) {
+		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO)> 0) {
 			devolucionRepository
-					.save(devolucionesBuilderService.buildDevolucion(context.getFacturaDto().getFolio(), context.getCurrentPago().getId(),
+					.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(), context.getCurrentPago().getId(),
 							context.getCurrentPago().getMonto().multiply(baseComisiones), client.getPorcentajeContacto(),
 							client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.name()));
 		}

@@ -4,18 +4,18 @@ import java.util.List;
 
 public class EmailConfig {
 
-	private String receptor;
+	private List<String> receptor;
 	private String emisor;
 	private String asunto;
 	private String cuerpo;
 	private String pwEmisor;
 	private List<FileConfig> archivos;
 
-	public String getReceptor() {
+	public List<String> getReceptor() {
 		return receptor;
 	}
 
-	public void setReceptor(String receptor) {
+	public void setReceptor(List<String> receptor) {
 		this.receptor = receptor;
 	}
 

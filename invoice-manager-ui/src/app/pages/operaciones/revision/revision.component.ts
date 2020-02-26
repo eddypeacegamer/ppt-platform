@@ -65,7 +65,6 @@ export class RevisionComponent implements OnInit {
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
-    private paymentsService: PaymentsData,
     private filesService: FilesData,
     private userService: UsersData,
     private downloadService: DownloadInvoiceFilesService,
@@ -272,8 +271,7 @@ export class RevisionComponent implements OnInit {
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
-        console.log('Timbrando:',invoice);
-        if (invoice != undefined) {
+        if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => { 
               this.loading = false;

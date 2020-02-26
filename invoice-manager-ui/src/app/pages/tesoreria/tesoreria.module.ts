@@ -1,54 +1,35 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {
-  NbActionsModule,
-  NbButtonModule,
-  NbCardModule,
-  NbCheckboxModule,
-  NbDatepickerModule,
-  NbInputModule,
-  NbRadioModule,
-  NbSelectModule,
-  NbUserModule,
-  NbStepperModule,
-  NbDialogModule,
-  NbIconModule
-} from '@nebular/theme';
-
 import { TesoreriaRoutingModule } from './tesoreria-routing.module';
 import { TesoreriaComponent } from './tesoreria.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
+import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { ValidacionPagoComponent } from './validacion-pagos/validacion-pago/validacion-pago.component';
 import { ValidacionPagosComponent } from './validacion-pagos/validacion-pagos.component';
 import { IngresosComponent } from './ingresos/ingresos.component';
 import { EgresosComponent } from './egresos/egresos.component';
 import { ConciliacionComponent } from './conciliacion/conciliacion.component';
-import { SolicitudDevolucionComponent } from './devoluciones/solicitud-devolucion/solicitud-devolucion.component';
+import { ValidacionDevolucionComponent } from './devoluciones/validacion-devolucion/validacion-devolucion.component';
+import { CommonsModule } from '../commons/commons.module';
 
 
 @NgModule({
-  declarations: [TesoreriaComponent,DevolucionesComponent,ValidacionPagosComponent ,ValidacionPagoComponent, IngresosComponent, EgresosComponent, ConciliacionComponent, SolicitudDevolucionComponent],
+  declarations: [
+    TesoreriaComponent,
+    DevolucionesComponent,
+    ValidacionPagosComponent ,
+    ValidacionPagoComponent,
+    IngresosComponent,
+    EgresosComponent,
+    ConciliacionComponent,
+    ValidacionDevolucionComponent,
+  ],
   imports: [
     TesoreriaRoutingModule,
-
-    CommonModule,
-    FormsModule,
-    NbActionsModule,
-    NbButtonModule,
-    NbCardModule,
-    NbCheckboxModule,
-    NbDatepickerModule, 
-    NbIconModule,
-    NbInputModule,
-    NbRadioModule,
-    NbSelectModule,
-    NbUserModule,
-    NbStepperModule,
-    NbDialogModule.forChild(),
+    CommonsModule,
   ],
-  entryComponents:[ValidacionPagoComponent,SolicitudDevolucionComponent],
-  providers:[DownloadCsvService]
+  entryComponents: [
+    ValidacionPagoComponent,
+    ValidacionDevolucionComponent],
+  providers: [DownloadCsvService],
 })
 export class TesoreriaModule { }

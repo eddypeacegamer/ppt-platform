@@ -1,6 +1,7 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -52,22 +53,22 @@ public class Client implements Serializable {
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_PROMOTOR")
-	private Double porcentajePromotor;
+	private BigDecimal porcentajePromotor;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CLIENTE")
-	private Double porcentajeCliente;
+	private BigDecimal porcentajeCliente;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_DESPACHO")
-	private Double porcentajeDespacho;
+	private BigDecimal porcentajeDespacho;
 
 	@DecimalMin("0.00")
 	@DecimalMax("16.00")
 	@Column(name = "PORCENTAJE_CONTACTO")
-	private Double porcentajeContacto;
+	private BigDecimal porcentajeContacto;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -115,35 +116,35 @@ public class Client implements Serializable {
 		this.correoContacto = correoContacto;
 	}
 
-	public Double getPorcentajePromotor() {
+	public BigDecimal getPorcentajePromotor() {
 		return porcentajePromotor;
 	}
 
-	public void setPorcentajePromotor(Double porcentajePromotor) {
+	public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
 		this.porcentajePromotor = porcentajePromotor;
 	}
 
-	public Double getPorcentajeCliente() {
+	public BigDecimal getPorcentajeCliente() {
 		return porcentajeCliente;
 	}
 
-	public void setPorcentajeCliente(Double porcentajeCliente) {
+	public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
 		this.porcentajeCliente = porcentajeCliente;
 	}
 
-	public Double getPorcentajeDespacho() {
+	public BigDecimal getPorcentajeDespacho() {
 		return porcentajeDespacho;
 	}
 
-	public void setPorcentajeDespacho(Double porcentajeDespacho) {
+	public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
 
-	public Double getPorcentajeContacto() {
+	public BigDecimal getPorcentajeContacto() {
 		return porcentajeContacto;
 	}
 
-	public void setPorcentajeContacto(Double porcentajeContacto) {
+	public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
 		this.porcentajeContacto = porcentajeContacto;
 	}
 

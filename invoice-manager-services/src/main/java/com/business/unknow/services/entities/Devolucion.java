@@ -22,56 +22,65 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
- *@author ralfdemoledor
+ * @author ralfdemoledor
  *
- *Las devoluciones solo pueden ser creadas para facturas pagadas y timbradas, de otro modo no es posible  crear una devolucion
+ *         Las devoluciones solo pueden ser creadas para facturas pagadas y
+ *         timbradas, de otro modo no es posible crear una devolucion
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "DEVOLUCIONES")
 public class Devolucion {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_DEVOLUCION")
 	private Integer id;
-	
+
 	/*
-	 * Este ID es llenado al momento de hacer el pago de la devolucion, el diseño permite que un pago pueda ligar multiples devoluciones.
+	 * Este ID es llenado al momento de hacer el pago de la devolucion, el diseño
+	 * permite que un pago pueda ligar multiples devoluciones.
 	 */
-	@Column(name = "ID_PAGO_ORIGEN")
+	@Column(name = "ID_PAGO")
 	private Integer idPagoOrigen;
-	
-	@Column(name = "ID_PAGO_DESTINO")
-	private Integer idPagoDestino;
+
 	/*
-	 *Folio de complemento si es PPD o folio factura si es PUE 
+	 * Folio de complemento si es PPD o folio factura si es PUE
 	 */
 	@NotNull
+	@Column(name = "TIPO")
+	private String tipo;
+
 	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "STATUS_DEVOLUCION")
-	private String statusDevolucion;
-	
+	@Column(name = "PAGO_MONTO")
+	private BigDecimal pagoMonto;
+
+	@Column(name = "IMPUESTO")
+	private BigDecimal impuesto;
+
+	@Column(name = "PORCENTAJE")
+	private BigDecimal porcentaje;
+
 	@NotNull
 	@Column(name = "MONTO")
 	private BigDecimal monto;
-	
+
 	/*
-	 *Entidad que recibe pago,en este caso es e correo de promotor,RFC cliente, correo contacto y CASA 
+	 * Entidad que recibe pago,en este caso es e correo de promotor,RFC cliente,
+	 * correo contacto y CASA
 	 */
 	@NotNull
 	@Column(name = "ID_RECEPTOR")
 	private String receptor;
-	
+
 	/*
 	 * CLIENTE,PROMOTOR,CONTACTO,CASA
 	 */
 	@NotNull
 	@Column(name = "TIPO_RECEPTOR")
 	private String tipoReceptor;
-	
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -99,28 +108,12 @@ public class Devolucion {
 		this.idPagoOrigen = idPagoOrigen;
 	}
 
-	public Integer getIdPagoDestino() {
-		return idPagoDestino;
-	}
-
-	public void setIdPagoDestino(Integer idPagoDestino) {
-		this.idPagoDestino = idPagoDestino;
-	}
-
 	public String getFolio() {
 		return folio;
 	}
 
 	public void setFolio(String folio) {
 		this.folio = folio;
-	}
-
-	public String getStatusDevolucion() {
-		return statusDevolucion;
-	}
-
-	public void setStatusDevolucion(String statusDevolucion) {
-		this.statusDevolucion = statusDevolucion;
 	}
 
 	public BigDecimal getMonto() {
@@ -163,11 +156,44 @@ public class Devolucion {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public BigDecimal getPagoMonto() {
+		return pagoMonto;
+	}
+
+	public void setPagoMonto(BigDecimal pagoMonto) {
+		this.pagoMonto = pagoMonto;
+	}
+
+	public BigDecimal getImpuesto() {
+		return impuesto;
+	}
+
+	public void setImpuesto(BigDecimal impuesto) {
+		this.impuesto = impuesto;
+	}
+
+	public BigDecimal getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(BigDecimal porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
 	@Override
 	public String toString() {
-		return "Devolucion [id=" + id + ", idPagoOrigen=" + idPagoOrigen + ", idPagoDestino=" + idPagoDestino
-				+ ", folio=" + folio + ", statusPago=" + statusDevolucion + ", monto=" + monto + ", receptor=" + receptor
-				+ ", tipoReceptor=" + tipoReceptor + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+		return "Devolucion [id=" + id + ", idPagoOrigen=" + idPagoOrigen + ", tipo=" + tipo + ", folio=" + folio
+				+ ", pagoMonto=" + pagoMonto + ", impuesto=" + impuesto + ", porcentaje=" + porcentaje + ", monto="
+				+ monto + ", receptor=" + receptor + ", tipoReceptor=" + tipoReceptor + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
+
 }

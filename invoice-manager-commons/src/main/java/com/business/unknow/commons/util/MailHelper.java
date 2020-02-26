@@ -23,10 +23,10 @@ import com.business.unknow.model.error.InvoiceCommonException;
 
 public class MailHelper {
 	
-	public void enviarCorreoGmail(EmailConfig emailConfig) throws InvoiceCommonException {
+	public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
 
 		Properties props = System.getProperties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.host", "smtpout.secureserver.net");
 		props.put("mail.smtp.user", emailConfig.getEmisor());
 		props.put("mail.smtp.clave", emailConfig.getPwEmisor());
 		props.put("mail.smtp.auth", "true");
@@ -38,7 +38,9 @@ public class MailHelper {
 
 		try {
 			message.setFrom(new InternetAddress(emailConfig.getEmisor()));
-			message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.getReceptor()));
+			for (String receptor : emailConfig.getReceptor()) {
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(receptor));
+			}
 			message.setSubject(emailConfig.getAsunto());
 			message.setText(emailConfig.getCuerpo());
 			if (emailConfig.getArchivos() != null) {
@@ -59,13 +61,14 @@ public class MailHelper {
 			}
 
 			Transport transport = session.getTransport("smtp");
-			transport.connect("smtp.gmail.com", emailConfig.getEmisor(), emailConfig.getPwEmisor());
+			transport.connect("smtpout.secureserver.net", emailConfig.getEmisor(), emailConfig.getPwEmisor());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
 		} catch (MessagingException me) {
+			me.printStackTrace();
 			throw new InvoiceCommonException(String.format("Error mandando Email de %s para %s",
 					emailConfig.getEmisor(), emailConfig.getReceptor()), me.getMessage());
 		}
 	}
-
+	
 }
