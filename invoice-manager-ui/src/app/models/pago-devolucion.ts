@@ -19,12 +19,14 @@ export class PagoDevolucion {
     public autorizador: string;
     public idDevolucion: number;
     public tipoReceptor: string;
+    public folioFactura: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
 
     constructor() {
         this.moneda = 'MXN';
         this.tipoCambio = 1.00;
+        this.monto = 0;
         this.status = 'VALIDACION';
         this.banco = 'N/A';
         this.formaPago = '*';

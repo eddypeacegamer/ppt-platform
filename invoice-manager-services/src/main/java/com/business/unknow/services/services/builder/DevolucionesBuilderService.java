@@ -58,9 +58,6 @@ public class DevolucionesBuilderService {
 		return fcb.build();
 	}
 	
-	public PagoDevolucionDto buildDevolucionPago(PagoDevolucionDto pago) {
-		return  new PagoDevolucionBuilder(pago)
-				.setStatus("VALIDACION").build();
-	}
+	
 
 }

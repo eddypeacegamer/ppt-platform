@@ -10,13 +10,15 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { DownloadInvoiceFilesService } from '../../@core/util-services/download-invoice-files';
 import { CommonsModule } from '../commons/commons.module';
+import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 
 
 @NgModule({
   declarations: [PromotorComponent,
     PreCfdiComponent,
     ReportesComponent,
-    DevolucionesComponent],
+    DevolucionesComponent,
+    DevolutionPreferencesComponent],
   imports: [
     PromotorRoutingModule,
     CommonsModule,

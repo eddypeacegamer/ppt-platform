@@ -3,13 +3,12 @@ import { PagoDevolucion } from '../../../../models/pago-devolucion';
 import { NbDialogRef } from '@nebular/theme';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DevolutionData } from '../../../../@core/data/devolution-data';
-import { map } from 'rxjs/operators';
-import { GenericPage } from '../../../../models/generic-page';
-import { Empresa } from '../../../../models/empresa';
-import { Contribuyente } from '../../../../models/contribuyente';
 import { CuentasData } from '../../../../@core/data/cuentas-data';
 import { User, UsersData } from '../../../../@core/data/users-data';
 import { Cuenta } from '../../../../models/cuenta';
+import { DownloadInvoiceFilesService } from '../../../../@core/util-services/download-invoice-files';
+import { FilesData } from '../../../../@core/data/files-data';
+import { ResourceFile } from '../../../../models/resource-file';
 
 @Component({
   selector: 'ngx-validacion-devolucion',
@@ -26,6 +25,8 @@ export class ValidacionDevolucionComponent implements OnInit {
   public formInfo: any = { rfc: '', empresa: '*', cuenta: '*'};
 
   constructor(protected ref: NbDialogRef<ValidacionDevolucionComponent>,
+    private downloadService: DownloadInvoiceFilesService,
+    private resourceService: FilesData,
     private devolutionsService: DevolutionData,
     private userService: UsersData,
     private accountsService: CuentasData) { }
@@ -94,6 +95,15 @@ export class ValidacionDevolucionComponent implements OnInit {
       .subscribe(success => this.ref.close(),
         (error: HttpErrorResponse) => this.errorMesage = error.error.message
             || `${error.statusText} : ${error.message}`);
+  }
+
+  public donwloadRefFile(referencia: string) {
+    this.resourceService.getResourceFile(referencia, 'DEVOLUCION', 'ARCHIVO')
+          .subscribe((file: ResourceFile) => {
+            const fileType = file.data.substring(5, file.data.indexOf('base64') + 7);
+            this.downloadService.downloadFile(file.data.replace('data:' + fileType, ''),
+              this.payment.referencia, fileType);
+          });
   }
 
 }

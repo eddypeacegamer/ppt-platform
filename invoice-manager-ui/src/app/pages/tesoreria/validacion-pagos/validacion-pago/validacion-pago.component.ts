@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
-import { Pago } from '../../../../models/pago';
+import { PagoFactura } from '../../../../models/pago-factura';
 import { FilesData } from '../../../../@core/data/files-data';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { DevolutionData } from '../../../../@core/data/devolution-data';
 
 @Component({
   selector: 'ngx-validacion-pago',
@@ -13,9 +12,9 @@ import { DevolutionData } from '../../../../@core/data/devolution-data';
 export class ValidacionPagoComponent implements OnInit {
 
 
-  @Input() pago: Pago;
+  @Input() pago: PagoFactura;
   public comprobanteUrl: SafeUrl;
-  public updatedPayment: Pago;
+  public updatedPayment: PagoFactura;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
     private filesService: FilesData,
@@ -26,18 +25,17 @@ export class ValidacionPagoComponent implements OnInit {
     this.updatedPayment = {... this.pago};
   }
 
-  public mostrarComprobante(pago:Pago){
+  public mostrarComprobante(pago:PagoFactura){
     this.comprobanteUrl = undefined;
     if(pago.formaPago!='CREDITO'){
       this.filesService.getResourceFile(`${pago.id}_${pago.folio}`, 'PAGO', 'IMAGEN').subscribe(
         (file) => this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
     }
   }
-
   cancel() {
     this.ref.close();
   }
-  onRecahzarPago(){
+  onRecahzarPago() {
     this.updatedPayment.statusPago = 'RECHAZADO';
     this.ref.close(this.updatedPayment);
   }
@@ -45,7 +43,5 @@ export class ValidacionPagoComponent implements OnInit {
   onValidarPago() {
     this.ref.close(this.updatedPayment);
   }
-
-  
 
 }

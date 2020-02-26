@@ -33,7 +33,7 @@
           <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
             [(ngModel)]="formInfo.usoCfdi" (change)="onUsoCfdiSelected($event.target.value)">
             <option value="*">Seleccionar</option>
-            <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
+            <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.clave}}-{{clave.descripcion}}</option>
           </select>
         </div>
         <div class="col-sm-1">

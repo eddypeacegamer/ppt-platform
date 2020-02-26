@@ -94,6 +94,9 @@ public class PagoDevolucion implements Serializable {
 	
 	@Column(name = "ID_DEVOLUCION")
 	private Integer idDevolucion;
+	
+	@Column(name = "FOLIO_FACT")
+	private String folioFactura;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -255,6 +258,14 @@ public class PagoDevolucion implements Serializable {
 
 	public void setIdDevolucion(Integer idDevolucion) {
 		this.idDevolucion = idDevolucion;
+	}
+	
+	public String getFolioFactura() {
+		return folioFactura;
+	}
+
+	public void setFolioFactura(String folioFactura) {
+		this.folioFactura = folioFactura;
 	}
 
 	public Date getFechaCreacion() {

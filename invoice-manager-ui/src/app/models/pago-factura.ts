@@ -1,4 +1,4 @@
-export class Pago{
+export class PagoFactura {
 
     public id: number;
     public folio: string;

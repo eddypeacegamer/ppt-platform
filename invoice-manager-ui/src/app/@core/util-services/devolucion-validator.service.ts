@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PagoDevolucion } from '../../models/pago-devolucion';
+import { Cfdi } from '../../models/factura/cfdi';
+import { Client } from '../../models/client';
 
 @Injectable({
   providedIn: 'root',
@@ -7,6 +9,34 @@ import { PagoDevolucion } from '../../models/pago-devolucion';
 export class DevolucionValidatorService {
 
   constructor() { }
+
+
+  public calculateDevolutionAmmount(cfdi: Cfdi, client: Client, tipoReceptor: string): number {
+    if (cfdi.metodoPago === 'PUE') {
+      const baseComisiones = cfdi.total - cfdi.subtotal;
+      if (tipoReceptor === 'CLIENTE') {
+        return cfdi.subtotal + baseComisiones * client.porcentajeCliente / 16;
+      }
+      if (tipoReceptor === 'CONTACTO') {
+        return baseComisiones * client.porcentajeContacto / 16;
+      }
+      if (tipoReceptor === 'PROMOTOR') {
+        return baseComisiones * client.porcentajePromotor / 16;
+      }
+    }else {
+      const porcentajeImpuestos = (cfdi.total - cfdi.subtotal) / cfdi.total;
+      const baseComisiones = cfdi.complemento.pagos[0].monto * porcentajeImpuestos;
+      if (tipoReceptor === 'CLIENTE') {
+        return cfdi.complemento.pagos[0].monto + baseComisiones * (client.porcentajeCliente / 16 - 1);
+      }
+      if (tipoReceptor === 'CONTACTO') {
+        return baseComisiones * client.porcentajeContacto / 16;
+      }
+      if (tipoReceptor === 'PROMOTOR') {
+        return baseComisiones * client.porcentajePromotor / 16;
+      }
+    }
+  }
 
   public validateDevolution(maxAmmount: Number, solicitud: PagoDevolucion): string[] {
     const messages = [];

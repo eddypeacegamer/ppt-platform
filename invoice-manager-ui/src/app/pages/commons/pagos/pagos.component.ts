@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { Pago } from '../../../models/pago';
+import { PagoFactura } from '../../../models/pago-factura';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,8 +25,8 @@ export class PagosComponent implements OnInit {
   public fileInput: any;
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-  public newPayment: Pago = new Pago();
-  public invoicePayments: Pago[] = [];
+  public newPayment: PagoFactura = new PagoFactura();
+  public invoicePayments: PagoFactura[] = [];
   public paymentSum: number = 0;
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
@@ -84,7 +84,7 @@ export class PagosComponent implements OnInit {
     const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      if (file.size > 100000) {
+      if (file.size > 1000000) {
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
       } else {
         reader.readAsDataURL(file);
@@ -124,7 +124,7 @@ export class PagosComponent implements OnInit {
       this.loading = true;
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
-          this.newPayment = new Pago();
+          this.newPayment = new PagoFactura();
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
           resourceFile.tipoRecurso = 'PAGO';
@@ -142,7 +142,7 @@ export class PagosComponent implements OnInit {
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
         });
     }
-    this.newPayment = new Pago();
+    this.newPayment = new PagoFactura();
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';

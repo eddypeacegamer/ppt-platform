@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
+import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.PagoMapper;
@@ -25,6 +27,7 @@ import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 import com.business.unknow.services.services.CfdiService;
 
@@ -46,6 +49,9 @@ public class PagoExecutorService extends AbstractExecutorService {
 	@Autowired
 	protected ConceptoRepository conceptoRepository;
 
+	@Autowired
+	private ImpuestoRepository impuestoRepository;
+	
 	@Autowired
 	protected ReceptorRepository receptorRepository;
 
@@ -107,6 +113,11 @@ public class PagoExecutorService extends AbstractExecutorService {
 			Concepto concepto = cfdiMapper.getEntityFromConceptoDto(conceptoDto);
 			concepto.setCfdi(cfdi);
 			conceptoRepository.save(concepto);
+			for (ImpuestoDto impuesto : conceptoDto.getImpuestos()) {
+				Impuesto imp = cfdiMapper.getEntityFromImpuestoDto(impuesto);
+				imp.setConcepto(concepto);
+				impuestoRepository.save(imp);
+			}
 		}
 		for (CfdiPago pago : cfdiPagos) {
 			pago.setCfdi(cfdi);
