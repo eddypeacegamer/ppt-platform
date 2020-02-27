@@ -14,4 +14,10 @@ public class AbstractValidator {
 					Constants.BAD_REQUEST);
 		}
 	}
+	protected void checkNotEmpty(String var, String attribute) throws InvoiceManagerException {
+		if (var.isEmpty()) {
+			throw new InvoiceManagerException(String.format(ATTRIBUTE_REQUIRED_MESSAGE, attribute),ATTRIBUTE_REQUIRED,
+					Constants.BAD_REQUEST);
+		}
+	}
 }
