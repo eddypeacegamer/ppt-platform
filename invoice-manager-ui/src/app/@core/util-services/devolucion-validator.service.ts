@@ -46,8 +46,12 @@ export class DevolucionValidatorService {
     if (solicitud.monto === undefined) {
       messages.push('El monto de la devolucion es un valor requerido');
     }else {
-      if (solicitud.monto > maxAmmount || solicitud.monto <= 0) {
-        messages.push(`El monto solicitado es invalido`);
+      if (solicitud.monto <= 0) {
+        messages.push(`No es posible realizar solicitudes de montos negativos`);
+      }
+      if (solicitud.monto > maxAmmount) {
+        messages.push(`No se cuentan con fondos suficientes para la devolucion,
+              saldo disponible ${(maxAmmount > 0) ? maxAmmount : 0}`);
       }
     }
     if (solicitud.formaPago === undefined || solicitud.formaPago === '*') {

@@ -19,7 +19,7 @@ export class ReportesComponent implements OnInit {
 
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '' };
+  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', solicitante: '' };
 
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];
@@ -45,7 +45,6 @@ export class ReportesComponent implements OnInit {
 
   public onValidationStatus(validationStatus: string) {
     this.filterParams.status = validationStatus;
-    console.log(this.filterParams);
   }
 
   public redirectToCfdi(folio: string) {
