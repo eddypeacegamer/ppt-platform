@@ -75,7 +75,7 @@
                 <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
                   style="display:block;" [(ngModel)]="formInfo.giro">
                   <option value="*">Seleccionar</option>
-                  <option *ngFor="let giro of girosCat" [(value)]="giro.clave">{{giro.nombre}}</option>
+                  <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
                 </select>
               </div>
             </div>

@@ -31,7 +31,7 @@ import { FilesData } from '../../../@core/data/files-data';
   styleUrls: ['./pre-cfdi.component.scss']
 })
 export class PreCfdiComponent implements OnInit {
-  public girosCat: Giro[] = [];
+  public girosCat: Catalogo[] = [];
   public companiesCat: Empresa[] = [];
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
