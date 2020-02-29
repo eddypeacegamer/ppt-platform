@@ -23,23 +23,28 @@ const routes: Routes = [{
         .then(m => m.PromotorModule),
     },
     {
-      path:'operaciones',
+      path: 'operaciones',
       loadChildren: ()=> import('./operaciones/operaciones.module')
         .then(m => m.OperacionesModule),
     },
     {
-      path:'contabilidad',
-      loadChildren: ()=> import('./contabilidad/contabilidad.module')
+      path: 'contabilidad',
+      loadChildren: () => import('./contabilidad/contabilidad.module')
         .then(m => m.ContabilidadModule),
     },
     {
-      path:'tesoreria',
+      path: 'tesoreria',
       loadChildren : () => import('./tesoreria/tesoreria.module')
         .then(m => m.TesoreriaModule ),
     },
-    {path:'administracion',
+    {
+      path: 'boveda',
+      loadChildren : () => import('./boveda/boveda.module')
+        .then(m => m.BovedaModule ),
+    },
+    {path: 'administracion',
       loadChildren:() => import('./administracion/administracion.module')
-        .then(m =>m.AdministracionModule )
+        .then(m =>m.AdministracionModule)
     },
     {
       path: '**',

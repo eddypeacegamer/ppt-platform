@@ -26,14 +26,15 @@
                   [(ngModel)]="filterParams.idReceptor">
               </div>
               <div class="col-sm-4">
-                <label for="inputPayType" class="label">Forma de Pago</label>
+                <label for="inputPayType" class="label">Estatus</label>
                 <div class="form-inline">
                 <select id="inputPayType" style="display:block;" class="form-control"
-                  [(ngModel)]="filterParams.formaPago" >
+                  [(ngModel)]="filterParams.status" >
                   <option value="*">Todos</option>
-                  <option value="EFECTIVO">Efectivo</option>
-                  <option value="CHEQUE">Cheque nominativo</option>
-                  <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                  <option value="SOLICITUD">En solicitud</option>
+                  <option value="VALIDACION">Validacion</option>
+                  <option value="ACEPTADO">Aceptada</option>
+                  <option value="PAGADO">Pagado</option>
                 </select>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
                 <button type="button" class="btn btn-primary align-bottom"  (click)="updateDataTable()" status="primary">BUSCAR</button>
