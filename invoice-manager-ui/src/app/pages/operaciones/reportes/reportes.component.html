@@ -7,22 +7,27 @@
           <div class="col-md-1">
             <label for="inputFolio" class="label">Folio</label>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
           </div>
           <div class="col-md-1">
             <label for="inputEmisor" class="label">Emisor</label>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="Razon Social Emisor">
           </div>
           <div class="col-md-1">
             <label for="InputReceptor" class="label">Receptor</label>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="Razon Social Receptor">
           </div>
-
+          <div class="col-md-1">
+            <label for="inputPromotor" class="label">Promotor</label>
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.solicitante"  id="inputPromotor" placeholder="Correo promotor">
+          </div>
         </div>
         <br>
         <div class="row">

@@ -1,0 +1,10 @@
+ {
+    "title": "Boveda",
+    "icon": "layout-outline",
+    "children": [
+      {
+        "title": "Solicitudes",
+        "link": "/pages/boveda/solicitudes"
+      }
+    ]
+  }

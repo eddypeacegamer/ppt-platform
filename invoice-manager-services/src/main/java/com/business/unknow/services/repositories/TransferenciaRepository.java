@@ -17,7 +17,7 @@ public interface TransferenciaRepository extends JpaRepository<Transferencia, In
 	
 	public Page<Transferencia> findAll(Pageable pageable);
 	
-	@Query("select t from Transferencia t where upper(t.lineaRetiro) like upper(:from) and t.folio = null and upper(t.lineaDeposito) like upper(:to)")
+	@Query("select t from Transferencia t where t.folio = null and upper(t.lineaDeposito) like upper(:from)  and upper(t.lineaRetiro) like upper(:to)")
 	public Page<Transferencia> findTransfersFromTo(@Param("from") String desde,@Param("to") String hacia ,Pageable pageable);
 	public Optional<Transferencia> findTransferById(int id);
 

@@ -13,25 +13,24 @@ import { InvoiceRequestComponent } from './invoice-request/invoice-request.compo
 })
 export class InvoiceGeneratorComponent implements OnInit {
 
-  public headers: string[] = ['RFC Emisor','RFC Receptor','Linea Emisor','Linea Receptor','Total','Fecha Solicitud'];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { tipoEmisor: 'A', tipoReceptor: 'B', since: '', to: '' };
+  public filterParams: any = { tipoEmisor: 'B', tipoReceptor: 'A', since: '', to: '' };
 
-  constructor(private tranferService:TransferData,
+  constructor(private tranferService: TransferData,
     private donwloadService: DownloadCsvService,
     private dialogService: NbDialogService) { }
 
   ngOnInit() {
-    this.filterParams = { tipoEmisor: 'A', tipoReceptor: 'B', since: '', to: '' };
+    this.filterParams = { tipoEmisor: 'B', tipoReceptor: 'A', since: '', to: '' };
     this.updateDataTable();
   }
 
 
-  public updateDataTable(currentPage?: number, pageSize?: number, filterParams?: any) {
+  public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.tranferService.getAllTransfers(pageValue, sizeValue, filterParams)
+    this.tranferService.getAllTransfers(pageValue, sizeValue, this.filterParams)
       .subscribe((result: GenericPage<any>) => this.page = result);
   }
 
@@ -41,17 +40,16 @@ export class InvoiceGeneratorComponent implements OnInit {
 
   public downloadHandler() {
     this.tranferService.getAllTransfers(0, 10000, this.filterParams).subscribe(result => {
-      console.log(result.content);
-      this.donwloadService.exportCsv(result.content, 'Transferencias');
+      this.donwloadService.exportCsv(result.content, 'Facturas_a_generar');
     });
   }
 
-  public openDialog(transferencia:Transferencia){
+  public openDialog(transferencia: Transferencia ) {
     this.dialogService.open(InvoiceRequestComponent, {
       context: {
         transfer: transferencia,
       },
-    }).onClose.subscribe(()=>this.updateDataTable(this.page.number,this.page.size,this.filterParams));
+    }).onClose.subscribe(()=> this.updateDataTable(this.page.number,this.page.size));
   }
 
 }

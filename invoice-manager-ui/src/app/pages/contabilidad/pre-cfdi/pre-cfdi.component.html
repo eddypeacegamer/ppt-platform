@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
-      <nb-card-header>Registro CFDI</nb-card-header>
+      <nb-card-header>Registro CFDI Contabilidad</nb-card-header>
       <nb-card-body>
         <div *ngIf="folioParam != '*'">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
@@ -15,9 +15,6 @@
             <p class="font-weight-bold">Receptor</p>
             <p>{{factura.rfcRemitente}}</p>
             <p>{{factura.razonSocialRemitente}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Promotor</p>
-            <p>{{factura.solicitante}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
           </div>
@@ -208,9 +205,6 @@
           </div>
         </div>
 
-        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
-          <ngx-pagos [factura]="factura" [user]="user"></ngx-pagos>
-        </div>
       </nb-card-body>
     </nb-card>
   </div>
@@ -228,6 +222,7 @@
             [(ngModel)]="data.packFacturacion">
             <option value="SW_SAPIENS">SW Sapiens</option>
             <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
+            <option value="NTLINK">NT Link</option>
           </select>
 
         </div>

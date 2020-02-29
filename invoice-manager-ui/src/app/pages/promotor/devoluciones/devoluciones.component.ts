@@ -148,7 +148,7 @@ export class DevolucionesComponent implements OnInit {
     if (solicitud.formaPago === 'PAGO_MULTIPLE') {
       solicitud.referencia = this.filename;
     }
-    this.messages = this.devolutionValidator.validateDevolution(this.solicitud.monto, solicitud);
+    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion , solicitud);
     if (this.messages.length === 0) {
       this.devolutionService.requestDevolution(solicitud)
         .subscribe( request => {

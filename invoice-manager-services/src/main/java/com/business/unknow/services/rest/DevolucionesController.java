@@ -87,7 +87,7 @@ public class DevolucionesController {
 	}
 	@GetMapping("/devoluciones/pagos")
 	public ResponseEntity<Page<PagoDevolucionDto>> getDevolucionesByParams(
-			@RequestParam(name = "status", defaultValue = "VALIDACION") String status,
+			@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
 			@RequestParam(name = "idReceptor", defaultValue = "") String idReceptor,
 			@RequestParam(name = "beneficiario", defaultValue = "") String beneficiario,
