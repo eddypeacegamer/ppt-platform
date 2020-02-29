@@ -141,13 +141,11 @@
     </div>
   </nb-card-body>
   <nb-card-footer>
-
-    <div class="form-inline" *ngIf="this.factura.folio == undefined">
-      <button type="button" class="btn btn-success" (click)="calcularPrecioUnitario(newConcep)">Calcular Precio Unitario</button>
-      &nbsp;&nbsp;&nbsp;
-      <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
-      &nbsp;&nbsp;&nbsp;
-      <button type="button" class="btn btn-success" [disabled]="!validarRestante()" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+    <div class="clearfix">
+      <button type="button" class="float-left btn btn-warning" (click)="exit()">Salir</button>
+      <button type="button" class="btn btn-success float-left" (click)="calcularPrecioUnitario(newConcep)">Calcular Precio Unitario</button>
+      <button type="button" class="btn btn-info float-right" (click)="limpiarForma()">LIMPIAR</button>
+      <button type="button" class="btn btn-success float-right" [disabled]="!validarRestante()" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
     </div>
   </nb-card-footer>
 </nb-card>

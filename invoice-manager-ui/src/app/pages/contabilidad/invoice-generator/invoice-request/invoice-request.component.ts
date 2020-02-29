@@ -16,6 +16,7 @@ import { Cfdi } from '../../../../models/factura/cfdi';
 import { map } from 'rxjs/operators';
 import { CfdiValidatorService } from '../../../../@core/util-services/cfdi-validator.service';
 import { Contribuyente } from '../../../../models/contribuyente';
+import { TransferData } from '../../../../@core/data/transfers-data';
 
 @Component({
   selector: 'ngx-invoice-request',
@@ -51,6 +52,7 @@ export class InvoiceRequestComponent implements OnInit {
     protected ref: NbDialogRef<InvoiceRequestComponent>,
     private catalogsService: CatalogsData,
     private companiesService: CompaniesData,
+    private tranferService: TransferData,
     private invoiceService: InvoicesData,
     private cfdiValidator: CfdiValidatorService,
     private userService: UsersData,
@@ -59,7 +61,7 @@ export class InvoiceRequestComponent implements OnInit {
   ngOnInit() {
     this.userService.getUserInfo().subscribe(user => this.user = user as User);
     this.initVariables();
-    this.companiesService.getCompanyByRFC(this.transfer.rfcRetiro).subscribe(
+    this.companiesService.getCompanyByRFC(this.transfer.rfcDeposito).subscribe(
       emisor => {
         this.factura.rfcEmisor = emisor.informacionFiscal.rfc;
         this.factura.razonSocialEmisor = emisor.informacionFiscal.razonSocial;
@@ -67,18 +69,18 @@ export class InvoiceRequestComponent implements OnInit {
         this.factura.cfdi.emisor.nombre = emisor.informacionFiscal.razonSocial;
         this.factura.cfdi.emisor.regimenFiscal = emisor.regimenFiscal;
       },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
-    );
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message ||
+           `${error.statusText} : ${error.message}`));
 
-    this.companiesService.getCompanyByRFC(this.transfer.rfcDeposito).subscribe(
+    this.companiesService.getCompanyByRFC(this.transfer.rfcRetiro).subscribe(
       receptor => {
         this.factura.rfcRemitente = receptor.informacionFiscal.rfc;
         this.factura.razonSocialRemitente = receptor.informacionFiscal.razonSocial;
         this.factura.cfdi.receptor.rfc = receptor.informacionFiscal.rfc;
         this.factura.cfdi.receptor.nombre = receptor.informacionFiscal.razonSocial;
       },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
-    );
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || 
+          `${error.statusText} : ${error.message}`));
 
     this.catalogsService.getInvoiceCatalogs().subscribe(results => {
       this.girosCat = results[0];
@@ -112,6 +114,7 @@ export class InvoiceRequestComponent implements OnInit {
 
   public validarRestante(): boolean {
     if (Math.abs(this.transfer.importe - this.factura.cfdi.total) < 0.01 && this.factura.folio === undefined) {
+      this.errorMessages = [];
       this.successMessage = 'Muy bien el monto de la factura se cuadro correctamente';
       return true;
     }else {
@@ -120,18 +123,19 @@ export class InvoiceRequestComponent implements OnInit {
   }
   public calcularPrecioUnitario(concepto: Concepto) {
     if (concepto.cantidad < 1) {
-      alert('NO es posible calcular montos unitarios para valores menores a 1');
+      alert('No es posible calcular montos unitarios para valores menores a 1');
     }else {
       const restante  = this.transfer.importe - this.factura.cfdi.total;
-      if (concepto.iva === true){
+      if (concepto.iva === true) {
         concepto.valorUnitario = restante / (1.16 * concepto.cantidad);
-      }else{
+      }else {
         concepto.valorUnitario = restante / concepto.cantidad;
       }
     }
   }
 
   public getInvoiceByFolio(folio: string) {
+    this.errorMessages = [];
     this.invoiceService.getInvoiceByFolio(folio).pipe(
       map((fac: Factura) => {
         fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
@@ -219,8 +223,8 @@ export class InvoiceRequestComponent implements OnInit {
 
     this.errorMessages = [];
     this.successMessage = undefined;
-    this.factura.lineaEmisor = this.transfer.lineaRetiro;
-    this.factura.lineaRemitente = this.transfer.lineaDeposito;
+    this.factura.lineaEmisor =  this.transfer.lineaDeposito;
+    this.factura.lineaRemitente = this.transfer.lineaRetiro;
     this.factura.statusFactura = '4';//SET AS DEFAULT POR TIMBRAR
     this.factura.solicitante = this.user.email;
     this.factura.metodoPago = this.factura.cfdi.metodoPago;
@@ -230,7 +234,9 @@ export class InvoiceRequestComponent implements OnInit {
       this.invoiceService.insertNewInvoice({... this.factura})
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
-          this.successMessage = 'Solicitud de factura enviada correctamente';
+          this.transfer.folio = invoice.folio;
+          this.tranferService.updateTranfer({... this.transfer})
+            .subscribe(() => this.exit());
         }, (error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined) ?
             error.error.message : `${error.statusText} : ${error.message}`);
