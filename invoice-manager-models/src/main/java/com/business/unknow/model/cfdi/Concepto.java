@@ -31,7 +31,7 @@ public class Concepto {
 	@XmlAttribute(name = "Descuento")
 	private BigDecimal descuento;
 	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
-	private Impuesto impuestos;
+	private ConceptoImpuesto impuestos;
 
 	public String getClaveProdServ() {
 		return claveProdServ;
@@ -97,11 +97,11 @@ public class Concepto {
 		this.descuento = descuento;
 	}
 
-	public Impuesto getImpuestos() {
+	public ConceptoImpuesto getImpuestos() {
 		return impuestos;
 	}
 
-	public void setImpuestos(Impuesto impuestos) {
+	public void setImpuestos(ConceptoImpuesto impuestos) {
 		this.impuestos = impuestos;
 	}
 

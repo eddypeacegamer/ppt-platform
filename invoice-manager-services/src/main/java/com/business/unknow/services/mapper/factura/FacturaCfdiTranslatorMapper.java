@@ -8,12 +8,14 @@ import org.mapstruct.Mappings;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.Concepto;
+import com.business.unknow.model.cfdi.Retencion;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
+import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecorator;
@@ -87,6 +89,8 @@ public interface FacturaCfdiTranslatorMapper {
 	public Concepto cfdiConcepto(ConceptoDto dto);
 
 	public Translado cfdiImpuesto(ImpuestoDto dto);
+	
+	public Retencion cfdiRetencion(RetencionDto dto);
 
 	public Translado cfdiImpuestoGlobal(ImpuestoDto dto);
 
