@@ -18,8 +18,6 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 	@Autowired
 	private ComplementoSuite complementoSuite;
 
-	
-
 	public FacturaContext facturaEvaluation(FacturaContext facturaContext) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		facts.put("facturaContext", facturaContext);

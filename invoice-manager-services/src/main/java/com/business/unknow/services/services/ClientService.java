@@ -62,11 +62,11 @@ public class ClientService {
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
-			Optional<Client> entity = repository.findByRazonSocial(cliente.getInformacionFiscal().getRazonSocial());
-			if (entity.isPresent()) {
+			Optional<Client> entity = repository.findByRfc(cliente.getInformacionFiscal().getRfc());
+			if (entity.isPresent()){
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("La razon social  %s ya esta creada en el sistema",
-								cliente.getInformacionFiscal().getRazonSocial()));
+						String.format("El rfc  %s ya esta creado en el sistema",
+								cliente.getInformacionFiscal().getRfc()));
 			}
 			SwSapiensConfig config = swSapinsExecutorService
 					.validateRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
