@@ -7,40 +7,37 @@
 
           <div class="col-sm-3">
             <label for="inputDevType" class="label">Tipo Receptor</label>
-
             <select selected="*" id="inputDevType" style="display:block;" class="form-control" fullWidth
               (change)="onReceptorTypeSelected($event.target.value)" [(ngModel)]="filterParams.tipoReceptor">
               <option value="PROMOTOR">Promotor</option>
               <option value="CLIENTE">Cliente</option>
               <option value="CONTACTO">Contacto</option>
             </select>
-
           </div>
-          <div class="col-sm-3" *ngIf="filterParams.tipoReceptor == 'PROMOTOR'">
+          <div class="col-sm-5" *ngIf="filterParams.tipoReceptor == 'PROMOTOR'">
             <label for="inputPromotor" class="label">Promotor</label>
             <input id="inputPromotor" class="form-control" type="text" [(ngModel)]="filterParams.idReceptor" disabled
               placeholder="correo promotor">
           </div>
-          <div class="col-sm-3" *ngIf="filterParams.tipoReceptor == 'CONTACTO'">
+          <div class="col-sm-5" *ngIf="filterParams.tipoReceptor == 'CONTACTO'">
             <label for="inputContacto" class="label">Correo contacto</label>
-            <input id="inputContacto" class="form-control" type="text" [(ngModel)]="filterParams.idReceptor" fullWidth
-              placeholder="correo contacto">
+            <select selected="*" id="inputContacto" style="display:block;" class="form-control" fullWidth [(ngModel)]="filterParams.idReceptor" (change)="searchDevolutionsData()">
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let client of clientsCat" [value]="client.porcentajeContacto">{{client.correoContacto}} - {{client.porcentajeContacto/100 | percent}}</option>
+            </select>
           </div>
-          <div class="col-sm-3" *ngIf="filterParams.tipoReceptor == 'CLIENTE'">
+          <div class="col-sm-5" *ngIf="filterParams.tipoReceptor == 'CLIENTE'">
             <label for="inputCliente" class="label">RFC cliente</label>
-            <input id="inputCliente" class="form-control" type="text" [(ngModel)]="filterParams.idReceptor" fullWidth
-              placeholder="RFC cliente">
+            <select selected="*" id="inputCliente" style="display:block;" class="form-control" fullWidth [(ngModel)]="filterParams.idReceptor" (change)="searchDevolutionsData()">
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let client of clientsCat" [value]="client.informacionFiscal.rfc">{{client.informacionFiscal.rfc}} - {{client.informacionFiscal.razonSocial}}</option>
+            </select>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             <label for="inputSaldo" class="label">Saldo disponible</label>
-            <div class="form-inline">
               <div class="alert alert-success form-control" role="alert" style="width: 200px;">
                 <p class="font-weight-bold">{{montoDevolucion | currency}}</p>
               </div>
-              
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="searchDevolutionsData()">BUSCAR</button>
-            </div>
           </div>
 
         </div>
