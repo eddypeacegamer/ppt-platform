@@ -87,7 +87,7 @@ public class TimbradoExecutorService {
 						context.getFacturaDto().getFolio().concat(TipoArchivoEnum.XML.getFormat()), xml.getData()))
 				.addArchivo(new FileConfig(TipoArchivoEnum.PDF,
 						context.getFacturaDto().getFolio().concat(TipoArchivoEnum.PDF.getFormat()), pdf.getData()))
-				.setCuerpo(String.format("Su devolucion es: %d", 0));
+				.setCuerpo("Su factura timbrada es:");
 		try {
 			mailHelper.enviarCorreo(emailBuilder.build());
 		} catch (InvoiceCommonException e) {

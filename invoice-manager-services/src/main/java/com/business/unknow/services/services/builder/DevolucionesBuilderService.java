@@ -31,7 +31,7 @@ public class DevolucionesBuilderService {
 				.setPagoMonto(totalPago)
 				.setPorcentaje(porcentaje)
 				.setImpuesto(montoBase)
-				.setMonto((montoBase.multiply(porcentaje).divide(new BigDecimal(16), 2,
+				.setMonto((montoBase.multiply(porcentaje).divide(new BigDecimal(16),4,
 						RoundingMode.HALF_UP)))
 				.setFolio(foliofFact).setIdPagoOrigen(idPago).setReceptor(receptor).setTipoReceptor(tipoReceptor)
 				.setTipo("D").build());
