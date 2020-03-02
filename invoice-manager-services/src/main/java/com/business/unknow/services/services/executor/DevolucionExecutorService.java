@@ -36,7 +36,7 @@ public class DevolucionExecutorService {
 	@Autowired
 	private DevolucionesBuilderService devolucionesBuilderService;
 
-	public void executeDevolucionForPue(FacturaContext context, Client client,BigDecimal total, BigDecimal baseComisiones)
+	public void executeDevolucionForPue(FacturaContext context, Client client,BigDecimal total, BigDecimal baseComisiones,BigDecimal realSubtotal)
 			throws InvoiceManagerException {
 		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 				context.getFacturaDto().getId(), baseComisiones, client.getPorcentajePromotor(),
@@ -48,13 +48,13 @@ public class DevolucionExecutorService {
 			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
-			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal().add(devolucion.getMonto()));
+			devolucion.setMonto(realSubtotal.add(devolucion.getMonto()));
 			devolucionRepository.save(devolucion);
 		}else {
 			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
 					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
-			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal());
+			devolucion.setMonto(realSubtotal);
 			devolucionRepository.save(devolucion);
 		}
 		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO)> 0) {
@@ -70,7 +70,7 @@ public class DevolucionExecutorService {
 		facturaRepository.save(facturaMapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
 
-	public void executeDevolucionForPpd(FacturaContext context, Client client,BigDecimal  total, BigDecimal baseComisiones)
+	public void executeDevolucionForPpd(FacturaContext context, Client client,BigDecimal  total, BigDecimal baseComisiones,BigDecimal realSubtotal)
 			throws InvoiceManagerException {
 		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(), context.getFacturaDto().getId(),
 				context.getCurrentPago().getMonto().multiply(baseComisiones), client.getPorcentajePromotor(),
@@ -86,6 +86,12 @@ public class DevolucionExecutorService {
 			devolucion.setMonto(context.getCurrentPago().getMonto()
 					.subtract(context.getCurrentPago().getMonto().multiply(baseComisiones))
 					.add(devolucion.getMonto()));
+			devolucionRepository.save(devolucion);
+		}else {
+			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
+					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
+					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
+			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal());
 			devolucionRepository.save(devolucion);
 		}
 		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO)> 0) {

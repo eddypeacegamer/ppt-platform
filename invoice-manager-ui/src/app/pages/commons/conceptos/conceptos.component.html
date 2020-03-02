@@ -84,6 +84,7 @@
         <th scope="col" class="text-center">Descripcion</th>
         <th scope="col" class="text-center">Valor Unitario</th>
         <th scope="col" class="text-center">Impuesto</th>
+        <th scope="col" class="text-center">Retencion</th>
         <th scope="col" class="text-center">Importe</th>
       </tr>
     </thead>
@@ -101,21 +102,22 @@
         <td scope="row" class="text-center">{{fila.descripcion}}</td>
         <td scope="row" class="text-center">{{fila.valorUnitario | currency}}</td>
         <td scope="row" class="text-center">{{getImporteImpuestos(fila.impuestos) | currency}}</td>
+        <td scope="row" class="text-center">{{getImporteImpuestos(fila.retenciones) | currency}}</td>
         <td scope="row" class="text-center">{{fila.importe | currency}}</td>
       </tr>
       <tr>
-        <td *ngIf="!allowEdit" colspan="6">
+        <td *ngIf="!allowEdit" colspan="7">
         </td>
-        <td *ngIf="allowEdit" colspan="7">
+        <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center">Subtotal</td>
         <td class="text-center">{{cfdi.subtotal | currency}}</td>
       </tr>
 
       <tr>
-        <td *ngIf="!allowEdit" colspan="6">
+        <td *ngIf="!allowEdit" colspan="7">
         </td>
-        <td *ngIf="allowEdit" colspan="7">
+        <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center">Total</td>
         <td class="text-center">{{cfdi.total | currency}}</td>
