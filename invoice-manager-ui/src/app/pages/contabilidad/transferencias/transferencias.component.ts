@@ -46,6 +46,7 @@ export class TransferenciasComponent implements OnInit {
         return initial;
       }, {});
       if(jsonData.TRANSFERENCIAS==undefined){
+        console.log(jsonData)
         alert('Formato Excel invalido')
       }else{
         this.transfers = jsonData.TRANSFERENCIAS;
