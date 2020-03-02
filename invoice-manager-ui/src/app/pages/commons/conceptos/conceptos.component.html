@@ -13,6 +13,7 @@
       <label for="inputProdServ" class="label">Selección clave producto servicio</label>
       <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
         (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
+        <option value="*">Seleccionar</option>
         <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.clave}} - {{clave.descripcion}}
         </option>
       </select>

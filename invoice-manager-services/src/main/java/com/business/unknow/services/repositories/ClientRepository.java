@@ -1,5 +1,6 @@
 package com.business.unknow.services.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -28,4 +29,6 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 	
 	@Query("select c from Client c where lower(c.informacionFiscal.razonSocial) = lower(:razonSocial)")
 	public Optional<Client> findByRazonSocial( @Param("razonSocial") String razonSocial);
+	
+	public List<Client> findByCorreoPromotor(String promotor);
 }

@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,10 @@ public class ClientService {
 		Client client = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("No existe cliente con  rfc %s", rfc)));
 		return mapper.getClientDtoFromEntity(client);
+	}
+	
+	public List<ClientDto> getClientsByPromotor(String promotor){
+		return mapper.getClientDtosFromEntities(repository.findByCorreoPromotor(promotor));
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {

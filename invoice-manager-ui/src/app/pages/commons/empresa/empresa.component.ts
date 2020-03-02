@@ -141,4 +141,11 @@ export class EmpresaComponent implements OnInit {
     );
   }
 
+  public inactivateCompany(){
+    this.companyInfo.activo = false;
+    this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo)
+    .subscribe((data:Empresa) => this.formInfo.success ='la empresa ha sido desactivada satisfactoriamente',
+    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);});
+  }
+
 }
