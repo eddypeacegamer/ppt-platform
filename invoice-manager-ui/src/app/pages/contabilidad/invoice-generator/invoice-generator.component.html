@@ -37,7 +37,7 @@
                 <nb-datepicker #topicker></nb-datepicker>
               </div>
               <div class="col-md-2">
-                  <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+                  <button type="button" (click)="updateDataTable(0,10)" nbButton status="primary">BUSCAR</button>
               </div>
           </div>
           
@@ -73,7 +73,12 @@
               <thead class="thead-light">
                 <tr>
                   <th class="text-center">Acciones</th>
-                  <th scope="col" *ngFor="let header of headers">{{header}}</th>
+                  <th scope="col">RFC Emisor</th>
+                  <th scope="col">RFC Receptor</th>
+                  <th scope="col">Linea Emisor</th>
+                  <th scope="col">Linea Receptor</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Fecha Solicitud</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,10 +87,10 @@
                     <button class="btn btn-outline-primary" (click)="openDialog(fila)"><i class="fa fa-edit"></i>
                     </button> 
                   </td>
-                  <td scope="row">{{fila.rfcRetiro}}</td>
                   <td scope="row">{{fila.rfcDeposito}}</td>
-                  <td scope="row">{{fila.lineaRetiro}}</td>
+                  <td scope="row">{{fila.rfcRetiro}}</td>
                   <td scope="row">{{fila.lineaDeposito}}</td>
+                  <td scope="row">{{fila.lineaRetiro}}</td>
                   <td scope="row">{{fila.importe | currency}}</td>
                   <td scope="row">{{fila.fechaCreacion}}</td>
                 </tr>

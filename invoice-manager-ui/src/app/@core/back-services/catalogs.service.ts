@@ -82,6 +82,9 @@ export class CatalogsService {
     if (formapago === 'FACTURA') {
       return of([new Catalogo('FOLIO', 'Folio factura a pagar')]);
     }
+    if (formapago === 'PAGO_MULTIPLE') {
+      return of([new Catalogo('ARCHIVO', 'Archivo con detalles de pago')]);
+    }
     return of([]);
   }
 

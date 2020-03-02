@@ -22,6 +22,7 @@ import { DownloadInvoiceFilesService } from '../../../@core/util-services/downlo
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
+import { GenericPage } from '../../../models/generic-page';
 
 @Component({
   selector: 'ngx-revision',
@@ -38,15 +39,14 @@ export class RevisionComponent implements OnInit {
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];
   public devolutionCat: Catalogo[] = [];
-  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
-
+  public payTypeCat: Catalogo[] = [];
+  public clientsCat: Client[] = [];
   public newConcep: Concepto;
   public factura: Factura;
   public folioParam: string;
   public user: User;
 
   public complementos: Factura[] = [];
-  public headers: string[] = ['Producto Servicio', 'Cantidad', 'Clave Unidad', 'Unidad', 'Descripcion', 'Valor Unitario', 'Impuesto', 'Importe'];
   public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
@@ -171,18 +171,38 @@ export class RevisionComponent implements OnInit {
         }
       });
     }
-  
-    buscarClientInfo() {
-      this.errorMessages = [];
-      this.clientsService.getClientByRFC(this.formInfo.clientRfc).subscribe(
-        (client: Client) => {
-          if (client.activo === true) {
-            this.clientInfo = client.informacionFiscal;
-          } else {
-            alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
-            this.formInfo.clientRfc = '';
-          }
-        }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+
+    buscarClientInfo( razonSocial: string) {
+      if ( razonSocial !== undefined && razonSocial.length > 5) {
+        this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
+            .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+            .subscribe(clients => {
+              this.clientsCat = clients;
+              if ( clients.length > 0) {
+                this.formInfo.clientRfc = clients[0].id.toString();
+                this.onClientSelected(this.formInfo.clientRfc);
+              }
+            }, (error: HttpErrorResponse) => {
+              this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+              this.clientsCat = [];
+              this.clientInfo = undefined;
+            });
+      }else {
+        this.clientsCat = [];
+        this.clientInfo = undefined;
+      }
+    }
+
+    onClientSelected(id: string) {
+      const value = +id;
+      if (!isNaN(value)) {
+        const client = this.clientsCat.find(c => c.id === Number(value));
+        if (client.activo === true) {
+          this.clientInfo = client.informacionFiscal;
+        } else {
+          alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+        }
+      }
     }
   
     onUsoCfdiSelected(clave: string) {

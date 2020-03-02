@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,12 @@ public class FilesService {
 	
 	
 	public ResourceFileDto insertResourceFile( ResourceFileDto resourceFile) {
+		
+		Optional<ResourceFile> resource = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(resourceFile.getTipoRecurso(), resourceFile.getReferencia(), resourceFile.getTipoArchivo());
+		if(resource.isPresent()) {
+		 resourceFile.setId(resource.get().getId());
+		 resourceFile.setFechaCreacion(new Date());
+		}
 		return mapper.getResourceFileDtoFromEntity(resourceRepo.save(mapper.getResourceFileFromDto(resourceFile)));
 	}
 	

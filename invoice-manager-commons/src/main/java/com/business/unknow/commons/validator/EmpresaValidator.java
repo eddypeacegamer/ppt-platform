@@ -9,6 +9,7 @@ public class EmpresaValidator extends AbstractValidator {
 		checkNotNull(dto.getInformacionFiscal(), "Informacion fiscal");
 		checkNotNull(dto.getInformacionFiscal().getRfc(), "Rfc");
 		checkNotNull(dto.getInformacionFiscal().getRazonSocial(), "Razon social");
+		checkNotEmpty(dto.getInformacionFiscal().getRazonSocial(), "Razon social");
 		checkNotNull(dto.getRegimenFiscal(), "Regimen fiscal");
 		checkNotNull(dto.getInformacionFiscal().getCp(), "Codigo postal");
 		checkNotNull(dto.getInformacionFiscal().getMunicipio(), "Municipio");

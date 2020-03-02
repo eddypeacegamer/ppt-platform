@@ -16,7 +16,7 @@ import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { Pago } from '../../../models/pago';
+import { PagoFactura } from '../../../models/pago-factura';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
@@ -31,7 +31,7 @@ import { FilesData } from '../../../@core/data/files-data';
   styleUrls: ['./pre-cfdi.component.scss']
 })
 export class PreCfdiComponent implements OnInit {
-  public girosCat: Giro[] = [];
+  public girosCat: Catalogo[] = [];
   public companiesCat: Empresa[] = [];
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
@@ -63,7 +63,7 @@ export class PreCfdiComponent implements OnInit {
   /** PAYMENT SECCTION**/
 
   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
-  public newPayment: Pago;
+  public newPayment: PagoFactura;
   public invoicePayments = [];
   public paymentSum:number = 0;
 

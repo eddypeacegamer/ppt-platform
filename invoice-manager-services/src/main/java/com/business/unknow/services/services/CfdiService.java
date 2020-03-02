@@ -22,12 +22,14 @@ import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
+import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
+import com.business.unknow.services.entities.cfdi.Retencion;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
@@ -35,6 +37,7 @@ import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
+import com.business.unknow.services.repositories.facturas.RetencionRepository;
 
 /**
  * @author hha0009
@@ -60,6 +63,9 @@ public class CfdiService {
 
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
+	
+	@Autowired
+	private RetencionRepository retencionRepository;
 
 	@Autowired
 	private CfdiMapper mapper;
@@ -116,6 +122,12 @@ public class CfdiService {
 				imp.setConcepto(conceptoEntity);
 				impuestoRepository.save(imp);
 			}
+			for (RetencionDto retencion : concepto.getRetenciones()) {
+				Retencion reten = mapper.getEntityFromRetencionDto(retencion);
+				reten.setConcepto(conceptoEntity);
+				retencionRepository.save(reten);
+			}
+			
 		}
 		return mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
 	}
@@ -230,11 +242,15 @@ public class CfdiService {
 	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
 		BigDecimal subtotal = cfdi.getConceptos().stream().map(c -> c.getImporte()).reduce(BigDecimal.ZERO,
 				(i1, i2) -> i1.add(i2));
+		BigDecimal retenciones =cfdi.getConceptos().stream()
+				.map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
+						(i1, i2) -> i1.add(i2)))// suma importe retencioness por concepto
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
 		BigDecimal impuestos = cfdi.getConceptos().stream()
 				.map(i -> i.getImpuestos().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
-		BigDecimal total = subtotal.add(impuestos);
+		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values suatotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
 		cfdi.setSubtotal(subtotal);
 		cfdi.setTotal(total);

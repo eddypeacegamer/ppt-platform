@@ -2,16 +2,18 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
+import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
 import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
 import { Router } from '@angular/router';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
-import { PaymentsService } from '../../../@core/back-services/payments.service';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { GenericPage } from '../../../models/generic-page';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ResourceFile } from '../../../models/resource-file';
+import { FilesData } from '../../../@core/data/files-data';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -26,15 +28,20 @@ export class DevolucionesComponent implements OnInit {
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
   public user: User;
+  public filename: string = '';
   public montoDevolucion: Number = 0;
   public solicitud: PagoDevolucion;
+  public fileInput: any = {};
   public filterParams: any = { tipoReceptor: 'PROMOTOR', idReceptor: '' };
   public messages: string[] = [];
+
+  private referenceFile: ResourceFile;
 
   constructor(private dialogService: NbDialogService,
     private devolutionService: DevolutionData,
     private catalogService: CatalogsData,
-    private donwloadService: DownloadCsvService,
+    private resourceService: FilesData,
+    private donwloadCsvService: DownloadCsvService,
     private devolutionValidator: DevolucionValidatorService,
     private userService: UsersData,
     private router: Router) { }
@@ -82,13 +89,13 @@ export class DevolucionesComponent implements OnInit {
 
   public downloadCommissions() {
     this.updateCommissions(0, 10000).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Comisiones');
+      this.donwloadCsvService.exportCsv(result.content, 'Comisiones');
     });
   }
 
   public downloadPagosDevolucion() {
     this.updateDevolutions(0, 10000).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Devoluciones');
+      this.donwloadCsvService.exportCsv(result.content, 'Devoluciones');
     });
   }
 
@@ -110,21 +117,50 @@ export class DevolucionesComponent implements OnInit {
     }
   }
 
+  public fileUploadListener(event: any): void {
+    this.fileInput = event.target;
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      if (file.size > 1000000) {
+        alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
+      } else {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.filename = file.name;
+          this.referenceFile = new ResourceFile();
+          this.referenceFile.tipoArchivo = 'ARCHIVO';
+          this.referenceFile.tipoRecurso = 'DEVOLUCION';
+          this.referenceFile.data = reader.result.toString();
+        };
+        reader.onerror = (error) => { this.messages.push('Error parsing image file'); };
+      }
+    }
+  }
+
   public devolutionRequest(solicitud: PagoDevolucion) {
     this.messages = [];
-    solicitud.solicitante = this.user.email;
+    this.fileInput.value = '';
     solicitud.tipoReceptor = this.filterParams.tipoReceptor;
     solicitud.receptor = this.filterParams.idReceptor;
-    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion, solicitud);
+    solicitud.solicitante = this.user.email;
+    solicitud.status = 'VALIDACION';
+    if (solicitud.formaPago === 'PAGO_MULTIPLE') {
+      solicitud.referencia = this.filename;
+    }
+    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion , solicitud);
     if (this.messages.length === 0) {
       this.devolutionService.requestDevolution(solicitud)
-        .subscribe(
-          success => {
-            this.searchDevolutionsData();
-            this.solicitud = new PagoDevolucion();
-            this.solicitud.formaPago = 'TRANSFERENCIA';
-          },
-          (error: HttpErrorResponse) => this.messages.push(error.error.message
+        .subscribe( request => {
+          if (solicitud.formaPago === 'PAGO_MULTIPLE') {
+            this.referenceFile.referencia = request.id.toString();
+          this.resourceService.insertResourceFile(this.referenceFile)
+          .subscribe((resource: ResourceFile) => console.log(resource));
+          }
+          this.searchDevolutionsData();
+          this.solicitud = new PagoDevolucion();
+          this.solicitud.formaPago = 'TRANSFERENCIA';
+        }, (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
     } else {
       this.solicitud = new PagoDevolucion();
@@ -140,4 +176,6 @@ export class DevolucionesComponent implements OnInit {
         this.dialogService.open(dialog, { context: payment })
           .onClose.subscribe(() => this.searchDevolutionsData());
   }
+
+ 
 }

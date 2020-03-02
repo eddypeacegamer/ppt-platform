@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.business.unknow.commons.builder.DevolucionDtoBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
-import com.business.unknow.commons.builder.PagoDevolucionBuilder;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.PagoDevolucionDto;
@@ -58,9 +57,6 @@ public class DevolucionesBuilderService {
 		return fcb.build();
 	}
 	
-	public PagoDevolucionDto buildDevolucionPago(PagoDevolucionDto pago) {
-		return  new PagoDevolucionBuilder(pago)
-				.setStatus("VALIDACION").build();
-	}
+	
 
 }

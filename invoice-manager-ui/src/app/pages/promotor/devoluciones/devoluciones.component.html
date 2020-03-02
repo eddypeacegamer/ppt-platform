@@ -59,7 +59,7 @@
           <div class="form-row">
             <div class="form-group col-md-8">
               <label for="inputBenerficario" class="label">Beneficiario</label>
-              <input type="text" class="form-control" id="inputBenerficario" placeholder="Nombre completo beneficiario" [(ngModel)]="solicitud.beneficiario" name="beneficiario g">
+              <input type="text" class="form-control" id="inputBenerficario" placeholder="Nombre completo beneficiario" [(ngModel)]="solicitud.beneficiario" name="beneficiario_g">
             </div>
             <div class="form-group col-md-4">
               <label for="inputImporte" class="label"> Importe a solicitar</label>
@@ -74,6 +74,7 @@
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="CHEQUE">Cheque nominativo</option>
                 <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                <option value="PAGO_MULTIPLE">Pago multiple</option>
                 <option *ngIf="filterParams.tipoReceptor === 'CLIENTE'" value="FACTURA">Pago a factura</option>
               </select>
             </div>
@@ -92,8 +93,15 @@
               </select>
             </div>
             <div class="form-group col-md-3">
-              <label for="inputReferecnia" class="label">Referencia</label>
-              <input type="text" class="form-control" id="inputReferecnia" placeholder="XXXX-XXXX-XXXX" [(ngModel)]="solicitud.referencia" name ="referencia">
+              <label for="inputReferenciaDoc" class="label">Referencia</label>
+              <input *ngIf="solicitud.formaPago!=='PAGO_MULTIPLE'" type="text" class="form-control" id="inputReferenciaDoc" placeholder="XXXX-XXXX-XXXX"
+                [(ngModel)]="solicitud.referencia" name="referencia">
+              <div *ngIf="solicitud.formaPago ==='PAGO_MULTIPLE'"  class="custom-file" id="refDoc">
+                  <input  #fileInput type="file" class="custom-file-input" id="inputGroupFile01" accept=".xls,.xlsx" placeholder="Archivo referencia"
+                    (change)="fileUploadListener($event)" style="display:block;"
+                    aria-describedby="inputGroupFileAddon01">
+                  <label class="custom-file-label" for="inputGroupFile01">{{filename}}</label>
+              </div>
             </div>
           </div>
           <div class="form-row">

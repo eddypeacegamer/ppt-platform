@@ -3,10 +3,6 @@
 	"icon": "layout-outline",
 	"children": [
 		{
-			"title": "Clientes",
-			"link": "/pages/contabilidad/clientes"
-		},
-		{
 			"title": "Empresas",
 			"link": "/pages/contabilidad/empresas"
 		},

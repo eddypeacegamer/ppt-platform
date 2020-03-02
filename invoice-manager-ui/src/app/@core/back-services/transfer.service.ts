@@ -11,6 +11,7 @@ export class TransferService {
   constructor(private httpClient: HttpClient) { }
 
   public getAllTransfers(page: number, size: number, filterParams?: any) : Observable<any>{
+    console.log(filterParams)
     let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
     for (const key in filterParams) {
       let value : string;

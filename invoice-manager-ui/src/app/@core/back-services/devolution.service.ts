@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Pago } from '../../models/pago';
 import { PagoDevolucion } from '../../models/pago-devolucion';
-import { GenericPage } from '../../models/generic-page';
 
 
 @Injectable({
@@ -26,6 +24,10 @@ export class DevolutionService {
       }
     }
     return this.httpClient.get('../api/devoluciones', { params: pageParams });
+  }
+
+  public findDevolutionByFolioFactAndTipoReceptor(folio: string, tiporeceptor: string): Observable<any> {
+    return this.httpClient.get(`../api/facturas/${folio}/devoluciones/${tiporeceptor}`);
   }
 
   public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {

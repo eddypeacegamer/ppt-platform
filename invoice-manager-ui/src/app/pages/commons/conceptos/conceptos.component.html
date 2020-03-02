@@ -56,13 +56,14 @@
       <div class="row form-inline">
         <input type="checkbox" [(ngModel)]="concepto.iva" class="form-check-input" id="iva">
         <label class="form-check-label" for="iva">IVA</label>
+        <input type="checkbox" [(ngModel)]="concepto.retencionFlag" class="form-check-input" id="retencion">
+        <label class="form-check-label" for="retencion">RETENCION</label>
         <button *ngIf="concepto.id === undefined" class="btn btn-success" (click)="agregarConcepto()">Agregar
           Concepto</button>
         <button *ngIf="concepto.id !== undefined" class="btn btn-success"
           (click)="agregarConcepto(concepto.id)">Actualizar Concepto</button>
       </div>
     </div>
-
   </div>
   <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
     <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>

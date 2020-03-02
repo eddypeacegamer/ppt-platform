@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.cfdi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +16,7 @@ public class RetencionDto implements Serializable {
 	private String impuesto;
 	private String tipoFactor;
 	private String tasaOCuota;
-	private Double importe;
+	private BigDecimal importe;
 
 	public Integer getId() {
 		return id;
@@ -57,11 +58,11 @@ public class RetencionDto implements Serializable {
 		this.tasaOCuota = tasaOCuota;
 	}
 
-	public Double getImporte() {
+	public BigDecimal getImporte() {
 		return importe;
 	}
 
-	public void setImporte(Double importe) {
+	public void setImporte(BigDecimal importe) {
 		this.importe = importe;
 	}
 

@@ -20,6 +20,7 @@ import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoPagos;
 import com.business.unknow.model.cfdi.Concepto;
+import com.business.unknow.model.cfdi.Retencion;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
@@ -41,7 +42,6 @@ public class FacturaTranslator {
 	@Autowired
 	private DateHelper dateHelper;
 
-
 	@Autowired
 	private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
 
@@ -52,18 +52,29 @@ public class FacturaTranslator {
 		try {
 			Cfdi cfdi = facturaCfdiTranslatorMapper.cdfiRootInfo(context.getFacturaDto(), context.getEmpresaDto());
 			BigDecimal totalImpuestos =new BigDecimal(0);
+			BigDecimal totalRetenciones =new BigDecimal(0);
 			List<Translado> impuestos = new ArrayList<>();
+			List<Retencion> retenciones = new ArrayList<>();
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
 				Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
 				cfdi.getConceptos().add(concepto);
 				if (!conceptoDto.getImpuestos().isEmpty()) {
 					totalImpuestos = calculaImpuestos(impuestos, concepto, totalImpuestos);
 				}
+				if (!conceptoDto.getRetenciones().isEmpty()) {
+					totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
+				}
 			}
 			if (!impuestos.isEmpty()) {
 				cfdi.getImpuestos().setTranslados(impuestos);
 			}
+			if (!retenciones.isEmpty()) {
+				cfdi.getImpuestos().setRetenciones(retenciones);
+			}
 			cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
+			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
+			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
 			System.out.println(context.getXml());
@@ -141,6 +152,21 @@ public class FacturaTranslator {
 			totalImpuestos=totalImpuestos.add(translado.getImporte());
 		}
 		return totalImpuestos;
+	}
+	
+	public BigDecimal calculaRetenciones(List<Retencion> retenciones, Concepto concepto, BigDecimal totalRetenciones) {
+		for (Retencion translado : concepto.getImpuestos().getRetenciones()) {
+			Optional<Retencion> tempTranslado = retenciones.stream()
+					.filter(a -> a.getImpuesto().equals(translado.getImpuesto())).findFirst();
+			if (tempTranslado.isPresent()) {
+				tempTranslado.get().setImporte(tempTranslado.get().getImporte().add(translado.getImporte()));
+			} else {
+				retenciones.add(
+						new Retencion(translado.getImpuesto(),translado.getImporte()));
+			}
+			totalRetenciones=totalRetenciones.add(translado.getImporte());
+		}
+		return totalRetenciones;
 	}
 	
 }

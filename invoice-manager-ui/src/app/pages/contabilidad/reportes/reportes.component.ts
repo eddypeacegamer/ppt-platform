@@ -18,7 +18,7 @@ export class ReportesComponent implements OnInit {
 
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '1', since: '', to: '', lineaEmisor: 'B' };
+  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '4', since: '', to: '', lineaEmisor: 'B' };
 
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];

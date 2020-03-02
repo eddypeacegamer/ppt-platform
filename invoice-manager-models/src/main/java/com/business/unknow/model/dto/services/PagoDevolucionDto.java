@@ -35,6 +35,7 @@ public class PagoDevolucionDto implements Serializable {
 	private String autorizador;
 	private String comentarios;
 	private Integer idDevolucion;
+	private String folioFactura;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
@@ -153,6 +154,12 @@ public class PagoDevolucionDto implements Serializable {
 	public void setIdDevolucion(Integer idDevolucion) {
 		this.idDevolucion = idDevolucion;
 	}
+	public String getFolioFactura() {
+		return folioFactura;
+	}
+	public void setFolioFactura(String folioFactura) {
+		this.folioFactura = folioFactura;
+	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -172,7 +179,8 @@ public class PagoDevolucionDto implements Serializable {
 				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
 				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
 				+ solicitante + ", cuentaPago=" + cuentaPago + ", rfcEmpresa=" + rfcEmpresa + ", autorizador="
-				+ autorizador + ", idDevolucion=" + idDevolucion + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ autorizador + ", comentarios=" + comentarios + ", idDevolucion=" + idDevolucion + ", folioFactura="
+				+ folioFactura + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ "]";
 	}
 }
