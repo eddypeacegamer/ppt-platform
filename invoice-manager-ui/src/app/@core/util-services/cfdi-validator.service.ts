@@ -17,7 +17,6 @@ export class CfdiValidatorService {
     if (concepto.iva) {
       const impuesto = base * 0.16; // TODO calcular impuestos dinamicamente no solo IVA
       concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)]; }
-    console.log(concepto.retencionFlag);
       if (concepto.retencionFlag) {
       const retencion = base * 0.06; // TODO calcular retencion dinamicamente 
       concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)]; }

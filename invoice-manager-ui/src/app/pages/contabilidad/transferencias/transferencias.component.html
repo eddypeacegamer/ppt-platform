@@ -56,32 +56,48 @@
           <br>
           <br>
           <div class="table-responsive" *ngIf="transfers.length > 0">
-              <table class="table table-striped">
+              <table class="table table-striped table-sm">
                 <thead class="thead-dark">
                   <tr>
-                    <th scope="col" class="text-center">Banco retiro</th>
-                    <th scope="col" class="text-center">RFC retiro</th>
-                    <th scope="col" class="text-center">Cuenta retiro</th>
-                    <th scope="col" class="text-center">Banco deposito</th>
-                    <th scope="col" class="text-center">RFC deposito</th>
-                    <th scope="col" class="text-center">Cuenta deposito</th>
+                    <th scope="col" class="text-center">Emisor</th>
+                    <th scope="col" class="text-center">RFC</th>
+                    <th scope="col" class="text-center">Uso Cfdi</th>
+                    <th scope="col" class="text-center">Cliente</th>
+                    <th scope="col" class="text-center">RFC</th>
+                    <th scope="col" class="text-center">Forma Pago</th>
+                    <th scope="col" class="text-center">Cantidad</th>
+                    <th scope="col" class="text-center">Unidad</th>
+                    <th scope="col" class="text-center">Clave Unidad</th>
+                    <th scope="col" class="text-center">Clave Producto Servicio</th>
+                    <th scope="col" class="text-center">Concepto</th>
+                    <th scope="col" class="text-center">Precio Unitario</th>
                     <th scope="col" class="text-center">Importe</th>
-                    <th scope="col" class="text-center">Observaciones</th>
+                    <th scope="col" class="text-center">IVA</th>
+                    <th scope="col" class="text-center">Total</th>
+                    
+                    
                   </tr>
                 </thead>
-                <tbody>
+                <tbody>														
                   <tr *ngFor="let fila of transfers">
-                    <td scope="row" class="text-center">{{fila.BANCO_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.RFC_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.CUENTA_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.BANCO_DEPOSITO}}</td>
-                    <td scope="row" class="text-center">{{fila.RFC_DEPOSITO}}</td>
-                    <td scope="row" class="text-center">{{fila.CUENTA_DEPOSITO}}</td>
-                    <td scope="row" class="text-right">{{fila.MONTO | currency}}</td>
-                    <td scope="row" class="text-center">{{fila.observaciones }}</td>
+                    <td scope="row" class="text-center">{{fila.EMISORA}}</td>
+                    <td scope="row" class="text-right">{{fila.RFC_EMISOR}}</td>
+                    <td scope="row" class="text-center">{{fila.USO_CFDI }}</td>
+                    <td scope="row" class="text-center">{{fila.CLIENTE}}</td>
+                    <td scope="row" class="text-center">{{fila.RFC_RECEPTOR}}</td>
+                    <td scope="row" class="text-center">{{fila.FORMA_PAGO }}</td>
+                    <td scope="row" class="text-center">{{fila.CANTIDAD}}</td>
+                    <td scope="row" class="text-center">{{fila.UNIDAD}}</td>
+                    <td scope="row" class="text-center">{{fila.CLAVE_UNIDAD}}</td>
+                    <td scope="row" class="text-right">{{fila.CLAVE_PROD_SERVICIO}}</td>
+                    <td scope="row" class="text-center">{{fila.CONCEPTO }}</td>
+                    <td scope="row" class="text-center">{{fila.PRECIO_UNITARIO | currency}}</td>
+                    <td scope="row" class="text-center">{{fila.IMPORTE | currency}}</td>
+                    <td scope="row" class="text-center">{{fila.IVA | currency}}</td>
+                    <td scope="row" class="text-right">{{fila.TOTAL | currency}}</td>
                   </tr>
                   <tr class="table-active">
-                      <td colspan="5"></td>
+                      <td colspan="13"></td>
                       <td class="text-right"><p class="font-weight-bold">TOTAL</p></td>
                       <td class="text-right"><p class="font-weight-bold">{{calcularTotal() | currency}}</p></td>
                       <td ></td>
