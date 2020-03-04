@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import * as XLSX from 'xlsx';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { TransferData } from '../../../@core/data/transfers-data';
-import { Transferencia } from '../../../models/transferencia';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Factura } from '../../../models/factura/factura';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Concepto } from '../../../models/factura/concepto';
@@ -26,6 +26,7 @@ export class TransferenciasComponent implements OnInit {
   private facturas: Factura[] = [];
 
   constructor(private companyService: CompaniesData,
+              private cfdiValidator: CfdiValidatorService,
               private transferService: TransferData) { }
 
   ngOnInit() {
@@ -87,55 +88,58 @@ export class TransferenciasComponent implements OnInit {
           if(depositCompany.tipo === this.params.lineaDeposito) {
             this.companyService.getCompanyByRFC(transfer.RFC_RECEPTOR)
                    .subscribe(withdrawalCompany => {
-                    if(withdrawalCompany.tipo !== this.params.lineaRetiro){
+                    if ( withdrawalCompany.tipo !== this.params.lineaRetiro) {
                       this.params.dataValid = false;
-                      transfer.observaciones = `${transfer.RFC_DEPOSITO} no es de tipo ${this.params.lineaDeposito}`;          
+                      transfer.observaciones = [`${transfer.RFC_DEPOSITO} no es de tipo ${this.params.lineaDeposito}`];
                     }else {
                       transfer.observaciones = 'VALIDO';
-                      let factura = new Factura();
+                      const factura = new Factura();
                       factura.rfcEmisor = transfer.RFC_EMISOR;
                       factura.razonSocialEmisor = withdrawalCompany.informacionFiscal.razonSocial;
                       factura.lineaEmisor = this.params.lineaDeposito;
                       factura.rfcRemitente = transfer.RFC_RECEPTOR;
                       factura.razonSocialRemitente = depositCompany.informacionFiscal.razonSocial;
                       factura.lineaRemitente = this.params.lineaRetiro;
-                      factura.metodoPago = 'PUE';
+                      factura.metodoPago = transfer.METODO_PAGO;
                       factura.statusFactura = '4';
                       factura.solicitante = 'CARGA_MASIVA';
-                      factura.cfdi = new Cfdi();
-                      factura.cfdi.receptor.rfc =  transfer.RFC_RECEPTOR;
-                      factura.cfdi.receptor.usoCfdi = transfer.USO_CFDI;
-                      factura.cfdi.emisor.rfc = transfer.RFC_EMISOR;
-                      factura.cfdi.emisor.regimenFiscal = depositCompany.regimenFiscal;
-                      factura.cfdi.formaPago = transfer.FORMA_PAGO;
-                      factura.cfdi.moneda = 'MXN';
-                      factura.cfdi.total = transfer.TOTAL;
-                      factura.cfdi.subtotal = transfer.IMPORTE;
-                      factura.cfdi.metodoPago = 'PUE';
+                      const cfdi = new Cfdi();
+                      cfdi.receptor.rfc =  transfer.RFC_RECEPTOR;
+                      cfdi.receptor.usoCfdi = 'P01';
+                      cfdi.emisor.rfc = transfer.RFC_EMISOR;
+                      cfdi.emisor.regimenFiscal = depositCompany.regimenFiscal;
+                      cfdi.formaPago = transfer.FORMA_PAGO;
+                      cfdi.moneda = 'MXN';
+                      cfdi.total = transfer.TOTAL;
+                      cfdi.subtotal = transfer.IMPORTE;
+                      cfdi.metodoPago = transfer.METODO_PAGO;
                       const concepto = new Concepto();
                       concepto.cantidad = transfer.CANTIDAD;
                       concepto.claveProdServ = transfer.CLAVE_PROD_SERVICIO;
                       concepto.claveUnidad = transfer.CLAVE_UNIDAD;
                       concepto.descripcion = transfer.CONCEPTO;
                       concepto.descripcionCUPS = transfer.CONCEPTO;
-                      concepto.importe = transfer.IMPORTE;
-                      concepto.iva = true;
-                      concepto.impuestos = [new Impuesto('002', '0.160000', transfer.IMPORTE, transfer.IVA)];
                       concepto.unidad = transfer.UNIDAD;
                       concepto.valorUnitario = transfer.PRECIO_UNITARIO;
-                      factura.cfdi.conceptos.push(concepto);
-
+                      concepto.importe = transfer.IMPORTE;
+                      concepto.iva = true;
+                      this.cfdiValidator.validarConcepto(concepto);
+                      cfdi.conceptos.push(this.cfdiValidator.buildConcepto(concepto));
+                      this.cfdiValidator.validarCfdi(cfdi);
+                      factura.cfdi = this.cfdiValidator.calcularImportes(cfdi);
                       this.facturas.push(factura);
                     }
-                   },error=>{transfer.observaciones = error.error.message || `${error.statusText} : ${error.message}`; this.params.dataValid = false;});
-          }else{
-            transfer.observaciones = `${transfer.RFC_DEPOSITO} no es de tipo ${this.params.lineaDeposito}`;
+                   }, (error: HttpErrorResponse) => {transfer.observaciones = [ error.error.message
+                    || `${error.statusText} : ${error.message}`]; this.params.dataValid = false;});
+          }else {
+            transfer.observaciones = [`${transfer.RFC_DEPOSITO} no es de tipo ${this.params.lineaDeposito}`];
             this.params.dataValid = false;
           }
-        },error=>{ transfer.observaciones = error.error.message || `${error.statusText} : ${error.message}`; this.params.dataValid = false;});
+        }, (error: HttpErrorResponse) =>{ transfer.observaciones = [error.error.message
+          || `${error.statusText} : ${error.message}`]; this.params.dataValid = false; });
       }
-    }else{
-      alert('Formato invalido o sin informacion cargada')
+    }else {
+      alert('Formato invalido o sin informacion cargada');
     }
   }
 

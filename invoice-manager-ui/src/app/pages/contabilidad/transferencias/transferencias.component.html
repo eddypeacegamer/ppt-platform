@@ -59,11 +59,12 @@
               <table class="table table-striped table-sm">
                 <thead class="thead-dark">
                   <tr>
+                    <th scope="col" class="text-center">Observaciones</th>
                     <th scope="col" class="text-center">Emisor</th>
                     <th scope="col" class="text-center">RFC</th>
-                    <th scope="col" class="text-center">Uso Cfdi</th>
                     <th scope="col" class="text-center">Cliente</th>
                     <th scope="col" class="text-center">RFC</th>
+                    <th scope="col" class="text-center">Metodo de Pago</th>
                     <th scope="col" class="text-center">Forma Pago</th>
                     <th scope="col" class="text-center">Cantidad</th>
                     <th scope="col" class="text-center">Unidad</th>
@@ -80,11 +81,12 @@
                 </thead>
                 <tbody>														
                   <tr *ngFor="let fila of transfers">
+                    <td scope="row" class="text-center">{{fila.observaciones}}</td>
                     <td scope="row" class="text-center">{{fila.EMISORA}}</td>
                     <td scope="row" class="text-right">{{fila.RFC_EMISOR}}</td>
-                    <td scope="row" class="text-center">{{fila.USO_CFDI }}</td>
                     <td scope="row" class="text-center">{{fila.CLIENTE}}</td>
                     <td scope="row" class="text-center">{{fila.RFC_RECEPTOR}}</td>
+                    <td scope="row" class="text-center">{{fila.METODO_PAGO }}</td>
                     <td scope="row" class="text-center">{{fila.FORMA_PAGO }}</td>
                     <td scope="row" class="text-center">{{fila.CANTIDAD}}</td>
                     <td scope="row" class="text-center">{{fila.UNIDAD}}</td>

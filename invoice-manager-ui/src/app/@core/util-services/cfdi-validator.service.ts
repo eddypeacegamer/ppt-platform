@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { InvoicesData } from '../data/invoices-data';
 import { Concepto } from '../../models/factura/concepto';
 import { Cfdi } from '../../models/factura/cfdi';
 import { Impuesto } from '../../models/factura/impuesto';
