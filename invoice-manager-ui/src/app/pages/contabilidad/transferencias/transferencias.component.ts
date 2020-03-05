@@ -8,6 +8,7 @@ import { Factura } from '../../../models/factura/factura';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Concepto } from '../../../models/factura/concepto';
 import { Impuesto } from '../../../models/factura/impuesto';
+import { InvoicesData } from '../../../@core/data/invoices-data';
 
 @Component({
   selector: 'ngx-transferencias',
@@ -27,7 +28,7 @@ export class TransferenciasComponent implements OnInit {
 
   constructor(private companyService: CompaniesData,
               private cfdiValidator: CfdiValidatorService,
-              private transferService: TransferData) { }
+              private invoiceService: InvoicesData) { }
 
   ngOnInit() {
     this.params = {lineaRetiro:'A',lineaDeposito:'B',filename:'',dataValid : false};
@@ -92,7 +93,8 @@ export class TransferenciasComponent implements OnInit {
                       this.params.dataValid = false;
                       transfer.observaciones = [`${transfer.RFC_DEPOSITO} no es de tipo ${this.params.lineaDeposito}`];
                     }else {
-                      transfer.observaciones = 'VALIDO';
+                      if(withdrawalCompany.activo && depositCompany.activo){
+                        transfer.observaciones = 'VALIDO';
                       const factura = new Factura();
                       factura.rfcEmisor = transfer.RFC_EMISOR;
                       factura.razonSocialEmisor = withdrawalCompany.informacionFiscal.razonSocial;
@@ -128,6 +130,10 @@ export class TransferenciasComponent implements OnInit {
                       this.cfdiValidator.validarCfdi(cfdi);
                       factura.cfdi = this.cfdiValidator.calcularImportes(cfdi);
                       this.facturas.push(factura);
+                      }else {
+                        this.params.dataValid = false;
+                        transfer.observaciones = ['Empresa emisora o receptora se encuentra inactiva'];
+                      }
                     }
                    }, (error: HttpErrorResponse) => {transfer.observaciones = [ error.error.message
                     || `${error.statusText} : ${error.message}`]; this.params.dataValid = false;});
@@ -147,7 +153,9 @@ export class TransferenciasComponent implements OnInit {
     this.params.successMessage = undefined
     this.errorMessages = [];
     if ( this.facturas.length > 0) {
-      console.log('loading facturas :', this.facturas)
+      for (const factura of this.facturas) {
+        this.invoiceService.insertNewInvoice(factura).subscribe(fact=>console.log(fact));
+      }
       //this.transferService.saveAllTransfers(this.facturas).subscribe(data=>{this.params.successMessage = `Se han cargado ${data.length} transferencias exitosamente`;this.transfers=[]},
       //(error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`))
     }
