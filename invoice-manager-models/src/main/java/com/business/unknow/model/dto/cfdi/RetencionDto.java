@@ -12,7 +12,7 @@ public class RetencionDto implements Serializable {
 
 	private static final long serialVersionUID = 4590109888394034653L;
 	private Integer id;
-	private Double base;
+	private BigDecimal base;
 	private String impuesto;
 	private String tipoFactor;
 	private String tasaOCuota;
@@ -26,11 +26,11 @@ public class RetencionDto implements Serializable {
 		this.id = id;
 	}
 
-	public Double getBase() {
+	public BigDecimal getBase() {
 		return base;
 	}
 
-	public void setBase(Double base) {
+	public void setBase(BigDecimal base) {
 		this.base = base;
 	}
 
