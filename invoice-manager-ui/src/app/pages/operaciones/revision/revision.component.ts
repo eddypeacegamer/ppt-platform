@@ -283,8 +283,6 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    console.log(this.payTypeCat)
-
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
