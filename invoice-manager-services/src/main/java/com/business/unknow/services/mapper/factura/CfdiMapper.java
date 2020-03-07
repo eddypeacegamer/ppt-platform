@@ -74,4 +74,5 @@ public interface CfdiMapper {
 	List<RetencionDto> getRetencionDtosFromEntities(List<Retencion> entities);
 
 	List<Retencion> getEntitiesFromRetencionDtos(List<RetencionDto> dto);
+	
 }

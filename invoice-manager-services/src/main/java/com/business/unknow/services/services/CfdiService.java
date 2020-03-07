@@ -6,6 +6,7 @@ package com.business.unknow.services.services;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
+import com.business.unknow.model.dto.cfdi.TimbradoFiscalDigitialDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.Concepto;
@@ -30,6 +32,7 @@ import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.cfdi.Retencion;
+import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
@@ -38,6 +41,7 @@ import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 import com.business.unknow.services.repositories.facturas.RetencionRepository;
+import com.business.unknow.services.repositories.facturas.TimbradoFiscalDigitialRepository;
 
 /**
  * @author hha0009
@@ -66,6 +70,9 @@ public class CfdiService {
 	
 	@Autowired
 	private RetencionRepository retencionRepository;
+	
+	@Autowired
+	private TimbradoFiscalDigitialRepository timbradoFiscalDigitialRepository;
 
 	@Autowired
 	private CfdiMapper mapper;
@@ -86,9 +93,20 @@ public class CfdiService {
 		if(pagosCfdi!=null&&!pagosCfdi.isEmpty()) {
 			cfdiDto.getComplemento().setPagos(pagosCfdi);
 		}
+		cfdiDto.getComplemento().setTimbreFiscal(getTimbradoDigital(cfdiDto.getId()));
 		return cfdiDto;
 	}
 
+	private TimbradoFiscalDigitialDto getTimbradoDigital(int idCfdi) {
+		Optional<TimbradoFiscalDigitial> timbre=timbradoFiscalDigitialRepository.findByIdCfdi(idCfdi);
+		if(timbre.isPresent()) {
+			return mapper.getComplementoDtoFromEntity(timbre.get());
+		}
+		else {
+			return null;
+		}
+	}
+	
 	private List<ImpuestoDto> getImpuestosByConcepto(int id) {
 		return mapper.getImpuestosDtosFromEntities(impuestoRepository.findById(id));
 	}

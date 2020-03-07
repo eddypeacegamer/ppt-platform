@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.services.entities.files.FacturaFile;
@@ -31,6 +34,9 @@ public class FilesService {
 	
 	@Autowired
 	private ResourceFileRepository resourceRepo;
+	
+	@Autowired
+	private FacturaService facturaService;
 	
 	@Autowired
 	private FilesMapper mapper;
@@ -87,5 +93,13 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
+	
+	public FacturaPdfModelDto getPdfFromFactura(String folio) {
+		FacturaDto facturaDto=facturaService.getFacturaByFolio(folio);
+		FacturaFileDto qr=getFileByFolioAndType(folio,TipoArchivoEnum.QR.name());
+		ResourceFileDto logotipo=getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO");
+		return new FacturaPdfModelDto(qr.getData(),logotipo.getData(),facturaDto);
+	}
+
 
 }
