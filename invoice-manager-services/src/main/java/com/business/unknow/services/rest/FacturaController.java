@@ -49,16 +49,16 @@ public class FacturaController {
 
 	@Autowired
 	private CfdiService cfdiService;
-	
+
 	@Autowired
 	private PagoService pagoService;
-	
+
 	@Autowired
 	private DevolucionService devolucionService;
 
 	@Autowired
 	private PDFGenerator pdfGenerator;
-	
+
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
@@ -101,7 +101,7 @@ public class FacturaController {
 			@RequestBody @Valid FacturaDto factura) {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{folio}/complementos")
 	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
@@ -168,14 +168,14 @@ public class FacturaController {
 	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.updatePago(folio,id,pagoDto), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
 	@ApiOperation(value = "Deletes an existing payment")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		pagoService.deletePago(folio,id);
+		pagoService.deletePago(folio, id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -191,12 +191,13 @@ public class FacturaController {
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
 	}
-	
-	//DEVOLUCIONES
+
+	// DEVOLUCIONES
 	@GetMapping("/{folio}/devoluciones/{tipoReceptor}")
-	public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(@PathVariable String folio, @PathVariable String tipoReceptor){
-		return new ResponseEntity<>(devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor), HttpStatus.OK);
+	public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(@PathVariable String folio,
+			@PathVariable String tipoReceptor) {
+		return new ResponseEntity<>(devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor),
+				HttpStatus.OK);
 	}
-	
 
 }

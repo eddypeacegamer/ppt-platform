@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Empresa } from '../../../models/empresa';

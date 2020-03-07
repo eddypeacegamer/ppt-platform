@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
@@ -239,8 +240,10 @@ public class FacturaService {
 					HttpStatus.BAD_REQUEST.value());
 		}
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
-		if (!(facturaContext.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
-				&& facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()))) {
+		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
+				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
+						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
+				&& facturaContext.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
@@ -262,7 +265,7 @@ public class FacturaService {
 			break;
 		case NTLINK:
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
-			break;	
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
