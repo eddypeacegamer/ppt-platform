@@ -1,9 +1,16 @@
 package com.business.unknow.services.services;
 
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.services.util.pdf.PDFGenerator;
@@ -277,9 +284,12 @@ public class FacturaService {
 	}
 
 	public String getInvoicePDF(String folio) {
+		String xmlContent = getXMLData(getFacturaByFolio(folio));
+
+		System.out.println(xmlContent);
 		//String templateFilePath = ClassLoader.getSystemResource("xsl-fo/pue.xml").getFile();
 		String templateFilePath = "/Users/vvo0002/Documents/Temp/Invoice/pue.xml";
-		String xmlContent = getXMLData(folio);
+
 		return pdfGenerator.generateFromXmlContent(templateFilePath, xmlContent, "./pdf-build", folio + ".pdf");
 	}
 
@@ -287,6 +297,33 @@ public class FacturaService {
 		FacturaFileDto fileDto = filesService.getFileByFolioAndType(folio, "XML");
 		byte[] decodedBytes = Base64.getDecoder().decode(fileDto.getData());
 		return new String(decodedBytes);
+	}
+
+	private String getXMLData(FacturaDto facturaDto) {
+		Function<FacturaDto, String> facturaDtoXmlStringMapper = new Function<FacturaDto, String>() {
+			@Override
+			public String apply(FacturaDto facturaDto) {
+				try {
+					StringWriter stringWriter = new StringWriter();
+
+					JAXBContext jaxbContext = JAXBContext.newInstance(FacturaDto.class);
+
+					Marshaller marshaller = jaxbContext.createMarshaller();
+					marshaller.marshal(new JAXBElement<FacturaDto>(new QName("", "FacturaDto"),
+									FacturaDto.class,
+									null,
+									facturaDto),
+							stringWriter);
+
+					return stringWriter.toString();
+				} catch (JAXBException e) {
+					//TODO: Handle Error
+				}
+				return null;
+			}
+		};
+
+		return facturaDtoXmlStringMapper.apply(facturaDto);
 	}
 
 }
