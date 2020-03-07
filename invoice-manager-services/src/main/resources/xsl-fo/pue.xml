@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+    <xsl:template match="/">
+        <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
+            <fo:layout-master-set>
+                <fo:simple-page-master page-height="279mm" page-width="216mm" margin="4.6mm" master-name="letter">
+                    <fo:region-body />
+                    <fo:region-after extent="40mm" />
+                </fo:simple-page-master>
+            </fo:layout-master-set>
+            <fo:page-sequence master-reference="letter">
+
+                <fo:title>Invoice</fo:title>
+
+                <!-- Footer start -->
+                <fo:static-content flow-name="xsl-region-after">
+                    <fo:block text-align-last="right">
+                        <fo:block>
+                            Página
+                            <fo:page-number />
+                            de
+                            <fo:page-number-citation ref-id="last-item" />
+                        </fo:block>
+                    </fo:block>
+                </fo:static-content>
+                <!-- Footer end -->
+
+                <fo:flow flow-name="xsl-region-body">
+
+                    <!-- Header Table Start -->
+                    <fo:table border-bottom="solid">
+                        <fo:table-column column-width="117.3mm" />
+                        <fo:table-column column-width="89.5mm" />
+
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block><xsl:value-of select="cfdi:Comprobante/cfdi:Emisor/@Nombre" /></fo:block>
+                                    <fo:block>RFC <xsl:value-of select="cfdi:Comprobante/cfdi:Emisor/@Rfc" /></fo:block>
+                                    <fo:block>Régimen fiscal</fo:block>
+                                    <fo:block><xsl:value-of select="cfdi:Comprobante/cfdi:Emisor/@RegimenFiscal" /> [?]</fo:block>
+                                    <fo:block>Número de certificado</fo:block>
+                                    <fo:block><xsl:value-of select="cfdi:Comprobante/@NoCertificado" /> xxx</fo:block>
+                                </fo:table-cell>
+
+                                <fo:table-cell>
+                                    <fo:block-container padding-top="1.5mm" padding-bottom="1.5mm" background-color="#dcdde2" fox:border-radius="3pt">
+                                        <fo:block text-align="center" color="#636364">CFDI de Ingreso
+                                        </fo:block>
+                                    </fo:block-container>
+
+                                    <fo:table>
+                                        <fo:table-column column-width="35mm" />
+                                        <fo:table-column column-width="54.5mm" />
+                                        <fo:table-body>
+                                            <fo:table-row>
+                                                <fo:table-cell>
+                                                    <fo:block>
+                                                        Serie
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                                <fo:table-cell>
+                                                    <fo:block>
+                                                        Folio
+                                                    </fo:block>
+                                                    <fo:block>
+                                                        1574574086k
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                            </fo:table-row>
+                                        </fo:table-body>
+                                    </fo:table>
+
+                                    <fo:table>
+                                        <fo:table-column column-width="35mm" />
+                                        <fo:table-column column-width="54.5mm" />
+                                        <fo:table-body>
+                                            <fo:table-row>
+                                                <fo:table-cell>
+                                                    <fo:block>
+                                                        Lugar de emisión
+                                                    </fo:block>
+                                                    <fo:block>
+                                                        08630
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                                <fo:table-cell>
+                                                    <fo:block>
+                                                        Fecha y hora de emisión
+                                                    </fo:block>
+                                                    <fo:block>
+                                                        23 Nov. 2019 - 23:41:26
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                            </fo:table-row>
+                                        </fo:table-body>
+                                    </fo:table>
+
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    <!-- Header Table End -->
+
+                    <!-- Client Info Table Start -->
+                    <fo:table border-bottom="solid">
+                        <fo:table-column column-width="105.5mm" />
+                        <fo:table-column column-width="101.3mm" />
+
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block-container margin-right="5mm" padding-top="1.5mm" padding-bottom="1.5mm" background-color="#dcdde2" fox:border-radius="3pt">
+                                        <fo:block text-align="center" color="#636364">
+                                            Información del cliente
+                                        </fo:block>
+                                    </fo:block-container>
+                                    <fo:block>RAZON SOCIAL EMISOR</fo:block>
+                                    <fo:block>RFC RASE8810158B9</fo:block>
+                                </fo:table-cell>
+
+                                <fo:table-cell>
+                                    <fo:block-container padding-top="1.5mm" padding-bottom="1.5mm" background-color="#dcdde2" fox:border-radius="3pt">
+                                        <fo:block color="#dcdde2">No Content</fo:block>
+                                    </fo:block-container>
+                                    <fo:block>Uso del CFDI</fo:block>
+                                    <fo:block>G01 - Adquisición de mercancias</fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    <!-- Client Info Table End -->
+
+                    <!-- Items Info Table Start -->
+                    <fo:table>
+                        <fo:table-column column-width="13.77mm" />
+                        <fo:table-column column-width="18.61mm" />
+                        <fo:table-column column-width="107.86mm" />
+                        <fo:table-column column-width="19.12mm" />
+                        <fo:table-column column-width="13.55mm" />
+                        <fo:table-column column-width="15.55mm" />
+                        <fo:table-column column-width="18.38mm" />
+
+                        <fo:table-body>
+                            <fo:table-row padding-top="1.5mm" padding-bottom="1.5mm" background-color="#dcdde2" fox:border-radius="3pt">
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Código
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Clave Unidad
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Descripción
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Valor Unitario
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Cantidad
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Importe
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block color="#636364" margin-top="1mm" margin-bottom="1mm" font-size="2.4mm" font-weight="bold">
+                                        Descuento
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom="1mm">AULOG001</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom=".5mm">H87</fo:block>
+                                    <fo:block font-size="2.4mm" padding-top=".5mm" padding-bottom="1mm">Pieza</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom=".5mm">Auriculares USB Logitech</fo:block>
+                                    <fo:block font-size="2.4mm" padding-top=".5mm" padding-bottom="1mm">Código SAT: 01010101</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom="1mm">$350.00</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom="1mm">5.00</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom="1mm">$1750.00</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block font-size="2.4mm" padding-top="1mm" padding-bottom="1mm">$0.00</fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    <!-- Items Info Table End -->
+
+                    <!-- Taxes Start-->
+                    <fo:table>
+                        <fo:table-column column-width="105.5mm" />
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell border-top="solid">
+                                    <fo:block>
+                                        <fo:inline font-size="2.4mm">Traslado</fo:inline>
+                                        <fo:inline font-size="2.4mm">Impuesto: IVA</fo:inline>
+                                        <fo:inline font-size="2.4mm">Tasa o cuota: 0.16</fo:inline>
+                                        <fo:inline font-size="2.4mm">Base:</fo:inline>
+                                        <fo:inline font-size="2.4mm">$1750.00</fo:inline>
+                                        <fo:inline font-size="2.4mm">Importe:</fo:inline>
+                                        <fo:inline font-size="2.4mm">$280.00</fo:inline>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    <!-- Taxes Start-->
+
+                    <!-- Subtotal and IVA start -->
+                    <fo:block-container>
+                        <fo:block text-align="right">
+                            Subtotal: $ 1,750.00
+                        </fo:block>
+                        <fo:block text-align="right">
+                            IVA(0.16%): $ 280.00
+                        </fo:block>
+                    </fo:block-container>
+                    <!-- Subtotal and IVA end -->
+
+                    <!-- Total start -->
+                    <fo:block-container padding-top="1.5mm" padding-bottom="1.5mm" background-color="#dcdde2" fox:border-radius="3pt">
+                        <fo:block text-align="right">
+                            Total MXN 2,030.00
+                        </fo:block>
+                    </fo:block-container>
+                    <!-- Total end -->
+
+                    <!-- Payment method start-->
+                    <fo:table>
+                        <fo:table-column column-width="103.4mm" />
+                        <fo:table-column column-width="103.4mm" />
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block>Método de pago</fo:block>
+                                    <fo:block>PPD - Pago en parcialidades o diferido</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell id="last-item">
+                                    <fo:block>Forma de pago</fo:block>
+                                    <fo:block>03 - Transferencia electrónica de fondos</fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                    <!-- Payment method end-->
+
+                    <fo:block>
+                        <xsl:value-of select="employee/name" />
+                        -
+                        <xsl:value-of select="employee/age" />
+                    </fo:block>
+                </fo:flow>
+            </fo:page-sequence>
+        </fo:root>
+    </xsl:template>
+</xsl:stylesheet>

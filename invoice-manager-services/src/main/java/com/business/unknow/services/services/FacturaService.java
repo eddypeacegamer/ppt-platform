@@ -1,13 +1,12 @@
 package com.business.unknow.services.services;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
+import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.services.util.pdf.PDFGenerator;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -90,6 +89,12 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
+
+	@Autowired
+	private PDFGenerator pdfGenerator;
+
+	@Autowired
+	private FilesService filesService;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -269,6 +274,19 @@ public class FacturaService {
 		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
 		facturaContext.getPagoCredito().setMonto(
 				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
+	}
+
+	public String getInvoicePDF(String folio) {
+		//String templateFilePath = ClassLoader.getSystemResource("xsl-fo/pue.xml").getFile();
+		String templateFilePath = "/Users/vvo0002/Documents/Temp/Invoice/pue.xml";
+		String xmlContent = getXMLData(folio);
+		return pdfGenerator.generateFromXmlContent(templateFilePath, xmlContent, "./pdf-build", folio + ".pdf");
+	}
+
+	private String getXMLData(String folio) {
+		FacturaFileDto fileDto = filesService.getFileByFolioAndType(folio, "XML");
+		byte[] decodedBytes = Base64.getDecoder().decode(fileDto.getData());
+		return new String(decodedBytes);
 	}
 
 }
