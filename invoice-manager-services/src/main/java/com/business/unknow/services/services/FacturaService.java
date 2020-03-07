@@ -253,7 +253,7 @@ public class FacturaService {
 			break;
 		case NTLINK:
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
-			break;	
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());

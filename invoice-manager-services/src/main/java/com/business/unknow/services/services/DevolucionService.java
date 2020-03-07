@@ -232,5 +232,6 @@ public class DevolucionService {
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
 	}
-
+	
+	
 }
