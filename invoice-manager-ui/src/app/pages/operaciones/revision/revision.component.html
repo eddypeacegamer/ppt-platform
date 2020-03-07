@@ -61,9 +61,9 @@
             </button>
             <button type="button" class="btn btn-success" (click)="aceptarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
             &nbsp;&nbsp;
-            <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;" *ngIf="factura.statusFactura == 'Validacion operaciones'"/>
+            <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;" *ngIf="factura.statusFactura !== 'Timbrada' || factura.statusFactura !== 'Cancelada'"/>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Rechazar</button>
+            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura !== 'Timbrada' || factura.statusFactura !== 'Cancelada'">Rechazar</button>
 
             
           </div>
