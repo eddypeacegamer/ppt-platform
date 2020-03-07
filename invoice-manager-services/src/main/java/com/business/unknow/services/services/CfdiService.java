@@ -75,7 +75,7 @@ public class CfdiService {
 	public CfdiDto getCfdiByFolio(String folio) {
 		CfdiDto cfdiDto = mapper.getCfdiDtoFromEntity(
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No se ecnontro CFDI con folio %s", folio))));
+						String.format("No se encontro CFDI con folio %s", folio))));
 		for (ConceptoDto conceptoDto : cfdiDto.getConceptos()) {
 			conceptoDto.setImpuestos(getImpuestosByConcepto(conceptoDto.getId()));
 		}
@@ -174,6 +174,11 @@ public class CfdiService {
 			imp.setConcepto(conceptoEntity);
 			impuestoRepository.save(imp);
 		}
+		for(RetencionDto retencion:newConcept.getRetenciones()) {
+			Retencion ret = mapper.getEntityFromRetencionDto(retencion);
+			ret.setConcepto(conceptoEntity);
+			retencionRepository.save(ret);
+		}
 		return cfdi;
 	}
 
@@ -194,6 +199,9 @@ public class CfdiService {
 		Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));// Update CFDI ammounts
 		for (Impuesto impuesto : concepto.getImpuestos()) {
 			impuestoRepository.delete(impuesto); // Deleting impuesto
+		}
+		for (Retencion retencion : concepto.getRetenciones()) {
+			retencionRepository.delete(retencion); // Deleting retenciones
 		}
 		conceptoRepository.deleteById(concepto.getId());
 		return mapper.getCfdiDtoFromEntity(entity);
@@ -216,6 +224,8 @@ public class CfdiService {
 		Concepto conceptoEntity = mapper.getEntityFromConceptoDto(concepto);
 		conceptoEntity.setCfdi(entity);
 		conceptoRepository.save(conceptoEntity);
+		impuestoRepository.deleteByConcepto(conceptoEntity);
+		retencionRepository.deleteByConcepto(conceptoEntity);
 		// 2.- Update concepto and its references
 		for (ImpuestoDto impuesto : concepto.getImpuestos()) {
 			Impuesto imp = mapper.getEntityFromImpuestoDto(impuesto);
@@ -251,7 +261,7 @@ public class CfdiService {
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
-		log.info("Calculating cfdi values suatotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
+		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
 		cfdi.setSubtotal(subtotal);
 		cfdi.setTotal(total);
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
