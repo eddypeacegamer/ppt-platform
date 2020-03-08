@@ -91,37 +91,40 @@ export class TransferenciasComponent implements OnInit {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no es de tipo ${this.params.lineaDeposito}`);
           this.params.dataValid = false;
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
-          transfer.observaciones.push(`${transfer.RFC_EMISOR} no se encunetra activa`);
+          transfer.observaciones.push(`${transfer.RFC_EMISOR} no se encuentra activa`);
+          this.params.dataValid = false;
         }
         if (this.companies[transfer.RFC_RECEPTOR].tipo !== this.params.lineaRetiro) {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no es de tipo ${this.params.lineaRetiro}`);
           this.params.dataValid = false;
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
-          transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no se encunetra activa`);
+          transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no se encuentra activa`);
+          this.params.dataValid = false;
         }
         const fact = this.buildFacturaFromTransfer(transfer,
               this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
-        transfer.observaciones = this.cfdiValidator.validarCfdi(fact.cfdi);
-
-        if (transfer.observaciones.length === 0){
+        transfer.observaciones.push(... this.cfdiValidator.validarCfdi(fact.cfdi));
+        if (transfer.observaciones.length === 0) {
           transfer.observaciones = 'VALIDO';
         }
       }
     } else {
+      this.params.dataValid = false;
       this.errorMessages.push('No se encontro informacion cargada o valida');
     }
   }
 
   cargarTransferencias() {
-    this.params.successMessage = undefined
+    this.params.successMessage = undefined;
     this.errorMessages = [];
-    // if (this.facturas.length > 0) {
-    //   for (const factura of this.facturas) {
-    //     this.invoiceService.insertNewInvoice(factura).subscribe(fact => console.log(fact),
-    //       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-    //         || `${error.statusText} : ${error.message}`));
-    //   }
-    // }
+    for (const transfer of this.transfers) {
+      const factura = this.buildFacturaFromTransfer(transfer,
+        this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
+        this.invoiceService.insertNewInvoice(factura).subscribe(fact => transfer.observaciones = 'CARGADA',
+           (error: HttpErrorResponse) => transfer.observaciones = error.error.message
+             || `${error.statusText} : ${error.message}`);
+
+    }
   }
 
   private getCompaniesInfo(transfers: any[]) {
