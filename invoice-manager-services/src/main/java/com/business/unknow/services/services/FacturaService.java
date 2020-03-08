@@ -106,11 +106,11 @@ public class FacturaService {
 					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
-				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,
+				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(),lineaEmisor, status.get(), start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			} else {
-				result = repository.findBySolicitanteWithParams(solicitante.get(), start, end,
+				result = repository.findBySolicitanteWithParams(solicitante.get(),lineaEmisor, start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
