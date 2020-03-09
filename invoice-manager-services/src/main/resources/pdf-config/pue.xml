@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:template match="/">
+    <xsl:template match="/FacturaPdfModelDto">
         <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
             <layout-master-set>
                 <simple-page-master page-height="279mm" page-width="216mm" margin="10mm" master-name="letter">
@@ -32,30 +32,36 @@
                     <!-- Header -->
                     <block-container height="22mm" margin-bottom="5mm" padding="0mm">
                         <block>
-                            <inline-container width="50.4mm" margin-right="7mm" alignment-baseline="before-edge">
+                            <inline-container width="52.4mm" margin-right="5mm" alignment-baseline="before-edge">
                                 <block>
-                                    <external-graphic width="100%" content-width="scale-to-fit" content-height="scale-to-fit" border="solid 0.1pt" src="data:image/png;base64,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" />
+                                    <external-graphic width="100%" content-width="scale-to-fit" content-height="23mm">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="concat('data:image/png;base64,', logotipo)" />
+                                        </xsl:attribute>
+                                    </external-graphic>
                                 </block>
                             </inline-container>
 
-                            <inline-container width="88.6mm">
+                            <inline-container width="86.6mm">
                                 <block font-size="3mm" font-weight="bold" margin-top="5mm">
-                                    TCM970625MB1
+                                    <xsl:value-of select="factura/cfdi/emisor/nombre" />
                                 </block>
                                 <block font-size="3mm" font-weight="bold">
-                                    RFC: TCM970625MB1
+                                    RFC:
+                                    <xsl:value-of select="factura/cfdi/emisor/rfc" />
                                 </block>
                                 <block font-size="2.5mm" margin-top="3.5mm">
                                     <inline font-weight="bold">
                                         RÉGIMEN:
                                     </inline>
-                                    601 - GENERAL DE LEY PERSONAS MORALES
+                                    <xsl:value-of select="factura/cfdi/emisor/regimenFiscal" />
+                                    - [GENERAL DE LEY PERSONAS MORALES]
                                 </block>
                                 <block font-size="2.5mm">
                                     <inline font-weight="bold">
                                         LUGAR DE EXPEDICIÓN:
                                     </inline>
-                                    08630
+                                    [08630]
                                 </block>
                             </inline-container>
 
@@ -65,19 +71,20 @@
                                         RECIBO ELECTRÓNICO DE PAGO
                                     </block>
                                     <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
-                                        PFPC TCM9RASE20200228083847PPD
+                                        ¿PFPC?
+                                        <xsl:value-of select="factura/folio" />
                                     </block>
                                     <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
                                         FECHA DE EMISIÓN
                                     </block>
                                     <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
-                                        2020-02-28T08:41:36
+                                        [2020-02-28T08:41:36]
                                     </block>
                                     <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
                                         FOLIO FISCAL
                                     </block>
                                     <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
-                                        42430650-5A38-11EA-81A9-3709F5358B0A
+                                        [42430650-5A38-11EA-81A9-3709F5358B0A]
                                     </block>
                                 </block-container>
                             </inline-container>
@@ -98,7 +105,7 @@
                                     <inline font-weight="bold">
                                         R.F.C.:
                                     </inline>
-                                    RASE8810158B9
+                                    <xsl:value-of select="factura/cfdi/receptor/rfc" />
                                 </block>
                             </inline-container>
                         </block>
@@ -109,7 +116,7 @@
                                     <inline font-weight="bold">
                                         Razón social:
                                     </inline>
-                                    Edgar Joseduardo Ramos Silveyra
+                                    <xsl:value-of select="factura/cfdi/receptor/nombre" />
                                 </block>
                             </inline-container>
                         </block>
@@ -120,147 +127,254 @@
                                     <inline font-weight="bold">
                                         Uso CFDI:
                                     </inline>
-                                    P01 - Por definir
+                                    <xsl:value-of select="factura/cfdi/receptor/usoCfdi" />
+                                    - Por definir
                                 </block>
                             </inline-container>
                         </block>
                     </block-container>
 
 
-                    <!-- Pago -->
+                    <!-- Conceptos -->
                     <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
-                            <inline-container width="35.1mm">
-                                <block>FECHA DE PAGO</block>
+                            <inline-container width="16.3mm">
+                                <block>Cantidad</block>
                             </inline-container>
-                            <inline-container width="64.3mm">
-                                <block>FORMA DE PAGO</block>
+                            <inline-container width="18.3mm">
+                                <block>Clave SAT</block>
                             </inline-container>
-                            <inline-container text-align="left" width="23.4mm">
-                                <block>MONEDA</block>
+                            <inline-container text-align="left" width="71mm">
+                                <block>Descripción</block>
                             </inline-container>
-                            <inline-container width="32.3mm">
-                                <block>TIPO CAMBIO</block>
+                            <inline-container width="23.4mm">
+                                <block>Unidad</block>
                             </inline-container>
-                            <inline-container width="39.9mm">
-                                <block>MONTO PAGADO</block>
+                            <inline-container width="27.4mm">
+                                <block>Precio Unitario</block>
+                            </inline-container>
+                            <inline-container width="21.3mm">
+                                <block>Descuento</block>
+                            </inline-container>
+                            <inline-container width="18.3mm">
+                                <block>Importe</block>
                             </inline-container>
                         </block>
 
                         <table>
-                            <table-column column-width="35.1mm" />
-                            <table-column column-width="64.3mm" />
+                            <table-column column-width="16.3mm" />
+                            <table-column column-width="18.3mm" />
+                            <table-column column-width="71mm" />
                             <table-column column-width="23.4mm" />
-                            <table-column column-width="32.3mm" />
-                            <table-column column-width="39.9mm" />
+                            <table-column column-width="27.4mm" />
+                            <table-column column-width="21.3mm" />
+                            <table-column column-width="18.3mm" />
                             <table-body>
                                 <table-row text-align="center">
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">2020-02-28T00:00:00</block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">01 - EFECTIVO</block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">MXN</block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm"></block>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">10</block>
                                     </table-cell>
                                     <table-cell>
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$2,000.00</block>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">27113203</block>
+                                    </table-cell>
+                                    <table-cell text-align="left">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">Pc gamers</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">11 - Equipos</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$25,000.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$0.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$250,000.00</block>
+                                    </table-cell>
+                                </table-row>
+
+                                <table-row text-align="center">
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">10</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">43202205</block>
+                                    </table-cell>
+                                    <table-cell text-align="left">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">Teclados gamers</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">AB - Paquete a granel</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$550.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$0.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$5,500.00</block>
+                                    </table-cell>
+                                </table-row>
+
+                                <table-row text-align="center">
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">10</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">43211708</block>
+                                    </table-cell>
+                                    <table-cell text-align="left">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">Mouse gamers</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">AB - Paquete a granel</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$250.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$0.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$2,500.00</block>
+                                    </table-cell>
+                                </table-row>
+
+                                <table-row text-align="center">
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">10</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">14111539</block>
+                                    </table-cell>
+                                    <table-cell text-align="left">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">Monitores 4k</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">11 - Equipos</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$3,999.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$0.00</block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">$39,990.00</block>
                                     </table-cell>
                                 </table-row>
                             </table-body>
                         </table>
-                        <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
-                            DOCUMENTOS RELACIONADOS AL PAGO
-                        </block>
-                        <block>
-                            <inline-container width="73.2mm" text-align="center">
-                                <block>Id documento: A87DCE9C-5A37-11EA-999C-1B4C666B91E2</block>
-                            </inline-container>
-                            <inline-container width="18.8mm" text-align="center">
-                                <block>Serie: PFP</block>
-                            </inline-container>
-                            <inline-container width="50.5mm" text-align="center">
-                                <block>Folio: TCM9RASE20200228083105PPD</block>
-                            </inline-container>
-                            <inline-container width="25.1mm" text-align="center">
-                                <block>No. Parcialidad: 1</block>
-                            </inline-container>
-                            <inline-container width="26.9mm" text-align="center">
-                                <block>Método Pago: PPD</block>
-                            </inline-container>
-                        </block>
-                        <block margin-bottom="5mm">
-                            <inline-container width="21.9mm" text-align="center">
-                                <block>Moneda: MXN</block>
-                            </inline-container>
-                            <inline-container width="36.6mm" text-align="center">
-                                <block>Saldo anterior: $ 29,000.00</block>
-                            </inline-container>
-                            <inline-container width="36.3mm" text-align="center">
-                                <block>Importe pagado: $ 2,000.00</block>
-                            </inline-container>
-                            <inline-container width="100.1mm" text-align="left" margin-left="1mm">
-                                <block>Saldo insoluto: $ 27,000.00</block>
-                            </inline-container>
-                        </block>
                     </block-container>
 
                     <!-- Subtotales y Totales -->
                     <block-container margin-bottom="3mm" text-align="right" font-size="2.5mm">
                         <block>
                             <inline-container font-weight="bold">
-                                <block>TOTAL PAGADO:</block>
+                                <block>SUBTOTAL</block>
                             </inline-container>
                             <inline-container width="25mm" margin-right="3mm">
-                                <block>$2,000.00</block>
+                                <block>
+                                    $
+                                    <xsl:value-of select="factura/cfdi/subtotal" />
+                                </block>
                             </inline-container>
                         </block>
                         <block>
                             <inline-container font-weight="bold">
-                                <block>IMPORTE CON LETRA:</block>
+                                <block>IVA ¿16.00%?</block>
                             </inline-container>
                             <inline-container width="25mm" margin-right="3mm">
-                                <block>00/100 XXX</block>
+                                <block>[$47,678.40]</block>
+                            </inline-container>
+                        </block>
+                        <block>
+                            <inline-container font-weight="bold">
+                                <block>TOTAL</block>
+                            </inline-container>
+                            <inline-container width="25mm" margin-right="3mm">
+                                <block>
+                                    $
+                                    <xsl:value-of select="factura/cfdi/total" />
+                                </block>
                             </inline-container>
                         </block>
                     </block-container>
 
                     <!-- Forma de Pago -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
-                        <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
-                            <inline-container width="65.5mm">
-                                <block>No. CSD EMISOR</block>
+                    <block-container id="last-item" margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
+                        <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                            <inline-container width="30mm">
+                                <block margin-left="3mm">Importe con letra: </block>
                             </inline-container>
-                            <inline-container width="64.3mm">
-                                <block>No. CSD SAT</block>
-                            </inline-container>
-                            <inline-container width="64.3mm">
-                                <block>FECHA DE CERTIFICACIÓN</block>
+                            <inline-container text-align="center" width="165mm">
+                                <block margin-left="3mm">[TRESCIENTOS CUARENTA Y CINCO MIL SEISCIENTOS SESENTA Y OCHO PESOS 40/100 M.N]</block>
                             </inline-container>
                         </block>
 
-                        <table>
-                            <table-column column-width="65.5mm" />
-                            <table-column column-width="64.3mm" />
-                            <table-column column-width="64.3mm" />
-                            <table-body>
-                                <table-row text-align="center">
-                                    <table-cell>
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">20001000000300022762</block>
-                                    </table-cell>
-                                    <table-cell>
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">20001000000300022323</block>
-                                    </table-cell>
-                                    <table-cell>
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm" id="last-item">2020-02-28T08:40:26</block>
-                                    </table-cell>
-                                </table-row>
-                            </table-body>
-                        </table>
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Forma de pago</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/formaPago" />
+                                        - TRANSFERENCIA ELECTRÓNICA DE FONDOS
+                                    </inline>
+                                </block>
+                            </inline-container>
+                            <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">No. CSD del Emisor</inline>
+                                    <inline>[20001000000300022815]</inline>
+                                </block>
+                            </inline-container>
+                        </block>
+
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Condiciones de pago</inline>
+                                </block>
+                            </inline-container>
+                            <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">No. CSD del SAT</inline>
+                                    <inline>20001000000300022323</inline>
+                                </block>
+                            </inline-container>
+                        </block>
+
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Metodo de pago</inline>
+                                    <inline>PUE - PAGO EN UNA SOLA EXHIBICION</inline>
+                                </block>
+                            </inline-container>
+                            <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Fecha y hora de certificación</inline>
+                                    <inline>2020-02-28T08:34:58</inline>
+                                </block>
+                            </inline-container>
+                        </block>
+
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Tipo de Comprobante</inline>
+                                    <inline>I - INGRESO</inline>
+                                </block>
+                            </inline-container>
+                            <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Moneda</inline>
+                                    <inline>MXN</inline>
+                                </block>
+                            </inline-container>
+                        </block>
                     </block-container>
 
                     <!-- Timbrado -->
@@ -320,7 +434,7 @@
                             <inline-container background-color="#FFFFFF" width="40.3mm" alignment-baseline="before-edge">
                                 <block-container padding-top="1.2mm" padding-bottom="1mm" height="39.3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-after-end-radius="2mm" fox:border-before-end-radius="2mm" font-size="2.4mm">
                                     <block margin-left="1mm" margin-right="1mm">
-                                        <external-graphic width="100%" content-width="scale-to-fit" content-height="100%" border="solid 0.1pt" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADMAQMAAAAF7N6xAAAABlBMVEX///8AAABVwtN+AAACU0lEQVRYhb2YUY7DMAhEuQH3vyU3mDIzJF1pf6FRt+v6RbJNYIBE/PBKABFVhQokMjIrPbmP+sNhNek7sm/hDZEXiINeuDjfq/eP3o7pBepDcgs96bPXIdJcBm3KHxVXiJSgDcsfvamMP5ZfRTTpv+v1qFWkC3SWdhueFNrFe22iXjFhg3LY4/7uB1oXqLjo/NFh2okI4wJxXXtKcY6u00/2BPGfPgifkjForz1A9YSDA4NbCd55gLS05IQBAfoQZbMOUK/HZwd5D6egCC9cIEa3vEXMu6G5D1AfsrdA6Wf0Zdra2sY6SjjCmWSklJyJ8d5lxMRGo5ZCQjIJi+Y+UgaVW1L7lbSf4F9HTthK15otx73NsY1e+QiHBE3LzHqAFAvxDhh5TDYTDssI0pLS41O6CWh4gEJhl3QcVTs1SRUHyNWiQtxpVBrmUmQbTYHAzCYNcxROebCM6B+9MItUrt4GcEKNG8SpcdEIOQ8L4wM04sFjunxkusmpD9ZRTkPhpK1idTxqHVG9mN/0DGlY6Oh5gRgOlbKuwo+akhiZ2UU5gZD5irLyW16gUGXAdMMYp+Po1HWBUgVw+qTaUqkfPEHUD6g1Ywej6JCr7iN3YunQU3pzGxgnSN2sKx1Xc5DIXCDO6r2AVcy1sXPrNmLUwY2EGsKnz80DFFYwEUmk3DafJnEVTbKZbOoy1Yn1APFTaiXguj/qqRzWUWLetIxVJTEjLRfI7ZJV003u9w3MNgofUyOoLlE5t46sYEpmejNARcb3lc4qgupguJ0e5Y8qHKAfXh/baqpdbG1X4gAAAABJRU5ErkJggg==" />
+                                        <external-graphic src="https://via.placeholder.com/300x300" width="100%" content-width="scale-to-fit" content-height="100%" border="solid 0.1pt" />
                                     </block>
                                 </block-container>
                             </inline-container>

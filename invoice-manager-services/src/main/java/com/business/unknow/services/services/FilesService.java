@@ -1,15 +1,20 @@
 /**
- * 
+ *
  */
 package com.business.unknow.services.services;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 
 import com.business.unknow.services.util.pdf.PDFGenerator;
-import org.hibernate.result.Output;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,23 +43,23 @@ import javax.xml.namespace.QName;
  */
 @Service
 public class FilesService {
-	
+
 	@Autowired
 	private FacturaFileRepository facturaRepo;
-	
+
 	@Autowired
 	private ResourceFileRepository resourceRepo;
-	
+
 	@Autowired
 	private FacturaService facturaService;
-	
+
 	@Autowired
 	private FilesMapper mapper;
 
 	@Autowired
 	private PDFGenerator pdfGenerator;
-	
-	
+
+
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
 		if(file.isPresent()) {
@@ -63,7 +68,7 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
-	
+
 	public ResourceFileDto getFileByResourceReferenceAndType(String resource,String referencia, String type) {
 		Optional<ResourceFile> file = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia, type);
 		if(file.isPresent()) {
@@ -72,10 +77,10 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
-	
-	
+
+
 	public ResourceFileDto insertResourceFile( ResourceFileDto resourceFile) {
-		
+
 		Optional<ResourceFile> resource = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(resourceFile.getTipoRecurso(), resourceFile.getReferencia(), resourceFile.getTipoArchivo());
 		if(resource.isPresent()) {
 		 resourceFile.setId(resource.get().getId());
@@ -83,11 +88,11 @@ public class FilesService {
 		}
 		return mapper.getResourceFileDtoFromEntity(resourceRepo.save(mapper.getResourceFileFromDto(resourceFile)));
 	}
-	
+
 	public FacturaFileDto insertfacturaFile(FacturaFileDto facturaFile) {
 		return mapper.getFacturaFileDtoFromEntity(facturaRepo.save(mapper.getFacturaFileFromDto(facturaFile)));
 	}
-	
+
 	public void deleteFacturaFile(Integer id) {
 		Optional<FacturaFile> entity = facturaRepo.findById(id);
 		if(entity.isPresent()) {
@@ -96,8 +101,8 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
-	
-	
+
+
 	public void deleteResourceFile(Integer id) {
 		Optional<ResourceFile> entity = resourceRepo.findById(id);
 		if(entity.isPresent()) {
@@ -106,7 +111,7 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
-	
+
 	public FacturaPdfModelDto getPdfFromFactura(String folio) {
 		FacturaDto facturaDto=facturaService.getFacturaByFolio(folio);
 		FacturaFileDto qr=getFileByFolioAndType(folio,TipoArchivoEnum.QR.name());

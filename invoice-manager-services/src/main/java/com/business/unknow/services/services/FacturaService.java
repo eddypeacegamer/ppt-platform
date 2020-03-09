@@ -1,19 +1,13 @@
 package com.business.unknow.services.services;
 
-import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 
-import com.business.unknow.model.dto.files.FacturaFileDto;
-import com.business.unknow.services.util.pdf.PDFGenerator;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -97,12 +91,6 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
-
-	@Autowired
-	private PDFGenerator pdfGenerator;
-
-	@Autowired
-	private FilesService filesService;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -284,49 +272,6 @@ public class FacturaService {
 		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
 		facturaContext.getPagoCredito().setMonto(
 				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
-	}
-
-	public String getInvoicePDF(String folio) {
-		String xmlContent = getXMLData(getFacturaByFolio(folio));
-
-		System.out.println(xmlContent);
-		//String templateFilePath = ClassLoader.getSystemResource("xsl-fo/pue.xml").getFile();
-		String templateFilePath = "/Users/vvo0002/Documents/Temp/Invoice/pue.xml";
-
-		return pdfGenerator.generateFromXmlContent(templateFilePath, xmlContent, "./pdf-build", folio + ".pdf");
-	}
-
-	private String getXMLData(String folio) {
-		FacturaFileDto fileDto = filesService.getFileByFolioAndType(folio, "XML");
-		byte[] decodedBytes = Base64.getDecoder().decode(fileDto.getData());
-		return new String(decodedBytes);
-	}
-
-	private String getXMLData(FacturaDto facturaDto) {
-		Function<FacturaDto, String> facturaDtoXmlStringMapper = new Function<FacturaDto, String>() {
-			@Override
-			public String apply(FacturaDto facturaDto) {
-				try {
-					StringWriter stringWriter = new StringWriter();
-
-					JAXBContext jaxbContext = JAXBContext.newInstance(FacturaDto.class);
-
-					Marshaller marshaller = jaxbContext.createMarshaller();
-					marshaller.marshal(new JAXBElement<FacturaDto>(new QName("", "FacturaDto"),
-									FacturaDto.class,
-									null,
-									facturaDto),
-							stringWriter);
-
-					return stringWriter.toString();
-				} catch (JAXBException e) {
-					//TODO: Handle Error
-				}
-				return null;
-			}
-		};
-
-		return facturaDtoXmlStringMapper.apply(facturaDto);
 	}
 
 }

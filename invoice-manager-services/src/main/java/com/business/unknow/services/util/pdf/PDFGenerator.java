@@ -1,19 +1,25 @@
 package com.business.unknow.services.util.pdf;
 
-import com.business.unknow.model.dto.FacturaDto;
-import org.apache.fop.apps.*;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
 
 @Component
 public class PDFGenerator {
@@ -32,7 +38,7 @@ public class PDFGenerator {
     }
 
     public void render(Reader in, OutputStream out, Reader xslt) {
-        if(FOP_FACTORY == null) throw new RuntimeException("FOP FACTORY is not defined");
+        if (FOP_FACTORY == null) throw new RuntimeException("FOP FACTORY is not defined");
 
         try {
             Fop fop = FOP_FACTORY.newFop(MimeConstants.MIME_PDF, out);
@@ -52,87 +58,5 @@ public class PDFGenerator {
             LOG.error("FOPException", e);
             throw new RuntimeException(e);
         }
-    }
-
-    public String generateFromXmlFile(String templateFilePath, String xmlFilePath, String outputDirectoryPath, String outputFileName) {
-        try {
-            return generatePDF(templateFilePath, getXmlFileContent(xmlFilePath), outputDirectoryPath, outputFileName);
-        } catch (IOException e) {
-            //TODO: Handle exception
-            return null;
-        }
-    }
-
-    public String generateFromFacturaDto(String templateFilePath, FacturaDto facturaDto, String outputDirectoryPath, String outputFileName) {
-        return generatePDF(templateFilePath, getXmlDtoContent(facturaDto), outputDirectoryPath, outputFileName);
-    }
-
-    public String generateFromXmlContent(String templateFilePath, String xmlContent, String outputDirectoryPath, String outputFileName) {
-        return generatePDF(templateFilePath, xmlContent, outputDirectoryPath, outputFileName);
-    }
-
-    private String generatePDF(String templateFilePath, String xmlContent, String outputDirectoryPath, String outputFileName) {
-        try {
-            File templateFile = new File(templateFilePath);
-            File outputDirectory = new File(outputDirectoryPath);
-
-            if (!outputDirectory.exists()) outputDirectory.mkdir();
-            File outputFile = new File(outputDirectory, outputFileName);
-
-            final FopFactory fopFactory = FopFactory.newInstance(outputDirectory.toURI());
-
-            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-
-            OutputStream out = new FileOutputStream(outputFile);
-            out = new java.io.BufferedOutputStream(out);
-            try {
-                Fop fop;
-                fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
-                TransformerFactory factory = TransformerFactory.newInstance();
-                Transformer transformer = factory.newTransformer(new StreamSource(templateFile));
-
-                Source src = new StreamSource(new StringReader(xmlContent));
-
-                Result res = new SAXResult(fop.getDefaultHandler());
-                transformer.transform(src, res);
-                return outputFile.getAbsolutePath();
-            } catch (FOPException | TransformerException e) {
-                //TODO: Handle exception
-            } finally {
-                out.close();
-            }
-        } catch (IOException exp) {
-            //TODO: Handle exception
-        }
-
-        return null;
-    }
-
-    private String getXmlDtoContent(FacturaDto dto) {
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(FacturaDto.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(dto, sw);
-            String xmlContent = sw.toString();
-            return xmlContent;
-
-        } catch (JAXBException e) {
-            //TODO: Handle exception
-
-        }
-
-        return null;
-    }
-
-    private String getXmlFileContent(String xmlFilePath) throws IOException {
-        File file = new File(xmlFilePath);
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] data = new byte[(int) file.length()];
-        fileInputStream.read(data);
-        fileInputStream.close();
-
-        return new String(data, "UTF-8");
     }
 }
