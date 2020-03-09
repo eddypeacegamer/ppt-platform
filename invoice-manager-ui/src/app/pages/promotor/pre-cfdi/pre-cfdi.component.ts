@@ -15,7 +15,7 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
-import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
@@ -59,7 +59,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private cfdiValidator: CfdiValidatorService,
     private userService: UsersData,
     private filesService: FilesData,
-    private downloadService: DownloadInvoiceFilesService,
+    private downloadService: DonwloadFileService,
     private pdfMakeService: PdfMakeService,
     private route: ActivatedRoute) { }
 

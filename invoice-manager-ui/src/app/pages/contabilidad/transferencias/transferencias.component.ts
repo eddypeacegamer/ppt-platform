@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { TransferData } from '../../../@core/data/transfers-data';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse} from '@angular/common/http';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Factura } from '../../../models/factura/factura';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Concepto } from '../../../models/factura/concepto';
-import { Impuesto } from '../../../models/factura/impuesto';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-transferencias',
@@ -29,6 +28,7 @@ export class TransferenciasComponent implements OnInit {
 
   constructor(private companyService: CompaniesData,
     private cfdiValidator: CfdiValidatorService,
+    private downloadService: DonwloadFileService,
     private invoiceService: InvoicesData) { }
 
   ngOnInit() {
@@ -80,6 +80,7 @@ export class TransferenciasComponent implements OnInit {
     this.params.successMessage = undefined;
   }
 
+
   validarInformacion() {
     this.params.successMessage = undefined;
     this.params.dataValid = true;
@@ -89,23 +90,22 @@ export class TransferenciasComponent implements OnInit {
         transfer.observaciones = [];
         if (this.companies[transfer.RFC_EMISOR].tipo !== this.params.lineaDeposito) {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no es de tipo ${this.params.lineaDeposito}`);
-          this.params.dataValid = false;
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no se encuentra activa`);
-          this.params.dataValid = false;
         }
         if (this.companies[transfer.RFC_RECEPTOR].tipo !== this.params.lineaRetiro) {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no es de tipo ${this.params.lineaRetiro}`);
-          this.params.dataValid = false;
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no se encuentra activa`);
-          this.params.dataValid = false;
         }
         const fact = this.buildFacturaFromTransfer(transfer,
               this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
+        transfer.observaciones.push(... this.cfdiValidator.validarConcepto(fact.cfdi.conceptos[0]));
         transfer.observaciones.push(... this.cfdiValidator.validarCfdi(fact.cfdi));
         if (transfer.observaciones.length === 0) {
           transfer.observaciones = 'VALIDO';
+        }else {
+          this.params.dataValid = false;
         }
       }
     } else {
@@ -136,7 +136,7 @@ export class TransferenciasComponent implements OnInit {
     }
   }
 
-  private buildFacturaFromTransfer(transfer: any,emisorCompany: Empresa, receptorCompany: Empresa): Factura {
+  private buildFacturaFromTransfer(transfer: any, emisorCompany: Empresa, receptorCompany: Empresa): Factura {
     const factura = new Factura();
     factura.rfcEmisor = transfer.RFC_EMISOR;
     factura.razonSocialEmisor = receptorCompany.informacionFiscal.razonSocial;
@@ -169,7 +169,6 @@ export class TransferenciasComponent implements OnInit {
     concepto.iva = true;
     this.cfdiValidator.validarConcepto(concepto);
     cfdi.conceptos.push(this.cfdiValidator.buildConcepto(concepto));
-    
     factura.cfdi = this.cfdiValidator.calcularImportes(cfdi);
     return factura;
   }

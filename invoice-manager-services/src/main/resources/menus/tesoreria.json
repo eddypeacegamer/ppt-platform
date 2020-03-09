@@ -12,15 +12,11 @@
       },
       {
         "title": "Ingresos",
-        "link": "/pages/tesoreria/ingresos"
+        "link": "/pages/tesoreria/ingresos-notfinish"
       },
       {
         "title": "Egresos",
-        "link": "/pages/tesoreria/egresos"
-      },
-      {
-        "title": "Conciliacion",
-        "link": "/pages/tesoreria/conciliacion"
+        "link": "/pages/tesoreria/egresos-notfinish"
       }
     ]
   }

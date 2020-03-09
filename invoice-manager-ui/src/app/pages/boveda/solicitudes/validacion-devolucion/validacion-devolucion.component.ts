@@ -6,7 +6,7 @@ import { DevolutionData } from '../../../../@core/data/devolution-data';
 import { CuentasData } from '../../../../@core/data/cuentas-data';
 import { User, UsersData } from '../../../../@core/data/users-data';
 import { Cuenta } from '../../../../models/cuenta';
-import { DownloadInvoiceFilesService } from '../../../../@core/util-services/download-invoice-files';
+import { DonwloadFileService } from '../../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../../@core/data/files-data';
 import { ResourceFile } from '../../../../models/resource-file';
 
@@ -25,7 +25,7 @@ export class ValidacionDevolucionComponent implements OnInit {
   public formInfo: any = { rfc: '', empresa: '*', cuenta: '*'};
 
   constructor(protected ref: NbDialogRef<ValidacionDevolucionComponent>,
-    private downloadService: DownloadInvoiceFilesService,
+    private downloadService: DonwloadFileService,
     private resourceService: FilesData,
     private devolutionsService: DevolutionData,
     private userService: UsersData,

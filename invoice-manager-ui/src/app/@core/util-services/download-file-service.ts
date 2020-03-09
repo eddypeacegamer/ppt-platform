@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { InvoicesData } from '../data/invoices-data';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
   })
-export class DownloadInvoiceFilesService{
+export class DonwloadFileService {
 
 
     constructor(private invoiceService:InvoicesData){}

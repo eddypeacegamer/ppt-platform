@@ -42,8 +42,12 @@
             </div>
           </div>
         </div>
-        <br>
-        <br>
+        <small id="helpMessage" class="form-text text-muted">Para descargar el formato muestra presione el siguente
+          <a href="/FormatoMuestra.xlsx" target="_self" download>
+          link <i class="fa fa-download"></i>
+          </a>
+        </small>
+        
         <div class="row d-flex justify-content-center">
           <div class="alert alert-success" *ngIf="params.successMessage != undefined" role="alert">
             {{params.successMessage}}

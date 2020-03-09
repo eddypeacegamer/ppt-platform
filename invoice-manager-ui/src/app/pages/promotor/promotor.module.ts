@@ -8,7 +8,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 
 import {DownloadCsvService } from '../../@core/util-services/download-csv.service';
-import { DownloadInvoiceFilesService } from '../../@core/util-services/download-invoice-files';
+import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { CommonsModule } from '../commons/commons.module';
 import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 
@@ -23,6 +23,6 @@ import { DevolutionPreferencesComponent } from './devolution-preferences/devolut
     PromotorRoutingModule,
     CommonsModule,
   ],
-  providers: [ DownloadCsvService , DownloadInvoiceFilesService ],
+  providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class PromotorModule { }

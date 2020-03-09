@@ -2,7 +2,11 @@ spring:
   profiles:
     active: "dev"
   main:
-    banner-mode: "off"  
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/
+    - classpath:/samples/  
 server:
      port: 8080          
    
@@ -24,10 +28,6 @@ spring:
     open-in-view:  true
     hibernate:
       ddl-auto: none
-  resources:
-    static-locations: 
-    - classpath:/static/
-    - classpath:/samples/
   security:
     oauth2:
       client:
@@ -57,10 +57,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
     show-sql: true
-      
-  resources:
-    static-locations: 
-    - classpath:/static/
   security:
     oauth2:
       client:
@@ -86,10 +82,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
     show-sql: false
-      
-  resources:
-    static-locations: 
-    - classpath:/static/
   security:
     oauth2:
       client:

@@ -4,7 +4,17 @@
       <nb-card-header>Validacion devoluciones</nb-card-header>
       <nb-card-body>
           <div class="row">
-             
+            <div class="col-sm-2">
+              <label for="inputStatusType" class="label">Estatus Solicitud</label>
+              <select id="inputStatusType" style="display:block;" class="form-control"
+                [(ngModel)]="filterParams.status" >
+                <option value="*">Todos</option>
+                <option value="SOLICITUD">Solicitud</option>
+                <option value="VALIDACION">Validacion</option>
+                <option value="ACEPTADO">Aceptado</option>
+                <option value="PAGADO">Pagado</option>
+              </select>
+            </div>
               <div class="col-sm-2">
                 <label for="inputReceptorType" class="label">Tipo Receptor</label>
                 <select id="inputReceptorType" style="display:block;" class="form-control"
@@ -15,12 +25,12 @@
                   <option value="CONTACTO">Contacto</option>
                 </select>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2">
                   <label for="beneficiario" class="label">Beneficiario</label>
                   <input type="text" id="beneficiario" placeholder="Nombre beneficiario" fullWidth style="display:block;" class="form-control"
                     [(ngModel)]="filterParams.beneficiario">
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <label for="receptor" class="label">Receptor</label>
                 <input type="text" id="receptor" placeholder="RFC Empresa / correo promotor / correo contacto" fullWidth style="display:block;" class="form-control"
                   [(ngModel)]="filterParams.idReceptor">
