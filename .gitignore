@@ -98,5 +98,3 @@ buildNumber.properties
 
 .idea/
 *.iml
-
-pdf-build/
