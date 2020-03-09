@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
     <xsl:template match="/FacturaPdfModelDto">
         <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
             <layout-master-set>
@@ -341,7 +341,9 @@
                             <inline-container width="75mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">No. CSD del SAT</inline>
-                                    <inline>20001000000300022323</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/complemento/timbreFiscal/noCertificadoSat" />
+                                    </inline>
                                 </block>
                             </inline-container>
                         </block>
@@ -350,13 +352,18 @@
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">Metodo de pago</inline>
-                                    <inline>PUE - PAGO EN UNA SOLA EXHIBICION</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/metodoPago" />
+                                        - [PAGO EN UNA SOLA EXHIBICION]
+                                    </inline>
                                 </block>
                             </inline-container>
                             <inline-container width="75mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">Fecha y hora de certificación</inline>
-                                    <inline>2020-02-28T08:34:58</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/complemento/timbreFiscal/fechaTimbrado" />
+                                    </inline>
                                 </block>
                             </inline-container>
                         </block>
@@ -365,13 +372,18 @@
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">Tipo de Comprobante</inline>
-                                    <inline>I - INGRESO</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/tipoDeComprobante" />
+                                        - [INGRESO]
+                                    </inline>
                                 </block>
                             </inline-container>
                             <inline-container width="75mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">Moneda</inline>
-                                    <inline>MXN</inline>
+                                    <inline>
+                                        <xsl:value-of select="factura/cfdi/moneda" />
+                                    </inline>
                                 </block>
                             </inline-container>
                         </block>
@@ -392,7 +404,7 @@
                                         <inline-container>
                                             <block margin-left="3mm" margin-right="3mm">
                                                 <inline font-size="1.7mm">
-                                                    EoFCMuQ581M4XElr1xn3fFwzAiBEm5AEgL1UYxVbnLB9mx0Q6LASFtTBH6H8WHF7TFWcC0rC/K+FTRAJnlBT5l53QCc1bopKu92qRa5/VjxtWZLIEfkSSWItzg3EwctOuXnsXQTUU/2/T6cYh8yUJBwX81/G/cRmvQVXR4JBPBjHc8NDjQe9HBh7RMcPuOPY5MLyjDDo7Rt6VnCVp+0vKCESBIp/hYm0GCVb1Mk6oIxoih9/+ui3JS4UW9h7+pPuvEWkOBs0KCd4bm6T5FHUD+2Pw77CYooQUPiBMjasZyJ1IgWFhNDyU3LAdbaOwrHQ9/HX46YDLdT2/qqjMzyAIw==
+                                                    <xsl:value-of select="factura/cfdi/complemento/timbreFiscal/selloCFD" />
                                                 </inline>
                                             </block>
                                         </inline-container>
@@ -408,7 +420,7 @@
                                         <inline-container>
                                             <block margin-left="3mm" margin-right="3mm">
                                                 <inline font-size="1.7mm">
-                                                    JtdDALElRskJEnthgtziQPX6X7DBgKinBSTmxjFbrr20g0icWschrVVq1vvrNGOc4RGvGA2SUan/0VwJuEOIXx85zZpKBQ5B/urEExf2I4fS78XqpBxw8HIOS42b9fmurICkiuW+m0nvPZYyrOHjKW6JCQdngsNb0M7eUf78qAASc8OrtvDb0jPNheY9nk1LpMgtitFdbBJ/z56W6lidDRjjC1eM9CoZsjGFZOCPAg1BpqAjT3F41qfcdZRegSD8P+SL3UHo0ZhOCk6w4ynC6uSYX1xU6TTqbCzpkTKjIisEODn1mWBnylljGIyQgioSWj5Hh2mnq+D9frtM4GBmtg==
+                                                    <xsl:value-of select="factura/cfdi/complemento/timbreFiscal/selloSat" />
                                                 </inline>
                                             </block>
                                         </inline-container>
@@ -424,7 +436,7 @@
                                         <inline-container>
                                             <block margin-left="3mm" margin-right="3mm">
                                                 <inline font-size="1.7mm">
-                                                    ||1.1|42430650-5A38-11EA-81A9-3709F5358B0A|2020-02-28T08:40:26|FMO1007168C6|EoFCMuQ581M4XElr1xn3fFwzAiBEm5AEgL1UYxVbnLB9mx0Q6LASFtTBH6H8WHF7TFWcC0rC/K+FTRAJnlBT5l53QCc1bopKu92qRa5/VjxtWZLIEfkSSWItzg3EwctOuXnsXQTUU/2/T6cYh8yUJBwX81/G/cRmvQVXR4JBPBjHc8NDjQe9HBh7RMcPuOPY5MLyjDDo7Rt6VnCVp+0vKCESBIp/hYm0GCVb1Mk6oIxoih9/+ui3JS4UW9h7+pPuvEWkOBs0KCd4bm6T5FHUD+2Pw77CYooQUPiBMjasZyJ1IgWFhNDyU3LAdbaOwrHQ9/HX46YDLdT2/qqjMzyAIw==|20001000000300022323||
+                                                    <xsl:value-of select="factura/cfdi/complemento/timbreFiscal/cadenaOriginal" />
                                                 </inline>
                                             </block>
                                         </inline-container>
