@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.business.unknow.services.services.*;
 import com.business.unknow.services.util.pdf.PDFGenerator;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,6 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDevolucionDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.CfdiService;
-import com.business.unknow.services.services.DevolucionService;
-import com.business.unknow.services.services.FacturaService;
-import com.business.unknow.services.services.PagoService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +49,9 @@ public class FacturaController {
 
 	@Autowired
 	private PagoService pagoService;
+
+	@Autowired
+	private FilesService filesService;
 
 	@Autowired
 	private DevolucionService devolucionService;
@@ -83,9 +83,7 @@ public class FacturaController {
 
 	@GetMapping(value = "/pdf/{folio}", produces = MediaType.APPLICATION_PDF_VALUE)
 	public @ResponseBody byte[] getFacturaPDF(@PathVariable String folio) throws IOException {
-		String generatedPDFPath = service.getInvoicePDF(folio);
-		InputStream stream = new FileInputStream(generatedPDFPath);
-		return IOUtils.toByteArray(stream);
+		return filesService.generateInvoicePDF(folio);
 	}
 
 	@PostMapping

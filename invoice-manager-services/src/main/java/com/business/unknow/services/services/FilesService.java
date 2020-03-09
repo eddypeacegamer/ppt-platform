@@ -3,9 +3,13 @@
  */
 package com.business.unknow.services.services;
 
+import java.io.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Function;
 
+import com.business.unknow.services.util.pdf.PDFGenerator;
+import org.hibernate.result.Output;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,12 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 /**
  * @author ralfdemoledor
@@ -40,6 +50,9 @@ public class FilesService {
 	
 	@Autowired
 	private FilesMapper mapper;
+
+	@Autowired
+	private PDFGenerator pdfGenerator;
 	
 	
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) {
@@ -101,5 +114,47 @@ public class FilesService {
 		return new FacturaPdfModelDto(qr.getData(),logotipo.getData(),facturaDto);
 	}
 
+	public byte[] generateInvoicePDF(String folio) {
+		try {
+			String xslFoTemplate = "pue.xml";
+			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslFoTemplate).getFile()));
+			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/pue.xml"));
+			Reader inputReader = new StringReader(getXmlContent(getPdfFromFactura(folio)));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+			pdfGenerator.render(inputReader, outputStream, templateReader);
+			return outputStream.toByteArray();
+		} catch (FileNotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
+		}
+	}
+
+	private String getXmlContent(FacturaPdfModelDto model) {
+		Function<FacturaPdfModelDto, String> mapper = new Function<FacturaPdfModelDto, String>() {
+			@Override
+			public String apply(FacturaPdfModelDto facturaPdfModelDto) {
+
+				try {
+					StringWriter stringWriter = new StringWriter();
+
+					JAXBContext jaxbContext = JAXBContext.newInstance(FacturaPdfModelDto.class);
+
+					Marshaller marshaller = jaxbContext.createMarshaller();
+					marshaller.marshal(new JAXBElement<FacturaPdfModelDto>(new QName("", "FacturaPdfModelDto"),
+									FacturaPdfModelDto.class,
+									null,
+									facturaPdfModelDto),
+							stringWriter);
+
+					System.out.println(stringWriter.toString());
+					return stringWriter.toString();
+				} catch (JAXBException e) {
+					//TODO: Handle Error
+				}
+				return null;
+			}
+		};
+
+		return mapper.apply(model);
+	}
 }

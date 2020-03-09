@@ -2,7 +2,10 @@ package com.business.unknow.services.util.pdf;
 
 import com.business.unknow.model.dto.FacturaDto;
 import org.apache.fop.apps.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,6 +17,42 @@ import java.io.*;
 
 @Component
 public class PDFGenerator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class.getSimpleName());
+    private static FopFactory FOP_FACTORY = null;
+
+    static {
+        try {
+            FOP_FACTORY = FopFactory.newInstance(
+                    new File(ClassLoader.getSystemResource("pdf-config/fop.xconf")
+                            .getFile()));
+        } catch (SAXException | IOException e) {
+            LOG.error("The FOP_FACTORY cannot be initialized", e);
+        }
+    }
+
+    public void render(Reader in, OutputStream out, Reader xslt) {
+        if(FOP_FACTORY == null) throw new RuntimeException("FOP FACTORY is not defined");
+
+        try {
+            Fop fop = FOP_FACTORY.newFop(MimeConstants.MIME_PDF, out);
+
+            TransformerFactory tfact = TransformerFactory.newInstance();
+            Transformer transformer = tfact.newTransformer(new StreamSource(xslt));
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.transform(new StreamSource(in), new SAXResult(fop.getDefaultHandler()));
+
+        } catch (TransformerConfigurationException tce) {
+            LOG.error("TransformerConfigurationException", tce);
+            throw new RuntimeException(tce);
+        } catch (TransformerException te) {
+            LOG.error("TransformerException", te);
+            throw new RuntimeException(te);
+        } catch (FOPException e) {
+            LOG.error("FOPException", e);
+            throw new RuntimeException(e);
+        }
+    }
 
     public String generateFromXmlFile(String templateFilePath, String xmlFilePath, String outputDirectoryPath, String outputFileName) {
         try {
