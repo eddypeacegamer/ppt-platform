@@ -434,7 +434,11 @@
                             <inline-container background-color="#FFFFFF" width="40.3mm" alignment-baseline="before-edge">
                                 <block-container padding-top="1.2mm" padding-bottom="1mm" height="39.3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-after-end-radius="2mm" fox:border-before-end-radius="2mm" font-size="2.4mm">
                                     <block margin-left="1mm" margin-right="1mm">
-                                        <external-graphic src="https://via.placeholder.com/300x300" width="100%" content-width="scale-to-fit" content-height="100%" border="solid 0.1pt" />
+                                        <external-graphic width="100%" content-width="scale-to-fit" content-height="38mm">
+                                            <xsl:attribute name="src">
+                                                <xsl:value-of select="concat('data:image/png;base64,', qr)" />
+                                            </xsl:attribute>
+                                        </external-graphic>
                                     </block>
                                 </block-container>
                             </inline-container>

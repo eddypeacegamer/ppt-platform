@@ -122,8 +122,7 @@ public class FilesService {
 	public byte[] generateInvoicePDF(String folio) {
 		try {
 			String xslFoTemplate = "pue.xml";
-			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslFoTemplate).getFile()));
-			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/pue.xml"));
+			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslFoTemplate).getFile()));
 			Reader inputReader = new StringReader(getXmlContent(getPdfFromFactura(folio)));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
