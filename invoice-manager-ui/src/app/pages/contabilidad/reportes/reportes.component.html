@@ -41,21 +41,24 @@
           <div class="col-md-2">
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
               <option value="*">Todos</option>
-              <option *ngFor="let validation of validationCat" [value]="validation.id">{{validation.nombre}}</option>
+              <option value="4">Por timbrar</option>
+              <option value="3">Timbrada</option>
+              <option value="6">Rechazada</option>
+              <option value="7">Cancelada</option>
             </select>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <label for="inputTimbrado" class="label">Desde</label>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <label for="inputTimbrado" class="label">Hasta</label>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
@@ -106,9 +109,6 @@
                 <th class="text-center">Razon Social Cliente</th>
                 <th class="text-center">Tipo Documento</th>
                 <th class="text-center">Estatus factura</th>
-                <th class="text-center">Estatus pago</th>
-                <th class="text-center">Detalle</th>
-                <th class="text-center">Solicitante</th>
                 <th class="text-center">Solicitud</th>
                 <th class="text-center">Actualizacion</th>
               </tr>
@@ -127,9 +127,6 @@
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.tipoDocumento}}</td>
                 <td scope="row">{{fila.statusFactura}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.statusDetail}}</td>
-                <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>

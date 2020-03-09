@@ -9,6 +9,8 @@ import { InvoiceGeneratorComponent } from './invoice-generator/invoice-generator
 import { InvoiceRequestComponent } from './invoice-generator/invoice-request/invoice-request.component';
 import { TransferenciasComponent } from './transferencias/transferencias.component';
 import { CommonsModule } from '../commons/commons.module';
+import { DonwloadFileService } from '../../@core/util-services/download-file-service';
+import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 
 @NgModule({
   declarations: [ContabilidadComponent,
@@ -22,6 +24,7 @@ import { CommonsModule } from '../commons/commons.module';
     CommonsModule,
     NbDialogModule.forChild(),
   ],
-  entryComponents:[InvoiceRequestComponent]
+  entryComponents:[InvoiceRequestComponent],
+  providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class ContabilidadModule { }

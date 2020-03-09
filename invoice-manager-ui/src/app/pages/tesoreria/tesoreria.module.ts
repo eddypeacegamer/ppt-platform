@@ -10,6 +10,7 @@ import { EgresosComponent } from './egresos/egresos.component';
 import { ConciliacionComponent } from './conciliacion/conciliacion.component';
 import { ValidacionDevolucionComponent } from './devoluciones/validacion-devolucion/validacion-devolucion.component';
 import { CommonsModule } from '../commons/commons.module';
+import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 
 
 @NgModule({
@@ -30,6 +31,6 @@ import { CommonsModule } from '../commons/commons.module';
   entryComponents: [
     ValidacionPagoComponent,
     ValidacionDevolucionComponent],
-  providers: [DownloadCsvService],
+  providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class TesoreriaModule { }
