@@ -79,10 +79,10 @@ public class Pago implements Serializable {
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
 	
-	@Column(name = "REVISION_1")
+	@Column(name = "REVISION_1", columnDefinition = "TINYINT")
 	private Boolean revision1;
 
-	@Column(name = "REVISION_2")
+	@Column(name = "REVISION_2", columnDefinition = "TINYINT")
 	private Boolean revision2;
 
 	@Column(name = "REVISOR_1")

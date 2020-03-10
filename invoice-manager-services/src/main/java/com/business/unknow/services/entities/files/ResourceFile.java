@@ -45,7 +45,7 @@ public class ResourceFile implements Serializable {
 	@Column(name = "TIPO_RECURSO",nullable = false)
 	private String tipoRecurso;
 	
-	@Column(name = "DATA", unique = false, nullable = false)
+	@Column(name = "DATA", unique = false, nullable = false,columnDefinition="longblob")
 	private byte[] data;
 	
 	@Temporal(TemporalType.TIMESTAMP)
