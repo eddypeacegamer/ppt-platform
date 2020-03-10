@@ -13,7 +13,7 @@ import { ValidacionDevolucionComponent } from './validacion-devolucion/validacio
 })
 export class DevolucionesComponent implements OnInit {
 
-  public filterParams: any = 
+  public filterParams: any =
     { formaPago: '*', status: 'VALIDACION', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
   public errors: string[] = [];
   public page: GenericPage<PagoDevolucion> = new GenericPage();

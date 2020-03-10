@@ -18,7 +18,7 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute} from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
-import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
@@ -66,7 +66,7 @@ export class RevisionComponent implements OnInit {
     private invoiceService: InvoicesData,
     private filesService: FilesData,
     private userService: UsersData,
-    private downloadService: DownloadInvoiceFilesService,
+    private downloadService: DonwloadFileService,
     private route: ActivatedRoute) { }
 
     ngOnInit() {

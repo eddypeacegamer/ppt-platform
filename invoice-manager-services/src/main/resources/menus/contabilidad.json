@@ -11,10 +11,6 @@
 			"link": "/pages/contabilidad/transferencias"
 		},
 		{
-			"title": "Carga Facturas",
-			"link": "/pages/contabilidad/carga-facturas"
-		},
-		{
 			"title": "Reportes",
 			"link": "/pages/contabilidad/reportes"
 		},

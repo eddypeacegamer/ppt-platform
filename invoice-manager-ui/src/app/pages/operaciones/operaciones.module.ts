@@ -6,6 +6,8 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { CommonsModule } from '../commons/commons.module';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { ValidacionDevolucionComponent } from './devoluciones/validacion-devolucion/validacion-devolucion.component';
+import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
+import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 
 
 
@@ -21,5 +23,6 @@ import { ValidacionDevolucionComponent } from './devoluciones/validacion-devoluc
     CommonsModule,
   ],
   entryComponents: [ValidacionDevolucionComponent],
+  providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class OperacionesModule { }

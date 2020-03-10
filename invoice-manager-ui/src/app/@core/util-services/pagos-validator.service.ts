@@ -30,7 +30,8 @@ export class PagosValidatorService {
     if (pago.formaPago === undefined || pago.formaPago === '*') {
       messages.push('El tipo de pago es requerido.');
     }
-    if (pago.formaPago !== 'CREDITO' && pago.documento === undefined) {
+    if ((pago.formaPago === 'CHEQUE' || pago.formaPago === 'TRANSFERENCIA' || pago.formaPago === 'DEPOSITO')
+           && pago.documento === undefined) {
       messages.push('La imagen del documento de pago es requerida.');
     }
     if (cfdi.metodoPago === 'PUE' && Math.abs(cfdi.total - pago.monto) > 0.01) {
