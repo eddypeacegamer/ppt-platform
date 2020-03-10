@@ -97,3 +97,38 @@ spring:
           google:
             client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
             client-secret: NzIQxH-VGVxWqZz9flDEMROg
+            
+---
+
+spring:
+  profiles: prod         
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.10.33:3306/invoice_manager
+    username: invoice-manager
+    password: hola123
+  jpa:
+    hibernate:
+      ddlAuto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
+    hibernate.ddl-auto: none
+    show-sql: true
+      
+  resources:
+    static-locations: 
+    - classpath:/static/
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
+            client-secret: NzIQxH-VGVxWqZz9flDEMROg 
+            
+        
