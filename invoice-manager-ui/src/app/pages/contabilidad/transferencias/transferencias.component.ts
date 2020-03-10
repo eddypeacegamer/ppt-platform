@@ -88,20 +88,26 @@ export class TransferenciasComponent implements OnInit {
     if (this.transfers !== undefined && this.transfers.length > 0) {
       for (const transfer of this.transfers) {
         transfer.observaciones = [];
-        if (this.companies[transfer.RFC_EMISOR].tipo !== this.params.lineaDeposito) {
+        if (this.companies[transfer.RFC_EMISOR] === undefined) {
+          transfer.observaciones.push(`${transfer.RFC_EMISOR} no esta dada de alta en el sistema`);
+        }else if (this.companies[transfer.RFC_EMISOR].tipo !== this.params.lineaDeposito) {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no es de tipo ${this.params.lineaDeposito}`);
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no se encuentra activa`);
         }
-        if (this.companies[transfer.RFC_RECEPTOR].tipo !== this.params.lineaRetiro) {
+        if (this.companies[transfer.RFC_RECEPTOR] === undefined) {
+          transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no esta dada de alta en el sistema`);
+        }else if (this.companies[transfer.RFC_RECEPTOR].tipo !== this.params.lineaRetiro) {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no es de tipo ${this.params.lineaRetiro}`);
         }else if (!this.companies[transfer.RFC_EMISOR].activo) {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no se encuentra activa`);
         }
-        const fact = this.buildFacturaFromTransfer(transfer,
-              this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
-        transfer.observaciones.push(... this.cfdiValidator.validarConcepto(fact.cfdi.conceptos[0]));
-        transfer.observaciones.push(... this.cfdiValidator.validarCfdi(fact.cfdi));
+        if (transfer.observaciones.length === 0) {
+          const fact = this.buildFacturaFromTransfer(transfer,
+            this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
+            transfer.observaciones.push(... this.cfdiValidator.validarConcepto(fact.cfdi.conceptos[0]));
+            transfer.observaciones.push(... this.cfdiValidator.validarCfdi(fact.cfdi));
+        }
         if (transfer.observaciones.length === 0) {
           transfer.observaciones = 'VALIDO';
         }else {
