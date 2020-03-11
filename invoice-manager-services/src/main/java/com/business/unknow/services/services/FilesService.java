@@ -113,24 +113,46 @@ public class FilesService {
 	}
 
 	public FacturaPdfModelDto getPdfFromFactura(String folio) {
-		FacturaDto facturaDto=facturaService.getFacturaByFolio(folio);
-		FacturaFileDto qr=getFileByFolioAndType(folio,TipoArchivoEnum.QR.name());
-		ResourceFileDto logotipo=getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO");
-		return new FacturaPdfModelDto(qr.getData(),logotipo.getData(),facturaDto);
+		FacturaDto facturaDto = facturaService.getFacturaByFolio(folio);
+		String qrData;
+		String logotipoData;
+		try {
+			FacturaFileDto qr = getFileByFolioAndType(folio, TipoArchivoEnum.QR.name());
+			qrData = qr.getData();
+		} catch (ResponseStatusException ex) {
+			qrData = null;
+		}
+		try {
+			ResourceFileDto logotipo = getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO");
+			logotipoData = logotipo.getData();
+		} catch (ResponseStatusException ex) {
+			logotipoData = null;
+		}
+		return new FacturaPdfModelDto(qrData, logotipoData, facturaDto);
 	}
 
 	public byte[] generateInvoicePDF(String folio) {
 		try {
-			String xslFoTemplate = "pue.xml";
-			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslFoTemplate).getFile()));
-			//Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/pue.xml"));
-			Reader inputReader = new StringReader(getXmlContent(getPdfFromFactura(folio)));
+			FacturaPdfModelDto model = getPdfFromFactura(folio);
+
+			String xslfoTemplate = getXSLFOTemplate(model);
+			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
+			Reader inputReader = new StringReader(getXmlContent(model));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 			pdfGenerator.render(inputReader, outputStream, templateReader);
 			return outputStream.toByteArray();
 		} catch (FileNotFoundException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
+		}
+	}
+
+	private String getXSLFOTemplate(FacturaPdfModelDto model) {
+		if(model.getFactura().getCfdi().getComplemento().getTimbreFiscal() == null) {
+			return "pue_sin_timbrado.xml";
+		} else {
+			return "pue.xml";
 		}
 	}
 
