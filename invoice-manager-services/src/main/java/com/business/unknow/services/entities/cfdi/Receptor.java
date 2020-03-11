@@ -20,8 +20,8 @@ public class Receptor implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_CFDI_RECEPTOR")
-	private String id;
-	
+	private int id;
+
 	@Column(name = "RFC")
 	private String rfc;
 
@@ -65,6 +65,14 @@ public class Receptor implements Serializable {
 
 	public void setCfdi(Cfdi cfdi) {
 		this.cfdi = cfdi;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
