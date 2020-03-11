@@ -4,6 +4,7 @@
 package com.business.unknow.services.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -190,11 +191,15 @@ public class CfdiService {
 		for (ImpuestoDto impuesto : newConcept.getImpuestos()) {
 			Impuesto imp = mapper.getEntityFromImpuestoDto(impuesto);
 			imp.setConcepto(conceptoEntity);
+			imp.setBase(imp.getBase().setScale(6, RoundingMode.DOWN));
+			imp.setImporte(imp.getImporte().setScale(6, RoundingMode.DOWN));
 			impuestoRepository.save(imp);
 		}
 		for(RetencionDto retencion:newConcept.getRetenciones()) {
 			Retencion ret = mapper.getEntityFromRetencionDto(retencion);
 			ret.setConcepto(conceptoEntity);
+			ret.setBase(ret.getBase().setScale(6, RoundingMode.DOWN));
+			ret.setImporte(ret.getImporte().setScale(6, RoundingMode.DOWN));
 			retencionRepository.save(ret);
 		}
 		return cfdi;

@@ -35,7 +35,7 @@ public class Concepto implements Serializable {
 	private String noIdentificacion;
 
 	@Column(name = "CANTIDAD")
-	private Double cantidad;
+	private BigDecimal cantidad;
 
 	@Column(name = "CLAVE_UNIDAD")
 	private String claveUnidad;
@@ -81,11 +81,11 @@ public class Concepto implements Serializable {
 		this.noIdentificacion = noIdentificacion;
 	}
 
-	public Double getCantidad() {
+	public BigDecimal getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Double cantidad) {
+	public void setCantidad(BigDecimal cantidad) {
 		this.cantidad = cantidad;
 	}
 
