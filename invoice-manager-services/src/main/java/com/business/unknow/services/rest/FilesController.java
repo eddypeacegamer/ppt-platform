@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
+import com.business.unknow.model.error.InvoiceCommonException;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
 
 import io.swagger.annotations.Api;
@@ -38,13 +40,14 @@ public class FilesController {
 
 	@GetMapping("/facturas/{folio}/files/{fileType}")
 	public ResponseEntity<FacturaFileDto> getFacturaFiles(@PathVariable(name = "folio") String folio,
-			@PathVariable(name = "fileType") String fileType) {
+			@PathVariable(name = "fileType") String fileType) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getFileByFolioAndType(folio, fileType), HttpStatus.OK);
 	}
 
 	@GetMapping("/recursos/{recurso}/files/{fileType}/referencias/{referencia}")
 	public ResponseEntity<ResourceFileDto> getResourceFiles(@PathVariable(name = "recurso") String recurso,
-			@PathVariable(name = "fileType") String fileType, @PathVariable(name = "referencia") String referencia) {
+			@PathVariable(name = "fileType") String fileType, @PathVariable(name = "referencia") String referencia)
+			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.getFileByResourceReferenceAndType(recurso, referencia, fileType),
 				HttpStatus.OK);
 	}
@@ -77,7 +80,8 @@ public class FilesController {
 
 	// PDF
 	@GetMapping("/facturas/{folio}/pdf")
-	public ResponseEntity<FacturaPdfModelDto> getPdfFromFactura(@PathVariable String folio) {
+	public ResponseEntity<FacturaPdfModelDto> getPdfFromFactura(@PathVariable String folio)
+			throws InvoiceCommonException {
 		return new ResponseEntity<>(service.getPdfFromFactura(folio), HttpStatus.OK);
 	}
 

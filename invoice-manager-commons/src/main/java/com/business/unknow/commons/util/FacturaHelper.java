@@ -9,6 +9,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 
 public class FacturaHelper {
@@ -22,6 +23,21 @@ public class FacturaHelper {
 			jaxbMarshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd");
 			StringWriter sw = new StringWriter();
 			jaxbMarshaller.marshal(cfdi, sw);
+			return sw.toString();
+		} catch (JAXBException e) {
+			throw new InvoiceCommonException(e.getMessage());
+		}
+	}
+	
+	public String facturaPdfToXml(FacturaPdfModelDto modelDto) throws InvoiceCommonException {
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(FacturaPdfModelDto.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new MyNamespaceMapper());
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			jaxbMarshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd");
+			StringWriter sw = new StringWriter();
+			jaxbMarshaller.marshal(modelDto, sw);
 			return sw.toString();
 		} catch (JAXBException e) {
 			throw new InvoiceCommonException(e.getMessage());
