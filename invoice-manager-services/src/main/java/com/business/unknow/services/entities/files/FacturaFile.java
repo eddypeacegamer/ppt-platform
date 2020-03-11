@@ -42,7 +42,7 @@ public class FacturaFile implements Serializable {
 	@Column(name = "FOLIO", unique = false, nullable = false)
 	private String folio;
 	
-	@Column(name = "DATA", unique = false, nullable = false)
+	@Column(name = "DATA", unique = false, nullable = false,columnDefinition="longblob")
 	private byte[] data;
 	
 	@Temporal(TemporalType.TIMESTAMP)

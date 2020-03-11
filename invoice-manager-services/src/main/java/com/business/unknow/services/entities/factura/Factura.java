@@ -92,7 +92,7 @@ public class Factura implements Serializable {
 	private Date fechaCancelacion;
 
 	@Column(name = "STATUS_CANCELADO")
-	private Date statusCancelado;
+	private int statusCancelado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -286,11 +286,11 @@ public class Factura implements Serializable {
 		this.metodoPago = metodoPago;
 	}
 
-	public Date getStatusCancelado() {
+	public int getStatusCancelado() {
 		return statusCancelado;
 	}
 
-	public void setStatusCancelado(Date statusCancelado) {
+	public void setStatusCancelado(int statusCancelado) {
 		this.statusCancelado = statusCancelado;
 	}
 
