@@ -9,11 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
 import com.business.unknow.services.util.pdf.PDFGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,12 +41,6 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 
 /**
  * @author ralfdemoledor
@@ -77,6 +72,9 @@ public class FilesService {
 
 	@Autowired
 	private CatalogCacheService catalogCacheService;
+
+	@Autowired
+	private CfdiXmlMapper cfdiXmlMapper;
 
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) throws InvoiceManagerException {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
@@ -157,7 +155,32 @@ public class FilesService {
 			}
 			return fBuilder.build();
 		} catch (InvoiceManagerException e) {
-			return null;
+			try {
+				Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(facturaDto.getCfdi());
+				cfdi.setConceptos(facturaDto.getCfdi().getConceptos().stream()
+						.map(cfdiXmlMapper::getEntityFromConceptoDto)
+						.collect(Collectors.toList()));
+				fBuilder.setFactura(cfdi)
+						.setMetodoPagoDesc(
+								MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
+
+						.setLogotipo(
+								getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO").getData())
+						.setTipoDeComprobanteDesc(TipoComprobanteEnum
+								.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
+				FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
+				RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
+						.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
+				UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
+						.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+				fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+				fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
+				fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
+				return fBuilder.build();
+			} catch (InvoiceManagerException e2) {
+				//TODO: Run !
+				return null;
+			}
 		}
 
 	}
@@ -169,6 +192,7 @@ public class FilesService {
 
 			String xslfoTemplate = getXSLFOTemplate(model);
 			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			//Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -179,6 +203,10 @@ public class FilesService {
 	}
 
 	private String getXSLFOTemplate(FacturaPdfModelDto model) {
-		return "factura-timbrada.xml";
+		if(model.getCadenaOriginal() != null) {
+			return "factura-timbrada.xml";
+		} else {
+			return "factura-sin-timbrar.xml";
+		}
 	}
 }

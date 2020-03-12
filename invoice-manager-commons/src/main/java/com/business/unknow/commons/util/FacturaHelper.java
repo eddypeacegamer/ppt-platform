@@ -9,7 +9,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 
 public class FacturaHelper {
@@ -56,6 +58,4 @@ public class FacturaHelper {
 			throw new InvoiceCommonException(e.getMessage());
 		}
 	}
-
-	
 }
