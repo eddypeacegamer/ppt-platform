@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
@@ -75,6 +76,9 @@ public class FilesService {
 
 	@Autowired
 	private CfdiXmlMapper cfdiXmlMapper;
+
+	@Autowired
+	private NumberTranslatorHelper numberTranslatorHelper;
 
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) throws InvoiceManagerException {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
@@ -136,7 +140,9 @@ public class FilesService {
 				.setQr(getQRData(folio))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
-				.setTipoDeComprobanteDesc(TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
+				.setTipoDeComprobanteDesc(TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
+				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
+				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
 
 		FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()

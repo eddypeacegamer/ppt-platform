@@ -13,6 +13,7 @@ import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.commons.util.NumberHelper;
+import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.DevolucionSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
@@ -64,7 +65,7 @@ public class ServicesApplication {
 	public PagoPpdSuite getPagoPpdSuite() {
 		return new PagoPpdSuite();
 	}
-	
+
 	@Bean
 	public DevolucionSuite getDevolucionSuite() {
 		return new DevolucionSuite();
@@ -109,12 +110,12 @@ public class ServicesApplication {
 	public StringHelper getStringHelper() {
 		return new StringHelper();
 	}
-	
+
 	@Bean
 	public SignHelper getSignHelper() {
 		return new SignHelper();
 	}
-	
+
 	@Bean
 	public FacturaDefaultValues getFacturaDefaultValues() {
 		return new FacturaDefaultValues();
@@ -123,6 +124,11 @@ public class ServicesApplication {
 	@Bean
 	public MailHelper getMailHelper() {
 		return new MailHelper();
-
 	}
+
+	@Bean
+	public NumberTranslatorHelper getNumberTranslatorHelper() {
+		return new NumberTranslatorHelper();
+	}
+
 }

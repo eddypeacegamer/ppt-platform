@@ -53,5 +53,15 @@ public class FacturaPdfModelDtoBuilder extends AbstractBuilder<FacturaPdfModelDt
 		instance.setRegimenFiscalDesc(regimenFiscalDesc);
 		return this;
 	}
+	
+	public FacturaPdfModelDtoBuilder setTotalDesc(String totalDesc) {
+		instance.setTotalDesc(totalDesc);
+		return this;
+	}
+	
+	public FacturaPdfModelDtoBuilder setSubTotalDesc(String subTotalDesc) {
+		instance.setSubTotalDesc(subTotalDesc);
+		return this;
+	}
 
 }
