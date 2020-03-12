@@ -1,5 +1,7 @@
 package com.business.unknow.model.dto;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,10 +11,23 @@ import com.business.unknow.model.cfdi.Cfdi;
 
 @XmlRootElement(name = "FacturaPdfModel")
 @XmlAccessorType(XmlAccessType.NONE)
-public class FacturaPdfModelDto {
+public class FacturaPdfModelDto implements Serializable {
 
+	private static final long serialVersionUID = -5413904708136266306L;
 	@XmlElement(name = "Qr")
 	private String qr;
+	@XmlElement(name = "CadenaOriginal")
+	private String cadenaOriginal;
+	@XmlElement(name = "UsoCfdiDesc")
+	private String usoCfdiDesc;
+	@XmlElement(name = "RegimenFiscalDesc")
+	private String regimenFiscalDesc;
+	@XmlElement(name = "FormaPagoDesc")
+	private String formaPagoDesc;
+	@XmlElement(name = "MetodoPagoDesc")
+	private String metodoPagoDesc;
+	@XmlElement(name = "TipoDeComprobanteDesc")
+	private String tipoDeComprobanteDesc;
 	@XmlElement(name = "Logotipo")
 	private String logotipo;
 	@XmlElement(name = "factura")
@@ -53,9 +68,60 @@ public class FacturaPdfModelDto {
 		this.factura = factura;
 	}
 
+	public String getCadenaOriginal() {
+		return cadenaOriginal;
+	}
+
+	public void setCadenaOriginal(String cadenaOriginal) {
+		this.cadenaOriginal = cadenaOriginal;
+	}
+
+	public String getTipoDeComprobanteDesc() {
+		return tipoDeComprobanteDesc;
+	}
+
+	public void setTipoDeComprobanteDesc(String tipoDeComprobanteDesc) {
+		this.tipoDeComprobanteDesc = tipoDeComprobanteDesc;
+	}
+
+	public String getUsoCfdiDesc() {
+		return usoCfdiDesc;
+	}
+
+	public void setUsoCfdiDesc(String usoCfdiDesc) {
+		this.usoCfdiDesc = usoCfdiDesc;
+	}
+
+	public String getRegimenFiscalDesc() {
+		return regimenFiscalDesc;
+	}
+
+	public void setRegimenFiscalDesc(String regimenFiscalDesc) {
+		this.regimenFiscalDesc = regimenFiscalDesc;
+	}
+
+	public String getFormaPagoDesc() {
+		return formaPagoDesc;
+	}
+
+	public void setFormaPagoDesc(String formaPagoDesc) {
+		this.formaPagoDesc = formaPagoDesc;
+	}
+
+	public String getMetodoPagoDesc() {
+		return metodoPagoDesc;
+	}
+
+	public void setMetodoPagoDesc(String metodoPagoDesc) {
+		this.metodoPagoDesc = metodoPagoDesc;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaPdfModel [qr=" + qr + ", logotipo=" + logotipo + ", factura=" + factura + "]";
+		return "FacturaPdfModelDto [qr=" + qr + ", cadenaOriginal=" + cadenaOriginal + ", usoCfdiDesc=" + usoCfdiDesc
+				+ ", regimenFiscalDesc=" + regimenFiscalDesc + ", formaPagoDesc=" + formaPagoDesc + ", metodoPagoDesc="
+				+ metodoPagoDesc + ", tipoDeComprobanteDesc=" + tipoDeComprobanteDesc + ", logotipo=" + logotipo
+				+ ", factura=" + factura + "]";
 	}
 
 }
