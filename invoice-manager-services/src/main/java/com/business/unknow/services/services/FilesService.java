@@ -160,6 +160,8 @@ public class FilesService {
 				cfdi.setConceptos(facturaDto.getCfdi().getConceptos().stream()
 						.map(cfdiXmlMapper::getEntityFromConceptoDto)
 						.collect(Collectors.toList()));
+				cfdi.setFecha(facturaDto.getFechaCreacion().toString());
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
 				fBuilder.setFactura(cfdi)
 						.setMetodoPagoDesc(
 								MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
