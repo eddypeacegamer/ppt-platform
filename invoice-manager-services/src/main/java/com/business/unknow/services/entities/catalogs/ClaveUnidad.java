@@ -1,5 +1,7 @@
 package com.business.unknow.services.entities.catalogs;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,8 +9,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CLAVE_UNIDAD")
-public class ClaveUnidad {
+public class ClaveUnidad implements Serializable {
 	
+	private static final long serialVersionUID = 1578386921742161974L;
 	@Id
 	@Column(name = "CLAVE")
 	private String clave;

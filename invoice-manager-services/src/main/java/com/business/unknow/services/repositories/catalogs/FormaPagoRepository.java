@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.business.unknow.services.entities.catalogs.RegimenFiscal;
-
+import com.business.unknow.services.entities.catalogs.FormaPago;
 @Repository
-public interface RegimanFiscalRepository extends JpaRepository<RegimenFiscal, Integer> {
+public interface FormaPagoRepository  extends JpaRepository<FormaPago, String> {
 
-	public List<RegimenFiscal> findAll();
+	public List<FormaPago> findAll();
+
 }

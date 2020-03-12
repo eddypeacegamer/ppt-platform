@@ -1,3 +1,4 @@
+
 package com.business.unknow.services.entities.factura;
 
 import java.io.Serializable;
@@ -92,7 +93,7 @@ public class Factura implements Serializable {
 	private Date fechaCancelacion;
 
 	@Column(name = "STATUS_CANCELADO")
-	private int statusCancelado;
+	private Integer statusCancelado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -286,11 +287,11 @@ public class Factura implements Serializable {
 		this.metodoPago = metodoPago;
 	}
 
-	public int getStatusCancelado() {
+	public Integer getStatusCancelado() {
 		return statusCancelado;
 	}
 
-	public void setStatusCancelado(int statusCancelado) {
+	public void setStatusCancelado(Integer statusCancelado) {
 		this.statusCancelado = statusCancelado;
 	}
 
