@@ -205,8 +205,7 @@ public class FilesService {
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
-			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
-			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
+			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -218,7 +217,7 @@ public class FilesService {
 
 	private String getXSLFOTemplate(FacturaPdfModelDto model) {
 		if(model.getCadenaOriginal() != null) {
-			return "factura-timbrada.xml";
+			return model.getFolioPadre() == null ? "factura-timbrada.xml" : "complemento-timbrado.xml";
 		} else {
 			return model.getFolioPadre() == null ? "factura-sin-timbrar.xml" : "complemento-sin-timbrar.xml";
 		}
