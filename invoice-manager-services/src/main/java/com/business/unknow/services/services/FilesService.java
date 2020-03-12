@@ -140,11 +140,12 @@ public class FilesService {
 	public byte[] generateInvoicePDF(String folio) {
 		try {
 			FacturaPdfModelDto model = getPdfFromFactura(folio);
+			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
 			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
 			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
-			Reader inputReader = new StringReader(getXmlContent(model));
+			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
 			return outputStream.toByteArray();
@@ -160,34 +161,5 @@ public class FilesService {
 			return "pue.xml";
 		}*/
 		return "pue.xml";
-	}
-
-	private String getXmlContent(FacturaPdfModelDto model) {
-		Function<FacturaPdfModelDto, String> mapper = new Function<FacturaPdfModelDto, String>() {
-			@Override
-			public String apply(FacturaPdfModelDto facturaPdfModelDto) {
-
-				try {
-					StringWriter stringWriter = new StringWriter();
-
-					JAXBContext jaxbContext = JAXBContext.newInstance(FacturaPdfModelDto.class);
-
-					Marshaller marshaller = jaxbContext.createMarshaller();
-					marshaller.marshal(new JAXBElement<FacturaPdfModelDto>(new QName("", "FacturaPdfModelDto"),
-									FacturaPdfModelDto.class,
-									null,
-									facturaPdfModelDto),
-							stringWriter);
-
-					System.out.println(stringWriter.toString());
-					return stringWriter.toString();
-				} catch (JAXBException e) {
-					//TODO: Handle Error
-				}
-				return null;
-			}
-		};
-
-		return mapper.apply(model);
 	}
 }
