@@ -131,60 +131,57 @@ public class FilesService {
 	public FacturaPdfModelDto getPdfFromFactura(String folio) throws InvoiceCommonException {
 		FacturaDto facturaDto = facturaService.getFacturaByFolio(folio);
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
-		try {
-			FacturaFileDto xml = getFileByFolioAndType(folio, TipoArchivoEnum.XML.name());
-			fBuilder.setQr(getFileByFolioAndType(folio, TipoArchivoEnum.QR.name()).getData())
-					.setFactura(facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData())))
-					.setMetodoPagoDesc(
-							MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 
-					.setLogotipo(
-							getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO").getData())
-					.setTipoDeComprobanteDesc(TipoComprobanteEnum
-							.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
-			FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
-			RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
-					.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
-			UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
-					.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
-			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
-			fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
-			fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
-			if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
-				fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
-			}
-			return fBuilder.build();
-		} catch (InvoiceManagerException e) {
-			try {
-				Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(facturaDto.getCfdi());
-				cfdi.setConceptos(facturaDto.getCfdi().getConceptos().stream()
-						.map(cfdiXmlMapper::getEntityFromConceptoDto)
-						.collect(Collectors.toList()));
-				cfdi.setFecha(facturaDto.getFechaCreacion().toString());
-				cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
-				fBuilder.setFactura(cfdi)
-						.setMetodoPagoDesc(
-								MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
+		fBuilder.setFactura(getCfdiModelFromFacturaDto(facturaDto))
+				.setQr(getQRData(folio))
+				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
+				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
+				.setTipoDeComprobanteDesc(TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
 
-						.setLogotipo(
-								getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO").getData())
-						.setTipoDeComprobanteDesc(TipoComprobanteEnum
-								.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
-				FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
-				RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
-						.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
-				UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
-						.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
-				fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
-				fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
-				fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
-				return fBuilder.build();
-			} catch (InvoiceManagerException e2) {
-				//TODO: Run !
-				return null;
-			}
+		FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
+		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
+				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
+		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
+				.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+		fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
+		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
+
+		if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
+			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
 		}
+		return fBuilder.build();
+	}
 
+	private Cfdi getCfdiModelFromFacturaDto(FacturaDto dto) {
+		try {
+			FacturaFileDto xml = getFileByFolioAndType(dto.getFolio(), TipoArchivoEnum.XML.name());
+			return facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
+		} catch (InvoiceManagerException | InvoiceCommonException e) {
+			Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(dto.getCfdi());
+			cfdi.setConceptos(dto.getCfdi().getConceptos().stream()
+					.map(cfdiXmlMapper::getEntityFromConceptoDto)
+					.collect(Collectors.toList()));
+			cfdi.setFecha(dto.getFechaCreacion().toString());
+			cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
+			return cfdi;
+		}
+	}
+
+	private String getQRData(String folio) {
+		try {
+			return getFileByFolioAndType(folio, TipoArchivoEnum.QR.name()).getData();
+		} catch (InvoiceManagerException e) {
+			return null;
+		}
+	}
+
+	private String getLogoData(String rfcEmisor){
+		try {
+			return getFileByResourceReferenceAndType("Empresa", rfcEmisor, "LOGO").getData();
+		} catch (InvoiceManagerException e) {
+			return null;
+		}
 	}
 
 	public byte[] generateInvoicePDF(String folio) {
