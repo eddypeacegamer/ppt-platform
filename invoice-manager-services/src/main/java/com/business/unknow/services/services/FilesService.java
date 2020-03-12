@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
 import com.business.unknow.services.util.pdf.PDFGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,7 @@ public class FilesService {
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
 
 		fBuilder.setFactura(getCfdiModelFromFacturaDto(facturaDto))
+				.setFolioPadre(facturaDto.getFolioPadre())
 				.setQr(getQRData(folio))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
@@ -155,6 +157,13 @@ public class FilesService {
 
 		if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
 			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
+		}
+
+		if(facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
+			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
+			fBuilder.setPagoComplemento(pagoComplemento)
+					.setTotalDesc(numberTranslatorHelper.getStringNumber(
+							pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
 		}
 		return fBuilder.build();
 	}
@@ -196,8 +205,8 @@ public class FilesService {
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
-			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
-			//Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
+			//Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			Reader templateReader = new FileReader(new File("/Users/vvo0002/Documents/Temp/Invoice/temporal.xml"));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -211,7 +220,7 @@ public class FilesService {
 		if(model.getCadenaOriginal() != null) {
 			return "factura-timbrada.xml";
 		} else {
-			return "factura-sin-timbrar.xml";
+			return model.getFolioPadre() == null ? "factura-sin-timbrar.xml" : "complemento-sin-timbrar.xml";
 		}
 	}
 }
