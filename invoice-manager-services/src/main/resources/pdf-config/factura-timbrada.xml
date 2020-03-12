@@ -264,7 +264,9 @@
                                 <block margin-left="3mm">Importe con letra: </block>
                             </inline-container>
                             <inline-container text-align="center" width="165mm">
-                                <block margin-left="3mm">[TRESCIENTOS CUARENTA Y CINCO MIL SEISCIENTOS SESENTA Y OCHO PESOS 40/100 M.N]</block>
+                                <block margin-left="3mm">
+                                    <xsl:value-of select="TotalDesc" />
+                                </block>
                             </inline-container>
                         </block>
 
