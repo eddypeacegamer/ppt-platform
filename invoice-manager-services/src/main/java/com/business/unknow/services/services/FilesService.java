@@ -11,16 +11,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.commons.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
-import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.catalogs.FormaPago;
+import com.business.unknow.services.entities.catalogs.RegimenFiscal;
+import com.business.unknow.services.entities.catalogs.UsoCfdi;
 import com.business.unknow.services.entities.files.FacturaFile;
 import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
@@ -51,6 +56,9 @@ public class FilesService {
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+	private CatalogCacheService catalogCacheService;
 
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) throws InvoiceManagerException {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
@@ -107,15 +115,33 @@ public class FilesService {
 
 	public FacturaPdfModelDto getPdfFromFactura(String folio) throws InvoiceCommonException {
 		FacturaDto facturaDto = facturaService.getFacturaByFolio(folio);
+		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
 		try {
-			FacturaFileDto qr = getFileByFolioAndType(folio, TipoArchivoEnum.QR.name());
 			FacturaFileDto xml = getFileByFolioAndType(folio, TipoArchivoEnum.XML.name());
-			ResourceFileDto logotipo = getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO");
-			Cfdi cfdi = facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
-			return new FacturaPdfModelDto(qr.getData(), logotipo.getData(), cfdi);
+			fBuilder.setQr(getFileByFolioAndType(folio, TipoArchivoEnum.QR.name()).getData())
+					.setFactura(facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData())))
+					.setMetodoPagoDesc(
+							MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
+
+					.setLogotipo(
+							getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO").getData())
+					.setTipoDeComprobanteDesc(TipoComprobanteEnum
+							.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion());
+			FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
+			RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
+					.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
+			UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
+					.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+			fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
+			fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
+			if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
+				fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
+			}
+			return fBuilder.build();
 		} catch (InvoiceManagerException e) {
 			// TODO: create logic for pre pdf
-			return new FacturaPdfModelDto();
+			return fBuilder.build();
 		}
 
 	}
