@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 public class NumberTranslatorHelper {
 
-	public static String cantidadConLetra(String s) {
+	private String cantidadConLetra(String s) {
 		StringBuilder result = new StringBuilder();
 		BigDecimal totalBigDecimal = new BigDecimal(s).setScale(2, BigDecimal.ROUND_DOWN);
 		long parteEntera = totalBigDecimal.toBigInteger().longValue();
@@ -44,7 +44,7 @@ public class NumberTranslatorHelper {
 	 * @return Una cadena de texto que contiene la representación con letra del
 	 *         número que se recibió como argumento.
 	 */
-	private static StringBuilder triTexto(int n) {
+	private StringBuilder triTexto(int n) {
 		StringBuilder result = new StringBuilder();
 		int centenas = n / 100;
 		int decenas = (n % 100) / 10;
@@ -179,10 +179,9 @@ public class NumberTranslatorHelper {
 		return result;
 	}
 
-	public static void main(String[] args) {
-		BigDecimal bd = new BigDecimal("14114.14");
-		System.out.println(bd);
-		BigInteger decimal = bd.remainder(BigDecimal.ONE).movePointRight(bd.scale()).abs().toBigInteger();
-		System.out.println(NumberTranslatorHelper.cantidadConLetra(bd.toString()) + " pesos "+NumberTranslatorHelper.cantidadConLetra(decimal.toString()) + " centavos");
+	public String getStringNumber(BigDecimal number) {
+		BigInteger decimal = number.remainder(BigDecimal.ONE).movePointRight(number.scale()).abs().toBigInteger();
+		return cantidadConLetra(number.toString()).concat(" Pesos ").concat(cantidadConLetra(decimal.toString()))
+				.concat(" Centavos");
 	}
 }

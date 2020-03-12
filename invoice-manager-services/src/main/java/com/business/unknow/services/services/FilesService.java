@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
+import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
@@ -59,6 +60,9 @@ public class FilesService {
 
 	@Autowired
 	private CatalogCacheService catalogCacheService;
+
+	@Autowired
+	private NumberTranslatorHelper numberTranslatorHelper;
 
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) throws InvoiceManagerException {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
@@ -122,7 +126,8 @@ public class FilesService {
 					.setFactura(facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData())))
 					.setMetodoPagoDesc(
 							MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
-
+					.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
+					.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()))
 					.setLogotipo(
 							getFileByResourceReferenceAndType("Empresa", facturaDto.getRfcEmisor(), "LOGO").getData())
 					.setTipoDeComprobanteDesc(TipoComprobanteEnum
