@@ -1,8 +1,5 @@
 package com.business.unknow.services.services.executor;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +8,6 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.client.swsapiens.model.SwSapiensVersionEnum;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
@@ -74,13 +70,15 @@ public class SwSapinsExecutorService {
 			xml.setFolio(context.getFacturaDto().getFolio());
 			xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 			xml.setData(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
-			FacturaFileDto pdf = new FacturaFileDto();
+			//TODO REMOVE THIS CODE
+			/*FacturaFileDto pdf = new FacturaFileDto();
 			pdf.setFolio(context.getFacturaDto().getFolio());
 			pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
 			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
+			files.add(pdf);
+			*/
 			files.add(qr);
 			files.add(xml);
-			files.add(pdf);
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
@@ -88,10 +86,7 @@ public class SwSapinsExecutorService {
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
-		} catch (IOException e) {
-			throw new InvoiceManagerException("Error durante la creacion de archivos", e.getMessage(),
-					HttpStatus.SC_CONFLICT);
-		}
+		} 
 		return context;
 	}
 

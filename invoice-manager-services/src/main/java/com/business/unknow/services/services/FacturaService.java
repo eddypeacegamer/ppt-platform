@@ -29,6 +29,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -88,6 +89,9 @@ public class FacturaService {
 
 	@Autowired
 	private DevolucionService devolucionService;
+	
+	@Autowired
+	private FilesService fileService;
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
@@ -158,6 +162,7 @@ public class FacturaService {
 			pagoService.insertNewPaymentWithoutValidation(
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
+		fileService.generateInvoicePDF(facturaBuilded);
 		return saveFactura;
 	}
 
@@ -227,6 +232,9 @@ public class FacturaService {
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
 		}
+		
+		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
+		facturaContext.getFacturaFilesDto().add(pdfFile);
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
@@ -236,6 +244,7 @@ public class FacturaService {
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
 		}
+		//PDF GENERATION
 		// TODO Insertar en tabla de ingresos
 		return facturaContext;
 	}

@@ -233,9 +233,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
+      this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
+      this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial;
       this.factura.rfcRemitente = this.clientInfo.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
