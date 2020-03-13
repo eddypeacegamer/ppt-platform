@@ -285,8 +285,8 @@ public class CfdiService {
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
-		cfdi.setSubtotal(subtotal);
-		cfdi.setTotal(total);
+		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_DOWN));
+		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_DOWN));
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
 	}
 
