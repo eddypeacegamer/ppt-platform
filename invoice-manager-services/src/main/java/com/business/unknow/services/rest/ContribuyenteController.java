@@ -20,19 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.services.services.ContribuyenteService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 @RestController
 @RequestMapping("/api/contribuyentes")
-@Api(value = "ContribuyenteController", produces = "application/json")
 public class ContribuyenteController {
 
 	@Autowired
 	private ContribuyenteService service;
 	
 	@GetMapping
-	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<ContribuyenteDto>> getClientsByParameters(
 			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
 			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
@@ -43,19 +38,16 @@ public class ContribuyenteController {
 	
 
 	@GetMapping("/{rfc}")
-	@ApiOperation(value = "Get all contribuyentes ")
 	public ResponseEntity<ContribuyenteDto> getClientByRfc(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getContribuyenteByRfc(rfc), HttpStatus.OK);
 	}
 
 	@PostMapping
-	@ApiOperation(value = "insert a new clien into the system")
 	public ResponseEntity<ContribuyenteDto> insertClient(@RequestBody @Valid ContribuyenteDto contribuyente) {
 		return new ResponseEntity<>(service.insertNewContribuyente(contribuyente), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{rfc}")
-	@ApiOperation(value = "insert a new clien into the system")
 	public ResponseEntity<ContribuyenteDto> updateClient(@PathVariable String rfc,
 			@RequestBody @Valid ContribuyenteDto contribuyente) {
 		return new ResponseEntity<>(service.updateContribuyenteInfo(contribuyente, rfc), HttpStatus.OK);

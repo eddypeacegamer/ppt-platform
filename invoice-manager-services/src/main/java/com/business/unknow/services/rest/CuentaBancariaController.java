@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.business.unknow.model.dto.services.CuentaBancariaDto;
 import com.business.unknow.services.services.CuentaBancariaService;
 
-import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "ClientController", produces = "application/json")
 public class CuentaBancariaController {
 
 	@Autowired

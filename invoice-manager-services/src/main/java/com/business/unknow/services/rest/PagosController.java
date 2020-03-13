@@ -20,23 +20,18 @@ import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.PagoService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 /**
  * @author ralfdemoledor
  *
  */
 @RestController
 @RequestMapping("/api/pagos")
-@Api(value = "PagosController", produces = "application/json")
 public class PagosController {
 
 	@Autowired
 	private PagoService service;
 
 	@GetMapping
-	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getAllPayments(
 			@RequestParam(name = "folio", required = false) Optional<String> folio,
 			@RequestParam(name = "acredor", required = false) Optional<String> acredor,
@@ -56,7 +51,6 @@ public class PagosController {
 	}
 
 	@GetMapping("/ingresos")
-	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getIngresos(@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "banco", defaultValue = "") String banco,
@@ -83,7 +77,6 @@ public class PagosController {
 	}
 
 	@GetMapping("/egresos")
-	@ApiOperation(value = "Get all payments.")
 	public ResponseEntity<Page<PagoDto>> getEgresos(@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "banco", defaultValue = "") String banco,
