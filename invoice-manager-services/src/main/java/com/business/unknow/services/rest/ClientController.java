@@ -23,8 +23,6 @@ import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.ClientService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author eej000f
@@ -32,14 +30,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "ClientController", produces = "application/json")
 public class ClientController {
 
 	@Autowired
 	private ClientService service;
 
 	@GetMapping("/clientes")
-	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<ClientDto>> getClientsByParameters(
 			@RequestParam(name = "promotor") Optional<String> promotor,
 			@RequestParam(name = "status", defaultValue = "") String status,
@@ -52,31 +48,26 @@ public class ClientController {
 	}
 
 	@GetMapping("/clientes/{rfc}")
-	@ApiOperation(value = "Recover single client by RFC")
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getClientByRFC(rfc), HttpStatus.OK);
 	}
 	
 	@GetMapping("/promotores/{promotor}/clientes")
-	@ApiOperation(value = "Recover promotor clients")
 	public ResponseEntity<List<ClientDto>> clinetesPorPromotor(@PathVariable String promotor) {
 		return new ResponseEntity<>(service.getClientsByPromotor(promotor), HttpStatus.OK);
 	}
 	@PostMapping("/clientes")
-	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/clientes/{rfc}")
-	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateClientInfo(client, rfc), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/clientes/{rfc}")
-	@ApiOperation(value = "insert a new client into the system")
 	public ResponseEntity<Void> deleteClient(@PathVariable String rfc) {
 		service.deleteClientInfo(rfc);
 		return new ResponseEntity<Void>(HttpStatus.OK);

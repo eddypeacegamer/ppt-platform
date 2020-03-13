@@ -23,8 +23,6 @@ import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author hha0009
@@ -32,7 +30,6 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "FilesController", produces = "application/json")
 public class FilesController {
 
 	@Autowired
@@ -53,26 +50,22 @@ public class FilesController {
 	}
 
 	@PostMapping("/facturas/{folio}/files")
-	@ApiOperation(value = "insert a new Factura FILE into the system")
 	public ResponseEntity<FacturaFileDto> insertFacturaFile(@RequestBody @Valid FacturaFileDto facturaFile) {
 		return new ResponseEntity<>(service.insertfacturaFile(facturaFile), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/recursos/{recurso}/files")
-	@ApiOperation(value = "insert a new Factura FILE into the system")
 	public ResponseEntity<ResourceFileDto> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile) {
 		return new ResponseEntity<>(service.insertResourceFile(resourceFile), HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/facturas/files/{id}")
-	@ApiOperation(value = "delete factura file from the system")
 	public ResponseEntity<Void> deleteFacturaFile(@PathVariable Integer id) {
 		service.deleteFacturaFile(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@DeleteMapping("/recursos/files/{id}")
-	@ApiOperation(value = "delete recurso file from the system")
 	public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
 		service.deleteResourceFile(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

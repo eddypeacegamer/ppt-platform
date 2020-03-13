@@ -22,8 +22,6 @@ import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.services.services.RoleService;
 import com.business.unknow.services.services.UserService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author eej000f
@@ -31,7 +29,6 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/api/users")
-@Api(value = "UserController", produces = "application/json")
 public class UserController {
 
 	@Autowired
@@ -41,7 +38,6 @@ public class UserController {
 	private RoleService rolService;
 
 	@GetMapping("/{id}")
-	@ApiOperation(value = "Get by id.")
 	public ResponseEntity<UserDto> getRolesByName(@PathVariable Integer id) {
 		return new ResponseEntity<>(service.getUserById(id), HttpStatus.OK);
 	}
@@ -58,13 +54,11 @@ public class UserController {
 	}
 
 	@GetMapping("/myInfo")
-	@ApiOperation(value = "Get current user info")
 	public ResponseEntity<UserDto> geMyUserInfo(Authentication authentication) throws IOException {
 		return new ResponseEntity<>(service.getUserInfo(authentication), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}/roles")
-	@ApiOperation(value = "Get roles by user id.")
 	public ResponseEntity<List<RoleDto>> getRolesByUserId(@PathVariable Integer id) {
 		return new ResponseEntity<>(rolService.getRolesByUserId(id), HttpStatus.OK);
 	}
