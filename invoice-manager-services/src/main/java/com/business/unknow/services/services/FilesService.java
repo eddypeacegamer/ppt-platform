@@ -29,6 +29,8 @@ import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -146,12 +148,19 @@ public class FilesService {
 				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
 				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
 
-		FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
 		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
 				.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
-		fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
+					.get(facturaDto.getCfdi().getComplemento().getPagos().get(0).getFormaPago());
+			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+		} else {
+			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
+					.get(facturaDto.getCfdi().getFormaPago());
+			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
 
