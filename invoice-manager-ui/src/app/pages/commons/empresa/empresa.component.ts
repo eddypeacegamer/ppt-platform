@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
+import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
 
 @Component({
   selector: 'ngx-empresa',
@@ -28,7 +29,8 @@ export class EmpresaComponent implements OnInit {
               private catalogsService: CatalogsData,
               private empresaService: CompaniesData,
               private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) { }
+              private sanitizer: DomSanitizer,
+              private companiesValidatorService: CompaniesValidatorService) { }
 
   ngOnInit() {
     this.companyInfo = new Empresa();
@@ -117,8 +119,9 @@ export class EmpresaComponent implements OnInit {
   }
 
   public insertNewCompany():void{
-    console.log(this.companyInfo.giro);
-   if (this.companyInfo.giro!=null && this.companyInfo.giro!='*' && this.companyInfo.giro.length>1) {
+    let validatorErrors = this.companiesValidatorService.validarEmpresa(this.companyInfo);
+
+   if (validatorErrors.length == 0) {
       this.companyInfo.giro=this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
       this.errorMessages = [];
       this.formInfo.success ='';
@@ -127,8 +130,7 @@ export class EmpresaComponent implements OnInit {
       (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
       );
     }else{
-      this.errorMessages = [];
-      this.errorMessages.push('Se debe seleccionar un giro');
+      this.errorMessages = validatorErrors;
     }
   }
 
