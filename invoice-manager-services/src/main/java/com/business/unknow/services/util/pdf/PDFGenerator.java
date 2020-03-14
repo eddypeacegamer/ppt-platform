@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -16,8 +17,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 
@@ -25,13 +28,14 @@ import java.io.Reader;
 public class PDFGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class.getSimpleName());
-    private static FopFactory FOP_FACTORY = null;
+    private FopFactory FOP_FACTORY = null;
 
-    static {
-        try {
-            FOP_FACTORY = FopFactory.newInstance(
-                    new File(ClassLoader.getSystemResource("pdf-config/fop.xconf")
-                            .getFile()));
+    
+    @PostConstruct
+    public void init() {
+    	try {
+    		InputStream confStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/fop.xconf");
+            FOP_FACTORY = FopFactory.newInstance(new File(".").toURI(), confStream);
         } catch (SAXException | IOException e) {
             LOG.error("The FOP_FACTORY cannot be initialized", e);
         }

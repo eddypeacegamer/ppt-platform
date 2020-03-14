@@ -102,6 +102,8 @@ public class UserService {
 	}
 
 	private MenuItem getMenuFromResource(String fileName) throws IOException {
+		
+		
 		InputStream is = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(String.format("menus/%s.json", fileName));
 		if (is != null) {

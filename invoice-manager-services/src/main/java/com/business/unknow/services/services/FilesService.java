@@ -4,9 +4,7 @@
 package com.business.unknow.services.services;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Base64;
@@ -274,10 +272,8 @@ public class FilesService {
 		try {
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
-
 			String xslfoTemplate = getXSLFOTemplate(model);
-			Reader templateReader = new FileReader(
-					new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));		
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -289,7 +285,7 @@ public class FilesService {
 			insertfacturaFile(factFile);
 			log.info("PDF for factura {} was generated successfully", factura.getFolio());
 			return factFile;
-		} catch (FileNotFoundException | InvoiceCommonException e) {
+		} catch (InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}
@@ -302,8 +298,7 @@ public class FilesService {
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
-			Reader templateReader = new FileReader(
-					new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));	
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -315,7 +310,7 @@ public class FilesService {
 			insertfacturaFile(factFile);
 			log.info("PDF for factura {} was generated successfully", context.getFacturaDto().getFolio());
 			return factFile;
-		} catch (FileNotFoundException | InvoiceCommonException e) {
+		} catch ( InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}
