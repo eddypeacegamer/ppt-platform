@@ -60,13 +60,16 @@ public class TimbradoExecutorService {
 		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
 				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
 		timbradoFiscalDigitial.setCfdi(cfdi);
-		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
-
+		context.getFacturaDto().getCfdi().getComplemento().setTimbreFiscal(cfdiMapper.getComplementoDtoFromEntity(timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial)));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
 			if (facturaFileDto != null) {
 				facturaFileRepository.save(filesMapper.getFacturaFileFromDto(facturaFileDto));
 			}
 		}
+
+	}
+
+	public void createFilesAndSentEmail(FacturaContext context) throws InvoiceManagerException {
 		if (context.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
 			Client client = clientRepository.findByRfc(context.getFacturaDto().getRfcRemitente())
 					.orElseThrow(() -> new InvoiceManagerException("Error sending the email",
@@ -74,12 +77,12 @@ public class TimbradoExecutorService {
 							HttpStatus.SC_CONFLICT));
 			FacturaFileDto xml = context.getFacturaFilesDto().stream()
 					.filter(a -> a.getTipoArchivo().equals(TipoArchivoEnum.XML.name())).findFirst()
-					.orElseThrow(() -> new InvoiceManagerException("Error getting xml",
-							"No se guardo el xml correctamente", HttpStatus.SC_CONFLICT));
+					.orElseThrow(() -> new InvoiceManagerException("Error getting XML",
+							"No se guardo el XML correctamente", HttpStatus.SC_CONFLICT));
 			FacturaFileDto pdf = context.getFacturaFilesDto().stream()
 					.filter(a -> a.getTipoArchivo().equals(TipoArchivoEnum.PDF.name())).findFirst()
-					.orElseThrow(() -> new InvoiceManagerException("Error getting xml",
-							"No se guardo el xml correctamente", HttpStatus.SC_CONFLICT));
+					.orElseThrow(() -> new InvoiceManagerException("Error getting PDF",
+							"No se guardo el PDF correctamente", HttpStatus.SC_CONFLICT));
 			EmailConfigBuilder emailBuilder = new EmailConfigBuilder().setEmisor(context.getEmpresaDto().getCorreo())
 					.setPwEmisor(context.getEmpresaDto().getPwCorreo())
 					.setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))

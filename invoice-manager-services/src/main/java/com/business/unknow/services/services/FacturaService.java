@@ -29,6 +29,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -43,6 +44,7 @@ import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
+
 
 @Service
 public class FacturaService {
@@ -88,6 +90,9 @@ public class FacturaService {
 
 	@Autowired
 	private DevolucionService devolucionService;
+	
+	@Autowired
+	private FilesService fileService;
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
@@ -158,6 +163,7 @@ public class FacturaService {
 			pagoService.insertNewPaymentWithoutValidation(
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
+		fileService.generateInvoicePDF(facturaBuilded,facturaContext.getCfdi());
 		return saveFactura;
 	}
 
@@ -228,6 +234,9 @@ public class FacturaService {
 					HttpStatus.BAD_REQUEST.value());
 		}
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
+		facturaContext.getFacturaFilesDto().add(pdfFile);
+		timbradoExecutorService.createFilesAndSentEmail(facturaContext);
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
@@ -236,6 +245,7 @@ public class FacturaService {
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
 		}
+		//PDF GENERATION
 		// TODO Insertar en tabla de ingresos
 		return facturaContext;
 	}

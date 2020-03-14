@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
-import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
 
@@ -71,11 +69,5 @@ public class FilesController {
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
-	// PDF
-	@GetMapping("/facturas/{folio}/pdf")
-	public ResponseEntity<FacturaPdfModelDto> getPdfFromFactura(@PathVariable String folio)
-			throws InvoiceCommonException {
-		return new ResponseEntity<>(service.getPdfFromFactura(folio), HttpStatus.OK);
-	}
 
 }
