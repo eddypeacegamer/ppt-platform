@@ -156,4 +156,12 @@ export class ConceptosComponent implements OnInit {
     }
   }
 
+  public getIporteRetenciones(impuestos: Impuesto[]): number {
+    if (impuestos.length > 0) {
+      return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+    } else {
+      return 0;
+    }
+  }
+
 }

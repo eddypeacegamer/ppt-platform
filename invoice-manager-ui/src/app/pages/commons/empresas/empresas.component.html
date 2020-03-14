@@ -48,8 +48,8 @@
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="table-responsive" *ngIf="page.empty == false">
-          <div class="clearfix">
+        
+          <div class="clearfix" *ngIf="page.empty == false">
             <strong>Resultados</strong>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
@@ -61,7 +61,7 @@
             </nb-select>
           </div>
 
-
+        <div class="table-responsive" *ngIf="page.empty == false">
           <table class="table">
             <thead class="thead-light">
               <tr>

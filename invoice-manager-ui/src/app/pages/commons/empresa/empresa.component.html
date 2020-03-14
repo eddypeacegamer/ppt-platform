@@ -12,7 +12,7 @@
                 placeholder="RFC Empresa" [disabled]="companyInfo.id!=undefined" >
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-5">
             <div class="form-group">
               <label for="inputSocialReason" class="label">Razón Social</label>
               <input type="text" [(ngModel)]="companyInfo.informacionFiscal.razonSocial" class="form-control" fullWidth [disabled]="companyInfo.activo"
@@ -32,6 +32,9 @@
                 <option value="620">Sociedades Cooperativas de Producción que optan por diferir sus ingresos</option>
                 <option value="621">Incorporación Fiscal</option>
               </select>
+          </div>
+          <div class="col-md-1">
+            <button type="button" class="btn btn-outline-danger" *ngIf="companyInfo.activo" (click)="inactivateCompany()">Desactivar</button>
           </div>
         </div>
         <div class="row">
@@ -226,6 +229,7 @@
             </div>
           </div>
         </div>
+        <small *ngIf="companyInfo.activo !== true" id="emailHelp" class="form-text text-muted">La activacion del cliente se realizara manualmente notificando al departamento de soporte.</small>
         <div class="form-inline">
           <button type="button" *ngIf="companyInfo.id == undefined"
             (click)="insertNewCompany()" nbButton status="primary">GUARDAR</button>

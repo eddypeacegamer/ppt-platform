@@ -47,7 +47,7 @@ public class CfdiPago implements Serializable {
 	private String metodoPago;
 	@Column(name = "MONEDA_DR")
 	private String monedaDr;
-	@Column(name = "NUM_PARCIALIDAD")
+	@Column(name = "NUM_PARCIALIDAD",columnDefinition = "TINYINT")
 	private int numeroParcialidad;
 	@Column(name = "SERIE")
 	private String serie;

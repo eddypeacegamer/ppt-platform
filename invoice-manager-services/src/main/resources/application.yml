@@ -1,13 +1,17 @@
 spring:
   profiles:
-    active: "local"
+    active: "dev"
   main:
-    banner-mode: "off"  
-server:
-     port: 8080          
+    banner-mode: "off"
+  resources:
+    static-locations: 
+    - classpath:/static/
+    - classpath:/samples/  
+          
    
 ---
- 
+server:
+     port: 9999 
 spring:
   profiles: local      
   h2:
@@ -24,10 +28,6 @@ spring:
     open-in-view:  true
     hibernate:
       ddl-auto: none
-  resources:
-    static-locations: 
-    - classpath:/static/
-    - classpath:/samples/
   security:
     oauth2:
       client:
@@ -37,7 +37,8 @@ spring:
             client-secret: NzIQxH-VGVxWqZz9flDEMROg         
 
 ---
-
+server:
+     port: 8080
 spring:
   profiles: dev         
   http:
@@ -57,10 +58,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
     show-sql: true
-      
-  resources:
-    static-locations: 
-    - classpath:/static/
   security:
     oauth2:
       client:
@@ -70,7 +67,8 @@ spring:
             client-secret: NzIQxH-VGVxWqZz9flDEMROg
 
 ---
-
+server:
+     port: 8080
 spring:
   profiles: stg         
   
@@ -86,10 +84,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
     hibernate.ddl-auto: none
     show-sql: false
-      
-  resources:
-    static-locations: 
-    - classpath:/static/
   security:
     oauth2:
       client:
@@ -97,3 +91,4 @@ spring:
           google:
             client-id: 821564819362-nag0ge4u3skdp8v3ffb4752vul5oof7o.apps.googleusercontent.com
             client-secret: NzIQxH-VGVxWqZz9flDEMROg
+            

@@ -15,11 +15,10 @@ import { Client } from '../../../models/client';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
-import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
-import { PaymentsData } from '../../../@core/data/payments-data';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
@@ -67,7 +66,7 @@ export class RevisionComponent implements OnInit {
     private invoiceService: InvoicesData,
     private filesService: FilesData,
     private userService: UsersData,
-    private downloadService: DownloadInvoiceFilesService,
+    private downloadService: DonwloadFileService,
     private route: ActivatedRoute) { }
 
     ngOnInit() {
@@ -283,8 +282,6 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    console.log(this.payTypeCat)
-
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;

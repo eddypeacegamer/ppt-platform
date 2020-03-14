@@ -3,92 +3,117 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro de transferencias</nb-card-header>
       <nb-card-body>
-          
-          <div class="row">
-              <div class="col-sm-2">
-                  <label for="inputRetiro" class="label">Linea retiro</label>
-                  <select id="inputRetiro" style="display:block;" class="form-control"
-                    [(ngModel)]="params.lineaRetiro">
-                    <option value="A">Linea A</option>
-                    <option value="B">Linea B</option>
-                    <option value="C">Linea C</option>
-                    <option value="D">Linea D</option>
-                  </select>
-              </div>
-              <div class="col-sm-2">
-                  <label for="inputDeposito" class="label">Linea deposito</label>
-                  <select id="inputDeposito" style="display:block;" class="form-control"
-                    [(ngModel)]="params.lineaDeposito">
-                    <option value="A">Linea A</option>
-                    <option value="B">Linea B</option>
-                    <option value="C">Linea C</option>
-                    <option value="D">Linea D</option>
-                  </select>
-              </div>
-              <div class="col-sm-8">
-                  <label for="payFile" class="label">Carga de transferencias</label>
-                  <div class="input-group">
-                  <div class="custom-file" id="uploadFile">
-                      <input #fileInput type="file" class="custom-file-input" id="uploadFile01" accept=".xls,.xlsx"
-                        (change)="onFileChange($event.target.files)" style="display:block;"
-                        aria-describedby="uploadFile">
-                      <label class="custom-file-label" for="uploadFile01">{{params.filename}}</label>
-                  </div>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button class="btn btn-primary" (click)="clean()">Limpiar</button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button class="btn btn-success" (click)="validarInformacion()">Validar</button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button class="btn btn-success" (click)="cargarTransferencias()"  [disabled]="!params.dataValid">Cargar</button>
-                  </div>
-              </div>
+
+        <div class="row">
+          <div class="col-sm-2">
+            <label for="inputDeposito" class="label">Linea Emisor</label>
+            <select id="inputDeposito" style="display:block;" class="form-control" [(ngModel)]="params.lineaDeposito">
+              <option value="A">Linea A</option>
+              <option value="B">Linea B</option>
+              <option value="C">Linea C</option>
+              <option value="D">Linea D</option>
+            </select>
           </div>
-          <br>
-          <br>
-          <div class="row d-flex justify-content-center">
-              <div class="alert alert-success" *ngIf="params.successMessage != undefined" role="alert">
-                {{params.successMessage}}
+          <div class="col-sm-2">
+            <label for="inputRetiro" class="label">Linea Receptor</label>
+            <select id="inputRetiro" style="display:block;" class="form-control" [(ngModel)]="params.lineaRetiro">
+              <option value="A">Linea A</option>
+              <option value="B">Linea B</option>
+              <option value="C">Linea C</option>
+              <option value="D">Linea D</option>
+            </select>
+          </div>
+
+          <div class="col-sm-8">
+            <label for="payFile" class="label">Carga de transferencias</label>
+            <div class="input-group">
+              <div class="custom-file" id="uploadFile">
+                <input #fileInput type="file" class="custom-file-input" id="uploadFile01" accept=".xls,.xlsx"
+                  (change)="onFileChange($event.target.files)" style="display:block;" aria-describedby="uploadFile">
+                <label class="custom-file-label" for="uploadFile01">{{params.filename}}</label>
               </div>
-          </div>
-          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-              <p *ngFor="let message of errorMessages">{{message}}</p>
-          </div>
-          <br>
-          <br>
-          <div class="table-responsive" *ngIf="transfers.length > 0">
-              <table class="table table-striped">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col" class="text-center">Banco retiro</th>
-                    <th scope="col" class="text-center">RFC retiro</th>
-                    <th scope="col" class="text-center">Cuenta retiro</th>
-                    <th scope="col" class="text-center">Banco deposito</th>
-                    <th scope="col" class="text-center">RFC deposito</th>
-                    <th scope="col" class="text-center">Cuenta deposito</th>
-                    <th scope="col" class="text-center">Importe</th>
-                    <th scope="col" class="text-center">Observaciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let fila of transfers">
-                    <td scope="row" class="text-center">{{fila.BANCO_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.RFC_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.CUENTA_RETIRO}}</td>
-                    <td scope="row" class="text-center">{{fila.BANCO_DEPOSITO}}</td>
-                    <td scope="row" class="text-center">{{fila.RFC_DEPOSITO}}</td>
-                    <td scope="row" class="text-center">{{fila.CUENTA_DEPOSITO}}</td>
-                    <td scope="row" class="text-right">{{fila.MONTO | currency}}</td>
-                    <td scope="row" class="text-center">{{fila.observaciones }}</td>
-                  </tr>
-                  <tr class="table-active">
-                      <td colspan="5"></td>
-                      <td class="text-right"><p class="font-weight-bold">TOTAL</p></td>
-                      <td class="text-right"><p class="font-weight-bold">{{calcularTotal() | currency}}</p></td>
-                      <td ></td>
-                  </tr>
-                </tbody>
-              </table>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class="btn btn-primary" (click)="clean()">Limpiar</button>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class="btn btn-success" (click)="validarInformacion()">Validar</button>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class="btn btn-success" (click)="cargarTransferencias()"
+                [disabled]="!params.dataValid">Cargar</button>
             </div>
+          </div>
+        </div>
+        <small id="helpMessage" class="form-text text-muted">Para descargar el formato muestra presione el siguente
+          <a href="/FormatoMuestra.xlsx" target="_self" download>
+          link <i class="fa fa-download"></i>
+          </a>
+        </small>
+        
+        <div class="row d-flex justify-content-center">
+          <div class="alert alert-success" *ngIf="params.successMessage != undefined" role="alert">
+            {{params.successMessage}}
+          </div>
+        </div>
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
+        <br>
+        <br>
+        <div class="table-responsive" *ngIf="transfers.length > 0">
+          <table class="table table-striped table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="text-center">Observaciones</th>
+                <th scope="col" class="text-center">Emisor</th>
+                <th scope="col" class="text-center">RFC</th>
+                <th scope="col" class="text-center">Cliente</th>
+                <th scope="col" class="text-center">RFC</th>
+                <th scope="col" class="text-center">Metodo de Pago</th>
+                <th scope="col" class="text-center">Forma Pago</th>
+                <th scope="col" class="text-center">Cantidad</th>
+                <th scope="col" class="text-center">Unidad</th>
+                <th scope="col" class="text-center">Clave Unidad</th>
+                <th scope="col" class="text-center">Clave Producto Servicio</th>
+                <th scope="col" class="text-center">Concepto</th>
+                <th scope="col" class="text-center">Precio Unitario</th>
+                <th scope="col" class="text-center">Importe</th>
+                <th scope="col" class="text-center">IVA</th>
+                <th scope="col" class="text-center">Total</th>
+
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fila of transfers">
+                <td scope="row" class="text-center">{{fila.observaciones}}</td>
+                <td scope="row" class="text-center">{{fila.EMISORA}}</td>
+                <td scope="row" class="text-right">{{fila.RFC_EMISOR}}</td>
+                <td scope="row" class="text-center">{{fila.CLIENTE}}</td>
+                <td scope="row" class="text-center">{{fila.RFC_RECEPTOR}}</td>
+                <td scope="row" class="text-center">{{fila.METODO_PAGO }}</td>
+                <td scope="row" class="text-center">{{fila.FORMA_PAGO }}</td>
+                <td scope="row" class="text-center">{{fila.CANTIDAD}}</td>
+                <td scope="row" class="text-center">{{fila.UNIDAD}}</td>
+                <td scope="row" class="text-center">{{fila.CLAVE_UNIDAD}}</td>
+                <td scope="row" class="text-right">{{fila.CLAVE_PROD_SERVICIO}}</td>
+                <td scope="row" class="text-center">{{fila.CONCEPTO }}</td>
+                <td scope="row" class="text-center">{{fila.PRECIO_UNITARIO | currency}}</td>
+                <td scope="row" class="text-center">{{fila.IMPORTE | currency}}</td>
+                <td scope="row" class="text-center">{{fila.IVA | currency}}</td>
+                <td scope="row" class="text-right">{{fila.TOTAL | currency}}</td>
+              </tr>
+              <tr class="table-active">
+                <td colspan="14"></td>
+                <td class="text-right">
+                  <p class="font-weight-bold">TOTAL</p>
+                </td>
+                <td class="text-right">
+                  <p class="font-weight-bold">{{calcularTotal() | currency}}</p>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </nb-card-body>
     </nb-card>
   </div>

@@ -26,6 +26,7 @@ import com.business.unknow.commons.validator.DevolucionValidator;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.services.DevolucionDto;
 import com.business.unknow.model.dto.services.PagoDevolucionDto;
 import com.business.unknow.model.dto.services.PagoDto;
@@ -152,22 +153,26 @@ public class DevolucionService {
 						HttpStatus.BAD_REQUEST.value()));
 		FacturaContext context;
 		BigDecimal baseComisiones;
+		BigDecimal impuestos;
+		BigDecimal realSubtotal;
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
 		case FACTURA:
-			baseComisiones = facturaDto.getCfdi().getTotal().subtract(facturaDto.getCfdi().getSubtotal());
+			impuestos=calculaImpuestos(facturaDto.getCfdi());
+			realSubtotal = calculaImporteBaseFactura(facturaDto.getCfdi());
 			context = devolucionesBuilderService.buildFacturaContextForPueDevolution(facturaDto, pagoDto);
 			devolucionEvaluatorService.devolucionPueValidation(context);
 			devolucionExecutorService.executeDevolucionForPue(context, client, facturaDto.getCfdi().getTotal(),
-					baseComisiones);
+					impuestos,realSubtotal);
 			break;
 		case COMPLEMENTO:
 			context = devolucionesBuilderService.buildFacturaContextForComplementoDevolution(facturaDto, pagoDto);
-			baseComisiones = context.getFacturaPadreDto().getCfdi().getTotal()
-					.subtract(context.getFacturaPadreDto().getCfdi().getSubtotal())
-					.divide(context.getFacturaPadreDto().getCfdi().getTotal(), 2, RoundingMode.HALF_UP);
+			impuestos=calculaImpuestos(context.getFacturaPadreDto().getCfdi());
+			realSubtotal = calculaImporteBaseFactura(context.getFacturaPadreDto().getCfdi());
+			baseComisiones = impuestos
+					.divide(context.getFacturaPadreDto().getCfdi().getTotal(), 6, RoundingMode.HALF_UP);
 			devolucionEvaluatorService.devolucionPpdValidation(context);
 			devolucionExecutorService.executeDevolucionForPpd(context, client,
-					context.getFacturaPadreDto().getCfdi().getTotal(), baseComisiones);
+					context.getFacturaPadreDto().getCfdi().getTotal(), baseComisiones,realSubtotal);
 			break;
 		default:
 			throw new InvoiceManagerException("The type of document not supported",
@@ -175,7 +180,7 @@ public class DevolucionService {
 					HttpStatus.BAD_REQUEST.value());
 		}
 	}
-	
+
 	public void updateSolicitudDevoluciones(String folio) {
 		for (PagoDevolucion pagoDevolucion : pagoDevolucionRepository.findByFolioFactura(folio)) {
 			pagoDevolucion.setStatus("VALIDACION");
@@ -211,4 +216,22 @@ public class DevolucionService {
 				result.getPageable(), result.getTotalElements());
 	}
 
+	public BigDecimal calculaImporteBaseFactura(CfdiDto cfdiDto) {
+		BigDecimal subtotal = cfdiDto.getConceptos().stream().map(c -> c.getImporte()).reduce(BigDecimal.ZERO,
+				(i1, i2) -> i1.add(i2));
+		BigDecimal retenciones = cfdiDto
+				.getConceptos().stream().map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte())
+						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+		return subtotal.subtract(retenciones);
+	}
+
+	public BigDecimal calculaImpuestos(CfdiDto cfdiDto) {
+		return cfdiDto.getConceptos().stream()
+				.map(i -> i.getImpuestos().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
+						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+	}
+	
+	
 }

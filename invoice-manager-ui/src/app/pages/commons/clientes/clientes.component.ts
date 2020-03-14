@@ -38,7 +38,7 @@ export class ClientesComponent implements OnInit {
       }).then(() => this.updateDataTable(0, 10, this.filterParams));
   }
 
-  public updateDataTable(currentPage?: number, pageSize?: number,filterParams?:any) {
+  public updateDataTable(currentPage?: number, pageSize?: number, filterParams?: any) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
     this.clientService.getClients(pageValue, sizeValue, filterParams)
@@ -46,7 +46,7 @@ export class ClientesComponent implements OnInit {
   }
 
   public onChangePageSize(pageSize: number) {
-    this.updateDataTable(this.page.number, pageSize);
+    this.updateDataTable(this.page.number, pageSize, this.filterParams);
   }
 
 

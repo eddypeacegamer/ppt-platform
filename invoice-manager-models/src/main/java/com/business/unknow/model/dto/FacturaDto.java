@@ -36,6 +36,7 @@ public class FacturaDto implements Serializable {
 	private Date fechaCancelacion;
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
+	private Integer statusCancelado;
 	private Integer idCfdi;
 	private CfdiDto cfdi;
 
@@ -245,6 +246,14 @@ public class FacturaDto implements Serializable {
 
 	public void setStatusCancelacion(String statusCancelacion) {
 		this.statusCancelacion = statusCancelacion;
+	}
+
+	public Integer getStatusCancelado() {
+		return statusCancelado;
+	}
+
+	public void setStatusCancelado(Integer statusCancelado) {
+		this.statusCancelado = statusCancelado;
 	}
 
 	@Override

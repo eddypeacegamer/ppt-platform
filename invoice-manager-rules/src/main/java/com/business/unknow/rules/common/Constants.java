@@ -12,7 +12,7 @@ public class Constants {
 		
 		public static final String EMISOR_VALIDATION = "EmisorValidation";
 		public static final String EMISOR_VALIDATION_RULE = "EmisorValidationRule";
-		public static final String EMISOR_VALIDATION_RULE_DESC = "La informacion del emisor no es valida";
+		public static final String EMISOR_VALIDATION_RULE_DESC = "La empresa Emisora no se encunetra activa en el sistema";
 		
 		public static final String RECEPTOR_VALIDATION = "ReceptorValidation";
 		public static final String RECEPTOR_VALIDATION_RULE = "ReceptorValidationRule";

@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
-import { DownloadInvoiceFilesService } from '../../../@core/util-services/download-invoice-files';
 import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
 import { Router } from '@angular/router';
 import { UsersData, User } from '../../../@core/data/users-data';
@@ -14,6 +13,8 @@ import { GenericPage } from '../../../models/generic-page';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
+import { Client } from '../../../models/client';
+import { ClientsData } from '../../../@core/data/clients-data';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -24,6 +25,7 @@ export class DevolucionesComponent implements OnInit {
 
   public banksCat: Catalogo[] = [];
   public refTypesCat: Catalogo[] = [];
+  public clientsCat : Client[] = [];
   public pageCommissions: GenericPage<Devolucion> = new GenericPage();
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
@@ -40,6 +42,7 @@ export class DevolucionesComponent implements OnInit {
   constructor(private dialogService: NbDialogService,
     private devolutionService: DevolutionData,
     private catalogService: CatalogsData,
+    private clientsService: ClientsData,
     private resourceService: FilesData,
     private donwloadCsvService: DownloadCsvService,
     private devolutionValidator: DevolucionValidatorService,
@@ -54,26 +57,38 @@ export class DevolucionesComponent implements OnInit {
         this.user = user;
         this.filterParams.idReceptor = user.email;
         this.searchDevolutionsData();
+        this.clientsService.getClientsByPromotor(user.email)
+          .subscribe(clients => this.clientsCat = clients);
       });
     this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
+    
   }
 
   public onReceptorTypeSelected(type: string) {
     if (type === 'PROMOTOR') {
       this.filterParams.idReceptor = this.user.email;
-    } else { this.filterParams.idReceptor = ''; }
+    } else {
+      this.filterParams.idReceptor = '*';
+    }
     this.filterParams.tipoReceptor = type;
+    this.searchDevolutionsData();
   }
 
   public searchDevolutionsData() {
     this.messages = [];
     this.solicitud = new PagoDevolucion();
-    this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
+    if(this.filterParams.idReceptor !== '*'){
+      this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
       (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
     this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,
       (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
     this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
       .subscribe(ammount => this.montoDevolucion = ammount);
+    }else {
+      this.montoDevolucion = 0.0;
+      this.pageCommissions = new GenericPage();
+      this.pageDevolutions = new GenericPage();
+    }
   }
 
   public updateCommissions(page?: number, size?: number) {

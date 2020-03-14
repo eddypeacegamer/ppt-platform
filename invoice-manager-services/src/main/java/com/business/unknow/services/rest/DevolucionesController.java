@@ -23,9 +23,6 @@ import com.business.unknow.model.dto.services.PagoDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 /**
  * @author ralfdemoledor
  *
@@ -33,14 +30,12 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
-@Api(value = "DevolucionesController", produces = "application/json")
 public class DevolucionesController {
 
 	@Autowired
 	private DevolucionService service;
 
 	@GetMapping("/devoluciones")
-	@ApiOperation(value = "Get all devolutions.")
 	public ResponseEntity<Page<DevolucionDto>> getAllDevolutions(
 			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
 			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,

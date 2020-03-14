@@ -55,48 +55,76 @@
             </button>
             <button type="button" class="btn btn-success" (click)="aceptarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
             &nbsp;&nbsp;
-            <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;" *ngIf="factura.statusFactura == 'Validacion operaciones'"/>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Rechazar</button>
+            <button type="button" class="btn btn-danger" (click)="rechazarFactura()" >Rechazar</button>
 
             
           </div>
         </div>
         <div *ngIf="folioParam === '*'">
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
+          <p class="font-weight-bold">Información Emisor</p>
           <div class="row">
-
-            <div class="col-sm-4">
+            <div class="col-md-2">
+              <label for="inputGiro" class="label">Linea Emisor</label>
+              <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaEmisor">
+                  <option value="*">Seleccionar</option>
+                  <option value="A">Linea A</option>
+                  <option value="B">Linea B</option>
+                  <option value="C">Linea C</option>
+              </select>
+            </div>
+            <div class="col-sm-5">
               <div class="form-group">
                 <label for="inputGiro" class="label">Giro Empresa</label>
-                <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
-                  style="display:block;" [(ngModel)]="formInfo.giro">
+                <select id="inputGiro" fullWidth class="form-control" (change)="onGiroEmisorSelection($event.target.value)"
+                  style="display:block;" [(ngModel)]="formInfo.giroEmisor">
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
               <label for="inputEmpresa" class="label">Empresa</label>
-              <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
-                [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
+              <select id="inputEmpresa" class="form-control" (change)="onEmnisorSelected($event.target.value)"
+                [(ngModel)]="formInfo.emisorRfc" style="display:block;" fullWidth>
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let company of companiesCat" [(value)]="company.id">
+                <option *ngFor="let company of emisoresCat" [(value)]="company.id">
                   {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
                 </option>
               </select>
             </div>
-            <div class="col-md-4">
-              <label for="inputCliente" class="label">RFC cliente</label>
-              <div class="row form-inline">
-                <input type="text" [(ngModel)]="formInfo.clientRfc" fullWidth class="form-control"
-                  placeholder="RFC CLIENTE">
-                <button type="button" nbButton status="primary" (click)="buscarClientInfo()">BUSCAR</button>
+          </div>
+          <p class="font-weight-bold">Información Receptor</p>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="inputGiro" class="label">Linea Receptor</label>
+              <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaReceptor">
+                  <option value="*">Seleccionar</option>
+                  <option value="A">Linea A</option>
+                  <option value="B">Linea B</option>
+                  <option value="C">Linea C</option>
+              </select>
+            </div>
+            <div class="col-sm-5">
+              <div class="form-group">
+                <label for="inputGiro" class="label">Giro Empresa</label>
+                <select id="inputGiro" fullWidth class="form-control" (change)="onGiroReceptorSelection($event.target.value)"
+                  style="display:block;" [(ngModel)]="formInfo.giroReceptor">
+                  <option value="*">Seleccionar</option>
+                  <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
+                </select>
               </div>
             </div>
-          </div>
-          <div class="alert alert-info" *ngIf="clientInfo!=undefined" role="alert">
-            {{clientInfo.rfc}} - {{clientInfo.razonSocial}}
+            <div class="col-md-5">
+              <label for="inputEmpresa" class="label">Empresa</label>
+              <select id="inputEmpresa" class="form-control" (change)="onReceptorSelected($event.target.value)"
+                [(ngModel)]="formInfo.receptorRfc" style="display:block;" fullWidth>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let company of receptoresCat" [(value)]="company.id">
+                  {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                </option>
+              </select>
+            </div>
+            
           </div>
           <br>
           <p class="font-weight-bold">Información CFDI</p>
@@ -112,22 +140,20 @@
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.usoCfdi" (change)="onUsoCfdiSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.descripcion}}</option>
+                <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.clave}}-{{clave.descripcion}}</option>
               </select>
             </div>
             <div class="col-sm-1">
               <label for="inputCoin" class="label">Moneda</label>
               <select selected="1" id="inputCoin" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.moneda" (change)="onMonedaSelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="factura.cfdi.moneda">
                 <option value="MXN">Peso MX</option>
-                <option value="USD">Dollar US</option>
               </select>
             </div>
             <div class="col-sm-3">
               <label for="inputPayMethod" class="label">Metodo de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
-                [(ngModel)]="formInfo.payMethod" (change)="onMetodoDePagoSelected($event.target.value)">
+                [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="PUE">Factura pagada (PUE)</option>
                 <option value="PPD">Factura pago por definir(PPD)</option>
@@ -137,7 +163,8 @@
               <label for="inputPaytype" class="label">Forma de Pago</label>
               <select selected="1" id="inputPaytype" style="display:block;" class="form-control"
                 [(ngModel)]="formInfo.payType" (change)="onFormaDePagoSelected($event.target.value)">
-                <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.value}}</option>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.nombre}}</option>
               </select>
             </div>
 
@@ -146,8 +173,12 @@
         </div>
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
-          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
+          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "factura.statusFactura !== 'Timbrada'"></ngx-conceptos>
         <br>
+        <div class="form-inline" *ngIf="this.factura.folio == undefined">
+          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
+        </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>

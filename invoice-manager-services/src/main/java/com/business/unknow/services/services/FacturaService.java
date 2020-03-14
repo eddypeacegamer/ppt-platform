@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
@@ -105,11 +106,11 @@ public class FacturaService {
 					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
-				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), status.get(), start, end,
+				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(),lineaEmisor, status.get(), start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			} else {
-				result = repository.findBySolicitanteWithParams(solicitante.get(), start, end,
+				result = repository.findBySolicitanteWithParams(solicitante.get(),lineaEmisor, start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
@@ -227,8 +228,10 @@ public class FacturaService {
 					HttpStatus.BAD_REQUEST.value());
 		}
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
-		if (!(facturaContext.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
-				&& facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()))) {
+		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
+				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
+						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
+				&& facturaContext.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
@@ -250,7 +253,7 @@ public class FacturaService {
 			break;
 		case NTLINK:
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
-			break;	
+			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());

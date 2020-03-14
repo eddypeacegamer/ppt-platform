@@ -77,17 +77,18 @@
             <thead class="thead-light">
               <tr>
                 <th scope="col">Acciones</th>
-                <th scope="col">Moneda</th>
+                <th scope="col">Folio</th>
+                <th scope="col">Fecha captura</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Fecha pago</th>
                 <th scope="col">Monto</th>
+                <th scope="col">Promotor</th>
+                <th scope="col">Validador 1</th>
+                <th scope="col">Validador 2</th>
                 <th scope="col">Banco</th>
                 <th scope="col">Cuenta</th>
                 <th scope="col">Forma de pago</th>
-                <th scope="col">Fecha pago</th>
-                <th scope="col">Acredor</th>
-                <th scope="col">Deudor</th>
-                <th scope="col">Estatus Pago</th>
-                <th scope="col">Solicitante</th>
-                <th scope="col">Folio</th>
               </tr>
             </thead>
             <tbody>
@@ -112,19 +113,21 @@
                         class="fa fa-check-circle"></i></button>
                   </div>
                 </td>
+                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
+                  (click)="redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
+                <td scope="row">{{fila.fechaCreacion}}</td>
+                <td scope="row">{{fila.acredor}}</td>
+                <td scope="row">{{fila.deudor}}</td>
+                <td scope="row">{{fila.fechaPago}}</td>
 
-                <td scope="row">{{fila.moneda}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
+                <td scope="row">{{fila.solicitante}}</td>
+                <td scope="row">{{fila.revisor1}}</td>
+                <td scope="row">{{fila.revisor2}}</td>
                 <td scope="row">{{fila.banco}}</td>
                 <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.formaPago}}</td>
-                <td scope="row">{{fila.fechaPago}}</td>
-                <td scope="row">{{fila.acredor}}</td>
-                <td scope="row">{{fila.deudor}}</td>
-                <td scope="row">{{fila.statusPago}}</td>
-                <td scope="row">{{fila.solicitante}}</td>
-                <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
-                    (click)="redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
+                    
               </tr>
             </tbody>
           </table>

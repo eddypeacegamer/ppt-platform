@@ -22,8 +22,6 @@ import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author eej000f
@@ -31,14 +29,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "EmpresaController", produces = "application/json")
 public class EmpresaController {
 
 	@Autowired
 	private EmpresaService service;
 
 	@GetMapping("/empresas")
-	@ApiOperation(value = "Get all client by promotor name and name.")
 	public ResponseEntity<Page<EmpresaDto>> getEmpresasByParameter(
 			@RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
 			@RequestParam(name = "rfc", required = false) Optional<String> rfc,
@@ -50,13 +46,11 @@ public class EmpresaController {
 	}
 
 	@GetMapping("/empresas/{rfc}")
-	@ApiOperation(value = "insert a new empresa into the system")
 	public ResponseEntity<EmpresaDto> updateClient(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getEmpresaByRfc(rfc), HttpStatus.OK);
 	}
 
 	@GetMapping("/lineas/{linea}/giros/{giro}/empresas")
-	@ApiOperation(value = "Get all companies by linea and giro")
 	public ResponseEntity<List<EmpresaDto>> getEmpresasByLineaAndGiro(@PathVariable(name = "linea") String linea,
 			@PathVariable(name = "giro") Integer giro) {
 		return new ResponseEntity<>(service.getEmpresasByGiroAndLinea(linea, giro), HttpStatus.OK);
@@ -64,14 +58,12 @@ public class EmpresaController {
 	
 
 	@PostMapping("/empresas")
-	@ApiOperation(value = "insert a new empresa into the system")
 	public ResponseEntity<EmpresaDto> insertClient(@RequestBody @Valid EmpresaDto empresa)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewEmpresa(empresa), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/empresas/{rfc}")
-	@ApiOperation(value = "insert a new empresa into the system")
 	public ResponseEntity<EmpresaDto> updateClient(@PathVariable String rfc, @RequestBody @Valid EmpresaDto empresa) {
 		return new ResponseEntity<>(service.updateEmpresaInfo(empresa, rfc), HttpStatus.OK);
 	}

@@ -64,7 +64,7 @@ export class EmpresasComponent implements OnInit {
 
 
     public onChangePageSize(pageSize: number) {
-      this.updateDataTable(this.page.number, pageSize);
+      this.updateDataTable(this.page.number, pageSize, this.filterParams);
     }
   
     public onCompanySelected(tipo:string){

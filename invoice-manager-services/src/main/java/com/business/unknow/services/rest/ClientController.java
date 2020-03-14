@@ -1,5 +1,6 @@
 package com.business.unknow.services.rest;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -22,23 +23,19 @@ import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.ClientService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author eej000f
  *
  */
 @RestController
-@RequestMapping("/api/clientes")
-@Api(value = "ClientController", produces = "application/json")
+@RequestMapping("/api")
 public class ClientController {
 
 	@Autowired
 	private ClientService service;
 
-	@GetMapping
-	@ApiOperation(value = "Get all client by promotor name and name.")
+	@GetMapping("/clientes")
 	public ResponseEntity<Page<ClientDto>> getClientsByParameters(
 			@RequestParam(name = "promotor") Optional<String> promotor,
 			@RequestParam(name = "status", defaultValue = "") String status,
@@ -50,27 +47,27 @@ public class ClientController {
 				HttpStatus.OK);
 	}
 
-	@GetMapping("/{rfc}")
-	@ApiOperation(value = "Recover single client by RFC")
+	@GetMapping("/clientes/{rfc}")
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc) {
 		return new ResponseEntity<>(service.getClientByRFC(rfc), HttpStatus.OK);
 	}
-
-	@PostMapping
-	@ApiOperation(value = "insert a new client into the system")
+	
+	@GetMapping("/promotores/{promotor}/clientes")
+	public ResponseEntity<List<ClientDto>> clinetesPorPromotor(@PathVariable String promotor) {
+		return new ResponseEntity<>(service.getClientsByPromotor(promotor), HttpStatus.OK);
+	}
+	@PostMapping("/clientes")
 	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{rfc}")
-	@ApiOperation(value = "insert a new client into the system")
+	@PutMapping("/clientes/{rfc}")
 	public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc, @RequestBody @Valid ClientDto client)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.updateClientInfo(client, rfc), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{rfc}")
-	@ApiOperation(value = "insert a new client into the system")
+	@DeleteMapping("/clientes/{rfc}")
 	public ResponseEntity<Void> deleteClient(@PathVariable String rfc) {
 		service.deleteClientInfo(rfc);
 		return new ResponseEntity<Void>(HttpStatus.OK);

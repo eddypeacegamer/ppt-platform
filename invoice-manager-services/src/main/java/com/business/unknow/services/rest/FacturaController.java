@@ -33,16 +33,12 @@ import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 /**
  * @author eej000f
  *
  */
 @RestController
 @RequestMapping("/api/facturas")
-@Api(value = "FacturaController", produces = "application/json")
 public class FacturaController {
 
 	@Autowired
@@ -50,13 +46,13 @@ public class FacturaController {
 
 	@Autowired
 	private CfdiService cfdiService;
-	
+
 	@Autowired
 	private PagoService pagoService;
-	
+
 	@Autowired
 	private DevolucionService devolucionService;
-	
+
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
@@ -80,19 +76,17 @@ public class FacturaController {
 	}
 
 	@PostMapping
-	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<FacturaDto> insertFacturaWithCfdi(@RequestBody @Valid FacturaDto factura)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}")
-	@ApiOperation(value = "update an existing in the system")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto factura) {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{folio}/complementos")
 	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
@@ -149,24 +143,21 @@ public class FacturaController {
 	}
 
 	@PostMapping("/{folio}/pagos")
-	@ApiOperation(value = "insert a new Payment into the system")
 	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
-	@ApiOperation(value = "insert a new Factura into the system")
 	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.updatePago(folio,id,pagoDto), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
-	@ApiOperation(value = "Deletes an existing payment")
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		pagoService.deletePago(folio,id);
+		pagoService.deletePago(folio, id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -182,12 +173,13 @@ public class FacturaController {
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
 	}
-	
-	//DEVOLUCIONES
+
+	// DEVOLUCIONES
 	@GetMapping("/{folio}/devoluciones/{tipoReceptor}")
-	public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(@PathVariable String folio, @PathVariable String tipoReceptor){
-		return new ResponseEntity<>(devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor), HttpStatus.OK);
+	public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(@PathVariable String folio,
+			@PathVariable String tipoReceptor) {
+		return new ResponseEntity<>(devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor),
+				HttpStatus.OK);
 	}
-	
 
 }
