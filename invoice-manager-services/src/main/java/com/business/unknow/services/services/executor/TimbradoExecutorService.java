@@ -60,13 +60,16 @@ public class TimbradoExecutorService {
 		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
 				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
 		timbradoFiscalDigitial.setCfdi(cfdi);
-		timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial);
-
+		context.getFacturaDto().getCfdi().getComplemento().setTimbreFiscal(cfdiMapper.getComplementoDtoFromEntity(timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial)));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
 			if (facturaFileDto != null) {
 				facturaFileRepository.save(filesMapper.getFacturaFileFromDto(facturaFileDto));
 			}
 		}
+
+	}
+
+	public void createFilesAndSentEmail(FacturaContext context) throws InvoiceManagerException {
 		if (context.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
 			Client client = clientRepository.findByRfc(context.getFacturaDto().getRfcRemitente())
 					.orElseThrow(() -> new InvoiceManagerException("Error sending the email",

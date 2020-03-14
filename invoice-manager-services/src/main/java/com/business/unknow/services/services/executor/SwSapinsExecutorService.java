@@ -70,13 +70,6 @@ public class SwSapinsExecutorService {
 			xml.setFolio(context.getFacturaDto().getFolio());
 			xml.setTipoArchivo(TipoArchivoEnum.XML.name());
 			xml.setData(fileHelper.stringEncodeBase64(swSapiensConfig.getData().getCfdi()));
-			//TODO REMOVE THIS CODE
-			/*FacturaFileDto pdf = new FacturaFileDto();
-			pdf.setFolio(context.getFacturaDto().getFolio());
-			pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
-			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
-			files.add(pdf);
-			*/
 			files.add(qr);
 			files.add(xml);
 			context.setFacturaFilesDto(files);

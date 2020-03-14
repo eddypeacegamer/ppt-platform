@@ -63,7 +63,6 @@ public class FilesService {
 	@Autowired
 	private ResourceFileRepository resourceRepo;
 
-
 	@Autowired
 	private FilesMapper mapper;
 
@@ -84,11 +83,8 @@ public class FilesService {
 
 	@Autowired
 	private NumberTranslatorHelper numberTranslatorHelper;
-	
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(FilesService.class);
 
+	private static final Logger log = LoggerFactory.getLogger(FilesService.class);
 
 	public FacturaFileDto getFileByFolioAndType(String folio, String type) throws InvoiceManagerException {
 		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(folio, type);
@@ -109,6 +105,7 @@ public class FilesService {
 			throw new InvoiceManagerException("El recurso solicitado no existe.", HttpStatus.NOT_FOUND.value());
 		}
 	}
+
 	public ResourceFileDto insertResourceFile(ResourceFileDto resourceFile) {
 
 		Optional<ResourceFile> resource = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(
@@ -121,7 +118,8 @@ public class FilesService {
 	}
 
 	public FacturaFileDto insertfacturaFile(FacturaFileDto facturaFile) {
-		Optional<FacturaFile> file  = facturaRepo.findByFolioAndTipoArchivo(facturaFile.getFolio(), facturaFile.getTipoArchivo());
+		Optional<FacturaFile> file = facturaRepo.findByFolioAndTipoArchivo(facturaFile.getFolio(),
+				facturaFile.getTipoArchivo());
 		if (file.isPresent()) {
 			facturaFile.setId(file.get().getId());
 			facturaFile.setFechaCreacion(new Date());
@@ -147,30 +145,28 @@ public class FilesService {
 		}
 	}
 
-	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto) throws InvoiceCommonException {
-		
+	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi) throws InvoiceCommonException {
+
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
 
-		fBuilder.setFactura(getCfdiModelFromFacturaDto(facturaDto))
-				.setFolioPadre(facturaDto.getFolioPadre())
+		fBuilder.setFactura(getCfdiModelFromFacturaDto(facturaDto)).setFolioPadre(facturaDto.getFolioPadre())
 				.setQr(getQRData(facturaDto.getFolio()))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
-				.setTipoDeComprobanteDesc(TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
+				.setTipoDeComprobanteDesc(
+						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
 				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
 				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
 
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
-		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
-				.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
 		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
-					.get(facturaDto.getCfdi().getComplemento().getPagos().get(0).getFormaPago());
+					.get(cfdi.getComplemento().getComplemntoPago().getComplementoPagos().get(0).getFormaDePago());
 			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
 		} else {
-			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
-					.get(facturaDto.getCfdi().getFormaPago());
+			FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
 			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
 		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
@@ -180,40 +176,37 @@ public class FilesService {
 			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
 		}
 
-		if(facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
+		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
-			fBuilder.setPagoComplemento(pagoComplemento)
-					.setTotalDesc(numberTranslatorHelper.getStringNumber(
-							pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
+			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
+					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
 		}
 		return fBuilder.build();
 	}
-	
-public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws InvoiceCommonException {
-		
+
+	public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws InvoiceCommonException {
+
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
 		FacturaDto facturaDto = context.getFacturaDto();
 
-		fBuilder.setFactura(getCfdiModelFromContext(context))
-				.setFolioPadre(facturaDto.getFolioPadre())
+		fBuilder.setFactura(getCfdiModelFromContext(context)).setFolioPadre(facturaDto.getFolioPadre())
 				.setQr(getQRData(facturaDto.getFolio()))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
-				.setTipoDeComprobanteDesc(TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
+				.setTipoDeComprobanteDesc(
+						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
 				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
 				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
 
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
-		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings()
-				.get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
 		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
 					.get(facturaDto.getCfdi().getComplemento().getPagos().get(0).getFormaPago());
 			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
 		} else {
-			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
-					.get(facturaDto.getCfdi().getFormaPago());
+			FormaPago formaPago = catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
 			fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
 		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
@@ -223,11 +216,10 @@ public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws Invoi
 			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
 		}
 
-		if(facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
+		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
-			fBuilder.setPagoComplemento(pagoComplemento)
-					.setTotalDesc(numberTranslatorHelper.getStringNumber(
-							pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
+			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
+					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
 		}
 		return fBuilder.build();
 	}
@@ -238,25 +230,25 @@ public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws Invoi
 			return facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
 		} catch (InvoiceManagerException | InvoiceCommonException e) {
 			Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(dto.getCfdi());
-			cfdi.setConceptos(dto.getCfdi().getConceptos().stream()
-					.map(cfdiXmlMapper::getEntityFromConceptoDto)
+			cfdi.setConceptos(dto.getCfdi().getConceptos().stream().map(cfdiXmlMapper::getEntityFromConceptoDto)
 					.collect(Collectors.toList()));
-			cfdi.setFecha((dto.getFechaCreacion()==null)?new Date().toString():dto.getFechaCreacion().toString());
+			cfdi.setFecha((dto.getFechaCreacion() == null) ? new Date().toString() : dto.getFechaCreacion().toString());
 			cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
 			return cfdi;
 		}
 	}
-	
+
 	private Cfdi getCfdiModelFromContext(FacturaContext context) {
 		try {
-			FacturaFileDto xml = context.getFacturaFilesDto().stream().filter(t -> "XML".equalsIgnoreCase(t.getTipoArchivo())).findFirst().get();
+			FacturaFileDto xml = context.getFacturaFilesDto().stream()
+					.filter(t -> "XML".equalsIgnoreCase(t.getTipoArchivo())).findFirst().get();
 			return facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
 		} catch (InvoiceCommonException e) {
 			Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
 			cfdi.setConceptos(context.getFacturaDto().getCfdi().getConceptos().stream()
-					.map(cfdiXmlMapper::getEntityFromConceptoDto)
-					.collect(Collectors.toList()));
-			cfdi.setFecha((context.getFacturaDto().getFechaCreacion()==null)?new Date().toString():context.getFacturaDto().getFechaCreacion().toString());
+					.map(cfdiXmlMapper::getEntityFromConceptoDto).collect(Collectors.toList()));
+			cfdi.setFecha((context.getFacturaDto().getFechaCreacion() == null) ? new Date().toString()
+					: context.getFacturaDto().getFechaCreacion().toString());
 			cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
 			return cfdi;
 		}
@@ -270,7 +262,7 @@ public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws Invoi
 		}
 	}
 
-	private String getLogoData(String rfcEmisor){
+	private String getLogoData(String rfcEmisor) {
 		try {
 			return getFileByResourceReferenceAndType("Empresa", rfcEmisor, "LOGO").getData();
 		} catch (InvoiceManagerException e) {
@@ -278,55 +270,58 @@ public FacturaPdfModelDto getPdfFromFactura(FacturaContext context) throws Invoi
 		}
 	}
 
-	public FacturaFileDto generateInvoicePDF(FacturaDto factura) {
+	public FacturaFileDto generateInvoicePDF(FacturaDto factura, Cfdi cfdi) {
 		try {
-			FacturaPdfModelDto model = getPdfFromFactura(factura);
+			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
-			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			Reader templateReader = new FileReader(
+					new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
-			 String data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
-			 FacturaFileDto factFile = new FacturaFileDto();
-			 factFile.setData(data);
-			 factFile.setFolio(factura.getFolio());
-			 factFile.setTipoArchivo("PDF");
-			 insertfacturaFile(factFile);
-			 log.info("PDF for factura {} was generated successfully", factura.getFolio());
-			 return factFile;
+			String data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+			FacturaFileDto factFile = new FacturaFileDto();
+			factFile.setData(data);
+			factFile.setFolio(factura.getFolio());
+			factFile.setTipoArchivo("PDF");
+			insertfacturaFile(factFile);
+			log.info("PDF for factura {} was generated successfully", factura.getFolio());
+			return factFile;
 		} catch (FileNotFoundException | InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}
-	
+
 	public FacturaFileDto generateInvoicePDF(FacturaContext context) {
 		try {
-			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto());
-			model.setQr(context.getFacturaFilesDto().stream().filter(f->"QR".equalsIgnoreCase(f.getTipoArchivo())).findFirst().get().getData());
+			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
+			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
+					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
-			Reader templateReader = new FileReader(new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
+			Reader templateReader = new FileReader(
+					new File(ClassLoader.getSystemResource("pdf-config/" + xslfoTemplate).getFile()));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
-			 String data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
-			 FacturaFileDto factFile = new FacturaFileDto();
-			 factFile.setData(data);
-			 factFile.setFolio(context.getFacturaDto().getFolio());
-			 factFile.setTipoArchivo("PDF");
-			 insertfacturaFile(factFile);
-			 log.info("PDF for factura {} was generated successfully", context.getFacturaDto().getFolio());
-			 return factFile;
+			String data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+			FacturaFileDto factFile = new FacturaFileDto();
+			factFile.setData(data);
+			factFile.setFolio(context.getFacturaDto().getFolio());
+			factFile.setTipoArchivo("PDF");
+			insertfacturaFile(factFile);
+			log.info("PDF for factura {} was generated successfully", context.getFacturaDto().getFolio());
+			return factFile;
 		} catch (FileNotFoundException | InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}
 
 	private String getXSLFOTemplate(FacturaPdfModelDto model) {
-		if(model.getCadenaOriginal() != null) {
+		if (model.getCadenaOriginal() != null) {
 			return model.getFolioPadre() == null ? "factura-timbrada.xml" : "complemento-timbrado.xml";
 		} else {
 			return model.getFolioPadre() == null ? "factura-sin-timbrar.xml" : "complemento-sin-timbrar.xml";
