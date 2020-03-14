@@ -45,6 +45,7 @@ import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 
+
 @Service
 public class FacturaService {
 
@@ -162,7 +163,7 @@ public class FacturaService {
 			pagoService.insertNewPaymentWithoutValidation(
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
-		fileService.generateInvoicePDF(facturaBuilded);
+		fileService.generateInvoicePDF(facturaBuilded,facturaContext.getCfdi());
 		return saveFactura;
 	}
 
@@ -232,10 +233,10 @@ public class FacturaService {
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
 		}
-		
+		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		timbradoExecutorService.createFilesAndSentEmail(facturaContext);
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
