@@ -56,6 +56,4 @@ public class FacturaHelper {
 			throw new InvoiceCommonException(e.getMessage());
 		}
 	}
-
-	
 }

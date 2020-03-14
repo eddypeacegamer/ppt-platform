@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 
 @XmlRootElement(name = "FacturaPdfModel")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -18,6 +19,8 @@ public class FacturaPdfModelDto implements Serializable {
 	private String qr;
 	@XmlElement(name = "CadenaOriginal")
 	private String cadenaOriginal;
+	@XmlElement(name = "folioPadre")
+	private String folioPadre;
 	@XmlElement(name = "TotalDesc")
 	private String totalDesc;
 	@XmlElement(name = "SubTotalDesc")
@@ -36,6 +39,8 @@ public class FacturaPdfModelDto implements Serializable {
 	private String logotipo;
 	@XmlElement(name = "factura")
 	private Cfdi factura;
+	@XmlElement(name = "pagoComplemento")
+	private CfdiPagoDto  pagoComplemento;
 
 	public FacturaPdfModelDto() {
 		super();
@@ -134,6 +139,22 @@ public class FacturaPdfModelDto implements Serializable {
 
 	public void setSubTotalDesc(String subTotalDesc) {
 		this.subTotalDesc = subTotalDesc;
+	}
+
+	public String getFolioPadre() {
+		return folioPadre;
+	}
+
+	public void setFolioPadre(String folioPadre) {
+		this.folioPadre = folioPadre;
+	}
+
+	public CfdiPagoDto getPagoComplemento() {
+		return pagoComplemento;
+	}
+
+	public void setPagoComplemento(CfdiPagoDto pagoComplemento) {
+		this.pagoComplemento = pagoComplemento;
 	}
 
 	@Override
