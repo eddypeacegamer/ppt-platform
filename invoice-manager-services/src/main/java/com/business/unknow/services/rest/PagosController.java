@@ -71,7 +71,6 @@ public class PagosController {
 			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 		Double total = service.getSumaIngresosbyParams(formaPago, banco, cuenta, since, to);
-		System.out.println(total);
 		return new ResponseEntity<>(total, HttpStatus.OK);
 
 	}
