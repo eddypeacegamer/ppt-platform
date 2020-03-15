@@ -9,6 +9,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -98,6 +100,10 @@ public class FacturaService {
 	private FacturaDefaultValues facturaDefaultValues;
 
 	private FacturaValidator validator = new FacturaValidator();
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
+
 
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
@@ -233,10 +239,13 @@ public class FacturaService {
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
 		}
+		
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
+		//PDF GENERATION
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		timbradoExecutorService.createFilesAndSentEmail(facturaContext);
+		log.info("mail service is disabled");
+		//timbradoExecutorService.createFilesAndSentEmail(facturaContext); 
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
@@ -245,7 +254,7 @@ public class FacturaService {
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
 		}
-		//PDF GENERATION
+
 		// TODO Insertar en tabla de ingresos
 		return facturaContext;
 	}
