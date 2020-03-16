@@ -77,13 +77,22 @@ public class FacturaTranslator {
 			if (!retenciones.isEmpty()) {
 				cfdi.getImpuestos().setRetenciones(retenciones);
 			}
-			cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
+			
+			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
+			}else {
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
+			}
+			
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
+			}else {
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
 			log.debug(context.getXml());
+			System.out.println(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
