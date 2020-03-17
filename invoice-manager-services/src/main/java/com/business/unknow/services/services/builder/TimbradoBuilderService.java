@@ -55,6 +55,7 @@ public class TimbradoBuilderService extends AbstractBuilderService{
 						.orElseThrow(() -> new InvoiceManagerException("La empresa no existe",
 								String.format("La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
+		getEmpresaFiles(empresaDto, facturaDto);
 		return new FacturaContextBuilder().setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(

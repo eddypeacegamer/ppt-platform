@@ -79,7 +79,7 @@ public class SwSapinsExecutorService {
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
-		} 
+		}
 		return context;
 	}
 
@@ -101,7 +101,8 @@ public class SwSapinsExecutorService {
 					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
 					.cancel(context.getFacturaDto().getUuid(), context.getEmpresaDto().getPwSat(),
 							context.getEmpresaDto().getInformacionFiscal().getRfc(),
-							context.getEmpresaDto().getCertificado(), context.getEmpresaDto().getLlavePrivada());
+							fileHelper.stringEncodeBase64(context.getEmpresaDto().getCertificado()),
+							fileHelper.stringEncodeBase64(context.getEmpresaDto().getLlavePrivada()));
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;

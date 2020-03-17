@@ -114,7 +114,6 @@ public class FacturaModernaMessageParser {
 		envelope.addNamespaceDeclaration(FacturacionModernaRequest.NS1, FacturacionModernaRequest.URL_TIMBRADO);
 		envelope.addNamespaceDeclaration(FacturacionModernaRequest.XSD, FacturacionModernaRequest.URL_SCHEMA);
 		envelope.addNamespaceDeclaration(FacturacionModernaRequest.XSI, FacturacionModernaRequest.URL_SCHEMA_INSTANCE);
-		envelope.addNamespaceDeclaration(FacturacionModernaRequest.SOAP_ENC, FacturacionModernaRequest.URL_ENCODING);
 		envelope.addNamespaceDeclaration(FacturacionModernaRequest.SOAP_ENV, FacturacionModernaRequest.URL_ENCODING);
 		SOAPBody soapBody = envelope.getBody();
 		return soapBody.addBodyElement(envelope.createName(requestType, FacturacionModernaRequest.NS1, ""));
