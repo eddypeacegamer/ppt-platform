@@ -57,6 +57,7 @@ public class FacturacionModernaClientImpl extends AbstractClient implements Rest
 		FacturaModernaMessageParser soapRequest = new FacturaModernaMessageParser();
 		log.info("Stamping the invoice.");
 		String endpoint = FacturacionModernaEndpoints.getTimbradoEndpoint();
+		System.out.println(soapRequest.createStampRequest(request));
 		Response response = post(endpoint, MediaType.TEXT_PLAIN, soapRequest.createStampRequest(request));
 		return parseResponse(response, FacturaModernaResponseModel.class);
 	}

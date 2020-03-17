@@ -78,7 +78,7 @@ public class Constants {
 		public static final String URL_TIMBRADO = "https://t1demo.facturacionmoderna.com/timbrado/soap";
 		public static final String URL_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 		public static final String URL_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
-		public static final String URL_ENCODING = "ttp://schemas.xmlsoap.org/soap/encoding/";
+		public static final String URL_ENCODING = "http://schemas.xmlsoap.org/soap/envelope/";
 	
 		public static final String REQUEST_CANCELADO="requestCancelarCFDI";
 		public static final String REQUEST_TIMBRADO="requestTimbrarCFDI";

@@ -36,13 +36,16 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 		instance.setReceptor(receptor);
 		return this;
 	}
-	
+
 	public EmailConfigBuilder addReceptor(String receptor) {
-		if(instance.getReceptor()==null) {
-			instance.setReceptor(new ArrayList<>());
+		if (receptor != null && !receptor.isEmpty()) {
+			if (instance.getReceptor() == null) {
+				instance.setReceptor(new ArrayList<>());
+			}
+			instance.getReceptor().add(receptor);
 		}
-		instance.getReceptor().add(receptor);
 		return this;
+
 	}
 
 	public EmailConfigBuilder addArchivo(FileConfig fileConfig) {

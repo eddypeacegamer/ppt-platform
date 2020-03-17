@@ -1,8 +1,5 @@
 package com.business.unknow.services.services.executor;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,20 +94,17 @@ public class NtinkExecutorService {
 				xml.setData(fileHelper.stringEncodeBase64(response.getCfdi()));
 				files.add(xml);
 			}
-			FacturaFileDto pdf = new FacturaFileDto();
-			pdf.setFolio(context.getFacturaDto().getFolio());
-			pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
-			pdf.setData(new String(Files.readAllBytes(Paths.get(FacturaConstants.FACTURA_DUMMY))));
-			files.add(pdf);
 			context.setFacturaFilesDto(files);
+			FacturaFileDto qr = new FacturaFileDto();
+			qr.setFolio(context.getFacturaDto().getFolio());
+			qr.setTipoArchivo(TipoArchivoEnum.QR.name());
+			qr.setData(response.getQrCodeBase64());
+			files.add(qr);
 		} catch (NtlinkClientException | InvoiceCommonException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(e.getMessage(),
 					String.format("Error Stamping in facturacion moderna: %s", e.getLocalizedMessage()),
 					HttpStatus.SC_CONFLICT);
-		} catch (IOException e2) {
-			throw new InvoiceManagerException(e2.getMessage(),
-					String.format("Error setting file: %s", e2.getLocalizedMessage()), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}

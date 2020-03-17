@@ -9,8 +9,6 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -101,10 +99,6 @@ public class FacturaService {
 
 	private FacturaValidator validator = new FacturaValidator();
 	
-	
-	private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
-
-
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
 			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
@@ -244,8 +238,9 @@ public class FacturaService {
 		//PDF GENERATION
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		log.info("mail service is disabled");
-		//timbradoExecutorService.createFilesAndSentEmail(facturaContext); 
+		if(facturaContext.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
+			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
+		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
