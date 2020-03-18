@@ -11,6 +11,7 @@ public class ClienteValidator extends AbstractValidator {
 	public void validatePostCliente(ClientDto dto) throws InvoiceManagerException {
 		checkNotNull(dto.getInformacionFiscal(), "Informacion fiscal");
 		checkNotNull(dto.getInformacionFiscal().getRazonSocial(), "Razon Social");
+		checkValidString(dto.getInformacionFiscal().getRazonSocial());
 		checkNotNull(dto.getInformacionFiscal().getEstado(), "Estado");
 		checkNotNull(dto.getInformacionFiscal().getCp(), "Codigo postal");
 		checkNotNull(dto.getInformacionFiscal().getLocalidad(), "Localidad");
@@ -40,6 +41,12 @@ public class ClienteValidator extends AbstractValidator {
 		if (dto.getInformacionFiscal().getCp().matches("[a-zA-Z]+")) {
 			throw new InvoiceManagerException("El codigo postal esta incorrect", "No debe llevar letras",
 					Constants.BAD_REQUEST);
+		}
+		if (dto.getInformacionFiscal().getCorreo() != null && !dto.getInformacionFiscal().getCorreo().isEmpty()) {
+			checkValidEmail(dto.getInformacionFiscal().getCorreo());
+		}
+		if (dto.getCorreoContacto() != null && !dto.getCorreoContacto().isEmpty()) {
+			checkValidEmail(dto.getCorreoContacto());
 		}
 	}
 
