@@ -9,98 +9,102 @@ export class CompaniesValidatorService {
   camposObligatoriosEmpresa = [
     {
       field: 'encabezado',
-      description: 'Encabezado'
+      description: 'Encabezado',
+    },
+    {
+      field: 'tipo',
+      description: 'Linea',
     },
     {
       field: 'piePagina',
-      description: 'Pie de página'
+      description: 'Pie de página',
     },
     {
       field: 'contactoAdmin',
-      description: 'Contacto Admin.'
+      description: 'Contacto Admin.',
     },
     {
       field: 'correo',
-      description: 'Correo'
+      description: 'Correo',
     },
     {
       field: 'pwCorreo',
-      description: 'Password Correo'
+      description: 'Password Correo',
     },
     {
       field: 'pwSat',
-      description: 'Password Sat'
+      description: 'Password Sat',
     },
     {
       field: 'certificado',
-      description: 'Certificado'
+      description: 'Certificado',
     },
     {
       field: 'llavePrivada',
-      description: 'Llave privada'
+      description: 'Llave privada',
     },
     {
       field: 'logotipo',
-      description: 'Logotipo'
+      description: 'Logotipo',
     },
   ];
 
   camposObligatoriosInformacionFiscal = [
     {
       field: 'rfc',
-      description: 'RFC'
+      description: 'RFC',
     },
     {
       field: 'razonSocial',
-      description: 'Razón Social'
+      description: 'Razón Social',
     },
     {
       field: 'cp',
-      description: 'Código Postal'
+      description: 'Código Postal',
     },
     {
       field: 'municipio',
-      description: 'Municipio'
+      description: 'Municipio',
     },
     {
       field: 'estado',
-      description: 'Estado'
+      description: 'Estado',
     },
     {
       field: 'localidad',
-      description: 'Localidad'
+      description: 'Localidad',
     },
     {
       field: 'calle',
-      description: 'Calle'
+      description: 'Calle',
     },
   ];
 
   public validarEmpresa(empresa: Empresa) {
     const messages: string[] = [];
 
-    if(empresa == null) {
-      throw "La empresa a validar tiene un valor de null";
+    if (empresa == null) {
+      throw 'La empresa a validar tiene un valor de null';
     }
 
-    if(empresa.giro == null || empresa.giro == "*" || empresa.giro.length < 1) {
+    if (empresa.giro == null || empresa.giro === "*" || empresa.giro.length < 1) {
       messages.push("Se debe seleccionar un giro de empresa");
     }
 
-    if(empresa.tipo == null || empresa.tipo == "*" || empresa.tipo.length < 1) {
+    if (empresa.tipo == null || empresa.tipo === "*" || empresa.tipo.length < 1) {
       messages.push("Se debe seleccionar la linea de empresa");
     }
 
     this.camposObligatoriosInformacionFiscal.forEach(campo => {
-      if(empresa.informacionFiscal[campo.field] == null 
-        || empresa.informacionFiscal[campo.field] == '') {
+      if(empresa.informacionFiscal[campo.field] === null
+        || empresa.informacionFiscal[campo.field] === '') {
           messages.push(`El campo '${campo.description}' es obligatorio`);
         }
     });
 
     this.camposObligatoriosEmpresa.forEach(campo => {
-      if(empresa[campo.field] == null 
-        || empresa[campo.field] == '') {
+      if (empresa[campo.field] === null
+        || empresa[campo.field] === '') {
           messages.push(`El campo '${campo.description}' es obligatorio`);
         }
     });

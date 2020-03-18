@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { UsersData } from '../../../@core/data/users-data';
+import { ClientsValidatorService } from '../../../@core/util-services/clients-validator.service';
 
 @Component({
   selector: 'ngx-cliente',
@@ -16,11 +17,13 @@ export class ClienteComponent implements OnInit {
 
   public isPromotor: boolean = false;
   public clientInfo: Client;
-  public formInfo: any = {rfc:'',message:'',coloniaId:'*', success:''};
+  public messages: string[] = [];
+  public formInfo: any = {rfc:'',coloniaId:'*', success:''};
   public coloniaId: number= 0;
   public colonias = [];
   public paises = ['México'];
   constructor(private clientService: ClientsData,
+              private clientValidatorService: ClientsValidatorService,
               private userService: UsersData,
               private catalogsService: CatalogsData,
               private route: ActivatedRoute,
@@ -42,29 +45,24 @@ export class ClienteComponent implements OnInit {
 
   public updateClient() {
     this.formInfo.success = '';
-    this.formInfo.message = '';
-    this. validatePercentages();
+    this.messages = [];
+    this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
     this.clientService.updateClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente actualizado exitosamente'; this.clientInfo = client; },
       (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
   }
 
   public insertClient() {
     this.formInfo.success = '';
-    this.formInfo.message = '';
-    this. validatePercentages();
-    if(this.clientInfo.porcentajeCliente < 0 ||  this.clientInfo.porcentajeContacto < 0 
-        || this.clientInfo.porcentajeDespacho < 0 || this.clientInfo.porcentajePromotor < 0){
-      this.formInfo.message = 'Alguno o algunos porcentages son invalidos';
-    }else{
-      this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
+    this.messages = [];
+    this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
       .then(() => {
-        this.clientService.insertNewClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
-          (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
+        this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
+        if (this.messages.length === 0) {
+        this.clientService.insertNewClient(this.clientInfo)
+          .subscribe(client => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
+          (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+        }
       });
-    }
-
-
-    
   }
 
   public zipCodeInfo(zc: string){
