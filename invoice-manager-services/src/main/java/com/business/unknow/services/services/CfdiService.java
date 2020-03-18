@@ -68,10 +68,10 @@ public class CfdiService {
 
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
-	
+
 	@Autowired
 	private RetencionRepository retencionRepository;
-	
+
 	@Autowired
 	private TimbradoFiscalDigitialRepository timbradoFiscalDigitialRepository;
 
@@ -91,7 +91,7 @@ public class CfdiService {
 		if (cfdiDto.getComplemento() == null) {
 			cfdiDto.setComplemento(new ComplementoDto());
 		}
-		if(pagosCfdi!=null&&!pagosCfdi.isEmpty()) {
+		if (pagosCfdi != null && !pagosCfdi.isEmpty()) {
 			cfdiDto.getComplemento().setPagos(pagosCfdi);
 		}
 		cfdiDto.getComplemento().setTimbreFiscal(getTimbradoDigital(cfdiDto.getId()));
@@ -99,15 +99,14 @@ public class CfdiService {
 	}
 
 	private TimbradoFiscalDigitialDto getTimbradoDigital(int idCfdi) {
-		Optional<TimbradoFiscalDigitial> timbre=timbradoFiscalDigitialRepository.findByIdCfdi(idCfdi);
-		if(timbre.isPresent()) {
+		Optional<TimbradoFiscalDigitial> timbre = timbradoFiscalDigitialRepository.findByIdCfdi(idCfdi);
+		if (timbre.isPresent()) {
 			return mapper.getComplementoDtoFromEntity(timbre.get());
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
+
 	private List<ImpuestoDto> getImpuestosByConcepto(int id) {
 		return mapper.getImpuestosDtosFromEntities(impuestoRepository.findById(id));
 	}
@@ -121,13 +120,13 @@ public class CfdiService {
 		recalculateCfdiAmmounts(cfdi);
 		Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));
 		Emisor emisor = mapper.getEntityFromEmisorDto(cfdi.getEmisor());
-		if(emisor.getNombre()==null) {
+		if (emisor.getNombre() == null) {
 			emisor.setNombre(emisor.getRfc());
 		}
 		emisor.setCfdi(entity);
 		emisorRepository.save(emisor);
 		Receptor receptor = mapper.getEntityFromEmisorDto(cfdi.getReceptor());
-		if(receptor.getNombre()==null) {
+		if (receptor.getNombre() == null) {
 			receptor.setNombre(receptor.getRfc());
 		}
 		receptor.setCfdi(entity);
@@ -146,7 +145,7 @@ public class CfdiService {
 				reten.setConcepto(conceptoEntity);
 				retencionRepository.save(reten);
 			}
-			
+
 		}
 		return mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
 	}
@@ -195,7 +194,7 @@ public class CfdiService {
 			imp.setImporte(imp.getImporte().setScale(6, RoundingMode.DOWN));
 			impuestoRepository.save(imp);
 		}
-		for(RetencionDto retencion:newConcept.getRetenciones()) {
+		for (RetencionDto retencion : newConcept.getRetenciones()) {
 			Retencion ret = mapper.getEntityFromRetencionDto(retencion);
 			ret.setConcepto(conceptoEntity);
 			ret.setBase(ret.getBase().setScale(6, RoundingMode.DOWN));
@@ -276,12 +275,12 @@ public class CfdiService {
 		BigDecimal subtotal = cfdi.getConceptos().stream().map(c -> c.getValorUnitario().multiply(c.getCantidad()))
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
 		BigDecimal retenciones = cfdi.getConceptos().stream()
-				.map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
-						(i1, i2) -> i1.add(i2)))// suma importe retencioness por concepto
+				.map(i -> i.getRetenciones().stream().map(imp -> imp.getBase().multiply(imp.getTasaOCuota()))
+						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))// suma importe retencioness por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
 		BigDecimal impuestos = cfdi.getConceptos().stream()
-				.map(i -> i.getImpuestos().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
-						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
+				.map(i -> i.getImpuestos().stream().map(imp -> imp.getBase().multiply(imp.getTasaOCuota()))
+						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
 
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);

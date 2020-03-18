@@ -116,6 +116,7 @@ public class FacturaTranslator {
 			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
 			complementoToXmlSigned(context);
+			System.out.println(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
