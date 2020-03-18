@@ -1,7 +1,6 @@
 package com.business.unknow.services.services.translators;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,13 +78,13 @@ public class FacturaTranslator {
 			}
 			
 			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_DOWN));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
 			}
 			
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_DOWN));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}

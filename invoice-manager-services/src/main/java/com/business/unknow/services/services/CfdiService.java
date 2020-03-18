@@ -273,20 +273,21 @@ public class CfdiService {
 	}
 
 	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
-		BigDecimal subtotal = cfdi.getConceptos().stream().map(c -> c.getImporte()).reduce(BigDecimal.ZERO,
-				(i1, i2) -> i1.add(i2));
-		BigDecimal retenciones =cfdi.getConceptos().stream()
+		BigDecimal subtotal = cfdi.getConceptos().stream().map(c -> c.getValorUnitario().multiply(c.getCantidad()))
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
+		BigDecimal retenciones = cfdi.getConceptos().stream()
 				.map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
 						(i1, i2) -> i1.add(i2)))// suma importe retencioness por concepto
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
 		BigDecimal impuestos = cfdi.getConceptos().stream()
 				.map(i -> i.getImpuestos().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
+
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
-		cfdi.setSubtotal(subtotal.setScale(3, BigDecimal.ROUND_DOWN));
-		cfdi.setTotal(total.setScale(3, BigDecimal.ROUND_DOWN));
+		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_DOWN));
+		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_DOWN));
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
 	}
 

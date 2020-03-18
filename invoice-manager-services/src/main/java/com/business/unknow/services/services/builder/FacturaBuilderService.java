@@ -136,7 +136,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	public List<ConceptoDto> buildFacturaComplementoConceptos(FacturaContext facturaContext) {
 		List<ConceptoDto> conceptos = new ArrayList<ConceptoDto>();
-		ConceptoDtoBuilder conceptoBuilder = new ConceptoDtoBuilder().setCantidad(ComplementoPpdDefaults.CANTIDAD)
+		ConceptoDtoBuilder conceptoBuilder = new ConceptoDtoBuilder().setCantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
 				.setClaveProdServ(ComplementoPpdDefaults.CLAVE_PROD).setClaveUnidad(ComplementoPpdDefaults.CLAVE)
 				.setDescripcion(ComplementoPpdDefaults.DESCRIPCION)
 				.setImporte(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
