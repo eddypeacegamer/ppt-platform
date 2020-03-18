@@ -158,7 +158,6 @@ public class PagoService {
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
 	}
 
-	
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPayment(String folio, PagoDto pagoDto) throws InvoiceManagerException {
 		pagoEvaluatorService.validatePago(pagoDto, new PagoDto());
@@ -190,18 +189,29 @@ public class PagoService {
 				.setRevisor2(pago.getRevisor2());
 		pagoEvaluatorService.validatePago(pago, mapper.getPagoDtoFromEntity(entity));
 
-		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
-			if(entity.getRevision1()&& entity.getRevision2()) {
-			 throw new InvoiceManagerException("No puede ser rechazado un pago que ya fue aprobado","El pago ya fue aprobado por dos personas.", HttpStatus.CONFLICT.value());	
-			}else {
+		if (entity.getRevision1()&&entity.getRevision2()) {
+			throw new InvoiceManagerException(
+					"Incongruencia en la validacion de pagos ya se valido dos veces ",
+					"Incongruencia de pago.", HttpStatus.CONFLICT.value());
+		} else if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
+			if (entity.getRevision1() && entity.getRevision2()) {
+				throw new InvoiceManagerException("No puede ser rechazado un pago que ya fue aprobado",
+						"El pago ya fue aprobado por dos personas.", HttpStatus.CONFLICT.value());
+			} else {
 				factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 				factura.setStatusDetail(pago.getComentarioPago());
 				facturaService.updateFactura(factura, folio);
-				pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());	
+				pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
 			}
-		}else if(!entity.getRevision1() && pago.getRevision2()) {
-			throw new InvoiceManagerException("Incongruencia en la validacion de pagos, el segundo pago no puede ser validado si el primer pago ya fue validado","Incongruencia de pago.", HttpStatus.CONFLICT.value());
-		}else if (entity.getRevision1() && pago.getRevision2()
+		}else if (entity.getRevision1() && !pago.getRevision2()&&!pago.getRevisor1().equals(entity.getRevision1())) {
+			throw new InvoiceManagerException(
+					"Ya se realizo la primera validacion",
+					"Ya se realizo la primera validacion.", HttpStatus.CONFLICT.value());
+		}else if (!entity.getRevision1() && pago.getRevision2()) {
+			throw new InvoiceManagerException(
+					"Incongruencia en la validacion de pagos, el segundo pago no puede ser validado si el primer pago ya fue validado",
+					"Incongruencia de pago.", HttpStatus.CONFLICT.value());
+		} else if (entity.getRevision1() && pago.getRevision2()
 				&& (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor())
 						|| factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())
 						|| factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_TESORERIA.getValor()))) {
