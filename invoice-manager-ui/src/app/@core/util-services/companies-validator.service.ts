@@ -97,6 +97,7 @@ export class CompaniesValidatorService {
 
     this.camposObligatoriosInformacionFiscal.forEach(campo => {
       if(empresa.informacionFiscal[campo.field] === null
+        || empresa.informacionFiscal[campo.field] === undefined
         || empresa.informacionFiscal[campo.field] === '') {
           messages.push(`El campo '${campo.description}' es obligatorio`);
         }
@@ -104,6 +105,7 @@ export class CompaniesValidatorService {
 
     this.camposObligatoriosEmpresa.forEach(campo => {
       if (empresa[campo.field] === null
+        || empresa[campo.field] === undefined
         || empresa[campo.field] === '') {
           messages.push(`El campo '${campo.description}' es obligatorio`);
         }

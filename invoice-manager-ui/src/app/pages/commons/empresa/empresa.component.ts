@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
+import { debug } from 'util';
 
 @Component({
   selector: 'ngx-empresa',
