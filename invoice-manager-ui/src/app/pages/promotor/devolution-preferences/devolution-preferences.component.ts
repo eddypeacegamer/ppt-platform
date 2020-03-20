@@ -154,17 +154,16 @@ export class DevolutionPreferencesComponent implements OnInit {
     if (this.messages.length === 0) {
       this.devolutionService.requestDevolution(solicitud)
         .subscribe( request => {this.solicitud = request;
-          this.referenceFile.referencia = request.id.toString();
+          if (solicitud.formaPago === 'PAGO_MULTIPLE') {
+            this.referenceFile.referencia = request.id.toString();
           this.resourceService.insertResourceFile(this.referenceFile)
           .subscribe((resource: ResourceFile) => console.log(resource),
           (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
+          }
         }, (error: HttpErrorResponse) => this.messages.push(error.error.message
             || `${error.statusText} : ${error.message}`));
-    } else {
-      this.solicitud = new PagoDevolucion();
-      this.solicitud.formaPago = 'TRANSFERENCIA';
-    }
+    } 
   }
 
 

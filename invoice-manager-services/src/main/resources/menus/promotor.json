@@ -3,19 +3,19 @@
     "icon": "layout-outline",
     "children": [
       {
-        "title": "clientes",
+        "title": "Clientes",
         "link": "/pages/promotor/clientes"
       },
       {
-        "title": "reportes",
+        "title": "Reportes",
         "link": "/pages/promotor/reportes"
       },
       {
-        "title": "pre-cfdi",
+        "title": "Pre-cfdi",
         "link": "/pages/promotor/precfdi/*"
       },
       {
-        "title": "devoluciones",
+        "title": "Devoluciones",
         "link": "/pages/promotor/devoluciones"
       }
     ]

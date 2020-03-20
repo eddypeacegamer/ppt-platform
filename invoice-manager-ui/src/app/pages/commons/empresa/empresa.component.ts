@@ -17,7 +17,7 @@ import { debug } from 'util';
 })
 export class EmpresaComponent implements OnInit {
 
-  public companyInfo : Empresa;
+  public companyInfo: Empresa;
   public formInfo : any = {rfc:'',message:'',coloniaId:'*', success:'',certificateFileName:'',keyFileName:'', logoFileName:''};
   public coloniaId: number=0;
   public colonias = [];
@@ -25,7 +25,7 @@ export class EmpresaComponent implements OnInit {
 
   public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
-  
+
   constructor(private router: Router,
               private catalogsService: CatalogsData,
               private empresaService: CompaniesData,
@@ -42,14 +42,16 @@ export class EmpresaComponent implements OnInit {
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {
         const rfc = route.get('rfc');
-        this.empresaService.getCompanyByRFC(rfc)
-        .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc;},
-        (error : HttpErrorResponse)=>console.log(error.error.message || `${error.statusText} : ${error.message}`));  
-        });
-    
+        if (rfc !== '*') {
+          this.empresaService.getCompanyByRFC(rfc)
+        .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc; },
+        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
+          || `${error.statusText} : ${error.message}`));
+        }});
     /**** LOADING CAT INFO ****/
     this.catalogsService.getAllGiros().subscribe((giros: Catalogo[]) => this.girosCat = giros,
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
+        || `${error.statusText} : ${error.message}`));
   }
 
   sanitize(url: string) {
@@ -84,28 +86,37 @@ export class EmpresaComponent implements OnInit {
   public onLineaSelected(linea:string){
     this.companyInfo.tipo = linea;
   }
-  
+
   logoUploadListener(event: any): void {
-    let reader = new FileReader();
+    const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      if(file.size > 200000){
+      const file = event.target.files[0];
+      if (file.size > 200000){
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
-      }else{
+      }else {
         reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.logoFileName = file.name + " " + file.type;this.companyInfo.logotipo = reader.result.toString()}
-      reader.onerror = (error) => {this.errorMessages.push('Error parsing image file');console.error(error)};
+      reader.onload = () => {
+        this.formInfo.logoFileName = file.name;
+        this.companyInfo.logotipo = reader.result.toString(); };
+      reader.onerror = (error) => {
+        this.errorMessages.push('Error parsing image file');
+        console.error(error); };
       }
     }
   }
 
   keyUploadListener(event: any): void {
-    let reader = new FileReader();
+    const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
+      const file = event.target.files[0];
       reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.keyFileName = file.name + " " + file.type;this.companyInfo.llavePrivada = reader.result.toString()}
-      reader.onerror = (error) => {this.errorMessages.push('Error parsing key file');console.error(error)};
+      reader.onload = () => {
+        this.formInfo.keyFileName = file.name;
+        const data: string = reader.result.toString();
+        this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length); };
+      reader.onerror = (error) => {
+        this.errorMessages.push('Error parsing key file');
+        console.error(error); };
     }
   }
 
@@ -114,24 +125,26 @@ export class EmpresaComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.certificateFileName = file.name + " " + file.type;this.companyInfo.certificado = reader.result.toString()}
-      reader.onerror = (error) => {this.errorMessages.push('Error parsing certificate file')};
+      reader.onload = () => {
+        this.formInfo.certificateFileName = file.name;
+        const data: string = reader.result.toString();
+      this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);};
+    reader.onerror = (error) => {this.errorMessages.push('Error parsing certificate file')};
     }
   }
 
-  public insertNewCompany():void{
-    let validatorErrors = this.companiesValidatorService.validarEmpresa(this.companyInfo);
-
-   if (validatorErrors.length == 0) {
-      this.companyInfo.giro=this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
-      this.errorMessages = [];
-      this.formInfo.success ='';
+  public insertNewCompany(): void {
+    this.errorMessages = [];
+    this.formInfo.success = '';
+    this.errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
+   if (this.errorMessages.length === 0) {
+      this.companyInfo.giro = this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
+      console.log(this.companyInfo);
       this.empresaService.insertNewCompany(this.companyInfo)
-      .subscribe((empresa:Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]);},
-      (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
-      );
-    }else{
-      this.errorMessages = validatorErrors;
+      .subscribe((empresa: Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]); },
+      (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
+        || `${error.statusText} : ${error.message}`);
+      });
     }
   }
 

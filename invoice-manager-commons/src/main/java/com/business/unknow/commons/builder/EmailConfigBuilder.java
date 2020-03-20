@@ -38,7 +38,7 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 	}
 
 	public EmailConfigBuilder addReceptor(String receptor) {
-		if (receptor != null && !receptor.isEmpty()) {
+		if (receptor != null && !receptor.isEmpty() && !receptor.contains("Sin asignar")) {
 			if (instance.getReceptor() == null) {
 				instance.setReceptor(new ArrayList<>());
 			}

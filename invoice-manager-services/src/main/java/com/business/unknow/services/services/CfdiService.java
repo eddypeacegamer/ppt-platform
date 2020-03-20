@@ -272,21 +272,31 @@ public class CfdiService {
 	}
 
 	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
+		cfdi.getConceptos().forEach(a -> {
+			a.setImporte(a.getValorUnitario().multiply(a.getCantidad()));
+			a.getImpuestos().forEach(b -> {
+				b.setImporte(b.getBase().multiply(b.getTasaOCuota()));
+			});
+			a.getRetenciones().forEach(b -> {
+				b.setImporte(b.getBase().multiply(b.getTasaOCuota()));
+			});
+		});
+
 		BigDecimal subtotal = cfdi.getConceptos().stream().map(c -> c.getValorUnitario().multiply(c.getCantidad()))
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
 		BigDecimal retenciones = cfdi.getConceptos().stream()
 				.map(i -> i.getRetenciones().stream().map(imp -> imp.getBase().multiply(imp.getTasaOCuota()))
 						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))// suma importe retencioness por concepto
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		BigDecimal impuestos = cfdi.getConceptos().stream()
 				.map(i -> i.getImpuestos().stream().map(imp -> imp.getBase().multiply(imp.getTasaOCuota()))
 						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_DOWN);
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
-		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_DOWN));
-		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_DOWN));
+		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));
+		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_HALF_UP));
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
 	}
 
