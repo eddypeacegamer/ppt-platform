@@ -92,7 +92,7 @@ export class EmpresaComponent implements OnInit {
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
       }else{
         reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.logoFileName = file.name + " " + file.type;this.companyInfo.logotipo = reader.result.toString()}
+      reader.onload = () => {this.formInfo.logoFileName = file.name;this.companyInfo.logotipo = reader.result.toString()}
       reader.onerror = (error) => {this.errorMessages.push('Error parsing image file');console.error(error)};
       }
     }
@@ -103,7 +103,7 @@ export class EmpresaComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.keyFileName = file.name + " " + file.type;this.companyInfo.llavePrivada = reader.result.toString()}
+      reader.onload = () => {this.formInfo.keyFileName = file.name;this.companyInfo.llavePrivada = reader.result.toString()}
       reader.onerror = (error) => {this.errorMessages.push('Error parsing key file');console.error(error)};
     }
   }
@@ -113,7 +113,7 @@ export class EmpresaComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.certificateFileName = file.name + " " + file.type;this.companyInfo.certificado = reader.result.toString()}
+      reader.onload = () => {this.formInfo.certificateFileName = file.name;this.companyInfo.certificado = reader.result.toString()}
       reader.onerror = (error) => {this.errorMessages.push('Error parsing certificate file')};
     }
   }
