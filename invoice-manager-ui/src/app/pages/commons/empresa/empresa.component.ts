@@ -102,8 +102,11 @@ export class EmpresaComponent implements OnInit {
     let reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.keyFileName = file.name;this.companyInfo.llavePrivada = reader.result.toString()}
+      reader.readAsDataURL(file); //file.data.substring(5, file.data.indexOf('base64') + 7)
+      reader.onload = () => {
+        this.formInfo.keyFileName = file.name;
+        const data:string = reader.result.toString();
+        this.companyInfo.llavePrivada = data.substring(0,data.indexOf('base64') + 7);}
       reader.onerror = (error) => {this.errorMessages.push('Error parsing key file');console.error(error)};
     }
   }
@@ -113,7 +116,10 @@ export class EmpresaComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
-      reader.onload = () => {this.formInfo.certificateFileName = file.name;this.companyInfo.certificado = reader.result.toString()}
+      reader.onload = () => {
+        this.formInfo.certificateFileName = file.name;
+        const data:string = reader.result.toString();
+      this.companyInfo.certificado = data.substring(0,data.indexOf('base64') + 7);}
       reader.onerror = (error) => {this.errorMessages.push('Error parsing certificate file')};
     }
   }
