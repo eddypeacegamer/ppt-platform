@@ -78,13 +78,13 @@ public class FacturaTranslator {
 			}
 			
 			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_DOWN));
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
 			}
 			
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_DOWN));
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}
