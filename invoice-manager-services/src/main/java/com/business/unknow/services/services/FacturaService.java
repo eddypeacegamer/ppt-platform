@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
@@ -238,13 +237,13 @@ public class FacturaService {
 		//PDF GENERATION
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		if(facturaContext.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
+		if(!facturaContext.getFacturaDto().getSolicitante().equals("CARGA_MASIVA")) {
 			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
 		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
-				&& facturaContext.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
+				&& !facturaContext.getFacturaDto().getSolicitante().equals("CARGA_MASIVA")) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
