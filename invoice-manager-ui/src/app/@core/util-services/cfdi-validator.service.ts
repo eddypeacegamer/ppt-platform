@@ -12,7 +12,7 @@ export class CfdiValidatorService {
   private usoCfdiCat: string[] = ['D01','D02','D03','D04','D05','D06','D07','D08','D09','D10','G01','G02','G03','I01','I02','I03','I04','I05','I06','I07','I08','P01'];
   private metodoPagoCat: string[]  = ['PUE','PPD'];
   private formaPagoCat: string[]  = ['01','02','03','04','05','06','08','12','13','14','15','17','23','24','25','26','27','28','29','30','31','99'];
-  private unidadCat: string[]  = ['10','11','A9','AB ','ACT','AS','BB','DAY','DPC','E48','E51','E54','EA','GRM','H87','HUR','KGM','KT','LTR','MGM','MLT','MON','MTK','MTR','PR','SET','XBX','XKI','XLT','XPK','XUN'];
+  private unidadCat: string[]  = ['10','11','A9','AB','ACT','AS','BB','DAY','DPC','E48','E51','E54','EA','GRM','H87','HUR','KGM','KT','LTR','MGM','MLT','MON','MTK','MTR','PR','SET','XBX','XKI','XLT','XPK','XUN'];
 
   constructor(private catService: CatalogsData) {
 
