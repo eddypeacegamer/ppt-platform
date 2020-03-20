@@ -58,7 +58,8 @@ public class CatalogsService {
 	@Autowired
 	private UsoCfdiRepository usoCfdiRepo;
 
-	@Autowired
+	//@Autowired
+	@Deprecated
 	private StatusFacturaRepository statusFacturaRepo;
 
 	@Autowired
