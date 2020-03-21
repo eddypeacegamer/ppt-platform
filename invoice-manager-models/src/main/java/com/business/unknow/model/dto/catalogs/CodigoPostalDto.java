@@ -6,17 +6,17 @@ public class CodigoPostalDto implements Serializable {
 
 	private static final long serialVersionUID = -2907308795601544511L;
 	private int id;
-	private int codigoPostal;
+	private String codigoPostal;
 	private String estado;
 	private String municipio;
 	private String ciudad;
 	private String colonia;
 
-	public int getCodigoPostal() {
+	public String getCodigoPostal() {
 		return codigoPostal;
 	}
 
-	public void setCodigoPostal(int codigoPostal) {
+	public void setCodigoPostal(String codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 

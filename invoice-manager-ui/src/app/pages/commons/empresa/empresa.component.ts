@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
+import { debug } from 'util';
 
 @Component({
   selector: 'ngx-empresa',
@@ -37,6 +38,7 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.regimenFiscal = '*';
     this.companyInfo.giro = '*';
     this.companyInfo.tipo = '*';
+    this.companyInfo.informacionFiscal.pais = 'México';
     this.errorMessages = [];
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {

@@ -23,51 +23,52 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * @author hha0009
  *
  */
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "TRANSFERENCIAS")
+//@Entity
+//@EntityListeners(AuditingEntityListener.class)
+//@Table(name = "TRANSFERENCIAS")
+@Deprecated
 public class Transferencia implements Serializable {
 
 	private static final long serialVersionUID = 1152989539957300970L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_TRANSFER")
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Column(name = "ID_TRANSFER")
 	private Integer id;
 
-	@Column(name = "BANCO_RETIRO")
+//	@Column(name = "BANCO_RETIRO")
 	private String bancoRetiro;
 
-	@Column(name = "RFC_RETIRO")
+//	@Column(name = "RFC_RETIRO")
 	private String rfcRetiro;
 
-	@Column(name = "CUENTA_RETIRO")
+//	@Column(name = "CUENTA_RETIRO")
 	private String cuentaRetiro;
 
-	@Column(name = "LINEA_RETIRO")
+//	@Column(name = "LINEA_RETIRO")
 	private String lineaRetiro;
 
-	@Column(name = "BANCO_DEPOSITO")
+//	@Column(name = "BANCO_DEPOSITO")
 	private String bancoDeposito;
 
-	@Column(name = "RFC_DEPOSITO")
+//	@Column(name = "RFC_DEPOSITO")
 	private String rfcDeposito;
 
-	@Column(name = "CUENTA_DEPOSITO")
+//	@Column(name = "CUENTA_DEPOSITO")
 	private String cuentaDeposito;
 
-	@Column(name = "LINEA_DEPOSITO")
+//	@Column(name = "LINEA_DEPOSITO")
 	private String lineaDeposito;
 
-	@Column(name = "FOLIO")
+//	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "IMPORTE")
+//	@Column(name = "IMPORTE")
 	private Double importe;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
+//	@Temporal(TemporalType.TIMESTAMP)
+//	@CreatedDate
+//	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
 	public Integer getId() {

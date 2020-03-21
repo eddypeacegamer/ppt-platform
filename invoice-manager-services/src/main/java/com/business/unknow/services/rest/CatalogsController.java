@@ -37,7 +37,7 @@ public class CatalogsController {
 	private CatalogsService service;
 
 	@GetMapping("/codigo-postal/{cp}")
-	public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(@PathVariable Integer cp) {
+	public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(@PathVariable String cp) {
 		return new ResponseEntity<>(service.getCodigosPostaleByCode(cp), HttpStatus.OK);
 	}
 
@@ -64,10 +64,10 @@ public class CatalogsController {
 		return new ResponseEntity<>(service.getAllRegimenFiscal(), HttpStatus.OK);
 	}
 
-	@GetMapping("/status-factura")
-	public ResponseEntity<List<StatusFacturaDto>> getStatusFactura() {
-		return new ResponseEntity<>(service.getAllStatusFactura(), HttpStatus.OK);
-	}
+//	@GetMapping("/status-factura")
+//	public ResponseEntity<List<StatusFacturaDto>> getStatusFactura() {
+//		return new ResponseEntity<>(service.getAllStatusFactura(), HttpStatus.OK);
+//	}
 
 	@GetMapping("/giros")
 	public ResponseEntity<List<CatalogDto>> getGiros() {
@@ -99,9 +99,9 @@ public class CatalogsController {
 		return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
 	}
 
-	@GetMapping("/status-revision")
-	public ResponseEntity<List<CatalogDto>> getAllStatusRevision() {
-		return new ResponseEntity<>(service.getAllStatusRevision(), HttpStatus.OK);
-	}
+//	@GetMapping("/status-revision")
+//	public ResponseEntity<List<CatalogDto>> getAllStatusRevision() {
+//		return new ResponseEntity<>(service.getAllStatusRevision(), HttpStatus.OK);
+//	}
 
 }
