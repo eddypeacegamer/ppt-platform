@@ -23,9 +23,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * @author hha0009
  *
  */
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "TRANSFERENCIAS")
+//@Entity
+//@EntityListeners(AuditingEntityListener.class)
+//@Table(name = "TRANSFERENCIAS")
 public class Transferencia implements Serializable {
 
 	private static final long serialVersionUID = 1152989539957300970L;
