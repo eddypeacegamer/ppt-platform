@@ -71,7 +71,8 @@ public class CatalogsService {
 	@Autowired
 	private StatusDevolucionRepository statusDevoluicionRepo;
 
-	@Autowired
+	//@Autowired
+	@Deprecated
 	private StatusRevisionRepository statusRevisionRepo;
 
 	@Autowired
