@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.business.unknow.services.entities.catalogs.StatusRevision;
 
-@Repository
-public interface StatusRevisionRepository extends JpaRepository<StatusRevision, String> {
+//@Repository
+@Deprecated
+public interface StatusRevisionRepository{
 
 	public List<StatusRevision> findAll();
 

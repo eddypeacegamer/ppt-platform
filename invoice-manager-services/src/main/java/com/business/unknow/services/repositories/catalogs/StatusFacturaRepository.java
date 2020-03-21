@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.business.unknow.services.entities.catalogs.StatusFactura;
 
-@Repository
-public interface StatusFacturaRepository extends JpaRepository<StatusFactura, String> {
+//@Repository
+@Deprecated
+public interface StatusFacturaRepository{
 
 	public List<StatusFactura> findAll();
 
