@@ -33,6 +33,9 @@ public class Contribuyente implements Serializable {
 
 	@Column(name = "GIRO")
 	private String giro;
+	
+	@Column(name = "MORAL")
+	private boolean moral;
 
 	@Column(name = "NOMBRE")
 	private String nombre;

@@ -106,7 +106,7 @@
                                     <inline font-weight="bold">
                                         R.F.C.:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Rfc" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Rfc" />
                                 </block>
                             </inline-container>
                         </block>
@@ -117,7 +117,7 @@
                                     <inline font-weight="bold">
                                         Razón social:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Nombre" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Nombre" />
                                 </block>
                             </inline-container>
                         </block>
@@ -128,7 +128,7 @@
                                     <inline font-weight="bold">
                                         Uso CFDI:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@UsoCFDI" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@UsoCFDI" />
                                     -
                                     <xsl:value-of select="UsoCfdiDesc" />
                                 </block>

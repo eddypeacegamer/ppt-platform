@@ -20,7 +20,6 @@ import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
@@ -34,9 +33,7 @@ import com.business.unknow.services.repositories.catalogs.CodigoPostalRepository
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusDevolucionRepository;
 import com.business.unknow.services.repositories.catalogs.StatusEventoRepository;
-import com.business.unknow.services.repositories.catalogs.StatusFacturaRepository;
 import com.business.unknow.services.repositories.catalogs.StatusPagoRepository;
-import com.business.unknow.services.repositories.catalogs.StatusRevisionRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 
 /**
@@ -58,8 +55,9 @@ public class CatalogsService {
 	@Autowired
 	private UsoCfdiRepository usoCfdiRepo;
 
-	@Autowired
-	private StatusFacturaRepository statusFacturaRepo;
+	//@Autowired
+	//@Deprecated
+	//private StatusFacturaRepository statusFacturaRepo;
 
 	@Autowired
 	private StatusEventoRepository statusEventoRepo;
@@ -70,8 +68,9 @@ public class CatalogsService {
 	@Autowired
 	private StatusDevolucionRepository statusDevoluicionRepo;
 
-	@Autowired
-	private StatusRevisionRepository statusRevisionRepo;
+	//@Autowired
+//	@Deprecated
+//	private StatusRevisionRepository statusRevisionRepo;
 
 	@Autowired
 	private GiroRepository giroRepo;
@@ -85,12 +84,11 @@ public class CatalogsService {
 	@Autowired
 	private CatalogsMapper mapper;
 	
-	public CodigoPostalUiDto getCodigosPostaleByCode(Integer codigo) {
+	public CodigoPostalUiDto getCodigosPostaleByCode(String codigo) {
 		List<CodigoPostal> codigos = codigoPostalRepository.findByCodigoPostal(codigo);
-		CodigoPostal codigoÇostal = codigos.stream().findFirst()
+		CodigoPostal codigPostal = codigos.stream().findFirst()
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados"));
-		CodigoPostalUiDto dto = new CodigoPostalUiDto(String.format("%05d", codigoÇostal.getCodigoPostal()),
-				codigoÇostal.getMunicipio(), codigoÇostal.getEstado());
+		CodigoPostalUiDto dto = new CodigoPostalUiDto(codigo,codigPostal.getMunicipio(), codigPostal.getEstado());
 		for (CodigoPostal cod : codigos) {
 			dto.getColonias().add(cod.getColonia());
 		}
@@ -142,9 +140,9 @@ public class CatalogsService {
 		return mapper.getUsoCfdiDtosFromEntities(usoCfdiRepo.findAll());
 	}
 
-	public List<StatusFacturaDto> getAllStatusFactura() {
-		return mapper.getStatusFacturaDtosFromEntities(statusFacturaRepo.findAll());
-	}
+//	public List<StatusFacturaDto> getAllStatusFactura() {
+//		return mapper.getStatusFacturaDtosFromEntities(statusFacturaRepo.findAll());
+//	}
 
 	public List<CatalogDto> getAllGiros() {
 		return mapper.getGirosDtoFromEntities(giroRepo.findAll());
@@ -162,9 +160,9 @@ public class CatalogsService {
 		return mapper.getStatusDevolucionDtosFromEntities(statusDevoluicionRepo.findAll());
 	}
 
-	public List<CatalogDto> getAllStatusRevision() {
-		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
-	}
+//	public List<CatalogDto> getAllStatusRevision() {
+//		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
+//	}
 
 	public List<CatalogDto> getAllBancos() {
 		return mapper.getBancoDtoFromEntities(bancoRepository.findAll());

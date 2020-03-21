@@ -32,6 +32,7 @@ export class ClienteComponent implements OnInit {
   ngOnInit() {
     this.isPromotor = (this.router.url.indexOf('/promotor') > 0) ? true : false;
     this.clientInfo = new Client();
+    this.clientInfo.informacionFiscal.pais = 'México';
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
       const rfc = route.get('rfc');

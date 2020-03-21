@@ -17,6 +17,7 @@ public class ContribuyenteDto implements Serializable {
 	private String rfc;
 	private String giro;
 	private String nombre;
+	private boolean moral;
 	private String curp;
 	private String razonSocial;
 	private String calle;
@@ -57,6 +58,13 @@ public class ContribuyenteDto implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	public boolean isMoral() {
+		return moral;
+	}
+
+	public void setMoral(boolean moral) {
+		this.moral = moral;
 	}
 
 	public String getCurp() {

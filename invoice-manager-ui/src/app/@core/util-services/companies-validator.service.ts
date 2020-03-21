@@ -21,7 +21,7 @@ export class CompaniesValidatorService {
     },
     {
       field: 'contactoAdmin',
-      description: 'Contacto Admin.',
+      description: 'Contacto',
     },
     {
       field: 'correo',

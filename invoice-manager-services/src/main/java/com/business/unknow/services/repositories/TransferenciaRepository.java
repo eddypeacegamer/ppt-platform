@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 
 import com.business.unknow.services.entities.Transferencia;
 
-@Repository
-public interface TransferenciaRepository extends JpaRepository<Transferencia, Integer> {
-	
-	
-	public Page<Transferencia> findAll(Pageable pageable);
-	
-	@Query("select t from Transferencia t where t.folio = null and upper(t.lineaDeposito) like upper(:from)  and upper(t.lineaRetiro) like upper(:to)")
-	public Page<Transferencia> findTransfersFromTo(@Param("from") String desde,@Param("to") String hacia ,Pageable pageable);
-	public Optional<Transferencia> findTransferById(int id);
-
-}
+//@Repository
+//public interface TransferenciaRepository extends JpaRepository<Transferencia, Integer> {
+//	
+//	
+//	public Page<Transferencia> findAll(Pageable pageable);
+//	
+//	@Query("select t from Transferencia t where t.folio = null and upper(t.lineaDeposito) like upper(:from)  and upper(t.lineaRetiro) like upper(:to)")
+//	public Page<Transferencia> findTransfersFromTo(@Param("from") String desde,@Param("to") String hacia ,Pageable pageable);
+//	public Optional<Transferencia> findTransferById(int id);
+//
+//}
