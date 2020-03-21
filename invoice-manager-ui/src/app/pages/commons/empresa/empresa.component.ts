@@ -38,6 +38,7 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.regimenFiscal = '*';
     this.companyInfo.giro = '*';
     this.companyInfo.tipo = '*';
+    this.companyInfo.informacionFiscal.pais = 'México';
     this.errorMessages = [];
       /** recovering folio info**/
       this.route.paramMap.subscribe(route => {

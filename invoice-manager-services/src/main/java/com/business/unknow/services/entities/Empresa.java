@@ -46,7 +46,7 @@ public class Empresa implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "SUCURSAL")
 	private String sucursal;
-
+	
 	@Basic(optional = false)
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
@@ -144,6 +144,14 @@ public class Empresa implements Serializable {
 		this.lugarExpedicion = lugarExpedicion;
 	}
 
+	public String getNoCertificado() {
+		return noCertificado;
+	}
+
+	public void setNoCertificado(String noCertificado) {
+		this.noCertificado = noCertificado;
+	}
+
 	public String getPwSat() {
 		return pwSat;
 	}
@@ -238,14 +246,6 @@ public class Empresa implements Serializable {
 
 	public void setInformacionFiscal(Contribuyente informacionFiscal) {
 		this.informacionFiscal = informacionFiscal;
-	}
-
-	public String getNoCertificado() {
-		return noCertificado;
-	}
-
-	public void setNoCertificado(String noCertificado) {
-		this.noCertificado = noCertificado;
 	}
 
 	@Override

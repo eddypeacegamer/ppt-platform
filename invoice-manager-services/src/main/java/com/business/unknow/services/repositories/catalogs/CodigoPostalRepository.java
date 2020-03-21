@@ -10,5 +10,5 @@ import com.business.unknow.services.entities.catalogs.CodigoPostal;
 @Repository
 public interface CodigoPostalRepository extends JpaRepository<CodigoPostal, String> {
 
-	public List<CodigoPostal> findByCodigoPostal(Integer codigoPostal);
+	public List<CodigoPostal> findByCodigoPostal(String codigoPostal);
 }
