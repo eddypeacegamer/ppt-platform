@@ -4,6 +4,7 @@ CREATE SCHEMA `invoice_manager` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_
 USE invoice_manager;
 */
 
+
 ----------------
 --- USERS 
 ----------------
@@ -130,6 +131,7 @@ CREATE TABLE IF NOT EXISTS PAGOS(
   `TIPO_CAMBIO` decimal(12,2) NOT NULL,
   `FORMA_PAGO` VARCHAR(40) NOT NULL,
   `MONTO` decimal(20,2) unsigned NOT NULL,
+  `TOTAL` decimal(20,2) unsigned DEFAULT NULL,
   `ACREDOR` VARCHAR(20) NOT NULL,
   `DEUDOR` VARCHAR(20) NOT NULL,
   `STATUS_PAGO` VARCHAR(20) NOT NULL,
