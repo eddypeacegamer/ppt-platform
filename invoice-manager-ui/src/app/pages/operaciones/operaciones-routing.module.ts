@@ -9,6 +9,8 @@ import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { ValidateInvoicesComponent } from './validate-invoices/validate-invoices.component';
+import { StampInvoicesComponent } from './stamp-invoices/stamp-invoices.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -31,6 +33,12 @@ const routes: Routes = [{
     }, {
       path: 'reportes',
       component : ReportesComponent,
+    }, {
+      path: 'validacion',
+      component : ValidateInvoicesComponent,
+    }, {
+      path: 'timbrar-facturas',
+      component : StampInvoicesComponent,
     }, {
       path: 'revision/:folio',
       component : RevisionComponent,

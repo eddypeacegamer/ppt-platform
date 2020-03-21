@@ -226,7 +226,7 @@ export class PreCfdiComponent implements OnInit {
 
   public solicitarCfdi() {
     this.errorMessages = [];
-    this.factura.solicitante = this.user.email;
+    this.factura.solicitante = 'CARGA_MASIVA';
     this.factura.lineaEmisor = 'A';
     this.factura.lineaRemitente = 'CLIENTE';
     if (this.clientInfo === undefined || this.clientInfo.informacionFiscal.rfc === undefined) {

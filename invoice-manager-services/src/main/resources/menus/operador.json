@@ -3,19 +3,27 @@
 	"icon": "layout-outline",
 	"children": [
 		{
-			"title": "clientes",
+			"title": "Clientes",
 			"link": "/pages/operaciones/clientes"
 		},
 		{
-			"title": "empresas",
+			"title": "Empresas",
 			"link": "/pages/operaciones/empresas"
 		},
 		{
-			"title": "reportes",
+			"title": "Validacion facturas",
+			"link": "/pages/operaciones/validacion"
+		},
+		{
+			"title": "Timbrar facturas",
+			"link": "/pages/operaciones/timbrar-facturas"
+		},
+		{
+			"title": "Reportes",
 			"link": "/pages/operaciones/reportes"
 		},
 		{
-			"title": "devoluciones",
+			"title": "Devoluciones",
 			"link": "/pages/operaciones/devoluciones"
 		}
 	]

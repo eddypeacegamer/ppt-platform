@@ -78,20 +78,19 @@ public class FacturaTranslator {
 			}
 			
 			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_DOWN));
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
 			}
 			
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_DOWN));
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
 			}else {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
 			log.debug(context.getXml());
-			System.out.println(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
@@ -116,7 +115,7 @@ public class FacturaTranslator {
 			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
 			complementoToXmlSigned(context);
-			System.out.println(context.getXml());
+			log.debug(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
