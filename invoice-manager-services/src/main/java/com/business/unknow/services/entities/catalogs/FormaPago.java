@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "FORMA_PAGO")
+@Table(name = "CAT_FORMA_PAGO")
 public class FormaPago implements Serializable {
 
 	private static final long serialVersionUID = 8508424746268290927L;

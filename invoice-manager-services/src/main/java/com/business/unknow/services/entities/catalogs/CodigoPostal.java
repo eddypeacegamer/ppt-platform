@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CODIGO_POSTAL")
+@Table(name = "CAT_CODIGO_POSTAL")
 public class CodigoPostal implements Serializable {
 
 	private static final long serialVersionUID = 3999575917505652397L;
