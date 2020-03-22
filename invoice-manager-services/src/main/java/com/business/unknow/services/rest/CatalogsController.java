@@ -21,7 +21,6 @@ import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
 import com.business.unknow.services.services.CatalogsService;
 
@@ -64,11 +63,6 @@ public class CatalogsController {
 		return new ResponseEntity<>(service.getAllRegimenFiscal(), HttpStatus.OK);
 	}
 
-//	@GetMapping("/status-factura")
-//	public ResponseEntity<List<StatusFacturaDto>> getStatusFactura() {
-//		return new ResponseEntity<>(service.getAllStatusFactura(), HttpStatus.OK);
-//	}
-
 	@GetMapping("/giros")
 	public ResponseEntity<List<CatalogDto>> getGiros() {
 		return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
@@ -98,10 +92,5 @@ public class CatalogsController {
 	public ResponseEntity<List<CatalogDto>> getAllStatusDevoluicion() {
 		return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
 	}
-
-//	@GetMapping("/status-revision")
-//	public ResponseEntity<List<CatalogDto>> getAllStatusRevision() {
-//		return new ResponseEntity<>(service.getAllStatusRevision(), HttpStatus.OK);
-//	}
 
 }
