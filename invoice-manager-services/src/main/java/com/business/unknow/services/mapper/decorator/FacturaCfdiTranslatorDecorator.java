@@ -2,6 +2,7 @@ package com.business.unknow.services.mapper.decorator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,7 +41,7 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 	@Override
 	public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto) {
 		Cfdi cfdi = delegate.cdfiRootInfo(facturaDto, empresaDto);
-		cfdi.setFecha(dateHelper.getStringFromFecha(facturaDto.getFechaActualizacion(),
+		cfdi.setFecha(dateHelper.getStringFromFecha(new Date(),
 				FacturaConstants.FACTURA_DATE_FORMAT));
 		return cfdi;
 	}
