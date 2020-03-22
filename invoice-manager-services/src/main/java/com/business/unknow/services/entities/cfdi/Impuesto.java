@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "IMPUESTOS")
+@Table(name = "CFDI_IMPUESTOS")
 public class Impuesto implements Serializable {
 
 	private static final long serialVersionUID = 5623944906795628517L;

@@ -15,7 +15,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "CLAVE_PROD_SERV")
+@Table(name = "CAT_CLAVE_PROD_SERV")
 public class ClaveProductoServicio {
 	
 	@Id

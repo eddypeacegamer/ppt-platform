@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "GIROS")
+@Table(name = "CAT_GIROS")
 public class Giro implements Serializable {
 
 	private static final long serialVersionUID = 1L;
