@@ -98,7 +98,8 @@ export class EmpresaComponent implements OnInit {
         reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.logoFileName = file.name;
-        this.companyInfo.logotipo = reader.result.toString(); };
+        const data: string = reader.result.toString();
+        this.companyInfo.logotipo = data.substring(data.indexOf('base64') + 7, data.length);};
       reader.onerror = (error) => {
         this.errorMessages.push('Error parsing image file');
         console.error(error); };
@@ -140,7 +141,6 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
    if (this.errorMessages.length === 0) {
       this.companyInfo.giro = this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
-      console.log(this.companyInfo);
       this.empresaService.insertNewCompany(this.companyInfo)
       .subscribe((empresa: Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]); },
       (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
@@ -149,9 +149,9 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  public updateCompany():void{
+  public updateCompany(): void {
     this.errorMessages = [];
-    this.formInfo.success ='';
+    this.formInfo.success = '';
     this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc,this.companyInfo)
     .subscribe((data:Empresa) => {this.router.navigate([`./pages/contablidad/empresas`]);},
     (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
