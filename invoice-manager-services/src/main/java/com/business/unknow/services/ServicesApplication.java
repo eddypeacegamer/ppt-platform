@@ -1,5 +1,9 @@
 package com.business.unknow.services;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
 import org.springframework.boot.SpringApplication;
@@ -129,6 +133,12 @@ public class ServicesApplication {
 	@Bean
 	public NumberTranslatorHelper getNumberTranslatorHelper() {
 		return new NumberTranslatorHelper();
+	}
+
+	@PostConstruct
+	void started() {
+		System.err.println(TimeZone.getTimeZone("TimeZone"));
+		TimeZone.setDefault(TimeZone.getTimeZone("TimeZone"));
 	}
 
 }
