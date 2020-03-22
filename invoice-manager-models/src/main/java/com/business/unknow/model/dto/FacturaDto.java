@@ -3,7 +3,9 @@ package com.business.unknow.model.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.business.unknow.Constants;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -31,9 +33,11 @@ public class FacturaDto implements Serializable {
 	private String packFacturacion;
 	private String metodoPago;
 	private String notas;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
 	private String statusCancelacion;
 	private Date fechaCancelacion;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 	private Integer statusCancelado;
