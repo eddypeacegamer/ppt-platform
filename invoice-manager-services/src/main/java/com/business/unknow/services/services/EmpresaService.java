@@ -78,6 +78,9 @@ public class EmpresaService {
 			empresaValidator.validatePostEmpresa(empresaDto);
 			empresaDto.setActivo(false);
 			swSapinsExecutorService.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
+			String logo = empresaDto.getLogotipo();
+			empresaDto.setLogotipo(logo.substring(logo.indexOf("base64")+7));
+			
 			if (repository.findByRfc(empresaDto.getInformacionFiscal().getRfc()).isPresent()) {
 				throw new InvoiceManagerException("Ya existe la empresa",
 						String.format("La empresa %s ya existe", empresaDto.getInformacionFiscal().getRfc()),

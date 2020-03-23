@@ -98,8 +98,7 @@ export class EmpresaComponent implements OnInit {
         reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.logoFileName = file.name;
-        const data: string = reader.result.toString();
-        this.companyInfo.logotipo = data.substring(data.indexOf('base64') + 7, data.length);};
+        this.companyInfo.logotipo = reader.result.toString();};
       reader.onerror = (error) => {
         this.errorMessages.push('Error parsing image file');
         console.error(error); };
