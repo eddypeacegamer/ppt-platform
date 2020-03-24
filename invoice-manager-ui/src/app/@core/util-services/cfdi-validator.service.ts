@@ -67,7 +67,7 @@ export class CfdiValidatorService {
       for (const imp of concepto.retenciones) {
         retencion = (imp.importe * 3 + retencion * 3) / 3;
       }
-      const base = concepto.importe - concepto.descuento-retencion;
+      const base = concepto.importe - concepto.descuento;
       subtotal += base;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe * 3 + impuesto * 3) / 3;
