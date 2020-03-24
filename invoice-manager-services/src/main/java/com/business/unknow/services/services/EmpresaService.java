@@ -1,9 +1,13 @@
 package com.business.unknow.services.services;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -68,11 +72,15 @@ public class EmpresaService {
 		return mapper.getEmpresaDtosFromEntities(repository.findByTipoAndGiro(tipo, giro));
 	}
 
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public EmpresaDto insertNewEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
 		try {
 			empresaValidator.validatePostEmpresa(empresaDto);
 			empresaDto.setActivo(false);
 			swSapinsExecutorService.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
+			String logo = empresaDto.getLogotipo();
+			empresaDto.setLogotipo(logo.substring(logo.indexOf("base64")+7));
+			
 			if (repository.findByRfc(empresaDto.getInformacionFiscal().getRfc()).isPresent()) {
 				throw new InvoiceManagerException("Ya existe la empresa",
 						String.format("La empresa %s ya existe", empresaDto.getInformacionFiscal().getRfc()),

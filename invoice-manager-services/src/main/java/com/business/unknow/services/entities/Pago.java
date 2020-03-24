@@ -26,12 +26,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Pago implements Serializable {
 
 	private static final long serialVersionUID = 8371622895161409889L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PAGO")
 	private Integer id;
-	
+
 	@Column(name = "FOLIO")
 	private String folio;
 
@@ -45,7 +45,7 @@ public class Pago implements Serializable {
 	@NotEmpty
 	@Column(name = "BANCO")
 	private String banco;
-	
+
 	@NotEmpty
 	@Column(name = "CUENTA")
 	private String cuenta;
@@ -53,7 +53,7 @@ public class Pago implements Serializable {
 	@NotNull
 	@Column(name = "TIPO_CAMBIO")
 	private BigDecimal tipoDeCambio;
-	
+
 	/* DEPOSITO,TRANSFERENCIA, CHEQUE, EFECTIVO */
 	@NotEmpty
 	@Column(name = "FORMA_PAGO")
@@ -61,15 +61,18 @@ public class Pago implements Serializable {
 
 	@Column(name = "MONTO")
 	private BigDecimal monto;
-	
+
+	@Column(name = "Total")
+	private BigDecimal total;
+
 	@NotEmpty
 	@Column(name = "ACREDOR")
 	private String acredor;
-	
+
 	@NotEmpty
 	@Column(name = "DEUDOR")
 	private String deudor;
-	
+
 	@Column(name = "STATUS_PAGO")
 	private String statusPago;
 
@@ -78,7 +81,7 @@ public class Pago implements Serializable {
 
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
-	
+
 	@Column(name = "REVISION_1", columnDefinition = "TINYINT")
 	private Boolean revision1;
 
@@ -87,7 +90,7 @@ public class Pago implements Serializable {
 
 	@Column(name = "REVISOR_1")
 	private String revisor1;
-	
+
 	@Column(name = "REVISOR_2")
 	private String revisor2;
 
@@ -272,13 +275,22 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
 	@Override
 	public String toString() {
 		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda + ", banco="
 				+ banco + ", cuenta=" + cuenta + ", tipoDeCambio=" + tipoDeCambio + ", formaPago=" + formaPago
-				+ ", monto=" + monto + ", acredor=" + acredor + ", deudor=" + deudor + ", statusPago=" + statusPago
-				+ ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1=" + revision1
-				+ ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago="
-				+ fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+				+ ", monto=" + monto + ", total=" + total + ", acredor=" + acredor + ", deudor=" + deudor
+				+ ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante
+				+ ", revision1=" + revision1 + ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2="
+				+ revisor2 + ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + "]";
 	}
 }

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CLAVE_UNIDAD")
+@Table(name = "CAT_CLAVE_UNIDAD")
 public class ClaveUnidad implements Serializable {
 	
 	private static final long serialVersionUID = 1578386921742161974L;
