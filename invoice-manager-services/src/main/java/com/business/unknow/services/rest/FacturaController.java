@@ -124,7 +124,9 @@ public class FacturaController {
 	@PutMapping("/{folio}/conceptos/{id}")
 	public ResponseEntity<CfdiDto> updateConcepto(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid ConceptoDto concepto) throws InvoiceManagerException {
-		return new ResponseEntity<>(cfdiService.updateConceptoFromCfdi(folio, id, concepto), HttpStatus.OK);
+		CfdiDto dto = cfdiService.updateConceptoFromCfdi(folio, id, concepto);
+		service.recreatePdf( dto);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/conceptos/{id}")

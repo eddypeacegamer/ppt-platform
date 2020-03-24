@@ -101,7 +101,7 @@ public class PagoExecutorService extends AbstractExecutorService {
 		Factura factura=mapper.getEntityFromFacturaDto(context.getFacturaDto());
 		factura.setIdCfdi(cfdi.getId());
 		repository.save(factura);
-		Receptor receptor = cfdiMapper.getEntityFromEmisorDto(context.getFacturaDto().getCfdi().getReceptor());
+		Receptor receptor = cfdiMapper.getEntityFromReceptorDto(context.getFacturaDto().getCfdi().getReceptor());
 		receptor.setCfdi(cfdi);
 		receptorRepository.save(receptor);
 		Emisor emisor = cfdiMapper.getEntityFromEmisorDto(context.getFacturaDto().getCfdi().getEmisor());

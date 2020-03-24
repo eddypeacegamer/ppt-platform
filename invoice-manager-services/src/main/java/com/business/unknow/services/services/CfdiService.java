@@ -94,6 +94,18 @@ public class CfdiService {
 		if (pagosCfdi != null && !pagosCfdi.isEmpty()) {
 			cfdiDto.getComplemento().setPagos(pagosCfdi);
 		}
+		if (cfdiDto.getEmisor() == null) {
+			Optional<Emisor> emisor = emisorRepository.findByIdCfdi(cfdiDto.getId());
+			if (emisor.isPresent()) {
+				cfdiDto.setEmisor(mapper.getEmisorDtoFromEntity(emisor.get()));
+			}
+		}
+		if (cfdiDto.getReceptor() == null) {
+			Optional<Receptor> receptor = receptorReceptor.findByIdCfdi(cfdiDto.getId());
+			if (receptor.isPresent()) {
+				cfdiDto.setReceptor(mapper.getRecetorDtoFromEntity(receptor.get()));
+			}
+		}
 		cfdiDto.getComplemento().setTimbreFiscal(getTimbradoDigital(cfdiDto.getId()));
 		return cfdiDto;
 	}
@@ -125,7 +137,7 @@ public class CfdiService {
 		}
 		emisor.setCfdi(entity);
 		emisorRepository.save(emisor);
-		Receptor receptor = mapper.getEntityFromEmisorDto(cfdi.getReceptor());
+		Receptor receptor = mapper.getEntityFromReceptorDto(cfdi.getReceptor());
 		if (receptor.getNombre() == null) {
 			receptor.setNombre(receptor.getRfc());
 		}
@@ -254,7 +266,13 @@ public class CfdiService {
 			imp.setConcepto(conceptoEntity);
 			impuestoRepository.save(imp);
 		}
-		// 4.- recalculate values
+		// 3.- Update concepto and its references
+		for (RetencionDto retencionDto : concepto.getRetenciones()) {
+			Retencion ret = mapper.getEntityFromRetencionDto(retencionDto);
+			ret.setConcepto(conceptoEntity);
+			retencionRepository.save(ret);
+		}
+		// 4.- recalculate pdf
 		return cfdi;
 	}
 

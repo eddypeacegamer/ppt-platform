@@ -47,9 +47,9 @@ public interface CfdiMapper {
 
 	Emisor getEntityFromEmisorDto(EmisorDto dto);
 
-	ReceptorDto getEmisorDtoFromEntity(Receptor entity);
+	ReceptorDto getRecetorDtoFromEntity(Receptor entity);
 
-	Receptor getEntityFromEmisorDto(ReceptorDto dto);
+	Receptor getEntityFromReceptorDto(ReceptorDto dto);
 
 	ConceptoDto getConceptoDtoFromEntity(Concepto entity);
 
