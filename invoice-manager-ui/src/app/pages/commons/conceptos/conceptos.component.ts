@@ -105,6 +105,9 @@ export class ConceptosComponent implements OnInit {
     if (concepto.impuestos.length > 0 ) {
       this.concepto.iva = true;
     }
+    if (concepto.retenciones.length > 0 ) {
+      this.concepto.retencionFlag = true;
+    }
     this.formInfo.unidad = concepto.claveUnidad;
     this.formInfo.claveProdServ = concepto.claveProdServ;
     this.buscarClaveProductoServicio(concepto.claveProdServ);
