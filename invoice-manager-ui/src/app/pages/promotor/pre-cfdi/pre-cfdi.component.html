@@ -76,10 +76,10 @@
               </select>
             </div>
             <div class="col-md-3">
-              <label for="inputCliente" class="label">Razon social</label>
+              <label for="inputCliente" class="label">Razón social</label>
               <div class="row form-inline">
                 <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control" (ngModelChange)="buscarClientInfo($event)"
-                  placeholder="Razon social">
+                  placeholder="Razón social">
               </div>
             </div>
             <div class="col-md-3">
@@ -121,7 +121,7 @@
               </select>
             </div>
             <div class="col-sm-3">
-              <label for="inputPayMethod" class="label">Metodo de Pago</label>
+              <label for="inputPayMethod" class="label">Método de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
