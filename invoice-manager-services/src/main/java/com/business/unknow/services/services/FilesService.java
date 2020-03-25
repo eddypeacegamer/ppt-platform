@@ -276,6 +276,7 @@ public class FilesService {
 		try {
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
+			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(model);
 			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));		
 			Reader inputReader = new StringReader(xmlContent);
@@ -329,6 +330,7 @@ public class FilesService {
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
+			System.out.println(xmlContent);
 
 			String xslfoTemplate = getXSLFOTemplate(model);
 			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));	
