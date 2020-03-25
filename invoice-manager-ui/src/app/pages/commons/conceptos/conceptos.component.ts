@@ -105,6 +105,9 @@ export class ConceptosComponent implements OnInit {
     if (concepto.impuestos.length > 0 ) {
       this.concepto.iva = true;
     }
+    if (concepto.retenciones.length > 0 ) {
+      this.concepto.retencionFlag = true;
+    }
     this.formInfo.unidad = concepto.claveUnidad;
     this.formInfo.claveProdServ = concepto.claveProdServ;
     this.buscarClaveProductoServicio(concepto.claveProdServ);
@@ -148,7 +151,7 @@ export class ConceptosComponent implements OnInit {
     }
   }
 
-  public getImporteImpuestos(impuestos: Impuesto[]): number {
+  public calcularImportes(impuestos): number {
     if (impuestos.length > 0) {
       return impuestos.map(i => i.importe).reduce((total, value) => total + value);
     } else {
@@ -156,12 +159,22 @@ export class ConceptosComponent implements OnInit {
     }
   }
 
-  public getIporteRetenciones(impuestos: Impuesto[]): number {
-    if (impuestos.length > 0) {
-      return impuestos.map(i => i.importe).reduce((total, value) => total + value);
-    } else {
-      return 0;
-    }
+  public getTotalImpuestos(conceptos: Concepto[]): number {
+   let impuestos = 0;
+   for (const concepto of conceptos) {
+     impuestos += this.calcularImportes(concepto.impuestos);
+   }
+   return impuestos;
   }
+
+  public getTotalRetenciones(conceptos: Concepto[]): number {
+    let retenciones = 0;
+    for (const concepto of conceptos) {
+      retenciones += this.calcularImportes(concepto.retenciones);
+    }
+    return retenciones;
+   }
+
+
 
 }

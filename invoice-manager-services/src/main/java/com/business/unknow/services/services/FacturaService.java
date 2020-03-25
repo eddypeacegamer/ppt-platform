@@ -131,9 +131,6 @@ public class FacturaService {
 
 		}
 		
-		System.err.println("SIN MAPPER :"+result.getContent());
-		System.err.println("CON MAPPER :"+mapper.getFacturaDtosFromEntities(result.getContent()));
-		
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}

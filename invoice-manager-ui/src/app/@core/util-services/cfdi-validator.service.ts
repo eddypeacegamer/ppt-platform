@@ -23,10 +23,16 @@ export class CfdiValidatorService {
     const base = concepto.importe - concepto.descuento;
     if (concepto.iva) {
       const impuesto = base * 0.16; // TODO calcular impuestos dinamicamente no solo IVA
-      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)]; }
-      if (concepto.retencionFlag) {
+      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)]; 
+    } else {
+      concepto.impuestos = [];
+    }
+    if (concepto.retencionFlag) {
       const retencion = base * 0.06; // TODO calcular retencion dinamicamente
-      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)]; }
+      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)]; 
+    } else {
+      concepto.retenciones = [];
+    }
     return concepto;
   }
 
@@ -61,7 +67,7 @@ export class CfdiValidatorService {
       for (const imp of concepto.retenciones) {
         retencion = (imp.importe * 3 + retencion * 3) / 3;
       }
-      const base = concepto.importe - concepto.descuento-retencion;
+      const base = concepto.importe - concepto.descuento;
       subtotal += base;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe * 3 + impuesto * 3) / 3;

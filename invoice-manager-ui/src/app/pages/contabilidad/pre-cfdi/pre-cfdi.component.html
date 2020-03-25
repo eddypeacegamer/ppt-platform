@@ -55,7 +55,7 @@
             </button>
             <button type="button" class="btn btn-success" (click)="aceptarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" (click)="rechazarFactura()" >Rechazar</button>
+            <button type="button" class="btn btn-danger" (click)="rechazarFactura()" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0" >Rechazar</button>
 
             
           </div>
