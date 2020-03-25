@@ -244,17 +244,19 @@
                                 </block>
                             </inline-container>
                         </block>
-                        <block>
-                            <inline-container font-weight="bold">
-                                <block>IMPUESTOS RETENIDOS</block>
-                            </inline-container>
-                            <inline-container width="25mm" margin-right="3mm">
-                                <block>
-                                    $
-                                    <xsl:value-of select="format-number(factura/cfdi:Impuestos/@TotalImpuestosRetenidos, '###,##0.00')" />
-                                </block>
-                            </inline-container>
-                        </block>
+                        <xsl:if test="factura/cfdi:Impuestos/@TotalImpuestosRetenidos">
+                            <block>
+                                <inline-container font-weight="bold">
+                                    <block>IMPUESTOS RETENIDOS</block>
+                                </inline-container>
+                                <inline-container width="25mm" margin-right="3mm">
+                                    <block>
+                                        $
+                                        <xsl:value-of select="format-number(factura/cfdi:Impuestos/@TotalImpuestosRetenidos, '###,##0.00')" />
+                                    </block>
+                                </inline-container>
+                            </block>
+                        </xsl:if>
                         <block>
                             <inline-container font-weight="bold">
                                 <block>TOTAL</block>

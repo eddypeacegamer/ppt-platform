@@ -51,6 +51,7 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
+import com.business.unknow.services.services.translators.FacturaTranslator;
 
 /**
  * @author ralfdemoledor
@@ -85,6 +86,9 @@ public class FilesService {
 
 	@Autowired
 	private NumberTranslatorHelper numberTranslatorHelper;
+	
+	@Autowired
+	private FacturaTranslator facturaTranslator;
 
 	private static final Logger log = LoggerFactory.getLogger(FilesService.class);
 
@@ -274,7 +278,10 @@ public class FilesService {
 
 	public FacturaFileDto generateInvoicePDF(FacturaDto factura, Cfdi cfdi) {
 		try {
+			BigDecimal retenciones = facturaTranslator.calculaRetenciones(factura);
+			
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
+			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(model);
@@ -297,7 +304,10 @@ public class FilesService {
 
 	public FacturaFileDto generateInvoicePDF(FacturaContext context) {
 		try {
+			BigDecimal retenciones = facturaTranslator.calculaRetenciones(context);
+			
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
+			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			if(model.getFolioPadre() != null && model.getPagoComplemento() == null) {
 				ComplementoPago contextComplementoPago = context.getCfdi()
 						.getComplemento()
