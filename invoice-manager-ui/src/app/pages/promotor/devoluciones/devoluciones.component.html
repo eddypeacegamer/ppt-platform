@@ -108,7 +108,7 @@
                 placeholder="Observaciones o comentarios adicionales">
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)">Solicitar Devolucion </button>
+          <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)">Solicitar Devolución </button>
         </form>
         <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
           <p *ngFor="let message of messages">{{message}}</p>
@@ -174,7 +174,7 @@
 
 
         <br>
-        <strong>Ultimas comisiones / reembolsos generados</strong>
+        <strong>Últimas comisiones / reembolsos generados</strong>
         <div class="clearfix">
 
           <button type="button" (click)="downloadCommissions()" class="btn btn-success float-right">Descarga</button>
@@ -190,9 +190,9 @@
                   <th scope="col" class="text-center">Folio Factura</th>
                   <th scope="col" class="text-center">Monto Pago</th>
                   <th scope="col" class="text-center">Impuestos</th>
-                  <th scope="col" class="text-center">Porcentage comision</th>
-                  <th scope="col" class="text-center">Comision/Reembolso</th>
-                  <th scope="col" class="text-center">Fecha creacion</th>
+                  <th scope="col" class="text-center">Porcentaje comisión</th>
+                  <th scope="col" class="text-center">Comisión/Reembolso</th>
+                  <th scope="col" class="text-center">Fecha creación</th>
                 </tr>
               </thead>
               <tbody>
