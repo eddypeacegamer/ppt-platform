@@ -64,12 +64,12 @@
           <p class="font-weight-bold">Información Emisor</p>
           <div class="row">
             <div class="col-md-2">
-              <label for="inputGiro" class="label">Linea Emisor</label>
+              <label for="inputGiro" class="label">Línea Emisor</label>
               <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaEmisor">
                   <option value="*">Seleccionar</option>
-                  <option value="A">Linea A</option>
-                  <option value="B">Linea B</option>
-                  <option value="C">Linea C</option>
+                  <option value="A">Línea A</option>
+                  <option value="B">Línea B</option>
+                  <option value="C">Línea C</option>
               </select>
             </div>
             <div class="col-sm-5">
@@ -96,12 +96,12 @@
           <p class="font-weight-bold">Información Receptor</p>
           <div class="row">
             <div class="col-md-2">
-              <label for="inputGiro" class="label">Linea Receptor</label>
+              <label for="inputGiro" class="label">Línea Receptor</label>
               <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaReceptor">
                   <option value="*">Seleccionar</option>
-                  <option value="A">Linea A</option>
-                  <option value="B">Linea B</option>
-                  <option value="C">Linea C</option>
+                  <option value="A">Línea A</option>
+                  <option value="B">Línea B</option>
+                  <option value="C">Línea C</option>
               </select>
             </div>
             <div class="col-sm-5">
@@ -151,7 +151,7 @@
               </select>
             </div>
             <div class="col-sm-3">
-              <label for="inputPayMethod" class="label">Metodo de Pago</label>
+              <label for="inputPayMethod" class="label">Método de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="*">Seleccionar</option>

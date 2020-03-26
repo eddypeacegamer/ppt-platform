@@ -24,7 +24,7 @@ export class DashboardComponent implements OnDestroy {
     type: 'primary',
   };
   rollerShadesCard: CardSettings = {
-    title: '15 facturas revision',
+    title: '15 facturas revisión',
     iconClass: 'nb-edit',
     type: 'success',
   };
