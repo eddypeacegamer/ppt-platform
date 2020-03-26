@@ -145,7 +145,10 @@
         <p class="font-weight-bold">Conceptos factura</p>
         <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)"  [nbSpinner]="loading" [disabled]="loading"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+              SOLICITAR CFDI
+          </button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
