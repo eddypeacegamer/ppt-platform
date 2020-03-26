@@ -5,14 +5,14 @@
       <nb-card-body>
         <div class="row">
           <div class="col-md-1">
-            <label for="inputLinea" class="label">Linea Emisora</label>
+            <label for="inputLinea" class="label">Línea Emisora</label>
           </div>
           <div class="col-md-2">
             <select id="inputLinea" style="display:block;" class="form-control" [(ngModel)]="filterParams.lineaEmisor">
-              <option value="A">Linea A</option>
-              <option value="B">Linea B</option>
-              <option value="C">Linea C</option>
-              <option value="D">Linea D</option>
+              <option value="A">Línea A</option>
+              <option value="B">Línea B</option>
+              <option value="C">Línea C</option>
+              <option value="D">Línea D</option>
             </select>
           </div>
           <div class="col-md-1">
@@ -21,7 +21,7 @@
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
               [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
-              placeholder="Razon Social Emisor">
+              placeholder="Razón Social Emisor">
           </div>
           <div class="col-md-1">
             <label for="InputReceptor" class="label">Receptor</label>
@@ -29,7 +29,7 @@
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
               [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
-              placeholder="Razon Social Receptor">
+              placeholder="Razón Social Receptor">
           </div>
 
         </div>

@@ -175,6 +175,8 @@ export class ConceptosComponent implements OnInit {
     return retenciones;
    }
 
-
+  public handleIvaInputChange() {
+    if(!this.concepto.iva) this.concepto.retencionFlag = false;
+  }
 
 }

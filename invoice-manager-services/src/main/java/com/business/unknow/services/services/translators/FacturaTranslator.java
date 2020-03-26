@@ -24,6 +24,7 @@ import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Retencion;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
@@ -166,6 +167,23 @@ public class FacturaTranslator {
 			totalImpuestos = totalImpuestos.add(translado.getImporte());
 		}
 		return totalImpuestos;
+	}
+	
+	public BigDecimal calculaRetenciones(FacturaContext context) {
+		return calculaRetenciones(context.getFacturaDto());
+	}
+	
+	public BigDecimal calculaRetenciones(FacturaDto facturaDto) {
+		BigDecimal totalRetenciones = new BigDecimal(0);
+		List<Retencion> retenciones = new ArrayList<>();
+		for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
+			Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
+			if (!conceptoDto.getRetenciones().isEmpty()) {
+				totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
+			}
+		}
+		
+		return totalRetenciones;
 	}
 
 	public BigDecimal calculaRetenciones(List<Retencion> retenciones, Concepto concepto, BigDecimal totalRetenciones) {
