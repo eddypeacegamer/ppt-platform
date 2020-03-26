@@ -55,9 +55,9 @@
     <div class="col-sm-4">
       <label for="inputImpuesto" class="label"></label>
       <div class="row form-inline">
-        <input type="checkbox" [(ngModel)]="concepto.iva" class="form-check-input" id="iva">
+        <input type="checkbox" [(ngModel)]="concepto.iva" class="form-check-input" id="iva" (change)="handleIvaInputChange()">
         <label class="form-check-label" for="iva">IVA</label>
-        <input type="checkbox" [(ngModel)]="concepto.retencionFlag" class="form-check-input" id="retencion">
+        <input type="checkbox" [(ngModel)]="concepto.retencionFlag" class="form-check-input" id="retencion" [disabled]="!concepto.iva">
         <label class="form-check-label" for="retencion">RETENCIÓN</label>
         <button *ngIf="concepto.id === undefined" class="btn btn-success" (click)="agregarConcepto()">Agregar
           Concepto</button>
