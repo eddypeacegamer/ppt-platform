@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -280,7 +280,7 @@ export class RevisionComponent implements OnInit {
     this.loading = true;
     this.successMessage = undefined;
     this.errorMessages = [];
-    let fact = { ...factura };
+    const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;

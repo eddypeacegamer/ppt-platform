@@ -176,7 +176,10 @@
           <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "factura.statusFactura !== 'Timbrada'"></ngx-conceptos>
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)"  [nbSpinner]="loading" [disabled]="loading"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+              SOLICITAR CFDI
+          </button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
@@ -251,9 +254,9 @@
           <label for="inputGiro" class="label">Pack de facturacion</label>
           <select id="inputGiro" fullWidth class="form-control" style="display:block;"
             [(ngModel)]="data.packFacturacion">
+            <option value="NTLINK">NT Link</option>
             <option value="SW_SAPIENS">SW Sapiens</option>
             <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
-            <option value="NTLINK">NT Link</option>
           </select>
 
         </div>

@@ -141,7 +141,6 @@
           </div>
         </div>
         <p class="alert alert-success" *ngIf="formInfo.success">{{formInfo.success}}</p>
-        <p class="alert alert-warning" *ngIf="formInfo.message">{{formInfo.message}}</p>
         <p class="alert alert-warning"
           *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
           role="alert">La suma de los porcentajes debe ser igual al 16%</p>
@@ -152,7 +151,7 @@
           <button type="button" *ngIf="clientInfo.id === undefined && isPromotor"
             [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>
-          <button type="button"  *ngIf="clientInfo.id !== undefined" [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined" (click)="updateClient()" nbButton
+          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo " [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
       </nb-card-body>

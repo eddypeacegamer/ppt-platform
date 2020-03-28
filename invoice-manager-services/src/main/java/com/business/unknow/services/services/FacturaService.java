@@ -128,7 +128,6 @@ public class FacturaService {
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
-
 		}
 		
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
@@ -288,4 +287,12 @@ public class FacturaService {
 				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
 	}
 
+	public void recreatePdf(CfdiDto dto) {
+		FacturaDto factura = mapper.getFacturaDtoFromEntity(
+				repository.findByFolio(dto.getFolio()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", dto.getFolio()))));
+		factura.setCfdi(dto);
+		fileService.generateInvoicePDF(factura, null);
+	}
+	
 }

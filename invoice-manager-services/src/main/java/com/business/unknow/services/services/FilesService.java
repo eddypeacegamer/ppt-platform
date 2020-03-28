@@ -178,7 +178,8 @@ public class FilesService {
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
 
-		if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
+		if (facturaDto.getCfdi().getComplemento() != null
+				&& facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
 			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
 		}
 

@@ -42,12 +42,16 @@ export class PagosComponent implements OnInit {
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
     if (this.factura !== undefined && this.factura.folio !== undefined) {
-      this.paymentsService.getPaymentsByFolio(this.factura.folio)
-              .subscribe(payments => {
-                this.invoicePayments = payments; 
-                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-                });
       this.paymentsService.getFormasPago(this.user.roles).subscribe(payTypes => this.payTypeCat = payTypes);
+      this.paymentsService.getPaymentsByFolio(this.factura.folio)
+              .subscribe((payments: PagoFactura[]) => {
+                this.invoicePayments = payments;
+                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
+                if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
+                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
+                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
+                }
+                });
     }
   }
 
@@ -132,9 +136,14 @@ export class PagosComponent implements OnInit {
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe(payments => { this.invoicePayments = payments;
+          .subscribe((payments: PagoFactura[]) => { this.invoicePayments = payments;
             this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-            this.loading = false; });
+            this.loading = false;
+             if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
+                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
+                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
+              }
+          });
           this.invoiceService.getComplementosInvoice(this.factura.folio)
           .subscribe(complementos => this.factura.complementos = complementos);
         }, (error: HttpErrorResponse) => {

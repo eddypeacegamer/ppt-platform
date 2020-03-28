@@ -221,6 +221,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   }
 
   solicitarCfdi() {
+    this.loading = true;
     this.errorMessages = [];
     this.factura.solicitante = this.user.email;
     this.factura.lineaEmisor = 'A';
@@ -249,16 +250,18 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
+          this.loading = false;
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {
+          this.loading = false;
           this.errorMessages.push((error.error != null && error.error !== undefined) ?
             error.error.message : `${error.statusText} : ${error.message}`);
         });
+    }else{
+      this.loading = false;
     }
   }
   public downloadPdf(folio: string) {
-    //console.log('calling pdfMakeService for :', folio)
-    //this.pdfMakeService.generatePdf(this.factura);
     this.filesService.getFacturaFile(folio, 'PDF').subscribe(
       file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
     );
