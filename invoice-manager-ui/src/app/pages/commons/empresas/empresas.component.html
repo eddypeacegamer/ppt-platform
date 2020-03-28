@@ -53,7 +53,7 @@
             <strong>Resultados</strong>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
-            <nb-select *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+            <nb-select *ngIf="page.last==false || page.first" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
               id="inputPageSize" class="float-right">
               <nb-option value="10">10</nb-option>
               <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>

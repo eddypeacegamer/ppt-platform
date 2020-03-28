@@ -96,12 +96,29 @@ export class ClienteComponent implements OnInit {
 
   public toggleOn() {
     this.clientInfo.activo = true;
-    this.updateClient();
+    this.formInfo.success = '';
+    this.messages = [];
+    this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
+    this.clientService.updateClient(this.clientInfo)
+    .subscribe(client => { this.formInfo.success = 'Cliente activado exitosamente'; this.clientInfo = client; },
+      (error: HttpErrorResponse) => {
+        this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
+        this.clientInfo.activo = false;
+        this.formInfo.status = error.status;
+      });
   }
 
   public toggleOff() {
     this.clientInfo.activo = false;
-    this.updateClient();
+    this.formInfo.success = '';
+    this.messages = [];
+    this.clientService.updateClient(this.clientInfo)
+    .subscribe(client => { this.formInfo.success = 'Cliente desactivado exitosamente'; this.clientInfo = client; },
+      (error: HttpErrorResponse) => {
+        this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
+        this.clientInfo.activo = true;
+        this.formInfo.status = error.status;
+      });
   }
 
 }

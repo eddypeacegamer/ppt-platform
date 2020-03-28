@@ -141,7 +141,6 @@
           </div>
         </div>
         <p class="alert alert-success" *ngIf="formInfo.success">{{formInfo.success}}</p>
-        <p class="alert alert-warning" *ngIf="formInfo.message">{{formInfo.message}}</p>
         <p class="alert alert-warning"
           *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
           role="alert">La suma de los porcentajes debe ser igual al 16%</p>
