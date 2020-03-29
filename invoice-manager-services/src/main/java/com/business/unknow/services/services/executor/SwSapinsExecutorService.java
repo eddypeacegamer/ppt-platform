@@ -44,6 +44,7 @@ public class SwSapinsExecutorService {
 			SwSapiensConfig swSapiensConfig = swSapiensClient
 					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
 					.stamp(context.getXml(), SwSapiensVersionEnum.V4.getValue());
+			
 			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
 					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());

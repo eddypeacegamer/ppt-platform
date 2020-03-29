@@ -99,20 +99,20 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.build();
 	}
 
-	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaContext facturaContext) {
-		return new FacturaBuilder().setFolioPadre(facturaContext.getFacturaPadreDto().getFolio())
-				.setPackFacturacion(facturaContext.getFacturaPadreDto().getPackFacturacion())
-				.setCfdi(facturaContext.getFacturaPadreDto().getCfdi())
-				.setLineaEmisor(facturaContext.getFacturaPadreDto().getLineaEmisor())
-				.setRfcEmisor(facturaContext.getFacturaPadreDto().getRfcEmisor())
+	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto facturaPadre, PagoDto pagoActual) {
+		return new FacturaBuilder().setFolioPadre(facturaPadre.getFolio())
+				.setPackFacturacion(facturaPadre.getPackFacturacion())
+				.setCfdi(facturaPadre.getCfdi())
+				.setLineaEmisor(facturaPadre.getLineaEmisor())
+				.setRfcEmisor(facturaPadre.getRfcEmisor())
 				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-				.setRfcRemitente(facturaContext.getFacturaPadreDto().getRfcRemitente())
-				.setLineaRemitente(facturaContext.getFacturaPadreDto().getLineaRemitente())
-				.setRazonSocialEmisor(facturaContext.getFacturaPadreDto().getRazonSocialEmisor())
-				.setRazonSocialRemitente(facturaContext.getFacturaPadreDto().getRazonSocialRemitente())
-				.setSolicitante(facturaContext.getFacturaPadreDto().getSolicitante())
+				.setRfcRemitente(facturaPadre.getRfcRemitente())
+				.setLineaRemitente(facturaPadre.getLineaRemitente())
+				.setRazonSocialEmisor(facturaPadre.getRazonSocialEmisor())
+				.setRazonSocialRemitente(facturaPadre.getRazonSocialRemitente())
+				.setSolicitante(facturaPadre.getSolicitante())
 				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
+				.setFormaPago(FormaPagoEnum.findByPagoValue(pagoActual.getFormaPago()).getClave())
 				.build();
 	}
 
@@ -129,12 +129,12 @@ public class FacturaBuilderService extends AbstractBuilderService {
 						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getRegimenFiscal()))
 				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
 						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI))
-				.setConceptos(buildFacturaComplementoConceptos(facturaContext))
+				.setConceptos(buildFacturaComplementoConceptos())
 				.setPagos(buildFacturaComplementoPagos(facturaContext));
 		return cfdiBuilder.build();
 	}
 
-	public List<ConceptoDto> buildFacturaComplementoConceptos(FacturaContext facturaContext) {
+	public List<ConceptoDto> buildFacturaComplementoConceptos() {
 		List<ConceptoDto> conceptos = new ArrayList<ConceptoDto>();
 		ConceptoDtoBuilder conceptoBuilder = new ConceptoDtoBuilder().setCantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
 				.setClaveProdServ(ComplementoPpdDefaults.CLAVE_PROD).setClaveUnidad(ComplementoPpdDefaults.CLAVE)

@@ -62,7 +62,7 @@ public class Pago implements Serializable {
 	@Column(name = "MONTO")
 	private BigDecimal monto;
 
-	@Column(name = "Total")
+	@Column(name = "TOTAL")
 	private BigDecimal total;
 
 	@NotEmpty

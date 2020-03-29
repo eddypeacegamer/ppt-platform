@@ -1,7 +1,6 @@
 package com.business.unknow.services.services;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,7 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -184,6 +184,13 @@ public class FacturaService {
 					String.format("La factura con el folio %s no existe", folio));
 		}
 	}
+	
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
+	public void deleteFactura(String folio) throws InvoiceManagerException {
+		repository.delete(repository.findByFolio(folio).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el folio %s no existe", folio))));
+		cfdiService.deleteCfdi(folio);
+	}
 
 	// CFDI
 	public CfdiDto getCfdiByFolio(String folio) {
@@ -275,16 +282,16 @@ public class FacturaService {
 		return facturaContext;
 	}
 
-	public void buildComplemento(FacturaContext facturaContext) throws InvoiceManagerException {
-		facturaContext.setFacturaDto(facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaContext));
-		facturaContext.getFacturaDto().setCfdi(facturaBuilderService.buildFacturaComplementoCreation(facturaContext));
-		facturaDefaultValues.assignaDefaultsComplemento(facturaContext.getFacturaDto());
-		facturaServiceEvaluator.complementoValidation(facturaContext);
-		facturaContext.getCurrentPago().setFolio(facturaContext.getFacturaDto().getFolio());
-		facturaContext.getCurrentPago().setFolioPadre(facturaContext.getFacturaDto().getFolioPadre());
-		facturaContext.setPagos(Arrays.asList(facturaContext.getCurrentPago()));
-		facturaContext.getPagoCredito().setMonto(
-				facturaContext.getPagoCredito().getMonto().subtract(facturaContext.getCurrentPago().getMonto()));
+	public FacturaDto generateComplemento(FacturaDto facturaPadre, PagoDto pagoPpd) throws InvoiceManagerException {
+		
+		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturaPadre, facturaPadre.getFolio());
+		FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaPadre, pagoPpd);
+		complemento.setCfdi(facturaBuilderService.buildFacturaComplementoCreation(factContext));
+		facturaDefaultValues.assignaDefaultsComplemento(complemento);
+		factContext.setFacturaDto(complemento);
+		facturaServiceEvaluator.complementoValidation(factContext);
+		//Save complemento in DB
+		return insertNewFacturaWithDetail(complemento);
 	}
 
 	public void recreatePdf(CfdiDto dto) {

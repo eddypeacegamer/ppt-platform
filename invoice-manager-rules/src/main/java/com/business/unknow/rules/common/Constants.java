@@ -23,9 +23,9 @@ public class Constants {
 	public class DeletePagoSuite {
 		public static final String DELETE_PAGO_SUITE = "DeletePagoSuite";
 		
-		public static final String DELETE_PPD_PAYMENT = "DeletePpdPayment";
-		public static final String DELETE_PPD_PAYMENT_RULE = "DeletePpdPaymentRule";
-		public static final String DELETE_PPD_PAYMENT_RULE_DESC = "No se puede borrar el pago ppd por que hay incosistencias";
+		public static final String DELETE_STATUS_PAYMENT = "DeletePpdPayment";
+		public static final String DELETE_STATUS_PAYMENT_RULE = "DeletePpdPaymentRule";
+		public static final String DELETE_STATUS_PAYMENT_RULE_DESC = "El estatus del pago o de la factura no permiten el borrado";
 		
 		public static final String DELETE_PAYMENT = "DeletePayment";
 		public static final String DELETE_PAYMENT_RULE = "DeletePaymentRule";
@@ -33,33 +33,35 @@ public class Constants {
 		
 		public static final String DELETE_CREDIT_PAYMANT = "DeleteCreditPaymant";
 		public static final String DELETE_CREDIT_PAYMANT_RULE = "DeleteCreditPaymantRule";
-		public static final String DELETE_CREDIT_PAYMANT_RULE_DESC = "No se puede borrar el credito , hay un pago regular";
+		public static final String DELETE_CREDIT_PAYMANT_RULE_DESC = "En facturas PPD no puede ser borrado el pago a credito";
 	}
 	
-	public class PagoPpdSuite {
+	public class PaymentsSuite {
 		public static final String PAGO_PPD_SUITE = "PagoPpdSuite";
+		public static final String PAGO_PUE_SUITE = "PagoPueSuite";
 		
 		public static final String MONTO_PAGO_VALIDATION = "MontoPagoValidation";
 		public static final String MONTO_PAGO_VALIDATION_RULE = "MontoPagoValidationRule";
-		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "El monto del pago actual contiene una incongruencia con su credito";
-		
-	}
-	
-	public class PagoPueSuite {
-		public static final String PAGO_PUE_SUITE = "PagoPueSuite";
-		
-		public static final String PAYMENT_CREDIT_PUE= "PaymantPueWithCredit";
-		public static final String PAYMENT_CREDIT_PUE_RULE = "PaymantPueWithCreditRule";
-		public static final String PAYMENT_CREDIT_PUE_RULE_DESC = "El Credito requerido para tu factura PUE esta mal";
-		
-		public static final String PAYMENT_PUE_NOT_CREDIT= "PaymentPueNotCredit";
-		public static final String PAYMENT_PUE_NOT_CREDIT_RULE = "PaymentPueNotCreditRule";
-		public static final String PAYMENT_PUE_NOT_CREDIT_RULE_DESC = "Los datos del pago de la factura pue son incorrectos";
+		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "Monto invalido de pago, el pago  no puede ser superior al monto faltante por acreditar en la factura  o menor a $0:00.";
 		
 		public static final String CREATE_CREDIT_VALIDATION = "CreateCreditValidation";
 		public static final String CREATE_CREDIT_VALIDATION_RULE = "CreateCreditValidationRule";
-		public static final String CREATE_CREDIT_VALIDATION_RULE_DESC = "Los datos de credito Pue son incorrectos";
+		public static final String CREATE_CREDIT_VALIDATION_RULE_DESC = "El pago  no puede ser superior al monto faltante por acreditar en la factura.";
+		
+		public static final String ORDER_PAYMENT_VALIDATION = "PaymentOrderValidation";
+		public static final String ORDER_PAYMENT_VALIDATION_RULE = "PaymentOrderValidationRule";
+		public static final String ORDER_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion de pagos, el segundo pago no puede ser validado si el primer pago no ha sido validado.";
+		
+		public static final String DOUBLE_PAYMENT_VALIDATION = "DoubleOrderValidation";
+		public static final String DOUBLE_PAYMENT_VALIDATION_RULE = "DoubleOrderValidationRule";
+		public static final String DOUBLE_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion del segundo pago, el primer pago  no ha sido validado.";
+		
+		public static final String CONFLICT_PAYMENT_VALIDATION = "ConflictOrderValidation";
+		public static final String CONFLICT_PAYMENT_VALIDATION_RULE = "ConflictOrderValidationRule";
+		public static final String CONFLICT_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion del pago.";
+		
 	}
+	
 
 	public class Prevalidations {
 		public static final String PREVALIDATION_SUITE = "PrevalidationSuite";

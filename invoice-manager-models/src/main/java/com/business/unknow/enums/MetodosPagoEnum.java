@@ -2,7 +2,7 @@ package com.business.unknow.enums;
 
 public enum MetodosPagoEnum {
 
-	PUE("PUE", "PAGO EN UNA SOLA EXHIBICION"), PPD("PPF", "PAGO POR DEFINIR");
+	PUE("PUE", "PAGO EN UNA SOLA EXHIBICION"), PPD("PDD", "PAGO POR DEFINIR");
 
 	private String clave;
 

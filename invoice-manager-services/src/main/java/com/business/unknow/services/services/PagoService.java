@@ -27,16 +27,12 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoRepository;
-import com.business.unknow.services.services.builder.FacturaBuilderService;
-import com.business.unknow.services.services.builder.PagoBuilderService;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.services.executor.PagoExecutorService;
 import com.business.unknow.services.util.PagoBuilder;
@@ -57,8 +53,6 @@ public class PagoService {
 	@Autowired
 	private PagoEvaluatorService pagoEvaluatorService;
 
-	@Autowired
-	private PagoBuilderService pagoBuilderService;
 
 	@Autowired
 	private PagoExecutorService pagoExecutorService;
@@ -66,8 +60,6 @@ public class PagoService {
 	@Autowired
 	private FacturaService facturaService;
 
-	@Autowired // TODO evaluate remove this dependency when factura context will be disabled
-	private FacturaBuilderService facturaBuilderService;
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
@@ -160,23 +152,24 @@ public class PagoService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPayment(String folio, PagoDto pagoDto) throws InvoiceManagerException {
-		pagoEvaluatorService.validatePago(pagoDto, new PagoDto());
-		FacturaDto factura = facturaService.getFacturaByFolio(folio);
-		if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			FacturaContext facturaContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoDto,
-					facturaService.getFacturaByFolio(folio), folio);
-			pagoEvaluatorService.validatePagoPpdCreation(facturaContext);
-			facturaService.buildComplemento(facturaContext);
-			return pagoExecutorService.creaPagoPpdExecutor(facturaContext);
-		} else if (factura.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
-			FacturaContext facturaContext = facturaBuilderService.buildFacturaContextPagoPueCreation(folio, pagoDto);
-			pagoEvaluatorService.validatePagoPueCreation(facturaContext);
-			return pagoExecutorService.creaPagoPueExecutor(facturaContext);
-		}
-		throw new InvoiceManagerException("Metodo de pago no soportado",
-				String.format("El metodo de pago %s no es valido", factura.getCfdi().getMetodoPago()),
-				HttpStatus.BAD_REQUEST.value());
-
+		//1.- validate fields required
+		//2.- validate if payment is credit or real payment
+		//3.- Validate payment amount can't be greater than invoice total
+		//4.- Populate invoice total in payment
+		//5.- PPD crean en automatico complemento
+		
+		pagoEvaluatorService.validatePayment(pagoDto);
+		FacturaDto facturaPadre = facturaService.getFacturaByFolio(folio);
+		List<PagoDto> payments = getPagos(folio);
+		pagoDto.setFolio(folio);
+		pagoDto.setFolioPadre(folio);
+		pagoDto.setTotal(facturaPadre.getCfdi().getTotal());
+		pagoEvaluatorService.validatePaymentCreation(pagoDto, payments, facturaPadre.getCfdi());
+		if (facturaPadre.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
+			FacturaDto complemento = facturaService.generateComplemento(facturaPadre, pagoDto);
+			pagoDto.setFolio(complemento.getFolio()); //Override folio payment
+		} 
+		return pagoExecutorService.createPagoExecutor(pagoDto, payments);
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -187,7 +180,7 @@ public class PagoService {
 		PagoBuilder pagoBuilder = new PagoBuilder(mapper.getPagoDtoFromEntity(entity)) // payment only update revision
 				.setRevision1(pago.getRevision1()).setRevision2(pago.getRevision2()).setRevisor1(pago.getRevisor1())
 				.setRevisor2(pago.getRevisor2());
-		pagoEvaluatorService.validatePago(pago, mapper.getPagoDtoFromEntity(entity));
+		pagoEvaluatorService.validatePayment(pago);
 
 		if (entity.getRevision1()&&entity.getRevision2()) {
 			throw new InvoiceManagerException(
@@ -228,29 +221,12 @@ public class PagoService {
 	}
 
 	public void deletePago(String folio, Integer id) throws InvoiceManagerException {
-		Pago pago = repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
-				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value()));
-		FacturaDto factura = facturaService.getBaseFacturaByFolio(pago.getFolio());
-
-		FacturaContext context = null;
-		switch (TipoDocumentoEnum.findByDesc(factura.getTipoDocumento())) {
-		case FACTURA:
-			context = pagoBuilderService.deletePagoPueBuilder(factura, pago, id);
-			pagoEvaluatorService.deletePagoPueValidation(context);
-			pagoEvaluatorService.deleteComplementoValidation(context);
-			pagoExecutorService.deletePagoPueExecutor(context);
-			break;
-		case COMPLEMENTO:
-			context = pagoBuilderService.deletePagoPpdBuilder(factura, pago, id);
-			pagoEvaluatorService.deletePagoPpdValidation(context);
-			pagoExecutorService.deletePagoPpdExecutor(context);
-			break;
-		default:
-			new InvoiceManagerException("Tipo de documento not suported",
-					String.format("Documento %s not suported", factura.getTipoDocumento()),
-					HttpStatus.CONFLICT.value());
-			break;
-		}
+		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
+				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value())));
+		FacturaDto factura = facturaService.getBaseFacturaByFolio(payment.getFolio());
+		List<PagoDto> payments = getPagos(folio);
+		pagoEvaluatorService.deletepaymentValidation(payment, factura);
+		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
 	}
 
 }

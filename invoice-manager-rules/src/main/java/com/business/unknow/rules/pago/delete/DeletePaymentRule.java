@@ -12,6 +12,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.DeletePagoSuite;
 
 @Rule(name = DeletePagoSuite.DELETE_PAYMENT_RULE, description = DeletePagoSuite.DELETE_PAYMENT)
+@Deprecated
 public class DeletePaymentRule {
 
 	@Condition
