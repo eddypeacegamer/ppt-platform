@@ -29,6 +29,7 @@ import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.cfdi.TimbradoFiscalDigitialDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
@@ -159,6 +160,14 @@ public class CfdiService {
 				retencionRepository.save(reten);
 			}
 
+		}
+		if (cfdi.getComplemento() != null && cfdi.getComplemento().getPagos() != null
+				&& !cfdi.getComplemento().getPagos().isEmpty()) {
+			for(CfdiPagoDto cfdiPagoDto:cfdi.getComplemento().getPagos()) {
+				CfdiPago cfdiPago=mapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
+				cfdiPago.setCfdi(entity);
+				cfdiPagoRepository.save(cfdiPago);
+			}
 		}
 		return mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
 	}
