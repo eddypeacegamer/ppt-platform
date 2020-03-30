@@ -157,7 +157,7 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
-		FacturaDto saveFactura = saveFactura(entity);
+		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			pagoService.insertNewPaymentWithoutValidation(
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
@@ -166,9 +166,7 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	private FacturaDto saveFactura(Factura factura) {
-		return mapper.getFacturaDtoFromEntity(repository.save(factura));
-	}
+
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
 		if (repository.findByFolio(folio).isPresent()) {
@@ -282,6 +280,7 @@ public class FacturaService {
 		return facturaContext;
 	}
 
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto generateComplemento(FacturaDto facturaPadre, PagoDto pagoPpd) throws InvoiceManagerException {
 		
 		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturaPadre, facturaPadre.getFolio());
@@ -291,7 +290,10 @@ public class FacturaService {
 		factContext.setFacturaDto(complemento);
 		facturaServiceEvaluator.complementoValidation(factContext);
 		//Save complemento in DB
-		return insertNewFacturaWithDetail(complemento);
+		CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
+		Factura fact = mapper.getEntityFromFacturaDto(complemento);
+		fact.setIdCfdi(cfdi.getId());
+		return mapper.getFacturaDtoFromEntity(repository.save(fact));
 	}
 
 	public void recreatePdf(CfdiDto dto) {

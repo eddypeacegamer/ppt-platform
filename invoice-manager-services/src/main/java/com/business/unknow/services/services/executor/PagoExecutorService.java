@@ -1,5 +1,6 @@
 package com.business.unknow.services.services.executor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +48,12 @@ public class PagoExecutorService extends AbstractExecutorService {
 	public PagoDto createPagoExecutor(PagoDto payment,List<PagoDto> payments) {
 		Optional<PagoDto> creditPayment = payments.stream().filter(p->FormaPagoEnum.CREDITO.getPagoValue().equals(p.getFormaPago())).findAny();
 		if (creditPayment.isPresent()) { // updating credit payment
-			creditPayment.get().setMonto(creditPayment.get().getMonto().subtract(payment.getMonto()));
-			pagoRepository.save(pagoMapper.getEntityFromPagoDto(creditPayment.get()));
+			if(payment.getMonto().compareTo(creditPayment.get().getMonto())>0) {
+				creditPayment.get().setMonto(BigDecimal.ZERO);
+			}else {
+				creditPayment.get().setMonto(creditPayment.get().getMonto().subtract(payment.getMonto()));
+				pagoRepository.save(pagoMapper.getEntityFromPagoDto(creditPayment.get()));	
+			}
 		}
 		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(payment)));
 	}

@@ -182,6 +182,8 @@ public class PagoService {
 				.setRevisor2(pago.getRevisor2());
 		pagoEvaluatorService.validatePayment(pago);
 
+		pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), getPagos(folio), facturaService.getFacturaByFolio(folio).getCfdi());
+		
 		if (entity.getRevision1()&&entity.getRevision2()) {
 			throw new InvoiceManagerException(
 					"Incongruencia en la validacion de pagos ya se valido dos veces ",
