@@ -326,8 +326,6 @@
                                     <inline padding-right="3mm" font-weight="bold">Metodo de pago</inline>
                                     <inline>
                                         <xsl:value-of select="factura/@MetodoPago" />
-                                        -
-                                        <xsl:value-of select="MetodoPagoDesc" />
                                     </inline>
                                 </block>
                             </inline-container>
