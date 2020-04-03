@@ -41,7 +41,7 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "empresaDto.certificado", target = "certificado"),
 			@Mapping(source = "empresaDto.noCertificado", target = "noCertificado"),
 			@Mapping(source = "facturaDto.cfdi.sello", target = "sello"),
-			@Mapping(source = "empresaDto.informacionFiscal.cp", target = "lugarExpedicion") })
+			@Mapping(source = "empresaDto.informacionFiscal.cp", target = "lugarExpedicion")})
 	public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
 
 	@Mappings({ @Mapping(source = "cfdiDto.folio", target = "folio"),
@@ -60,6 +60,9 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "cfdiDto.sello", target = "sello"),
 			@Mapping(source = "cfdiDto.lugarExpedicion", target = "lugarExpedicion"),
 			@Mapping(source = "cfdiDto.serie", target = "serie"),
+			@Mapping(target = "formaPago", ignore = true),
+			@Mapping(target = "metodoPago", ignore = true),
+			@Mapping(target = "descuento", ignore = true),
 			@Mapping(source = "cfdiDto.version", target = "version"), @Mapping(target = "conceptos", ignore = true) })
 	public Cfdi complementoRootInfo(CfdiDto cfdiDto, EmpresaDto empresaDto);
 

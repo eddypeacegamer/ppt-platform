@@ -40,6 +40,8 @@ public interface CfdiMapper {
 	
 	List<CfdiPago> getEntityFromCdfiPagosDtos(List<CfdiPagoDto> dtos);
 	
+	CfdiPago getEntityFromCdfiPagosDto(CfdiPagoDto dtos);
+	
 	List<CfdiPagoDto> getCfdiPagosDtoFromEntities(List<CfdiPago> entities);
 	
 

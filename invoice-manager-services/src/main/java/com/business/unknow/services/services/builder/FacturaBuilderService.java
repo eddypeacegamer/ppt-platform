@@ -120,6 +120,8 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION_CFDI)
 				.setLugarExpedicion(facturaContext.getEmpresaDto().getInformacionFiscal().getCp())
 				.setMoneda(ComplementoPpdDefaults.MONEDA)
+				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
+				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
 				.setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
 				.setSerie(ComplementoPpdDefaults.SERIE).setSubtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
 				.setTotal(new BigDecimal(ComplementoPpdDefaults.TOTAL)).setComplemento(new ComplementoDto())
