@@ -41,7 +41,14 @@ public class ConflicPaymentRuleValidation {
 				return true;
 			}
 		}
-		
+		if (dbPayment.getRevision1() && !currentPayment.getRevision2()&&!currentPayment.getRevisor1().equals(dbPayment.getRevision1())) {
+			results.add("Ya se realizo la primera validacion.");
+			return true;
+		}
+		if (!dbPayment.getRevision1() && currentPayment.getRevision2()) {
+			results.add("Incongruencia en la validacion de pagos, el segundo pago no puede ser validado si el primer pago ya fue validado");
+			return true;
+		}
 		if(currentPayment.getRevision1() && currentPayment.getRevision2() && !dbPayment.getRevision1() && !dbPayment.getRevision2()) {
 			results.add("Inconsistencia en los estatus de validacion, un pago no puede ser validado doblemente");
 			return true;

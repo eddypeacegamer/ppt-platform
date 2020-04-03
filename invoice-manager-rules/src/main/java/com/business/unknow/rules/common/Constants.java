@@ -52,6 +52,10 @@ public class Constants {
 		public static final String ORDER_PAYMENT_VALIDATION_RULE = "PaymentOrderValidationRule";
 		public static final String ORDER_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion de pagos, el segundo pago no puede ser validado si el primer pago no ha sido validado.";
 		
+		public static final String INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION = "UpdatePaymentInvoiceStatusRules";
+		public static final String INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE = "UpdatePaymentInvoiceStatusRulesRule";
+		public static final String INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE_DESC = "Incongruencia en el estatus de la factura, los pagos de facturas rechazadas, canceladas o  por timbrar no pueden validar pagos.";
+		
 		public static final String DOUBLE_PAYMENT_VALIDATION = "DoubleOrderValidation";
 		public static final String DOUBLE_PAYMENT_VALIDATION_RULE = "DoubleOrderValidationRule";
 		public static final String DOUBLE_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion del segundo pago, el primer pago  no ha sido validado.";

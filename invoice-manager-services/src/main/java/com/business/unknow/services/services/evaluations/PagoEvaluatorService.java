@@ -61,11 +61,12 @@ public class PagoEvaluatorService extends AbstractValidator {
 		}
 	}
 
-	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment, List<PagoDto> payments,CfdiDto cfdi) throws InvoiceManagerException {
+	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment, List<PagoDto> payments,FacturaDto factura) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<String>();
 		facts.put("currentPayment", currentPayment);
 		facts.put("dbPayment", dbPayment);
+		facts.put("factura", factura);
 		facts.put("results", results);
 		
 		rulesEngine.fire(updateSuite.getSuite(), facts);
