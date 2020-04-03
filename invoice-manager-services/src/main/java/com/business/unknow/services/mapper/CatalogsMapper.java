@@ -12,7 +12,6 @@ import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
-import com.business.unknow.model.dto.catalogs.StatusFacturaDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
@@ -22,9 +21,7 @@ import com.business.unknow.services.entities.catalogs.Giro;
 import com.business.unknow.services.entities.catalogs.RegimenFiscal;
 import com.business.unknow.services.entities.catalogs.StatusDevolucion;
 import com.business.unknow.services.entities.catalogs.StatusEvento;
-import com.business.unknow.services.entities.catalogs.StatusFactura;
 import com.business.unknow.services.entities.catalogs.StatusPago;
-import com.business.unknow.services.entities.catalogs.StatusRevision;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
 
 /**
@@ -64,9 +61,6 @@ public interface CatalogsMapper {
 
 	List<ClaveUnidadDto> getClaveUnidadDtosFromEntities(List<ClaveUnidad> claveUnidad);
 
-	StatusFactura getStatusFacturaDtoFromEntity(StatusFacturaDto claveUnidad);
-
-	List<StatusFacturaDto> getStatusFacturaDtosFromEntities(List<StatusFactura> claveUnidad);
 
 	List<CatalogDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
 
@@ -74,5 +68,4 @@ public interface CatalogsMapper {
 
 	List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
 
-	List<CatalogDto> getStatusRevisionDtosFromEntities(List<StatusRevision> entities);
 }

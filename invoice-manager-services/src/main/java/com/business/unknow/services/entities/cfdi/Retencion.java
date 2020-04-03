@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "RETENCIONES")
+@Table(name = "CFDI_RETENCIONES")
 public class Retencion implements Serializable {
 
 	private static final long serialVersionUID = -2655293148503394319L;

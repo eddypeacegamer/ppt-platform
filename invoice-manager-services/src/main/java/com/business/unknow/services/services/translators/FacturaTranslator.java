@@ -1,13 +1,14 @@
 package com.business.unknow.services.services.translators;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Retencion;
 import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
@@ -47,12 +49,16 @@ public class FacturaTranslator {
 
 	@Autowired
 	private SignHelper signHelper;
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
+
 
 	public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
 			Cfdi cfdi = facturaCfdiTranslatorMapper.cdfiRootInfo(context.getFacturaDto(), context.getEmpresaDto());
-			BigDecimal totalImpuestos =new BigDecimal(0);
-			BigDecimal totalRetenciones =new BigDecimal(0);
+			BigDecimal totalImpuestos = new BigDecimal(0);
+			BigDecimal totalRetenciones = new BigDecimal(0);
 			List<Translado> impuestos = new ArrayList<>();
 			List<Retencion> retenciones = new ArrayList<>();
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
@@ -71,13 +77,21 @@ public class FacturaTranslator {
 			if (!retenciones.isEmpty()) {
 				cfdi.getImpuestos().setRetenciones(retenciones);
 			}
-			cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
+			
+			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
+			}else {
+				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
+			}
+			
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
-				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
+			}else {
+				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}
 			context.setCfdi(cfdi);
 			facturaToXmlSigned(context);
-			System.out.println(context.getXml());
+			log.debug(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
@@ -102,6 +116,7 @@ public class FacturaTranslator {
 			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
 			complementoToXmlSigned(context);
+			log.debug(context.getXml());
 			return context;
 		} catch (InvoiceCommonException e) {
 			throw new InvoiceManagerException("Error generating the xml", e.getMessage(), HttpStatus.SC_CONFLICT);
@@ -110,7 +125,7 @@ public class FacturaTranslator {
 
 	public void complementoToXmlSigned(FacturaContext context) throws InvoiceCommonException {
 		String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-		System.out.println(xml);
+		log.debug(context.getXml());
 		xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
 		xml = xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
 		xml = cdfiHelper.changeDate(xml,
@@ -146,15 +161,31 @@ public class FacturaTranslator {
 			if (tempTranslado.isPresent()) {
 				tempTranslado.get().setImporte(tempTranslado.get().getImporte().add(translado.getImporte()));
 			} else {
-				impuestos.add(
-						new Translado(translado.getImpuesto(), translado.getTipoFactor(), translado.getTasaOCuota(),
-								translado.getImporte()));
+				impuestos.add(new Translado(translado.getImpuesto(), translado.getTipoFactor(),
+						translado.getTasaOCuota(), translado.getImporte()));
 			}
-			totalImpuestos=totalImpuestos.add(translado.getImporte());
+			totalImpuestos = totalImpuestos.add(translado.getImporte());
 		}
 		return totalImpuestos;
 	}
 	
+	public BigDecimal calculaRetenciones(FacturaContext context) {
+		return calculaRetenciones(context.getFacturaDto());
+	}
+	
+	public BigDecimal calculaRetenciones(FacturaDto facturaDto) {
+		BigDecimal totalRetenciones = new BigDecimal(0);
+		List<Retencion> retenciones = new ArrayList<>();
+		for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
+			Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
+			if (!conceptoDto.getRetenciones().isEmpty()) {
+				totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
+			}
+		}
+		
+		return totalRetenciones;
+	}
+
 	public BigDecimal calculaRetenciones(List<Retencion> retenciones, Concepto concepto, BigDecimal totalRetenciones) {
 		for (Retencion translado : concepto.getImpuestos().getRetenciones()) {
 			Optional<Retencion> tempTranslado = retenciones.stream()
@@ -162,12 +193,11 @@ public class FacturaTranslator {
 			if (tempTranslado.isPresent()) {
 				tempTranslado.get().setImporte(tempTranslado.get().getImporte().add(translado.getImporte()));
 			} else {
-				retenciones.add(
-						new Retencion(translado.getImpuesto(),translado.getImporte()));
+				retenciones.add(new Retencion(translado.getImpuesto(), translado.getImporte()));
 			}
-			totalRetenciones=totalRetenciones.add(translado.getImporte());
+			totalRetenciones = totalRetenciones.add(translado.getImporte());
 		}
 		return totalRetenciones;
 	}
-	
+
 }

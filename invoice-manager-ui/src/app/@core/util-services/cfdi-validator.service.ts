@@ -12,7 +12,7 @@ export class CfdiValidatorService {
   private usoCfdiCat: string[] = ['D01','D02','D03','D04','D05','D06','D07','D08','D09','D10','G01','G02','G03','I01','I02','I03','I04','I05','I06','I07','I08','P01'];
   private metodoPagoCat: string[]  = ['PUE','PPD'];
   private formaPagoCat: string[]  = ['01','02','03','04','05','06','08','12','13','14','15','17','23','24','25','26','27','28','29','30','31','99'];
-  private unidadCat: string[]  = ['10','11','A9','AB ','ACT','AS','BB','DAY','DPC','E48','E51','E54','EA','GRM','H87','HUR','KGM','KT','LTR','MGM','MLT','MON','MTK','MTR','PR','SET','XBX','XKI','XLT','XPK','XUN'];
+  private unidadCat: string[]  = ['10','11','A9','AB','ACT','AS','BB','DAY','DPC','E48','E51','E54','EA','GRM','H87','HUR','KGM','KT','LTR','MGM','MLT','MON','MTK','MTR','PR','SET','XBX','XKI','XLT','XPK','XUN'];
 
   constructor(private catService: CatalogsData) {
 
@@ -23,10 +23,16 @@ export class CfdiValidatorService {
     const base = concepto.importe - concepto.descuento;
     if (concepto.iva) {
       const impuesto = base * 0.16; // TODO calcular impuestos dinamicamente no solo IVA
-      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)]; }
-      if (concepto.retencionFlag) {
+      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
+    } else {
+      concepto.impuestos = [];
+    }
+    if (concepto.retencionFlag) {
       const retencion = base * 0.06; // TODO calcular retencion dinamicamente
-      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)]; }
+      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)];
+    } else {
+      concepto.retenciones = [];
+    }
     return concepto;
   }
 
@@ -61,12 +67,12 @@ export class CfdiValidatorService {
       for (const imp of concepto.retenciones) {
         retencion = (imp.importe * 3 + retencion * 3) / 3;
       }
-      const base = concepto.importe - concepto.descuento-retencion;
+      const base = concepto.importe - concepto.descuento;
       subtotal += base;
       for (const imp of concepto.impuestos) {
         impuesto = (imp.importe * 3 + impuesto * 3) / 3;
       }
-      total += (base * 3 + impuesto * 3) / 3;
+      total += (base * 3 + impuesto * 3 - retencion * 3) / 3;
     }
     cfdi.total = total;
     cfdi.subtotal = subtotal;

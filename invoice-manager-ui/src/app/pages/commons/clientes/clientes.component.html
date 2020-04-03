@@ -11,9 +11,9 @@
               placeholder="RFC Cliente">
           </div>
           <div class="col-md-3">
-            <label for="inputRazonSocial" class="label">Razon social cliente</label>
+            <label for="inputRazonSocial" class="label">Razón social cliente</label>
             <input type="text" class="form-control" [(ngModel)]="filterParams.razonSocial"
-              [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="inputName" placeholder="Razon Social">
+              [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="inputName" placeholder="Razón Social">
           </div>
           <div class="col-md-2" *ngIf="paths[2] !== 'promotor'">
             <label for="inputPromotor" class="label">Promotor</label>
@@ -55,7 +55,7 @@
         <div class="clearfix" *ngIf="page.empty == false">
           <strong>Resultados</strong>
           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-          <nb-select *ngIf="page.last==false" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+          <nb-select *ngIf="page.last==false || page.first" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
             id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
@@ -68,11 +68,11 @@
               <tr>
                 <th class="text-center">Acciones</th>
                 <th class="text-center" scope="col">RFC</th>
-                <th class="text-center" scope="col">Razon Social</th>
+                <th class="text-center" scope="col">Razón Social</th>
                 <th class="text-center" scope="col">Activo</th>
                 <th class="text-center" scope="col">Promotor</th>
                 <th class="text-center" scope="col">Email cliente</th>
-                <th class="text-center" scope="col">Direccion</th>
+                <th class="text-center" scope="col">Dirección</th>
               </tr>
             </thead>
             <tbody>
@@ -95,14 +95,14 @@
 
           <ul class="pagination" *ngIf="page.totalElements > 1">
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+                (click)="updateDataTable(0,page.size,filterParams)"><i class="nb-arrow-left"></i></button></li>
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+                (click)="updateDataTable(page.number-1,page.size,filterParams)">{{page.number}}</button></li>
             <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
             <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+                (click)="updateDataTable(page.number+1,page.size,filterParams)">{{page.number+2}}</button></li>
             <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+                (click)="updateDataTable(page.totalPages-1,page.size,filterParams)"><i class="nb-arrow-right"></i></button></li>
           </ul>
         </div>
       </nb-card-body>

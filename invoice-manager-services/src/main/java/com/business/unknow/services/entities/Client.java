@@ -46,7 +46,6 @@ public class Client implements Serializable {
 	@Column(name = "CORREO_PROMOTOR")
 	private String correoPromotor;
 
-	@NotEmpty
 	@Column(name = "CORREO_CONTACTO")
 	private String correoContacto;
 

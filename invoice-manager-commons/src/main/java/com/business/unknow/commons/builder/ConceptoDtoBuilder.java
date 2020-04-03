@@ -10,7 +10,7 @@ public class ConceptoDtoBuilder extends AbstractBuilder<ConceptoDto> {
 		super(new ConceptoDto());
 	}
 
-	public ConceptoDtoBuilder setCantidad(int cantidad) {
+	public ConceptoDtoBuilder setCantidad(BigDecimal cantidad) {
 		instance.setCantidad(cantidad);
 		return this;
 	}

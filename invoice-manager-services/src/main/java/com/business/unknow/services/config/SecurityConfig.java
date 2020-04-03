@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+
 /**
  *@author ralfdemoledor
  *
@@ -16,9 +17,12 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+//	@Autowired
+//	private AuthenticationFilter authFilter;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll() // TODO create local profile to protect everything in higher environments
+//		http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll() // TODO create local profile to protect everything in higher environments
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
 		.authorizeRequests()
          .anyRequest().authenticated().and().oauth2Login()

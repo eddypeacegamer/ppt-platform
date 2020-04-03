@@ -34,7 +34,7 @@
             <p class="font-weight-bold">Forma de Pago</p>
             <p>{{factura.cfdi.formaPago}}</p>
             &nbsp;&nbsp;
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
+            <button type="button" 
               class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
               <i class="fa fa-file-pdf"></i>
             </button>
@@ -55,7 +55,7 @@
             </button>
             <button type="button" class="btn btn-success" (click)="aceptarFactura()" *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" (click)="rechazarFactura()" >Rechazar</button>
+            <button type="button" class="btn btn-danger" (click)="rechazarFactura()" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0" >Rechazar</button>
 
             
           </div>
@@ -64,12 +64,12 @@
           <p class="font-weight-bold">Información Emisor</p>
           <div class="row">
             <div class="col-md-2">
-              <label for="inputGiro" class="label">Linea Emisor</label>
+              <label for="inputGiro" class="label">Línea Emisor</label>
               <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaEmisor">
                   <option value="*">Seleccionar</option>
-                  <option value="A">Linea A</option>
-                  <option value="B">Linea B</option>
-                  <option value="C">Linea C</option>
+                  <option value="A">Línea A</option>
+                  <option value="B">Línea B</option>
+                  <option value="C">Línea C</option>
               </select>
             </div>
             <div class="col-sm-5">
@@ -96,12 +96,12 @@
           <p class="font-weight-bold">Información Receptor</p>
           <div class="row">
             <div class="col-md-2">
-              <label for="inputGiro" class="label">Linea Receptor</label>
+              <label for="inputGiro" class="label">Línea Receptor</label>
               <select id="inputGiro" fullWidth class="form-control" style="display:block;" [(ngModel)]="formInfo.lineaReceptor">
                   <option value="*">Seleccionar</option>
-                  <option value="A">Linea A</option>
-                  <option value="B">Linea B</option>
-                  <option value="C">Linea C</option>
+                  <option value="A">Línea A</option>
+                  <option value="B">Línea B</option>
+                  <option value="C">Línea C</option>
               </select>
             </div>
             <div class="col-sm-5">
@@ -151,7 +151,7 @@
               </select>
             </div>
             <div class="col-sm-3">
-              <label for="inputPayMethod" class="label">Metodo de Pago</label>
+              <label for="inputPayMethod" class="label">Método de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
@@ -176,7 +176,10 @@
           <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "factura.statusFactura !== 'Timbrada'"></ngx-conceptos>
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)"  [nbSpinner]="loading" [disabled]="loading"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+              SOLICITAR CFDI
+          </button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
@@ -251,9 +254,9 @@
           <label for="inputGiro" class="label">Pack de facturacion</label>
           <select id="inputGiro" fullWidth class="form-control" style="display:block;"
             [(ngModel)]="data.packFacturacion">
+            <option value="NTLINK">NT Link</option>
             <option value="SW_SAPIENS">SW Sapiens</option>
             <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
-            <option value="NTLINK">NT Link</option>
           </select>
 
         </div>

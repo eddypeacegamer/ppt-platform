@@ -106,7 +106,7 @@
                                     <inline font-weight="bold">
                                         R.F.C.:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Rfc" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Rfc" />
                                 </block>
                             </inline-container>
                         </block>
@@ -117,7 +117,7 @@
                                     <inline font-weight="bold">
                                         Razón social:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Nombre" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Nombre" />
                                 </block>
                             </inline-container>
                         </block>
@@ -128,7 +128,7 @@
                                     <inline font-weight="bold">
                                         Uso CFDI:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@UsoCFDI" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@UsoCFDI" />
                                     -
                                     <xsl:value-of select="UsoCfdiDesc" />
                                 </block>
@@ -244,6 +244,19 @@
                                 </block>
                             </inline-container>
                         </block>
+                        <xsl:if test="factura/cfdi:Impuestos/@TotalImpuestosRetenidos">
+                            <block>
+                                <inline-container font-weight="bold">
+                                    <block>IMPUESTOS RETENIDOS</block>
+                                </inline-container>
+                                <inline-container width="25mm" margin-right="3mm">
+                                    <block>
+                                        $
+                                        <xsl:value-of select="format-number(factura/cfdi:Impuestos/@TotalImpuestosRetenidos, '###,##0.00')" />
+                                    </block>
+                                </inline-container>
+                            </block>
+                        </xsl:if>
                         <block>
                             <inline-container font-weight="bold">
                                 <block>TOTAL</block>
@@ -313,8 +326,6 @@
                                     <inline padding-right="3mm" font-weight="bold">Metodo de pago</inline>
                                     <inline>
                                         <xsl:value-of select="factura/@MetodoPago" />
-                                        -
-                                        <xsl:value-of select="MetodoPagoDesc" />
                                     </inline>
                                 </block>
                             </inline-container>

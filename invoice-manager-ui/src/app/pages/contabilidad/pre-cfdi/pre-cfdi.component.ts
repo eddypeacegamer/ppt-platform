@@ -225,8 +225,9 @@ export class PreCfdiComponent implements OnInit {
   }
 
   public solicitarCfdi() {
+    this.loading = true;
     this.errorMessages = [];
-    this.factura.solicitante = this.user.email;
+    this.factura.solicitante = 'CARGA_MASIVA';
     this.factura.lineaEmisor = 'A';
     this.factura.lineaRemitente = 'CLIENTE';
     if (this.clientInfo === undefined || this.clientInfo.informacionFiscal.rfc === undefined) {
@@ -252,11 +253,15 @@ export class PreCfdiComponent implements OnInit {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
+          this.loading = false;
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {
+          this.loading = false;
           this.errorMessages.push((error.error != null && error.error !== undefined) ?
             error.error.message : `${error.statusText} : ${error.message}`);
         });
+    }else {
+      this.loading = false;
     }
   }
 
@@ -295,7 +300,8 @@ export class PreCfdiComponent implements OnInit {
       this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
       (error: HttpErrorResponse) => {
         this.loading = false;
-        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+        this.errorMessages.push((error.error != null && error.error !== undefined)
+          ? error.error.message : `${error.statusText} : ${error.message}`);
       });
   }
 
@@ -303,27 +309,26 @@ export class PreCfdiComponent implements OnInit {
     this.loading = true;
     this.successMessage = undefined;
     this.errorMessages = [];
-    let fact = { ...factura };
+    const fact = { ...factura };
     fact.cfdi = null;
-
-
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
-        console.log('Timbrando:',invoice);
-        if (invoice != undefined) {
+        if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
-            .subscribe(result => { 
+            .subscribe(result => {
               this.loading = false;
-              console.log('factura timbrada correctamente');
               this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
               (error: HttpErrorResponse) => {
                 this.loading = false;
-                this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+                this.errorMessages.push((error.error != null && error.error !== undefined)
+                  ? error.error.message : `${error.statusText} : ${error.message}`);
               });
+        }else{
+          this.loading = false;
         }
       }
       );

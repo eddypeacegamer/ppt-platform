@@ -15,7 +15,7 @@ public class RetencionDto implements Serializable {
 	private BigDecimal base;
 	private String impuesto;
 	private String tipoFactor;
-	private String tasaOCuota;
+	private BigDecimal tasaOCuota;
 	private BigDecimal importe;
 
 	public Integer getId() {
@@ -50,11 +50,11 @@ public class RetencionDto implements Serializable {
 		this.tipoFactor = tipoFactor;
 	}
 
-	public String getTasaOCuota() {
+	public BigDecimal getTasaOCuota() {
 		return tasaOCuota;
 	}
 
-	public void setTasaOCuota(String tasaOCuota) {
+	public void setTasaOCuota(BigDecimal tasaOCuota) {
 		this.tasaOCuota = tasaOCuota;
 	}
 

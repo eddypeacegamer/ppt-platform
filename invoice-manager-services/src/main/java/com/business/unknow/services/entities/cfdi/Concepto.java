@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CONCEPTOS")
+@Table(name = "CFDI_CONCEPTOS")
 public class Concepto implements Serializable {
 
 	private static final long serialVersionUID = -1917092984790590992L;

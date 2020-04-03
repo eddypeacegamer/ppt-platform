@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Validacion de Pagos</nb-card-header>
+      <nb-card-header>Validación de pagos</nb-card-header>
       <nb-card-body>
         <div class="row">
           <div class="col-md-2">
-            <label for="acredor" class="label">Acredor</label>
+            <label for="acredor" class="label">Acreedor</label>
             <input id="acredor" class="form-control" fullWidth type="text" placeholder="RFC acredor" [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'> 
           </div>
           <div class="col-md-2">
@@ -34,8 +34,8 @@
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="CHEQUE">Cheque nominativo</option>
                 <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
-                <option value="DEPOSITO">Deposito bancario</option>
-                <option value="CREDITO">Credito Despacho</option>
+                <option value="DEPOSITO">Depósito bancario</option>
+                <option value="CREDITO">Crédito Despacho</option>
               </select>
               <p>&nbsp;&nbsp;</p>
               <button type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"

@@ -46,9 +46,8 @@ public class FacturacionModernaClientImpl extends AbstractClient implements Rest
 	public FacturaModernaCancelResponseModel cancelar(FacturaModernaRequestModel request)
 			throws FacturaModernaClientException {
 		FacturaModernaMessageParser soapRequest = new FacturaModernaMessageParser();
-		log.info("Canceling the invoice.");
 		String endpoint = FacturacionModernaEndpoints.getTimbradoEndpoint();
-		System.out.println(soapRequest.createCancelRequest(request));
+		log.info("Canceling the invoice: {}",soapRequest.createCancelRequest(request));
 		Response response = post(endpoint, MediaType.TEXT_PLAIN, soapRequest.createCancelRequest(request));
 		return parseResponse(response, FacturaModernaCancelResponseModel.class);
 	}

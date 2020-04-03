@@ -1,0 +1,139 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Reportes</nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-md-1">
+            <label for="inputFolio" class="label">Folio</label>
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio" [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio" placeholder="Folio PreCFDI">
+          </div>
+          <div class="col-md-1">
+            <label for="inputEmisor" class="label">Emisor</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" class="form-control" fullWidth  [(ngModel)]="filterParams.emisor" [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor" placeholder="Razón Social Emisor">
+          </div>
+          <div class="col-md-1">
+            <label for="InputReceptor" class="label">Receptor</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente" [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor" placeholder="Razón Social Receptor">
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-1">
+            <label for="inputPromotor" class="label">Promotor</label>
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.solicitante"  id="inputPromotor" placeholder="Correo promotor">
+          </div>
+          <div class="col-md-1">
+              <label for="inputTimbrado" class="label">Desde</label>
+            </div>
+          <div class="col-md-3">
+            <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
+            [(ngModel)]="filterParams.since">
+            <nb-datepicker #sincepicker></nb-datepicker>
+          </div>
+          <div class="col-md-1">
+            <label for="inputTimbrado" class="label">Hasta</label>
+          </div>
+        <div class="col-md-3">
+          <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
+          [(ngModel)]="filterParams.to">
+          <nb-datepicker #topicker></nb-datepicker>
+        </div>
+          <div class="col-md-1">
+            <button type="button" (click)="updateDataTable(0,10)" nbButton status="primary">BUSCAR</button>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Facturas</nb-card-header>
+      <nb-card-body>
+
+        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+          No se encontraron resultados
+        </div>
+        <div class="clearfix">
+          <strong>Resultados</strong>
+          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+
+          <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+            id="inputPageSize" class="float-right">
+            <nb-option value="10">10</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
+          </nb-select>
+        </div>
+        <div class="table-responsive" *ngIf="page.empty == false">
+          
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th class="text-center">Acciones</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-center">RFC Empresa</th>
+                  <th class="text-center">Razón Social Empresa</th>
+                  <th class="text-center">RFC Cliente</th>
+                  <th class="text-center">Razón Social Cliente</th>
+                  <th class="text-center">Tipo Documento</th>
+                  <th class="text-center">Método Pago</th>
+                  <th class="text-center">Estatus factura</th>
+                  <th class="text-center">Estatus pago</th>
+                  <th class="text-center">Detalle</th>
+                  <th class="text-center">Promotor</th>
+                  <th class="text-center">Solicitud</th>
+                  <th class="text-center">Actualización</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fila of page.content">
+                <td scope="row" class="text-center"> 
+                  <button class="btn btn-outline-primary" (click)= "redirectToCfdi(fila.folioPadre || fila.folio)"><i class="fa fa-search"></i>
+                  </button> 
+                </td>
+                <td scope="row">{{fila.folio}}</td>
+                  <td scope="row">{{fila.rfcEmisor}}</td>
+                  <td scope="row">{{fila.razonSocialEmisor}}</td>
+                  <td scope="row">{{fila.rfcRemitente}}</td>
+                  <td scope="row">{{fila.razonSocialRemitente}}</td>
+                  <td scope="row">{{fila.tipoDocumento}}</td>
+                  <td scope="row">{{fila.metodoPago}}</td>
+                  <td scope="row">{{fila.statusFactura}}</td>
+                  <td scope="row">{{fila.statusPago}}</td>
+                  <td scope="row">{{fila.statusDetail}}</td>
+                  <td scope="row">{{fila.solicitante}}</td>
+                <td scope="row">{{fila.fechaCreacion}}</td>
+                <td scope="row">{{fila.fechaActualizacion}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ul class="pagination" *ngIf="page.totalElements > 1">
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+            <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+          </ul>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

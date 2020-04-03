@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "REGIMEN_FISCAL")
+@Table(name = "CAT_REGIMEN_FISCAL")
 public class RegimenFiscal {
 	
 	@Id

@@ -17,7 +17,7 @@ public class Concepto {
 	@XmlAttribute(name = "NoIdentificacion")
 	private String noIdentificacion;
 	@XmlAttribute(name = "Cantidad")
-	private Integer cantidad;
+	private BigDecimal cantidad;
 	@XmlAttribute(name = "ClaveUnidad")
 	private String claveUnidad;
 	@XmlAttribute(name = "Unidad")
@@ -105,11 +105,11 @@ public class Concepto {
 		this.impuestos = impuestos;
 	}
 
-	public Integer getCantidad() {
+	public BigDecimal getCantidad() {
 		return cantidad;
 	}
 
-	public void setCantidad(Integer cantidad) {
+	public void setCantidad(BigDecimal cantidad) {
 		this.cantidad = cantidad;
 	}
 

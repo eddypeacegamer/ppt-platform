@@ -40,8 +40,7 @@
             <p class="font-weight-bold">Detalles : </p>
             <p>{{factura.statusDetail}}</p>
             &nbsp;&nbsp;
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-              class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
+            <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
               <i class="fa fa-file-pdf"></i>
             </button>
             &nbsp;&nbsp;
@@ -63,9 +62,8 @@
             &nbsp;&nbsp;
             <input id="statusDetail" class="form-control" type="text" placeholder="Motivo rechazo factura" [(ngModel)]="factura.statusDetail" style="width: 250px;" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada'"/>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada'">Rechazar</button>
-
-            
+            <button type="button" class="btn btn-danger" [disabled]="factura.statusDetail.lenght<3" (click)="rechazarFactura()" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
+        
           </div>
         </div>
         <div *ngIf="folioParam === '*'">
@@ -159,16 +157,17 @@
           </div>
 
         </div>
-        <br>
-        <p class="font-weight-bold">Conceptos factura</p>
-          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
-        <br>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
         </div>
+        <br>
+        <p class="font-weight-bold">Conceptos factura</p>
+          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
+        <br>
+        
         <div *ngIf="factura.complementos!==undefined  && factura.metodoPago=='PPD' && factura.complementos.length>0">
           <p class="font-weight-bold">Complementos</p>
           <br>
@@ -238,9 +237,9 @@
           <label for="inputGiro" class="label">Pack de facturacion</label>
           <select id="inputGiro" fullWidth class="form-control" style="display:block;"
             [(ngModel)]="data.packFacturacion">
-            <option value="SW_SAPIENS">SW Sapiens</option>
-            <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
             <option value="NTLINK">NT LINK</option>
+            <option value="FACTURACION_MODERNA">Facturacion Moderna</option>
+            <option value="SW_SAPIENS">SW Sapiens</option>
           </select>
 
         </div>

@@ -40,6 +40,8 @@ public interface CfdiMapper {
 	
 	List<CfdiPago> getEntityFromCdfiPagosDtos(List<CfdiPagoDto> dtos);
 	
+	CfdiPago getEntityFromCdfiPagosDto(CfdiPagoDto dtos);
+	
 	List<CfdiPagoDto> getCfdiPagosDtoFromEntities(List<CfdiPago> entities);
 	
 
@@ -47,9 +49,9 @@ public interface CfdiMapper {
 
 	Emisor getEntityFromEmisorDto(EmisorDto dto);
 
-	ReceptorDto getEmisorDtoFromEntity(Receptor entity);
+	ReceptorDto getRecetorDtoFromEntity(Receptor entity);
 
-	Receptor getEntityFromEmisorDto(ReceptorDto dto);
+	Receptor getEntityFromReceptorDto(ReceptorDto dto);
 
 	ConceptoDto getConceptoDtoFromEntity(Concepto entity);
 

@@ -23,6 +23,7 @@ public class PagoDto implements Serializable {
 	private BigDecimal tipoDeCambio;
 	private String formaPago;
 	private BigDecimal monto;
+	private BigDecimal total;
 	private String acredor;
 	private String deudor;
 	private String statusPago;
@@ -91,6 +92,12 @@ public class PagoDto implements Serializable {
 	}
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
+	}
+	public BigDecimal getTotal() {
+		return total;
+	}
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 	public String getAcredor() {
 		return acredor;

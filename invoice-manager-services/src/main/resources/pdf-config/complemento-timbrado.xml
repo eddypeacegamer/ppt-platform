@@ -106,7 +106,7 @@
                                     <inline font-weight="bold">
                                         R.F.C.:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Rfc" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Rfc" />
                                 </block>
                             </inline-container>
                         </block>
@@ -117,7 +117,7 @@
                                     <inline font-weight="bold">
                                         Razón social:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@Nombre" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Nombre" />
                                 </block>
                             </inline-container>
                         </block>
@@ -128,7 +128,7 @@
                                     <inline font-weight="bold">
                                         Uso CFDI:
                                     </inline>
-                                    <xsl:value-of select="factura/cfdi:Receptor/@UsoCFDI" />
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@UsoCFDI" />
                                     -
                                     <xsl:value-of select="UsoCfdiDesc" />
                                 </block>
@@ -324,10 +324,10 @@
                     </block-container>
 
                     <!-- Timbrado -->
-                    <block-container margin-bottom="3mm">
-                        <block>
-                            <inline-container width="155.5mm" alignment-baseline="before-edge">
-                                <block-container height="41.5mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-after-start-radius="2mm" fox:border-before-start-radius="2mm" font-size="2.4mm">
+                    <block-container>
+                        <block border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm" padding-top="-0.4mm" padding-bottom="-0.4mm">
+                            <inline-container width="155mm" alignment-baseline="before-edge">
+                                <block-container border-right-color="black" border-right-style="solid" border-right-width=".4mm">
                                     <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm">
                                         <inline-container>
                                             <block margin-left="3mm">SELLO DIGITAL DEL CFDI</block>
@@ -374,40 +374,24 @@
                                         </inline-container>
                                     </block>
 
-                                    <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                                    <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.7mm" padding-top="0.7mm">
                                         <inline-container>
                                             <block margin-left="3mm">CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACION DIGITAL DEL CFDI</block>
                                         </inline-container>
                                     </block>
-
-                                    <block>
-                                        <inline-container>
-                                            <block-container margin="0.7mm" margin-left="2mm" width="150mm" text-align="justify">
-                                                <xsl:variable name="strlen3" select="string-length(CadenaOriginal) div 3" />
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, 0, floor($strlen3))" />
-                                                </block>
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3), floor($strlen3))" />
-                                                </block>
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 2, 1000)" />
-                                                </block>
-                                            </block-container>
-                                        </inline-container>
+                                    <block margin-left="3mm" margin-right="3mm" padding-bottom="0.5mm" padding-top="0.5mm" font-size="2mm">
+                                        <xsl:value-of select="CadenaOriginal" />
                                     </block>
                                 </block-container>
                             </inline-container>
-                            <inline-container background-color="#FFFFFF" width="40.3mm" alignment-baseline="before-edge">
-                                <block-container padding-top="1.2mm" padding-bottom="1mm" height="39.3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-after-end-radius="2mm" fox:border-before-end-radius="2mm" font-size="2.4mm">
-                                    <block margin-left="1mm" margin-right="1mm">
-                                        <external-graphic width="100%" content-width="scale-to-fit" content-height="38mm">
-                                            <xsl:attribute name="src">
-                                                <xsl:value-of select="concat('data:image/png;base64,', Qr)" />
-                                            </xsl:attribute>
-                                        </external-graphic>
-                                    </block>
-                                </block-container>
+                            <inline-container width="41mm" alignment-baseline="before-edge">
+                                <block margin-left="1mm">
+                                    <external-graphic content-height="scale-to-fit" content-width="39mm">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="concat('data:image/png;base64,', Qr)" />
+                                        </xsl:attribute>
+                                    </external-graphic>
+                                </block>
                             </inline-container>
                         </block>
                     </block-container>

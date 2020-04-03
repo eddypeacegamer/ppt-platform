@@ -7,6 +7,7 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -22,18 +23,20 @@ import com.business.unknow.model.config.FileConfig;
 import com.business.unknow.model.error.InvoiceCommonException;
 
 public class MailHelper {
-	
+
 	public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
 
 		Properties props = System.getProperties();
-		props.put("mail.smtp.host", "smtpout.secureserver.net");
-		props.put("mail.smtp.user", emailConfig.getEmisor());
-		props.put("mail.smtp.clave", emailConfig.getPwEmisor());
+		props.put("mail.smtp.host", "p3plcpnl0577.prod.phx3.secureserver.net");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.port", "587");
 
-		Session session = Session.getDefaultInstance(props);
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(emailConfig.getEmisor(), emailConfig.getPwEmisor());
+			}
+		});
 		MimeMessage message = new MimeMessage(session);
 
 		try {
@@ -61,7 +64,8 @@ public class MailHelper {
 			}
 
 			Transport transport = session.getTransport("smtp");
-			transport.connect("smtpout.secureserver.net", emailConfig.getEmisor(), emailConfig.getPwEmisor());
+			transport.connect("p3plcpnl0577.prod.phx3.secureserver.net", emailConfig.getEmisor(),
+					emailConfig.getPwEmisor());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
 		} catch (MessagingException me) {
@@ -70,5 +74,5 @@ public class MailHelper {
 					emailConfig.getEmisor(), emailConfig.getReceptor()), me.getMessage());
 		}
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "BANCOS")
+@Table(name = "CAT_BANCOS")
 public class Banco implements Serializable {
 
 	private static final long serialVersionUID = 5619170839532161430L;

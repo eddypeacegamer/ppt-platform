@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USO_CFDI")
+@Table(name = "CAT_USO_CFDI")
 public class UsoCfdi {
 	
 	@Id

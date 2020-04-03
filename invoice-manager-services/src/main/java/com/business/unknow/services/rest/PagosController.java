@@ -50,55 +50,6 @@ public class PagosController {
 		return new ResponseEntity<>(pagos, HttpStatus.OK);
 	}
 
-	@GetMapping("/ingresos")
-	public ResponseEntity<Page<PagoDto>> getIngresos(@RequestParam(name = "status", defaultValue = "") String status,
-			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
-			@RequestParam(name = "banco", defaultValue = "") String banco,
-			@RequestParam(name = "cuenta", defaultValue = "") String cuenta,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		Page<PagoDto> pagos = service.getIngresosPaginados(formaPago, status, banco, cuenta, since, to, page, size);
-
-		return new ResponseEntity<>(pagos, HttpStatus.OK);
-	}
-
-	@GetMapping("/ingresos/total")
-	public ResponseEntity<Double> getSumaIngresos(@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
-			@RequestParam(name = "banco", defaultValue = "") String banco,
-			@RequestParam(name = "cuenta", defaultValue = "") String cuenta,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
-		Double total = service.getSumaIngresosbyParams(formaPago, banco, cuenta, since, to);
-		System.out.println(total);
-		return new ResponseEntity<>(total, HttpStatus.OK);
-
-	}
-
-	@GetMapping("/egresos")
-	public ResponseEntity<Page<PagoDto>> getEgresos(@RequestParam(name = "status", defaultValue = "") String status,
-			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
-			@RequestParam(name = "banco", defaultValue = "") String banco,
-			@RequestParam(name = "cuenta", defaultValue = "") String cuenta,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		Page<PagoDto> pagos = service.getEgresosPaginados(formaPago, status, banco, cuenta, since, to, page, size);
-
-		return new ResponseEntity<>(pagos, HttpStatus.OK);
-	}
-
-	@GetMapping("/egresos/total")
-	public ResponseEntity<Double> getSumaEgresos(@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
-			@RequestParam(name = "banco", defaultValue = "") String banco,
-			@RequestParam(name = "cuenta", defaultValue = "") String cuenta,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
-		return new ResponseEntity<>(service.getSumaEgresosbyParams(formaPago, banco, cuenta, since, to), HttpStatus.OK);
-	}
-
 	@GetMapping("/{idPago}")
 	public ResponseEntity<PagoDto> getPagoById(@PathVariable(name = "idPago") Integer idPago)
 			throws InvoiceManagerException {

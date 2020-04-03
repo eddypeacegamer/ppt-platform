@@ -19,8 +19,10 @@ import com.business.unknow.commons.validator.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 
 @Service
@@ -28,6 +30,9 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository repository;
+	
+	@Autowired
+	private ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
 	private ClientMapper mapper;
@@ -67,7 +72,7 @@ public class ClientService {
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
-			Optional<Client> entity = repository.findByRfc(cliente.getInformacionFiscal().getRfc());
+			Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
 			if (entity.isPresent()){
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El rfc  %s ya esta creado en el sistema",
@@ -103,5 +108,5 @@ public class ClientService {
 				String.format("El cliente con el rfc %s no existe", rfc)));
 		repository.delete(dbClient);
 	}
-
+	
 }

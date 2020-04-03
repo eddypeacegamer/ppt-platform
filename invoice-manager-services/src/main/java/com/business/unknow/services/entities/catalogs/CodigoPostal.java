@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CODIGO_POSTAL")
+@Table(name = "CAT_CODIGO_POSTAL")
 public class CodigoPostal implements Serializable {
 
 	private static final long serialVersionUID = 3999575917505652397L;
@@ -19,7 +19,7 @@ public class CodigoPostal implements Serializable {
 	@Column(name = "ID")
 	private int id;
 	@Column(name = "CODIGO_POSTAL")
-	private int codigoPostal;
+	private String codigoPostal;
 	@Column(name = "ESTADO")
 	private String estado;
 	@Column(name = "MUNICIPIO")
@@ -29,11 +29,11 @@ public class CodigoPostal implements Serializable {
 	@Column(name = "COLONIA")
 	private String colonia;
 
-	public int getCodigoPostal() {
+	public String getCodigoPostal() {
 		return codigoPostal;
 	}
 
-	public void setCodigoPostal(int codigoPostal) {
+	public void setCodigoPostal(String codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 

@@ -76,10 +76,10 @@
               </select>
             </div>
             <div class="col-md-3">
-              <label for="inputCliente" class="label">Razon social</label>
+              <label for="inputCliente" class="label">Razón social</label>
               <div class="row form-inline">
                 <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control" (ngModelChange)="buscarClientInfo($event)"
-                  placeholder="RFC CLIENTE">
+                  placeholder="Razón social">
               </div>
             </div>
             <div class="col-md-3">
@@ -121,7 +121,7 @@
               </select>
             </div>
             <div class="col-sm-3">
-              <label for="inputPayMethod" class="label">Metodo de Pago</label>
+              <label for="inputPayMethod" class="label">Método de Pago</label>
               <select selected="1" id="inputPayMethod" style="display:block;" class="form-control"
                 [(ngModel)]="factura.cfdi.metodoPago" (change)="onPayMethodSelected($event.target.value)">
                 <option value="*">Seleccionar</option>
@@ -145,7 +145,10 @@
         <p class="font-weight-bold">Conceptos factura</p>
         <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button type="button" class="btn btn-success" (click)="solicitarCfdi()">SOLICITAR CFDI</button>
+          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)"  [nbSpinner]="loading" [disabled]="loading"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+              SOLICITAR CFDI
+          </button>
           <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
         </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">

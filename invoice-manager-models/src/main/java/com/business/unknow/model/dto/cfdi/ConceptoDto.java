@@ -17,7 +17,7 @@ public class ConceptoDto implements Serializable {
 	private String claveProdServ;
 	private String descripcionCUPS;
 	private String noIdentificacion;
-	private Integer cantidad;
+	private BigDecimal cantidad;
 	private String claveUnidad;
 	private String unidad;
 	private String descripcion;
@@ -44,10 +44,10 @@ public class ConceptoDto implements Serializable {
 	public void setNoIdentificacion(String noIdentificacion) {
 		this.noIdentificacion = noIdentificacion;
 	}
-	public Integer getCantidad() {
+	public BigDecimal getCantidad() {
 		return cantidad;
 	}
-	public void setCantidad(Integer cantidad) {
+	public void setCantidad(BigDecimal cantidad) {
 		this.cantidad = cantidad;
 	}
 	public String getClaveUnidad() {

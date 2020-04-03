@@ -20,9 +20,9 @@ import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.facturas.CancelacionSuite;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
-import com.business.unknow.rules.suites.pagos.DeletePagoSuite;
-import com.business.unknow.rules.suites.pagos.PagoPpdSuite;
-import com.business.unknow.rules.suites.pagos.PagoPueSuite;
+import com.business.unknow.rules.suites.payments.DeletePagoSuite;
+import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
+import com.business.unknow.rules.suites.payments.PaymentUpdateSuite;
 import com.business.unknow.services.util.FacturaDefaultValues;
 
 /**
@@ -57,13 +57,13 @@ public class ServicesApplication {
 	}
 
 	@Bean
-	public PagoPueSuite getPagoPueSuite() {
-		return new PagoPueSuite();
+	public PaymentUpdateSuite getPagoPueSuite() {
+		return new PaymentUpdateSuite();
 	}
 
 	@Bean
-	public PagoPpdSuite getPagoPpdSuite() {
-		return new PagoPpdSuite();
+	public PaymentCreationSuite getPagoPpdSuite() {
+		return new PaymentCreationSuite();
 	}
 
 	@Bean
@@ -130,5 +130,7 @@ public class ServicesApplication {
 	public NumberTranslatorHelper getNumberTranslatorHelper() {
 		return new NumberTranslatorHelper();
 	}
+
+	
 
 }

@@ -88,15 +88,6 @@ public class FacturacionModernaExecutor {
 				xml.setData(response.getXml());
 				files.add(xml);
 			}
-			/*
-			 * TODO REMOVE THIS CODE
-			if (response.getPdf() != null) {
-				FacturaFileDto pdf = new FacturaFileDto();
-				pdf.setFolio(context.getFacturaDto().getFolio());
-				pdf.setTipoArchivo(TipoArchivoEnum.PDF.name());
-				pdf.setData(response.getPdf());
-				files.add(pdf);
-			}*/
 			context.setFacturaFilesDto(files);
 		} catch (FacturaModernaClientException | InvoiceCommonException e) {
 			e.printStackTrace();
