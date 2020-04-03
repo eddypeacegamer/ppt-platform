@@ -1,5 +1,7 @@
 package com.business.unknow.rules.timbrado;
 
+import java.math.BigDecimal;
+
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
@@ -14,9 +16,17 @@ public class FacturaPagoValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		return fc.getPagos() == null || fc.getPagos().isEmpty() || fc.getPagos().stream()
-				.anyMatch(a -> !a.getStatusPago().equals(RevisionPagosEnum.ACEPTADO.name()));
-
+		
+		if(fc.getPagos()!=null && !fc.getPagos().isEmpty()) {
+			BigDecimal paymentsAmmount = fc.getPagos().stream()
+				.filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+				.map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
+			BigDecimal totalfactura = (fc.getFacturaPadreDto()!=null)? fc.getFacturaPadreDto().getCfdi().getTotal(): fc.getFacturaDto().getCfdi().getTotal();
+			return paymentsAmmount.compareTo(totalfactura)!=0;
+			
+		}else {
+			return true;
+		}
 	}
 
 	@Action

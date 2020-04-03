@@ -96,7 +96,7 @@ public class Constants {
 		
 		public static final String TIMBRADO_PAGO_VALIDATION = "FacturaPagoValidation";
 		public static final String TIMBRADO_PAGO_VALIDATION_RULE = "FacturaPagoValidationRule";
-		public static final String TIMBRADO_PAGO_VALIDATION_RULE_DES = "Los datos de la factura padre tienen una inconsistencia.";
+		public static final String TIMBRADO_PAGO_VALIDATION_RULE_DES = "Los pagos de la factura tienen incosistencias";
 	}
 	
 	public class CancelacionSuite {

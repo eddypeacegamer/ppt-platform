@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
@@ -28,6 +29,7 @@ import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.cfdi.TimbradoFiscalDigitialDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
@@ -159,6 +161,14 @@ public class CfdiService {
 			}
 
 		}
+		if (cfdi.getComplemento() != null && cfdi.getComplemento().getPagos() != null
+				&& !cfdi.getComplemento().getPagos().isEmpty()) {
+			for(CfdiPagoDto cfdiPagoDto:cfdi.getComplemento().getPagos()) {
+				CfdiPago cfdiPago=mapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
+				cfdiPago.setCfdi(entity);
+				cfdiPagoRepository.save(cfdiPago);
+			}
+		}
 		return mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
 	}
 
@@ -279,7 +289,7 @@ public class CfdiService {
 			throw new InvoiceManagerException("El CFDI no puede tener 0 conceptos", "Numero de comceptos invalido",
 					HttpStatus.CONFLICT.value());
 		}
-		if (cfdi.getMetodoPago().equals("01")) {
+		if (FormaPagoEnum.EFECTIVO.getClave().equals(cfdi.getMetodoPago())) {
 			throw new InvoiceManagerException(
 					"En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos",
 					"Metodo de pago invalido", HttpStatus.CONFLICT.value());
