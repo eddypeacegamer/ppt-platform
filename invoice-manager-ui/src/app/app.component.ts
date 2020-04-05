@@ -30,6 +30,6 @@ export class AppComponent implements OnInit {
         console.error('El usuario se encuentra inactivo');
         this.router.navigate(['./auth/register']);
       }
-    }, error => this.router.navigate(['./auth/register']));
+    });
   }
 }

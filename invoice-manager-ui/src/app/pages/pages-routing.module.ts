@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule, OnInit } from '@angular/core';
+import { NgModule} from '@angular/core';
 
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -19,10 +19,7 @@ const routes: Routes = [{
     },
     {
       path: 'promotor',
-      loadChildren: () => {
-        console.log('loading promotor module');
-        return import('./promotor/promotor.module')
-        .then(m => m.PromotorModule)},
+      loadChildren: () => import('./promotor/promotor.module').then(m => m.PromotorModule),
     },
     {
       path: 'operaciones',
@@ -45,15 +42,13 @@ const routes: Routes = [{
         .then(m => m.BovedaModule ),
     },
     {path: 'administracion',
-      loadChildren:() => import('./administracion/administracion.module')
-        .then(m =>m.AdministracionModule)
+      loadChildren: () => import('./administracion/administracion.module')
+        .then(m =>m.AdministracionModule),
     },
     {
       path: '**',
       component: DashboardComponent,
-    }
-  ],
-}];
+    }]}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
