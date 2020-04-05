@@ -257,8 +257,8 @@
                       (click)="redirectToCfdi(fila.folioPadre || fila.folio)"><i class="fa fa-search"></i>
                     </button>
                     <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
-                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || fila.statusFactura !== 'Validacion operaciones', 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && fila.statusFactura === 'Validacion operaciones' }"
-                      [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || fila.statusFactura !== 'Validacion operaciones'"
+                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' ), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Validacion operaciones' || fila.statusFactura === 'Validacion tesoreria') }"
+                      [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                       (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                     </button>
                 </td>

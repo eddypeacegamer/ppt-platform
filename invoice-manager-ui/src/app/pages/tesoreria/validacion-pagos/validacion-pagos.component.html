@@ -82,7 +82,8 @@
                 <th scope="col">Cliente</th>
                 <th scope="col">Empresa</th>
                 <th scope="col">Fecha pago</th>
-                <th scope="col">Monto</th>
+                <th scope="col">Monto pagado</th>
+                <th scope="col">Total factura</th>
                 <th scope="col">Promotor</th>
                 <th scope="col">Validador 1</th>
                 <th scope="col">Validador 2</th>
@@ -121,6 +122,7 @@
                 <td scope="row">{{fila.fechaPago}}</td>
 
                 <td scope="row">{{fila.monto | currency}}</td>
+                <td scope="row">{{fila.total | currency}}</td>
                 <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.revisor1}}</td>
                 <td scope="row">{{fila.revisor2}}</td>
