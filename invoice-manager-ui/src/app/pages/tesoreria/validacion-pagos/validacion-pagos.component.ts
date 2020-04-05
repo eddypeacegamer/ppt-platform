@@ -34,7 +34,7 @@ export class ValidacionPagosComponent implements OnInit {
   ngOnInit() {
     this.updateDataTable();
     this.filterParams = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
-    this.userService.getUserInfo().subscribe(user => this.user = user);
+    this.userService.getUserInfo().then(user => this.user = user);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {

@@ -49,8 +49,8 @@ export class DevolutionPreferencesComponent implements OnInit {
   ngOnInit() {
     this.messages = [];
     this.fileInput.value = '';
-    this.userService.getUserInfo().subscribe(user => this.user = user);
-    this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
+    this.userService.getUserInfo().then(user => this.user = user);
+    this.catalogService.getBancos().then(banks => this.banksCat = banks);
     this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
       if (this.folioParam !== '*') {
@@ -105,7 +105,7 @@ export class DevolutionPreferencesComponent implements OnInit {
   public onPayFormSelected(formaPago: string) {
     if (formaPago !== '*') {
       this.catalogService.getTiposReferencia(formaPago)
-        .subscribe(types => {
+        .then(types => {
           this.refTypesCat = types;
           this.solicitud.tipoReferencia = types[0].id;
         });

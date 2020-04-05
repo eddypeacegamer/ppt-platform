@@ -15,7 +15,7 @@ export class ClientsService {
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
         const value: string = filterParams[key];
-        if( value.length > 0 && value !== '*') {
+        if (value.length > 0 && value !== '*') {
           pageParams = pageParams.append(key, value);
         }
       }

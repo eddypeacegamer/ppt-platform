@@ -1,101 +1,166 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http'
-import { Observable, forkJoin, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Catalogo } from '../../models/catalogos/catalogo';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CatalogsService {
+  private giros = undefined;
+  private claveUnidad = undefined;
+  private usoCfdi = undefined;
+  private regimenFiscal = undefined;
+  private statusPago = undefined;
+  private statusDevolucion = undefined;
+  private statusValidacion = undefined;
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  public getAllClavesProductoServicio(page:number,size:number): Observable<any> {
+  public getAllClavesProductoServicio(page: number, size: number): Promise<any> {
      const pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
-    return this.httpClient.get('../api/catalogs/producto-servicios', { params: pageParams});
+    return this.httpClient.get('../api/catalogs/producto-servicios', { params: pageParams}).toPromise();
   }
 
-  public getZipCodeInfo(zipCode: String): Observable<any> {
-    return this.httpClient.get(`/api/catalogs/codigo-postal/${zipCode}`);
+  public getZipCodeInfo(zipCode: String): Promise<any> {
+    return this.httpClient.get(`/api/catalogs/codigo-postal/${zipCode}`).toPromise();
   }
 
-  public getProductoServiciosByDescription(description:string): Observable<any> {
+  public getProductoServiciosByDescription(description:string): Promise<any> {
     const params: HttpParams =  new HttpParams().append('descripcion',description);
-    return this.httpClient.get('/api/catalogs/producto-servicios',{params:params});
+    return this.httpClient.get('/api/catalogs/producto-servicios',{params:params}).toPromise();
   }
-  public getProductoServiciosByClave(clave:string): Observable<any> {
+  public getProductoServiciosByClave(clave:string): Promise<any> {
     const params: HttpParams =  new HttpParams().append('clave',clave);
-    return this.httpClient.get('/api/catalogs/producto-servicios',{params:params});
+    return this.httpClient.get('/api/catalogs/producto-servicios',{params:params}).toPromise();
   }
-  public getClaveUnidadByName(name: string): Observable<any> {
-    const params: HttpParams =  new HttpParams().append('nombre',name);
-    return this.httpClient.get('/api/catalogs/clave-unidad',{params:params});
+  public getClaveUnidadByName(name: string): Promise<any> {
+    return new Promise(resolve => {
+      if (this.claveUnidad !== undefined && name === '') {
+        resolve(this.claveUnidad);
+      }else {
+        this.httpClient.get(`/api/catalogs/clave-unidad?nombre=${name}`)
+        .subscribe(cat => {
+          if (name === '') {
+            this.claveUnidad = cat;
+          }
+          resolve(cat);
+        });
+      }});
   }
-  public getAllUsoCfdis(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/uso-cdfi');
+  public getAllUsoCfdis(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.usoCfdi !== undefined) {
+        resolve(this.usoCfdi);
+      }else {
+        this.httpClient.get('/api/catalogs/uso-cdfi')
+        .subscribe(cat => {
+          this.usoCfdi = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getAllRegimenFiscal(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/regimen-fiscal');
+  public getAllRegimenFiscal(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.regimenFiscal !== undefined) {
+        resolve(this.regimenFiscal);
+      }else {
+        this.httpClient.get('/api/catalogs/regimen-fiscal')
+        .subscribe(cat => {
+          this.regimenFiscal = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getAllGiros(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/giros');
+  public getAllGiros(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.giros !== undefined) {
+        resolve(this.giros);
+      }else {
+        this.httpClient.get('/api/catalogs/giros')
+        .subscribe(cat => {
+          this.giros = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getStatusPago(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/status-pago');
+  public getStatusPago(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.statusPago !== undefined) {
+        resolve(this.statusPago);
+      }else {
+        this.httpClient.get('/api/catalogs/status-pago')
+        .subscribe(cat => {
+          this.statusPago = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getStatusValidacion(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/status-evento');
+  public getStatusValidacion(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.statusValidacion !== undefined) {
+        resolve(this.statusValidacion);
+      }else {
+        this.httpClient.get('/api/catalogs/status-evento')
+        .subscribe(cat => {
+          this.statusValidacion = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getStatusDevolucion(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/status-devolucion');
+  public getStatusDevolucion(): Promise<any> {
+    return new Promise(resolve => {
+      if (this.statusDevolucion !== undefined) {
+        resolve(this.statusDevolucion);
+      }else {
+        this.httpClient.get('/api/catalogs/status-devolucion')
+        .subscribe(cat => {
+          this.statusDevolucion = cat;
+          resolve(cat);
+        });
+      }});
   }
-  public getFormasPago(metodo?: string): Observable<any> {
-    if (metodo === 'PUE') {
-      return of([new Catalogo('01', 'Efectivo'),
+
+  public getFormasPago(metodo?: string): Promise<any> {
+    return new Promise(resolve => {
+      if (metodo === 'PUE') {
+        return resolve([new Catalogo('01', 'Efectivo'),
+        new Catalogo('02', 'Cheque nominativo'),
+        new Catalogo('03', 'Transferencia electrónica de fondos')]);
+      }
+      if (metodo === 'PPD') {
+        return resolve([new Catalogo('99', 'Por definir')]);
+      }
+      return resolve([new Catalogo('01', 'Efectivo'),
       new Catalogo('02', 'Cheque nominativo'),
-      new Catalogo('03', 'Transferencia electrónica de fondos')]);
-    }
-    if (metodo === 'PPD') {
-      return of([new Catalogo('99', 'Por definir')]);
-    }
-    return of([new Catalogo('01', 'Efectivo'),
-    new Catalogo('02', 'Cheque nominativo'),
-    new Catalogo('03', 'Transferencia electrónica de fondos'),
-    new Catalogo('99', 'Por definir')]);
+      new Catalogo('03', 'Transferencia electrónica de fondos'),
+      new Catalogo('99', 'Por definir')]);
+    });
   }
 
-  public getBancos(): Observable<any> {
-    return this.httpClient.get('/api/catalogs/bancos');
-  }
-  public getTiposReferencia(formapago: string): Observable<any> {
-    if (formapago === 'EFECTIVO') {
-      return of([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
-    }
-    if (formapago === 'CHEQUE') {
-      return of([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
-    }
-    if (formapago === 'TRANSFERENCIA') {
-      return of([new Catalogo('CLABE', 'CLABE interbacaria'),
-      new Catalogo('TC', 'Tarjeta de credito'),
-      new Catalogo('TD', 'Tarjeta de debito'),
-    ]); }
-    if (formapago === 'FACTURA') {
-      return of([new Catalogo('FOLIO', 'Folio factura a pagar')]);
-    }
-    if (formapago === 'PAGO_MULTIPLE') {
-      return of([new Catalogo('ARCHIVO', 'Archivo con detalles de pago')]);
-    }
-    return of([]);
+  public getTiposReferencia(formapago: string): Promise<any> {
+    return new Promise(resolve => {
+      if (formapago === 'EFECTIVO') {
+        return resolve([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
+      }
+      if (formapago === 'CHEQUE') {
+        return resolve([new Catalogo('DIRECCION', 'Direcccion de entrega')]);
+      }
+      if (formapago === 'TRANSFERENCIA') {
+        return resolve([new Catalogo('CLABE', 'CLABE interbacaria'),
+        new Catalogo('TC', 'Tarjeta de credito'),
+        new Catalogo('TD', 'Tarjeta de debito'),
+      ]); }
+      if (formapago === 'FACTURA') {
+        return resolve([new Catalogo('FOLIO', 'Folio factura a pagar')]);
+      }
+      if (formapago === 'PAGO_MULTIPLE') {
+        return resolve([new Catalogo('ARCHIVO', 'Archivo con detalles de pago')]);
+      }
+      return resolve([]);
+    });
   }
 
-  public getInvoiceCatalogs(): Observable<any[]> {
-    const giros = this.getAllGiros();
-    const claveUnidad = this.getClaveUnidadByName('');
-    const usoCfdi = this.getAllUsoCfdis();
-    const statusPago = this.getStatusPago();
-    const statusDevolucion = this.getStatusDevolucion();
-    const statusEvento = this.getStatusValidacion();
-    const formasPago = this.getFormasPago();
-    return forkJoin([giros, claveUnidad, usoCfdi , statusPago, statusDevolucion, statusEvento, formasPago]);
+  public getBancos(): Promise<any> {
+    return this.httpClient.get('/api/catalogs/bancos').toPromise();
   }
 }

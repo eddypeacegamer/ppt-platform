@@ -29,7 +29,7 @@ export class EmpresasComponent implements OnInit {
     private donwloadService:DownloadCsvService) {}
 
     ngOnInit() {
-      this.catalogsService.getAllGiros().toPromise()
+      this.catalogsService.getAllGiros()
         .then(cat=>this.girosCat = cat)
         .then(()=>this.updateDataTable())
     }

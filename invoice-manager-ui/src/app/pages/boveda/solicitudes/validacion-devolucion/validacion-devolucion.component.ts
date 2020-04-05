@@ -33,7 +33,7 @@ export class ValidacionDevolucionComponent implements OnInit {
   ngOnInit() {
     this.errorMesage = '';
     this.getAccountInfo();
-    this.userService.getUserInfo().subscribe(user => this.user = user);
+    this.userService.getUserInfo().then(user => this.user = user);
   }
 
 

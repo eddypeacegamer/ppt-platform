@@ -2,15 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { OperacionesComponent } from './operaciones.component';
-import { ReportesComponent } from './reportes/reportes.component';
 import { RevisionComponent } from './revision/revision.component';
 import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import { ValidateInvoicesComponent } from './validate-invoices/validate-invoices.component';
-import { StampInvoicesComponent } from './stamp-invoices/stamp-invoices.component';
+import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -31,14 +29,14 @@ const routes: Routes = [{
       path: 'empresa/:rfc',
       component: EmpresaComponent,
     }, {
-      path: 'reportes',
-      component : ReportesComponent,
+      path: 'reportes/:status',
+      component : InvoiceReportsComponent,
     }, {
-      path: 'validacion',
-      component : ValidateInvoicesComponent,
+      path: 'validacion/:status',
+      component : InvoiceReportsComponent,
     }, {
-      path: 'timbrar-facturas',
-      component : StampInvoicesComponent,
+      path: 'timbrar-facturas/:status',
+      component : InvoiceReportsComponent,
     }, {
       path: 'revision/:folio',
       component : RevisionComponent,

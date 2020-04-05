@@ -13,11 +13,11 @@
           <div class="col-md-3">
             <label for="inputRazonSocial" class="label">Razón social cliente</label>
             <input type="text" class="form-control" [(ngModel)]="filterParams.razonSocial"
-              [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="inputName" placeholder="Razón Social">
+              [disabled]="filterParams.rfc.length > 0" nbInput fullWidth id="InoputRazonSocial" placeholder="Razón Social">
           </div>
           <div class="col-md-2" *ngIf="paths[2] !== 'promotor'">
             <label for="inputPromotor" class="label">Promotor</label>
-            <input type="text" class="form-control" [(ngModel)]="filterParams.promotor" nbInput fullWidth id="inputName" placeholder="Correo promotor">
+            <input type="text" class="form-control" [(ngModel)]="filterParams.promotor" nbInput fullWidth id="inputEmail" placeholder="Correo promotor">
           </div>
           <div class="col-md-5">
             <label for="inputActivo" class="label">Estado cliente</label>

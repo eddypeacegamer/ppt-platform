@@ -32,7 +32,7 @@ export class ConceptosComponent implements OnInit {
     private cfdiValidator: CfdiValidatorService ) { }
 
   ngOnInit() {
-    this.catalogsService.getClaveUnidadByName('').subscribe(unidadCat => this.claveUnidadCat = unidadCat);
+    this.catalogsService.getClaveUnidadByName('').then(unidadCat => this.claveUnidadCat = unidadCat);
   }
 
 
@@ -41,7 +41,7 @@ export class ConceptosComponent implements OnInit {
     const value = +claveProdServ;
     if (isNaN(value)) {
       if (claveProdServ.length > 5) {
-        this.catalogsService.getProductoServiciosByDescription(claveProdServ).subscribe(claves => {
+        this.catalogsService.getProductoServiciosByDescription(claveProdServ).then(claves => {
           this.prodServCat = claves;
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
@@ -53,7 +53,7 @@ export class ConceptosComponent implements OnInit {
       }
     } else {
       if (claveProdServ.length > 5) {
-        this.catalogsService.getProductoServiciosByClave(claveProdServ).subscribe(claves => {
+        this.catalogsService.getProductoServiciosByClave(claveProdServ).then(claves => {
           this.prodServCat = claves;
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();

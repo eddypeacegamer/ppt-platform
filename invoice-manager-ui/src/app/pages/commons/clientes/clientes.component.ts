@@ -29,8 +29,7 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit() {
     this.paths = this.router.url.split('/');
-    this.userService.getUserInfo().toPromise()
-      .then((user) => {
+    this.userService.getUserInfo().then((user) => {
         this.user = user as User;
         if (this.paths[2] === 'promotor')  {
           this.filterParams.promotor = user.email;

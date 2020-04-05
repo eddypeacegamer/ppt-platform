@@ -55,7 +55,7 @@ export class ClienteComponent implements OnInit {
   public insertClient() {
     this.formInfo.success = '';
     this.messages = [];
-    this.userService.getUserInfo().toPromise().then(user => this.clientInfo.correoPromotor = user.email)
+    this.userService.getUserInfo().then(user => this.clientInfo.correoPromotor = user.email)
       .then(() => {
         this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
         if (this.messages.length === 0) {
@@ -69,7 +69,7 @@ export class ClienteComponent implements OnInit {
   public zipCodeInfo(zc: string){
     if(zc.length > 4 && zc.length < 6) {
       this.colonias = [];
-      this.catalogsService.getZipCodeInfo(zc).subscribe(
+      this.catalogsService.getZipCodeInfo(zc).then(
           (data:ZipCodeInfo) => {
           this.clientInfo.informacionFiscal.estado = data.estado;
           this.clientInfo.informacionFiscal.municipio = data.municipio;

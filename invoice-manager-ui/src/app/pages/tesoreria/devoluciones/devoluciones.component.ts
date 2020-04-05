@@ -31,7 +31,7 @@ export class DevolucionesComponent implements OnInit {
     ngOnInit() {
       this.updateDataTable();
       this.filterParams = { formaPago: '*', status: 'ACEPTADO', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
-      this.userService.getUserInfo().subscribe(user => this.user = user);
+      this.userService.getUserInfo().then(user => this.user = user);
     }
     public updateDataTable(currentPage?: number, pageSize?: number) {
       const pageValue = currentPage || 0;

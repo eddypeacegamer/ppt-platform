@@ -19,7 +19,6 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
-import { NbDialogService } from '@nebular/theme';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
 
@@ -31,7 +30,7 @@ import { GenericPage } from '../../../models/generic-page';
 })
 export class PreCfdiComponent implements OnInit, OnDestroy {
 
-  public girosCat: Giro[] = [];
+  public girosCat: Catalogo[] = [];
   public companiesCat: Empresa[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
   public validationCat: Catalogo[] = [];
@@ -64,17 +63,17 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.userService.getUserInfo().subscribe(user => this.user = user as User);
+    this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
-    this.catalogsService.getInvoiceCatalogs()
-      .toPromise().then(results => {
-        this.girosCat = results[0];
-        this.usoCfdiCat = results[2];
-        this.payCat = results[3];
-        this.devolutionCat = results[4];
-        this.validationCat = results[5];
-        this.payTypeCat = results[6];
-      }).then(() => {
+    /* preloaded cats*/
+    this.catalogsService.getStatusPago().then(cat => this.payCat = cat);
+    this.catalogsService.getStatusDevolucion().then(cat => this.devolutionCat = cat);
+    this.catalogsService.getStatusValidacion().then(cat => this.validationCat = cat);
+    this.catalogsService.getFormasPago().then(cat => this.payTypeCat = cat);
+    /* not pre-loaded cats*/
+    this.catalogsService.getAllUsoCfdis().then(cat => this.usoCfdiCat = cat);
+    this.catalogsService.getAllGiros().then(cat => this.girosCat = cat)
+    .then(() => {
         this.route.paramMap.subscribe(route => {
           this.folioParam = route.get('folio');
           if (this.folioParam !== '*') {
@@ -121,7 +120,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-                  //record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
                   return record;
                 })
               }))
@@ -152,7 +150,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   onPayMethodSelected(clave: string) {
     this.catalogsService.getFormasPago(clave)
-      .subscribe(cat => {
+      .then(cat => {
         this.payTypeCat = cat;
         this.formInfo.payType = this.payTypeCat[0].id;
         if (clave === 'PPD') {
