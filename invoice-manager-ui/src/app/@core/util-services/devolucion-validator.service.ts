@@ -13,52 +13,47 @@ import { PagoFactura } from '../../models/pago-factura';
 })
 export class DevolucionValidatorService {
 
-  constructor(private paymentservice: PaymentsData) { }
+  constructor() { }
 
-  public calculateDevolutionAmmount(factura: Factura, client: Client, tipoReceptor: string, folio: string): number {
+  public calculateDevolutionAmmount(factura: Factura, pagos: PagoFactura[], client: Client, tipoReceptor: string, folio: string): number {
     //TODO set this methiod as promise
 
     const impuestos = this.getTotalImpuestos(factura.cfdi.conceptos);
     const retenciones = this.getTotalRetenciones(factura.cfdi.conceptos);
+    const payment = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => folio === p.folio);
 
-    console.log('impuestos',impuestos);
-    console.log('retenciones',retenciones);
-
-    if (factura.cfdi.metodoPago === 'PUE') {
-      if (tipoReceptor === 'CLIENTE') {
-        return factura.cfdi.subtotal + (impuestos * client.porcentajeCliente / 16) - retenciones;
-      }
-      if (tipoReceptor === 'CONTACTO') {
-        return impuestos * client.porcentajeContacto / 16;
-      }
-      if (tipoReceptor === 'PROMOTOR') {
-        return impuestos * client.porcentajePromotor / 16;
+    if (payment) {
+      if (factura.cfdi.metodoPago === 'PUE') {
+        if (tipoReceptor === 'CLIENTE') {
+          return factura.cfdi.subtotal + (impuestos * client.porcentajeCliente / 16) - retenciones;
+        }
+        if (tipoReceptor === 'CONTACTO') {
+          return impuestos * client.porcentajeContacto / 16;
+        }
+        if (tipoReceptor === 'PROMOTOR') {
+          return impuestos * client.porcentajePromotor / 16;
+        }
+      } else {
+        const porcentajeImpuestos = impuestos / factura.cfdi.total;
+        //const porcentajeRetenciones = retenciones / factura.cfdi.total;
+        const baseComision = payment.monto * porcentajeImpuestos;
+        if (tipoReceptor === 'CLIENTE') {
+          return payment.monto  + baseComision * (client.porcentajeCliente / 16 - 1);
+          //return payment.monto + baseComision * (client.porcentajeCliente / 16) - baseComision
+          //return (payment.monto - baseComision + baseRetencion ) + baseComision * (client.porcentajeCliente / 16) - baseRetencion;
+        }
+        if (tipoReceptor === 'CONTACTO') {
+          return baseComision * client.porcentajeContacto / 16;
+        }
+        if (tipoReceptor === 'PROMOTOR') {
+          return baseComision * client.porcentajePromotor / 16;
+        }
       }
     } else {
-      this.paymentservice.getPaymentsByFolio(factura.folio).subscribe((pagos: PagoFactura[]) => {
-        
-        const payment = pagos.find(p => folio === p.folio);
-        if (payment) {
-          const porcentajeImpuestos = impuestos / factura.cfdi.total;
-          const porcentajeRetenciones = retenciones / factura.cfdi.total;
-          const baseComision = payment.monto * porcentajeImpuestos;
-          const baseRetencion = payment.monto * porcentajeRetenciones;
-
-          console.log('baseComision:', baseComision);
-          console.log('baseRetencion:', baseRetencion);
-
-          if (tipoReceptor === 'CLIENTE') {
-            return baseComision * (client.porcentajeCliente / 16) - baseRetencion;
-          }
-          if (tipoReceptor === 'CONTACTO') {
-            return baseComision * client.porcentajeContacto / 16;
-          }
-          if (tipoReceptor === 'PROMOTOR') {
-            return baseComision * client.porcentajePromotor / 16;
-          }
-        }
-      });
+      return 0;
     }
+
+
   }
 
 

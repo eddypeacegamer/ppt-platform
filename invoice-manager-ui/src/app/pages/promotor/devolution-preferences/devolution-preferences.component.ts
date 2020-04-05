@@ -14,6 +14,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
+import { PagoFactura } from '../../../models/pago-factura';
+import { PaymentsData } from '../../../@core/data/payments-data';
 
 @Component({
   selector: 'ngx-devolution-preferences',
@@ -26,6 +28,7 @@ export class DevolutionPreferencesComponent implements OnInit {
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
+  public pagos: PagoFactura[] = [];
  
   public formParams: any = {tab: 'CLIENTE', filename: ''};
   public solicitud: PagoDevolucion = new PagoDevolucion();
@@ -43,6 +46,7 @@ export class DevolutionPreferencesComponent implements OnInit {
     private userService: UsersData,
     private devolutionService: DevolutionData,
     private devolutionValidator: DevolucionValidatorService,
+    private paymentservice: PaymentsData,
     private route: ActivatedRoute) {}
 
 
@@ -59,13 +63,17 @@ export class DevolutionPreferencesComponent implements OnInit {
               if ( invoice.tipoDocumento === 'Complemento') {
                 this.invoiceService.getInvoiceByFolio(invoice.folioPadre).subscribe(padre => {
                   this.factura = padre;
-                  this.clientsService.getClientByRFC(invoice.rfcRemitente)
-                  .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); });
+                  this.paymentservice.getPaymentsByFolio(padre.folio).toPromise()
+                  .then(pagos => this.pagos = pagos).then(() =>
+                    this.clientsService.getClientByRFC(invoice.rfcRemitente)
+                    .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); }));
                 });
               }else {
                 this.factura = invoice;
-                this.clientsService.getClientByRFC(invoice.rfcRemitente)
-                .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); });
+                this.paymentservice.getPaymentsByFolio(this.folioParam).toPromise()
+                  .then(pagos => this.pagos = pagos).then(() =>
+                    this.clientsService.getClientByRFC(invoice.rfcRemitente)
+                    .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); }));
               }
             });
       } else {
@@ -89,7 +97,7 @@ export class DevolutionPreferencesComponent implements OnInit {
           this.solicitud = new PagoDevolucion();
           this.solicitud.tipoReceptor = tiporeceptor;
           this.solicitud.monto = this.devolutionValidator
-              .calculateDevolutionAmmount(this.factura, this.clientInfo, tiporeceptor, this.folioParam);
+              .calculateDevolutionAmmount(this.factura, this.pagos, this.clientInfo, tiporeceptor, this.folioParam);
               if (tiporeceptor === 'CLIENTE') {
                 this.solicitud.receptor = this.factura.rfcRemitente;
               }
