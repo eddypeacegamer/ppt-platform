@@ -1,7 +1,8 @@
 
 export class Devolucion {
 
-    public id: number;
+	public id: number;
+	public tipo:string;
 	public idPago: number;
 	public folio: string;
 	public monto: number;

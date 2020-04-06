@@ -32,7 +32,7 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>
 	
 	public List<Devolucion> findByFolio(String folio);
 	
-	public List<Devolucion> findByFolioAndReceptor(String folio, String receptor);
+	public List<Devolucion> findByFolioAndTipoReceptor(String folio, String receptor);
 	
 	public Optional<Devolucion> findById(Integer id);
 	public Optional<Devolucion> findByIdPagoOrigen(Integer id);
