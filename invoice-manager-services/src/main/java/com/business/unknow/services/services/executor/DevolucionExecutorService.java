@@ -75,7 +75,7 @@ public class DevolucionExecutorService {
 		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(), context.getFacturaDto().getId(),
 				context.getCurrentPago().getMonto().multiply(baseComisiones), client.getPorcentajePromotor(),
 				client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolioPadre(),
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
 				context.getCurrentPago().getId(), context.getCurrentPago().getMonto().multiply(baseComisiones),
 				client.getPorcentajeDespacho(), "invoice-manager@gmail.com", ContactoDevolucionEnum.DESPACHO.name()));
 		if (client.getPorcentajeCliente().compareTo(BigDecimal.ZERO)> 0) {
