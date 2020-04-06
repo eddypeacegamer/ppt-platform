@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.commons.validator.DevolucionValidator;
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -58,6 +59,9 @@ public class DevolucionService {
 
 	@Autowired
 	private PagoDevolucionRepository pagoDevolucionRepository;
+	
+	@Autowired
+	private PagoService pagoService;
 
 	@Autowired
 	private DevolucionMapper mapper;
@@ -110,6 +114,29 @@ public class DevolucionService {
 			pagos.add(solicitudDevolucion(dto));
 		}
 		return pagos;
+	}
+	
+	
+	public List<DevolucionDto> getDevolucionesByFolio(String folio){
+		return  mapper.getDevolucionesDtoFromEntities(repository.findByFolio(folio));
+	}
+	
+	public List<DevolucionDto> upadteDevoluciones(String folio,List<DevolucionDto> devoluciones) throws InvoiceManagerException{
+		PagoDto pago = pagoService.findPagosByFolio(folio).stream().filter(p->FormaPagoEnum.CREDITO.getPagoValue().equals(p.getFormaPago()))
+			.findAny().orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("No se encontraron pagos para el folio %s", folio)));
+		
+		BigDecimal newAmmount = devoluciones.stream().map(d->d.getMonto()).reduce(BigDecimal.ZERO,(d1,d2)->d1.add(d2));
+		if(newAmmount.compareTo(pago.getMonto())==0) {
+			for (DevolucionDto devolucion : devoluciones) {
+				for (Devolucion entity : repository.findByFolioAndReceptor(folio, devolucion.getReceptor())) {
+					entity.setMonto(devolucion.getMonto()); //update solicitud y generacion de devolucion
+					repository.save(entity);
+				}
+			}
+			return devoluciones;	
+		}else {
+			throw new InvoiceManagerException("El monto total de las devoluciones no iguala al pago dado", HttpStatus.CONFLICT.value());
+		}
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

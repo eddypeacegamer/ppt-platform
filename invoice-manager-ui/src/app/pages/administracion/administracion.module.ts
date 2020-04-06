@@ -20,28 +20,19 @@ import { DownloadCsvService } from '../../@core/util-services/download-csv.servi
 import { AdministracionRoutingModule } from './administracion-routing.module';
 import { AdministracionComponent } from './administracion.component';
 import { UsersComponent } from './users/users.component';
+import { DevolutionsAdjustmentComponent } from './devolutions-adjustment/devolutions-adjustment.component';
+import { CommonsModule } from '../commons/commons.module';
 
 
 @NgModule({
-  declarations: [AdministracionComponent,UsersComponent],
+  declarations: [
+    AdministracionComponent,
+    UsersComponent,
+    DevolutionsAdjustmentComponent],
   imports: [
     AdministracionRoutingModule,
-
-    CommonModule,
-    FormsModule,
-    NbActionsModule,
-    NbButtonModule,
-    NbCardModule,
-    NbCheckboxModule,
-    NbDatepickerModule, 
-    NbIconModule,
-    NbInputModule,
-    NbRadioModule,
-    NbSelectModule,
-    NbUserModule,
-    NbStepperModule,
-    NbDialogModule,
+    CommonsModule,
   ],
-  providers:[DownloadCsvService]
+  providers: [ DownloadCsvService ],
 })
 export class AdministracionModule { }

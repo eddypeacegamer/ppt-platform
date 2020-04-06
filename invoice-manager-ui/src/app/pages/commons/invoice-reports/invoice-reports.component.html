@@ -71,7 +71,7 @@
       </nb-card-body>
 
       <!--  OPERACIONES  -->
-      <nb-card-body *ngIf="module === 'operaciones'">
+      <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion'">
         <div class="row">
           <div class="col-md-1">
             <label for="inputFolio" class="label">Folio</label>
@@ -259,6 +259,11 @@
                     <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
                       [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' ), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Validacion operaciones' || fila.statusFactura === 'Validacion tesoreria') }"
                       [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
+                      (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
+                    </button>
+                    <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'administracion'"
+                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Timbrada') }"
+                      [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada')"
                       (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                     </button>
                 </td>

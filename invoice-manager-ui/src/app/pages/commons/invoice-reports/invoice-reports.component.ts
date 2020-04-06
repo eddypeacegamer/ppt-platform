@@ -18,7 +18,6 @@ export class InvoiceReportsComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '',lineaEmisor: 'A', solicitante: '' };
-  //Contabilidad          // { emisor: '', remitente: '', folio: '', status: '4', since: '', to: '', lineaEmisor: 'B', solicitante:'CARGA_MASIVA'}
   public userEmail: string;
 
   constructor(private invoiceService: InvoicesData,
@@ -45,6 +44,12 @@ export class InvoiceReportsComponent implements OnInit {
         case 'contabilidad':
           this.filterParams.lineaEmisor = 'B';
           this.filterParams.status = this.router.url.split('/')[4];
+          this.statusFlag = false;
+          this.updateDataTable();
+        break;
+        case 'administracion':
+          this.filterParams.lineaEmisor = 'A';
+          this.filterParams.status = '3';
           this.statusFlag = false;
           this.updateDataTable();
         break;
@@ -75,13 +80,26 @@ export class InvoiceReportsComponent implements OnInit {
         case 'contabilidad':
           this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
         break;
+        case 'administracion':
+          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        break;
         default:
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
       }
     }
 
     public redirectToPreferences(folio: string) {
-      this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
+      switch (this.module) {
+        case 'promotor':
+          this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
+          break;
+        case 'administracion':
+          this.router.navigate([`./pages/administracion/devoluciones/${folio}/ajustes`]);
+          break;
+        default:
+          break;
+      }
+      
     }
 
     public updateDataTable(currentPage?: number, pageSize?: number) {
