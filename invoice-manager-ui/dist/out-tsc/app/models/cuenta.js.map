@@ -1,0 +1,1 @@
+{"version":3,"file":"cuenta.js","sourceRoot":"","sources":["../../../../src/app/models/cuenta.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,MAAM;IASf,YAAY,EAAW,EAAE,KAAc,EAAE,MAAe;QACpD,IAAI,CAAC,EAAE,GAAG,EAAE,CAAC;QACb,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACnB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IACzB,CAAC;CACJ"}

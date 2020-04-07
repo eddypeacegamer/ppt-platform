@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/FacturaPdfModel">
+        <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
+            <layout-master-set>
+                <simple-page-master page-height="279mm" page-width="216mm" margin="10mm" master-name="letter">
+                    <region-body />
+                    <region-after extent="3mm" />
+                </simple-page-master>
+            </layout-master-set>
+            <page-sequence master-reference="letter">
+                <title>Invoice</title>
+
+                <static-content flow-name="xsl-region-after">
+                    <block font-size="2.5mm">
+                        <inline-container width="150mm">
+                            <block font-weight="bold" text-align="left">ESTE DOCUMENTO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI</block>
+                        </inline-container>
+
+                        <inline-container text-align="right" width="47mm">
+                            <block>
+                                Página
+                                <page-number />
+                                de
+                                <page-number-citation ref-id="last-item" />
+                            </block>
+                        </inline-container>
+                    </block>
+                </static-content>
+
+                <flow flow-name="xsl-region-body">
+                    <!-- Header -->
+                    <block-container height="22mm" margin-bottom="5mm" padding="0mm">
+                        <block>
+                            <inline-container width="52.4mm" margin-right="5mm" alignment-baseline="before-edge">
+                                <block>
+                                    <external-graphic width="100%" content-width="scale-to-fit" content-height="23mm">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="concat('data:image/png;base64,', Logotipo)" />
+                                        </xsl:attribute>
+                                    </external-graphic>
+                                </block>
+                            </inline-container>
+
+                            <inline-container width="86.6mm">
+                                <block font-size="3mm" font-weight="bold" margin-top="5mm">
+                                    <xsl:value-of select="factura/cfdi:Emisor/@Nombre" />
+                                </block>
+                                <block font-size="3mm" font-weight="bold">
+                                    RFC:
+                                    <xsl:value-of select="factura/cfdi:Emisor/@Rfc" />
+                                </block>
+                                <block font-size="2.5mm" margin-top="3.5mm">
+                                    <inline font-weight="bold">
+                                        RÉGIMEN:
+                                    </inline>
+                                    <xsl:value-of select="factura/cfdi:Emisor/@RegimenFiscal" />
+                                    -
+                                    <xsl:value-of select="RegimenFiscalDesc" />
+                                </block>
+                                <block font-size="2.5mm">
+                                    <inline font-weight="bold">
+                                        LUGAR DE EXPEDICIÓN:
+                                    </inline>
+                                    <xsl:value-of select="factura/@LugarExpedicion" />
+                                </block>
+                            </inline-container>
+
+                            <inline-container width="56.6mm" alignment-baseline="before-edge">
+                                <block-container border-color="black" border-style="solid" border-width=".4mm" height="23mm" fox:border-radius="2mm" font-size="2.4mm">
+                                    <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                                        RECIBO ELECTRÓNICO DE PAGO
+                                    </block>
+                                    <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        PFPC
+                                        <xsl:value-of select="factura/@Folio" />
+                                    </block>
+                                    <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        FECHA DE EMISIÓN
+                                    </block>
+                                    <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        <xsl:value-of select="factura/@Fecha" />
+                                    </block>
+                                    <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        FOLIO FISCAL
+                                    </block>
+                                    <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        <xsl:value-of select="factura/cfdi:Complemento/@UUID" />
+                                    </block>
+                                </block-container>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <!-- Información del Receptor -->
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="15mm" fox:border-radius="2mm" font-size="2.4mm">
+                        <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                            <inline-container>
+                                <block margin-left="3mm">INFORMACIÓN DEL RECEPTOR</block>
+                            </inline-container>
+                        </block>
+
+                        <block>
+                            <inline-container>
+                                <block margin-left="3mm">
+                                    <inline font-weight="bold">
+                                        R.F.C.:
+                                    </inline>
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Rfc" />
+                                </block>
+                            </inline-container>
+                        </block>
+
+                        <block>
+                            <inline-container>
+                                <block margin-left="3mm">
+                                    <inline font-weight="bold">
+                                        Razón social:
+                                    </inline>
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@Nombre" />
+                                </block>
+                            </inline-container>
+                        </block>
+
+                        <block>
+                            <inline-container>
+                                <block margin-left="3mm">
+                                    <inline font-weight="bold">
+                                        Uso CFDI:
+                                    </inline>
+                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@UsoCFDI" />
+                                    -
+                                    <xsl:value-of select="UsoCfdiDesc" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+
+                    <!-- Pago -->
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
+                        <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                            <inline-container width="35.1mm">
+                                <block>FECHA DE PAGO</block>
+                            </inline-container>
+                            <inline-container width="64.3mm">
+                                <block>FORMA DE PAGO</block>
+                            </inline-container>
+                            <inline-container width="23.4mm">
+                                <block>MONEDA</block>
+                            </inline-container>
+                            <inline-container width="32.3mm">
+                                <block>TIPO CAMBIO</block>
+                            </inline-container>
+                            <inline-container width="39.9mm">
+                                <block>MONTO PAGADO</block>
+                            </inline-container>
+                        </block>
+
+                        <table>
+                            <table-column column-width="35.1mm" />
+                            <table-column column-width="64.3mm" />
+                            <table-column column-width="23.4mm" />
+                            <table-column column-width="32.3mm" />
+                            <table-column column-width="39.9mm" />
+                            <table-body>
+                                <table-row text-align="center">
+                                    <table-cell border-right="solid">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="pagoComplemento/fechaPago" />
+                                        </block>
+                                    </table-cell>
+                                    <table-cell border-right="solid">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="pagoComplemento/formaPago" />
+                                            -
+                                            <xsl:value-of select="FormaPagoDesc" />
+                                        </block>
+                                    </table-cell>
+                                    <table-cell border-right="solid">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="pagoComplemento/moneda" />
+                                        </block>
+                                    </table-cell>
+                                    <table-cell border-right="solid">
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm"></block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            $
+                                            <xsl:value-of select="format-number(pagoComplemento/importePagado, '###,##0.00')" />
+                                        </block>
+                                    </table-cell>
+                                </table-row>
+                            </table-body>
+                        </table>
+                        <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                            DOCUMENTOS RELACIONADOS AL PAGO
+                        </block>
+                        <block>
+                            <inline-container width="73.2mm" text-align="left" margin="3mm">
+                                <block>
+                                    Id documento:
+                                    <xsl:value-of select="factura/cfdi:Complemento/@UUID" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="18.8mm" text-align="center">
+                                <block>
+                                    Serie:
+                                    <xsl:value-of select="pagoComplemento/serie" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="50.5mm" text-align="center">
+                                <block>
+                                    Folio:
+                                    <xsl:value-of select="factura/@Folio" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="25.1mm" text-align="center">
+                                <block>
+                                    No. Parcialidad:
+                                    <xsl:value-of select="pagoComplemento/numeroParcialidad" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="26.9mm" text-align="center">
+                                <block>
+                                    Método Pago:
+                                    <xsl:value-of select="pagoComplemento/metodoPago" />
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block margin-bottom="5mm">
+                            <inline-container width="21.9mm" text-align="center">
+                                <block>
+                                    Moneda:
+                                    <xsl:value-of select="pagoComplemento/moneda" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="36.6mm" text-align="center">
+                                <block>
+                                    Saldo anterior: $
+                                    <xsl:value-of select="format-number(pagoComplemento/importeSaldoAnterior, '###,##0.00')" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="36.3mm" text-align="center">
+                                <block>
+                                    Importe pagado: $
+                                    <xsl:value-of select="format-number(pagoComplemento/importePagado, '###,##0.00')" />
+                                </block>
+                            </inline-container>
+                            <inline-container width="100.1mm" text-align="left" margin-left="1mm">
+                                <block>
+                                    Saldo insoluto: $
+                                    <xsl:value-of select="format-number(pagoComplemento/importeSaldoInsoluto, '###,##0.00')" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <!-- Subtotales y Totales -->
+                    <block-container margin-bottom="3mm" text-align="right" font-size="2.5mm">
+                        <block>
+                            <inline-container font-weight="bold">
+                                <block>TOTAL PAGADO:</block>
+                            </inline-container>
+                            <inline-container width="45mm" margin-right="3mm">
+                                <xsl:variable name="total" select="pagoComplemento/importeSaldoAnterior - pagoComplemento/importeSaldoInsoluto" />
+                                <block>
+                                    $
+                                    <xsl:value-of select="format-number($total, '###,##0.00')" />
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block>
+                            <inline-container font-weight="bold">
+                                <block>IMPORTE CON LETRA:</block>
+                            </inline-container>
+                            <inline-container width="45mm" margin-right="3mm">
+                                <block>
+                                    <xsl:value-of select="TotalDesc" />
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <!-- Forma de Pago -->
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
+                        <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                            <inline-container width="65.5mm">
+                                <block>No. CSD EMISOR</block>
+                            </inline-container>
+                            <inline-container width="64.3mm">
+                                <block>No. CSD SAT</block>
+                            </inline-container>
+                            <inline-container width="64.3mm">
+                                <block>FECHA DE CERTIFICACIÓN</block>
+                            </inline-container>
+                        </block>
+
+                        <table>
+                            <table-column column-width="65.5mm" />
+                            <table-column column-width="64.3mm" />
+                            <table-column column-width="64.3mm" />
+                            <table-body>
+                                <table-row text-align="center">
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="factura/@NoCertificado" />
+                                        </block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@NoCertificadoSAT" />
+                                        </block>
+                                    </table-cell>
+                                    <table-cell>
+                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                            <xsl:value-of select="factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@FechaTimbrado" />
+                                        </block>
+                                    </table-cell>
+                                </table-row>
+                            </table-body>
+                        </table>
+                    </block-container>
+
+                    <!-- Timbrado -->
+                    <block-container>
+                        <block border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm" padding-top="-0.4mm" padding-bottom="-0.4mm">
+                            <inline-container width="155mm" alignment-baseline="before-edge">
+                                <block-container border-right-color="black" border-right-style="solid" border-right-width=".4mm">
+                                    <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm">
+                                        <inline-container>
+                                            <block margin-left="3mm">SELLO DIGITAL DEL CFDI</block>
+                                        </inline-container>
+                                    </block>
+
+                                    <block>
+                                        <inline-container>
+                                            <block-container margin="0.7mm" margin-left="2mm" width="150mm" text-align="justify">
+                                                <xsl:variable name="strlen1" select="string-length(factura/@Sello) div 3" />
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/@Sello, 0, floor($strlen1))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/@Sello, floor($strlen1), floor($strlen1))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/@Sello, floor($strlen1) * 2, 1000)" />
+                                                </block>
+                                            </block-container>
+                                        </inline-container>
+                                    </block>
+
+                                    <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                                        <inline-container>
+                                            <block margin-left="3mm">SELLO DEL SAT</block>
+                                        </inline-container>
+                                    </block>
+
+                                    <block>
+                                        <inline-container>
+                                            <block-container margin="0.7mm" margin-left="2mm" width="150mm" text-align="justify">
+                                                <xsl:variable name="strlen2" select="string-length(factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@SelloSAT) div 3" />
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@SelloSAT, 0, floor($strlen2))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@SelloSAT, floor($strlen2), floor($strlen2))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(factura/cfdi:Complemento/tfd:TimbreFiscalDigital/@SelloSAT, floor($strlen2) * 2, 1000)" />
+                                                </block>
+                                            </block-container>
+                                        </inline-container>
+                                    </block>
+
+                                    <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.7mm" padding-top="0.7mm">
+                                        <inline-container>
+                                            <block margin-left="3mm">CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACION DIGITAL DEL CFDI</block>
+                                        </inline-container>
+                                    </block>
+                                    <block margin-left="3mm" margin-right="3mm" padding-bottom="0.5mm" padding-top="0.5mm" font-size="2mm">
+                                        <xsl:value-of select="CadenaOriginal" />
+                                    </block>
+                                </block-container>
+                            </inline-container>
+                            <inline-container width="41mm" alignment-baseline="before-edge">
+                                <block margin-left="1mm">
+                                    <external-graphic content-height="scale-to-fit" content-width="39mm">
+                                        <xsl:attribute name="src">
+                                            <xsl:value-of select="concat('data:image/png;base64,', Qr)" />
+                                        </xsl:attribute>
+                                    </external-graphic>
+                                </block>
+                            </inline-container>
+                        </block>
+                    </block-container>
+
+                    <block id="last-item" />
+                </flow>
+            </page-sequence>
+        </root>
+    </xsl:template>
+</xsl:stylesheet>

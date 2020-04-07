@@ -1,0 +1,30 @@
+{
+	"title": "Operaciones",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Clientes",
+			"link": "/pages/operaciones/clientes"
+		},
+		{
+			"title": "Empresas",
+			"link": "/pages/operaciones/empresas"
+		},
+		{
+			"title": "Validacion facturas",
+			"link": "/pages/operaciones/validacion/1"
+		},
+		{
+			"title": "Timbrar facturas",
+			"link": "/pages/operaciones/timbrar-facturas/4"
+		},
+		{
+			"title": "Reportes",
+			"link": "/pages/operaciones/reportes/*"
+		},
+		{
+			"title": "Devoluciones",
+			"link": "/pages/operaciones/devoluciones"
+		}
+	]
+}

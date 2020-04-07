@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Devoluciones</nb-card-header>
+      <nb-card-body>
+        <div>
+          <div class="form-inline">
+            <p class="font-weight-bold">FOLIO:&nbsp;&nbsp;</p>
+            <p>{{factura.folio}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Uso CFDI:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Moneda:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.moneda}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Total:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.total | currency}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Subtotal:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.subtotal | currency}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Metodo de Pago:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.metodoPago}}</p>
+          </div>
+          <div class="form-inline">
+            <p class="font-weight-bold">Emisor:&nbsp;&nbsp;</p>
+            <p>{{factura.rfcEmisor}}</p>&nbsp;&nbsp;
+            <p>{{factura.razonSocialEmisor}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Receptor :&nbsp;&nbsp;</p>
+            <p>{{factura.rfcRemitente}}</p>&nbsp;&nbsp;
+            <p>{{factura.razonSocialRemitente}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Promotor :&nbsp;&nbsp;</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p>{{factura.solicitante}}</p>
+          </div>
+          <div class="form-inline">
+            <p class="font-weight-bold">Porcentaje cliente :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeCliente / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje promotor :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajePromotor / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje contacto :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeContacto / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje despacho :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeDespacho / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+           
+          </div>
+
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Preferencia Devolucion Factura</nb-card-header>
+      <nb-card-body>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" [ngClass]="{'active': formParams.tab === 'CLIENTE'}" (click)="selectTab('CLIENTE')" id="client-tab" role="tab">Cliente</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [ngClass]="{'active': formParams.tab === 'PROMOTOR'}" (click)="selectTab('PROMOTOR')" id="promotor-tab" role="tab">Promotor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [ngClass]="{'active': formParams.tab === 'CONTACTO'}"  (click)="selectTab('CONTACTO')" id="contact-tab" role="tab">Contacto</a>
+          </li>
+        </ul>
+        <!-- CLIENTE-->
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="d-flex p-2 flex-column" *ngIf="solicitud.id !== undefined && solicitud.status!=='RECHAZADO'">
+              <div class="form-inline">
+                <p class="font-weight-bold">Beneficiario</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.beneficiario}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Monto</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.monto | currency}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Forma de Pago</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.formaPago}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">{{solicitud.tipoReferencia}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>{{solicitud.referencia}}</p>
+              </div>
+              <div class="form-inline">
+                <p class="font-weight-bold">Banco</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.banco}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Solicitante</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.solicitante}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Fecha Solicitud</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.fechaCreacion | date}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="font-weight-bold">Fecha Pago</p>
+                &nbsp;&nbsp;&nbsp;
+                <p>{{solicitud.fechaPago | date}}</p>
+              </div>
+              <div class="form-inline">
+                <p>{{solicitud.comentarios}}</p>
+              </div>
+            </div>
+            
+            <form *ngIf="solicitud.id === undefined || solicitud.status ==='RECHAZADO'">
+              <div class="form-row">
+                <div class="form-group col-md-8">
+                  <label for="inputBenerficario1" class="label">Beneficiario</label>
+                  <input type="text" class="form-control" id="inputBenerficario1"
+                    placeholder="Nombre completo beneficiario" [(ngModel)]="solicitud.beneficiario" name="beneficiario">
+                </div>
+                <div class="form-group col-md-4">
+                  <label for="inputImporte1" class="label"> Importe a solicitar</label>
+                  <div class="alert alert-success form-control" role="alert" style="width: 150px;">
+                    <p class="font-weight-bold">{{solicitud.monto | currency}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="inputFormaPago1" class="label">Forma de Pago</label>
+                  <select id="inputFormaPago1" style="display:block;" class="form-control"
+                    [(ngModel)]="solicitud.formaPago" (change)="onPayFormSelected($event.target.value)" name="formapago">
+                    <option value="*">Seleccionar</option>
+                    <option value="EFECTIVO">Efectivo</option>
+                    <option value="CHEQUE">Cheque nominativo</option>
+                    <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                    <option value="PAGO_MULTIPLE">Pago multiple</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="inputBanco1" class="label">Banco</label>
+                  <select id="inputBanco1" style="display:block;" class="form-control" [(ngModel)]="solicitud.banco"
+                    name="banco">
+                    <option value="N/A">No Aplica</option>
+                    <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="inputTypeRef1" class="label">Tipo referencia</label>
+                  <select id="inputTypeRef1" style="display:block;" class="form-control"
+                    [(ngModel)]="solicitud.tipoReferencia" name="tiporeferecnia">
+                    <option value="*">Seleccionar</option>
+                    <option *ngFor="let type of refTypesCat" [value]="type.id">{{type.nombre}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="inputReferenciaDoc" class="label">Referencia</label>
+                  <input *ngIf="solicitud.formaPago!=='PAGO_MULTIPLE'" type="text" class="form-control" id="inputReferenciaDoc" placeholder="XXXX-XXXX-XXXX"
+                    [(ngModel)]="solicitud.referencia" name="referencia">
+                  <div *ngIf="solicitud.formaPago ==='PAGO_MULTIPLE'"  class="custom-file" id="refDoc">
+                      <input  #fileInput type="file" class="custom-file-input" id="inputGroupFile01" accept=".xls,.xlsx" placeholder="Archivo referencia"
+                        (change)="fileUploadListener($event)" style="display:block;"
+                        aria-describedby="inputGroupFileAddon01">
+                      <label class="custom-file-label" for="inputGroupFile01">{{formParams.filename}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputObservaciones1" class="label">Observaciones/comentarios</label>
+                  <input type="text" class="form-control" id="inputObservaciones1" [(ngModel)]="solicitud.comentarios"
+                    name="cometarios" placeholder="Observaciones o comentarios adicionales">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)">Solicitar
+                Devolucion</button>
+            </form>
+          </div>
+        </div>
+
+
+
+        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+          <p *ngFor="let message of messages">{{message}}</p>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+
+
+  </div>
+</div>

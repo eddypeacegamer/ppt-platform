@@ -1,0 +1,22 @@
+{
+    "title": "Promotor",
+    "icon": "layout-outline",
+    "children": [
+      {
+        "title": "Clientes",
+        "link": "/pages/promotor/clientes"
+      },
+      {
+        "title": "Reportes",
+        "link": "/pages/promotor/reportes/*"
+      },
+      {
+        "title": "Pre-cfdi",
+        "link": "/pages/promotor/precfdi/*"
+      },
+      {
+        "title": "Devoluciones",
+        "link": "/pages/promotor/devoluciones"
+      }
+    ]
+  }

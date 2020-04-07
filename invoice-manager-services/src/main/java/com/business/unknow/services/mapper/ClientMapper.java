@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.ClientDto;
+import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.Client;
 
 /**
@@ -14,7 +14,7 @@ import com.business.unknow.services.entities.Client;
 @Mapper
 public interface ClientMapper {
 
-	ClientDto getClientDtoFromentity(Client entity);
+	ClientDto getClientDtoFromEntity(Client entity);
 
 	Client getEntityFromClientDto(ClientDto dto);
 

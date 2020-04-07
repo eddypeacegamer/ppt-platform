@@ -1,0 +1,144 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Pago devoluciones</nb-card-header>
+      <nb-card-body>
+          <div class="row">
+            <div class="col-sm-2">
+              <label for="inputStatusType" class="label">Estatus Solicitud</label>
+              <select id="inputStatusType" style="display:block;" class="form-control"
+                [(ngModel)]="filterParams.status" >
+                <option value="*">Todos</option>
+                <option value="SOLICITUD">Solicitud</option>
+                <option value="VALIDACION">Validación</option>
+                <option value="ACEPTADO">Aceptado</option>
+                <option value="PAGADO">Pagado</option>
+              </select>
+            </div>
+              <div class="col-sm-2">
+                <label for="inputReceptorType" class="label">Tipo Receptor</label>
+                <select id="inputReceptorType" style="display:block;" class="form-control"
+                  [(ngModel)]="filterParams.tipoReceptor" >
+                  <option value="*">Todos</option>
+                  <option value="PROMOTOR">Promotor</option>
+                  <option value="CLIENTE">Cliente</option>
+                  <option value="CONTACTO">Contacto</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                  <label for="beneficiario" class="label">Beneficiario</label>
+                  <input type="text" id="beneficiario" placeholder="Nombre beneficiario" fullWidth style="display:block;" class="form-control"
+                    [(ngModel)]="filterParams.beneficiario">
+              </div>
+              <div class="col-md-2">
+                <label for="receptor" class="label">Receptor</label>
+                <input type="text" id="receptor" placeholder="RFC Empresa / correo promotor / correo contacto" fullWidth style="display:block;" class="form-control"
+                  [(ngModel)]="filterParams.idReceptor">
+              </div>
+              <div class="col-sm-4">
+                <label for="inputPayType" class="label">Forma de Pago</label>
+                <div class="form-inline">
+                <select id="inputPayType" style="display:block;" class="form-control"
+                  [(ngModel)]="filterParams.formaPago" >
+                  <option value="*">Todos</option>
+                  <option value="EFECTIVO">Efectivo</option>
+                  <option value="CHEQUE">Cheque nominativo</option>
+                  <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                </select>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <button type="button" class="btn btn-primary align-bottom"  (click)="updateDataTable()" status="primary">BUSCAR</button>
+              </div>
+              </div>
+
+
+            </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Pago devoluciones</nb-card-header>
+      <nb-card-body>
+
+        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+          No se encontraron resultados
+        </div>
+        <div class="clearfix" *ngIf="page.empty == false">
+            <strong>Resultados</strong>
+           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+
+            <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
+              id="inputPageSize" class="float-right">
+              <nb-option value="10">10</nb-option>
+              <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+              <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
+            </nb-select>
+        </div>
+
+        <div class="table-responsive" *ngIf="page.empty == false">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="text-center">Detalle</th>
+                <th scope="col" class="text-center">Folio Devolucion</th>
+                <th scope="col" class="text-center">Tipo receptor</th>
+                <th scope="col" class="text-center">ID Receptor</th>
+                <th scope="col" class="text-center">Beneficiario</th>
+                <th scope="col" class="text-center">Importe</th>
+                <th scope="col" class="text-center">Forma de pago</th>
+                <th scope="col" class="text-center">Banco</th>
+                <th scope="col" class="text-center">Tipo Ref</th>
+                <th scope="col" class="text-center">Referencia</th>
+                <th scope="col" class="text-center">Estatus</th>
+                <th scope="col" class="text-center">Fecha solicitud</th>
+                <th scope="col" class="text-center">Fecha pago</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fila of page.content">
+                <td scope="row" class="text-center">
+                  <button class="btn btn-outline-primary btn-sm"
+                    (click)="openDialog(fila)"><i class="fa fa-search"></i></button>
+                </td>
+                <td scope="row" class="text-center">{{fila.id}}</td>
+                <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
+                <td scope="row" class="text-center">{{fila.receptor}}</td>
+                <td scope="row" class="text-center">{{fila.beneficiario}}</td>
+                <td scope="row" class="text-right">{{fila.monto | currency}}</td>
+                <td scope="row" class="text-center">{{fila.formaPago}}</td>
+                <td scope="row" class="text-center">{{fila.banco}}</td>
+                <td scope="row" class="text-center">{{fila.tipoReferencia}}</td>
+                <td scope="row" class="text-center">{{fila.referencia}}</td>
+                <td scope="row" class="text-center">{{fila.status}}</td>
+                <td scope="row" class="text-center">{{fila.fechaCreacion | date}}</td>
+                <td scope="row" class="text-center">{{fila.fechaPago | date}}</td>
+              </tr>
+            </tbody>
+          </table>
+        
+          <ul class="pagination" *ngIf="page.totalElements > 1">
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+            <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+          </ul>
+        </div>
+
+        <br>
+        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
+            <p *ngFor="let message of errors">{{message}}</p>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

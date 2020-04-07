@@ -1,196 +1,183 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
-import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "client")
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "CLIENTES")
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = -491025321146807933L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_client")
-	private Integer id;
+	@Column(name = "ID_CLIENTE")
+	private int id;
 
-	@Basic(optional = false)
-	@Column(name = "name", unique = true)
-	private String name;
+	@NotNull
+	@Column(name = "ACTIVO")
+	private Boolean activo;
 
-	@Basic(optional = false)
-	@Column(name = "rfc", unique = true)
-	private String rfc;
+	@NotEmpty
+	@Column(name = "CORREO_PROMOTOR")
+	private String correoPromotor;
 
-	@Basic(optional = false)
-	@Column(name = "razon_social", unique = true)
-	private String razonSocial;
+	@Column(name = "CORREO_CONTACTO")
+	private String correoContacto;
 
-	@Basic(optional = false)
-	@Column(name = "email", unique = true)
-	private String email;
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
+	@Column(name = "PORCENTAJE_PROMOTOR")
+	private BigDecimal porcentajePromotor;
 
-	@Basic(optional = false)
-	@Column(name = "calle", unique = true)
-	private String calle;
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
+	@Column(name = "PORCENTAJE_CLIENTE")
+	private BigDecimal porcentajeCliente;
 
-	@Basic(optional = false)
-	@Column(name = "colonia", unique = true)
-	private String colonia;
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
+	@Column(name = "PORCENTAJE_DESPACHO")
+	private BigDecimal porcentajeDespacho;
 
-	@Basic(optional = false)
-	@Column(name = "estado", unique = true)
-	private String estado;
+	@DecimalMin("0.00")
+	@DecimalMax("16.00")
+	@Column(name = "PORCENTAJE_CONTACTO")
+	private BigDecimal porcentajeContacto;
 
-	@Basic(optional = false)
-	@Column(name = "coo", unique = true)
-	private String coo;
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	@Column(name = "FECHA_CREACION")
+	private Date fechaCreacion;
 
-	@Basic(optional = false)
-	@Column(name = "no_interior", unique = true)
-	private String noInterior;
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	@Column(name = "FECHA_ACTUALIZACION")
+	private Date fechaActualizacion;
 
-	@Basic(optional = false)
-	@Column(name = "no_exterior", unique = true)
-	private String noExterior;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
+	private Contribuyente informacionFiscal;
 
-	@Basic(optional = false)
-	@Column(name = "municipio", unique = true)
-	private String municipio;
-
-	@Basic(optional = false)
-	@Column(name = "pais", unique = true)
-	private String pais;
-
-	@Basic(optional = false)
-	@Column(name = "codigo_postal", unique = true)
-	private String codigoPostal;
-
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Boolean getActivo() {
+		return activo;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 
-	public String getRfc() {
-		return rfc;
+	public String getCorreoPromotor() {
+		return correoPromotor;
 	}
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
+	public void setCorreoPromotor(String correoPromotor) {
+		this.correoPromotor = correoPromotor;
 	}
 
-	public String getRazonSocial() {
-		return razonSocial;
+	public String getCorreoContacto() {
+		return correoContacto;
 	}
 
-	public void setRazonSocial(String razonSocial) {
-		this.razonSocial = razonSocial;
+	public void setCorreoContacto(String correoContacto) {
+		this.correoContacto = correoContacto;
 	}
 
-	public String getEmail() {
-		return email;
+	public BigDecimal getPorcentajePromotor() {
+		return porcentajePromotor;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
+		this.porcentajePromotor = porcentajePromotor;
 	}
 
-	public String getCalle() {
-		return calle;
+	public BigDecimal getPorcentajeCliente() {
+		return porcentajeCliente;
 	}
 
-	public void setCalle(String calle) {
-		this.calle = calle;
+	public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
+		this.porcentajeCliente = porcentajeCliente;
 	}
 
-	public String getColonia() {
-		return colonia;
+	public BigDecimal getPorcentajeDespacho() {
+		return porcentajeDespacho;
 	}
 
-	public void setColonia(String colonia) {
-		this.colonia = colonia;
+	public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
+		this.porcentajeDespacho = porcentajeDespacho;
 	}
 
-	public String getEstado() {
-		return estado;
+	public BigDecimal getPorcentajeContacto() {
+		return porcentajeContacto;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
+		this.porcentajeContacto = porcentajeContacto;
 	}
 
-	public String getCoo() {
-		return coo;
+	public Date getFechaCreacion() {
+		return fechaCreacion;
 	}
 
-	public void setCoo(String coo) {
-		this.coo = coo;
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getNoInterior() {
-		return noInterior;
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
 
-	public void setNoInterior(String noInterior) {
-		this.noInterior = noInterior;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public String getNoExterior() {
-		return noExterior;
+	public Contribuyente getInformacionFiscal() {
+		return informacionFiscal;
 	}
 
-	public void setNoExterior(String noExterior) {
-		this.noExterior = noExterior;
-	}
-
-	public String getMunicipio() {
-		return municipio;
-	}
-
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
-	}
-
-	public String getPais() {
-		return pais;
-	}
-
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-
-	public String getCodigoPostal() {
-		return codigoPostal;
-	}
-
-	public void setCodigoPostal(String codigoPostal) {
-		this.codigoPostal = codigoPostal;
+	public void setInformacionFiscal(Contribuyente informacionFiscal) {
+		this.informacionFiscal = informacionFiscal;
 	}
 
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", name=" + name + ", rfc=" + rfc + ", razonSocial=" + razonSocial + ", email="
-				+ email + ", calle=" + calle + ", colonia=" + colonia + ", estado=" + estado + ", coo=" + coo
-				+ ", noInterior=" + noInterior + ", noExterior=" + noExterior + ", municipio=" + municipio + ", pais="
-				+ pais + ", codigoPostal=" + codigoPostal + "]";
+		return "Client [id=" + id + ", activo=" + activo + ", correoPromotor=" + correoPromotor + ", correoContacto="
+				+ correoContacto + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
+				+ porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho + ", porcentajeContacto="
+				+ porcentajeContacto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", informacionFiscal=" + informacionFiscal + "]";
 	}
 
 }

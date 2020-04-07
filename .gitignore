@@ -19,6 +19,8 @@
 *.tar.gz
 *.rar
 *.DS_Store
+*.project
+*.classpath
 */.settings
 */target
 
@@ -92,3 +94,7 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+
+.idea/
+*.iml

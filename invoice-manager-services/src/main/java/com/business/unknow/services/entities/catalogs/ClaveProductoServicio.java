@@ -15,14 +15,14 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "CLAVE_PROD_SERV")
+@Table(name = "CAT_CLAVE_PROD_SERV")
 public class ClaveProductoServicio {
 	
 	@Id
 	@Column(name = "CLAVE")
 	private Integer clave;
 	@Column(name = "DESCRIPCION")
-	private String descipcion;
+	private String descripcion;
 	@Column(name = "SIMILARES")
 	private String similares;
 	@Column(name = "INICIO_VIGENCIA")
@@ -33,11 +33,11 @@ public class ClaveProductoServicio {
 	public void setClave(Integer clave) {
 		this.clave = clave;
 	}
-	public String getDescipcion() {
-		return descipcion;
+	public String getDescripcion() {
+		return descripcion;
 	}
-	public void setDescipcion(String descipcion) {
-		this.descipcion = descipcion;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	public String getSimilares() {
 		return similares;
@@ -53,7 +53,8 @@ public class ClaveProductoServicio {
 	}
 	@Override
 	public String toString() {
-		return "ClaveProductoServicio [clave=" + clave + ", descipcion=" + descipcion + ", similares=" + similares
+		return "ClaveProductoServicio [clave=" + clave + ", descripcion=" + descripcion + ", similares=" + similares
 				+ ", inicioVigencia=" + inicioVigencia + "]";
 	}
+
 }

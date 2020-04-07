@@ -1,0 +1,1 @@
+{"version":3,"file":"empresa.js","sourceRoot":"","sources":["../../../../src/app/models/empresa.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAC;AAEhD,MAAM,OAAO,OAAO;IAuBhB;QACI,IAAI,CAAC,iBAAiB,GAAG,IAAI,aAAa,EAAE,CAAC;IACjD,CAAC;CACJ"}

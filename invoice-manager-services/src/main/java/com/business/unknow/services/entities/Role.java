@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -15,19 +17,27 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "role")
+@Table(name = "ROLES")
 public class Role implements Serializable {
 
 	private static final long serialVersionUID = -2562827192729375750L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_role")
+	@Column(name = "ID_ROLE")
 	private Integer id;
 
 	@Basic(optional = false)
-	@Column(name = "name", unique = true)
-	private String name;
+	@Column(name = "ROLE")
+	private String role;
+	
+	@Basic(optional = true)
+	@Column(name = "ROLE_DESC")
+	private String description;
+	
+	@ManyToOne
+    @JoinColumn(name="ID_USER", nullable=false)
+    private User user;
 
 	public Integer getId() {
 		return id;
@@ -37,17 +47,33 @@ public class Role implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getRole() {
+		return role;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
 	public String toString() {
-		return "Role [id=" + id + ", name=" + name + "]";
+		return "Role [id=" + id + ", role=" + role + ", description=" + description + "]";
 	}
 
 }

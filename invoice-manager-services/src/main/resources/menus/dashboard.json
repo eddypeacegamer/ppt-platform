@@ -1,0 +1,6 @@
+{
+	"title": "Dashboard",
+	"icon": "shopping-cart-outline",
+	"link": "/pages/dashboard",
+	"home": true
+}

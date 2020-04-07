@@ -1,0 +1,17 @@
+ {
+    "title": "Administracion",
+    "icon": "layout-outline",
+    "children": [
+    	{
+			"title": "Usuarios",
+			"link": "/pages/administracion/usuarios"
+		},
+		{
+			"title": "Clientes",
+			"link": "/pages/administracion/clientes"
+		},
+		{
+			"title": "Reportes",
+			"link": "/pages/administracion/reportes/3"
+		}]
+  }
