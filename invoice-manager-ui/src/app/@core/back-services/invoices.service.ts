@@ -3,41 +3,69 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Factura } from '../../models/factura/factura';
 import { Concepto } from '../../models/factura/concepto';
+import { Catalogo } from '../../models/catalogos/catalogo';
+import { CatalogsData } from '../data/catalogs-data';
+import { map } from 'rxjs/operators';
+import { GenericPage } from '../../models/generic-page';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class InvoicesService {
 
-  constructor(private httpClient:HttpClient) { }
+  private validationCat: Catalogo[] = [];
+  private payCat: Catalogo[] = [];
+  private devolutionCat: Catalogo[] = [];
 
-  public getInvoices(page: number, size: number, filterParams?: any): Observable<Object> {
-    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
-    for (const key in filterParams) {
-      let value : string;
-      if(filterParams[key] instanceof Date){
-        let date : Date = filterParams[key] as Date; 
-        value = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
-      }else{
-        value = filterParams[key];
-      }
-      
-      if(value.length>0){
-        pageParams = pageParams.append(key, (filterParams[key]==='*')?'':value);
-      }
-    }
-    return this.httpClient.get('../api/facturas',{params:pageParams});
+
+  constructor(private httpClient: HttpClient,
+              private catalogService: CatalogsData) {
+    this.catalogService.getStatusPago().then(cat => this.payCat = cat);
+    this.catalogService.getStatusValidacion().then(cat => this.validationCat = cat);
+    this.catalogService.getStatusDevolucion().then(cat => this.devolutionCat = cat);
   }
 
-  public getInvoiceByFolio(folio:string) : Observable<any>{
+  public getInvoices(page: number, size: number, filterParams?: any): Observable<Object> {
+
+    let pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
+    for (const key in filterParams) {
+      if (filterParams[key] !== undefined) {
+        let value: string = filterParams[key];
+      if ( filterParams[key] instanceof Date) {
+        const date: Date = filterParams[key] as Date;
+        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      }
+      if ( value !== null && value.length > 0 && value !== '*') {
+          pageParams = pageParams.append(key, value);
+        }
+      }
+    }
+    return this.httpClient.get('../api/facturas', {params: pageParams})
+    .pipe(
+      map((invPage: GenericPage<Factura>) => {
+        const records: Factura[] = invPage.content.map(record => {
+          record.statusFactura = this.validationCat.find(v => v.id.toString()
+                                      === record.statusFactura.toString()).nombre;
+          record.statusPago = this.payCat.find(v => v.id.toString()
+                                      === record.statusPago.toString()).nombre;
+          record.statusDevolucion = this.devolutionCat.find(v => v.id.toString()
+                                      === record.statusDevolucion.toString()).nombre;
+          return record;
+        });
+        invPage.content = records;
+        return invPage;
+      }));
+  }
+
+  public getInvoiceByFolio(folio: string): Observable<any> {
     return this.httpClient.get(`../api/facturas/${folio}`);
   }
 
-  public getInvoiceFiles(folio:string) : Observable<any>{
+  public getInvoiceFiles(folio: string): Observable<any>{
     return this.httpClient.get(`../api/facturas/${folio}/files`);
   }
 
-  public getComplementosInvoice(folioPadre:string) : Observable<any>{
+  public getComplementosInvoice(folioPadre: string): Observable<any>{
     return this.httpClient.get(`../api/facturas/${folioPadre}/complementos`);
   }
 

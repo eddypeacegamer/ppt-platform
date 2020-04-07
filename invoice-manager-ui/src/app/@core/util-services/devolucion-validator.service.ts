@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { PagoDevolucion } from '../../models/pago-devolucion';
 import { Cfdi } from '../../models/factura/cfdi';
 import { Client } from '../../models/client';
+import { Concepto } from '../../models/factura/concepto';
+import { PaymentsData } from '../data/payments-data';
+import { Factura } from '../../models/factura/factura';
+import { filter } from 'rxjs/operators';
+import { PagoFactura } from '../../models/pago-factura';
 
 @Injectable({
   providedIn: 'root',
@@ -10,32 +15,70 @@ export class DevolucionValidatorService {
 
   constructor() { }
 
+  public calculateDevolutionAmmount(factura: Factura, pagos: PagoFactura[], client: Client, tipoReceptor: string, folio: string): number {
+    //TODO set this methiod as promise
 
-  public calculateDevolutionAmmount(cfdi: Cfdi, client: Client, tipoReceptor: string): number {
-    if (cfdi.metodoPago === 'PUE') {
-      const baseComisiones = cfdi.total - cfdi.subtotal;
-      if (tipoReceptor === 'CLIENTE') {
-        return cfdi.subtotal + baseComisiones * client.porcentajeCliente / 16;
+    const impuestos = this.getTotalImpuestos(factura.cfdi.conceptos);
+    const retenciones = this.getTotalRetenciones(factura.cfdi.conceptos);
+    const payment = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => folio === p.folio);
+
+    if (payment) {
+      if (factura.cfdi.metodoPago === 'PUE') {
+        if (tipoReceptor === 'CLIENTE') {
+          return factura.cfdi.subtotal + (impuestos * client.porcentajeCliente / 16) - retenciones;
+        }
+        if (tipoReceptor === 'CONTACTO') {
+          return impuestos * client.porcentajeContacto / 16;
+        }
+        if (tipoReceptor === 'PROMOTOR') {
+          return impuestos * client.porcentajePromotor / 16;
+        }
+      } else {
+        const porcentajeImpuestos = impuestos / factura.cfdi.total;
+        //const porcentajeRetenciones = retenciones / factura.cfdi.total;
+        const baseComision = payment.monto * porcentajeImpuestos;
+        if (tipoReceptor === 'CLIENTE') {
+          return payment.monto  + baseComision * (client.porcentajeCliente / 16 - 1);
+          //return payment.monto + baseComision * (client.porcentajeCliente / 16) - baseComision
+          //return (payment.monto - baseComision + baseRetencion ) + baseComision * (client.porcentajeCliente / 16) - baseRetencion;
+        }
+        if (tipoReceptor === 'CONTACTO') {
+          return baseComision * client.porcentajeContacto / 16;
+        }
+        if (tipoReceptor === 'PROMOTOR') {
+          return baseComision * client.porcentajePromotor / 16;
+        }
       }
-      if (tipoReceptor === 'CONTACTO') {
-        return baseComisiones * client.porcentajeContacto / 16;
-      }
-      if (tipoReceptor === 'PROMOTOR') {
-        return baseComisiones * client.porcentajePromotor / 16;
-      }
-    }else {
-      const porcentajeImpuestos = (cfdi.total - cfdi.subtotal) / cfdi.total;
-      const baseComisiones = cfdi.complemento.pagos[0].monto * porcentajeImpuestos;
-      if (tipoReceptor === 'CLIENTE') {
-        return cfdi.complemento.pagos[0].monto + baseComisiones * (client.porcentajeCliente / 16 - 1);
-      }
-      if (tipoReceptor === 'CONTACTO') {
-        return baseComisiones * client.porcentajeContacto / 16;
-      }
-      if (tipoReceptor === 'PROMOTOR') {
-        return baseComisiones * client.porcentajePromotor / 16;
-      }
+    } else {
+      return 0;
     }
+
+
+  }
+
+
+  public calcularImportes(impuestos): number {
+    if (impuestos.length > 0) {
+      return impuestos.map(i => i.importe).reduce((total, value) => total + value);
+    } else {
+      return 0;
+    }
+  }
+
+  public getTotalImpuestos(conceptos: Concepto[]): number {
+    let impuestos = 0;
+    for (const concepto of conceptos) {
+      impuestos += this.calcularImportes(concepto.impuestos);
+    }
+    return impuestos;
+  }
+
+  public getTotalRetenciones(conceptos: Concepto[]): number {
+    let retenciones = 0;
+    for (const concepto of conceptos) {
+      retenciones += this.calcularImportes(concepto.retenciones);
+    }
+    return retenciones;
   }
 
   public validateDevolution(maxAmmount: Number, solicitud: PagoDevolucion): string[] {
@@ -45,7 +88,7 @@ export class DevolucionValidatorService {
     }
     if (solicitud.monto === undefined) {
       messages.push('El monto de la devolucion es un valor requerido');
-    }else {
+    } else {
       if (solicitud.monto <= 0) {
         messages.push(`No es posible realizar solicitudes de montos negativos`);
       }
@@ -56,26 +99,26 @@ export class DevolucionValidatorService {
     }
     if (solicitud.formaPago === undefined || solicitud.formaPago === '*') {
       messages.push('La forma de pago es requerida.');
-    }else {
+    } else {
       if (solicitud.formaPago === 'EFECTIVO' || solicitud.formaPago === 'CHEQUE') {
         if (solicitud.tipoReferencia !== 'DIRECCION' || solicitud.referencia === undefined
-              || solicitud.referencia.length === 0) {
+          || solicitud.referencia.length === 0) {
           messages.push('Los pagos en efectivo/cheque requiren como referencia a la direccion de entrega');
-          }
+        }
       }
       if (solicitud.formaPago === 'FACTURA') {
-        if (solicitud.tipoReferencia !== 'FOLIO' ||  solicitud.referencia === undefined
-                || solicitud.referencia.length === 0) {
-            messages.push('Los pagos en abono a factura requiren como referencia el folio de la factura');
+        if (solicitud.tipoReferencia !== 'FOLIO' || solicitud.referencia === undefined
+          || solicitud.referencia.length === 0) {
+          messages.push('Los pagos en abono a factura requiren como referencia el folio de la factura');
         }
       }
       if (solicitud.formaPago === 'TRANSFERENCIA') {
         if (solicitud.banco === undefined || solicitud.banco === '*') {
           messages.push('La informacion del banco es un valor requerido');
         }
-        if (solicitud.tipoReferencia === undefined || solicitud.tipoReferencia === '*' ) {
+        if (solicitud.tipoReferencia === undefined || solicitud.tipoReferencia === '*') {
           messages.push('El tipo de referencia es un valor requerido');
-        }else {
+        } else {
           if (solicitud.tipoReferencia === 'CLABE' && !((new RegExp(/^[\d]{18}$/)).test(solicitud.referencia))) {
             messages.push('La clabe especificada debe de contener 18 digitos numericos');
           }
@@ -89,7 +132,7 @@ export class DevolucionValidatorService {
 
       }
     }
-    if (solicitud.tipoReceptor === undefined || solicitud.tipoReceptor.length < 1 ){
+    if (solicitud.tipoReceptor === undefined || solicitud.tipoReceptor.length < 1) {
       messages.push('La informacion del tipo receptor es requerida.');
     }
     if (solicitud.receptor === undefined || solicitud.receptor.length === 0) {

@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
-import { debug } from 'util';
 
 @Component({
   selector: 'ngx-empresa',
@@ -50,7 +49,7 @@ export class EmpresaComponent implements OnInit {
           || `${error.statusText} : ${error.message}`));
         }});
     /**** LOADING CAT INFO ****/
-    this.catalogsService.getAllGiros().subscribe((giros: Catalogo[]) => this.girosCat = giros,
+    this.catalogsService.getAllGiros().then((giros: Catalogo[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));
   }
@@ -64,7 +63,7 @@ export class EmpresaComponent implements OnInit {
     let zc = new String(zipcode);
     if(zc.length>4 && zc.length <6){
       this.colonias = [];
-      this.catalogsService.getZipCodeInfo(zipcode).subscribe(
+      this.catalogsService.getZipCodeInfo(zipcode).then(
           (data:ZipCodeInfo) => {this.companyInfo.informacionFiscal.estado = data.estado;
           this.companyInfo.informacionFiscal.municipio= data.municipio;this.colonias=data.colonias; 
           this.companyInfo.informacionFiscal.localidad=data.colonias[0];},

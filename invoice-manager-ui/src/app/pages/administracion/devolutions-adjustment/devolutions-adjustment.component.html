@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Devoluciones</nb-card-header>
+      <nb-card-body>
+        <div>
+          <div class="form-inline">
+            <p class="font-weight-bold">FOLIO:&nbsp;&nbsp;</p>
+            <p>{{factura.folio}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Uso CFDI:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Moneda:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.moneda}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Total:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.total | currency}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Subtotal:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.subtotal | currency}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Metodo de Pago:&nbsp;&nbsp;</p>
+            <p>{{factura.cfdi.metodoPago}}</p>
+          </div>
+          <div class="form-inline">
+            <p class="font-weight-bold">Emisor:&nbsp;&nbsp;</p>
+            <p>{{factura.rfcEmisor}}</p>&nbsp;&nbsp;
+            <p>{{factura.razonSocialEmisor}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Receptor :&nbsp;&nbsp;</p>
+            <p>{{factura.rfcRemitente}}</p>&nbsp;&nbsp;
+            <p>{{factura.razonSocialRemitente}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Promotor :&nbsp;&nbsp;</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p>{{factura.solicitante}}</p>
+          </div>
+          <div class="form-inline">
+            <p class="font-weight-bold">Porcentaje cliente :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeCliente / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje promotor :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajePromotor / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje contacto :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeContacto / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Porcentaje despacho :&nbsp;&nbsp;</p>
+            <p>{{clientInfo.porcentajeDespacho / 100 | percent}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+          </div>
+          <div class="form-inline" *ngIf="pago">
+            <p class="font-weight-bold">Forma de pago :&nbsp;&nbsp;</p>
+            <p>{{pago.formaPago}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Monto de Pago :&nbsp;&nbsp;</p>
+            <p>{{pago.monto | currency}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Fecha de pago :&nbsp;&nbsp;</p>
+            <p>{{pago.fechaPago}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Banco :&nbsp;&nbsp;</p>
+            <p>{{pago.banco}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Cuenta :&nbsp;&nbsp;</p>
+            <p>{{pago.cuenta}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <button class="btn btn-small btn-primary" [disabled]="calculateTotal()!=pago.monto" (click)="updateAmmounts()">Actualizar montos</button>
+           
+          </div>
+
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Detalle Devoluciones</nb-card-header>
+      <nb-card-body>
+        
+        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+          <p *ngFor="let message of messages">{{message}}</p>
+        </div>
+        <div class="alert alert-success" *ngIf="successMessage" role="alert">
+          <p>{{successMessage}}</p>
+        </div>
+        <br>
+        <strong>Coomisiones / reembolsos generados</strong>
+        
+          <div *ngIf="devoluciones.length==0" class="alert alert-primary" role="alert">
+            No se encontraron resultados
+          </div>
+          <div class="table-responsive" *ngIf="devoluciones.length>0">
+
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="text-center">Acciones</th>
+                  <th scope="col" class="text-center">Tipo Receptor</th>
+                  <th scope="col" class="text-center">Receptor</th>
+                  <th scope="col" class="text-center">Monto Pago</th>
+                  <th scope="col" class="text-center">Impuestos</th>
+                  <th scope="col" class="text-center">Porcentaje comisión</th>
+                  <th scope="col" class="text-center">Comisión/Reembolso</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of devoluciones">
+                  <td scope="row" class="text-center">
+                  <button class="btn-sm btn-outline-primary" (click)="fila.edit=true"><i class="fa fa-edit"></i></button>
+                  </td>
+                  <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
+                  <td scope="row" class="text-center">{{fila.receptor}}</td>
+                  <td scope="row" class="text-center">{{fila.pagoMonto | currency}}</td>
+                  <td scope="row" class="text-center">{{fila.impuesto | currency}}</td>
+                  <td scope="row" class="text-center">{{fila.porcentaje/100 | percent}}</td>
+                  <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency}}</td>
+                  <td scope="row" class="text-center" *ngIf="fila.edit"><input type="number" [(ngModel)]="fila.monto"></td>
+                </tr>
+                <tr>
+                  <td colspan="5"></td>
+                  <td class="text-center"><p class="font-weight-bold">Total</p></td>
+                  <td class="text-center">{{calculateTotal() | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+  
+      </nb-card-body>
+    </nb-card>
+
+
+  </div>
+</div>

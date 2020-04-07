@@ -23,9 +23,12 @@ public class DoubleValidatesPaymentRule {
 		if(dbPayment.getRevision1()&& currentPayment.getRevision1() && currentPayment.getRevision2()) {
 			currentPayment.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 			return false;
-		}else {
+		}
+		
+		if(!dbPayment.getRevision1() && currentPayment.getRevision2()) {
 			return true;
 		}
+		return false;
 	 
 	}
 	

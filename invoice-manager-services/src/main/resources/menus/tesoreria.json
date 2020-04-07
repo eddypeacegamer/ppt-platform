@@ -9,14 +9,6 @@
       {
         "title": "Devoluciones",
         "link": "/pages/tesoreria/devoluciones"
-      },
-      {
-        "title": "Ingresos",
-        "link": "/pages/tesoreria/ingresos-notfinish"
-      },
-      {
-        "title": "Egresos",
-        "link": "/pages/tesoreria/egresos-notfinish"
       }
     ]
   }

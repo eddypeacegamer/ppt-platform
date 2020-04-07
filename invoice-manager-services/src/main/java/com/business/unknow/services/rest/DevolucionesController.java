@@ -45,6 +45,21 @@ public class DevolucionesController {
 				service.getDevolucionesByParams(tipoReceptor, idReceptor, page, size), HttpStatus.OK);
 	}
 	
+	@GetMapping("/facturas/{folio}/devoluciones")
+	public ResponseEntity<List<DevolucionDto>> getAllDevolutionsByFoliofactura(
+			@PathVariable(name = "folio") String folio) {
+		return new ResponseEntity<>(
+				service.getDevolucionesByFolio(folio), HttpStatus.OK);
+	}
+	
+	@PutMapping("/facturas/{folio}/devoluciones")
+	public ResponseEntity<List<DevolucionDto>> updateDevoluciones(
+			@PathVariable(name = "folio") String folio,
+			@RequestBody List<DevolucionDto> devoluciones)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.upadteDevoluciones(folio,devoluciones), HttpStatus.OK);
+	}
+	
 	
 	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}")
 	public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
@@ -69,11 +84,7 @@ public class DevolucionesController {
 	}
 
 	
-	@PostMapping("/devoluciones/bulk")
-	public ResponseEntity<List<PagoDevolucionDto>> solicitudDevoluciones(@RequestBody List<PagoDevolucionDto> solicitudes)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.solicitudDevoluciones(solicitudes), HttpStatus.CREATED);
-	}
+	
 
 	@PutMapping("/devoluciones/{id}")
 	public ResponseEntity<PagoDevolucionDto> solicitudDevolucionUpdate(@RequestBody PagoDevolucionDto solicitud,

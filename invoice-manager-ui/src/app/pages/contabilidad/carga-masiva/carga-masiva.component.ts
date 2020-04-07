@@ -9,29 +9,31 @@ import { Concepto } from '../../../models/factura/concepto';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { User, UsersData } from '../../../@core/data/users-data';
 
 @Component({
-  selector: 'ngx-transferencias',
-  templateUrl: './transferencias.component.html',
-  styleUrls: ['./transferencias.component.scss']
+  selector: 'ngx-carga-masiva',
+  templateUrl: './carga-masiva.component.html',
+  styleUrls: ['./carga-masiva.component.scss']
 })
-export class TransferenciasComponent implements OnInit {
+export class CargaMasivaComponent implements OnInit {
 
 
   @ViewChild('fileInput', { static: true })
   public fileInput: ElementRef;
-  public transfers: any[] = [];
+  public invoices: any[] = [];
   public params: any = { lineaRetiro: 'A', lineaDeposito: 'B', filename: '', dataValid: false };
-
+  public user: User;
   public errorMessages: string[] = [];
   private companies: any = {};
 
   constructor(private companyService: CompaniesData,
     private cfdiValidator: CfdiValidatorService,
-    private downloadService: DonwloadFileService,
-    private invoiceService: InvoicesData) { }
+    private invoiceService: InvoicesData,
+    private userService: UsersData) { }
 
   ngOnInit() {
+    this.userService.getUserInfo().then(user => this.user = user as User);
     this.params = { lineaRetiro: 'A', lineaDeposito: 'B', filename: '', dataValid: false };
     this.companies = {};
     this.errorMessages = [];
@@ -55,23 +57,23 @@ export class TransferenciasComponent implements OnInit {
       if (jsonData.CARGA_MASIVA === undefined) {
         alert('Formato Excel invalido');
       } else {
-        this.transfers = jsonData.CARGA_MASIVA;
-        this.getCompaniesInfo(this.transfers);
+        this.invoices = jsonData.CARGA_MASIVA;
+        this.getCompaniesInfo(this.invoices);
       }
     }
     reader.readAsBinaryString(file);
   }
 
   calcularTotal() {
-    if (this.transfers === undefined || this.transfers.length === 0) {
+    if (this.invoices === undefined || this.invoices.length === 0) {
       return 0;
     } else {
-      return this.transfers.map(t => t.TOTAL).reduce((total, m) => total + m);
+      return this.invoices.map(t => t.TOTAL).reduce((total, m) => total + m);
     }
   }
 
   clean() {
-    this.transfers = [];
+    this.invoices = [];
     this.companies = {};
     this.params.dataValid = false;
     this.params.filename = '';
@@ -85,8 +87,8 @@ export class TransferenciasComponent implements OnInit {
     this.params.successMessage = undefined;
     this.params.dataValid = true;
     this.errorMessages = [];
-    if (this.transfers !== undefined && this.transfers.length > 0) {
-      for (const transfer of this.transfers) {
+    if (this.invoices !== undefined && this.invoices.length > 0) {
+      for (const transfer of this.invoices) {
         transfer.observaciones = [];
         if (this.companies[transfer.RFC_EMISOR] === undefined) {
           transfer.observaciones.push(`${transfer.RFC_EMISOR} no esta dada de alta en el sistema`);
@@ -120,21 +122,21 @@ export class TransferenciasComponent implements OnInit {
     }
   }
 
-  cargarTransferencias() {
+  cargarFacturas() {
     this.params.successMessage = undefined;
     this.errorMessages = [];
-    for (const transfer of this.transfers) {
-      const factura = this.buildFacturaFromTransfer(transfer,
-        this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
-        this.invoiceService.insertNewInvoice(factura).subscribe(fact => transfer.observaciones = 'CARGADA',
-           (error: HttpErrorResponse) => transfer.observaciones = error.error.message
+    for (const invoice of this.invoices) {
+      const factura = this.buildFacturaFromTransfer(invoice,
+        this.companies[invoice.RFC_EMISOR], this.companies[invoice.RFC_RECEPTOR]);
+        this.invoiceService.insertNewInvoice(factura).subscribe(fact => invoice.observaciones = 'CARGADA',
+           (error: HttpErrorResponse) => invoice.observaciones = error.error.message
              || `${error.statusText} : ${error.message}`);
 
     }
   }
 
   private getCompaniesInfo(transfers: any[]) {
-    for (const transfer of this.transfers) {
+    for (const transfer of this.invoices) {
       this.companyService.getCompanyByRFC(transfer.RFC_EMISOR)
           .subscribe(company => this.companies[transfer.RFC_EMISOR] = company);
       this.companyService.getCompanyByRFC(transfer.RFC_RECEPTOR)
@@ -151,8 +153,8 @@ export class TransferenciasComponent implements OnInit {
     factura.razonSocialRemitente = emisorCompany.informacionFiscal.razonSocial;
     factura.lineaRemitente = this.params.lineaRetiro;
     factura.metodoPago = transfer.METODO_PAGO;
-    factura.statusFactura = '4';
-    factura.solicitante = 'CARGA_MASIVA';
+    factura.statusFactura = '8';
+    factura.solicitante = this.user.email;
     const cfdi = new Cfdi();
     cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
     cfdi.receptor.usoCfdi = 'P01';

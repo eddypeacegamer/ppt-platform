@@ -52,15 +52,14 @@ export class DevolucionesComponent implements OnInit {
   ngOnInit() {
     this.montoDevolucion = 0.0;
     this.solicitud = new PagoDevolucion();
-    this.userService.getUserInfo()
-      .subscribe(user => {
+    this.userService.getUserInfo().then(user => {
         this.user = user;
         this.filterParams.idReceptor = user.email;
         this.searchDevolutionsData();
         this.clientsService.getClientsByPromotor(user.email)
           .subscribe(clients => this.clientsCat = clients);
       });
-    this.catalogService.getBancos().subscribe(banks => this.banksCat = banks);
+    this.catalogService.getBancos().then(banks => this.banksCat = banks);
     
   }
 
@@ -117,7 +116,7 @@ export class DevolucionesComponent implements OnInit {
   public onPayFormSelected(formaPago: string) {
     if (formaPago !== '*') {
       this.catalogService.getTiposReferencia(formaPago)
-        .subscribe(types => {
+        .then(types => {
           this.refTypesCat = types;
           this.solicitud.tipoReferencia = types[0].id;
         });

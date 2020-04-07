@@ -7,6 +7,7 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.Timbrado;
@@ -24,7 +25,9 @@ public class FacturaPagoValidationRule {
 			BigDecimal totalfactura = (fc.getFacturaPadreDto()!=null)? fc.getFacturaPadreDto().getCfdi().getTotal(): fc.getFacturaDto().getCfdi().getTotal();
 			return paymentsAmmount.compareTo(totalfactura)!=0;
 			
-		}else {
+		}else if(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor().equals(fc.getFacturaDto().getStatusFactura())){
+			return false;
+		}else{
 			return true;
 		}
 	}

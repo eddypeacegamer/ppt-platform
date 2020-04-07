@@ -31,7 +31,7 @@ export class SolicitudesComponent implements OnInit {
     ngOnInit() {
       this.updateDataTable();
       this.filterParams = { formaPago: 'EFECTIVO', status: '*', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
-      this.userService.getUserInfo().subscribe(user => this.user = user);
+      this.userService.getUserInfo().then(user => this.user = user);
     }
     public updateDataTable(currentPage?: number, pageSize?: number) {
       const pageValue = currentPage || 0;
