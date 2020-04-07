@@ -90,8 +90,12 @@ public class PagoService {
 				result.getTotalElements());
 	}
 
-	public List<PagoDto> getPagos(String folio) {
+	public List<PagoDto> findPagosByFolioPadre(String folio) {
 		return mapper.getPagosDtoFromEntities(repository.findByFolioPadre(folio));
+	}
+	
+	public List<PagoDto> findPagosByFolio(String folio) {
+		return mapper.getPagosDtoFromEntities(repository.findByFolio(folio));
 	}
 
 	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, String cuenta, Date since,
@@ -160,7 +164,7 @@ public class PagoService {
 		
 		pagoEvaluatorService.validatePayment(pagoDto);
 		FacturaDto facturaPadre = facturaService.getFacturaByFolio(folio);
-		List<PagoDto> payments = getPagos(folio);
+		List<PagoDto> payments = findPagosByFolioPadre(folio);
 		pagoDto.setFolio(folio);
 		pagoDto.setFolioPadre(folio);
 		pagoDto.setTotal(facturaPadre.getCfdi().getTotal());
@@ -182,7 +186,7 @@ public class PagoService {
 				.setRevisor2(pago.getRevisor2());
 		pagoEvaluatorService.validatePayment(pago);
 
-		pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), getPagos(folio), factura);
+		pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), findPagosByFolioPadre(folio), factura);
 		
 		if (entity.getRevision1()&&entity.getRevision2()) {
 			throw new InvoiceManagerException(
@@ -215,7 +219,7 @@ public class PagoService {
 		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
 				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value())));
 		FacturaDto factura = facturaService.getBaseFacturaByFolio(payment.getFolio());
-		List<PagoDto> payments = getPagos(folio);
+		List<PagoDto> payments = findPagosByFolioPadre(folio);
 		pagoEvaluatorService.deletepaymentValidation(payment, factura);
 		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
 	}

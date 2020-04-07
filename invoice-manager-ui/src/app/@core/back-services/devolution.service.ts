@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { PagoDevolucion } from '../../models/pago-devolucion';
+import { Devolucion } from '../../models/devolucion';
 
 
 @Injectable({
@@ -30,6 +31,10 @@ export class DevolutionService {
     return this.httpClient.get(`../api/facturas/${folio}/devoluciones/${tiporeceptor}`);
   }
 
+  public findDevolutionByFolioFact(folio: string):  Observable<any> {
+    return this.httpClient.get(`../api/facturas/${folio}/devoluciones`);
+  }
+
   public getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<any> {
     return this.httpClient.get(`../api/devoluciones/receptor/${tipoReceptor}/${receptor}/saldo`);
   }
@@ -55,6 +60,10 @@ export class DevolutionService {
 
   public updateDevolution(id: number, solicitud: PagoDevolucion): Observable<any> {
     return this.httpClient.put(`../api/devoluciones/${id}`, solicitud);
+  }
+
+  public updateDevolutionByFolioFact(folio: string, devoluciones: Devolucion[]): Observable <any> {
+    return this.httpClient.put(`../api/facturas/${folio}/devoluciones`, devoluciones );
   }
 
 }

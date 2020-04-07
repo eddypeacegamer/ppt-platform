@@ -9,6 +9,10 @@ export abstract class DevolutionData {
 
     abstract findDevolutionByFolioFactAndTipoReceptor(folio: string, tiporeceptor: string): Observable<PagoDevolucion>;
 
+    abstract findDevolutionByFolioFact(folio: string): Observable<Devolucion[]>;
+
+    abstract updateDevolutionByFolioFact(folio: string): Observable<Devolucion[]>;
+
     abstract getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<Number>;
 
     abstract findDevolutionsRequests(page: number, size: number, filterParams?: any):
