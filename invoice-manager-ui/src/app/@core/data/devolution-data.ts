@@ -11,7 +11,7 @@ export abstract class DevolutionData {
 
     abstract findDevolutionByFolioFact(folio: string): Observable<Devolucion[]>;
 
-    abstract updateDevolutionByFolioFact(folio: string): Observable<Devolucion[]>;
+    abstract updateDevolutionByFolioFact(folio: string, devoluciones: Devolucion[]): Observable<Devolucion[]>;
 
     abstract getAmmountDevolutions(tipoReceptor: string, receptor: string): Observable<Number>;
 

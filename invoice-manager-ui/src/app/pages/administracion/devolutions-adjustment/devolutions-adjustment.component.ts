@@ -6,12 +6,11 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { DevolutionData } from '../../../@core/data/devolution-data';
-import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { ActivatedRoute } from '@angular/router';
 import { Devolucion } from '../../../models/devolucion';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-devolutions-adjustment',
@@ -31,6 +30,7 @@ export class DevolutionsAdjustmentComponent implements OnInit {
 
   public refTypesCat: Catalogo[] = [];
   public messages: string[] = [];
+  public successMessage: string;
   public clientInfo: Client = new Client();
 
 
@@ -38,7 +38,6 @@ export class DevolutionsAdjustmentComponent implements OnInit {
     private invoiceService: InvoicesData,
     private userService: UsersData,
     private devolutionService: DevolutionData,
-    private devolutionValidator: DevolucionValidatorService,
     private paymentservice: PaymentsData,
     private route: ActivatedRoute) {}
 
@@ -50,7 +49,8 @@ export class DevolutionsAdjustmentComponent implements OnInit {
     this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
       if (this.folioParam !== '*') {
-        this.devolutionService.findDevolutionByFolioFact(this.folioParam).subscribe(devs => this.devoluciones = devs);
+        this.devolutionService.findDevolutionByFolioFact(this.folioParam)
+          .subscribe(devs => this.devoluciones = devs.filter(d =>'D' === d.tipo));
         this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
               this.clientsService.getClientByRFC(invoice.rfcRemitente).subscribe(client => this.clientInfo = client);
@@ -74,15 +74,28 @@ export class DevolutionsAdjustmentComponent implements OnInit {
     });
   }
 
+  public updateAmmounts() {
+    this.successMessage = undefined;
+    this.messages = [];
+    this.devolutionService.updateDevolutionByFolioFact(this.folioParam, this.devoluciones)
+      .subscribe(devs =>{this.devoluciones = devs;
+        this.successMessage = 'Se han actualizado la devoluciones correctamente'; },
+      (error: HttpErrorResponse) =>
+        this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+
   public initVariables() {
     /** INIT VARIABLES **/
     this.messages = [];
     this.fileInput.value = '';
   }
 
-  public selectTab(tiporeceptor: string) {
-    this.messages = [];
-    this.formParams.tab = tiporeceptor;
+  public calculateTotal() {
+    if (this.devoluciones.length > 0) {
+      return this.devoluciones.map(d => d.monto).reduce((total, value) => total + value);
+    }else {
+      return 0;
+    }
   }
 
 

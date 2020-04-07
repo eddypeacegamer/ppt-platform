@@ -66,7 +66,7 @@
             <p class="font-weight-bold">Cuenta :&nbsp;&nbsp;</p>
             <p>{{pago.cuenta}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            
+            <button class="btn btn-small btn-primary" [disabled]="calculateTotal()!=pago.monto" (click)="updateAmmounts()">Actualizar montos</button>
            
           </div>
 
@@ -86,7 +86,9 @@
         <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
           <p *ngFor="let message of messages">{{message}}</p>
         </div>
-
+        <div class="alert alert-success" *ngIf="successMessage" role="alert">
+          <p>{{successMessage}}</p>
+        </div>
         <br>
         <strong>Coomisiones / reembolsos generados</strong>
         
@@ -119,9 +121,13 @@
                   <td scope="row" class="text-center">{{fila.impuesto | currency}}</td>
                   <td scope="row" class="text-center">{{fila.porcentaje/100 | percent}}</td>
                   <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency}}</td>
-                  <td scope="row" class="text-center" *ngIf="fila.edit"><input type="number" [(ngModel)]="fila.monto"></input></td>
+                  <td scope="row" class="text-center" *ngIf="fila.edit"><input type="number" [(ngModel)]="fila.monto"></td>
                 </tr>
-
+                <tr>
+                  <td colspan="5"></td>
+                  <td class="text-center"><p class="font-weight-bold">Total</p></td>
+                  <td class="text-center">{{calculateTotal() | currency}}</td>
+                </tr>
               </tbody>
             </table>
           </div>
