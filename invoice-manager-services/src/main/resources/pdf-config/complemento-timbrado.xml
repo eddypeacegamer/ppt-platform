@@ -201,7 +201,7 @@
                             <inline-container width="73.2mm" text-align="left" margin="3mm">
                                 <block>
                                     Id documento:
-                                    <xsl:value-of select="factura/cfdi:Complemento/@UUID" />
+                                    <xsl:value-of select="factura/cfdi:Complemento/pago10:Pagos/pago10:Pago/pago10:DoctoRelacionado/@IdDocumento" />
                                 </block>
                             </inline-container>
                             <inline-container width="18.8mm" text-align="center">
