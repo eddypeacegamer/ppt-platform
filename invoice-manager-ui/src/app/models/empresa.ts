@@ -22,6 +22,7 @@ export class Empresa {
     public informacionFiscal: Contribuyente;
     public sucursal: string;
     public lugarExpedicion: string;
+    public noCertificado: string;
 
     constructor() {
         this.informacionFiscal = new Contribuyente();

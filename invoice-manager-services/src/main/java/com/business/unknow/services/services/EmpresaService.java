@@ -78,13 +78,10 @@ public class EmpresaService {
 			empresaValidator.validatePostEmpresa(empresaDto);
 			empresaDto.setActivo(false);
 			swSapinsExecutorService.validateRfc(empresaDto.getInformacionFiscal().getRfc().toUpperCase());
-			String logo = empresaDto.getLogotipo();
-			empresaDto.setLogotipo(logo.substring(logo.indexOf("base64")+7));
-			
 			if (repository.findByRfc(empresaDto.getInformacionFiscal().getRfc()).isPresent()) {
 				throw new InvoiceManagerException("Ya existe la empresa",
 						String.format("La empresa %s ya existe", empresaDto.getInformacionFiscal().getRfc()),
-						HttpStatus.BAD_REQUEST.value());
+						HttpStatus.CONFLICT.value());
 			}
 			return empresaEvaluatorService.createEmpresa(empresaDto);
 		} catch (SwSapiensClientException e) {
@@ -93,6 +90,8 @@ public class EmpresaService {
 	}
 
 	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {
+		
+
 		Empresa empresa = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El empresa con el rfc %s no existe", rfc)));
 		empresa.setTipo(empresaDto.getTipo());
@@ -103,8 +102,10 @@ public class EmpresaService {
 		empresa.setCorreo(empresaDto.getCorreo());
 		empresa.setPwCorreo(empresa.getPwCorreo());
 		empresa.setActivo(empresaDto.getActivo());
-		empresa.setInformacionFiscal(
-				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		empresa.setNoCertificado(empresaDto.getNoCertificado());
+//		empresa.setInformacionFiscal(
+//				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		empresaEvaluatorService.updateLogo(rfc, empresaDto.getLogotipo());
 		return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
 	}
 
