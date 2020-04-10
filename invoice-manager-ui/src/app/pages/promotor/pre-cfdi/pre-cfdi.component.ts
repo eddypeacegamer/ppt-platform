@@ -248,7 +248,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (this.errorMessages.length === 0) {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
-          this.factura.folio = invoice.folio;
+          this.factura = invoice;
           this.loading = false;
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {

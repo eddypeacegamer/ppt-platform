@@ -91,6 +91,7 @@ export class ConceptosComponent implements OnInit {
       this.invoiceService.deleteConcepto(this.cfdi.folio, this.cfdi.conceptos[index].id)
       .subscribe((cfdi: Cfdi) => {
         this.cfdi.conceptos.splice(index, 1);
+        this.conceptoMessages = [];
         this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
       }, (error: HttpErrorResponse) => { this.conceptoMessages.push((error.error != null && error.error !== undefined)
           ? error.error.message : `${error.statusText} : ${error.message}`)});
@@ -128,6 +129,7 @@ export class ConceptosComponent implements OnInit {
               this.formInfo.prodServ = '*';
               this.formInfo.unidad = '*';
               this.concepto = new Concepto();
+              this.conceptoMessages = [];
             }, (error: HttpErrorResponse) => {
               this.conceptoMessages.push((error.error != null && error.error !== undefined)
                 ? error.error.message : `${error.statusText} : ${error.message}`);
@@ -143,6 +145,7 @@ export class ConceptosComponent implements OnInit {
         this.formInfo.prodServ = '*';
         this.formInfo.unidad = '*';
         this.concepto = new Concepto();
+        this.conceptoMessages = [];
       }
     }else {
       this.formInfo.prodServ = '*';
