@@ -20,7 +20,6 @@ import com.business.unknow.commons.validator.EmpresaValidator;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
-import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.executor.EmpresaExecutorService;
@@ -34,9 +33,6 @@ public class EmpresaService {
 
 	@Autowired
 	private EmpresaMapper mapper;
-
-	@Autowired
-	private ContribuyenteMapper contribuyenteMapper;
 
 	@Autowired
 	private EmpresaExecutorService empresaEvaluatorService;
@@ -90,7 +86,6 @@ public class EmpresaService {
 	}
 
 	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {
-		
 
 		Empresa empresa = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El empresa con el rfc %s no existe", rfc)));

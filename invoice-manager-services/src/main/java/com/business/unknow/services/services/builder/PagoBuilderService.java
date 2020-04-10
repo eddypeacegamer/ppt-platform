@@ -1,33 +1,10 @@
 package com.business.unknow.services.services.builder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
-
-import com.business.unknow.commons.builder.FacturaContextBuilder;
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.services.PagoDto;
-import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.Pago;
-import com.business.unknow.services.mapper.PagoMapper;
-import com.business.unknow.services.repositories.PagoRepository;
 
 @Service
 @Deprecated
 public class PagoBuilderService {
-	
-	@Autowired
-	private PagoRepository pagoRepository;
-	
-	@Autowired
-	private PagoMapper pagoMapper;
 	
 
 //	public FacturaContext deletePagoPpdBuilder(FacturaDto factura, Pago pago, int id) throws InvoiceManagerException {
