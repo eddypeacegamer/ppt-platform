@@ -176,7 +176,7 @@
                                     <table-row text-align="center">
                                         <table-cell>
                                             <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                                <xsl:value-of select="@Cantidad" />
+                                                <xsl:value-of select="number(@Cantidad)" />
                                             </block>
                                         </table-cell>
                                         <table-cell>
