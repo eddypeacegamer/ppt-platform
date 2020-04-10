@@ -8,9 +8,11 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.client.swsapiens.model.SwSapiensVersionEnum;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
+import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.enums.FacturaStatusEnum;
@@ -24,13 +26,16 @@ import com.business.unknow.services.client.SwSapiensClient;
 import com.business.unknow.services.config.properties.SwProperties;
 
 @Service
-public class SwSapinsExecutorService {
+public class SwSapinsExecutorService extends AbstractPackExecutor {
 
 	@Autowired
 	private SwSapiensClient swSapiensClient;
 
 	@Autowired
 	private FacturaHelper facturaHelper;
+	
+	@Autowired
+	private DateHelper dateHelper;
 
 	@Autowired
 	private FileHelper fileHelper;
@@ -44,24 +49,17 @@ public class SwSapinsExecutorService {
 			SwSapiensConfig swSapiensConfig = swSapiensClient
 					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
 					.stamp(context.getXml(), SwSapiensVersionEnum.V4.getValue());
-			
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setFechaTimbrado(swSapiensConfig.getData().getFechaTimbrado());
+
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			context.getFacturaDto().setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setUuid(swSapiensConfig.getData().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloSat(swSapiensConfig.getData().getSelloSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setNoCertificadoSat(swSapiensConfig.getData().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloCFD(swSapiensConfig.getData().getSelloCFDI());
 			context.getFacturaDto().getCfdi().setSello(swSapiensConfig.getData().getSelloCFDI());
 			String cfdi = swSapiensConfig.getData().getCfdi();
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());
+			context.getFacturaDto()
+					.setFechaTimbrado(dateHelper.getDateFromString(
+							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
+							FacturaConstants.FACTURA_DATE_FORMAT));
+			context.getFacturaDto().setCadenaOriginalTimbrado(getCadenaOriginalTimbrado(currentCfdi));
 			List<FacturaFileDto> files = new ArrayList<>();
 			FacturaFileDto qr = new FacturaFileDto();
 			qr.setFolio(context.getFacturaDto().getFolio());

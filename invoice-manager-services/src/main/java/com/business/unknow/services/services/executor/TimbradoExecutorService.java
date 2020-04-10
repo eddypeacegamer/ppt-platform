@@ -14,15 +14,12 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
-import com.business.unknow.services.entities.cfdi.Cfdi;
-import com.business.unknow.services.entities.cfdi.TimbradoFiscalDigitial;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
-import com.business.unknow.services.repositories.facturas.TimbradoFiscalDigitialRepository;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 
 @Service
@@ -33,11 +30,9 @@ public class TimbradoExecutorService {
 
 	@Autowired
 	private CfdiRepository cfdiRepository;
-	@Autowired
-	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
-	private TimbradoFiscalDigitialRepository timbradoFiscalDigitialRepository;
+	private FacturaFileRepository facturaFileRepository;
 
 	@Autowired
 	private ClientRepository clientRepository;
@@ -56,11 +51,7 @@ public class TimbradoExecutorService {
 
 	public void updateFacturaAndCfdiValues(FacturaContext context) throws InvoiceManagerException {
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
-		Cfdi cfdi = cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
-		TimbradoFiscalDigitial timbradoFiscalDigitial = cfdiMapper
-				.getEntityFromComplementoDto(context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal());
-		timbradoFiscalDigitial.setCfdi(cfdi);
-		context.getFacturaDto().getCfdi().getComplemento().setTimbreFiscal(cfdiMapper.getComplementoDtoFromEntity(timbradoFiscalDigitialRepository.save(timbradoFiscalDigitial)));
+		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
 			if (facturaFileDto != null) {
 				facturaFileRepository.save(filesMapper.getFacturaFileFromDto(facturaFileDto));
@@ -87,8 +78,7 @@ public class TimbradoExecutorService {
 					.setPwEmisor(context.getEmpresaDto().getPwCorreo())
 					.setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
 					.addReceptor(client.getCorreoPromotor()).addReceptor(client.getInformacionFiscal().getCorreo())
-					.addReceptor(client.getCorreoContacto())
-					.addReceptor(context.getEmpresaDto().getCorreo())
+					.addReceptor(client.getCorreoContacto()).addReceptor(context.getEmpresaDto().getCorreo())
 					.addArchivo(new FileConfig(TipoArchivoEnum.XML,
 							context.getFacturaDto().getFolio().concat(TipoArchivoEnum.XML.getFormat()), xml.getData()))
 					.addArchivo(new FileConfig(TipoArchivoEnum.PDF,

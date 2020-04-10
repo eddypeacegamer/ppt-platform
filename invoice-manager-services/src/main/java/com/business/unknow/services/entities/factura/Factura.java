@@ -100,6 +100,9 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CREACION")
 	private Date fechaCreacion;
 
+	@Column(name = "CADENA_ORIGINAL_TIMBRADO")
+	private String cadenaOriginalTimbrado;
+
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
 
@@ -295,6 +298,14 @@ public class Factura implements Serializable {
 		this.statusCancelado = statusCancelado;
 	}
 
+	public String getCadenaOriginalTimbrado() {
+		return cadenaOriginalTimbrado;
+	}
+
+	public void setCadenaOriginalTimbrado(String cadenaOriginalTimbrado) {
+		this.cadenaOriginalTimbrado = cadenaOriginalTimbrado;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -305,7 +316,7 @@ public class Factura implements Serializable {
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
 				+ statusDetail + ", uuid=" + uuid + ", packFacturacion=" + packFacturacion + ", notas=" + notas
 				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion
-				+ ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion + ", idCfdi=" + idCfdi
-				+ "]";
+				+ ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", idCfdi=" + idCfdi + "]";
 	}
 }

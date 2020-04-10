@@ -11,7 +11,7 @@ import com.business.unknow.services.entities.Client;
  * @author eej000f
  *
  */
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ClientMapper {
 
 	ClientDto getClientDtoFromEntity(Client entity);
