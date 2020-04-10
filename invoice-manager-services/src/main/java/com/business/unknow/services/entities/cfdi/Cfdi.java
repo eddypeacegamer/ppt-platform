@@ -73,8 +73,8 @@ public class Cfdi implements Serializable {
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
 
-	@OneToOne(mappedBy = "cfdi")
-	private TimbradoFiscalDigitial complemento;
+//	@OneToOne(mappedBy = "cfdi")
+//	private TimbradoFiscalDigitial complemento;
 
 	@OneToOne(mappedBy = "cfdi")
 	private Receptor receptor;
@@ -237,13 +237,13 @@ public class Cfdi implements Serializable {
 		this.conceptos = conceptos;
 	}
 
-	public TimbradoFiscalDigitial getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(TimbradoFiscalDigitial complemento) {
-		this.complemento = complemento;
-	}
+//	public TimbradoFiscalDigitial getComplemento() {
+//		return complemento;
+//	}
+//
+//	public void setComplemento(TimbradoFiscalDigitial complemento) {
+//		this.complemento = complemento;
+//	}
 
 	public Receptor getReceptor() {
 		return receptor;
@@ -263,8 +263,8 @@ public class Cfdi implements Serializable {
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
 				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
 				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
-				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion //+", conceptos=" + conceptos
-				+ ", complemento=" + complemento + ", receptor=" + receptor + ", emisor=" + emisor + "]";
+				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", conceptos=" + conceptos
+				+ ", receptor=" + receptor + ", emisor=" + emisor + ", pagos=" + pagos + "]";
 	}
 
 }

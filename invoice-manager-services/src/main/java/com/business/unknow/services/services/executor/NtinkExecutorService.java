@@ -27,7 +27,7 @@ import com.business.unknow.services.client.NtlinkClient;
 import com.business.unknow.services.config.properties.NtlinkProperties;
 
 @Service
-public class NtinkExecutorService {
+public class NtinkExecutorService extends AbstractPackExecutor{
 
 	@Autowired
 	private NtlinkClient client;
@@ -70,22 +70,13 @@ public class NtinkExecutorService {
 			String cfdi = response.getCfdi();
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setFechaTimbrado(dateHelper.getDateFromString(
-							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
-							FacturaConstants.FACTURA_DATE_FORMAT));
 			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setNoCertificadoSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloCFD(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
 			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());
+			context.getFacturaDto()
+			.setFechaTimbrado(dateHelper.getDateFromString(
+					currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
+					FacturaConstants.FACTURA_DATE_FORMAT));
+			context.getFacturaDto().setCadenaOriginalTimbrado(getCadenaOriginalTimbrado(currentCfdi));
 			List<FacturaFileDto> files = new ArrayList<>();
 			if (response.getCfdi() != null) {
 				FacturaFileDto xml = new FacturaFileDto();

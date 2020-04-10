@@ -41,6 +41,7 @@ public class FacturaDto implements Serializable {
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 	private Integer statusCancelado;
+	private String cadenaOriginalTimbrado;
 	private Integer idCfdi;
 	private CfdiDto cfdi;
 
@@ -260,6 +261,14 @@ public class FacturaDto implements Serializable {
 		this.statusCancelado = statusCancelado;
 	}
 
+	public String getCadenaOriginalTimbrado() {
+		return cadenaOriginalTimbrado;
+	}
+
+	public void setCadenaOriginalTimbrado(String cadenaOriginalTimbrado) {
+		this.cadenaOriginalTimbrado = cadenaOriginalTimbrado;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -271,7 +280,8 @@ public class FacturaDto implements Serializable {
 				+ ", packFacturacion=" + packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas
 				+ ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
 				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", idCfdi=" + idCfdi + ", cfdi=" + cfdi + "]";
+				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", idCfdi=" + idCfdi + ", cfdi=" + cfdi + "]";
 	}
 
 }
