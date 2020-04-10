@@ -163,7 +163,9 @@ public class CfdiService {
 				cfdiPagoRepository.save(cfdiPago);
 			}
 		}
-		return mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
+		CfdiDto dto = mapper.getCfdiDtoFromEntity(repository.findById(entity.getId()).orElse(null));
+		dto.setConceptos(cfdi.getConceptos());
+		return dto;
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
