@@ -163,6 +163,7 @@ public class FacturaService {
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
 		fileService.generateInvoicePDF(facturaBuilded,facturaContext.getCfdi());
+		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
 

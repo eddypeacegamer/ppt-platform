@@ -227,9 +227,7 @@ export class PreCfdiComponent implements OnInit {
   public solicitarCfdi() {
     this.loading = true;
     this.errorMessages = [];
-    this.factura.solicitante = 'CARGA_MASIVA';
-    this.factura.lineaEmisor = 'A';
-    this.factura.lineaRemitente = 'CLIENTE';
+    this.factura.solicitante = this.user.email;
     if (this.clientInfo === undefined || this.clientInfo.informacionFiscal.rfc === undefined) {
       this.errorMessages.push('La informacion del cliente es insuficiente o no esta presente.');
     } else if (this.companyInfo === undefined || this.companyInfo.informacionFiscal === undefined) {
@@ -244,9 +242,9 @@ export class PreCfdiComponent implements OnInit {
       this.factura.rfcRemitente = this.clientInfo.informacionFiscal.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.rfc;
-      this.factura.lineaEmisor = this.formInfo.lineaEmisor;
-      this.factura.lineaRemitente = this.formInfo.lineaReceptor;
-      this.factura.statusFactura = '4'; // sets automatically to stamp directly
+      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
+      this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
+      this.factura.statusFactura = '8'; // sets automatically to stamp directly
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     }
     if (this.errorMessages.length === 0) {
