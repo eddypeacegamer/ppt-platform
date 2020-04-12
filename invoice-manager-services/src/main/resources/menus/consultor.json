@@ -1,0 +1,10 @@
+{
+	"title": "Contabilidad",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Reportes",
+			"link": "/pages/contabilidad/reportes/8"
+		}
+	]
+}
