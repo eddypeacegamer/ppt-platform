@@ -170,7 +170,6 @@ export class CargaMasivaComponent implements OnInit {
     concepto.claveProdServ = transfer.CLAVE_PROD_SERVICIO;
     concepto.claveUnidad = transfer.CLAVE_UNIDAD;
     concepto.descripcion = transfer.CONCEPTO;
-    concepto.descripcionCUPS = transfer.CONCEPTO;
     concepto.unidad = transfer.UNIDAD;
     concepto.valorUnitario = transfer.PRECIO_UNITARIO;
     concepto.importe = transfer.IMPORTE;

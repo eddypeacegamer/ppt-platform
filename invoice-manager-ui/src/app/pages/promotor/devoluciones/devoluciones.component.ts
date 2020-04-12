@@ -15,6 +15,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -45,6 +46,7 @@ export class DevolucionesComponent implements OnInit {
     private clientsService: ClientsData,
     private resourceService: FilesData,
     private donwloadCsvService: DownloadCsvService,
+    private downloadService: DonwloadFileService,
     private devolutionValidator: DevolucionValidatorService,
     private userService: UsersData,
     private router: Router) { }
@@ -180,6 +182,12 @@ export class DevolucionesComponent implements OnInit {
       this.solicitud = new PagoDevolucion();
       this.solicitud.formaPago = 'TRANSFERENCIA';
     }
+  }
+
+  public downloadPdf(folio: string) {
+    this.resourceService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${folio}.pdf`, 'application/pdf;')
+    )
   }
 
   public redirectToCfdi(folio: string) {

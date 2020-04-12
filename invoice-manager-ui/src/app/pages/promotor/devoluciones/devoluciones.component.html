@@ -188,7 +188,7 @@
                 <tr>
                   <th scope="col" class="text-center">Receptor</th>
                   <th scope="col" class="text-center">Folio Factura</th>
-                  <th scope="col" class="text-center">Monto Pago</th>
+                  <th scope="col" class="text-center">Total factura</th>
                   <th scope="col" class="text-center">Impuestos</th>
                   <th scope="col" class="text-center">Porcentaje comisión</th>
                   <th scope="col" class="text-center">Comisión/Reembolso</th>
@@ -198,8 +198,11 @@
               <tbody>
                 <tr *ngFor="let fila of pageCommissions.content">
                   <td scope="row" class="text-right">{{fila.receptor}}</td>
-                  <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
-                      (click)="redirectToCfdi(fila.folio)">{{fila.folio}}</button></td>
+                  <td scope="row" class="text-center">
+                    <button type="button" class="btn btn-small btn-outline-primary" (click)="downloadPdf(fila.folio)">
+                      <i class="fa fa-file-pdf"></i>
+                    </button>&nbsp;&nbsp;{{fila.folio}}
+                  </td>
                   <td scope="row" class="text-right">{{fila.pagoMonto | currency}}</td>
                   <td scope="row" class="text-right">{{fila.impuesto | currency}}</td>
                   <td scope="row" class="text-right">{{fila.porcentaje/100 | percent}}</td>

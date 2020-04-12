@@ -28,7 +28,7 @@ export class DevolutionPreferencesComponent implements OnInit {
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
-  public pagos: PagoFactura[] = [];
+  public pago: PagoFactura;
  
   public formParams: any = {tab: 'CLIENTE', filename: ''};
   public solicitud: PagoDevolucion = new PagoDevolucion();
@@ -64,16 +64,18 @@ export class DevolutionPreferencesComponent implements OnInit {
                 this.invoiceService.getInvoiceByFolio(invoice.folioPadre).subscribe(padre => {
                   this.factura = padre;
                   this.paymentservice.getPaymentsByFolio(padre.folio).toPromise()
-                  .then(pagos => this.pagos = pagos).then(() =>
+                  .then(pagos =>  this.pago = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => p.folio === this.folioParam))
+                  .then(() =>
                     this.clientsService.getClientByRFC(invoice.rfcRemitente)
                     .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); }));
                 });
               }else {
                 this.factura = invoice;
                 this.paymentservice.getPaymentsByFolio(this.folioParam).toPromise()
-                  .then(pagos => this.pagos = pagos).then(() =>
+                  .then(pagos => this.pago = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => p.folio === this.folioParam))
+                  .then(() => {
                     this.clientsService.getClientByRFC(invoice.rfcRemitente)
-                    .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); }));
+                    .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); })});
               }
             });
       } else {
@@ -91,13 +93,16 @@ export class DevolutionPreferencesComponent implements OnInit {
   public selectTab(tiporeceptor: string) {
     this.messages = [];
     this.formParams.tab = tiporeceptor;
-    this.devolutionService.findDevolutionByFolioFactAndTipoReceptor(this.folioParam, tiporeceptor)
+   
+
+    if(this.pago){
+      this.devolutionService.findDevolutionByFolioFactAndTipoReceptor(this.folioParam, tiporeceptor)
       .subscribe(solicitud => this.solicitud = solicitud,
         (error: HttpErrorResponse) => {
           this.solicitud = new PagoDevolucion();
           this.solicitud.tipoReceptor = tiporeceptor;
           this.solicitud.monto = this.devolutionValidator
-              .calculateDevolutionAmmount(this.factura, this.pagos, this.clientInfo, tiporeceptor, this.folioParam);
+              .calculateDevolutionAmmount(this.factura, this.pago, this.clientInfo, tiporeceptor);
               if (tiporeceptor === 'CLIENTE') {
                 this.solicitud.receptor = this.factura.rfcRemitente;
               }
@@ -109,6 +114,10 @@ export class DevolutionPreferencesComponent implements OnInit {
               }
           this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
         });
+    } else {
+      this.messages.push('No se encontraron pagos ligados a la factura, cargue primero el pago antes de solicitar la pre-devolucion.');
+    }
+   
   }
 
   public onPayFormSelected(formaPago: string) {
