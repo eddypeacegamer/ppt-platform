@@ -249,7 +249,7 @@ public class FacturaService {
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
-				&& !facturaContext.getFacturaDto().getSolicitante().equals("CARGA_MASIVA")) {
+				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);
