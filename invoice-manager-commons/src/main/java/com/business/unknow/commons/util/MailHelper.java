@@ -29,6 +29,7 @@ public class MailHelper {
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", "p3plcpnl0577.prod.phx3.secureserver.net");
 		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.ssl.trust", "p3plcpnl0577.prod.phx3.secureserver.net");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.port", "587");
 
