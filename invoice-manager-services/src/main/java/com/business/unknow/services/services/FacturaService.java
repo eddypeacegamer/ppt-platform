@@ -249,7 +249,8 @@ public class FacturaService {
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
-				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")) {
+				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")
+				&& facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 					facturaContext.getCurrentPago());
 			devolucionService.updateSolicitudDevoluciones(folio);

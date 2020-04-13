@@ -245,11 +245,11 @@ public class DevolucionService {
 
 	public BigDecimal calculaImporteBaseFactura(CfdiDto cfdiDto) {
 		BigDecimal subtotal = cfdiDto.getConceptos().stream().map(c -> c.getImporte()).reduce(BigDecimal.ZERO,
-				(i1, i2) -> i1.add(i2));
+				(i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		BigDecimal retenciones = cfdiDto
 				.getConceptos().stream().map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte())
 						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return subtotal.subtract(retenciones);
 	}
 
@@ -257,7 +257,7 @@ public class DevolucionService {
 		return cfdiDto.getConceptos().stream()
 				.map(i -> i.getImpuestos().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
-				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2));
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 	
 	
