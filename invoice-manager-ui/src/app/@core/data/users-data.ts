@@ -12,7 +12,7 @@ export interface User {
 }
 
 export abstract class UsersData {
-  abstract getUsers(): Observable<GenericPage<User>>;
+  abstract getUsers(page: number, size: number): Observable<GenericPage<User>>;
   abstract getUserInfo(): Promise<User>;
   abstract logout():Observable<any>;
 }

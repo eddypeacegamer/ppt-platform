@@ -15,7 +15,7 @@ import { ClientsValidatorService } from '../../../@core/util-services/clients-va
 })
 export class ClienteComponent implements OnInit {
 
-  public isPromotor: boolean = false;
+  public module: string = 'promotor';
   public clientInfo: Client;
   public messages: string[] = [];
   public formInfo: any = {rfc:'',coloniaId:'*', success:''};
@@ -30,7 +30,7 @@ export class ClienteComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.isPromotor = (this.router.url.indexOf('/promotor') > 0) ? true : false;
+    this.module = this.router.url.split('/')[2];
     this.clientInfo = new Client();
     this.clientInfo.informacionFiscal.pais = 'México';
     /** recovering folio info**/

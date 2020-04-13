@@ -18,7 +18,7 @@
                 id="inputSocialReason" placeholder="Razón Social">
             </div>
           </div>
-          <div class="col-md-1" *ngIf="!isPromotor">
+          <div class="col-md-1" *ngIf="module === 'administracion'">
             <button type="button" class="btn btn-outline-success" *ngIf="!clientInfo.activo" (click)="toggleOn()">Activar</button>
             <button type="button" class="btn btn-outline-danger" *ngIf="clientInfo.activo" (click)="toggleOff()">Desactivar</button>
           </div>
@@ -148,10 +148,10 @@
             <p *ngFor="let message of messages">{{message}}</p>
           </div>
         <div class="form-inline">
-          <button type="button" *ngIf="clientInfo.id === undefined && isPromotor"
+          <button type="button" *ngIf="clientInfo.id === undefined && module === 'promotor'"
             [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>
-          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo " [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined" (click)="updateClient()" nbButton
+          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo" [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
       </nb-card-body>
