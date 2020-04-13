@@ -243,7 +243,7 @@ public class FacturaService {
 		//PDF GENERATION
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		if(!facturaContext.getFacturaDto().getSolicitante().equals("CARGA_MASIVA")) {
+		if(facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
 		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
