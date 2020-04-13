@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -34,15 +38,20 @@ public class UserService {
 	@Autowired
 	private RoleRepository rolRepository;
 
-//	@Autowired
-//	private ResourceLoader resourceLoader;
-
 	@Autowired
 	private UserMapper mapper;
 
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
 	private ObjectMapper objMapper = new ObjectMapper();
+	
+	
+	public Page<UserDto> getAllUsers(int page, int size){
+		Page<User> result = repository.findAll(PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		
+		return  new PageImpl<>(mapper.getUsersDtoFromEntities(result.getContent()), result.getPageable(),
+				result.getTotalElements());
+	}
 
 	public UserDto getUserById(Integer id) {
 		User entity = repository.findById(id).orElseThrow(

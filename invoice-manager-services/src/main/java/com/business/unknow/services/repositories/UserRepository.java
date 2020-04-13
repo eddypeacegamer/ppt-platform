@@ -3,6 +3,8 @@ package com.business.unknow.services.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ import com.business.unknow.services.entities.User;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
 	public List<User> findAll();
+	
+	public Page<User> findAll(Pageable pageable);
 
 	public Optional<User> findByEmail(String email);
 
