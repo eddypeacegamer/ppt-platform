@@ -10,6 +10,8 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { User, UsersData } from '../../../@core/data/users-data';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
+import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 
 @Component({
   selector: 'ngx-carga-masiva',
@@ -30,6 +32,7 @@ export class CargaMasivaComponent implements OnInit {
   constructor(private companyService: CompaniesData,
     private cfdiValidator: CfdiValidatorService,
     private invoiceService: InvoicesData,
+    private catalogsData: CatalogsData,
     private userService: UsersData) { }
 
   ngOnInit() {
@@ -128,10 +131,16 @@ export class CargaMasivaComponent implements OnInit {
     for (const invoice of this.invoices) {
       const factura = this.buildFacturaFromTransfer(invoice,
         this.companies[invoice.RFC_EMISOR], this.companies[invoice.RFC_RECEPTOR]);
-        this.invoiceService.insertNewInvoice(factura).subscribe(fact => invoice.observaciones = 'CARGADA',
+
+        this.catalogsData.getProductoServiciosByClave(invoice.CLAVE_PROD_SERVICIO)
+        .then((claves: ClaveProductoServicio[]) => {
+          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
+          this.invoiceService.insertNewInvoice(factura).subscribe(fact => invoice.observaciones = 'CARGADA',
            (error: HttpErrorResponse) => invoice.observaciones = error.error.message
              || `${error.statusText} : ${error.message}`);
-
+        }, (error: HttpErrorResponse) => {
+          invoice.observaciones = error.error.message || `${error.statusText} : ${error.message}`}
+        );
     }
   }
 
@@ -148,8 +157,10 @@ export class CargaMasivaComponent implements OnInit {
     const factura = new Factura();
     factura.rfcEmisor = transfer.RFC_EMISOR;
     factura.razonSocialEmisor = receptorCompany.informacionFiscal.razonSocial;
+    factura.cfdi.emisor.nombre = receptorCompany.informacionFiscal.razonSocial;
     factura.lineaEmisor = this.params.lineaDeposito;
     factura.rfcRemitente = transfer.RFC_RECEPTOR;
+    factura.cfdi.receptor.nombre = emisorCompany.informacionFiscal.razonSocial;
     factura.razonSocialRemitente = emisorCompany.informacionFiscal.razonSocial;
     factura.lineaRemitente = this.params.lineaRetiro;
     factura.metodoPago = transfer.METODO_PAGO;
@@ -168,6 +179,7 @@ export class CargaMasivaComponent implements OnInit {
     const concepto = new Concepto();
     concepto.cantidad = transfer.CANTIDAD;
     concepto.claveProdServ = transfer.CLAVE_PROD_SERVICIO;
+    
     concepto.claveUnidad = transfer.CLAVE_UNIDAD;
     concepto.descripcion = transfer.CONCEPTO;
     concepto.unidad = transfer.UNIDAD;

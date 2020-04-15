@@ -151,7 +151,6 @@ export class EmpresaComponent implements OnInit {
     this.formInfo.success = '';
     this.errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
     if (this.errorMessages.length === 0) {
-      this.companyInfo.giro = this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
       this.empresaService.insertNewCompany(this.companyInfo)
         .subscribe((empresa: Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]); },
           (error: HttpErrorResponse) => {
