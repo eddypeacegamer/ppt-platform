@@ -95,14 +95,15 @@ public class CatalogsService {
 		return dto;
 	}
 
-	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<Integer> clave) {
+	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<String> clave) {
 		List<ClaveProductoServicioDto> mappings = new ArrayList<>();
 		if (description.isPresent()) {
 			mappings = mapper.getClaveProdServDtosFromEntities(
 					productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
 		}
 		if (clave.isPresent()) {
-			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(clave.get()));
+			Integer codigo = Integer.valueOf(clave.get().trim()); 
+			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(codigo));
 
 		}
 		if (mappings.isEmpty()) {

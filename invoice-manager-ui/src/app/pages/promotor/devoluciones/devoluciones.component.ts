@@ -32,6 +32,7 @@ export class DevolucionesComponent implements OnInit {
 
   public user: User;
   public filename: string = '';
+  public loading: boolean = false;
   public montoDevolucion: Number = 0;
   public solicitud: PagoDevolucion;
   public fileInput: any = {};
@@ -155,6 +156,7 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public devolutionRequest(solicitud: PagoDevolucion) {
+    this.loading = true;
     this.messages = [];
     this.fileInput.value = '';
     solicitud.tipoReceptor = this.filterParams.tipoReceptor;
@@ -176,9 +178,12 @@ export class DevolucionesComponent implements OnInit {
           this.searchDevolutionsData();
           this.solicitud = new PagoDevolucion();
           this.solicitud.formaPago = 'TRANSFERENCIA';
-        }, (error: HttpErrorResponse) => this.messages.push(error.error.message
-            || `${error.statusText} : ${error.message}`));
+          this.loading = false;
+        }, (error: HttpErrorResponse) => {
+          this.loading = false;
+          this.messages.push(error.error.message || `${error.statusText} : ${error.message}`); });
     } else {
+      this.loading = false;
       this.solicitud = new PagoDevolucion();
       this.solicitud.formaPago = 'TRANSFERENCIA';
     }

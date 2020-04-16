@@ -243,7 +243,7 @@ export class PreCfdiComponent implements OnInit {
       this.factura.rfcRemitente = this.clientInfo.informacionFiscal.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.rfc;
-      this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.receptor.nombre = this.clientInfo.informacionFiscal.razonSocial;
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
       this.factura.statusFactura = '8'; // sets automatically to stamp directly

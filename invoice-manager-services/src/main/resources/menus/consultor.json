@@ -1,9 +1,9 @@
 {
-	"title": "Contabilidad",
+	"title": "Consultas",
 	"icon": "layout-outline",
 	"children": [
 		{
-			"title": "Reportes",
+			"title": "Facturas",
 			"link": "/pages/contabilidad/reportes/8"
 		}
 	]

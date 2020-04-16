@@ -35,10 +35,11 @@
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <button class="btn btn-primary" (click)="clean()">Limpiar</button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <button class="btn btn-success" (click)="validarInformacion()">Validar</button>
+              <button nbButton status="success" size="medium" (click)="validarInformacion()"  [nbSpinner]="loading" [disabled]="loading"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">Validar</button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <button class="btn btn-success" (click)="cargarFacturas()"
-                [disabled]="!params.dataValid">Cargar</button>
+              <button nbButton status="success" size="medium" (click)="cargarFacturas()"  [nbSpinner]="loading" [disabled]="loading || !params.dataValid"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">Cargar</button>
             </div>
           </div>
         </div>

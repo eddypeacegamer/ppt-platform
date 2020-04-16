@@ -108,7 +108,8 @@
                 placeholder="Observaciones o comentarios adicionales">
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)">Solicitar Devolución </button>
+          <button nbButton status="primary" size="medium" (click)="devolutionRequest(solicitud)"  [nbSpinner]="loading" [disabled]="loading || montoDevolucion<=0"
+              nbSpinnerStatus="primary" nbSpinnerSize="small" nbSpinnerMessage="">Solicitar Devolución</button>
         </form>
         <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
           <p *ngFor="let message of messages">{{message}}</p>

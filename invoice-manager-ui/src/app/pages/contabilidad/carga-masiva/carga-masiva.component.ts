@@ -24,6 +24,7 @@ export class CargaMasivaComponent implements OnInit {
   @ViewChild('fileInput', { static: true })
   public fileInput: ElementRef;
   public invoices: any[] = [];
+  public loading: boolean = false;
   public params: any = { lineaRetiro: 'A', lineaDeposito: 'B', filename: '', dataValid: false };
   public user: User;
   public errorMessages: string[] = [];
@@ -87,6 +88,7 @@ export class CargaMasivaComponent implements OnInit {
 
 
   validarInformacion() {
+    this.loading = true;
     this.params.successMessage = undefined;
     this.params.dataValid = true;
     this.errorMessages = [];
@@ -123,24 +125,33 @@ export class CargaMasivaComponent implements OnInit {
       this.params.dataValid = false;
       this.errorMessages.push('No se encontro informacion cargada o valida');
     }
+    this.loading = false;
   }
 
   cargarFacturas() {
+    this.loading = true;
     this.params.successMessage = undefined;
     this.errorMessages = [];
     for (const invoice of this.invoices) {
       const factura = this.buildFacturaFromTransfer(invoice,
         this.companies[invoice.RFC_EMISOR], this.companies[invoice.RFC_RECEPTOR]);
-
-        this.catalogsData.getProductoServiciosByClave(invoice.CLAVE_PROD_SERVICIO)
-        .then((claves: ClaveProductoServicio[]) => {
-          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
-          this.invoiceService.insertNewInvoice(factura).subscribe(fact => invoice.observaciones = 'CARGADA',
-           (error: HttpErrorResponse) => invoice.observaciones = error.error.message
-             || `${error.statusText} : ${error.message}`);
-        }, (error: HttpErrorResponse) => {
-          invoice.observaciones = error.error.message || `${error.statusText} : ${error.message}`}
-        );
+        const claveProdServ = +invoice.CLAVE_PROD_SERVICIO;
+        if (!isNaN(claveProdServ)) {
+          this.catalogsData.getProductoServiciosByClave(claveProdServ.toString())
+          .then((claves: ClaveProductoServicio[]) => {
+            factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
+            factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
+            this.invoiceService.insertNewInvoice(factura)
+              .subscribe(fact => {invoice.observaciones = 'CARGADA'; this.loading = false; },
+             (error: HttpErrorResponse) => {invoice.observaciones = error.error.message
+               || `${error.statusText} : ${error.message}`; this.loading = false; });
+          }, (error: HttpErrorResponse) => {
+            this.loading = false;
+            invoice.observaciones = error.error.message || `${error.statusText} : ${error.message}`;
+          });
+        } else {
+          invoice.observaciones = 'La clave producto servicio es invalida.';
+        }
     }
   }
 
@@ -156,26 +167,26 @@ export class CargaMasivaComponent implements OnInit {
   private buildFacturaFromTransfer(transfer: any, emisorCompany: Empresa, receptorCompany: Empresa): Factura {
     const factura = new Factura();
     factura.rfcEmisor = transfer.RFC_EMISOR;
-    factura.razonSocialEmisor = receptorCompany.informacionFiscal.razonSocial;
-    factura.cfdi.emisor.nombre = receptorCompany.informacionFiscal.razonSocial;
+    factura.razonSocialEmisor = emisorCompany.informacionFiscal.razonSocial;
     factura.lineaEmisor = this.params.lineaDeposito;
     factura.rfcRemitente = transfer.RFC_RECEPTOR;
-    factura.cfdi.receptor.nombre = emisorCompany.informacionFiscal.razonSocial;
-    factura.razonSocialRemitente = emisorCompany.informacionFiscal.razonSocial;
+    factura.razonSocialRemitente = receptorCompany.informacionFiscal.razonSocial;
     factura.lineaRemitente = this.params.lineaRetiro;
     factura.metodoPago = transfer.METODO_PAGO;
     factura.statusFactura = '8';
     factura.solicitante = this.user.email;
     const cfdi = new Cfdi();
+    cfdi.receptor.nombre = receptorCompany.informacionFiscal.razonSocial;
     cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
     cfdi.receptor.usoCfdi = 'P01';
+    cfdi.emisor.nombre = emisorCompany.informacionFiscal.razonSocial;
     cfdi.emisor.rfc = transfer.RFC_EMISOR;
     cfdi.emisor.regimenFiscal = emisorCompany.regimenFiscal;
-    cfdi.formaPago = transfer.FORMA_PAGO;
+    cfdi.formaPago = transfer.FORMA_PAGO.toString();
     cfdi.moneda = 'MXN';
     cfdi.total = transfer.TOTAL;
     cfdi.subtotal = transfer.IMPORTE;
-    cfdi.metodoPago = transfer.METODO_PAGO;
+    cfdi.metodoPago = transfer.METODO_PAGO.toString();
     const concepto = new Concepto();
     concepto.cantidad = transfer.CANTIDAD;
     concepto.claveProdServ = transfer.CLAVE_PROD_SERVICIO;
