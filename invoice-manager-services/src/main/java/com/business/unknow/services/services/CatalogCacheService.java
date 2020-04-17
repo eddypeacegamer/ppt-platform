@@ -104,7 +104,11 @@ public class CatalogCacheService {
 	}
 	
 	public Optional<String> getUsoCfdi(String clave){
-		return usoCfdiMappings.containsKey(clave)? Optional.of(usoCfdiMappings.get(clave).getDescripcion()):Optional.empty();
+		if(usoCfdiMappings.containsKey(clave)) {
+			return Optional.of(usoCfdiMappings.get(clave).getDescripcion());
+		}else {
+			return Optional.empty();
+		}
 	}
 	
 	public Optional<String> getClaveUnidad(String clave){

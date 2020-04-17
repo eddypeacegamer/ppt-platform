@@ -36,7 +36,6 @@ import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.cfdi.Retencion;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
-import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
@@ -283,17 +282,17 @@ public class CfdiService {
 					HttpStatus.CONFLICT.value());
 		}
 		
-		if(cfdi.getMetodoPago()!= MetodosPagoEnum.PPD.name() && cfdi.getMetodoPago()!=MetodosPagoEnum.PUE.name()) {
+		if(!cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && !cfdi.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 			throw new InvoiceManagerException("El metodo de pago de la factura solo puede ser PUE o PPD", "Metodo de pago invalido",
 					HttpStatus.CONFLICT.value());
 		}
 		
-		if(cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
+		if(!cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
 			throw new InvoiceManagerException("Uso de CFDI invalido", "Uso de CFDI invalido",
 					HttpStatus.CONFLICT.value());
 		}
 		
-		if(cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
+		if(!cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
 			throw new InvoiceManagerException(String.format("La forma de pago %s es invalida", cfdi.getFormaPago()), "Forma de pago invalida",
 					HttpStatus.CONFLICT.value());
 		}
