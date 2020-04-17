@@ -77,7 +77,8 @@ public class FacturaController {
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
-
+	
+	
 	@PutMapping("/{folio}")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto factura) {
@@ -90,6 +91,14 @@ public class FacturaController {
 	}
 
 	// CFDI
+	@PostMapping("/cfdi/validacion")
+	public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi)
+			throws InvoiceManagerException {
+		cfdiService.validateCfdi(cfdi);
+		return new ResponseEntity<>("VALIDA", HttpStatus.OK);
+	}
+
+	
 	@GetMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
 		return new ResponseEntity<>(cfdiService.getCfdiByFolio(folio), HttpStatus.OK);

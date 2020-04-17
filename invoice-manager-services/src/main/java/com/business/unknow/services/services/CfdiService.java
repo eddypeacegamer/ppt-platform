@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FormaPagoEnum;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
@@ -35,6 +36,7 @@ import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
 import com.business.unknow.services.entities.cfdi.Retencion;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
+import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
@@ -70,9 +72,13 @@ public class CfdiService {
 
 	@Autowired
 	private RetencionRepository retencionRepository;
+	
 
 	@Autowired
 	private CfdiMapper mapper;
+	
+	@Autowired
+	private CatalogCacheService cacheCatalogsService;
 
 	private static final Logger log = LoggerFactory.getLogger(CfdiService.class);
 
@@ -112,6 +118,8 @@ public class CfdiService {
 	private List<CfdiPagoDto> getCfdiPagosByCfdi(int id) {
 		return mapper.getCfdiPagosDtoFromEntities(cfdiPagoRepository.findByCfdi(id));
 	}
+	
+	
 
 	public CfdiDto insertNewCfdi(CfdiDto cfdi) throws InvoiceManagerException {
 		validateCfdi(cfdi);
@@ -264,7 +272,32 @@ public class CfdiService {
 		return cfdi;
 	}
 
-	private void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
+	public void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
+		if(cfdi.getEmisor().getRfc() == null || cfdi.getEmisor().getNombre() == null) {
+			throw new InvoiceManagerException("La informacion del emisor es requerida", "Informacion emisor faltante",
+					HttpStatus.CONFLICT.value());
+		}
+		
+		if(cfdi.getReceptor().getRfc() == null || cfdi.getReceptor().getNombre() == null) {
+			throw new InvoiceManagerException("La informacion del receptor es requerida", "Informacion receptor faltante",
+					HttpStatus.CONFLICT.value());
+		}
+		
+		if(cfdi.getMetodoPago()!= MetodosPagoEnum.PPD.name() && cfdi.getMetodoPago()!=MetodosPagoEnum.PUE.name()) {
+			throw new InvoiceManagerException("El metodo de pago de la factura solo puede ser PUE o PPD", "Metodo de pago invalido",
+					HttpStatus.CONFLICT.value());
+		}
+		
+		if(cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
+			throw new InvoiceManagerException("Uso de CFDI invalido", "Uso de CFDI invalido",
+					HttpStatus.CONFLICT.value());
+		}
+		
+		if(cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
+			throw new InvoiceManagerException(String.format("La forma de pago %s es invalida", cfdi.getFormaPago()), "Forma de pago invalida",
+					HttpStatus.CONFLICT.value());
+		}
+	
 		if (cfdi.getConceptos().isEmpty()) {
 			throw new InvoiceManagerException("El CFDI no puede tener 0 conceptos", "Numero de comceptos invalido",
 					HttpStatus.CONFLICT.value());
@@ -274,6 +307,8 @@ public class CfdiService {
 					"En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos",
 					"Metodo de pago invalido", HttpStatus.CONFLICT.value());
 		}
+		
+		
 		// TODO add more validations here
 	}
 
