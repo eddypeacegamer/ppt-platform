@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
+import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -43,7 +45,6 @@ import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
-
 
 @Service
 public class FacturaService {
@@ -89,7 +90,7 @@ public class FacturaService {
 
 	@Autowired
 	private DevolucionService devolucionService;
-	
+
 	@Autowired
 	private FilesService fileService;
 
@@ -97,7 +98,7 @@ public class FacturaService {
 	private FacturaDefaultValues facturaDefaultValues;
 
 	private FacturaValidator validator = new FacturaValidator();
-	
+
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
 			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
@@ -110,11 +111,11 @@ public class FacturaService {
 					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
-				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(),lineaEmisor, status.get(), start, end,
-						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
+				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), lineaEmisor, status.get(),
+						start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			} else {
-				result = repository.findBySolicitanteWithParams(solicitante.get(),lineaEmisor, start, end,
+				result = repository.findBySolicitanteWithParams(solicitante.get(), lineaEmisor, start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
@@ -129,7 +130,7 @@ public class FacturaService {
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 			}
 		}
-		
+
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
@@ -162,18 +163,27 @@ public class FacturaService {
 			pagoService.insertNewPaymentWithoutValidation(
 					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
 		}
-		fileService.generateInvoicePDF(facturaBuilded,facturaContext.getCfdi());
+		fileService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
-
-
 
 	public FacturaDto updateFactura(FacturaDto factura, String folio) {
 		if (repository.findByFolio(folio).isPresent()) {
 			if (factura.getStatusPago().equals(PagoStatusEnum.PAGADA.getValor())
 					&& factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
+			}
+			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
+				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
+				pagos.stream().forEach(a -> {
+					a.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+					try {
+						pagoService.updatePago(a.getFolio(), a.getId(), a);
+					} catch (InvoiceManagerException e) {
+						System.out.println("Error updating factura");
+					}
+				});
 			}
 			Factura entity = mapper.getEntityFromFacturaDto(factura);
 
@@ -183,11 +193,12 @@ public class FacturaService {
 					String.format("La factura con el folio %s no existe", folio));
 		}
 	}
-	
+
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public void deleteFactura(String folio) throws InvoiceManagerException {
-		repository.delete(repository.findByFolio(folio).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("La factura con el folio %s no existe", folio))));
+		repository.delete(
+				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el folio %s no existe", folio))));
 		cfdiService.deleteCfdi(folio);
 	}
 
@@ -238,12 +249,12 @@ public class FacturaService {
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
 					HttpStatus.BAD_REQUEST.value());
 		}
-		
+
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
-		//PDF GENERATION
+		// PDF GENERATION
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		if(facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
+		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
 		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
@@ -284,14 +295,15 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto generateComplemento(FacturaDto facturaPadre, PagoDto pagoPpd) throws InvoiceManagerException {
-		
-		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturaPadre, facturaPadre.getFolio());
+
+		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturaPadre,
+				facturaPadre.getFolio());
 		FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaPadre, pagoPpd);
 		complemento.setCfdi(facturaBuilderService.buildFacturaComplementoCreation(factContext));
 		facturaDefaultValues.assignaDefaultsComplemento(complemento);
 		factContext.setFacturaDto(complemento);
 		facturaServiceEvaluator.complementoValidation(factContext);
-		//Save complemento in DB
+		// Save complemento in DB
 		CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
 		Factura fact = mapper.getEntityFromFacturaDto(complemento);
 		fact.setIdCfdi(cfdi.getId());
@@ -299,11 +311,11 @@ public class FacturaService {
 	}
 
 	public void recreatePdf(CfdiDto dto) {
-		FacturaDto factura = mapper.getFacturaDtoFromEntity(
-				repository.findByFolio(dto.getFolio()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+		FacturaDto factura = mapper.getFacturaDtoFromEntity(repository.findByFolio(dto.getFolio())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", dto.getFolio()))));
 		factura.setCfdi(dto);
 		fileService.generateInvoicePDF(factura, null);
 	}
-	
+
 }
