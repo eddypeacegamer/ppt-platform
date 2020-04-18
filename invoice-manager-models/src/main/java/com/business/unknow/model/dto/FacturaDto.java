@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -43,6 +44,7 @@ public class FacturaDto implements Serializable {
 	private Integer statusCancelado;
 	private String cadenaOriginalTimbrado;
 	private Integer idCfdi;
+	private BigDecimal total;
 	private CfdiDto cfdi;
 
 	public Integer getId() {
@@ -267,6 +269,16 @@ public class FacturaDto implements Serializable {
 
 	public void setCadenaOriginalTimbrado(String cadenaOriginalTimbrado) {
 		this.cadenaOriginalTimbrado = cadenaOriginalTimbrado;
+	}
+	
+	
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 
 	@Override

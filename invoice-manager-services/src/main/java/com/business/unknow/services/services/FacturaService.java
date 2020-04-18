@@ -215,7 +215,15 @@ public class FacturaService {
 
 	// COMPLEMNENTOS
 	public List<FacturaDto> getComplementos(String folioPadre) {
-		return mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
+		 List<FacturaDto> complementos =mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
+		for(FacturaDto fact:complementos) {
+			Optional<PagoDto> pago=pagoService.findPagosByFolio(fact.getFolio()).stream().findFirst();
+			if(pago.isPresent()) {
+				fact.setTotal(pago.get().getMonto());
+			}
+		}
+		 return complementos;
+		 
 	}
 
 	// TIMBRADO
