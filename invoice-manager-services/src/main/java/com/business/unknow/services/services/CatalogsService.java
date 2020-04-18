@@ -87,7 +87,7 @@ public class CatalogsService {
 	public CodigoPostalUiDto getCodigosPostaleByCode(String codigo) {
 		List<CodigoPostal> codigos = codigoPostalRepository.findByCodigoPostal(codigo);
 		CodigoPostal codigPostal = codigos.stream().findFirst()
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados del codigo postal"));
 		CodigoPostalUiDto dto = new CodigoPostalUiDto(codigo,codigPostal.getMunicipio(), codigPostal.getEstado());
 		for (CodigoPostal cod : codigos) {
 			dto.getColonias().add(cod.getColonia());
