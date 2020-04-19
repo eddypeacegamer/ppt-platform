@@ -133,19 +133,24 @@ export class CargaMasivaComponent implements OnInit {
     this.loading = true;
     this.params.successMessage = undefined;
     this.errorMessages = [];
-    for (const invoice of this.invoices) {
+    this.loadfactura(this.invoices);
+  }
+
+  private async loadfactura(invoices:any){
+    for (const invoice of invoices) {
       const factura = this.buildFacturaFromTransfer(invoice,
         this.companies[invoice.RFC_EMISOR], this.companies[invoice.RFC_RECEPTOR]);
       const claveProdServ = +invoice.CLAVE_PROD_SERVICIO;
       if (!isNaN(claveProdServ)) {
-        this.catalogsData.getProductoServiciosByClave(claveProdServ.toString())
-          .then((claves: ClaveProductoServicio[]) => {
-            factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
-            factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
-            this.loadfactura(factura);
-          }, (error: HttpErrorResponse) => {
-            invoice.observaciones = error.error.message || `${error.statusText} : ${error.message}`;
-          });
+        try{
+          const claves = await this.catalogsData.getProductoServiciosByClave(claveProdServ.toString());
+          factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
+          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion; 
+          await this.invoiceService.insertNewInvoice(factura).toPromise();
+          invoice.observaciones = 'CARGADA';
+        }catch(error){
+          invoice.observaciones = error.error.message || 'Error desconocido';
+        }
       } else {
         invoice.observaciones = 'La clave producto servicio es invalida.';
       }
@@ -153,25 +158,14 @@ export class CargaMasivaComponent implements OnInit {
     this.loading = false;
   }
 
-  private async loadfactura(factura:any){
-    try{
-      const fact = <Factura> await this.invoiceService.insertNewInvoice(factura).toPromise();
-      factura.observaciones = 'CARGADA';
-    }catch(error){
-      factura.observaciones = error.error.message || 'Error desconocido';
-    }
-    return factura;
-  }
-
   private async  getCompaniesInfo(invoices: any[]) {
     for (const transfer of invoices) {
       try {
         const emisor = <Empresa>await this.companyService.getCompanyByRFC(transfer.RFC_EMISOR)
-          .toPromise();//.then(company => this.companies[transfer.RFC_EMISOR] = company);
-
+          .toPromise();
         this.companies[transfer.RFC_EMISOR] = emisor;
         const receptor = <Empresa>await this.companyService.getCompanyByRFC(transfer.RFC_RECEPTOR)
-          .toPromise();//.then(company => this.companies[transfer.RFC_RECEPTOR] = company);
+          .toPromise();
         this.companies[transfer.RFC_RECEPTOR] = receptor;
       } catch (error) {
         console.error(error);
