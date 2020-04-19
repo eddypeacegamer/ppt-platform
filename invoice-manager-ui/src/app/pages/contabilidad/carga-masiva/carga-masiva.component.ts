@@ -142,20 +142,25 @@ export class CargaMasivaComponent implements OnInit {
           .then((claves: ClaveProductoServicio[]) => {
             factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
             factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
-            this.invoiceService.insertNewInvoice(factura)
-              .subscribe(fact => { invoice.observaciones = 'CARGADA'; this.loading = false; },
-                (error: HttpErrorResponse) => {
-                invoice.observaciones = error.error.message
-                  || `${error.statusText} : ${error.message}`; this.loading = false;
-                });
+            this.loadfactura(factura);
           }, (error: HttpErrorResponse) => {
-            this.loading = false;
             invoice.observaciones = error.error.message || `${error.statusText} : ${error.message}`;
           });
       } else {
         invoice.observaciones = 'La clave producto servicio es invalida.';
       }
     }
+    this.loading = false;
+  }
+
+  private async loadfactura(factura:any){
+    try{
+      const fact = <Factura> await this.invoiceService.insertNewInvoice(factura).toPromise();
+      factura.observaciones = 'CARGADA';
+    }catch(error){
+      factura.observaciones = error.error.message || 'Error desconocido';
+    }
+    return factura;
   }
 
   private async  getCompaniesInfo(invoices: any[]) {
