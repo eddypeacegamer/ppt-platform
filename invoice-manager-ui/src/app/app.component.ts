@@ -23,13 +23,20 @@ export class AppComponent implements OnInit {
     this.catalogsService.getStatusPago().then(cat => console.log('payment status cat has been loaded : ', cat));
     this.catalogsService.getStatusValidacion().then(cat => console.log('invoice status cat  has been loaded : ', cat));
     this.catalogsService.getStatusDevolucion().then(cat => console.log('devolution status cat  been loaded : ', cat));
+    let validar:boolean=false;
+    
     this.userService.getUserInfo().then(user => {
       if (user.activo) {
+        validar=true;
         this.router.navigate(['./pages/dashboard']);
       }else {
         console.error('El usuario se encuentra inactivo');
         this.router.navigate(['./auth/register']);
       }
-    });
+    },error=>console.error(error));
+    if (!validar) {
+        console.error('El usuario se encuentra inactivo');
+        this.router.navigate(['./request-password']);
+    }
   }
 }
