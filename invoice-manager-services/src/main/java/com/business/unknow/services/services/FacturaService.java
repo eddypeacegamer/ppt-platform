@@ -175,14 +175,14 @@ public class FacturaService {
 			}
 			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
 				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
-				pagos.stream().forEach(a -> {
-					a.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+				for(PagoDto pago:pagos) {
+					pago.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
 					try {
-						pagoService.updatePago(a.getFolio(), a.getId(), a);
+						pagoService.updatePago(pago.getFolio(), pago.getId(), pago);
 					} catch (InvoiceManagerException e) {
 						System.out.println("Error updating factura");
 					}
-				});
+				}
 			}
 			Factura entity = mapper.getEntityFromFacturaDto(factura);
 
