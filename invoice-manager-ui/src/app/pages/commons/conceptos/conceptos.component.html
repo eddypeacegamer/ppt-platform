@@ -101,10 +101,10 @@
         <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
         <td scope="row" class="text-center">{{fila.unidad}}</td>
         <td scope="row" class="text-center">{{fila.descripcion}}</td>
-        <td scope="row" class="text-center">{{fila.valorUnitario | currency}}</td>
-        <td scope="row" class="text-center">{{calcularImportes(fila.impuestos) | currency}}</td>
-        <td scope="row" class="text-center">{{calcularImportes(fila.retenciones) | currency}}</td>
-        <td scope="row" class="text-center">{{fila.importe | currency}}</td>
+        <td scope="row" class="text-center">{{fila.valorUnitario | currency :'MXN':'symbol':'.2-6'}}</td>
+        <td scope="row" class="text-center">{{calcularImportes(fila.impuestos) | currency :'MXN':'symbol':'.2-6'}}</td>
+        <td scope="row" class="text-center">{{calcularImportes(fila.retenciones) | currency :'MXN':'symbol':'.2-6'}}</td>
+        <td scope="row" class="text-center">{{fila.importe | currency :'MXN':'symbol':'.2-6'}}</td>
       </tr>
       <tr>
         <td *ngIf="!allowEdit" colspan="7">
@@ -112,7 +112,7 @@
         <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center"><p class="font-weight-bold">Subtotal</p></td>
-        <td class="text-center">{{cfdi.subtotal | currency}}</td>
+        <td class="text-center">{{cfdi.subtotal | currency :'MXN':'symbol':'.2'}}</td>
       </tr>
       <tr>
         <td *ngIf="!allowEdit" colspan="7">
@@ -120,7 +120,7 @@
         <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center"><p class="font-weight-bold">Impuestos Trasladados:</p></td>
-        <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency}}</td>
+        <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
       </tr>
       <tr>
         <td *ngIf="!allowEdit" colspan="7">
@@ -128,7 +128,7 @@
         <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center" ><p class="font-weight-bold">Impuestos Retenidos:</p></td>
-        <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency}}</td>
+        <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
       </tr>
       <tr>
         <td *ngIf="!allowEdit" colspan="7">
@@ -136,7 +136,7 @@
         <td *ngIf="allowEdit" colspan="8">
         </td>
         <td class="text-center"><p class="font-weight-bold">Total</p></td>
-        <td class="text-center">{{cfdi.total | currency}}</td>
+        <td class="text-center">{{cfdi.total | currency :'MXN':'symbol':'.2'}}</td>
       </tr>
     </tbody>
   </table>
