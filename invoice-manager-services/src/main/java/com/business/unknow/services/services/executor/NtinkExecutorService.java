@@ -44,12 +44,15 @@ public class NtinkExecutorService extends AbstractPackExecutor {
 	@Autowired
 	private NtlinkProperties ntlinkProperties;
 
+	private static final String EXP = "&";
+
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
 			String expresion = String.format(
-					"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?&amp;id=%s&amp;re=%s&amp;rr=%s&amp;tt=%s&amp;fe=%s",
-					context.getFacturaDto().getUuid(), context.getFacturaDto().getRfcEmisor(),
-					context.getFacturaDto().getRfcRemitente(), context.getFacturaDto().getCfdi().getTotal().toString(),
+					"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?%sid=%s%sre=%s%srr=%s%stt=%s%sfe=%s",
+					EXP, context.getFacturaDto().getUuid(), EXP, context.getFacturaDto().getRfcEmisor(), EXP,
+					context.getFacturaDto().getRfcRemitente(), EXP,
+					context.getFacturaDto().getCfdi().getTotal().toString(), EXP,
 					context.getFacturaDto().getSelloCfd());
 			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(ntlinkProperties.getUser(),
 					ntlinkProperties.getPassword(), context.getFacturaDto().getUuid(),

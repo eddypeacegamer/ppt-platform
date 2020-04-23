@@ -41,9 +41,12 @@ public class NtlinkMessageParser {
 			element.addChildElement(NtlinkModernaRequest.RFC_EMISOR, NtlinkModernaRequest.ISER)
 					.addTextNode(requestModel.getRfcEmisor());
 			element.addChildElement(NtlinkModernaRequest.EXPRESION, NtlinkModernaRequest.ISER)
-					.addTextNode(requestModel.getRfcEmisor());
+			.addTextNode(requestModel.getExpresion());
+			element.addChildElement(NtlinkModernaRequest.RFC_RECEPTOR, NtlinkModernaRequest.ISER)
+			.addTextNode(requestModel.getRfcReceptor());
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			soapMessage.writeTo(baos);
+			System.out.println(baos.toString());
 			return baos.toString();
 		} catch (SOAPException | IOException e) {
 			throw new NtlinkClientException(

@@ -6,6 +6,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,13 @@ public class RestNtlinkClientImpl extends AbstractClient implements RestNtlinkCl
 		int status = response.getStatus();
 		log.info("Status {}", status);
 		String content = response.readEntity(String.class);
+		System.out.println(content);
 		NtlinkMessageParser soapRequest = new NtlinkMessageParser();
+		if(content.contains("Error al cancelar el comprobante")) {
+			throw new NtlinkClientException(
+					new NtlinkErrorMessage("Error al timbrar en Ntlink", "Error"),
+					HttpStatus.SC_CONFLICT);
+		}
 		if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
 			return soapRequest.getResponseCancel(content, clazz);
 		} else {
