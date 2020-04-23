@@ -47,17 +47,14 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 	public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
 		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
-		Factura folioEnity = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Folio not found",
-						String.format("Folio with the name %s not found", facturaDto.getFolio()),
-						HttpStatus.SC_NOT_FOUND));
+		FacturaDto factura=facturaService.getFacturaByFolio(folio);
 		EmpresaDto empresaDto = empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 						.orElseThrow(() -> new InvoiceManagerException("La empresa no existe",
 								String.format("La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
 		getEmpresaFiles(empresaDto, facturaDto);
-		return new FacturaContextBuilder().setFacturaDto(mapper.getFacturaDtoFromEntity(folioEnity))
+		return new FacturaContextBuilder().setFacturaDto(factura)
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)

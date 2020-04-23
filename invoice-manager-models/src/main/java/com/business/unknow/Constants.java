@@ -40,10 +40,12 @@ public class Constants {
 	public class NtlinkModernaRequest{
 		public static final String ISER = "iser";
 		public static final String TIMBRA_CFDI = "TimbraCfdiQr";
+		public static final String CANCELA_CFDI = "CancelaCfdi";
 		public static final String USER = "userName";
 		public static final String PASS = "password";
 		public static final String COMPROBANTE = "comprobante";
 		public static final String RFC_EMISOR = "rfc";
+		public static final String EXPRESION = "expresion";
 		public static final String RFC_RECEPTOR = "rfcReceptor";
 		public static final String UUID = "uuid";
 		

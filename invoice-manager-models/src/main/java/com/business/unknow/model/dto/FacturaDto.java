@@ -43,6 +43,7 @@ public class FacturaDto implements Serializable {
 	private Date fechaTimbrado;
 	private Integer statusCancelado;
 	private String cadenaOriginalTimbrado;
+	private String selloCfd;
 	private Integer idCfdi;
 	private BigDecimal total;
 	private CfdiDto cfdi;
@@ -270,8 +271,6 @@ public class FacturaDto implements Serializable {
 	public void setCadenaOriginalTimbrado(String cadenaOriginalTimbrado) {
 		this.cadenaOriginalTimbrado = cadenaOriginalTimbrado;
 	}
-	
-	
 
 	public BigDecimal getTotal() {
 		return total;
@@ -279,6 +278,14 @@ public class FacturaDto implements Serializable {
 
 	public void setTotal(BigDecimal total) {
 		this.total = total;
+	}
+
+	public String getSelloCfd() {
+		return selloCfd;
+	}
+
+	public void setSelloCfd(String selloCfd) {
+		this.selloCfd = selloCfd;
 	}
 
 	@Override
@@ -293,7 +300,8 @@ public class FacturaDto implements Serializable {
 				+ ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
 				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
-				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", idCfdi=" + idCfdi + ", cfdi=" + cfdi + "]";
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
+				+ ", total=" + total + ", cfdi=" + cfdi + "]";
 	}
 
 }

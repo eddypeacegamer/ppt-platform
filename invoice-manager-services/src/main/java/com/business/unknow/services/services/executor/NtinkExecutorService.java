@@ -27,7 +27,7 @@ import com.business.unknow.services.client.NtlinkClient;
 import com.business.unknow.services.config.properties.NtlinkProperties;
 
 @Service
-public class NtinkExecutorService extends AbstractPackExecutor{
+public class NtinkExecutorService extends AbstractPackExecutor {
 
 	@Autowired
 	private NtlinkClient client;
@@ -46,9 +46,14 @@ public class NtinkExecutorService extends AbstractPackExecutor{
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
+			String expresion = String.format(
+					"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?&amp;id=%s&amp;re=%s&amp;rr=%s&amp;tt=%s&amp;fe=%s",
+					context.getFacturaDto().getUuid(), context.getFacturaDto().getRfcEmisor(),
+					context.getFacturaDto().getRfcRemitente(), context.getFacturaDto().getCfdi().getTotal().toString(),
+					context.getFacturaDto().getSelloCfd());
 			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(ntlinkProperties.getUser(),
 					ntlinkProperties.getPassword(), context.getFacturaDto().getUuid(),
-					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente());
+					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente(), expresion);
 			client.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext()).cancelar(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
@@ -73,10 +78,12 @@ public class NtinkExecutorService extends AbstractPackExecutor{
 			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
 			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
 			context.getFacturaDto()
-			.setFechaTimbrado(dateHelper.getDateFromString(
-					currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
-					FacturaConstants.FACTURA_DATE_FORMAT));
+					.setFechaTimbrado(dateHelper.getDateFromString(
+							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
+							FacturaConstants.FACTURA_DATE_FORMAT));
 			context.getFacturaDto().setCadenaOriginalTimbrado(getCadenaOriginalTimbrado(currentCfdi));
+			String selloSat = currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT();
+			context.getFacturaDto().setSelloCfd(selloSat.substring(selloSat.length() - 8, selloSat.length()));
 			List<FacturaFileDto> files = new ArrayList<>();
 			if (response.getCfdi() != null) {
 				FacturaFileDto xml = new FacturaFileDto();

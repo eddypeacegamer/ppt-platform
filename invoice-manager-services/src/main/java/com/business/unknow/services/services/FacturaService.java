@@ -290,7 +290,7 @@ public class FacturaService {
 			facturacionModernaExecutor.cancelarFactura(facturaContext);
 			break;
 		case NTLINK:
-			facturacionModernaExecutor.cancelarFactura(facturaContext);
+			ntinkExecutorService.cancelarFactura(facturaContext);
 			break;
 		default:
 			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
