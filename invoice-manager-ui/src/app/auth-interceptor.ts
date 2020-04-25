@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
@@ -16,15 +16,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      
       return next.handle(request).pipe(
         catchError((err: HttpErrorResponse) => {
-          if (err.status === 401) {
+          console.error(err);
+          if (err.status === 401 || err.url.indexOf('/oauth2/authorization/google') > 1) {
               console.error('Unauthorized request');
             this.router.navigateByUrl('/auth/login');
           }
           return throwError( err );
-        })
-      );
+        }));
     }
-  }
+}

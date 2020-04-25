@@ -30,6 +30,6 @@ export class UsersService {
   }
 
   public logout(): Observable<any> {
-    return this.httpClient.get('../api/logout');
+    return this.httpClient.post('../api/logout', {});
   }
 }
