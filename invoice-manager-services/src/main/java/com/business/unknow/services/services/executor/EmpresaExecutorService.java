@@ -50,5 +50,35 @@ public class EmpresaExecutorService extends AbstractExecutorService {
 			}
 		}
 	}
+	
+	public void updateCerrtificado(String rfc , String data) {
+		if(data!=null) {
+			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.CERT.name());
+			if(logoOpt.isPresent()) {
+				ResourceFile resource= logoOpt.get(); 
+				resource.setData(data.getBytes());
+				resourceFileRepository.save(resource);
+			}else {
+				createResourceFile(data, rfc,
+						TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.CERT.name());
+			}
+		}
+	}
+	
+	public void updateKey(String rfc , String data) {
+		if(data!=null) {
+			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.KEY.name());
+			if(logoOpt.isPresent()) {
+				ResourceFile resource= logoOpt.get(); 
+				resource.setData(data.getBytes());
+				resourceFileRepository.save(resource);
+			}else {
+				createResourceFile(data, rfc,
+						TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.KEY.name());
+			}
+		}
+	}
+	
+
 
 }
