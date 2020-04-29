@@ -117,16 +117,16 @@
                   </td>
                   <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
                   <td scope="row" class="text-center">{{fila.receptor}}</td>
-                  <td scope="row" class="text-center">{{fila.pagoMonto | currency}}</td>
-                  <td scope="row" class="text-center">{{fila.impuesto | currency}}</td>
+                  <td scope="row" class="text-center">{{fila.pagoMonto | currency :'MXN':'symbol':'.2-6'}}</td>
+                  <td scope="row" class="text-center">{{fila.impuesto | currency :'MXN':'symbol':'.2-6'}}</td>
                   <td scope="row" class="text-center">{{fila.porcentaje/100 | percent}}</td>
-                  <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency}}</td>
+                  <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency :'MXN':'symbol':'.2-6'}}</td>
                   <td scope="row" class="text-center" *ngIf="fila.edit"><input type="number" [(ngModel)]="fila.monto"></td>
                 </tr>
                 <tr>
                   <td colspan="5"></td>
                   <td class="text-center"><p class="font-weight-bold">Total</p></td>
-                  <td class="text-center">{{calculateTotal() | currency}}</td>
+                  <td class="text-center">{{calculateTotal() | currency :'MXN':'symbol':'.2'}}</td>
                 </tr>
               </tbody>
             </table>
