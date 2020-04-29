@@ -27,6 +27,7 @@ export class DevolucionesComponent implements OnInit {
   public banksCat: Catalogo[] = [];
   public refTypesCat: Catalogo[] = [];
   public clientsCat : Client[] = [];
+  public contactosCat: string[] = [];
   public pageCommissions: GenericPage<Devolucion> = new GenericPage();
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
@@ -60,10 +61,13 @@ export class DevolucionesComponent implements OnInit {
         this.filterParams.idReceptor = user.email;
         this.searchDevolutionsData();
         this.clientsService.getClientsByPromotor(user.email)
-          .subscribe(clients => this.clientsCat = clients);
+          .subscribe(clients => {
+            this.clientsCat = clients;
+            this.contactosCat = [...new Set(clients.map(c => c.correoContacto))];
+          });
       });
     this.catalogService.getBancos().then(banks => this.banksCat = banks);
-    
+
   }
 
   public onReceptorTypeSelected(type: string) {

@@ -23,7 +23,7 @@
             <label for="inputContacto" class="label">Correo contacto</label>
             <select selected="*" id="inputContacto" style="display:block;" class="form-control" fullWidth [(ngModel)]="filterParams.idReceptor" (change)="searchDevolutionsData()">
               <option value="*">Seleccionar</option>
-              <option *ngFor="let client of clientsCat" [value]="client.correoContacto">{{client.correoContacto}} - {{client.porcentajeContacto/100 | percent}}</option>
+              <option *ngFor="let contacto of contactosCat" [value]="contacto">{{contacto}}</option>
             </select>
           </div>
           <div class="col-sm-5" *ngIf="filterParams.tipoReceptor == 'CLIENTE'">
