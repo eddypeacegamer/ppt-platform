@@ -30,10 +30,14 @@ export class ValidacionDevolucionComponent implements OnInit {
     private devolutionsService: DevolutionData,
     private userService: UsersData,
     private accountsService: CuentasData) { }
+
   ngOnInit() {
     this.errorMesage = '';
     this.getAccountInfo();
     this.userService.getUserInfo().then(user => this.user = user);
+    if (this.payment.fechaPago === undefined || this.payment.fechaPago === null ) {
+      this.payment.fechaPago = new Date();
+    }
   }
 
 

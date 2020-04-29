@@ -101,7 +101,7 @@ public class EmpresaService {
 //		empresa.setInformacionFiscal(
 //				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
 		empresaEvaluatorService.updateLogo(rfc, empresaDto.getLogotipo());
-		empresaEvaluatorService.updateCerrtificado(rfc, empresaDto.getCertificado());
+		empresaEvaluatorService.updateCertificado(rfc, empresaDto.getCertificado());
 		empresaEvaluatorService.updateKey(rfc, empresaDto.getLlavePrivada());
 		return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
 	}

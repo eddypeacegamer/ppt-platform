@@ -51,7 +51,7 @@ public class EmpresaExecutorService extends AbstractExecutorService {
 		}
 	}
 	
-	public void updateCerrtificado(String rfc , String data) {
+	public void updateCertificado(String rfc , String data) {
 		if(data!=null) {
 			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.CERT.name());
 			if(logoOpt.isPresent()) {

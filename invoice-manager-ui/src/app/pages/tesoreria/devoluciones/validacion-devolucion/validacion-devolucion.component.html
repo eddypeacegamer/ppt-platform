@@ -46,6 +46,7 @@
     </div>
     <br>
     <p class="font-weight-bold">Datos de cuenta fondeo</p>
+    <small id="fondeoMsg" class="form-text text-muted">La infomacion referente al fondeo de las devolucions aun no se encuentra habilitado.</small>
     <div class="row">
       <!--div class="col-sm-3">
         <label for="inputCompanyType" class="label">Tipo Empresa</label>
@@ -58,12 +59,12 @@
       <div class="col-sm-3">
         <label for="inputRfc" class="label">RFC Empresa retiro</label>
         <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.rfc" (ngModelChange)="companySearch($event)" 
-          fullWidth placeholder="RFC Empresa">
+          fullWidth placeholder="RFC Empresa" disabled>
       </div>
       <div class="col-sm-6">
         <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
         <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-          [(ngModel)]="formInfo.cuenta" >
+          [(ngModel)]="formInfo.cuenta" disabled >
           <option value="*">Seleccionar</option>
           <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{cuenta.empresa}} -- {{cuenta.banco}} -- {{cuenta.cuenta}}</option>
         </select>
