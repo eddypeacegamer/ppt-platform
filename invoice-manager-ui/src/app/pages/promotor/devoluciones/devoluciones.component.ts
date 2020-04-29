@@ -63,7 +63,8 @@ export class DevolucionesComponent implements OnInit {
         this.clientsService.getClientsByPromotor(user.email)
           .subscribe(clients => {
             this.clientsCat = clients;
-            this.contactosCat = [...new Set(clients.map(c => c.correoContacto))];
+            const contacts = clients.map(c => c.correoContacto);
+            this.contactosCat = contacts.filter((item, index) => contacts.indexOf(item) === index);
           });
       });
     this.catalogService.getBancos().then(banks => this.banksCat = banks);
