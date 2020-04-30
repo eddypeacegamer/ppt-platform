@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
+import com.business.unknow.commons.util.ContactoHelper;
 import com.business.unknow.commons.validator.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -44,6 +45,8 @@ public class ClientService {
 	private CatalogsService catalogsService;
 
 	private ClienteValidator clientValidator = new ClienteValidator();
+	
+	private ContactoHelper contactoHelper= new ContactoHelper();
 
 	public Page<ClientDto> getClientsByParametros(Optional<String> promotor, String status, String rfc,
 			String razonSocial, int page, int size) {
@@ -88,6 +91,7 @@ public class ClientService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 			}
+			cliente.setCorreoContacto(contactoHelper.translateContacto(cliente.getCorreoContacto(),cliente.getCorreoPromotor()));
 			cliente.setActivo(false);
 			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
@@ -99,6 +103,7 @@ public class ClientService {
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
 		clientValidator.validatePostCliente(client);
+		client.setCorreoContacto(contactoHelper.translateContacto(client.getCorreoContacto(),client.getCorreoPromotor()));
 		if (repository.findByRfc(rfc).isPresent()) {
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
 		} else {

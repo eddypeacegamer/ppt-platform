@@ -54,8 +54,15 @@ public class ClienteValidator extends AbstractValidator {
 		if (dto.getInformacionFiscal().getCorreo() != null && !dto.getInformacionFiscal().getCorreo().isEmpty()) {
 			checkValidEmail(dto.getInformacionFiscal().getCorreo());
 		}
-		if (dto.getCorreoContacto() != null && !dto.getCorreoContacto().isEmpty()) {
-			checkValidEmail(dto.getCorreoContacto());
+		if (dto.getPorcentajeContacto().compareTo(BigDecimal.ZERO) > 0) {
+			checkNotNull(dto.getCorreoContacto(), "Conotacto");
+			checkNotEmpty(dto.getCorreoContacto(), "Conotacto");
+		}
+		if (dto.getPorcentajeContacto().compareTo(BigDecimal.ZERO) == 0) {
+			if (dto.getCorreoContacto() != null && !dto.getCorreoContacto().isEmpty()) {
+				throw new InvoiceManagerException("No debe haber contacto si no se le asigno porcentaje",
+						"Se debe poner el contacto si se le asigno un porcentaje", Constants.BAD_REQUEST);
+			}
 		}
 	}
 

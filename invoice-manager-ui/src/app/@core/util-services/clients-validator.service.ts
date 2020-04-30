@@ -90,9 +90,8 @@ export class ClientsValidatorService {
         if (cliente.porcentajeDespacho < 4) {
             messages.push('El porcentaje asignado al despacho no debe ser menor al 4%');
         }
-        if (cliente.porcentajeContacto > 0 && (cliente.correoContacto === undefined
-            || cliente.correoContacto.indexOf('@') < 0)) {
-            messages.push('Si fue asignado un porcentaje a un contacto, se debe de especificar una cuenta de correo al mismo.');
+        if (cliente.porcentajeContacto > 0 && (cliente.correoContacto === undefined)) {
+            messages.push('Si fue asignado un porcentaje a un contacto, se debe de especificar una cuenta de correo el mismo.');
         }
         return messages;
       }

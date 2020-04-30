@@ -49,7 +49,7 @@ export class ClienteComponent implements OnInit {
     this.messages = [];
     this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
     this.clientService.updateClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente actualizado exitosamente'; this.clientInfo = client; },
-      (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
+      (error: HttpErrorResponse) => {this.messages.push(error.error.message); this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
   }
 
   public insertClient() {
