@@ -195,7 +195,7 @@
                             </table-body>
                         </table>
                         <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
-                            DOCUMENTOS RELACIONADOS AL PAGO
+                            DOCUMENTOS RELACIONADOS AL PAGO 
                         </block>
                         <block>
                             <inline-container width="73.2mm" text-align="left" margin="3mm">
@@ -213,7 +213,7 @@
                             <inline-container width="50.5mm" text-align="center">
                                 <block>
                                     Folio:
-                                    <xsl:value-of select="factura/@Folio" />
+                                    <xsl:value-of select="folioPadre" />
                                 </block>
                             </inline-container>
                             <inline-container width="25.1mm" text-align="center">
