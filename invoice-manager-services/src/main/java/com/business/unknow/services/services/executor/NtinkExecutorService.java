@@ -64,7 +64,8 @@ public class NtinkExecutorService extends AbstractPackExecutor {
 		} catch (NtlinkClientException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(
-					String.format("Error durante el Cancelado de :%s", context.getFacturaDto().getUuid()),
+					String.format("Error durante el Cancelado de :%s error:%s detail:%s",
+							context.getFacturaDto().getUuid(), e.getMessage(), e.getErrorMessage().getMessageDetail()),
 					e.getMessage(), e.getHttpStatus());
 		}
 	}
@@ -101,11 +102,15 @@ public class NtinkExecutorService extends AbstractPackExecutor {
 			qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 			qr.setData(response.getQrCodeBase64());
 			files.add(qr);
-		} catch (NtlinkClientException | InvoiceCommonException e) {
+		} catch (NtlinkClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(),
-					String.format("Error Stamping in facturacion moderna: %s", e.getLocalizedMessage()),
-					HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(
+					String.format("Error Stamping in facturacion moderna:  Error:%s detail:%s", e.getMessage(),
+							e.getErrorMessage().getMessageDetail()),
+					e.getMessage(), HttpStatus.SC_CONFLICT);
+		} catch (InvoiceCommonException e) {
+			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: Error:%s detail:%s",
+					e.getMessage(), e.getErrorMessage().getDeveloperMessage()), e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}

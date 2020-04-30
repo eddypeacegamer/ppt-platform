@@ -33,7 +33,7 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
 
 	@Autowired
 	private FacturaHelper facturaHelper;
-	
+
 	@Autowired
 	private DateHelper dateHelper;
 
@@ -74,10 +74,14 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
 			context.setFacturaFilesDto(files);
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(
+					String.format("Error_%s Detail:%s", e.getMessage(), e.getErrorMessage().getMessageDetail()),
+					e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		} catch (InvoiceCommonException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(
+					String.format("Error_%s Detail:%s", e.getMessage(), e.getErrorMessage().getDeveloperMessage()),
+					e.getErrorMessage().toString(), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}
@@ -108,7 +112,8 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
 		} catch (SwSapiensClientException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(
-					String.format("Error durante el Cancelado de :%s", context.getFacturaDto().getUuid()),
+					String.format("Error durante el Cancelado de :%s Error:%s Detail:%s",
+							context.getFacturaDto().getUuid(), e.getMessage(), e.getErrorMessage().getMessageDetail()),
 					e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 	}

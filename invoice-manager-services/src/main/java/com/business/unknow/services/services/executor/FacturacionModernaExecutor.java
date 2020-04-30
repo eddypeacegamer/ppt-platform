@@ -80,10 +80,14 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
 				files.add(xml);
 			}
 			context.setFacturaFilesDto(files);
-		} catch (FacturaModernaClientException | InvoiceCommonException e) {
+		} catch (FacturaModernaClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(),
-					String.format("Error Stamping in facturacion moderna: %s", e.getLocalizedMessage()),
+			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: %s Detail:%s",
+					e.getMessage(), e.getErrorMessage().getMessageDetail()), e.getMessage(),
+					HttpStatus.SC_CONFLICT);
+		} catch (InvoiceCommonException e) {
+			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: %s Detail:%s",
+					e.getMessage(), e.getErrorMessage().getDeveloperMessage()), e.getMessage(),
 					HttpStatus.SC_CONFLICT);
 		}
 		return context;
@@ -101,7 +105,8 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
 		} catch (FacturaModernaClientException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(
-					String.format("Error durante el Cancelado de :%s", context.getFacturaDto().getUuid()),
+					String.format("Error durante el Cancelado de :%s Error:%s Detail:%s",
+							context.getFacturaDto().getUuid(), e.getMessage(), e.getErrorMessage().getMessageDetail()),
 					e.getMessage(), e.getHttpStatus());
 		}
 	}
