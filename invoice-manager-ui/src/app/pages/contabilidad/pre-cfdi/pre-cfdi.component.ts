@@ -343,11 +343,11 @@ export class PreCfdiComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
+    console.log(fact);
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
-
+    
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success => {
       this.successMessage = 'Factura correctamente cancelada';

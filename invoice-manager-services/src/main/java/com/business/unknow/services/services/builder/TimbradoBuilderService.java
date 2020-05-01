@@ -58,7 +58,8 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
 				.setFacturaPadreDto(
 						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-				.setTipoFactura(facturaDto.getCfdi().getMetodoPago()).setTipoDocumento(facturaDto.getTipoDocumento())
+				.setTipoFactura(factura.getCfdi().getMetodoPago())
+				.setTipoDocumento(factura.getTipoDocumento())
 				.build();
 	}
 
