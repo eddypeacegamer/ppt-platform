@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
 
@@ -59,7 +58,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private userService: UsersData,
     private filesService: FilesData,
     private downloadService: DonwloadFileService,
-    private pdfMakeService: PdfMakeService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {

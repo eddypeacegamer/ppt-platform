@@ -16,18 +16,20 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.component';
+import { SesionLostComponent } from './auth/sesion-lost/sesion-lost.component';
+import { UnavailableServiceComponent } from './auth/unavailable-service/unavailable-service.component';
+
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, UnauthorizedComponent, SesionLostComponent, UnavailableServiceComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-
     ThemeModule.forRoot(),
-
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
@@ -40,9 +42,8 @@ import {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
-  ],
+      multi: true,
+    }],
   bootstrap: [AppComponent],
 })
 export class AppModule {

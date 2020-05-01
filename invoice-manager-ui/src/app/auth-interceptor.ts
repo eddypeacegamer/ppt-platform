@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
           console.error(err);
           if (err.status === 401 || err.url.indexOf('/oauth2/authorization/google') > 1) {
               console.error('Unauthorized request');
-            this.router.navigateByUrl('/auth/login');
+            this.router.navigateByUrl('/unauthorized');
           }
           return throwError( err );
         }));

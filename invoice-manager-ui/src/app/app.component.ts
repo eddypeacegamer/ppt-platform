@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
         this.router.navigate(['./pages/dashboard']);
       }else{
         console.error('El usuario se encuentra inactivo');
-        this.router.navigate(['./auth/register']);
+        this.router.navigate(['./unauthorized']);
       }
     } catch(error) {
         console.error(error);
-        this.router.navigate(['./request-password']);
+        this.router.navigate(['./unauthorized']);
     }
   }
 }
