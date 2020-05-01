@@ -19,6 +19,10 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request).pipe(
         catchError((err: HttpErrorResponse) => {
           console.error(err);
+          if (err.status === 302 || err.status === 0 || err.statusText.indexOf('Unknown') >= 0 ) {
+            console.error('Sesion perdida');
+            this.router.navigateByUrl('/sesion-lost')
+          }
           if (err.status === 401 || err.url.indexOf('/oauth2/authorization/google') > 1) {
               console.error('Unauthorized request');
             this.router.navigateByUrl('/unauthorized');
