@@ -54,9 +54,7 @@ public class ClienteValidator extends AbstractValidator {
 		if (dto.getInformacionFiscal().getCorreo() != null && !dto.getInformacionFiscal().getCorreo().isEmpty()) {
 			checkValidEmail(dto.getInformacionFiscal().getCorreo());
 		}
-		if (dto.getCorreoContacto() != null && !dto.getCorreoContacto().isEmpty()) {
-			checkValidEmail(dto.getCorreoContacto());
-		}
+
 	}
 
 }

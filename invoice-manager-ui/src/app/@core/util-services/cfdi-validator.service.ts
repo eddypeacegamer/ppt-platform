@@ -91,6 +91,9 @@ export class CfdiValidatorService {
     if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined || cfdi.emisor.rfc.length < 8) {
       messages.push('La información del emisor es un valor solicitado');
     }
+    if (cfdi.emisor.rfc === cfdi.receptor.rfc) {
+      messages.push('El emisor y receptor son la misma entidad');
+    }
     if (cfdi.receptor.usoCfdi === undefined || cfdi.receptor.usoCfdi === '*') {
       messages.push('El uso del CFDI es un campo requerido.');
     }else if (this.usoCfdiCat.find(e => e === cfdi.receptor.usoCfdi) === undefined) {

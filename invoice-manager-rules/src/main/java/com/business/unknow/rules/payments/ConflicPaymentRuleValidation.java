@@ -41,7 +41,7 @@ public class ConflicPaymentRuleValidation {
 				return true;
 			}
 		}
-		if (dbPayment.getRevision1() && !currentPayment.getRevision2()&&!currentPayment.getRevisor1().equals(dbPayment.getRevision1())) {
+		if (dbPayment.getRevision1() && !currentPayment.getRevision2()&&!currentPayment.getRevision1().equals(dbPayment.getRevision1())) {
 			results.add("Ya se realizo la primera validacion.");
 			return true;
 		}

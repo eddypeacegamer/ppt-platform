@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { PdfMakeService } from '../../../@core/util-services/pdf-make.service';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
 
@@ -59,7 +58,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private userService: UsersData,
     private filesService: FilesData,
     private downloadService: DonwloadFileService,
-    private pdfMakeService: PdfMakeService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -241,13 +239,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.rfcRemitente = this.clientInfo.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
+      this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     }
 
     if (this.errorMessages.length === 0) {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
-          this.factura.folio = invoice.folio;
+          this.factura = invoice;
           this.loading = false;
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {

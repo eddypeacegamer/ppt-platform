@@ -205,7 +205,6 @@
             </table>
           </div>
         </div>
-
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
           <ngx-pagos [factura]="factura" [user]="user"></ngx-pagos>
         </div>

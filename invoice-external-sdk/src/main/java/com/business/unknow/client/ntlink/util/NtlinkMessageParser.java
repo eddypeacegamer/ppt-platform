@@ -31,19 +31,22 @@ public class NtlinkMessageParser {
 		try {
 			MessageFactory messageFactory = MessageFactory.newInstance();
 			SOAPMessage soapMessage = messageFactory.createMessage();
-			SOAPElement element = createStampHeaders(soapMessage, NtlinkModernaRequest.TIMBRA_CFDI);
+			SOAPElement element = createStampHeaders(soapMessage, NtlinkModernaRequest.CANCELA_CFDI);
 			element.addChildElement(NtlinkModernaRequest.USER, NtlinkModernaRequest.ISER)
 					.addTextNode(requestModel.getUser());
 			element.addChildElement(NtlinkModernaRequest.PASS, NtlinkModernaRequest.ISER)
 					.addTextNode(requestModel.getUserPass());
 			element.addChildElement(NtlinkModernaRequest.UUID, NtlinkModernaRequest.ISER)
 					.addTextNode(requestModel.getUuid());
-			element.addChildElement(NtlinkModernaRequest.RFC_RECEPTOR, NtlinkModernaRequest.ISER)
-					.addTextNode(requestModel.getRfcReceptor());
 			element.addChildElement(NtlinkModernaRequest.RFC_EMISOR, NtlinkModernaRequest.ISER)
 					.addTextNode(requestModel.getRfcEmisor());
+			element.addChildElement(NtlinkModernaRequest.EXPRESION, NtlinkModernaRequest.ISER)
+			.addTextNode(requestModel.getExpresion());
+			element.addChildElement(NtlinkModernaRequest.RFC_RECEPTOR, NtlinkModernaRequest.ISER)
+			.addTextNode(requestModel.getRfcReceptor());
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			soapMessage.writeTo(baos);
+			System.out.println(baos.toString());
 			return baos.toString();
 		} catch (SOAPException | IOException e) {
 			throw new NtlinkClientException(

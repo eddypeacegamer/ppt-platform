@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -41,7 +42,10 @@ public class FacturaDto implements Serializable {
 	private Date fechaActualizacion;
 	private Date fechaTimbrado;
 	private Integer statusCancelado;
+	private String cadenaOriginalTimbrado;
+	private String selloCfd;
 	private Integer idCfdi;
+	private BigDecimal total;
 	private CfdiDto cfdi;
 
 	public Integer getId() {
@@ -260,6 +264,30 @@ public class FacturaDto implements Serializable {
 		this.statusCancelado = statusCancelado;
 	}
 
+	public String getCadenaOriginalTimbrado() {
+		return cadenaOriginalTimbrado;
+	}
+
+	public void setCadenaOriginalTimbrado(String cadenaOriginalTimbrado) {
+		this.cadenaOriginalTimbrado = cadenaOriginalTimbrado;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	public String getSelloCfd() {
+		return selloCfd;
+	}
+
+	public void setSelloCfd(String selloCfd) {
+		this.selloCfd = selloCfd;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -271,7 +299,9 @@ public class FacturaDto implements Serializable {
 				+ ", packFacturacion=" + packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas
 				+ ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
 				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", idCfdi=" + idCfdi + ", cfdi=" + cfdi + "]";
+				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
+				+ ", total=" + total + ", cfdi=" + cfdi + "]";
 	}
 
 }

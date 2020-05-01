@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersData, User } from '../@core/data/users-data';
+import { UsersData } from '../@core/data/users-data';
 
 @Component({
   selector: 'ngx-pages',
@@ -18,6 +18,6 @@ export class PagesComponent implements OnInit {
   public menu = [];
 
   public ngOnInit() {
-    this.userService.getUserInfo().then(user => { console.log('loading menu info');this.menu = user.menu; });
+    this.userService.getUserInfo().then(user => {this.menu = user.menu; });
   }
 }

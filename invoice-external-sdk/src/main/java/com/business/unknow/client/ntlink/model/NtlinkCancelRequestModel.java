@@ -6,15 +6,17 @@ public class NtlinkCancelRequestModel {
 	private String userPass;
 	private String uuid;
 	private String rfcEmisor;
+	private String expresion;
 	private String rfcReceptor;
 
-	public NtlinkCancelRequestModel(String user, String userPass, String uuid, String rfcEmisor, String rfcReceptor) {
+	public NtlinkCancelRequestModel(String user, String userPass, String uuid, String rfcEmisor, String rfcReceptor,String expresion) {
 		super();
 		this.user = user;
 		this.userPass = userPass;
 		this.uuid = uuid;
 		this.rfcEmisor = rfcEmisor;
 		this.rfcReceptor = rfcReceptor;
+		this.expresion= expresion;
 	}
 
 	public NtlinkCancelRequestModel() {
@@ -61,10 +63,18 @@ public class NtlinkCancelRequestModel {
 		this.rfcReceptor = rfcReceptor;
 	}
 
+	public String getExpresion() {
+		return expresion;
+	}
+
+	public void setExpresion(String expresion) {
+		this.expresion = expresion;
+	}
+
 	@Override
 	public String toString() {
 		return "NtlinkCancelRequestModel [user=" + user + ", userPass=" + userPass + ", uuid=" + uuid + ", rfcEmisor="
-				+ rfcEmisor + ", rfcReceptor=" + rfcReceptor + "]";
+				+ rfcEmisor + ", expresion=" + expresion + ", rfcReceptor=" + rfcReceptor + "]";
 	}
 
 }

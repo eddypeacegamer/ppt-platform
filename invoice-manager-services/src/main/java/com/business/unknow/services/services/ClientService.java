@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.Constants;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
+import com.business.unknow.commons.util.ContactoHelper;
 import com.business.unknow.commons.validator.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -30,7 +31,7 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository repository;
-	
+
 	@Autowired
 	private ContribuyenteRepository contribuyenteRepository;
 
@@ -40,7 +41,12 @@ public class ClientService {
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
+	@Autowired
+	private CatalogsService catalogsService;
+
 	private ClienteValidator clientValidator = new ClienteValidator();
+
+	private ContactoHelper contactoHelper = new ContactoHelper();
 
 	public Page<ClientDto> getClientsByParametros(Optional<String> promotor, String status, String rfc,
 			String razonSocial, int page, int size) {
@@ -64,19 +70,19 @@ public class ClientService {
 				String.format("No existe cliente con  rfc %s", rfc)));
 		return mapper.getClientDtoFromEntity(client);
 	}
-	
-	public List<ClientDto> getClientsByPromotor(String promotor){
+
+	public List<ClientDto> getClientsByPromotor(String promotor) {
 		return mapper.getClientDtosFromEntities(repository.findByCorreoPromotor(promotor));
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
+			catalogsService.getCodigosPostaleByCode(cliente.getInformacionFiscal().getCp());
 			Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
-			if (entity.isPresent()){
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("El rfc  %s ya esta creado en el sistema",
-								cliente.getInformacionFiscal().getRfc()));
+			if (entity.isPresent()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
+						.format("El rfc  %s ya esta creado en el sistema", cliente.getInformacionFiscal().getRfc()));
 			}
 			SwSapiensConfig config = swSapinsExecutorService
 					.validateRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
@@ -84,6 +90,8 @@ public class ClientService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 			}
+			cliente.setCorreoContacto(contactoHelper.translateContacto(cliente.getInformacionFiscal().getRfc(),
+					cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
 			cliente.setActivo(false);
 			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
@@ -95,6 +103,9 @@ public class ClientService {
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
 		clientValidator.validatePostCliente(client);
+		client.setCorreoContacto(
+				contactoHelper.translateContacto(client.getInformacionFiscal().getRfc(),
+						client.getCorreoPromotor(), client.getPorcentajeContacto()));
 		if (repository.findByRfc(rfc).isPresent()) {
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
 		} else {
@@ -108,5 +119,5 @@ public class ClientService {
 				String.format("El cliente con el rfc %s no existe", rfc)));
 		repository.delete(dbClient);
 	}
-	
+
 }

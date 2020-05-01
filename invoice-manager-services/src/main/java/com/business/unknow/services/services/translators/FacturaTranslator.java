@@ -137,7 +137,6 @@ public class FacturaTranslator {
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
 		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
-		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
@@ -151,7 +150,6 @@ public class FacturaTranslator {
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
 		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
-		context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal().setCadenaOriginal(cadenaOriginal);
 	}
 
 	public BigDecimal calculaImpuestos(List<Translado> impuestos, Concepto concepto, BigDecimal totalImpuestos) {

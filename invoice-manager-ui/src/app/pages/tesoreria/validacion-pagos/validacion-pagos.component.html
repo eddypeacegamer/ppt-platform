@@ -5,12 +5,12 @@
       <nb-card-body>
         <div class="row">
           <div class="col-md-2">
-            <label for="acredor" class="label">Acreedor</label>
-            <input id="acredor" class="form-control" fullWidth type="text" placeholder="RFC acredor" [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'> 
+            <label for="acredor" class="label">Razon Social Empresa</label>
+            <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa" [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'> 
           </div>
           <div class="col-md-2">
-            <label for="deudor" class="label">Deudor</label>
-            <input id="deudor" class="form-control" fullWidth type="text" placeholder="RFC deudor" [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
+            <label for="deudor" class="label">Razon Social Cliente</label>
+            <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente" [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
           </div>
 
           <div class="col-md-2">
@@ -79,8 +79,8 @@
                 <th scope="col">Acciones</th>
                 <th scope="col">Folio</th>
                 <th scope="col">Fecha captura</th>
-                <th scope="col">Cliente</th>
                 <th scope="col">Empresa</th>
+                <th scope="col">Cliente</th>
                 <th scope="col">Fecha pago</th>
                 <th scope="col">Monto pagado</th>
                 <th scope="col">Total factura</th>
