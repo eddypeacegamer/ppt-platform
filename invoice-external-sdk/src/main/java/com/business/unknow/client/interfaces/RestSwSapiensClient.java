@@ -11,7 +11,7 @@ public interface RestSwSapiensClient {
 
 	public SwSapiensConfig stamp(String xml, String version) throws SwSapiensClientException;
 
-	public SwSapiensConfig cancel(String uuid, String password, String rfc, String cert, String key)
+	public void cancel(String uuid, String password, String rfc, String cert, String key)
 			throws SwSapiensClientException;
 
 	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException;

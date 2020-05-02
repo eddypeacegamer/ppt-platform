@@ -27,7 +27,7 @@ import com.business.unknow.services.client.NtlinkClient;
 import com.business.unknow.services.config.properties.NtlinkProperties;
 
 @Service
-public class NtinkExecutorService {
+public class NtinkExecutorService extends AbstractPackExecutor {
 
 	@Autowired
 	private NtlinkClient client;
@@ -44,11 +44,19 @@ public class NtinkExecutorService {
 	@Autowired
 	private NtlinkProperties ntlinkProperties;
 
+	private static final String EXP = "&";
+
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
+			String expresion = String.format(
+					"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?%sid=%s%sre=%s%srr=%s%stt=%s%sfe=%s",
+					EXP, context.getFacturaDto().getUuid(), EXP, context.getFacturaDto().getRfcEmisor(), EXP,
+					context.getFacturaDto().getRfcRemitente(), EXP,
+					context.getFacturaDto().getCfdi().getTotal().toString(), EXP,
+					context.getFacturaDto().getSelloCfd());
 			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(ntlinkProperties.getUser(),
 					ntlinkProperties.getPassword(), context.getFacturaDto().getUuid(),
-					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente());
+					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente(), expresion);
 			client.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext()).cancelar(requestModel);
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
@@ -56,7 +64,8 @@ public class NtinkExecutorService {
 		} catch (NtlinkClientException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(
-					String.format("Error durante el Cancelado de :%s", context.getFacturaDto().getUuid()),
+					String.format("Error durante el Cancelado de :%s error:%s detail:%s",
+							context.getFacturaDto().getUuid(), e.getMessage(), e.getErrorMessage().getMessageDetail()),
 					e.getMessage(), e.getHttpStatus());
 		}
 	}
@@ -70,22 +79,15 @@ public class NtinkExecutorService {
 			String cfdi = response.getCfdi();
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.TIMBRADA.getValor());
 			Cfdi currentCfdi = facturaHelper.getFacturaFromString(cfdi);
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
+			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
+			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
+			context.getFacturaDto()
 					.setFechaTimbrado(dateHelper.getDateFromString(
 							currentCfdi.getComplemento().getTimbreFiscalDigital().getFechaTimbrado(),
 							FacturaConstants.FACTURA_DATE_FORMAT));
-			context.getFacturaDto().setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setUuid(currentCfdi.getComplemento().getTimbreFiscalDigital().getUuid());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setNoCertificadoSat(currentCfdi.getComplemento().getTimbreFiscalDigital().getNoCertificadoSAT());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setSelloCFD(currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloCFD());
-			context.getFacturaDto().getCfdi().setSello(currentCfdi.getSello());
-			context.getFacturaDto().getCfdi().getComplemento().getTimbreFiscal()
-					.setRfcProvCertif(currentCfdi.getComplemento().getTimbreFiscalDigital().getRfcProvCertif());
+			context.getFacturaDto().setCadenaOriginalTimbrado(getCadenaOriginalTimbrado(currentCfdi));
+			String selloSat = currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT();
+			context.getFacturaDto().setSelloCfd(selloSat.substring(selloSat.length() - 8, selloSat.length()));
 			List<FacturaFileDto> files = new ArrayList<>();
 			if (response.getCfdi() != null) {
 				FacturaFileDto xml = new FacturaFileDto();
@@ -100,11 +102,15 @@ public class NtinkExecutorService {
 			qr.setTipoArchivo(TipoArchivoEnum.QR.name());
 			qr.setData(response.getQrCodeBase64());
 			files.add(qr);
-		} catch (NtlinkClientException | InvoiceCommonException e) {
+		} catch (NtlinkClientException e) {
 			e.printStackTrace();
-			throw new InvoiceManagerException(e.getMessage(),
-					String.format("Error Stamping in facturacion moderna: %s", e.getLocalizedMessage()),
-					HttpStatus.SC_CONFLICT);
+			throw new InvoiceManagerException(
+					String.format("Error Stamping in facturacion moderna:  Error:%s detail:%s", e.getMessage(),
+							e.getErrorMessage().getMessageDetail()),
+					e.getMessage(), HttpStatus.SC_CONFLICT);
+		} catch (InvoiceCommonException e) {
+			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: Error:%s detail:%s",
+					e.getMessage(), e.getErrorMessage().getDeveloperMessage()), e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}

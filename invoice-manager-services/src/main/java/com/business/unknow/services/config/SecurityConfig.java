@@ -17,9 +17,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-//	@Autowired
-//	private AuthenticationFilter authFilter;
-	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 //		http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll() // TODO create local profile to protect everything in higher environments

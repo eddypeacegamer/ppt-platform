@@ -43,7 +43,7 @@ public class CatalogsController {
 	@GetMapping("/producto-servicios")
 	public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
 			@RequestParam(name = "descripcion") Optional<String> description,
-			@RequestParam(name = "clave") Optional<Integer> clave) {
+			@RequestParam(name = "clave") Optional<String> clave) {
 		return new ResponseEntity<>(service.getProductoServicio(description, clave), HttpStatus.OK);
 	}
 

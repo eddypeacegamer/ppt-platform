@@ -15,6 +15,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -26,11 +27,13 @@ export class DevolucionesComponent implements OnInit {
   public banksCat: Catalogo[] = [];
   public refTypesCat: Catalogo[] = [];
   public clientsCat : Client[] = [];
+  public contactosCat: string[] = [];
   public pageCommissions: GenericPage<Devolucion> = new GenericPage();
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
   public user: User;
   public filename: string = '';
+  public loading: boolean = false;
   public montoDevolucion: Number = 0;
   public solicitud: PagoDevolucion;
   public fileInput: any = {};
@@ -45,6 +48,7 @@ export class DevolucionesComponent implements OnInit {
     private clientsService: ClientsData,
     private resourceService: FilesData,
     private donwloadCsvService: DownloadCsvService,
+    private downloadService: DonwloadFileService,
     private devolutionValidator: DevolucionValidatorService,
     private userService: UsersData,
     private router: Router) { }
@@ -57,10 +61,14 @@ export class DevolucionesComponent implements OnInit {
         this.filterParams.idReceptor = user.email;
         this.searchDevolutionsData();
         this.clientsService.getClientsByPromotor(user.email)
-          .subscribe(clients => this.clientsCat = clients);
+          .subscribe(clients => {
+            this.clientsCat = clients;
+            const contacts = clients.map(c => c.correoContacto);
+            this.contactosCat = contacts.filter((item, index) => contacts.indexOf(item) === index);
+          });
       });
     this.catalogService.getBancos().then(banks => this.banksCat = banks);
-    
+
   }
 
   public onReceptorTypeSelected(type: string) {
@@ -153,6 +161,7 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public devolutionRequest(solicitud: PagoDevolucion) {
+    this.loading = true;
     this.messages = [];
     this.fileInput.value = '';
     solicitud.tipoReceptor = this.filterParams.tipoReceptor;
@@ -174,12 +183,21 @@ export class DevolucionesComponent implements OnInit {
           this.searchDevolutionsData();
           this.solicitud = new PagoDevolucion();
           this.solicitud.formaPago = 'TRANSFERENCIA';
-        }, (error: HttpErrorResponse) => this.messages.push(error.error.message
-            || `${error.statusText} : ${error.message}`));
+          this.loading = false;
+        }, (error: HttpErrorResponse) => {
+          this.loading = false;
+          this.messages.push(error.error.message || `${error.statusText} : ${error.message}`); });
     } else {
+      this.loading = false;
       this.solicitud = new PagoDevolucion();
       this.solicitud.formaPago = 'TRANSFERENCIA';
     }
+  }
+
+  public downloadPdf(folio: string) {
+    this.resourceService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${folio}.pdf`, 'application/pdf;')
+    )
   }
 
   public redirectToCfdi(folio: string) {

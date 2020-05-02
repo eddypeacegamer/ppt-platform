@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.services.entities.Contribuyente;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ContribuyenteMapper {
 
 	ContribuyenteDto getContribuyenteToFromEntity(Contribuyente entity);

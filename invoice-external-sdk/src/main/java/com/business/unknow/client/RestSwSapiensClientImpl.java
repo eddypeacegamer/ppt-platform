@@ -29,12 +29,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSapiensClient {
 
 	private static final Logger log = LoggerFactory.getLogger(RestSwSapiensClientImpl.class);
-	
+
 	private String token;
-	private Integer time=0;
+	private Integer time = 0;
 	private String user;
 	private String pw;
-	
+
 	public RestSwSapiensClientImpl(String url, String contextPath, String user, String pw) {
 		super(url, contextPath);
 		this.pw = pw;
@@ -87,6 +87,38 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		return result;
 	}
 
+	protected void validateResponse(Response response) throws SwSapiensClientException {
+		int status = response.getStatus();
+		log.info("Status {}", status);
+		try {
+			String content = response.readEntity(String.class);
+			if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+				if (!content.contains("\"201\"")) {
+					try (StringReader reader = new StringReader(content)) {
+						SwSapiensErrorMessage error = new SwSapiensErrorMessage("Error canceling the invoice",
+								String.format("Error response: %s", content));
+						throw new SwSapiensClientException(error, status);
+					}
+				}
+			} else {
+				log.error("Error response: {}", content);
+				if (content.contains("message")) {
+
+					SwSapiensErrorMessage error = new SwSapiensErrorMessage("Unexpected services response",
+							String.format("Error response: %s", content));
+					throw new SwSapiensClientException(error, status);
+				}
+			}
+		} catch (SwSapiensClientException e) {
+			throw e;
+		} catch (Exception e) {
+			SwSapiensErrorMessage error = new SwSapiensErrorMessage();
+			error.setMessage("Unhandled Error in client implementation");
+			error.setMessageDetail(e.getMessage());
+			throw new SwSapiensClientException(error, SwSapiensConstans.UNPROCESSABLE_ENTITY);
+		}
+	}
+
 	@Override
 	public SwSapiensConfig authenticateService() throws SwSapiensClientException {
 		log.info("authenticate with Sw Sapiens.");
@@ -110,7 +142,7 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
 		});
 	}
-	
+
 	@Override
 	public SwSapiensConfig validateLco(String noCertificado) throws SwSapiensClientException {
 		log.info("Validating rfc.");
@@ -124,11 +156,11 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 	}
 
 	private void authenticate() throws SwSapiensClientException {
-		Date date=new Date(new Long(this.time)*Constants.MILISECONDS);
-		if (this.token == null||date.before(new Date())) {
+		Date date = new Date(new Long(this.time) * Constants.MILISECONDS);
+		if (this.token == null || date.before(new Date())) {
 			SwSapiensConfig config = authenticateService();
 			this.token = config.getData().getToken();
-			this.time=config.getData().getExpires_in();
+			this.time = config.getData().getExpires_in();
 		}
 	}
 
@@ -150,7 +182,7 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 	}
 
 	@Override
-	public SwSapiensConfig cancel(String uuid, String password, String rfc, String cert, String key)
+	public void cancel(String uuid, String password, String rfc, String cert, String key)
 			throws SwSapiensClientException {
 		log.info("Canceling the factura {}", uuid);
 		authenticate();
@@ -159,7 +191,6 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
 		headers.add(SwSapiensConstans.TOKEN_PARAMETER, token);
 		String endpoint = SwSapiensEndpoints.getCancelCsdEndpoint();
 		Response response = post(endpoint, MediaType.APPLICATION_JSON, cancel, headers);
-		return parseResponse(response, new TypeReference<SwSapiensConfig>() {
-		});
+		validateResponse(response);
 	}
 }

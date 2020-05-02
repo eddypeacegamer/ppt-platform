@@ -86,7 +86,7 @@ public class FilesService {
 
 	@Autowired
 	private NumberTranslatorHelper numberTranslatorHelper;
-	
+
 	@Autowired
 	private FacturaTranslator facturaTranslator;
 
@@ -178,10 +178,7 @@ public class FilesService {
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
 
-		if (facturaDto.getCfdi().getComplemento() != null
-				&& facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
-			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
-		}
+		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
@@ -218,10 +215,7 @@ public class FilesService {
 		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
-
-		if (facturaDto.getCfdi().getComplemento().getTimbreFiscal() != null) {
-			fBuilder.setCadenaOriginal(facturaDto.getCfdi().getComplemento().getTimbreFiscal().getCadenaOriginal());
-		}
+		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
@@ -280,13 +274,14 @@ public class FilesService {
 	public FacturaFileDto generateInvoicePDF(FacturaDto factura, Cfdi cfdi) {
 		try {
 			BigDecimal retenciones = facturaTranslator.calculaRetenciones(factura);
-			
+
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(model);
-			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));		
+			InputStreamReader templateReader = new InputStreamReader(
+					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -306,45 +301,45 @@ public class FilesService {
 	public FacturaFileDto generateInvoicePDF(FacturaContext context) {
 		try {
 			BigDecimal retenciones = facturaTranslator.calculaRetenciones(context);
-			
+
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
-			if(model.getFolioPadre() != null && model.getPagoComplemento() == null) {
-				ComplementoPago contextComplementoPago = context.getCfdi()
-						.getComplemento()
-						.getComplemntoPago()
-						.getComplementoPagos()
-						.get(0);
-				
-				
+			if (model.getFolioPadre() != null && model.getPagoComplemento() == null) {
+				ComplementoPago contextComplementoPago = context.getCfdi().getComplemento().getComplemntoPago()
+						.getComplementoPagos().get(0);
+
 				CfdiPagoDto cfdiPagoDto = new CfdiPagoDto();
 				try {
-					cfdiPagoDto.setFechaPago(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(contextComplementoPago.getFechaPago()));
+					cfdiPagoDto.setFechaPago(
+							new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(contextComplementoPago.getFechaPago()));
 				} catch (ParseException e) {
 					log.error("Error parsing complemento date");
 				}
 				cfdiPagoDto.setFormaPago(contextComplementoPago.getFormaDePago());
 				cfdiPagoDto.setMoneda(contextComplementoPago.getMoneda());
 				cfdiPagoDto.setSerie(contextComplementoPago.getComplementoDocRelacionado().getSerie());
-				cfdiPagoDto.setNumeroParcialidad(contextComplementoPago.getComplementoDocRelacionado().getNumParcialidad());
+				cfdiPagoDto.setNumeroParcialidad(
+						contextComplementoPago.getComplementoDocRelacionado().getNumParcialidad());
 				cfdiPagoDto.setMetodoPago(contextComplementoPago.getComplementoDocRelacionado().getMetodoDePagoDR());
-				cfdiPagoDto.setImporteSaldoAnterior(new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoAnt()));
-				cfdiPagoDto.setImportePagado(new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpPagado()));
-				cfdiPagoDto.setImporteSaldoInsoluto(new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoInsoluto()));
-				
+				cfdiPagoDto.setImporteSaldoAnterior(
+						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoAnt()));
+				cfdiPagoDto.setImportePagado(
+						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpPagado()));
+				cfdiPagoDto.setImporteSaldoInsoluto(
+						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoInsoluto()));
+
 				model.setPagoComplemento(cfdiPagoDto);
 				model.setTotalDesc(numberTranslatorHelper.getStringNumber(
 						cfdiPagoDto.getImporteSaldoAnterior().subtract(cfdiPagoDto.getImporteSaldoInsoluto())));
-				
+
 			}
-			
+
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
-			System.out.println(xmlContent);
-
 			String xslfoTemplate = getXSLFOTemplate(model);
-			InputStreamReader templateReader = new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/"+xslfoTemplate));	
+			InputStreamReader templateReader = new InputStreamReader(
+					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
 			Reader inputReader = new StringReader(xmlContent);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			pdfGenerator.render(inputReader, outputStream, templateReader);
@@ -356,7 +351,7 @@ public class FilesService {
 			insertfacturaFile(factFile);
 			log.info("PDF for factura {} was generated successfully", context.getFacturaDto().getFolio());
 			return factFile;
-		} catch ( InvoiceCommonException e) {
+		} catch (InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}

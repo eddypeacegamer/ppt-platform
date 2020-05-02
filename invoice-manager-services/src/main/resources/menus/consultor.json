@@ -1,0 +1,10 @@
+{
+	"title": "Consultas",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Facturas",
+			"link": "/pages/contabilidad/reportes/8"
+		}
+	]
+}

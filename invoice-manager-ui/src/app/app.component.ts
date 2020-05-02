@@ -5,7 +5,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { CatalogsData } from './@core/data/catalogs-data';
-import { UsersData } from './@core/data/users-data';
+import { UsersData, User } from './@core/data/users-data';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,13 +23,21 @@ export class AppComponent implements OnInit {
     this.catalogsService.getStatusPago().then(cat => console.log('payment status cat has been loaded : ', cat));
     this.catalogsService.getStatusValidacion().then(cat => console.log('invoice status cat  has been loaded : ', cat));
     this.catalogsService.getStatusDevolucion().then(cat => console.log('devolution status cat  been loaded : ', cat));
-    this.userService.getUserInfo().then(user => {
+    this.getUserInfo();
+  }
+
+  private async getUserInfo(){
+    try{
+      const user  = <User> await  this.userService.getUserInfo();
       if (user.activo) {
         this.router.navigate(['./pages/dashboard']);
-      }else {
+      }else{
         console.error('El usuario se encuentra inactivo');
-        this.router.navigate(['./auth/register']);
+        this.router.navigate(['./unauthorized']);
       }
-    });
+    } catch(error) {
+        console.error(error);
+        this.router.navigate(['./unauthorized']);
+    }
   }
 }

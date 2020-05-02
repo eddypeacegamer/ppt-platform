@@ -5,9 +5,10 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
+import { FilesData } from '../../../@core/data/files-data';
 
 @Component({
   selector: 'ngx-empresa',
@@ -17,20 +18,22 @@ import { CompaniesValidatorService } from '../../../@core/util-services/companie
 export class EmpresaComponent implements OnInit {
 
   public companyInfo: Empresa;
-  public formInfo : any = {rfc:'',message:'',coloniaId:'*', success:'',certificateFileName:'',keyFileName:'', logoFileName:''};
-  public coloniaId: number=0;
+  public formInfo: any = { rfc: '', message: '', coloniaId: '*', success: '', certificateFileName: '', keyFileName: '', logoFileName: '' };
+  public coloniaId: number = 0;
   public colonias = [];
   public paises = ['México'];
 
+  public logo: string = '';
   public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
 
   constructor(private router: Router,
-              private catalogsService: CatalogsData,
-              private empresaService: CompaniesData,
-              private route: ActivatedRoute,
-              private sanitizer: DomSanitizer,
-              private companiesValidatorService: CompaniesValidatorService) { }
+    private catalogsService: CatalogsData,
+    private empresaService: CompaniesData,
+    private resourcesService: FilesData,
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+    private companiesValidatorService: CompaniesValidatorService) { }
 
   ngOnInit() {
     this.companyInfo = new Empresa();
@@ -39,19 +42,21 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.tipo = '*';
     this.companyInfo.informacionFiscal.pais = 'México';
     this.errorMessages = [];
-      /** recovering folio info**/
-      this.route.paramMap.subscribe(route => {
-        const rfc = route.get('rfc');
-        if (rfc !== '*') {
-          this.empresaService.getCompanyByRFC(rfc)
-        .subscribe((data:Empresa) => {this.companyInfo = data, this.formInfo.rfc = rfc; },
-        (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-          || `${error.statusText} : ${error.message}`));
-        }});
-    /**** LOADING CAT INFO ****/
     this.catalogsService.getAllGiros().then((giros: Catalogo[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-        || `${error.statusText} : ${error.message}`));
+        || `${error.statusText} : ${error.message}`)).then(() =>
+    /** recovering folio info**/
+    this.route.paramMap.subscribe(route => {
+      const rfc = route.get('rfc');
+      if (rfc !== '*') {
+        this.empresaService.getCompanyByRFC(rfc)
+          .subscribe((data: Empresa) => { console.log(data);this.companyInfo = data, this.formInfo.rfc = rfc; },
+            (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
+              || `${error.statusText} : ${error.message}`));
+        this.resourcesService.getResourceFile(rfc,'EMPRESA','LOGO')
+          .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);
+      }
+    }));
   }
 
   sanitize(url: string) {
@@ -59,31 +64,33 @@ export class EmpresaComponent implements OnInit {
   }
 
 
-  public zipCodeInfo(zipcode:String){
+  public zipCodeInfo(zipcode: String) {
     let zc = new String(zipcode);
-    if(zc.length>4 && zc.length <6){
+    if (zc.length > 4 && zc.length < 6) {
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zipcode).then(
-          (data:ZipCodeInfo) => {this.companyInfo.informacionFiscal.estado = data.estado;
-          this.companyInfo.informacionFiscal.municipio= data.municipio;this.colonias=data.colonias; 
-          this.companyInfo.informacionFiscal.localidad=data.colonias[0];},
-          (error: HttpErrorResponse) => console.error(error));
+        (data: ZipCodeInfo) => {
+          this.companyInfo.informacionFiscal.estado = data.estado;
+          this.companyInfo.informacionFiscal.municipio = data.municipio; this.colonias = data.colonias;
+          this.companyInfo.informacionFiscal.localidad = data.colonias[0];
+        },
+        (error: HttpErrorResponse) => console.error(error));
     }
   }
 
-  public onLocation(index:string){
+  public onLocation(index: string) {
     this.companyInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
-  public onRegimenFiscalSelected(regimen:string){
-    this.companyInfo.regimenFiscal= regimen;
+  public onRegimenFiscalSelected(regimen: string) {
+    this.companyInfo.regimenFiscal = regimen;
   }
 
-  public onGiroSelection(giro:string){
-    this.companyInfo.giro =  giro;
+  public onGiroSelection(giro: string) {
+    this.companyInfo.giro = giro;
   }
 
-  public onLineaSelected(linea:string){
+  public onLineaSelected(linea: string) {
     this.companyInfo.tipo = linea;
   }
 
@@ -91,16 +98,19 @@ export class EmpresaComponent implements OnInit {
     const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      if (file.size > 200000){
+      if (file.size > 200000) {
         alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
-      }else {
+      } else {
         reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.formInfo.logoFileName = file.name;
-        this.companyInfo.logotipo = reader.result.toString();};
-      reader.onerror = (error) => {
-        this.errorMessages.push('Error parsing image file');
-        console.error(error); };
+        reader.onload = () => {
+          this.formInfo.logoFileName = file.name;
+          this.companyInfo.logotipo = reader.result.toString();
+          this.logo = this.companyInfo.logotipo;
+        };
+        reader.onerror = (error) => {
+          this.errorMessages.push('Error parsing image file');
+          console.error(error);
+        };
       }
     }
   }
@@ -113,10 +123,12 @@ export class EmpresaComponent implements OnInit {
       reader.onload = () => {
         this.formInfo.keyFileName = file.name;
         const data: string = reader.result.toString();
-        this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length); };
+        this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length);
+      };
       reader.onerror = (error) => {
         this.errorMessages.push('Error parsing key file');
-        console.error(error); };
+        console.error(error);
+      };
     }
   }
 
@@ -128,8 +140,9 @@ export class EmpresaComponent implements OnInit {
       reader.onload = () => {
         this.formInfo.certificateFileName = file.name;
         const data: string = reader.result.toString();
-      this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);};
-    reader.onerror = (error) => {this.errorMessages.push('Error parsing certificate file')};
+        this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);
+      };
+      reader.onerror = (error) => { this.errorMessages.push('Error parsing certificate file') };
     }
   }
 
@@ -137,30 +150,30 @@ export class EmpresaComponent implements OnInit {
     this.errorMessages = [];
     this.formInfo.success = '';
     this.errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
-   if (this.errorMessages.length === 0) {
-      this.companyInfo.giro = this.girosCat.find(g => g.nombre === this.companyInfo.giro).id.toString();
+    if (this.errorMessages.length === 0) {
       this.empresaService.insertNewCompany(this.companyInfo)
-      .subscribe((empresa: Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]); },
-      (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
-        || `${error.statusText} : ${error.message}`);
-      });
+        .subscribe((empresa: Empresa) => { this.router.navigate([`./pages/operaciones/empresas`]); },
+          (error: HttpErrorResponse) => {
+            this.errorMessages.push(error.error.message
+              || `${error.statusText} : ${error.message}`);
+          });
     }
   }
 
   public updateCompany(): void {
     this.errorMessages = [];
     this.formInfo.success = '';
-    this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc,this.companyInfo)
-    .subscribe((data:Empresa) => {this.router.navigate([`./pages/contablidad/empresas`]);},
-    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);}
-    );
+    this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo)
+      .subscribe((data: Empresa) => { this.router.navigate([`./pages/contablidad/empresas`]); },
+        (error: HttpErrorResponse) => { this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); }
+      );
   }
 
-  public inactivateCompany(){
+  public inactivateCompany() {
     this.companyInfo.activo = false;
     this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo)
-    .subscribe((data:Empresa) => this.formInfo.success ='la empresa ha sido desactivada satisfactoriamente',
-    (error : HttpErrorResponse)=>{this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);});
+      .subscribe((data: Empresa) => this.formInfo.success = 'la empresa ha sido desactivada satisfactoriamente',
+        (error: HttpErrorResponse) => { this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); });
   }
 
 }

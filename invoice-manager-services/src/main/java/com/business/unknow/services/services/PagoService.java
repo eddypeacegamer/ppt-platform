@@ -73,11 +73,11 @@ public class PagoService {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
 					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 		} else if (acredor.isPresent()) {
-			result = repository.findPagosAcredorFilteredByParams(acredor.get(), String.format("%%%s%%", status),
+			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else if (deudor.isPresent()) {
-			result = repository.findPagosDeudorFilteredByParams(deudor.get(), String.format("%%%s%%", status),
+			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else {

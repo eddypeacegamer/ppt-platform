@@ -87,7 +87,7 @@ public class CatalogsService {
 	public CodigoPostalUiDto getCodigosPostaleByCode(String codigo) {
 		List<CodigoPostal> codigos = codigoPostalRepository.findByCodigoPostal(codigo);
 		CodigoPostal codigPostal = codigos.stream().findFirst()
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados del codigo postal"));
 		CodigoPostalUiDto dto = new CodigoPostalUiDto(codigo,codigPostal.getMunicipio(), codigPostal.getEstado());
 		for (CodigoPostal cod : codigos) {
 			dto.getColonias().add(cod.getColonia());
@@ -95,14 +95,15 @@ public class CatalogsService {
 		return dto;
 	}
 
-	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<Integer> clave) {
+	public List<ClaveProductoServicioDto> getProductoServicio(Optional<String> description, Optional<String> clave) {
 		List<ClaveProductoServicioDto> mappings = new ArrayList<>();
 		if (description.isPresent()) {
 			mappings = mapper.getClaveProdServDtosFromEntities(
 					productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
 		}
 		if (clave.isPresent()) {
-			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(clave.get()));
+			Integer codigo = Integer.valueOf(clave.get().trim()); 
+			mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(codigo));
 
 		}
 		if (mappings.isEmpty()) {

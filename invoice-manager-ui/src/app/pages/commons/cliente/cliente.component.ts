@@ -15,7 +15,7 @@ import { ClientsValidatorService } from '../../../@core/util-services/clients-va
 })
 export class ClienteComponent implements OnInit {
 
-  public isPromotor: boolean = false;
+  public module: string = 'promotor';
   public clientInfo: Client;
   public messages: string[] = [];
   public formInfo: any = {rfc:'',coloniaId:'*', success:''};
@@ -30,7 +30,7 @@ export class ClienteComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.isPromotor = (this.router.url.indexOf('/promotor') > 0) ? true : false;
+    this.module = this.router.url.split('/')[2];
     this.clientInfo = new Client();
     this.clientInfo.informacionFiscal.pais = 'México';
     /** recovering folio info**/
@@ -49,7 +49,7 @@ export class ClienteComponent implements OnInit {
     this.messages = [];
     this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
     this.clientService.updateClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente actualizado exitosamente'; this.clientInfo = client; },
-      (error: HttpErrorResponse) => { this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
+      (error: HttpErrorResponse) => {this.messages.push(error.error.message); this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
   }
 
   public insertClient() {

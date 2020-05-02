@@ -119,8 +119,8 @@ export class PagosComponent implements OnInit {
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
-    this.newPayment.acredor = this.factura.rfcEmisor;
-    this.newPayment.deudor = this.factura.rfcRemitente;
+    this.newPayment.acredor = this.factura.razonSocialEmisor;
+    this.newPayment.deudor = this.factura.razonSocialRemitente;
     this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
     this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);

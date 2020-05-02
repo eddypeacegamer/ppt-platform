@@ -4,11 +4,13 @@ import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface CfdiXmlMapper {
 
     @Mappings({ @Mapping(target = "conceptos", ignore = true), @Mapping(target = "complemento", ignore = true) })

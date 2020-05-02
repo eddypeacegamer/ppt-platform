@@ -15,12 +15,13 @@ export class DevolucionValidatorService {
 
   constructor() { }
 
-  public calculateDevolutionAmmount(factura: Factura, pagos: PagoFactura[], client: Client, tipoReceptor: string, folio: string): number {
+  public calculateDevolutionAmmount(factura: Factura, payment: PagoFactura, client: Client, tipoReceptor: string): number {
     //TODO set this methiod as promise
 
     const impuestos = this.getTotalImpuestos(factura.cfdi.conceptos);
     const retenciones = this.getTotalRetenciones(factura.cfdi.conceptos);
-    const payment = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => folio === p.folio);
+    
+
 
     if (payment) {
       if (factura.cfdi.metodoPago === 'PUE') {

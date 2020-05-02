@@ -210,7 +210,7 @@
                             <inline-container width="50.5mm" text-align="center">
                                 <block>
                                     Folio:
-                                    <xsl:value-of select="factura/@Folio" />
+                                    <xsl:value-of select="folioPadre" />
                                 </block>
                             </inline-container>
                             <inline-container width="25.1mm" text-align="center">
