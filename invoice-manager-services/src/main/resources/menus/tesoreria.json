@@ -7,6 +7,10 @@
         "link": "/pages/tesoreria/validacion-pagos"
       },
       {
+        "title": "Historico pagos",
+        "link": "/pages/tesoreria/historial-pagos"
+      },
+      {
         "title": "Devoluciones",
         "link": "/pages/tesoreria/devoluciones"
       }

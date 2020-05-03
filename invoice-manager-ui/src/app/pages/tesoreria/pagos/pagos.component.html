@@ -3,14 +3,16 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Validación de pagos</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row" *ngIf="vista==='validacion-pagos'">
           <div class="col-md-2">
             <label for="acredor" class="label">Razon Social Empresa</label>
-            <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa" [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'> 
+            <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
+              [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'>
           </div>
           <div class="col-md-2">
             <label for="deudor" class="label">Razon Social Cliente</label>
-            <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente" [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
+            <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente"
+              [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
           </div>
 
           <div class="col-md-2">
@@ -42,12 +44,60 @@
                 status="primary">BUSCAR</button>
             </div>
           </div>
-
-
         </div>
-      </nb-card-body>
-    </nb-card>
+        <div class="row" *ngIf="vista==='historial-pagos'">
+          <div class=" col-md-1">
+          <label for="status" class="label">Estatus</label>
+          <select id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+            <option value="*">Todos</option>
+            <option value="ACEPTADO">Aceptado(pagado)</option>
+            <option value="VALIDACION">En validacion</option>
+            <option value="RECHAZADO">Rechazado</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="acredor" class="label">Razon Social Empresa</label>
+          <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
+            [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'>
+        </div>
+        <div class="col-md-2">
+          <label for="deudor" class="label">Razon Social Cliente</label>
+          <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente"
+            [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
+        </div>
+
+        <div class="col-md-2">
+          <label for="formpicker1" class="label">Desde</label>
+          <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;"
+            class="form-control" [(ngModel)]="filterParams.since">
+          <nb-datepicker #formpicker1></nb-datepicker>
+        </div>
+        <div class="col-md-2">
+          <label for="formpicker2" class="label">Hasta</label>
+          <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;"
+            class="form-control" [(ngModel)]="filterParams.to">
+          <nb-datepicker #formpicker2></nb-datepicker>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputBank" class="label">Forma de pago</label>
+          <div class="form-inline">
+            <select id="inputPayType" style="display:block; width: 100px;" class="form-control" [(ngModel)]="filterParams.formaPago">
+              <option value="*">TODAS</option>
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="CHEQUE">Cheque nominativo</option>
+              <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+              <option value="DEPOSITO">Depósito bancario</option>
+              <option value="CREDITO">Crédito Despacho</option>
+            </select>
+            <p>&nbsp;&nbsp;</p>
+            <button type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
+              status="primary">BUSCAR</button>
+          </div>
+        </div>
   </div>
+  </nb-card-body>
+  </nb-card>
+</div>
 </div>
 
 
@@ -94,8 +144,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row">
-                  <div class="form-inline" style="width: 150px;">
+                <td scope="row" *ngIf="vista==='validacion-pagos'">
+                  <div class="form-inline" style="width: 150px;" >
                     <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
                         class="fa fa-search"></i></button>
                     &nbsp;
@@ -114,8 +164,14 @@
                         class="fa fa-check-circle"></i></button>
                   </div>
                 </td>
+                <td scope="row" *ngIf="vista==='historial-pagos'">
+                  <div class="form-inline" style="width: 50px;" >
+                    <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
+                        class="fa fa-search"></i></button>
+                  </div>
+                </td>
                 <td scope="row" class="text-center"><button class="btn btn-outline-primary btn-sm"
-                  (click)="redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
+                    (click)="redirectToCfdi(fila.folioPadre)">{{fila.folioPadre}}</button></td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.acredor}}</td>
                 <td scope="row">{{fila.deudor}}</td>
@@ -129,7 +185,7 @@
                 <td scope="row">{{fila.banco}}</td>
                 <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.formaPago}}</td>
-                    
+
               </tr>
             </tbody>
           </table>

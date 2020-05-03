@@ -20,7 +20,7 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { EmpresasComponent } from './empresas/empresas.component';
-import { PagosComponent } from './pagos/pagos.component';
+import { PagosFacturaComponent } from './pagos-factura/pagos-factura.component';
 import { ConceptosComponent } from './conceptos/conceptos.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
 
@@ -30,7 +30,7 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
     ClienteComponent,
     EmpresaComponent,
     EmpresasComponent,
-    PagosComponent,
+    PagosFacturaComponent,
     ConceptosComponent,
     InvoiceReportsComponent,
   ],
@@ -57,7 +57,7 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
     EmpresaComponent,
     EmpresasComponent,
     InvoiceReportsComponent,
-    PagosComponent,
+    PagosFacturaComponent,
     ConceptosComponent,
     FormsModule,
     CommonModule,
