@@ -222,14 +222,17 @@
         </div>
         <div class="clearfix">
           <strong>Resultados</strong>
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-
           <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
+          <button type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()" class="btn btn-success float-right"><i class="fa fa-download"></i></button>
+          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i class="fa fa-download"></i>Facturas</button>
+          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()" class="btn btn-success float-right"><i class="fa fa-download"></i>Complementos</button>
+
+          
         </div>
         <div class="table-responsive" *ngIf="page.empty == false">
 

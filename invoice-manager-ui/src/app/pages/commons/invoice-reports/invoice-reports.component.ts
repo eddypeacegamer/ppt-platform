@@ -26,6 +26,10 @@ export class InvoiceReportsComponent implements OnInit {
     private router: Router) {}
 
     ngOnInit() {
+      const date: Date = new Date();
+      this.filterParams.to = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+      this.filterParams.since = new Date(date.getFullYear(), date.getMonth(), 1);
+
       this.module = this.router.url.split('/')[2];
       switch (this.module) {
         case 'promotor':
@@ -116,6 +120,18 @@ export class InvoiceReportsComponent implements OnInit {
     public downloadHandler() {
       this.invoiceService.getInvoices(0, 10000, this.filterParams).subscribe(result => {
         this.donwloadService.exportCsv(result.content, 'Facturas');
+      });
+    }
+
+    public downloadInvoicesReports() {
+      this.invoiceService.getInvoicesReports(0, 10000, this.filterParams).subscribe(result => {
+        this.donwloadService.exportCsv(result.content, 'Facturas');
+      });
+    }
+
+    public downloadComplementReports() {
+      this.invoiceService.getComplementReports(0, 10000, this.filterParams).subscribe(result => {
+        this.donwloadService.exportCsv(result.content, 'Complementos');
       });
     }
 

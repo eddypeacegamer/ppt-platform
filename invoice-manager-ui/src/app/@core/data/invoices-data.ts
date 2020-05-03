@@ -6,6 +6,10 @@ import { Cfdi } from '../../models/factura/cfdi';
 
 export abstract class InvoicesData {
     abstract getInvoices(page: number, size: number, filterParams?: any): Observable<GenericPage<Factura>>;
+
+    abstract getInvoicesReports(page: number, size: number, filterParams?: any): Observable<GenericPage<any>>;
+    abstract getComplementReports(page: number, size: number, filterParams?: any): Observable<GenericPage<any>>;
+
     abstract getInvoiceByFolio(folio: string): Observable<Factura>;
     abstract getInvoiceFiles(folio: string): Observable<any>;
     abstract getComplementosInvoice(folioPadre: string): Observable<Factura[]>;

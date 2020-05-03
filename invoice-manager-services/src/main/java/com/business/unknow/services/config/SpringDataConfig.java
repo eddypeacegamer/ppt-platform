@@ -47,4 +47,5 @@ public class SpringDataConfig {
 		transactionManager.setEntityManagerFactory(manager.getObject());
 		return transactionManager;
 	}
+	
 }

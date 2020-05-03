@@ -45,6 +45,12 @@ public class Cfdi implements Serializable {
 
 	@Column(name = "MONEDA")
 	private String moneda;
+	
+	@Column(name = "IMP_TRASLADADOS")
+	private BigDecimal impuestosTrasladados;
+	
+	@Column(name = "IMP_RETENIDOS")
+	private BigDecimal impuestosRetenidos;
 
 	@Column(name = "SUB_TOTAL")
 	private BigDecimal subtotal;
@@ -72,9 +78,6 @@ public class Cfdi implements Serializable {
 
 	@OneToMany(mappedBy = "cfdi")
 	private List<Concepto> conceptos;
-
-//	@OneToOne(mappedBy = "cfdi")
-//	private TimbradoFiscalDigitial complemento;
 
 	@OneToOne(mappedBy = "cfdi")
 	private Receptor receptor;
@@ -143,6 +146,22 @@ public class Cfdi implements Serializable {
 
 	public void setCertificado(String certificado) {
 		this.certificado = certificado;
+	}
+	
+	public BigDecimal getImpuestosTrasladados() {
+		return impuestosTrasladados;
+	}
+
+	public void setImpuestosTrasladados(BigDecimal impuestosTrasladados) {
+		this.impuestosTrasladados = impuestosTrasladados;
+	}
+
+	public BigDecimal getImpuestosRetenidos() {
+		return impuestosRetenidos;
+	}
+
+	public void setImpuestosRetenidos(BigDecimal impuestosRetenidos) {
+		this.impuestosRetenidos = impuestosRetenidos;
 	}
 
 	public BigDecimal getSubtotal() {
@@ -236,14 +255,6 @@ public class Cfdi implements Serializable {
 	public void setConceptos(List<Concepto> conceptos) {
 		this.conceptos = conceptos;
 	}
-
-//	public TimbradoFiscalDigitial getComplemento() {
-//		return complemento;
-//	}
-//
-//	public void setComplemento(TimbradoFiscalDigitial complemento) {
-//		this.complemento = complemento;
-//	}
 
 	public Receptor getReceptor() {
 		return receptor;

@@ -32,7 +32,7 @@ public class RepositoryContext {
 				.password(cloud.getDataSourcePass()).build();
 	}
 
-	@Bean(name = "jdbcAssociateEvaluationLogTemplate")
+	@Bean(name = "invoiceManagerTemplate")
 	@Autowired
 	public JdbcTemplate associateEvaluationLogTemplate(@Qualifier("invoiceDatasource") DataSource dsSlave) {
 		return new JdbcTemplate(dsSlave);

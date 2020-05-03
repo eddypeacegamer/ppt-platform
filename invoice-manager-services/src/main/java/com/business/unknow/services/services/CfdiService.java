@@ -310,8 +310,15 @@ public class CfdiService {
 		
 		// TODO add more validations here
 	}
-
+	
+	/**
+	 * This method recalculate CFDI amounts based on SAT  rounding rules, do not move or update this method without carefully review.
+	 * 
+	 * @param cfdi
+	 */
 	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
+		
+		// Importes, retenciones y traslados recalculo
 		cfdi.getConceptos().forEach(a -> {
 			a.setImporte(a.getValorUnitario().multiply(a.getCantidad()));
 			a.getImpuestos().forEach(b -> {
@@ -335,6 +342,9 @@ public class CfdiService {
 
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
+		
+		cfdi.setImpuestosTrasladados(impuestos);
+		cfdi.setImpuestosRetenidos(retenciones);
 		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));
 		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_HALF_UP));
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
