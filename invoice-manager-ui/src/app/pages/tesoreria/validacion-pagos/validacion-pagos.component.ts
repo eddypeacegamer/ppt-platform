@@ -49,7 +49,7 @@ export class ValidacionPagosComponent implements OnInit {
   }
 
   public downloadHandler() {
-    this.paymentService.getIncomes(0, 10000, this.filterParams).subscribe(result => {
+    this.paymentService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Pagos');
     });
   }

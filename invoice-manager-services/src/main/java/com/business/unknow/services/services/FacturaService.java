@@ -330,6 +330,7 @@ public class FacturaService {
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		System.out.println(facturaDto);
 		validator.validateTimbrado(facturaDto, folio);
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
