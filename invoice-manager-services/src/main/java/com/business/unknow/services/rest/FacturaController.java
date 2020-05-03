@@ -2,6 +2,8 @@ package com.business.unknow.services.rest;
 
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaReportDto;
+import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.PagoDevolucionDto;
@@ -65,6 +67,32 @@ public class FacturaController {
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		return new ResponseEntity<>(service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to,
 				emisor, receptor, page, size), HttpStatus.OK);
+	}
+	
+	@GetMapping("/factura-reports")
+	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(
+			@RequestParam(name = "status") Optional<String> status,
+			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
+			@RequestParam(name = "emisor", defaultValue = "") String emisor,
+			@RequestParam(name = "remitente", defaultValue = "") String receptor,
+			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
+			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "100") int size) {
+		return new ResponseEntity<>(service.getFacturaReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size), HttpStatus.OK);
+	}
+	
+	@GetMapping("/complemento-reports")
+	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(
+			@RequestParam(name = "status") Optional<String> status,
+			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
+			@RequestParam(name = "emisor", defaultValue = "") String emisor,
+			@RequestParam(name = "remitente", defaultValue = "") String receptor,
+			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
+			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "100") int size) {
+		return new ResponseEntity<>(service.getComplementoReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")
