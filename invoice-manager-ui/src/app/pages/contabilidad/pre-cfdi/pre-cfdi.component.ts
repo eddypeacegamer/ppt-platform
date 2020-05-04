@@ -293,7 +293,7 @@ export class PreCfdiComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...this.factura };
-    fact.statusFactura = '6';// update to recahzo operaciones
+    fact.statusFactura = '9';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {

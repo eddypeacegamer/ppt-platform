@@ -16,17 +16,17 @@ export class InvoicesService {
   private validationCat: Catalogo[] = [];
   private payCat: Catalogo[] = [];
   private devolutionCat: Catalogo[] = [];
-
+  private formaPagoCat: Catalogo[] = []
 
   constructor(private httpClient: HttpClient,
               private catalogService: CatalogsData) {
     this.catalogService.getStatusPago().then(cat => this.payCat = cat);
     this.catalogService.getStatusValidacion().then(cat => this.validationCat = cat);
     this.catalogService.getStatusDevolucion().then(cat => this.devolutionCat = cat);
+    this.catalogService.getFormasPago().then(cat => this.formaPagoCat = cat);
   }
 
-  public getInvoices(page: number, size: number, filterParams?: any): Observable<Object> {
-
+  private getHttpParamsFromFilterParams(page: number, size: number,filterParams:any):HttpParams{
     let pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
@@ -40,16 +40,60 @@ export class InvoicesService {
         }
       }
     }
-    return this.httpClient.get('../api/facturas', {params: pageParams})
+    return pageParams;
+  }
+
+  public getInvoices(page: number, size: number, filterParams?: any): Observable<any> {
+    return this.httpClient.get('../api/facturas', 
+    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
     .pipe(
-      map((invPage: GenericPage<Factura>) => {
-        const records: Factura[] = invPage.content.map(record => {
+      map((invPage: GenericPage<any>) => {
+        const records: any[] = invPage.content.map(record => {
+          record.cadenaOriginalTimbrado = '';
           record.statusFactura = this.validationCat.find(v => v.id.toString()
                                       === record.statusFactura.toString()).nombre;
           record.statusPago = this.payCat.find(v => v.id.toString()
                                       === record.statusPago.toString()).nombre;
           record.statusDevolucion = this.devolutionCat.find(v => v.id.toString()
                                       === record.statusDevolucion.toString()).nombre;
+          return record;
+        });
+        invPage.content = records;
+        return invPage;
+      }));
+  }
+
+  public getInvoicesReports(page: number, size: number, filterParams?: any): Observable<any>{
+    return this.httpClient.get('../api/facturas/factura-reports', 
+    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
+    .pipe(
+      map((invPage: GenericPage<any>) => {
+        const records: any[] = invPage.content.map(record => {
+          record.statusFactura = this.validationCat.find(v => v.id.toString()
+                                      === record.statusFactura.toString()).nombre;
+          record.statusPago = this.payCat.find(v => v.id.toString()
+                                      === record.statusPago.toString()).nombre;
+          record.formaPago = this.formaPagoCat.find(v => v.id.toString()
+                                      === record.formaPago.toString()).nombre;
+          return record;
+        });
+        invPage.content = records;
+        return invPage;
+      }));
+  }
+  public getComplementReports(page: number, size: number, filterParams?: any): Observable<any>{
+    return this.httpClient.get('../api/facturas/complemento-reports',
+    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
+    .pipe(
+      map((invPage: GenericPage<any>) => {
+        const records: any[] = invPage.content.map(record => {
+          record.statusFactura = this.validationCat.find(v => v.id.toString()
+                                      === record.statusFactura.toString()).nombre;
+          record.statusPago = this.payCat.find(v => v.id.toString()
+                                      === record.statusPago.toString()).nombre;
+          record.formaPago = this.formaPagoCat.find(v => v.id.toString()
+                                      === record.formaPago.toString()).nombre;
+          
           return record;
         });
         invPage.content = records;

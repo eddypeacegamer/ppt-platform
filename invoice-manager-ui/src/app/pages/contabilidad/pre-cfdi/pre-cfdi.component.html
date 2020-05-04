@@ -10,10 +10,12 @@
 
             <p class="font-weight-bold">Emisor</p>
             <p>{{factura.rfcEmisor}}</p>
+            &nbsp;&nbsp;
             <p>{{factura.razonSocialEmisor}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <p class="font-weight-bold">Receptor</p>
             <p>{{factura.rfcRemitente}}</p>
+            &nbsp;&nbsp;
             <p>{{factura.razonSocialRemitente}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <span class="badge badge-primary">{{factura.statusFactura}}</span>
@@ -175,8 +177,9 @@
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
         <br>
+
         <p class="font-weight-bold">Conceptos factura</p>
-          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "factura.statusFactura !== 'Timbrada'"></ngx-conceptos>
+          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura !== ''"></ngx-conceptos>
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)"  [nbSpinner]="loading" [disabled]="loading"

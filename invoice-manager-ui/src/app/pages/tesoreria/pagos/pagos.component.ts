@@ -11,13 +11,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'ngx-valiudacion-pagos',
-  templateUrl: './validacion-pagos.component.html',
-  styleUrls: ['./validacion-pagos.component.scss'],
+  selector: 'ngx-pagos',
+  templateUrl: './pagos.component.html',
+  styleUrls: ['./pagos.component.scss'],
 })
-export class ValidacionPagosComponent implements OnInit {
+export class PagosComponent implements OnInit {
 
   public user: User;
+  public vista: string  = 'validacion-pagos';
   public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
   public errors: string[]= [];
   public page: GenericPage<any> = new GenericPage();
@@ -32,8 +33,14 @@ export class ValidacionPagosComponent implements OnInit {
     ) {}
 
   ngOnInit() {
+    this.vista = this.router.url.split('/')[3];
+    if (this.vista === 'validacion-pagos') {
+      this.filterParams.status = 'VALIDACION';
+    }
+    if (this.vista === 'historial-pagos') {
+      this.filterParams.status = 'ACEPTADO';
+    }
     this.updateDataTable();
-    this.filterParams = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
     this.userService.getUserInfo().then(user => this.user = user);
   }
 
@@ -49,7 +56,7 @@ export class ValidacionPagosComponent implements OnInit {
   }
 
   public downloadHandler() {
-    this.paymentService.getIncomes(0, 10000, this.filterParams).subscribe(result => {
+    this.paymentService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Pagos');
     });
   }
