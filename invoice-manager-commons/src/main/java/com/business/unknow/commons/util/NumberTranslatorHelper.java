@@ -183,12 +183,13 @@ public class NumberTranslatorHelper {
 
 	public String getStringNumber(BigDecimal number,String moneda) throws InvoiceCommonException {
 		String cambio;
+		System.out.println(moneda);
 		if(moneda.equals("MXN")) {
-			cambio="pesos";
+			cambio="Pesos ";
 		}else if(moneda.equals("USD")){
-			cambio="dolares";
+			cambio="Centavos ";
 		}else {
-			throw new InvoiceCommonException("La moneda no esta soportada", "Moneda no soportada");
+			cambio="Pesos";
 		}
 		BigInteger decimal = number.remainder(BigDecimal.ONE).movePointRight(number.scale()).abs().toBigInteger();
 		return cantidadConLetra(number.toString()).concat(cambio).concat(cantidadConLetra(decimal.toString()))

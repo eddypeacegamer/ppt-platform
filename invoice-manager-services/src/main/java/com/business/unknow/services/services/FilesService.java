@@ -186,7 +186,7 @@ public class FilesService {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
 			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
 					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto()),
-					facturaDto.getCfdi().getMoneda()));
+					pagoComplemento.getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -340,7 +340,7 @@ public class FilesService {
 				model.setPagoComplemento(cfdiPagoDto);
 				model.setTotalDesc(numberTranslatorHelper.getStringNumber(
 						cfdiPagoDto.getImporteSaldoAnterior().subtract(cfdiPagoDto.getImporteSaldoInsoluto()),
-						cfdiPagoDto.getMoneda()));
+						contextComplementoPago.getMoneda()));
 
 			}
 
