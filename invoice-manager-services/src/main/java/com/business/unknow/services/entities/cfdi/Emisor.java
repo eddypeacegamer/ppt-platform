@@ -30,6 +30,9 @@ public class Emisor implements Serializable {
 
 	@Column(name = "REGIMEN_FISCAL")
 	private String regimenFiscal;
+	
+	@Column(name = "DIRECCION")
+	private String direccion;
 
 	@OneToOne
 	@JoinColumn(name = "ID_CFDI")
@@ -57,6 +60,14 @@ public class Emisor implements Serializable {
 
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
+	}
+	
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 
 	public Cfdi getCfdi() {

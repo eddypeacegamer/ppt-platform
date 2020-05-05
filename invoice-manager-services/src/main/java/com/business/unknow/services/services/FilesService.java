@@ -153,9 +153,8 @@ public class FilesService {
 
 	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi) throws InvoiceCommonException {
 
-		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
-
-		fBuilder.setFactura(getCfdiModelFromFacturaDto(facturaDto)).setFolioPadre(facturaDto.getFolioPadre())
+		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder()
+				.setFactura(getCfdiModelFromFacturaDto(facturaDto)).setFolioPadre(facturaDto.getFolioPadre())
 				.setQr(getQRData(facturaDto.getFolio()))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
@@ -167,6 +166,9 @@ public class FilesService {
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
 		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
+		
+		fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
+		fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
 		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 			FormaPago formaPago = catalogCacheService.getFormaPagoMappings()
 					.get(cfdi.getComplemento().getComplemntoPago().getComplementoPagos().get(0).getFormaDePago());
@@ -177,7 +179,7 @@ public class FilesService {
 		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
-
+		
 		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
@@ -202,6 +204,9 @@ public class FilesService {
 				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
 				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
 
+		fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
+		fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
+		
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
 		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());

@@ -55,6 +55,7 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "cfdiDto.total", target = "total"),
 			@Mapping(source = "cfdiDto.subtotal", target = "subtotal"),
 			@Mapping(source = "cfdiDto.moneda", target = "moneda"),
+			@Mapping(source = "cfdiDto.tipoCambio", target = "tipoCambio"),
 			@Mapping(source = "cfdiDto.tipoDeComprobante", target = "tipoDeComprobante"),
 			@Mapping(source = "empresaDto.certificado", target = "certificado"),
 			@Mapping(source = "cfdiDto.noCertificado", target = "noCertificado"),
