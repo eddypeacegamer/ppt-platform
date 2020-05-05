@@ -27,9 +27,9 @@ public class MailHelper {
 	public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
 
 		Properties props = System.getProperties();
-		props.put("mail.smtp.host", "p3plcpnl0577.prod.phx3.secureserver.net");
+		props.put("mail.smtp.host", emailConfig.getDominio());
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.ssl.trust", "p3plcpnl0577.prod.phx3.secureserver.net");
+		props.put("mail.smtp.ssl.trust",emailConfig.getDominio());
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.port", "587");
 
@@ -65,7 +65,7 @@ public class MailHelper {
 			}
 
 			Transport transport = session.getTransport("smtp");
-			transport.connect("p3plcpnl0577.prod.phx3.secureserver.net", emailConfig.getEmisor(),
+			transport.connect(emailConfig.getDominio(), emailConfig.getEmisor(),
 					emailConfig.getPwEmisor());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
