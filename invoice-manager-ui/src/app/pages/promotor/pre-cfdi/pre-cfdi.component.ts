@@ -240,13 +240,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
       this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
-      this.factura.cfdi.emisor.direccion = `${this.companyInfo.informacionFiscal.calle} 
-        ${this.companyInfo.informacionFiscal.noExterior}, ${this.companyInfo.informacionFiscal.noInterior},
-        ${this.companyInfo.informacionFiscal.localidad} , ${this.companyInfo.informacionFiscal.municipio}, 
-        ${this.companyInfo.informacionFiscal.estado}, C.P. ${this.companyInfo.informacionFiscal.cp}`;
-      this.factura.cfdi.receptor.direccion = `${this.clientInfo.calle} ${this.clientInfo.noExterior}, 
-        ${this.clientInfo.noInterior}, ${this.clientInfo.localidad} , ${this.clientInfo.municipio}, 
-        ${this.clientInfo.estado}, C.P. ${this.clientInfo.cp}`;
+      this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     }
 
