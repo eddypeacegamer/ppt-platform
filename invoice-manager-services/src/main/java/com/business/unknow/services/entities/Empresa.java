@@ -46,7 +46,7 @@ public class Empresa implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "SUCURSAL")
 	private String sucursal;
-	
+
 	@Basic(optional = false)
 	@Column(name = "LUGAR_EXPEDICION")
 	private String lugarExpedicion;
@@ -78,6 +78,9 @@ public class Empresa implements Serializable {
 
 	@Column(name = "LINEA")
 	private String tipo;
+
+	@Column(name = "DOMINIO_CORREO")
+	private String dominioCorreo;
 
 	@Column(name = "GIRO_ID")
 	private Integer giro;
@@ -248,14 +251,23 @@ public class Empresa implements Serializable {
 		this.informacionFiscal = informacionFiscal;
 	}
 
+	public String getDominioCorreo() {
+		return dominioCorreo;
+	}
+
+	public void setDominioCorreo(String dominioCorreo) {
+		this.dominioCorreo = dominioCorreo;
+	}
+
 	@Override
 	public String toString() {
 		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
 				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
 				+ ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web
 				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
-				+ activo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+				+ activo + ", tipo=" + tipo + ", dominioCorreo=" + dominioCorreo + ", giro=" + giro + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
+				+ informacionFiscal + "]";
 	}
 
 }

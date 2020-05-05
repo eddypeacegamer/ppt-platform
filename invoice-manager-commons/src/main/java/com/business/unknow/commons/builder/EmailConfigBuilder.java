@@ -36,6 +36,11 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 		instance.setReceptor(receptor);
 		return this;
 	}
+	
+	public EmailConfigBuilder setDominio(String dominio) {
+		instance.setDominio(dominio);
+		return this;
+	}
 
 	public EmailConfigBuilder addReceptor(String receptor) {
 		if (receptor != null && !receptor.isEmpty() && !receptor.contains("Sin asignar")) {
