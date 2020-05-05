@@ -89,9 +89,11 @@ public class DevolucionExecutorService {
 			devolucionRepository.save(devolucion);
 		}else {
 			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,context.getFacturaDto().getFolio(),
-					context.getCurrentPago().getId(), baseComisiones, client.getPorcentajeCliente(),
-					client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
-			devolucion.setMonto(context.getFacturaDto().getCfdi().getSubtotal());
+					context.getCurrentPago().getId(), context.getCurrentPago().getMonto().multiply(baseComisiones),
+					client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
+					ContactoDevolucionEnum.CLIENTE.name());
+			devolucion.setMonto(context.getCurrentPago().getMonto()
+					.subtract(context.getCurrentPago().getMonto().multiply(baseComisiones)));
 			devolucionRepository.save(devolucion);
 		}
 		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO)> 0) {
