@@ -60,6 +60,7 @@ export class ClienteComponent implements OnInit {
   public updateClient() {
     this.formInfo.success = '';
     this.messages = [];
+    this.clientInfo.informacionFiscal.localidad = this.colonias[this.formInfo.coloniaId];
     this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
     this.clientService.updateClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente actualizado exitosamente'; this.clientInfo = client; },
       (error: HttpErrorResponse) => {this.messages.push(error.error.message); this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
@@ -68,6 +69,7 @@ export class ClienteComponent implements OnInit {
   public insertClient() {
     this.formInfo.success = '';
     this.messages = [];
+    this.clientInfo.informacionFiscal.localidad = this.colonias[this.formInfo.coloniaId];
     this.userService.getUserInfo().then(user => this.clientInfo.correoPromotor = user.email)
       .then(() => {
         this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
@@ -93,11 +95,6 @@ export class ClienteComponent implements OnInit {
           }
           }, (error: HttpErrorResponse) => alert(error.error.message || error.statusText));
     }
-  }
-
-  public onLocation(index:string){
-    console.log(index);
-    this.clientInfo.informacionFiscal.localidad = this.colonias[index];
   }
 
   public validatePercentages() {
