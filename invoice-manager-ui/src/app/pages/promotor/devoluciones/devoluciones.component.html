@@ -206,7 +206,7 @@
                   </td>
                   <td scope="row" class="text-right">{{fila.pagoMonto | currency}}</td>
                   <td scope="row" class="text-right">{{fila.impuesto | currency}}</td>
-                  <td scope="row" class="text-right">{{fila.porcentaje/100 | percent}}</td>
+                  <td scope="row" class="text-right">{{fila.porcentaje/100 | percent : '.2'}}</td>
                   <td scope="row" class="text-right">{{fila.monto | currency}}</td>
                   <td scope="row" class="text-right">{{fila.fechaCreacion}}</td>
                 </tr>

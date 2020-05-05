@@ -22,6 +22,7 @@ public class FacturaDefaultValues {
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name());
+		facturaDto.getCfdi().setTipoCambio(BigDecimal.ONE);
 		if (facturaDto.getStatusFactura() == null) {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 		}

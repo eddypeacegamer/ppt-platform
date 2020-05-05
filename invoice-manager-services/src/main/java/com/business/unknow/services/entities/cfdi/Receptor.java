@@ -30,6 +30,9 @@ public class Receptor implements Serializable {
 
 	@Column(name = "USO_CFDI")
 	private String usoCfdi;
+	
+	@Column(name = "DIRECCION")
+	private String direccion;
 
 	@OneToOne
 	@JoinColumn(name = "ID_CFDI", referencedColumnName = "ID_CFDI")
@@ -57,6 +60,14 @@ public class Receptor implements Serializable {
 
 	public void setUsoCfdi(String usoCfdi) {
 		this.usoCfdi = usoCfdi;
+	}
+	
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 
 	public Cfdi getCfdi() {

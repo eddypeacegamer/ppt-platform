@@ -33,6 +33,10 @@ public class FacturaPdfModelDto implements Serializable {
 	private String formaPagoDesc;
 	@XmlElement(name = "MetodoPagoDesc")
 	private String metodoPagoDesc;
+	@XmlElement(name = "DireccionEmisor")
+	private String direccionEmisor;
+	@XmlElement(name = "DireccionReceptor")
+	private String direccionReceptor;
 	@XmlElement(name = "TipoDeComprobanteDesc")
 	private String tipoDeComprobanteDesc;
 	@XmlElement(name = "Logotipo")
@@ -83,6 +87,22 @@ public class FacturaPdfModelDto implements Serializable {
 
 	public void setCadenaOriginal(String cadenaOriginal) {
 		this.cadenaOriginal = cadenaOriginal;
+	}
+	
+	public String getDireccionEmisor() {
+		return direccionEmisor;
+	}
+
+	public void setDireccionEmisor(String direccionEmisor) {
+		this.direccionEmisor = direccionEmisor;
+	}
+
+	public String getDireccionReceptor() {
+		return direccionReceptor;
+	}
+
+	public void setDireccionReceptor(String direccionReceptor) {
+		this.direccionReceptor = direccionReceptor;
 	}
 
 	public String getTipoDeComprobanteDesc() {
