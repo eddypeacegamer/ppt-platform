@@ -38,8 +38,21 @@ export class ClienteComponent implements OnInit {
       const rfc = route.get('rfc');
       if (rfc !== '*') {
         this.clientService.getClientByRFC(rfc)
-        .subscribe((client: Client) => {this.clientInfo = client, this.formInfo.rfc = rfc; },
-        (error: HttpErrorResponse) => {this.formInfo.message = error.error.message ||
+        .subscribe((client: Client) => {
+          this.clientInfo = client;
+          this.formInfo.rfc = rfc;
+          this.catalogsService.getZipCodeInfo(client.informacionFiscal.cp).then((data: ZipCodeInfo) => {
+            this.colonias = data.colonias;
+            let index = 0;
+            this.formInfo.coloniaId = '*';
+            data.colonias.forEach(element => {
+              if ( data.colonias[index] === client.informacionFiscal.localidad){
+                this.formInfo.coloniaId = index;
+              }
+              index ++;
+            });
+          });
+        }, (error: HttpErrorResponse) => {this.formInfo.message = error.error.message ||
                   `${error.statusText} : ${error.message}`; this.formInfo.status = error.status;});
         }});
   }
@@ -83,6 +96,7 @@ export class ClienteComponent implements OnInit {
   }
 
   public onLocation(index:string){
+    console.log(index);
     this.clientInfo.informacionFiscal.localidad = this.colonias[index];
   }
 

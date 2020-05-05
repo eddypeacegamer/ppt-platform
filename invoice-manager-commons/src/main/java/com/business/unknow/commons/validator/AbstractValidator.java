@@ -11,7 +11,7 @@ public class AbstractValidator {
 	protected static final String ATTRIBUTE_REQUIRED = "Attribute required.";
 	protected static final String ATTRIBUTE_REQUIRED_MESSAGE = "Error, el campo [%s] no fue enviado.";
 	private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-	private static final String CHAR_REGEX = "^[A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,&\\-\\s]+";
+	private static final String CHAR_REGEX = "^[A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+";
 
 	protected void checkNotNull(Object var, String attribute) throws InvoiceManagerException {
 		if (var == null) {
