@@ -160,8 +160,8 @@ public class FilesService {
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
 				.setTipoDeComprobanteDesc(
 						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
-				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
-				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
+				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal(),facturaDto.getCfdi().getMoneda()))
+				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal(),facturaDto.getCfdi().getMoneda()));
 
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
@@ -185,7 +185,8 @@ public class FilesService {
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
 			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
-					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
+					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto()),
+					pagoComplemento.getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -201,8 +202,10 @@ public class FilesService {
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
 				.setTipoDeComprobanteDesc(
 						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
-				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal()))
-				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal()));
+				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal(),
+						facturaDto.getCfdi().getMoneda()))
+				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal(),
+						facturaDto.getCfdi().getMoneda()));
 
 		fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
 		fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
@@ -225,7 +228,8 @@ public class FilesService {
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
 			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
 			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
-					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto())));
+					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto()),
+					facturaDto.getCfdi().getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -335,7 +339,8 @@ public class FilesService {
 
 				model.setPagoComplemento(cfdiPagoDto);
 				model.setTotalDesc(numberTranslatorHelper.getStringNumber(
-						cfdiPagoDto.getImporteSaldoAnterior().subtract(cfdiPagoDto.getImporteSaldoInsoluto())));
+						cfdiPagoDto.getImporteSaldoAnterior().subtract(cfdiPagoDto.getImporteSaldoInsoluto()),
+						contextComplementoPago.getMoneda()));
 
 			}
 
