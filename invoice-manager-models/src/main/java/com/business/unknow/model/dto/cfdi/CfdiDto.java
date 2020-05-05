@@ -21,6 +21,7 @@ public class CfdiDto implements Serializable {
 	private String noCertificado;
 	private String certificado;
 	private String moneda;
+	private BigDecimal tipoCambio;
 	private BigDecimal impuestosTrasladados;
 	private BigDecimal impuestosRetenidos;
 	private BigDecimal subtotal;
@@ -82,6 +83,12 @@ public class CfdiDto implements Serializable {
 	}
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
+	}
+	public BigDecimal getTipoCambio() {
+		return tipoCambio;
+	}
+	public void setTipoCambio(BigDecimal tipoCambio) {
+		this.tipoCambio = tipoCambio;
 	}
 	public BigDecimal getImpuestosTrasladados() {
 		return impuestosTrasladados;

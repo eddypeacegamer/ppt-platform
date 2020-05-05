@@ -87,8 +87,8 @@ export class ClientsValidatorService {
                 + cliente.porcentajeDespacho + cliente.porcentajePromotor - 16) >= 0.01) {
             messages.push('La suma de los porcentajes asignados no debe ser mayor o menor a 16%');
         }
-        if (cliente.porcentajeDespacho < 4) {
-            messages.push('El porcentaje asignado al despacho no debe ser menor al 4%');
+       if (cliente.porcentajeDespacho < 2) { 
+            messages.push('El porcentaje asignado al despacho no debe ser menor al 2%');
         }
         return messages;
       }

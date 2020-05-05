@@ -30,7 +30,7 @@
 
                 <flow flow-name="xsl-region-body">
                     <!-- Header -->
-                    <block-container height="22mm" margin-bottom="5mm" padding="0mm">
+                    <block-container height="30mm" margin-bottom="5mm" padding="0mm">
                         <block>
                             <inline-container width="52.4mm" margin-right="5mm" alignment-baseline="before-edge">
                                 <block>
@@ -58,12 +58,10 @@
                                     -
                                     <xsl:value-of select="RegimenFiscalDesc" />
                                 </block>
-                                <block font-size="2.5mm">
-                                    <inline font-weight="bold">
-                                        LUGAR DE EXPEDICIÓN:
-                                    </inline>
-                                    <xsl:value-of select="factura/@LugarExpedicion" />
+                                <block margin-top="3.5mm" font-size="2.5mm">
+                                        <xsl:value-of select="DireccionEmisor" />
                                 </block>
+                                
                             </inline-container>
 
                             <inline-container width="56.6mm" alignment-baseline="before-edge">
@@ -93,7 +91,7 @@
                     </block-container>
 
                     <!-- Información del Receptor -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="15mm" fox:border-radius="2mm" font-size="2.4mm">
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="20mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
                             <inline-container>
                                 <block margin-left="3mm">INFORMACIÓN DEL RECEPTOR</block>
@@ -131,6 +129,16 @@
                                     <xsl:value-of select="factura/*[local-name()='Receptor']/@UsoCFDI" />
                                     -
                                     <xsl:value-of select="UsoCfdiDesc" />
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block>
+                            <inline-container>
+                                <block margin-left="3mm">
+                                    <inline font-weight="bold">
+                                        Dirección:
+                                    </inline>
+                                    <xsl:value-of select="DireccionReceptor" />
                                 </block>
                             </inline-container>
                         </block>

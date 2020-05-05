@@ -9,16 +9,18 @@ public class EmisorDto implements Serializable {
 	private String rfc;
 	private String nombre;
 	private String regimenFiscal;
+	private String direccion;
 
 	public EmisorDto() {
 		super();
 	}
 
-	public EmisorDto(String rfc, String nombre, String regimenFiscal) {
+	public EmisorDto(String rfc, String nombre, String regimenFiscal,String direccion) {
 		super();
 		this.rfc = rfc;
 		this.nombre = nombre;
 		this.regimenFiscal = regimenFiscal;
+		this.direccion = direccion;
 	}
 
 	public String getRfc() {
@@ -43,6 +45,14 @@ public class EmisorDto implements Serializable {
 
 	public void setRegimenFiscal(String regimenFiscal) {
 		this.regimenFiscal = regimenFiscal;
+	}
+	
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 
 	@Override

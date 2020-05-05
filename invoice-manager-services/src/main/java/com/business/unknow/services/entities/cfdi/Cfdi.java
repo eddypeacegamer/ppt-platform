@@ -46,6 +46,9 @@ public class Cfdi implements Serializable {
 	@Column(name = "MONEDA")
 	private String moneda;
 	
+	@Column(name = "TIPO_CAMBIO")
+	private BigDecimal tipoCambio;
+	
 	@Column(name = "IMP_TRASLADADOS")
 	private BigDecimal impuestosTrasladados;
 	
@@ -186,6 +189,14 @@ public class Cfdi implements Serializable {
 
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
+	}
+	
+	public BigDecimal getTipoCambio() {
+		return tipoCambio;
+	}
+
+	public void setTipoCambio(BigDecimal tipoCambio) {
+		this.tipoCambio = tipoCambio;
 	}
 
 	public BigDecimal getTotal() {

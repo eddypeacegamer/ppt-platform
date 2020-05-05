@@ -41,6 +41,9 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 	@Override
 	public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto) {
 		Cfdi cfdi = delegate.cdfiRootInfo(facturaDto, empresaDto);
+		if(cfdi.getMoneda().equals("MXN")) {
+			cfdi.setTipoCambio(BigDecimal.ONE);
+		}
 		cfdi.setFecha(dateHelper.getStringFromFecha(new Date(),
 				FacturaConstants.FACTURA_DATE_FORMAT));
 		return cfdi;

@@ -79,6 +79,7 @@ public class TimbradoExecutorService {
 					.setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
 					.addReceptor(client.getCorreoPromotor()).addReceptor(client.getInformacionFiscal().getCorreo())
 					.addReceptor(context.getEmpresaDto().getCorreo())
+					.setDominio(context.getEmpresaDto().getDominioCorreo())
 					.addArchivo(new FileConfig(TipoArchivoEnum.XML,
 							context.getFacturaDto().getFolio().concat(TipoArchivoEnum.XML.getFormat()), xml.getData()))
 					.addArchivo(new FileConfig(TipoArchivoEnum.PDF,

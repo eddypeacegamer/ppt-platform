@@ -37,6 +37,8 @@ public class Cfdi {
 	private BigDecimal subtotal;
 	@XmlAttribute(name = "Descuento")
 	private BigDecimal descuento;
+	@XmlAttribute(name = "TipoCambio")
+	private BigDecimal tipoCambio;
 	@XmlAttribute(name = "Moneda")
 	private String moneda;
 	@XmlAttribute(name = "Total")
@@ -138,6 +140,14 @@ public class Cfdi {
 
 	public BigDecimal getDescuento() {
 		return descuento;
+	}
+
+	public BigDecimal getTipoCambio() {
+		return tipoCambio;
+	}
+
+	public void setTipoCambio(BigDecimal tipoCambio) {
+		this.tipoCambio = tipoCambio;
 	}
 
 	public void setDescuento(BigDecimal descuento) {

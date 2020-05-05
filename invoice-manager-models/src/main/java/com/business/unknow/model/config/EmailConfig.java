@@ -6,6 +6,7 @@ public class EmailConfig {
 
 	private List<String> receptor;
 	private String emisor;
+	private String dominio;
 	private String asunto;
 	private String cuerpo;
 	private String pwEmisor;
@@ -59,10 +60,18 @@ public class EmailConfig {
 		this.archivos = archivos;
 	}
 
+	public String getDominio() {
+		return dominio;
+	}
+
+	public void setDominio(String dominio) {
+		this.dominio = dominio;
+	}
+
 	@Override
 	public String toString() {
-		return "EmailConfig [receptor=" + receptor + ", emisor=" + emisor + ", asunto=" + asunto + ", cuerpo=" + cuerpo
-				+ ", pwEmisor=" + pwEmisor + ", archivos=" + archivos + "]";
+		return "EmailConfig [receptor=" + receptor + ", emisor=" + emisor + ", dominio=" + dominio + ", asunto="
+				+ asunto + ", cuerpo=" + cuerpo + ", pwEmisor=" + pwEmisor + ", archivos=" + archivos + "]";
 	}
 
 }
