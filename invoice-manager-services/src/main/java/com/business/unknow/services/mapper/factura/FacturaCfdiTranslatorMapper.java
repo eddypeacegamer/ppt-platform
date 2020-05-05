@@ -33,6 +33,7 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "facturaDto.cfdi.receptor.usoCfdi", target = "receptor.usoCfdi"),
 			@Mapping(source = "facturaDto.cfdi.formaPago", target = "formaPago"),
 			@Mapping(source = "facturaDto.cfdi.metodoPago", target = "metodoPago"),
+			@Mapping(source = "facturaDto.cfdi.tipoCambio", target = "tipoCambio"),
 			@Mapping(source = "facturaDto.cfdi.total", target = "total"),
 			@Mapping(source = "facturaDto.cfdi.subtotal", target = "subtotal"),
 			@Mapping(source = "facturaDto.cfdi.descuento", target = "descuento"),
