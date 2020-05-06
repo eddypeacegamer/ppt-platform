@@ -25,6 +25,13 @@ public class FacturaReportDtoRsExtractor implements ResultSetExtractor<Optional<
 		if(rs.next()) {
 			return Optional.of(new FacturaReportDtoBuilder()
 					.setFolio(rs.getString("FOLIO"))
+					.setLineaEmisor(rs.getString("LINEA_EMISOR"))
+					.setCorreoPromotor(rs.getString("CORREO_PROMOTOR"))
+					.setPorcentajeCliente(rs.getString("PORCENTAJE_CLIENTE"))
+					.setPorcentajeConcatco(rs.getString("PORCENTAJE_CONTACTO"))
+					.setPorcentajeDespacho(rs.getString("PORCENTAJE_DESPACHO"))
+					.setPorcentajePromotor(rs.getString("PORCENTAJE_PROMOTOR"))
+					.setLineaEmisor("LINEA_EMISOR")
 					.setFolioFiscal(rs.getString("UUID"))
 					.setFechaEmision(rs.getDate("FECHA"))
 					.setRfcEmisor(rs.getString("RFC_EMISOR"))
