@@ -84,27 +84,27 @@ export class CfdiValidatorService {
     return cfdi;
   }
 
-  public generateAddress(contribuyente: Contribuyente ) {
-    let address = `${contribuyente.calle}`;
+  public generateAddress(contribuyente: Contribuyente) {
+    let address = `${contribuyente.calle}`.trim();
     if (contribuyente.noExterior !== undefined && contribuyente.noExterior !== null) {
-      address += ` ${contribuyente.noExterior}`;
+      address += ` ${contribuyente.noExterior}`.trim();
     }
     if (contribuyente.noInterior !== undefined && contribuyente.noInterior !== null) {
-      address += `,${contribuyente.noInterior}`;
+      address += `,${contribuyente.noInterior}`.trim();
     }
     if ( contribuyente.localidad !== undefined && contribuyente.localidad !== null ) {
-      address += `,${contribuyente.localidad}`;
+      address += `,${contribuyente.localidad}`.trim();
     }
     if ( contribuyente.municipio !== undefined && contribuyente.municipio != null ) {
-      address += `,${contribuyente.municipio}`;
+      address += `,${contribuyente.municipio}`.trim();
     }
     if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
-      address += `,${contribuyente.estado}`;
+      address += `,${contribuyente.estado}`.trim();
     }
     if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
-      address += `,C.P. ${contribuyente.cp}`;
+      address += `,C.P. ${contribuyente.cp}`.trim();
     }
-    return address;
+    return address.toUpperCase().trim();
   }
 
   public validarCfdi(cfdi: Cfdi): string[] {
