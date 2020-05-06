@@ -244,14 +244,8 @@ export class PreCfdiComponent implements OnInit {
       this.factura.razonSocialRemitente = this.clientInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.rfc;
       this.factura.cfdi.receptor.nombre = this.clientInfo.informacionFiscal.razonSocial;
-
-      this.factura.cfdi.emisor.direccion = `${this.companyInfo.informacionFiscal.calle} 
-        ${this.companyInfo.informacionFiscal.noExterior}, ${this.companyInfo.informacionFiscal.noInterior},
-        ${this.companyInfo.informacionFiscal.localidad} , ${this.companyInfo.informacionFiscal.municipio}, 
-        ${this.companyInfo.informacionFiscal.estado}, C.P. ${this.companyInfo.informacionFiscal.cp}`;
-      this.factura.cfdi.receptor.direccion = `${this.clientInfo.informacionFiscal.calle} ${this.clientInfo.informacionFiscal.noExterior}, 
-        ${this.clientInfo.informacionFiscal.noInterior}, ${this.clientInfo.informacionFiscal.localidad} , ${this.clientInfo.informacionFiscal.municipio}, 
-        ${this.clientInfo.informacionFiscal.estado}, C.P. ${this.clientInfo.informacionFiscal.cp}`;
+      this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo.informacionFiscal);
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';

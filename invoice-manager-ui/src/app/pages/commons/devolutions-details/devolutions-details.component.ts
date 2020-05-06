@@ -8,18 +8,19 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Devolucion } from '../../../models/devolucion';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'ngx-devolutions-adjustment',
-  templateUrl: './devolutions-adjustment.component.html',
-  styleUrls: ['./devolutions-adjustment.component.scss']
+  selector: 'ngx-devolutions-details',
+  templateUrl: './devolutions-details.component.html',
+  styleUrls: ['./devolutions-details.component.scss']
 })
-export class DevolutionsAdjustmentComponent implements OnInit {
+export class DevolutionsDetailsComponent implements OnInit {
 
   public folioParam: string;
+  public module: string = 'promotor';
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
@@ -39,10 +40,12 @@ export class DevolutionsAdjustmentComponent implements OnInit {
     private userService: UsersData,
     private devolutionService: DevolutionData,
     private paymentservice: PaymentsData,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private router: Router) {}
 
 
   ngOnInit() {
+    this.module = this.router.url.split('/')[2];
     this.messages = [];
     this.fileInput.value = '';
     this.userService.getUserInfo().then(user => this.user = user);

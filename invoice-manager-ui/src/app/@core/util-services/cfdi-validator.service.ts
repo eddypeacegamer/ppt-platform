@@ -5,6 +5,7 @@ import { Impuesto } from '../../models/factura/impuesto';
 import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
+import { Contribuyente } from '../../models/contribuyente';
 
 @Injectable({
   providedIn: 'root',
@@ -81,6 +82,29 @@ export class CfdiValidatorService {
     cfdi.total = total;
     cfdi.subtotal = subtotal;
     return cfdi;
+  }
+
+  public generateAddress(contribuyente: Contribuyente) {
+    let address = `${contribuyente.calle}`.trim();
+    if (contribuyente.noExterior !== undefined && contribuyente.noExterior !== null) {
+      address += ` ${contribuyente.noExterior}`.trim();
+    }
+    if (contribuyente.noInterior !== undefined && contribuyente.noInterior !== null) {
+      address += `,${contribuyente.noInterior}`.trim();
+    }
+    if ( contribuyente.localidad !== undefined && contribuyente.localidad !== null ) {
+      address += `,${contribuyente.localidad}`.trim();
+    }
+    if ( contribuyente.municipio !== undefined && contribuyente.municipio != null ) {
+      address += `,${contribuyente.municipio}`.trim();
+    }
+    if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
+      address += `,${contribuyente.estado}`.trim();
+    }
+    if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
+      address += `,C.P. ${contribuyente.cp}`.trim();
+    }
+    return address.toUpperCase().trim();
   }
 
   public validarCfdi(cfdi: Cfdi): string[] {
