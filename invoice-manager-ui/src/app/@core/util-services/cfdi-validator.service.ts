@@ -87,7 +87,8 @@ export class CfdiValidatorService {
   public generateAddress(contribuyente: Contribuyente) {
     let address = `${contribuyente.calle}`.trim();
     if (contribuyente.noExterior !== undefined && contribuyente.noExterior !== null) {
-      address += ` ${contribuyente.noExterior}`.trim();
+      address += ' ';
+      address += `${contribuyente.noExterior}`.trim();
     }
     if (contribuyente.noInterior !== undefined && contribuyente.noInterior !== null) {
       address += `,${contribuyente.noInterior}`.trim();

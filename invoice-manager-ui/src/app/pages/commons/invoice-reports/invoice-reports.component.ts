@@ -78,6 +78,9 @@ export class InvoiceReportsComponent implements OnInit {
         case 'promotor':
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
+        case 'tesoreria':
+          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        break;
         case 'operaciones':
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
         break;
@@ -96,6 +99,9 @@ export class InvoiceReportsComponent implements OnInit {
       switch (this.module) {
         case 'operaciones':
           this.router.navigate([`./pages/operaciones/facturas/${folio}/devoluciones`]);
+          break;
+        case 'tesoreria':
+          this.router.navigate([`./pages/tesoreria/facturas/${folio}/devoluciones`]);
           break;
         case 'administracion':
           this.router.navigate([`./pages/administracion/devoluciones/${folio}/ajustes`]);

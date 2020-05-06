@@ -268,8 +268,8 @@
                       (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                     </button>
                     <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module !== 'promotor' && module !== 'contabilidad'"
-                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Timbrada') }"
-                      [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada')"
+                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
+                      [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                       (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                     </button>
                 </td>

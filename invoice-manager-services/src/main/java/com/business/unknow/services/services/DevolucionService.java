@@ -222,10 +222,12 @@ public class DevolucionService {
 		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(pagoDevolucion);
 	}
 
-	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(String status, String formaPago, String beneficiario,
+	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> folio,String status, String formaPago, String beneficiario,
 			String tipoReceptor, String idReceptor, int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
-		if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
+		if(folio.isPresent()) {
+			result = pagoDevolucionRepository.findByFolioFactura(folio.get(), PageRequest.of(0,10));
+		}else if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
 			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor,
 					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 		} else if (status.length() > 0) {
