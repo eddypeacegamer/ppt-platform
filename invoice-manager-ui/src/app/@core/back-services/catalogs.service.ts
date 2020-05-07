@@ -133,6 +133,11 @@ export class CatalogsService {
       return resolve([new Catalogo('01', 'Efectivo'),
       new Catalogo('02', 'Cheque nominativo'),
       new Catalogo('03', 'Transferencia electrónica de fondos'),
+      new Catalogo('04', 'Tarjeta de crédito'),
+      new Catalogo('05', 'Monedero electrónico'),
+      new Catalogo('08', 'Vales de despensa'),
+      new Catalogo('28', 'Tarjeta de débito'),
+      new Catalogo('29', 'Tarjeta de servicios'),
       new Catalogo('99', 'Por definir')]);
     });
   }

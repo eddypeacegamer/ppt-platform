@@ -128,9 +128,11 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setTipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
 				.setEmisor(new EmisorDto(facturaContext.getFacturaPadreDto().getRfcEmisor(),
 						facturaContext.getFacturaPadreDto().getRazonSocialEmisor(),
-						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getRegimenFiscal()))
+						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getRegimenFiscal(),
+						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getDireccion()))
 				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
-						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI))
+						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI,
+						facturaContext.getFacturaPadreDto().getCfdi().getReceptor().getDireccion()))
 				.setConceptos(buildFacturaComplementoConceptos())
 				.setPagos(buildFacturaComplementoPagos(facturaContext));
 		return cfdiBuilder.build();

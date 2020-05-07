@@ -190,10 +190,13 @@ export class CargaMasivaComponent implements OnInit {
     cfdi.receptor.nombre = receptorCompany.informacionFiscal.razonSocial;
     cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
     cfdi.receptor.usoCfdi = 'P01';
+    cfdi.receptor.direccion = this.cfdiValidator.generateAddress(receptorCompany.informacionFiscal);
     cfdi.emisor.nombre = emisorCompany.informacionFiscal.razonSocial;
+
     cfdi.emisor.rfc = transfer.RFC_EMISOR;
     cfdi.emisor.regimenFiscal = emisorCompany.regimenFiscal;
     cfdi.formaPago = transfer.FORMA_PAGO.toString();
+    cfdi.emisor.direccion = this.cfdiValidator.generateAddress(emisorCompany.informacionFiscal);
     cfdi.moneda = 'MXN';
     cfdi.total = transfer.TOTAL;
     cfdi.subtotal = transfer.IMPORTE;

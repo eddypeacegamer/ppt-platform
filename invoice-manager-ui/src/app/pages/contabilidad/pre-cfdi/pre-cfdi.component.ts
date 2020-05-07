@@ -244,6 +244,9 @@ export class PreCfdiComponent implements OnInit {
       this.factura.razonSocialRemitente = this.clientInfo.informacionFiscal.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.rfc;
       this.factura.cfdi.receptor.nombre = this.clientInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo.informacionFiscal);
+
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
       this.factura.statusFactura = '8'; // sets automatically to stamp directly
@@ -293,7 +296,7 @@ export class PreCfdiComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...this.factura };
-    fact.statusFactura = '6';// update to recahzo operaciones
+    fact.statusFactura = '9';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {

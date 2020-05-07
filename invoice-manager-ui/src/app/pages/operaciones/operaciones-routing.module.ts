@@ -9,6 +9,7 @@ import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
+import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -40,6 +41,9 @@ const routes: Routes = [{
     }, {
       path: 'revision/:folio',
       component : RevisionComponent,
+    }, {
+      path: 'facturas/:folio/devoluciones',
+      component: DevolutionsDetailsComponent,
     }]}];
 
 @NgModule({

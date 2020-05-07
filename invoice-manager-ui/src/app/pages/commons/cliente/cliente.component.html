@@ -18,7 +18,7 @@
                 id="inputSocialReason" placeholder="Razón Social">
             </div>
           </div>
-          <div class="col-md-1" *ngIf="module === 'administracion'">
+          <div class="col-md-1" *ngIf="module === 'administracion' || module === 'operaciones'">
             <button type="button" class="btn btn-outline-success" *ngIf="!clientInfo.activo" (click)="toggleOn()">Activar</button>
             <button type="button" class="btn btn-outline-danger" *ngIf="clientInfo.activo" (click)="toggleOff()">Desactivar</button>
           </div>
@@ -37,17 +37,23 @@
                 nbInput fullWidth id="inputZipCode" placeholder="00300">
             </div>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6" *ngIf="clientInfo.id === undefined || !clientInfo.activo">
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
-              <nb-select id="inputColonia" [selected]="formInfo.coloniaId" fullWidth [disabled]="clientInfo.activo"
+              <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth [disabled]="clientInfo.activo" class="form-control"
                 (selectedChange)="onLocation($event)" style="display:block;">
-                <nb-option value="*">Seleccionar</nb-option>
-                <nb-option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</nb-option>
-              </nb-select>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
+              </select>
             </div>
           </div>
-
+          <div class="col-sm-6" *ngIf="clientInfo.activo">
+            <div class="form-group">
+              <label for="inputLocalidad" class="label">Colonia</label>
+              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth [disabled]="clientInfo.activo"
+                id="inputLocalidad" placeholder="Colonia">
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-4">
@@ -62,13 +68,7 @@
                 placeholder="Municipio/Delegación">
             </div>
           </div>
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label for="inputLocalidad" class="label">Colonia</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth [disabled]="clientInfo.activo"
-                id="inputLocalidad" placeholder="Colonia">
-            </div>
-          </div>
+          
         </div>
         <div class="row">
           <div class="col-md-6">
@@ -107,28 +107,28 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputPromotor" class="label">Promotor</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" [disabled]="clientInfo.activo"
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" [disabled]="clientInfo.activo || module === 'operaciones'" 
                 placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCliente" class="label">Cliente</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" [disabled]="clientInfo.activo"
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputdespacho" class="label">Despacho</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" [disabled]="clientInfo.activo"
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputContacto" class="label">Contacto</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" [disabled]="clientInfo.activo"
+              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4">
             </div>
           </div>

@@ -3,6 +3,8 @@ package com.business.unknow.commons.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.business.unknow.model.error.InvoiceCommonException;
+
 public class NumberTranslatorHelper {
 
 	private String cantidadConLetra(String s) {
@@ -179,9 +181,18 @@ public class NumberTranslatorHelper {
 		return result;
 	}
 
-	public String getStringNumber(BigDecimal number) {
+	public String getStringNumber(BigDecimal number,String moneda) throws InvoiceCommonException {
+		String cambio;
+		System.out.println(moneda);
+		if(moneda.equals("MXN")) {
+			cambio="Pesos ";
+		}else if(moneda.equals("USD")){
+			cambio="Dolares ";
+		}else {
+			cambio="Pesos";
+		}
 		BigInteger decimal = number.remainder(BigDecimal.ONE).movePointRight(number.scale()).abs().toBigInteger();
-		return cantidadConLetra(number.toString()).concat(" Pesos ").concat(cantidadConLetra(decimal.toString()))
+		return cantidadConLetra(number.toString()).concat(cambio).concat(cantidadConLetra(decimal.toString()))
 				.concat(" Centavos");
 	}
 }

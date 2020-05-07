@@ -71,7 +71,7 @@
       </nb-card-body>
 
       <!--  OPERACIONES  -->
-      <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion'">
+      <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion' ||  module === 'tesoreria' ">
         <div class="row">
           <div class="col-md-1">
             <label for="inputFolio" class="label">Folio</label>
@@ -178,8 +178,11 @@
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status" [disabled]="statusFlag">
               <option value="8">Por timbrar</option>
               <option value="3">Timbrada</option>
-              <option value="6">Rechazada</option>
               <option value="7">Cancelada</option>
+              <option value="9">Rechazada contabilidad</option>
+              <option value="5">Rechazada tesoreria</option>
+              <option value="6">Rechazada operaciones</option>
+              
             </select>
           </div>
           <div class="col-md-1">
@@ -203,6 +206,9 @@
           </div>
         </div>
       </nb-card-body>
+
+     
+
     </nb-card>
   </div>
 </div>
@@ -219,14 +225,17 @@
         </div>
         <div class="clearfix">
           <strong>Resultados</strong>
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-
           <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
+          <button type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()" class="btn btn-success float-right"><i class="fa fa-download"></i></button>
+          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i class="fa fa-download"></i>Facturas</button>
+          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()" class="btn btn-success float-right"><i class="fa fa-download"></i>Complementos</button>
+
+          
         </div>
         <div class="table-responsive" *ngIf="page.empty == false">
 
@@ -261,10 +270,10 @@
                       [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                       (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                     </button>
-                    <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'administracion'"
-                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Timbrada') }"
-                      [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Timbrada')"
-                      (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
+                    <button  type="button" class="btn-sm btn-outline-primary" *ngIf="module !== 'promotor' && module !== 'contabilidad'"
+                      [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
+                      [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
+                      (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                     </button>
                 </td>
                 <td scope="row">{{fila.folio}}</td>

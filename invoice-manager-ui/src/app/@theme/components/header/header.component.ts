@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{ title: 'V0.904' }];
+  userMenu = [{ title: 'V0.908' }];
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.userService.getUserInfo()
       //.pipe(takeUntil(this.destroy$))
-      .then((user: any) => this.user = user, 
+      .then((user: any) => this.user = user,
       (error:HttpErrorResponse) => {console.log(error.status); if(error.status==401){ this.logout()}});
 
     const { xl } = this.breakpointService.getBreakpointsMap();

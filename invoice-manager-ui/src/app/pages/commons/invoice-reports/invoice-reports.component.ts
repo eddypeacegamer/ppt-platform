@@ -17,106 +17,138 @@ export class InvoiceReportsComponent implements OnInit {
   public statusFlag = false;
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '',lineaEmisor: 'A', solicitante: '' };
+  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
   public userEmail: string;
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
     private donwloadService: DownloadCsvService,
-    private router: Router) {}
+    private router: Router) { }
 
-    ngOnInit() {
-      this.module = this.router.url.split('/')[2];
-      switch (this.module) {
-        case 'promotor':
-          this.userService.getUserInfo().then((user) => {
-            this.userEmail = user.email;
-            this.filterParams.solicitante = user.email;
-            this.updateDataTable();
-          });
-        break;
-        case 'operaciones':
-          this.filterParams.lineaEmisor = 'A';
-          this.filterParams.status = this.router.url.split('/')[4];
-          this.statusFlag = this.filterParams.status !== '*';
+  ngOnInit() {
+    const date: Date = new Date();
+    this.filterParams.to = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+    this.filterParams.since = new Date(date.getFullYear(), date.getMonth(), 1);
+
+    this.module = this.router.url.split('/')[2];
+    switch (this.module) {
+      case 'promotor':
+        this.userService.getUserInfo().then((user) => {
+          this.userEmail = user.email;
+          this.filterParams.solicitante = user.email;
           this.updateDataTable();
+        });
         break;
-        case 'contabilidad':
-          this.filterParams.lineaEmisor = 'B';
-          this.filterParams.status = this.router.url.split('/')[4];
-          this.statusFlag = false;
-          this.updateDataTable();
+      case 'operaciones':
+        this.filterParams.lineaEmisor = 'A';
+        this.filterParams.status = this.router.url.split('/')[4];
+        this.statusFlag = this.filterParams.status !== '*';
+        this.updateDataTable();
         break;
-        case 'administracion':
-          this.filterParams.lineaEmisor = 'A';
-          this.filterParams.status = '3';
-          this.statusFlag = false;
-          this.updateDataTable();
+      case 'contabilidad':
+        this.filterParams.lineaEmisor = 'B';
+        this.filterParams.status = this.router.url.split('/')[4];
+        this.statusFlag = false;
+        this.updateDataTable();
         break;
-        default:
-          this.updateDataTable();
+      case 'administracion':
+        this.filterParams.lineaEmisor = 'A';
+        this.filterParams.status = '3';
+        this.statusFlag = false;
+        this.updateDataTable();
         break;
-      }
-
+      case 'tesoreria':
+        this.filterParams.lineaEmisor = 'A';
+        this.filterParams.status = '3';
+        this.statusFlag = false;
+        this.updateDataTable();
+        break;
+      default:
+        this.updateDataTable();
+        break;
     }
 
-    public onPayStatus(payStatus: string) {
-        this.filterParams.payStatus = payStatus;
-    }
+  }
 
-    public onValidationStatus(validationStatus: string) {
-        this.filterParams.status = validationStatus;
-    }
+  public onPayStatus(payStatus: string) {
+    this.filterParams.payStatus = payStatus;
+  }
 
-    public redirectToCfdi(folio: string) {
+  public onValidationStatus(validationStatus: string) {
+    this.filterParams.status = validationStatus;
+  }
 
-      switch (this.module) {
-        case 'promotor':
-          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+  public redirectToCfdi(folio: string) {
+
+    switch (this.module) {
+      case 'promotor':
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
-        case 'operaciones':
-          this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+      case 'tesoreria':
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
-        case 'contabilidad':
-          this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
+      case 'operaciones':
+        this.router.navigate([`./pages/operaciones/revision/${folio}`]);
         break;
-        case 'administracion':
-          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+      case 'contabilidad':
+        this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
         break;
-        default:
-          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
-      }
+      case 'administracion':
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        break;
+      default:
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
+  }
 
-    public redirectToPreferences(folio: string) {
-      switch (this.module) {
-        case 'promotor':
-          this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
-          break;
-        case 'administracion':
-          this.router.navigate([`./pages/administracion/devoluciones/${folio}/ajustes`]);
-          break;
-        default:
-          break;
-      }
-      
+  public redirectToDevolutionDetails(folio: string) {
+    switch (this.module) {
+      case 'operaciones':
+        this.router.navigate([`./pages/operaciones/facturas/${folio}/devoluciones`]);
+        break;
+      case 'tesoreria':
+        this.router.navigate([`./pages/tesoreria/facturas/${folio}/devoluciones`]);
+        break;
+      case 'administracion':
+        this.router.navigate([`./pages/administracion/devoluciones/${folio}/ajustes`]);
+        break;
+      default:
+        break;
     }
+  }
 
-    public updateDataTable(currentPage?: number, pageSize?: number) {
-      const pageValue = currentPage || 0;
-      const sizeValue = pageSize || 10;
-      this.invoiceService.getInvoices(pageValue, sizeValue, this.filterParams)
-        .subscribe((result: GenericPage<any>) => this.page = result);
-    }
 
-    public onChangePageSize(pageSize: number) {
-      this.updateDataTable(this.page.number, pageSize);
-    }
+  public redirectToPreferences(folio: string) {
+    this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
+  }
 
-    public downloadHandler() {
-      this.invoiceService.getInvoices(0, 10000, this.filterParams).subscribe(result => {
-        this.donwloadService.exportCsv(result.content, 'Facturas');
-      });
-    }
+  public updateDataTable(currentPage?: number, pageSize?: number) {
+    const pageValue = currentPage || 0;
+    const sizeValue = pageSize || 10;
+    this.invoiceService.getInvoices(pageValue, sizeValue, this.filterParams)
+      .subscribe((result: GenericPage<any>) => this.page = result);
+  }
+
+  public onChangePageSize(pageSize: number) {
+    this.updateDataTable(this.page.number, pageSize);
+  }
+
+  public downloadHandler() {
+    this.invoiceService.getInvoices(0, 10000, this.filterParams).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Facturas');
+    });
+  }
+
+  public downloadInvoicesReports() {
+    this.invoiceService.getInvoicesReports(0, 10000, this.filterParams).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Facturas');
+    });
+  }
+
+  public downloadComplementReports() {
+    this.invoiceService.getComplementReports(0, 10000, this.filterParams).subscribe(result => {
+      this.donwloadService.exportCsv(result.content, 'Complementos');
+    });
+  }
 
 }

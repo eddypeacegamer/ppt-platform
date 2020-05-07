@@ -10,10 +10,12 @@
   
               <p class="font-weight-bold">Emisor</p>
               <p>{{factura.rfcEmisor}}</p>
+              &nbsp;&nbsp;
               <p>{{factura.razonSocialEmisor}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <p class="font-weight-bold">Receptor</p>
               <p>{{factura.rfcRemitente}}</p>
+              &nbsp;&nbsp;
               <p>{{factura.razonSocialRemitente}}</p>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <p class="font-weight-bold">Promotor</p>
@@ -206,7 +208,7 @@
           </div>
         </div>
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
-          <ngx-pagos [factura]="factura" [user]="user"></ngx-pagos>
+          <ngx-pagos-factura [factura]="factura" [user]="user"></ngx-pagos-factura>
         </div>
       </nb-card-body>
     </nb-card>

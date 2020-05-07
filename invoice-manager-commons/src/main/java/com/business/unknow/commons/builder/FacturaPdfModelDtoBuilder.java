@@ -74,5 +74,15 @@ public class FacturaPdfModelDtoBuilder extends AbstractBuilder<FacturaPdfModelDt
 		instance.setSubTotalDesc(subTotalDesc);
 		return this;
 	}
+	
+	public FacturaPdfModelDtoBuilder setDireccionEmisor(String direccionEmisor) {
+		instance.setDireccionEmisor(direccionEmisor);
+		return this;
+	}
+
+	public FacturaPdfModelDtoBuilder setDireccionReceptor(String direccionReceptor) {
+		instance.setDireccionReceptor(direccionReceptor);
+		return this;
+	}
 
 }

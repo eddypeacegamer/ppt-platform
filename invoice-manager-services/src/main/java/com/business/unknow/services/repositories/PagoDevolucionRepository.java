@@ -18,6 +18,8 @@ public interface PagoDevolucionRepository extends JpaRepository<PagoDevolucion, 
 	
 	public Page<PagoDevolucion> findAll(Pageable pageable);
 	
+	public Page<PagoDevolucion> findByFolioFactura(String folioFact,Pageable pageable);
+	
 	public Page<PagoDevolucion> findByTipoReceptorAndReceptor(String tipoReceptor,String receptor,Pageable pageable);
 	
 	public List<PagoDevolucion> findByFolioFactura(String folio);

@@ -13,11 +13,11 @@ import { FilesData } from '../../../@core/data/files-data';
 import { ResourceFile } from '../../../models/resource-file';
 
 @Component({
-  selector: 'ngx-pagos',
-  templateUrl: './pagos.component.html',
-  styleUrls: ['./pagos.component.scss'],
+  selector: 'ngx-pagos-factura',
+  templateUrl: './pagos-factura.component.html',
+  styleUrls: ['./pagos-factura.component.scss'],
 })
-export class PagosComponent implements OnInit {
+export class PagosFacturaComponent implements OnInit {
 
   @Input() factura: Factura;
   @Input() user: User;
