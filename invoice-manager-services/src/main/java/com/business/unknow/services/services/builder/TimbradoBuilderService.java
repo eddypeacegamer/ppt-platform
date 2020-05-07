@@ -75,6 +75,7 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 						.orElseThrow(() -> new InvoiceManagerException("Empresa not found",
 								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
+		
 		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(
 				currentFacturaDto.getFolioPadre(), FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
 		Optional<Pago> currentPago = pagoRepository.findByFolio(folio).stream()
