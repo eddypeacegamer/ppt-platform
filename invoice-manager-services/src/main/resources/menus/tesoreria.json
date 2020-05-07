@@ -1,18 +1,22 @@
  {
-    "title": "Tesoreria",
-    "icon": "layout-outline",
-    "children": [
-      {
-        "title": "Validacion pagos",
-        "link": "/pages/tesoreria/validacion-pagos"
-      },
-      {
-        "title": "Historico pagos",
-        "link": "/pages/tesoreria/historial-pagos"
-      },
-      {
-        "title": "Devoluciones",
-        "link": "/pages/tesoreria/devoluciones"
-      }
-    ]
-  }
+	"title": "Tesoreria",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Validacion pagos",
+			"link": "/pages/tesoreria/validacion-pagos"
+		},
+		{
+			"title": "Historico pagos",
+			"link": "/pages/tesoreria/historial-pagos"
+		},
+		{
+			"title": "Devoluciones",
+			"link": "/pages/tesoreria/devoluciones"
+		},
+		{
+			"title": "Reportes Facturas",
+			"link": "/pages/tesoreria/reportes/*"
+		}
+	]
+}

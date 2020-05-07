@@ -11,6 +11,8 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Devolucion } from '../../../models/devolucion';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PagoDevolucion } from '../../../models/pago-devolucion';
+import { GenericPage } from '../../../models/generic-page';
 
 @Component({
   selector: 'ngx-devolutions-details',
@@ -26,6 +28,7 @@ export class DevolutionsDetailsComponent implements OnInit {
   public factura: Factura= new Factura();
   public pago: PagoFactura;
   public devoluciones: Devolucion[]= [];
+  public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 
   public formParams: any = {tab: 'CLIENTE', filename: ''};
 
@@ -53,7 +56,9 @@ export class DevolutionsDetailsComponent implements OnInit {
       this.folioParam = route.get('folio');
       if (this.folioParam !== '*') {
         this.devolutionService.findDevolutionByFolioFact(this.folioParam)
-          .subscribe(devs => this.devoluciones = devs.filter(d =>'D' === d.tipo));
+          .subscribe(devs => this.devoluciones = devs.filter(d => 'D' === d.tipo));
+        this.devolutionService.findDevolutionsRequests(0, 1, { folio: this.folioParam})
+          .subscribe(page => this.pageDevolutions = page);
         this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
               this.clientsService.getClientByRFC(invoice.rfcRemitente).subscribe(client => this.clientInfo = client);

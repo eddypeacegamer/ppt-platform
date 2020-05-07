@@ -117,10 +117,10 @@
                   </td>
                   <td scope="row" class="text-center">{{fila.tipoReceptor}}</td>
                   <td scope="row" class="text-center">{{fila.receptor}}</td>
-                  <td scope="row" class="text-center">{{fila.pagoMonto | currency :'MXN':'symbol':'.2-6'}}</td>
-                  <td scope="row" class="text-center">{{fila.impuesto | currency :'MXN':'symbol':'.2-6'}}</td>
+                  <td scope="row" class="text-center">{{fila.pagoMonto | currency :'MXN':'symbol':'.2'}}</td>
+                  <td scope="row" class="text-center">{{fila.impuesto | currency :'MXN':'symbol':'.2'}}</td>
                   <td scope="row" class="text-center">{{fila.porcentaje/100 | percent : '.2'}}</td>
-                  <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency :'MXN':'symbol':'.2-6'}}</td>
+                  <td scope="row" class="text-center" *ngIf="!fila.edit">{{fila.monto | currency :'MXN':'symbol':'.2'}}</td>
                   <td scope="row" class="text-center" *ngIf="fila.edit"><input type="number" [(ngModel)]="fila.monto"></td>
                 </tr>
                 <tr>
@@ -128,6 +128,44 @@
                   <td *ngIf="module !== 'administracion'" colspan="4"></td>
                   <td class="text-center"><p class="font-weight-bold">Total</p></td>
                   <td class="text-center">{{calculateTotal() | currency :'MXN':'symbol':'.2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <strong>Devoluciones</strong>
+  
+          <div *ngIf="pageDevolutions.empty" class="alert alert-primary" role="alert">
+            No se encontraron resultados
+          </div>
+          <div class="table-responsive" *ngIf="!pageDevolutions.empty">
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="text-center">Folio Devolucion</th>
+                  <th scope="col" class="text-center">Beneficiario</th>
+                  <th scope="col" class="text-center">Importe</th>
+                  <th scope="col" class="text-center">Forma de pago</th>
+                  <th scope="col" class="text-center">Banco</th>
+                  <th scope="col" class="text-center">Tipo Ref</th>
+                  <th scope="col" class="text-center">Referencia</th>
+                  <th scope="col" class="text-center">Estatus</th>
+                  <th scope="col" class="text-center">Fecha solicitud</th>
+                  <th scope="col" class="text-center">Fecha pago</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of pageDevolutions.content">
+                  <td scope="row" class="text-center">{{fila.id}}</td>
+                  <td scope="row" class="text-center">{{fila.beneficiario}}</td>
+                  <td scope="row" class="text-right">{{fila.monto | currency}}</td>
+                  <td scope="row" class="text-center">{{fila.formaPago}}</td>
+                  <td scope="row" class="text-center">{{fila.banco}}</td>
+                  <td scope="row" class="text-center">{{fila.tipoReferencia}}</td>
+                  <td scope="row" class="text-center">{{fila.referencia}}</td>
+                  <td scope="row" class="text-center">{{fila.status}}</td>
+                  <td scope="row" class="text-center">{{fila.fechaCreacion | date}}</td>
+                  <td scope="row" class="text-center">{{fila.fechaPago | date}}</td>
                 </tr>
               </tbody>
             </table>
