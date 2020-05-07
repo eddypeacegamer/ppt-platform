@@ -355,7 +355,6 @@ export class PreCfdiComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    console.log(fact);
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
@@ -375,12 +374,15 @@ export class PreCfdiComponent implements OnInit {
 
   generateComplement() {
     this.errorMessages = [];
-    if( this.payment.monto + this.paymentSum > this.factura.cfdi.total ){
+    if (this.payment.monto + this.paymentSum > this.factura.cfdi.total ){
+      this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
+    }
+    if(this.payment.moneda !== this.factura.cfdi.moneda){
       this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
     }
 
-
-    this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
+    if(this.errorMessages.length === 0) {
+      this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
       .subscribe(complement => {
         this.invoiceService.getComplementosInvoice(this.factura.folio)
         .pipe(
@@ -396,6 +398,7 @@ export class PreCfdiComponent implements OnInit {
           this.calculatePaymentSum(complementos);
         });
       });
+    }
   }
 
   calculatePaymentSum(complementos: Factura[]){
