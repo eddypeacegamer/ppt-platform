@@ -23,6 +23,7 @@ import { EmpresasComponent } from './empresas/empresas.component';
 import { PagosFacturaComponent } from './pagos-factura/pagos-factura.component';
 import { ConceptosComponent } from './conceptos/conceptos.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
+import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-details.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
     PagosFacturaComponent,
     ConceptosComponent,
     InvoiceReportsComponent,
+    DevolutionsDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +59,7 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
     EmpresaComponent,
     EmpresasComponent,
     InvoiceReportsComponent,
+    DevolutionsDetailsComponent,
     PagosFacturaComponent,
     ConceptosComponent,
     FormsModule,

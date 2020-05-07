@@ -78,6 +78,9 @@ export class InvoiceReportsComponent implements OnInit {
         case 'promotor':
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
+        case 'tesoreria':
+          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        break;
         case 'operaciones':
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
         break;
@@ -92,10 +95,13 @@ export class InvoiceReportsComponent implements OnInit {
       }
     }
 
-    public redirectToPreferences(folio: string) {
+    public redirectToDevolutionDetails(folio: string) {
       switch (this.module) {
-        case 'promotor':
-          this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
+        case 'operaciones':
+          this.router.navigate([`./pages/operaciones/facturas/${folio}/devoluciones`]);
+          break;
+        case 'tesoreria':
+          this.router.navigate([`./pages/tesoreria/facturas/${folio}/devoluciones`]);
           break;
         case 'administracion':
           this.router.navigate([`./pages/administracion/devoluciones/${folio}/ajustes`]);
@@ -103,7 +109,11 @@ export class InvoiceReportsComponent implements OnInit {
         default:
           break;
       }
-      
+    }
+
+
+    public redirectToPreferences(folio: string) {
+      this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
     }
 
     public updateDataTable(currentPage?: number, pageSize?: number) {

@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class DevolucionesController {
 	}
 
 	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}/saldo")
-	public ResponseEntity<Double> getSaldoDevoluciones(
+	public ResponseEntity<BigDecimal> getSaldoDevoluciones(
 			@PathVariable(name = "tipoReceptor", required = true) String tipoReceptor,
 			@PathVariable(name = "idReceptor", required = true) String idReceptor) {
 		return new ResponseEntity<>(service.getMontoDevoluciones(tipoReceptor, idReceptor), HttpStatus.OK);
@@ -93,6 +94,7 @@ public class DevolucionesController {
 	}
 	@GetMapping("/devoluciones/pagos")
 	public ResponseEntity<Page<PagoDevolucionDto>> getDevolucionesByParams(
+			@RequestParam(name = "folio") Optional<String> folio,
 			@RequestParam(name = "status", defaultValue = "") String status,
 			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
 			@RequestParam(name = "idReceptor", defaultValue = "") String idReceptor,
@@ -100,7 +102,7 @@ public class DevolucionesController {
 			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size){
-		return new ResponseEntity<>(service.getPagoDevolucionesByParams(status, formaPago, beneficiario, tipoReceptor, idReceptor, page, size),HttpStatus.OK);
+		return new ResponseEntity<>(service.getPagoDevolucionesByParams(folio,status, formaPago, beneficiario, tipoReceptor, idReceptor, page, size),HttpStatus.OK);
 	}
 
 }

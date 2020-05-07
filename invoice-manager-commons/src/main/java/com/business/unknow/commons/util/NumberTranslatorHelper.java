@@ -187,7 +187,7 @@ public class NumberTranslatorHelper {
 		if(moneda.equals("MXN")) {
 			cambio="Pesos ";
 		}else if(moneda.equals("USD")){
-			cambio="Centavos ";
+			cambio="Dolares ";
 		}else {
 			cambio="Pesos";
 		}

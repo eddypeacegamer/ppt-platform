@@ -98,9 +98,14 @@ public class DevolucionService {
 				.getDevolucionesDtoFromEntities(repository.findDevolucionesByParams(tipoReceptor, idReceptor, "D"));
 	}
 
-	public Double getMontoDevoluciones(String tipoReceptor, String idReceptor) {
-		Double result = repository.findMontoByParams(tipoReceptor, idReceptor);
-		return (result == null) ? 0.0 : result;
+	public BigDecimal getMontoDevoluciones(String tipoReceptor, String idReceptor) {
+		BigDecimal result = repository.findMontoByParams(tipoReceptor, idReceptor);
+		
+		if(result==null||result.compareTo(BigDecimal.ZERO)==0) {
+			return new BigDecimal(0.0);
+		}else {
+			return result.setScale(2, BigDecimal.ROUND_DOWN);
+		}
 	}
 
 	public DevolucionDto insertDevolution(DevolucionDto devolucion) {
@@ -222,10 +227,12 @@ public class DevolucionService {
 		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(pagoDevolucion);
 	}
 
-	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(String status, String formaPago, String beneficiario,
+	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> folio,String status, String formaPago, String beneficiario,
 			String tipoReceptor, String idReceptor, int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
-		if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
+		if(folio.isPresent()) {
+			result = pagoDevolucionRepository.findByFolioFactura(folio.get(), PageRequest.of(0,10));
+		}else if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
 			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor,
 					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 		} else if (status.length() > 0) {
@@ -259,6 +266,4 @@ public class DevolucionService {
 						(i1, i2) -> i1.add(i2)))// suma importe impuestos por concepto
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
-	
-	
 }
