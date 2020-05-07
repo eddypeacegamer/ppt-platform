@@ -10,6 +10,8 @@ import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
+import { LineaBComponent } from './linea-b/linea-b.component';
+import { LineaCComponent } from './linea-c/linea-c.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -42,6 +44,13 @@ const routes: Routes = [{
       path: 'revision/:folio',
       component : RevisionComponent,
     }, {
+      path: 'linea-b',
+      component : LineaBComponent,
+    }, {
+      path: 'linea-c',
+      component : LineaCComponent,
+    },
+     {
       path: 'facturas/:folio/devoluciones',
       component: DevolutionsDetailsComponent,
     }]}];
