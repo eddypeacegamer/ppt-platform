@@ -68,7 +68,7 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to,
 				emisor, receptor, page, size), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/factura-reports")
 	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(
 			@RequestParam(name = "status") Optional<String> status,
@@ -79,9 +79,11 @@ public class FacturaController {
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "100") int size) {
-		return new ResponseEntity<>(service.getFacturaReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(
+				service.getFacturaReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size),
+				HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/complemento-reports")
 	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(
 			@RequestParam(name = "status") Optional<String> status,
@@ -92,7 +94,9 @@ public class FacturaController {
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "100") int size) {
-		return new ResponseEntity<>(service.getComplementoReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(
+				service.getComplementoReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size),
+				HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")
@@ -105,8 +109,7 @@ public class FacturaController {
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
-	
-	
+
 	@PutMapping("/{folio}")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto factura) {
@@ -118,15 +121,19 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
 	}
 
+	@PostMapping("/{folio}/complementos")
+	public ResponseEntity<FacturaDto> getComplementos(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.createComplemento(folio, pago), HttpStatus.OK);
+	}
+
 	// CFDI
 	@PostMapping("/cfdi/validacion")
-	public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi)
-			throws InvoiceManagerException {
+	public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
 		cfdiService.validateCfdi(cfdi);
 		return new ResponseEntity<>("VALIDA", HttpStatus.OK);
 	}
 
-	
 	@GetMapping("/{folio}/cfdi")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
 		return new ResponseEntity<>(cfdiService.getCfdiByFolio(folio), HttpStatus.OK);
@@ -155,24 +162,24 @@ public class FacturaController {
 	@PostMapping("/{folio}/conceptos")
 	public ResponseEntity<CfdiDto> insertConcepto(@PathVariable String folio,
 			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
-		CfdiDto dto =cfdiService.insertNewConceptoToCfdi(folio, conceptoDto);
+		CfdiDto dto = cfdiService.insertNewConceptoToCfdi(folio, conceptoDto);
 		service.recreatePdf(dto);
 		return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		
+
 	}
 
 	@PutMapping("/{folio}/conceptos/{id}")
 	public ResponseEntity<CfdiDto> updateConcepto(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid ConceptoDto concepto) throws InvoiceManagerException {
 		CfdiDto dto = cfdiService.updateConceptoFromCfdi(folio, id, concepto);
-		service.recreatePdf( dto);
+		service.recreatePdf(dto);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/conceptos/{id}")
 	public ResponseEntity<CfdiDto> deleteConcepto(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
-		CfdiDto dto =cfdiService.removeConceptFromCfdi(folio, id); 
+		CfdiDto dto = cfdiService.removeConceptFromCfdi(folio, id);
 		service.recreatePdf(dto);
 		return new ResponseEntity<>(dto, HttpStatus.NO_CONTENT);
 	}
