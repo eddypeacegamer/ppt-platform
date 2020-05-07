@@ -73,7 +73,7 @@
               <select id="inputGiro" fullWidth class="form-control" style="display:block;"
                 [(ngModel)]="formInfo.lineaEmisor">
                 <option value="*">Seleccionar</option>
-                <option value="A">Línea A</option>
+                <!--option value="A">Línea A -- NO USAR SE BLOQUEA PARA EVITAR CAGADAS DE GENERAR DEVOLUCIONES</option-->
                 <option value="B">Línea B</option>
                 <option value="C">Línea C</option>
               </select>
@@ -107,12 +107,13 @@
               <select id="inputGiro" fullWidth class="form-control" style="display:block;"
                 [(ngModel)]="formInfo.lineaReceptor">
                 <option value="*">Seleccionar</option>
+                <option value="CLIENTE">Clientes</option>
                 <option value="A">Línea A</option>
                 <option value="B">Línea B</option>
                 <option value="C">Línea C</option>
               </select>
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-5" *ngIf="formInfo.lineaReceptor!=='CLIENTE'">
               <div class="form-group">
                 <label for="inputGiro" class="label">Giro Empresa</label>
                 <select id="inputGiro" fullWidth class="form-control"
@@ -123,13 +124,31 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" *ngIf="formInfo.lineaReceptor!=='CLIENTE'">
               <label for="inputEmpresa" class="label">Empresa</label>
               <select id="inputEmpresa" class="form-control" (change)="onReceptorSelected($event.target.value)"
                 [(ngModel)]="formInfo.receptorRfc" style="display:block;" fullWidth>
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let company of receptoresCat" [(value)]="company.id">
                   {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-5" *ngIf="formInfo.lineaReceptor==='CLIENTE'">
+              <label for="inputCliente" class="label">Razón social</label>
+              <div class="row form-inline">
+                <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control" (ngModelChange)="buscarClientInfo($event)"
+                  placeholder="Razón social">
+              </div>
+            </div>
+            <div class="col-md-5" *ngIf="formInfo.lineaReceptor==='CLIENTE'">
+              <label for="inputClient" class="label">Cliente</label>
+              <select id="inputClient" class="form-control" (change)="onClientSelected($event.target.value)"
+                [(ngModel)]="formInfo.clientRfc" style="display:block;" fullWidth>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let client of clientsCat" [(value)]="client.id">
+                  {{client.informacionFiscal.rfc}}-{{client.informacionFiscal.razonSocial}}
                 </option>
               </select>
             </div>
@@ -205,8 +224,8 @@
 
         <div *ngIf="factura">
 
-          <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum">Pagos</p>
-          <div class="row" *ngIf="factura.cfdi.total > paymentSum">
+          <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.cfdi.metodoPago =='PPD'">Cargar Complementos</p>
+          <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.cfdi.metodoPago =='PPD'">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select id="inputPayCoin" style="display:block;" class="form-control" [(ngModel)]="payment.moneda">

@@ -21,6 +21,10 @@ import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Pago } from '../../../models/factura/pago';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { ClientsData } from '../../../@core/data/clients-data';
+import { GenericPage } from '../../../models/generic-page';
+import { Client } from '../../../models/client';
+import { Contribuyente } from '../../../models/contribuyente';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -31,6 +35,7 @@ export class PreCfdiComponent implements OnInit {
   public girosCat: Catalogo[] = [];
   public emisoresCat: Empresa[] = [];
   public receptoresCat: Empresa[] = [];
+  public clientsCat: Client[] = [];
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
   public usoCfdiCat: UsoCfdi[] = [];
@@ -39,7 +44,7 @@ export class PreCfdiComponent implements OnInit {
   public devolutionCat: Catalogo[] = [];
   public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
-  public complementPayTypeCat : Catalogo[] =[];
+  public complementPayTypeCat: Catalogo[] =[];
   public newConcep: Concepto;
   public payment: Pago;
   public factura: Factura;
@@ -55,7 +60,7 @@ export class PreCfdiComponent implements OnInit {
 
   public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'A', usoCfdi: '*', payType: '*' };
 
-  public clientInfo: Empresa;
+  public clientInfo: Contribuyente;
   public companyInfo: Empresa;
 
   public loading: boolean = false;
@@ -69,6 +74,7 @@ export class PreCfdiComponent implements OnInit {
 
   constructor(private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
+    private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
     private filesService: FilesData,
@@ -167,6 +173,7 @@ export class PreCfdiComponent implements OnInit {
 
   onGiroReceptorSelection(giroId: string) {
     const value = +giroId;
+    console.log(value);
     if (isNaN(value)) {
       this.receptoresCat = [];
     } else {
@@ -182,7 +189,40 @@ export class PreCfdiComponent implements OnInit {
   }
 
   onReceptorSelected(companyId: string) {
-    this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId));
+    this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId)).informacionFiscal;
+  }
+
+  buscarClientInfo( razonSocial: string) {
+    if ( razonSocial !== undefined && razonSocial.length > 5) {
+      this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
+          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+          .subscribe(clients => {
+            this.clientsCat = clients;
+            if ( clients.length > 0) {
+              this.formInfo.receptorRfc = clients[0].informacionFiscal.rfc;
+              this.onClientSelected(this.formInfo.receptorRfc);
+            }
+          }, (error: HttpErrorResponse) => {
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+            this.clientsCat = [];
+            this.clientInfo = undefined;
+          });
+    }else {
+      this.clientsCat = [];
+      this.clientInfo = undefined;
+    }
+  }
+
+  onClientSelected(id: string) {
+    const value = +id;
+    if (!isNaN(value)) {
+      const client = this.clientsCat.find(c => c.id === Number(value));
+      if (client.activo === true) {
+        this.clientInfo = client.informacionFiscal;
+      } else {
+        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+      }
+    }
   }
 
   onPayMethodSelected(clave: string) {
@@ -237,7 +277,7 @@ export class PreCfdiComponent implements OnInit {
     this.loading = true;
     this.errorMessages = [];
     this.factura.solicitante = this.user.email;
-    if (this.clientInfo === undefined || this.clientInfo.informacionFiscal.rfc === undefined) {
+    if (this.clientInfo === undefined || this.clientInfo.rfc === undefined) {
       this.errorMessages.push('La informacion del cliente es insuficiente o no esta presente.');
     } else if (this.companyInfo === undefined || this.companyInfo.informacionFiscal === undefined) {
       this.errorMessages.push('La informacion de la empresa es insuficiente o no esta presente.');
@@ -249,12 +289,13 @@ export class PreCfdiComponent implements OnInit {
       this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial;
       this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
       this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
-      this.factura.rfcRemitente = this.clientInfo.informacionFiscal.rfc;
-      this.factura.razonSocialRemitente = this.clientInfo.informacionFiscal.razonSocial;
-      this.factura.cfdi.receptor.rfc = this.clientInfo.informacionFiscal.rfc;
-      this.factura.cfdi.receptor.nombre = this.clientInfo.informacionFiscal.razonSocial;
+
+      this.factura.rfcRemitente = this.clientInfo.rfc;
+      this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
+      this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
+      this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
       this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
-      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo.informacionFiscal);
+      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
