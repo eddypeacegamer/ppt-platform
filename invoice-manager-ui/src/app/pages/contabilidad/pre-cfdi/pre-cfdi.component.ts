@@ -19,6 +19,8 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
+import { Pago } from '../../../models/factura/pago';
+import { PaymentsData } from '../../../@core/data/payments-data';
 
 @Component({
   selector: 'ngx-pre-cfdi',
@@ -37,7 +39,9 @@ export class PreCfdiComponent implements OnInit {
   public devolutionCat: Catalogo[] = [];
   public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
+  public complementPayTypeCat : Catalogo[] =[];
   public newConcep: Concepto;
+  public payment: Pago;
   public factura: Factura;
   public folioParam: string;
   public user: User;
@@ -70,12 +74,14 @@ export class PreCfdiComponent implements OnInit {
     private filesService: FilesData,
     private userService: UsersData,
     private cfdiValidator: CfdiValidatorService,
+    private paymentsService: PaymentsData,
     private downloadService: DonwloadFileService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
+    this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
     /* preloaded cats*/
     this.catalogsService.getStatusPago().then(cat => this.payCat = cat);
     this.catalogsService.getStatusDevolucion().then(cat => this.devolutionCat = cat);
@@ -110,6 +116,8 @@ export class PreCfdiComponent implements OnInit {
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';
+    this.payment = new Pago();
+    this.payment.formaPago = 'EFECTIVO';
   }
 
   public getInvoiceByFolio(folio: string) {
@@ -131,11 +139,12 @@ export class PreCfdiComponent implements OnInit {
                   record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-                  record.cfdi.formaPago = this.payTypeCat.find(v => v.id === record.cfdi.formaPago).nombre;
                   return record;
-                })
-              }))
-            .subscribe(complementos => this.factura.complementos = complementos);
+                })}
+            )).subscribe(complementos => {
+              this.factura.complementos = complementos;
+              this.calculatePaymentSum(complementos);
+            });
         }
       },
         error => {
@@ -364,4 +373,36 @@ export class PreCfdiComponent implements OnInit {
         });
   }
 
+  generateComplement() {
+    this.errorMessages = [];
+    if( this.payment.monto + this.paymentSum > this.factura.cfdi.total ){
+      this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
+    }
+
+
+    this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
+      .subscribe(complement => {
+        this.invoiceService.getComplementosInvoice(this.factura.folio)
+        .pipe(
+          map((facturas: Factura[]) => {
+            return facturas.map(record => {
+              record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
+              record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
+              record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
+              return record;
+            })}
+        )).subscribe(complementos => {
+          this.factura.complementos = complementos;
+          this.calculatePaymentSum(complementos);
+        });
+      });
+  }
+
+  calculatePaymentSum(complementos: Factura[]){
+    if (complementos.length === 0) {
+      this.paymentSum = 0;
+    } else {
+      this.paymentSum = complementos.map((c: Factura) => c.total).reduce((total, c) => total + c);
+    }
+  }
 }
