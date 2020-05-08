@@ -24,6 +24,7 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.NtlinkClient;
+import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.business.unknow.services.config.properties.NtlinkProperties;
 
 @Service
@@ -44,6 +45,9 @@ public class NtinkExecutorService extends AbstractPackExecutor {
 	@Autowired
 	private NtlinkProperties ntlinkProperties;
 
+	@Autowired
+	private GlocalConfigs glocalConfigs;
+
 	private static final String EXP = "&";
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
@@ -57,7 +61,10 @@ public class NtinkExecutorService extends AbstractPackExecutor {
 			NtlinkCancelRequestModel requestModel = new NtlinkCancelRequestModel(ntlinkProperties.getUser(),
 					ntlinkProperties.getPassword(), context.getFacturaDto().getUuid(),
 					context.getFacturaDto().getRfcEmisor(), context.getFacturaDto().getRfcRemitente(), expresion);
-			client.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext()).cancelar(requestModel);
+			if (glocalConfigs.getEnvironment().equals("prod")) {
+				client.getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext())
+						.cancelar(requestModel);
+			}
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;
