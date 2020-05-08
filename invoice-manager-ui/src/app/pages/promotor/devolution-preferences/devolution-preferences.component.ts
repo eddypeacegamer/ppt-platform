@@ -164,7 +164,7 @@ export class DevolutionPreferencesComponent implements OnInit {
     this.fileInput.value = '';
     solicitud.solicitante = this.user.email;
     solicitud.status = 'SOLICITUD';
-    solicitud.folioFactura = this.factura.folio;
+    solicitud.folioFactura = this.folioParam;
     if (solicitud.formaPago === 'PAGO_MULTIPLE') {
       solicitud.referencia = this.formParams.filename;
     }
