@@ -213,6 +213,7 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		entity.setTotal(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			pagoService.insertNewPaymentWithoutValidation(
