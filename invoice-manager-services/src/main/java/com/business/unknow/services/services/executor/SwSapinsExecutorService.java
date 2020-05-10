@@ -23,6 +23,7 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.SwSapiensClient;
+import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.business.unknow.services.config.properties.SwProperties;
 
 @Service
@@ -42,6 +43,9 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
 
 	@Autowired
 	private SwProperties swProperties;
+
+	@Autowired
+	private GlocalConfigs glocalConfigs;
 
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		SwSapiensClient swSapiensClient = new SwSapiensClient();
@@ -100,12 +104,14 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
 
 	public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
-			swSapiensClient
-					.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
-					.cancel(context.getFacturaDto().getUuid(), context.getEmpresaDto().getPwSat(),
-							context.getEmpresaDto().getInformacionFiscal().getRfc(),
-							fileHelper.stringEncodeBase64(context.getEmpresaDto().getCertificado()),
-							fileHelper.stringEncodeBase64(context.getEmpresaDto().getLlavePrivada()));
+			if (glocalConfigs.getEnvironment().equals("prod")) {
+				swSapiensClient.getSwSapiensClient(swProperties.getHost(), "", swProperties.getUser(),
+						swProperties.getPassword()).cancel(context.getFacturaDto().getUuid(),
+								context.getEmpresaDto().getPwSat(),
+								context.getEmpresaDto().getInformacionFiscal().getRfc(),
+								fileHelper.stringEncodeBase64(context.getEmpresaDto().getCertificado()),
+								fileHelper.stringEncodeBase64(context.getEmpresaDto().getLlavePrivada()));
+			}
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;

@@ -41,8 +41,6 @@ public class ClientService {
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
-	@Autowired
-	private CatalogsService catalogsService;
 
 	private ClienteValidator clientValidator = new ClienteValidator();
 
@@ -78,7 +76,7 @@ public class ClientService {
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
-			catalogsService.getCodigosPostaleByCode(cliente.getInformacionFiscal().getCp());
+			//catalogsService.getCodigosPostaleByCode(cliente.getInformacionFiscal().getCp()); Allow include postal codes not registered in the platform
 			Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
 			if (entity.isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String

@@ -25,6 +25,7 @@ import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.FacturacionModernaClient;
 import com.business.unknow.services.config.properties.FacturacionModernaProperties;
+import com.business.unknow.services.config.properties.GlocalConfigs;
 
 @Service
 public class FacturacionModernaExecutor extends AbstractPackExecutor {
@@ -43,6 +44,9 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
 
 	@Autowired
 	private FacturacionModernaProperties fmProperties;
+
+	@Autowired
+	private GlocalConfigs glocalConfigs;
 
 	public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
 		try {
@@ -83,12 +87,10 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
 		} catch (FacturaModernaClientException e) {
 			e.printStackTrace();
 			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: %s Detail:%s",
-					e.getMessage(), e.getErrorMessage().getMessageDetail()), e.getMessage(),
-					HttpStatus.SC_CONFLICT);
+					e.getMessage(), e.getErrorMessage().getMessageDetail()), e.getMessage(), HttpStatus.SC_CONFLICT);
 		} catch (InvoiceCommonException e) {
 			throw new InvoiceManagerException(String.format("Error Stamping in facturacion moderna: %s Detail:%s",
-					e.getMessage(), e.getErrorMessage().getDeveloperMessage()), e.getMessage(),
-					HttpStatus.SC_CONFLICT);
+					e.getMessage(), e.getErrorMessage().getDeveloperMessage()), e.getMessage(), HttpStatus.SC_CONFLICT);
 		}
 		return context;
 	}
@@ -98,7 +100,9 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
 			FacturaModernaRequestModel requestModel = new FacturaModernaRequestModel(fmProperties.getUser(),
 					fmProperties.getPassword(), context.getFacturaDto().getRfcEmisor(),
 					context.getFacturaDto().getUuid());
-			client.getFacturacionModernaClient(fmProperties.getHost(), "").cancelar(requestModel);
+			if (glocalConfigs.getEnvironment().equals("prod")) {
+				client.getFacturacionModernaClient(fmProperties.getHost(), "").cancelar(requestModel);
+			}
 			context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
 			context.getFacturaDto().setFechaCancelacion(new Date());
 			return context;
