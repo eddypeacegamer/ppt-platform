@@ -350,7 +350,14 @@ public class FacturaService {
 				|| facturaDto.getFolioPadre() == null) {
 			List<FacturaDto> complementos = getComplementos(folio);
 			for (FacturaDto complemento : complementos) {
-				cancelarFactura(complemento.getFolio(), complemento);
+				if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+					cancelarFactura(complemento.getFolio(), complemento);
+				} else {
+					if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+						complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
+						updateFactura(complemento, complemento.getFolio());
+					}
+				}
 			}
 		}
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
