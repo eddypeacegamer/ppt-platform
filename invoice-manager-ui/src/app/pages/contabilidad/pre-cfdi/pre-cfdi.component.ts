@@ -123,7 +123,7 @@ export class PreCfdiComponent implements OnInit {
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';
     this.payment = new Pago();
-    this.payment.formaPago = 'EFECTIVO';
+    this.payment.formaPago = '*';
   }
 
   public getInvoiceByFolio(folio: string) {
@@ -306,8 +306,8 @@ export class PreCfdiComponent implements OnInit {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
+          this.getInvoiceByFolio(invoice.folio);
           this.loading = false;
-          this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {
           this.loading = false;
           this.errorMessages.push((error.error != null && error.error !== undefined) ?
@@ -318,35 +318,12 @@ export class PreCfdiComponent implements OnInit {
     }
   }
 
-  public aceptarFactura() {
-    this.loading = true;
-    this.successMessage = undefined;
-    this.errorMessages = [];
-    const fact = { ...this.factura };
-    if (fact.cfdi.metodoPago === 'PPD') {
-      fact.statusFactura = '4'; // update to por timbrar
-    } else {
-      fact.statusFactura = '2'; // update to validacion tesoreria
-    }
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    fact.cfdi.formaPago = this.payTypeCat.find(v => v.nombre == fact.cfdi.formaPago).id;
-    this.invoiceService.updateInvoice(fact).subscribe(result => {
-      this.loading = false;
-      this.getInvoiceByFolio(fact.folioPadre || fact.folio);
-    },
-      (error: HttpErrorResponse) => {
-        this.loading = false;
-        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
-      });
-  }
-
   public rechazarFactura() {
     this.loading = true;
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...this.factura };
-    fact.statusFactura = '9';// update to recahzo operaciones
+    fact.statusFactura = '9';// update to recahzo contabilidad
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {
@@ -386,8 +363,7 @@ export class PreCfdiComponent implements OnInit {
         } else {
           this.loading = false;
         }
-      }
-      );
+      });
   }
 
   public cancelarFactura(factura: Factura) {
@@ -405,24 +381,28 @@ export class PreCfdiComponent implements OnInit {
       this.successMessage = 'Factura correctamente cancelada';
         this.getInvoiceByFolio(fact.folioPadre || fact.folio);
         this.loading = false;
-      },
-        (error: HttpErrorResponse) => {
+      },(error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
           this.loading = false;
-          console.error(this.errorMessages);
         });
   }
 
   generateComplement() {
     this.errorMessages = [];
-    if (this.payment.monto + this.paymentSum > this.factura.cfdi.total ){
+    if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
       this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
     }
-    if(this.payment.moneda !== this.factura.cfdi.moneda){
+    if (this.payment.moneda !== this.factura.cfdi.moneda) {
       this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
+    }
+    if (this.payment.formaPago === undefined) {
+      this.errorMessages.push('La forma de pago es requerida');
+    }
+    if (this.payment.monto === undefined) {
+      this.errorMessages.push('El monto del complemento es un valor requerido');
     }
 
-    if(this.errorMessages.length === 0) {
+    if (this.errorMessages.length === 0) {
       this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
       .subscribe(complement => {
         this.invoiceService.getComplementosInvoice(this.factura.folio)
@@ -433,11 +413,14 @@ export class PreCfdiComponent implements OnInit {
               record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
               record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
               return record;
-            })}
-        )).subscribe(complementos => {
+            });
+          })).subscribe(complementos => {
           this.factura.complementos = complementos;
           this.calculatePaymentSum(complementos);
         });
+      }, ( error: HttpErrorResponse) => {
+        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+        this.loading = false;
       });
     }
   }
