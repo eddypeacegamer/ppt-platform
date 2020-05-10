@@ -294,7 +294,7 @@ public class FacturaService {
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
-		
+
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
 		case FACTURA:
@@ -346,6 +346,13 @@ public class FacturaService {
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
+		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")
+				|| facturaDto.getFolioPadre() == null) {
+			List<FacturaDto> complementos = getComplementos(folio);
+			for (FacturaDto complemento : complementos) {
+				cancelarFactura(complemento.getFolio(), complemento);
+			}
+		}
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
 		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
