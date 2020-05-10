@@ -41,8 +41,6 @@ public class ClientService {
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
-	@Autowired
-	private CatalogsService catalogsService;
 
 	private ClienteValidator clientValidator = new ClienteValidator();
 
