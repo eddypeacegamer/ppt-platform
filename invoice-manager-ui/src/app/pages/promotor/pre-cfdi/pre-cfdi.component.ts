@@ -119,7 +119,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
                   return record;
-                })
+                });
               }))
             .subscribe(complementos => this.factura.complementos = complementos);
         }

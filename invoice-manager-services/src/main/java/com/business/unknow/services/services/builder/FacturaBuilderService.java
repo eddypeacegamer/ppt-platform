@@ -103,6 +103,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		return new FacturaBuilder().setFolioPadre(facturaPadre.getFolio())
 				.setPackFacturacion(facturaPadre.getPackFacturacion())
 				.setCfdi(facturaPadre.getCfdi())
+				.setTotal(pagoActual.getMonto())
 				.setLineaEmisor(facturaPadre.getLineaEmisor())
 				.setRfcEmisor(facturaPadre.getRfcEmisor())
 				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)

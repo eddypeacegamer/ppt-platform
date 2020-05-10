@@ -3,17 +3,19 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>Registro CFDI Contabilidad</nb-card-header>
       <nb-card-body>
-        <div *ngIf="folioParam != '*'">
+        <div *ngIf="factura.folio !== undefined">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="form-inline">
 
 
             <p class="font-weight-bold">Emisor</p>
+            &nbsp;&nbsp;
             <p>{{factura.rfcEmisor}}</p>
             &nbsp;&nbsp;
             <p>{{factura.razonSocialEmisor}}</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <p class="font-weight-bold">Receptor</p>
+            &nbsp;&nbsp;
             <p>{{factura.rfcRemitente}}</p>
             &nbsp;&nbsp;
             <p>{{factura.razonSocialRemitente}}</p>
@@ -25,15 +27,19 @@
 
           <div class="form-inline">
             <p class="font-weight-bold">Uso CFDI</p>
+            &nbsp;&nbsp;
             <p>{{factura.cfdi.receptor.usoCfdi}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Moneda</p>
+            &nbsp;&nbsp;
             <p>{{factura.cfdi.moneda}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Metodo de Pago</p>
+            &nbsp;&nbsp;
             <p>{{factura.cfdi.metodoPago}}</p>
             &nbsp;&nbsp;
             <p class="font-weight-bold">Forma de Pago</p>
+            &nbsp;&nbsp;
             <p>{{factura.cfdi.formaPago}}</p>
             &nbsp;&nbsp;
             <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
@@ -65,7 +71,7 @@
 
           </div>
         </div>
-        <div *ngIf="folioParam === '*'">
+        <div *ngIf="factura.folio === undefined && folioParam === '*'">
           <p class="font-weight-bold">Información Emisor</p>
           <div class="row">
             <div class="col-md-2">
@@ -134,14 +140,12 @@
                 </option>
               </select>
             </div>
-
-            <div class="col-md-5" *ngIf="formInfo.lineaReceptor==='CLIENTE'">
+            <div class="col-sm-5" *ngIf="formInfo.lineaReceptor==='CLIENTE'" >
               <label for="inputCliente" class="label">Razón social</label>
-              <div class="row form-inline">
-                <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control" (ngModelChange)="buscarClientInfo($event)"
-                  placeholder="Razón social">
-              </div>
+              <input id="inputCliente" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.clientName" (ngModelChange)="buscarClientInfo($event)"
+                placeholder="Nombre o razon social cliente">
             </div>
+            
             <div class="col-md-5" *ngIf="formInfo.lineaReceptor==='CLIENTE'">
               <label for="inputClient" class="label">Cliente</label>
               <select id="inputClient" class="form-control" (change)="onClientSelected($event.target.value)"
@@ -207,7 +211,7 @@
 
         <p class="font-weight-bold">Conceptos factura</p>
         <ngx-conceptos [cfdi]="factura.cfdi" [concepto]="newConcep"
-          [allowEdit]="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura !== ''">
+          [allowEdit]="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura !== 'Rechazo Contabilidad'">
         </ngx-conceptos>
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
@@ -224,8 +228,8 @@
 
         <div *ngIf="factura">
 
-          <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.cfdi.metodoPago =='PPD'">Cargar Complementos</p>
-          <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.cfdi.metodoPago =='PPD'">
+          <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
+          <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD'">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select id="inputPayCoin" style="display:block;" class="form-control" [(ngModel)]="payment.moneda">
@@ -234,8 +238,7 @@
             </div>
             <div class="col-sm-3">
               <label for="inputPayType" class="label">Forma de Pago</label>
-              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
-                [(ngModel)]="payment.payType">
+              <select selected="1" id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="payment.formaPago">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let payType of complementPayTypeCat" [value]="payType.id"> {{payType.nombre}}</option>
               </select>
@@ -248,9 +251,10 @@
             <div class="col-md-5">
               <label for="payAmmount" class="label">Fecha de pago</label>
               <div class="input-group">
-                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
+                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker"
                   [(ngModel)]="payment.fechaPago">
                 <nb-datepicker #formpicker></nb-datepicker>
+                &nbsp;&nbsp;
                 <button nbButton status="primary" size="medium" (click)="generateComplement()" [nbSpinner]="loading"
                   [disabled]="loading" nbSpinnerStatus="primary" nbSpinnerSize="small" nbSpinnerMessage="">
                   Generar Complemento

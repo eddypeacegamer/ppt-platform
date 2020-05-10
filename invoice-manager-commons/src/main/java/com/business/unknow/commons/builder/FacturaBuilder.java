@@ -1,5 +1,7 @@
 package com.business.unknow.commons.builder;
 
+import java.math.BigDecimal;
+
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 
@@ -40,6 +42,11 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 
 	public FacturaBuilder setRazonSocialEmisor(String razonSocialEmisor) {
 		instance.setRazonSocialEmisor(razonSocialEmisor);
+		return this;
+	}
+	
+	public FacturaBuilder setTotal(BigDecimal total) {
+		instance.setTotal(total);
 		return this;
 	}
 
