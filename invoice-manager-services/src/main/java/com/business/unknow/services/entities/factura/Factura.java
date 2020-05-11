@@ -2,6 +2,7 @@
 package com.business.unknow.services.entities.factura;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -77,6 +78,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "UUID")
 	private String uuid;
+	
+	@Column(name = "TOTAL")
+	private BigDecimal total;
 
 	@Column(name = "PACK_FACTURACION")
 	private String packFacturacion;
@@ -204,6 +208,14 @@ public class Factura implements Serializable {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+	
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
 
 	public Integer getStatusPago() {
 		return statusPago;
@@ -325,10 +337,11 @@ public class Factura implements Serializable {
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
 				+ ", folioPadre=" + folioPadre + ", metodoPago=" + metodoPago + ", statusPago=" + statusPago
 				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
-				+ statusDetail + ", uuid=" + uuid + ", packFacturacion=" + packFacturacion + ", notas=" + notas
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion
-				+ ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion
-				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ "]";
+				+ statusDetail + ", uuid=" + uuid + ", total=" + total + ", packFacturacion=" + packFacturacion
+				+ ", notas=" + notas + ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion="
+				+ fechaCancelacion + ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion
+				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + "]";
 	}
+
+	
 }
