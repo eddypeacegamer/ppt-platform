@@ -345,6 +345,13 @@ public class FacturaService {
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		System.out.println(facturaDto);
 		validator.validateTimbrado(facturaDto, folio);
+		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")
+				|| facturaDto.getFolioPadre() == null) {
+			List<FacturaDto> complementos = getComplementos(folio);
+			for (FacturaDto complemento : complementos) {
+				cancelarFactura(complemento.getFolio(), complemento);
+			}
+		}
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
 		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
