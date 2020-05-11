@@ -50,6 +50,7 @@ public class TimbradoExecutorService {
 	private MailHelper mailHelper;
 
 	public void updateFacturaAndCfdiValues(FacturaContext context) throws InvoiceManagerException {
+		context.getFacturaDto().setTotal(context.getFacturaDto().getCfdi().getTotal());
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {

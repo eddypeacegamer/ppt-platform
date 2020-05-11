@@ -1,37 +1,37 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Factura } from '../../../models/factura/factura';
+import { Catalogo } from '../../../models/catalogos/catalogo';
+import { Concepto } from '../../../models/factura/concepto';
+import { User, UsersData } from '../../../@core/data/users-data';
+import { Empresa } from '../../../models/empresa';
+import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Empresa } from '../../../models/empresa';
-import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
-import { Concepto } from '../../../models/factura/concepto';
-import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { Cfdi } from '../../../models/factura/cfdi';
-import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
-import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { PagoFactura } from '../../../models/pago-factura';
-import { ActivatedRoute } from '@angular/router';
-import { Catalogo } from '../../../models/catalogos/catalogo';
-import { map } from 'rxjs/operators';
-import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { Pago } from '../../../models/factura/pago';
-import { PaymentsData } from '../../../@core/data/payments-data';
-import { ClientsData } from '../../../@core/data/clients-data';
-import { GenericPage } from '../../../models/generic-page';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { ActivatedRoute } from '@angular/router';
 import { Client } from '../../../models/client';
+import { ClientsData } from '../../../@core/data/clients-data';
 import { Contribuyente } from '../../../models/contribuyente';
+import { map } from 'rxjs/operators';
+import { GenericPage } from '../../../models/generic-page';
+import { Cfdi } from '../../../models/factura/cfdi';
+import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
+import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
+import { PagoFactura } from '../../../models/pago-factura';
+import { NbDialogService } from '@nebular/theme';
+import { PaymentsData } from '../../../@core/data/payments-data';
+import { Pago } from '../../../models/factura/pago';
 
 @Component({
-  selector: 'ngx-pre-cfdi',
-  templateUrl: './pre-cfdi.component.html',
-  styleUrls: ['./pre-cfdi.component.scss']
+  selector: 'ngx-linea-b',
+  templateUrl: './linea-b.component.html',
+  styleUrls: ['./linea-b.component.scss']
 })
-export class PreCfdiComponent implements OnInit {
+export class LineaBComponent implements OnInit {
   public girosCat: Catalogo[] = [];
   public emisoresCat: Empresa[] = [];
   public receptoresCat: Empresa[] = [];
@@ -44,7 +44,7 @@ export class PreCfdiComponent implements OnInit {
   public devolutionCat: Catalogo[] = [];
   public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
-  public complementPayTypeCat: Catalogo[] =[];
+  public complementPayTypeCat: Catalogo[] = [];
   public newConcep: Concepto;
   public payment: Pago;
   public factura: Factura;
@@ -58,7 +58,7 @@ export class PreCfdiComponent implements OnInit {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'A', usoCfdi: '*', payType: '*' };
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
@@ -298,8 +298,8 @@ export class PreCfdiComponent implements OnInit {
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
-      this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
-      this.factura.statusFactura = '8'; // sets automatically to stamp directly
+      this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
+      this.factura.statusFactura = '4'; // sets automatically to stamp directly
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     }
     if (this.errorMessages.length === 0) {
@@ -323,7 +323,7 @@ export class PreCfdiComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...this.factura };
-    fact.statusFactura = '9';// update to recahzo contabilidad
+    fact.statusFactura = '6';// update to recahzo operaciones
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {

@@ -213,6 +213,7 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		entity.setTotal(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			pagoService.insertNewPaymentWithoutValidation(
@@ -282,19 +283,16 @@ public class FacturaService {
 
 	}
 
-	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
 		FacturaDto facturaPadre = getFacturaByFolio(folio);
 		FacturaDto complemento = generateComplemento(facturaPadre, pagoDto);
-		return complemento;
-
+		return timbrarFactura(complemento.getFolio(), complemento).getFacturaDto();
 	}
 
 	// TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
-
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
 		case FACTURA:
@@ -345,6 +343,7 @@ public class FacturaService {
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		System.out.println(facturaDto);
 		validator.validateTimbrado(facturaDto, folio);
 		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")
 				|| facturaDto.getFolioPadre() == null) {

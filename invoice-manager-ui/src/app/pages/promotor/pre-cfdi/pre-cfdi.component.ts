@@ -119,7 +119,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
                   return record;
-                })
+                });
               }))
             .subscribe(complementos => this.factura.complementos = complementos);
         }
@@ -187,12 +187,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   onClientSelected(id: string) {
     const value = +id;
     if (!isNaN(value)) {
-      this.errorMessages = [];
       const client = this.clientsCat.find(c => c.id === Number(value));
-      this.clientInfo = client.informacionFiscal;
-      if (!client.activo) {
-        this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
-        this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');
+      if (client.activo === true) {
+        this.clientInfo = client.informacionFiscal;
+      } else {
+        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
       }
     }
   }
