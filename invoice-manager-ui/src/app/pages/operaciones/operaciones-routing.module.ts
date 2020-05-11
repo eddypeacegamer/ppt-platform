@@ -32,22 +32,22 @@ const routes: Routes = [{
       path: 'empresa/:rfc',
       component: EmpresaComponent,
     }, {
-      path: 'reportes/:status',
+      path: 'reportes/:linea/:status',
       component : InvoiceReportsComponent,
     }, {
-      path: 'validacion/:status',
+      path: 'validacion/:linea/:status',
       component : InvoiceReportsComponent,
     }, {
-      path: 'timbrar-facturas/:status',
+      path: 'timbrar-facturas/:linea/:status',
       component : InvoiceReportsComponent,
     }, {
       path: 'revision/:folio',
       component : RevisionComponent,
     }, {
-      path: 'linea-b',
+      path: 'linea-b/:folio',
       component : LineaBComponent,
     }, {
-      path: 'linea-c',
+      path: 'linea-c/:folio',
       component : LineaCComponent,
     },
      {

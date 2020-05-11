@@ -3,7 +3,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -23,43 +23,49 @@ export class InvoiceReportsComponent implements OnInit {
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
     private donwloadService: DownloadCsvService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     const date: Date = new Date();
     this.filterParams.to = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     this.filterParams.since = new Date(date.getFullYear(), date.getMonth(), 1);
 
+    const linea = this.route.snapshot.paramMap.get('linea');
+    const status = this.route.snapshot.paramMap.get('status');
+
     this.module = this.router.url.split('/')[2];
+
     switch (this.module) {
       case 'promotor':
         this.userService.getUserInfo().then((user) => {
           this.userEmail = user.email;
           this.filterParams.solicitante = user.email;
+          this.filterParams.lineaEmisor = linea || 'A';
           this.updateDataTable();
         });
         break;
       case 'operaciones':
-        this.filterParams.lineaEmisor = 'A';
-        this.filterParams.status = this.router.url.split('/')[4];
+        this.filterParams.lineaEmisor = linea || 'A';
+        this.filterParams.status = status;
         this.statusFlag = this.filterParams.status !== '*';
         this.updateDataTable();
         break;
       case 'contabilidad':
-        this.filterParams.lineaEmisor = 'B';
-        this.filterParams.status = this.router.url.split('/')[4];
+        this.filterParams.lineaEmisor = linea || 'B';
+        this.filterParams.status = status;
         this.statusFlag = false;
         this.updateDataTable();
         break;
       case 'administracion':
-        this.filterParams.lineaEmisor = 'A';
-        this.filterParams.status = '3';
+        this.filterParams.lineaEmisor = linea || 'A';
+        this.filterParams.status = status;
         this.statusFlag = false;
         this.updateDataTable();
         break;
       case 'tesoreria':
-        this.filterParams.lineaEmisor = 'A';
-        this.filterParams.status = '3';
+        this.filterParams.lineaEmisor = linea || 'A';
+        this.filterParams.status = status;
         this.statusFlag = false;
         this.updateDataTable();
         break;
@@ -88,7 +94,13 @@ export class InvoiceReportsComponent implements OnInit {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
       case 'operaciones':
-        this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+        if ( this.filterParams.lineaEmisor === 'A') {
+          this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+        }else if (this.filterParams.lineaEmisor === 'B') {
+          this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
+        }else {
+          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        }
         break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);

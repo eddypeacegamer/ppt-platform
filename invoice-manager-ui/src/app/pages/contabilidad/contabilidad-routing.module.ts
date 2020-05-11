@@ -29,7 +29,7 @@ const routes: Routes = [{
       path: 'empresa/:rfc',
       component: EmpresaComponent,
     }, {
-      path: 'reportes/:status',
+      path: 'reportes/:linea/:status',
       component : InvoiceReportsComponent,
     }, {
       path: 'cfdi/:folio',
