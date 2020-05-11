@@ -12,15 +12,15 @@
 		},
 		{
 			"title": "Validacion facturas",
-			"link": "/pages/operaciones/validacion/1"
+			"link": "/pages/operaciones/validacion/A/1"
 		},
 		{
 			"title": "Timbrar facturas",
-			"link": "/pages/operaciones/timbrar-facturas/4"
+			"link": "/pages/operaciones/timbrar-facturas/A/4"
 		},
 		{
 			"title": "Reportes",
-			"link": "/pages/operaciones/reportes/*"
+			"link": "/pages/operaciones/reportes/A/*"
 		},
 		{
 			"title": "Devoluciones",

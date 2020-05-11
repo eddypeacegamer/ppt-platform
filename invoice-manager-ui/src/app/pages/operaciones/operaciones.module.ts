@@ -7,6 +7,8 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { ValidacionDevolucionComponent } from './devoluciones/validacion-devolucion/validacion-devolucion.component';
 import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
+import { LineaBComponent } from './linea-b/linea-b.component';
+import { LineaCComponent } from './linea-c/linea-c.component';
 
 
 
@@ -15,7 +17,9 @@ import { DonwloadFileService } from '../../@core/util-services/download-file-ser
     OperacionesComponent,
     RevisionComponent,
     DevolucionesComponent,
-    ValidacionDevolucionComponent],
+    ValidacionDevolucionComponent,
+    LineaBComponent,
+    LineaCComponent],
   imports: [
     OperacionesRoutingModule,
     CommonsModule,
