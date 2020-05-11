@@ -26,6 +26,7 @@ export class Factura {
 	public fechaActualizacion: Date;
 	public fechaTimbrado: Date;
 	public packFacturacion : string;
+	public total: number;
 	public cfdi: Cfdi;
 	public complementos: Factura[];
 	

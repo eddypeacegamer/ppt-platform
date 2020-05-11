@@ -3,6 +3,7 @@ import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { Concepto } from '../../models/factura/concepto';
 import { Cfdi } from '../../models/factura/cfdi';
+import { Pago } from '../../models/factura/pago';
 
 export abstract class InvoicesData {
     abstract getInvoices(page: number, size: number, filterParams?: any): Observable<GenericPage<Factura>>;
@@ -21,4 +22,6 @@ export abstract class InvoicesData {
     abstract insertConcepto(folio: string, concepto: Concepto): Observable<Concepto>;
     abstract updateConcepto(folio: string, id: number, concepto: Concepto): Observable<Concepto>;
     abstract deleteConcepto(folio: string, conceptoId: number): Observable<any>;
+
+    abstract generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable<Factura>;
 }

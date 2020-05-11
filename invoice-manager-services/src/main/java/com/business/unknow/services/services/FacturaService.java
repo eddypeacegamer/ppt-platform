@@ -53,10 +53,10 @@ import com.business.unknow.services.util.FacturaDefaultValues;
 
 @Service
 public class FacturaService {
-	
+
 	@Autowired
 	private FacturaDao facturaDao;
-	
+
 	@Autowired
 	private FacturaRepository repository;
 
@@ -106,7 +106,6 @@ public class FacturaService {
 	private FacturaDefaultValues facturaDefaultValues;
 
 	private FacturaValidator validator = new FacturaValidator();
-	
 
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
@@ -142,47 +141,53 @@ public class FacturaService {
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
-	
-	public Page<FacturaReportDto> getFacturaReportsByParams(Optional<String> status, String lineaEmisor,String emisor, String receptor, Date since, Date to, int page,
-			int size) {
+
+	public Page<FacturaReportDto> getFacturaReportsByParams(Optional<String> status, String lineaEmisor, String emisor,
+			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
-		if(status.isPresent()) {
-			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(), status.get(), lineaEmisor, start, end,
-					String.format("%%%s%%", emisor), String.format("%%%s%%", receptor), PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		if (status.isPresent()) {
+			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
+					status.get(), lineaEmisor, start, end, String.format("%%%s%%", emisor),
+					String.format("%%%s%%", receptor),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else {
-			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(), lineaEmisor, start, end,String.format("%%%s%%", emisor),
-					String.format("%%%s%%", receptor), PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
+					lineaEmisor, start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
-		List<String> folios = result.getContent().stream().map(f->f.getFolio()).collect(Collectors.toList());
-		if(folios.isEmpty()) {
-			return  new PageImpl<>(new ArrayList<>(),result.getPageable(),result.getTotalElements());
-		}else {
-			return new PageImpl<FacturaReportDto>(facturaDao.getInvoiceDetailsByFolios(folios),
-					result.getPageable(),result.getTotalElements());
-		}	
+		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
+		if (folios.isEmpty()) {
+			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
+		} else {
+			return new PageImpl<FacturaReportDto>(facturaDao.getInvoiceDetailsByFolios(folios), result.getPageable(),
+					result.getTotalElements());
+		}
 	}
-	
-	public Page<PagoReportDto> getComplementoReportsByParams(Optional<String> status, String lineaEmisor,String emisor, String receptor, Date since, Date to, int page,
-			int size) {
+
+	public Page<PagoReportDto> getComplementoReportsByParams(Optional<String> status, String lineaEmisor, String emisor,
+			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
-		if(status.isPresent()) {
-			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.COMPLEMENTO.getDescripcion(), status.get(), lineaEmisor, start, end,
-					String.format("%%%s%%", emisor), String.format("%%%s%%", receptor), PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		if (status.isPresent()) {
+			result = repository.findReportsByLineaAndStatusEmisorWithParams(
+					TipoDocumentoEnum.COMPLEMENTO.getDescripcion(), status.get(), lineaEmisor, start, end,
+					String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else {
-			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.COMPLEMENTO.getDescripcion(), lineaEmisor, start, end,String.format("%%%s%%", emisor),
-					String.format("%%%s%%", receptor), PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.COMPLEMENTO.getDescripcion(),
+					lineaEmisor, start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
-		List<String> folios = result.getContent().stream().map(f->f.getFolio()).collect(Collectors.toList());
-		if(folios.isEmpty()) {
-			return  new PageImpl<>(new ArrayList<>(),result.getPageable(),result.getTotalElements());
-		}else {
-			return new PageImpl<PagoReportDto>(facturaDao.getComplementsDetailsByFolios(folios),
-					result.getPageable(),result.getTotalElements());
-		}	
+		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
+		if (folios.isEmpty()) {
+			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
+		} else {
+			return new PageImpl<PagoReportDto>(facturaDao.getComplementsDetailsByFolios(folios), result.getPageable(),
+					result.getTotalElements());
+		}
 	}
 
 	public FacturaDto getFacturaByFolio(String folio) {
@@ -208,6 +213,7 @@ public class FacturaService {
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
+		entity.setTotal(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
 		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			pagoService.insertNewPaymentWithoutValidation(
@@ -226,7 +232,7 @@ public class FacturaService {
 			}
 			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
 				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
-				for(PagoDto pago:pagos) {
+				for (PagoDto pago : pagos) {
 					pago.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
 					try {
 						pagoService.updatePago(pago.getFolio(), pago.getId(), pago);
@@ -265,21 +271,29 @@ public class FacturaService {
 
 	// COMPLEMNENTOS
 	public List<FacturaDto> getComplementos(String folioPadre) {
-		 List<FacturaDto> complementos =mapper.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
-		for(FacturaDto fact:complementos) {
-			Optional<PagoDto> pago=pagoService.findPagosByFolio(fact.getFolio()).stream().findFirst();
-			if(pago.isPresent()) {
+		List<FacturaDto> complementos = mapper
+				.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
+		for (FacturaDto fact : complementos) {
+			Optional<PagoDto> pago = pagoService.findPagosByFolio(fact.getFolio()).stream().findFirst();
+			if (pago.isPresent()) {
 				fact.setTotal(pago.get().getMonto());
 			}
 		}
-		 return complementos;
-		 
+		return complementos;
+
+	}
+
+	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		FacturaDto facturaPadre = getFacturaByFolio(folio);
+		FacturaDto complemento = generateComplemento(facturaPadre, pagoDto);
+		return timbrarFactura(complemento.getFolio(), complemento).getFacturaDto();
 	}
 
 	// TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
+		
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
 		case FACTURA:
@@ -330,7 +344,6 @@ public class FacturaService {
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
-		System.out.println(facturaDto);
 		validator.validateTimbrado(facturaDto, folio);
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
@@ -376,9 +389,5 @@ public class FacturaService {
 		factura.setCfdi(dto);
 		fileService.generateInvoicePDF(factura, null);
 	}
-	
-	
-
-	
 
 }
