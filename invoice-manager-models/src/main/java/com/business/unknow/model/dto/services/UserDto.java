@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements Serializable {
 
+	private Integer id;
+	
 	private String email;
 
 	private boolean activo;
@@ -31,6 +33,19 @@ public class UserDto implements Serializable {
 	private List<MenuItem> menu;
 
 	private static final long serialVersionUID = -4269713581531174125L;
+	
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getEmail() {
 		return email;
