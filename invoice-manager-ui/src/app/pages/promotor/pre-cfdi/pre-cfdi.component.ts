@@ -187,15 +187,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   onClientSelected(id: string) {
     const value = +id;
     if (!isNaN(value)) {
-      this.errorMessages = [];
       const client = this.clientsCat.find(c => c.id === Number(value));
       this.clientInfo = client.informacionFiscal;
-      /* EXTE ES EL CAMBIO QUE DEBERIA DE ESTAR ARRIBA */
       if (!client.activo) {
         this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
         this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');
       }
-      /* EXTE ES EL CAMBIO QUE DEBERIA DE ESTAR ARRIBA */
     }
   }
 
