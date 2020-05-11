@@ -16,7 +16,7 @@
 		},
 		{
 			"title": "Reportes Facturas",
-			"link": "/pages/tesoreria/reportes/*"
+			"link": "/pages/tesoreria/reportes/A/*"
 		}
 	]
 }
