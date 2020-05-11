@@ -283,12 +283,10 @@ public class FacturaService {
 
 	}
 
-	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
 		FacturaDto facturaPadre = getFacturaByFolio(folio);
 		FacturaDto complemento = generateComplemento(facturaPadre, pagoDto);
-		return complemento;
-
+		return timbrarFactura(complemento.getFolio(), complemento).getFacturaDto();
 	}
 
 	// TIMBRADO

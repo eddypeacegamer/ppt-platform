@@ -126,11 +126,15 @@ public class CatalogsService {
 	}
 
 	public List<ClaveUnidadDto> getCalveUnidadByNombre(String nombre) {
-		return mapper.getClaveUnidadDtosFromEntities(unidadRepo.findByNombreContainingIgnoreCase(nombre));
+		List<ClaveUnidadDto> claveUnidadCat = mapper.getClaveUnidadDtosFromEntities(unidadRepo.findByNombreContainingIgnoreCase(nombre));
+		claveUnidadCat.sort((a,b)->a.getNombre().compareTo(b.getNombre()));
+		return claveUnidadCat;
 	}
 
 	public List<ClaveUnidadDto> getAllClaveUnidad() {
-		return mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll());
+		List<ClaveUnidadDto> claveUnidadCat = mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll()); 
+		claveUnidadCat.sort((a,b)->a.getNombre().compareTo(b.getNombre()));
+		return claveUnidadCat;
 	}
 
 	public List<RegimenFiscalDto> getAllRegimenFiscal() {
@@ -146,7 +150,9 @@ public class CatalogsService {
 //	}
 
 	public List<CatalogDto> getAllGiros() {
-		return mapper.getGirosDtoFromEntities(giroRepo.findAll());
+		List<CatalogDto> giros = mapper.getGirosDtoFromEntities(giroRepo.findAll());
+		giros.sort((a,b)->a.getNombre().compareTo(b.getNombre()));
+		return giros;
 	}
 
 	public List<CatalogDto> getAllStatusEvento() {
@@ -166,7 +172,9 @@ public class CatalogsService {
 //	}
 
 	public List<CatalogDto> getAllBancos() {
-		return mapper.getBancoDtoFromEntities(bancoRepository.findAll());
+		List<CatalogDto> bancos = mapper.getBancoDtoFromEntities(bancoRepository.findAll());
+		bancos.sort((a,b)->a.getNombre().compareTo(b.getNombre()));
+		return bancos;
 	}
 
 	public CatalogDto getAllBancoByName(String name) {
