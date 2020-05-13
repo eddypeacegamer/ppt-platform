@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-users',
@@ -13,20 +14,27 @@ export class UsersComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
-  constructor(private userService: UsersData) { }
+  public filterParams: any = {correo: '', rfc: '', status: '*', alias: ''};
+
+  constructor(private userService: UsersData,
+    private router: Router) { }
 
   ngOnInit() {
-    this.updateDataTable(0,10);
+    this.updateDataTable(0, 10);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.userService.getUsers(pageValue,sizeValue).subscribe(data => this.page = data);
+    this.userService.getUsers(pageValue, sizeValue).subscribe(data => this.page = data);
   }
 
   public onChangePageSize(pageSize: number) {
     this.updateDataTable(this.page.number, pageSize);
+  }
+
+  public redirectToUser(email: string) {
+    this.router.navigate([`./pages/administracion/usuarios/${email}`]);
   }
 
 }
