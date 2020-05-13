@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PromotorComponent} from './promotor.component';
 import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { DevolucionesComponent } from '../commons/devoluciones/devoluciones.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';

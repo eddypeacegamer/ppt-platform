@@ -7,11 +7,12 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { DevolucionesComponent } from '../commons/devoluciones/devoluciones.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
+
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,

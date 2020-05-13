@@ -8,13 +8,12 @@ import { ValidacionDevolucionComponent } from './validacion-devolucion/validacio
 import { DevolutionData } from '../../../@core/data/devolution-data';
 
 @Component({
-  selector: 'ngx-devoluciones',
-  templateUrl: './devoluciones.component.html',
-  styleUrls: ['./devoluciones.component.scss'],
+  selector: 'ngx-devolution-requests',
+  templateUrl: './devolution-requests.component.html',
+  styleUrls: ['./devolution-requests.component.scss'],
 })
-export class DevolucionesComponent implements OnInit {
+export class DevolutionRequestsComponent implements OnInit {
 
-  
   public user: User;
   public filterParams: any = { formaPago: '*', status: 'ACEPTADO', tipoReceptor: '*', beneficiario: '', idReceptor: '' };
   public errors: string[] = [];

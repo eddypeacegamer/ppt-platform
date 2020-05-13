@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DevolucionesComponent } from './devoluciones.component';
+import { DevolucionesComponent } from './devolution-requests.component';
 
 describe('DevolucionesComponent', () => {
   let component: DevolucionesComponent;

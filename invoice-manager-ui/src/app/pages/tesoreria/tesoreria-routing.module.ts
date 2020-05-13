@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TesoreriaComponent } from './tesoreria.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { DevolutionRequestsComponent } from './devolution-requests/devolution-requests.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
@@ -22,7 +22,7 @@ const routes: Routes = [{
     },
     {
       path: 'devoluciones',
-      component: DevolucionesComponent,
+      component: DevolutionRequestsComponent,
     },
     {
       path: 'reportes/:linea/:status',
