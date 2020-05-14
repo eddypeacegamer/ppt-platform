@@ -58,7 +58,7 @@ export class LineaCComponent implements OnInit {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'C', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
@@ -173,7 +173,6 @@ export class LineaCComponent implements OnInit {
 
   onGiroReceptorSelection(giroId: string) {
     const value = +giroId;
-    console.log(value);
     if (isNaN(value)) {
       this.receptoresCat = [];
     } else {
@@ -297,7 +296,7 @@ export class LineaCComponent implements OnInit {
       this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
-      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
+      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'C';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
       this.factura.statusFactura = '4'; // sets automatically to stamp directly
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
