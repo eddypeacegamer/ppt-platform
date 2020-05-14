@@ -16,6 +16,7 @@ import { FilesData } from '../../../@core/data/files-data';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { PaymentsData } from '../../../@core/data/payments-data';
 
 @Component({
   selector: 'ngx-devoluciones',
@@ -24,12 +25,15 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 })
 export class DevolucionesComponent implements OnInit {
 
+  public module: string = 'promotor';
+
   public banksCat: Catalogo[] = [];
   public refTypesCat: Catalogo[] = [];
-  public clientsCat : Client[] = [];
+  public clientsCat: Client[] = [];
   public contactosCat: string[] = [];
   public pageCommissions: GenericPage<Devolucion> = new GenericPage();
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
+
 
   public user: User;
   public filename: string = '';
@@ -37,7 +41,7 @@ export class DevolucionesComponent implements OnInit {
   public montoDevolucion: Number = 0;
   public solicitud: PagoDevolucion;
   public fileInput: any = {};
-  public filterParams: any = { tipoReceptor: 'PROMOTOR', idReceptor: '' };
+  public filterParams: any = { tipoReceptor: 'PROMOTOR', idReceptor: '', emailPromotor: '' };
   public messages: string[] = [];
 
   private referenceFile: ResourceFile;
@@ -50,25 +54,41 @@ export class DevolucionesComponent implements OnInit {
     private donwloadCsvService: DownloadCsvService,
     private downloadService: DonwloadFileService,
     private devolutionValidator: DevolucionValidatorService,
+    private paymentsService: PaymentsData,
     private userService: UsersData,
     private router: Router) { }
 
   ngOnInit() {
+    this.module = this.router.url.split('/')[2];
     this.montoDevolucion = 0.0;
     this.solicitud = new PagoDevolucion();
-    this.userService.getUserInfo().then(user => {
-        this.user = user;
-        this.filterParams.idReceptor = user.email;
-        this.searchDevolutionsData();
-        this.clientsService.getClientsByPromotor(user.email)
-          .subscribe(clients => {
-            this.clientsCat = clients;
-            const contacts = clients.map(c => c.correoContacto);
-            this.contactosCat = contacts.filter((item, index) => contacts.indexOf(item) === index);
-          });
-      });
     this.catalogService.getBancos().then(banks => this.banksCat = banks);
+    this.userService.getUserInfo().then(user => {
+      this.user = user;
+    }).then(() => {
+      if (this.module === 'promotor') {
+        this.searchPromotorData(this.user.email);
+      } else {
+        this.clientsCat = [];
+        this.filterParams.emailPromotor = '';
+      }
+    });
+  }
 
+  public searchPromotorData(email?: string) {
+    this.filterParams.idReceptor = email || this.filterParams.emailPromotor;
+    this.searchDevolutionsData();
+    this.clientsService.getClientsByPromotor(this.filterParams.idReceptor)
+      .subscribe(clients => {
+        this.clientsCat = clients;
+        const contacts = clients.map(c => c.correoContacto);
+        this.contactosCat = contacts.filter((item, index) => contacts.indexOf(item) === index);
+      });
+  }
+
+
+  public redirectToDevolutionDetails(folio: string) {
+    this.router.navigate([`./pages/operaciones/facturas/${folio}/devoluciones`]);
   }
 
   public onReceptorTypeSelected(type: string) {
@@ -84,14 +104,14 @@ export class DevolucionesComponent implements OnInit {
   public searchDevolutionsData() {
     this.messages = [];
     this.solicitud = new PagoDevolucion();
-    if(this.filterParams.idReceptor !== '*'){
+    if (this.filterParams.idReceptor !== '*') {
       this.updateCommissions().subscribe((result: GenericPage<Devolucion>) => this.pageCommissions = result,
-      (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,
-      (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
-      .subscribe(ammount => this.montoDevolucion = ammount);
-    }else {
+        (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      this.updateDevolutions().subscribe((result: GenericPage<PagoDevolucion>) => this.pageDevolutions = result,
+        (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      this.devolutionService.getAmmountDevolutions(this.filterParams.tipoReceptor, this.filterParams.idReceptor)
+        .subscribe(ammount => this.montoDevolucion = ammount);
+    } else {
       this.montoDevolucion = 0.0;
       this.pageCommissions = new GenericPage();
       this.pageDevolutions = new GenericPage();
@@ -111,13 +131,13 @@ export class DevolucionesComponent implements OnInit {
 
   public downloadCommissions() {
     this.updateCommissions(0, 10000).subscribe(result => {
-      this.donwloadCsvService.exportCsv(result.content, 'Comisiones');
+      this.donwloadCsvService.exportCsv(result.content, 'Comisiones&reembolsos');
     });
   }
 
   public downloadPagosDevolucion() {
     this.updateDevolutions(0, 10000).subscribe(result => {
-      this.donwloadCsvService.exportCsv(result.content, 'Devoluciones');
+      this.donwloadCsvService.exportCsv(result.content, 'SolicitudesDevolucion');
     });
   }
 
@@ -167,18 +187,18 @@ export class DevolucionesComponent implements OnInit {
     solicitud.tipoReceptor = this.filterParams.tipoReceptor;
     solicitud.receptor = this.filterParams.idReceptor;
     solicitud.solicitante = this.user.email;
-    solicitud.status = 'VALIDACION';
+    solicitud.status = 'ACEPTADO';
     if (solicitud.formaPago === 'PAGO_MULTIPLE') {
       solicitud.referencia = this.filename;
     }
-    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion , solicitud);
+    this.messages = this.devolutionValidator.validateDevolution(this.montoDevolucion, solicitud);
     if (this.messages.length === 0) {
       this.devolutionService.requestDevolution(solicitud)
-        .subscribe( request => {
+        .subscribe(request => {
           if (solicitud.formaPago === 'PAGO_MULTIPLE') {
             this.referenceFile.referencia = request.id.toString();
-          this.resourceService.insertResourceFile(this.referenceFile)
-          .subscribe((resource: ResourceFile) => console.log(resource));
+            this.resourceService.insertResourceFile(this.referenceFile)
+              .subscribe((resource: ResourceFile) => console.log(resource));
           }
           this.searchDevolutionsData();
           this.solicitud = new PagoDevolucion();
@@ -186,7 +206,8 @@ export class DevolucionesComponent implements OnInit {
           this.loading = false;
         }, (error: HttpErrorResponse) => {
           this.loading = false;
-          this.messages.push(error.error.message || `${error.statusText} : ${error.message}`); });
+          this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
+        });
     } else {
       this.loading = false;
       this.solicitud = new PagoDevolucion();
@@ -205,9 +226,17 @@ export class DevolucionesComponent implements OnInit {
   }
 
   public openPaymentDetails(dialog: TemplateRef<any>, payment: PagoDevolucion) {
-        this.dialogService.open(dialog, { context: payment })
-          .onClose.subscribe(() => this.searchDevolutionsData());
+    this.dialogService.open(dialog, { context: payment })
+      .onClose.subscribe(() => this.searchDevolutionsData());
   }
 
- 
+  public checkPaymentDetails(dialog: TemplateRef<any>,folio: string) {
+    this.paymentsService.getAllPayments(1, 10, {folio: folio})
+      .subscribe(page => 
+        this.dialogService.open(dialog, { context: page.content[0] })
+              .onClose.subscribe(() => this.searchDevolutionsData())
+        );
+  }
+
+
 }

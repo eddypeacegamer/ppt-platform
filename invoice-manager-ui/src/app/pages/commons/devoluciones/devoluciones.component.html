@@ -3,7 +3,26 @@
     <nb-card class="inline-form-card">
       <nb-card-header>Devoluciones</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row"  *ngIf="module === 'operaciones'">
+
+          <div class="col-sm-3">
+            <label for="inputPromotor" class="label">Usuario promotor</label>
+            <input id="inputPromotor" class="form-control" type="text" [(ngModel)]="filterParams.emailPromotor"
+              placeholder="correo promotor">
+          </div>
+          <div class="col-sm-7">
+            <label for="inputSaldo" class="label">Saldo disponible</label>
+            <div class="row form-inline">
+              <div class="alert alert-success form-control" role="alert" style="width: 200px;">
+                <p class="font-weight-bold">{{montoDevolucion | currency}}</p>
+              </div>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button class="btn btn-primary" (click)="searchPromotorData()">BUSCAR</button>
+            </div>
+          </div>
+
+        </div>
+        <div class="row" *ngIf="clientsCat.length>0 && filterParams.idReceptor.length>0">
 
           <div class="col-sm-3">
             <label for="inputDevType" class="label">Tipo Receptor</label>
@@ -33,13 +52,6 @@
               <option *ngFor="let client of clientsCat" [value]="client.informacionFiscal.rfc">{{client.informacionFiscal.rfc}} - {{client.informacionFiscal.razonSocial}}</option>
             </select>
           </div>
-          <div class="col-sm-4">
-            <label for="inputSaldo" class="label">Saldo disponible</label>
-              <div class="alert alert-success form-control" role="alert" style="width: 200px;">
-                <p class="font-weight-bold">{{montoDevolucion | currency}}</p>
-              </div>
-          </div>
-
         </div>
       </nb-card-body>
     </nb-card>
@@ -50,9 +62,19 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Solicitud devolución</nb-card-header>
+  
+      <nb-card-header *ngIf="module === 'operaciones'"><strong class="float-left">Solicitudes dedevoluciones</strong></nb-card-header>
+      <nb-card-header *ngIf="module === 'promotor'"><strong class="float-left">Detalles comisiones/devoluciones</strong></nb-card-header>
+      
       <nb-card-body>
-        <form>
+        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+          <p *ngFor="let message of messages">{{message}}</p>
+        </div>
+        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+          <p>No hay comisiones ni reembolsos generados</p>
+        </div>
+        <br>
+        <form *ngIf="module === 'operaciones' && montoDevolucion > 0.01">
           <div class="form-row">
             <div class="form-group col-md-8">
               <label for="inputBenerficario" class="label">Beneficiario</label>
@@ -111,11 +133,71 @@
           <button nbButton status="primary" size="medium" (click)="devolutionRequest(solicitud)"  [nbSpinner]="loading" [disabled]="loading || montoDevolucion<=0"
               nbSpinnerStatus="primary" nbSpinnerSize="small" nbSpinnerMessage="">Solicitar Devolución</button>
         </form>
-        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
-          <p *ngFor="let message of messages">{{message}}</p>
+
+        <strong>Últimas comisiones / reembolsos generados</strong>
+        <div class="clearfix">
+          <button type="button" (click)="downloadCommissions()" class="btn btn-success float-left">Descarga</button>
+          <ul class="pagination" *ngIf="pageCommissions.totalElements > 1" class="btn float-right">
+            <li class="page-item" *ngIf="pageCommissions.first==false"><button class="btn page-link"
+                (click)="updateDataTable(0,pageCommissions.size)"><i class="nb-arrow-left"></i></button></li>
+            <li class="page-item" *ngIf="pageCommissions.first==false"><button class="btn page-link"
+                (click)="updateDataTable(pageCommissions.number-1,pageCommissions.size)">{{pageCommissions.number}}</button></li>
+            <li class="page-item active"><a class="page-link"><strong>{{pageCommissions.number+1}}</strong></a></li>
+            <li class="page-item" *ngIf="pageCommissions.last==false"><button class="btn page-link"
+                (click)="updateDataTable(pageCommissions.number+1,pageCommissions.size)">{{pageCommissions.number+2}}</button></li>
+            <li class="page-item" *ngIf="pageCommissions.last==false"><button class="btn page-link"
+                (click)="updateDataTable(pageCommissions.totalPages-1,pageCommissions.size)"><i class="nb-arrow-right"></i></button></li>
+          </ul>
         </div>
-        <br>
-        <strong>Devoluciones</strong>
+        <div *ngIf="pageCommissions.empty" class="alert alert-primary" role="alert">
+          No se encontraron resultados
+        </div>
+          <div class="table-responsive" *ngIf="!pageCommissions.empty">
+
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="text-center">Folio Factura</th>
+                  <th scope="col" class="text-center">Fecha calculo</th>
+                  <th scope="col" class="text-center">Receptor</th>
+                  <th scope="col" class="text-center">Total factura</th>
+                  <th scope="col" class="text-center">Impuestos</th>
+                  <th scope="col" class="text-center">Porcentaje comisión</th>
+                  <th scope="col" class="text-center">Comisión/Reembolso</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of pageCommissions.content">
+                  <td scope="row" class="text-center">
+                    <button type="button" class="btn-sm btn-outline-primary " (click)="checkPaymentDetails(dialog2,fila.folio)"><i class="fa fa-search"></i>
+                  </button>
+                    <button type="button" class="btn-sm btn-outline-primary"
+                    *ngIf="module === 'operaciones'" (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
+                  </button>
+                    <button type="button" class="btn-sm btn-outline-primary" (click)="downloadPdf(fila.folio)">
+                      <i class="fa fa-file-pdf"></i>
+                    </button>&nbsp;&nbsp;{{fila.folio}}
+                  </td>
+                  <td scope="row" class="text-right">{{fila.fechaCreacion}}</td>
+                  <td scope="row" class="text-right">{{fila.receptor}}</td>
+                  <td scope="row" class="text-right">{{fila.pagoMonto | currency}}</td>
+                  <td scope="row" class="text-right">{{fila.impuesto | currency}}</td>
+                  <td scope="row" class="text-right">{{fila.porcentaje/100 | percent : '.2'}}</td>
+                  <td scope="row" class="text-right">{{fila.monto | currency}}</td>
+                </tr>
+                <tr>
+                  <td colspan="5"></td>
+                  <td scope="row" class="text-right">SALDO A FAVOR</td>
+                  <td scope="row" class="text-right"><p class="font-weight-bold">{{montoDevolucion | currency}}</p></td>
+                </tr>
+              </tbody>
+            </table>
+            
+          </div>
+
+        
+
+        <strong>Ultimas Devoluciones solicitadas</strong>
         <div class="clearfix">
 
           <button type="button" (click)="downloadPagosDevolucion()" class="btn btn-success float-right">Descarga</button>
@@ -174,75 +256,82 @@
         </div>
 
 
+    
         <br>
-        <strong>Últimas comisiones / reembolsos generados</strong>
-        <div class="clearfix">
-
-          <button type="button" (click)="downloadCommissions()" class="btn btn-success float-right">Descarga</button>
-          <div *ngIf="pageCommissions.empty" class="alert alert-primary" role="alert">
-            No se encontraron resultados
-          </div>
-          <div class="table-responsive" *ngIf="!pageCommissions.empty">
-
-            <table class="table">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col" class="text-center">Receptor</th>
-                  <th scope="col" class="text-center">Folio Factura</th>
-                  <th scope="col" class="text-center">Total factura</th>
-                  <th scope="col" class="text-center">Impuestos</th>
-                  <th scope="col" class="text-center">Porcentaje comisión</th>
-                  <th scope="col" class="text-center">Comisión/Reembolso</th>
-                  <th scope="col" class="text-center">Fecha creación</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let fila of pageCommissions.content">
-                  <td scope="row" class="text-right">{{fila.receptor}}</td>
-                  <td scope="row" class="text-center">
-                    <button type="button" class="btn btn-small btn-outline-primary" (click)="downloadPdf(fila.folio)">
-                      <i class="fa fa-file-pdf"></i>
-                    </button>&nbsp;&nbsp;{{fila.folio}}
-                  </td>
-                  <td scope="row" class="text-right">{{fila.pagoMonto | currency}}</td>
-                  <td scope="row" class="text-right">{{fila.impuesto | currency}}</td>
-                  <td scope="row" class="text-right">{{fila.porcentaje/100 | percent : '.2'}}</td>
-                  <td scope="row" class="text-right">{{fila.monto | currency}}</td>
-                  <td scope="row" class="text-right">{{fila.fechaCreacion}}</td>
-                </tr>
-
-              </tbody>
-            </table>
-            <ul class="pagination" *ngIf="pageCommissions.totalElements > 1">
-              <li class="page-item" *ngIf="pageCommissions.first==false"><button class="btn page-link"
-                  (click)="updateDataTable(0,pageCommissions.size)"><i class="nb-arrow-left"></i></button></li>
-              <li class="page-item" *ngIf="pageCommissions.first==false"><button class="btn page-link"
-                  (click)="updateDataTable(pageCommissions.number-1,pageCommissions.size)">{{pageCommissions.number}}</button></li>
-              <li class="page-item active"><a class="page-link"><strong>{{pageCommissions.number+1}}</strong></a></li>
-              <li class="page-item" *ngIf="pageCommissions.last==false"><button class="btn page-link"
-                  (click)="updateDataTable(pageCommissions.number+1,pageCommissions.size)">{{pageCommissions.number+2}}</button></li>
-              <li class="page-item" *ngIf="pageCommissions.last==false"><button class="btn page-link"
-                  (click)="updateDataTable(pageCommissions.totalPages-1,pageCommissions.size)"><i class="nb-arrow-right"></i></button></li>
-            </ul>
-          </div>
-
-        </div>
+        
+ 
 
       </nb-card-body>
     </nb-card>
   </div>
 </div>
 
-<ng-template #dialog let-data let-ref="dialogRef">
+<ng-template #dialog let-data let-ref="dialogRef2">
   <nb-card>
     <nb-card-header>
       <div class="clearfix">
-        <strong class="float-left">Detalles Devolucion</strong>
+        <strong class="float-left">Detalles Pago</strong>
         <div class="float-right d-inline p-2 bg-primary text-white">{{data.status}}</div>
       </div>
     </nb-card-header>
     <nb-card-body>
       <div class="form-inline">
+        <p class="font-weight-bold">Beneficiario</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.beneficiario}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Monto</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.monto | currency}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Forma de Pago</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.formaPago}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">{{data.tipoReferencia}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p>{{data.referencia}}</p>
+      </div>
+      <div class="form-inline">
+        <p class="font-weight-bold">Banco</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.banco}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Solicitante</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.solicitante}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Fecha Solicitud</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.fechaCreacion | date}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Fecha Pago</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.fechaPago | date}}</p>
+      </div>
+      <div class="form-inline">
+        <p class="font-weight-bold">Comentarios</p>
+        &nbsp;&nbsp;&nbsp;
+        <p>{{data.comentarios}}</p>
+      </div>
+
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close()">Salir</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog2 let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>
+      <div class="clearfix">
+        <strong class="float-left">Detalles Pago </strong>
+      </div>
+    </nb-card-header>
+    <nb-card-body>
+      <div class="form-inline">
+        <p>{{data | json}}</p>
         <p class="font-weight-bold">Beneficiario</p>
         &nbsp;&nbsp;&nbsp;
         <p>{{data.beneficiario}}</p>

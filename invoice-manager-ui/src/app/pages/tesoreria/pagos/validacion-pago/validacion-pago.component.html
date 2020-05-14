@@ -23,8 +23,6 @@
     
     <button class="btn btn-danger" (click)="onRecahzarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn btn-success" (click)="generateDevolutions()" *ngIf="pago.revision1==true && pago.revision2==true">Generar devoluciones</button>
-    &nbsp;&nbsp;&nbsp;
     <button class="btn btn-warning" (click)="cancel()">Salir</button>
     
   </nb-card-footer>
