@@ -1,0 +1,14 @@
+{
+	"title": "Operaciones linea B",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Reportes",
+			"link": "/pages/operaciones/reportes/B/*"
+		},
+		{
+			"title": "CFDI",
+			"link": "/pages/operaciones/linea-b/*"
+		}
+	]
+}

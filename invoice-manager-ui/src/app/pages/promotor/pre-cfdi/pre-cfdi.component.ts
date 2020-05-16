@@ -187,7 +187,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   onClientSelected(id: string) {
     const value = +id;
     if (!isNaN(value)) {
-      this.errorMessages = [];
       const client = this.clientsCat.find(c => c.id === Number(value));
       this.clientInfo = client.informacionFiscal;
       if (!client.activo) {

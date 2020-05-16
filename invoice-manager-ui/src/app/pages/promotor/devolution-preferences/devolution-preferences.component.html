@@ -89,6 +89,7 @@
             <a class="nav-link" [ngClass]="{'active': formParams.tab === 'CONTACTO'}"  (click)="selectTab('CONTACTO')" id="contact-tab" role="tab">Contacto</a>
           </li>
         </ul>
+        <!-- CLIENTE-->
         <div class="alert alert-warning" *ngIf="!clientInfo.activo" role="alert">
           <p>{{clientInfo.informacionFiscal.razonSocial}} no se encuentra activo en el sistema, no es posible generar pre-devoluciones para clientes inactivos</p>
         </div>
