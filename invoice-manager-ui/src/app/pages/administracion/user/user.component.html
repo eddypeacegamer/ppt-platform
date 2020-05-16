@@ -3,8 +3,59 @@
     <nb-card>
       <nb-card-header>Usuario</nb-card-header>
       <nb-card-body>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="InputCorreo" class="label">Correo Usuario</label>
+            <input type="text" class="form-control" id="inputCorreo" [(ngModel)]="filterParams.correo" 
+             placeholder="Correo Electronico">
+          </div>
+          <div class="col-md-1">
+            <label for="inputActivo" class="label">Activo</label>
+            <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.activo" style="display:block;"
+                fullWidth>
+                <option value="true">Si</option>
+                <option value="false">No</option>
+                
+              </select>
+          </div>
+          <div class="col-md-5" id="col5">
+            <label for="InputActivo" class="label">Roles del Usuario</label>
+            <div class="row form-inline">
+
+              <table class="tg">
+                <thead>
+                  <tr>
+                    <th class="tg-nrix"> <nb-checkbox (checkedChange)="toggle($event,0,'PROMOTOR')">PROMOTOR</nb-checkbox></th>
+                    <th class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,1,'TESORERIA')">TESORERIA</nb-checkbox></th>
+                    <th class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,2,'OPERADOR')">OPERADOR</nb-checkbox></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,3,'CONTABILIDAD')">CONTABILIDAD</nb-checkbox></td>
+                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,4,'ADMINISTRADOR')">ADMINISTRADOR</nb-checkbox></td>
+                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,5,'BOVEDA')">BOVEDA</nb-checkbox></td>
+                  </tr>
+                </tbody>
+                </table>
+
+          </div> 
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <button class="btn btn-primary" (click)="Registry()">Registrar</button>
+        </div>
+        </div>
+        <br>
+
+      </nb-card-body>
+
+      <nb-card-body>
         <p>{{user | json}}</p>
       </nb-card-body>
     </nb-card>
+    <!-- <p class="alert alert-warning"
+    *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
+    role="alert">La suma de los porcentajes debe ser igual al 16%</p>
+    <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+      <p *ngFor="let message of messages">{{message}}</p> -->
   </div>
 </div>
