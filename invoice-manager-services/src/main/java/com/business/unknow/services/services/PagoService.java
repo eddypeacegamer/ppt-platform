@@ -214,6 +214,14 @@ public class PagoService {
 
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}
+	
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
+	public PagoDto updateMontoPago(Integer id, PagoDto pago) throws InvoiceManagerException {
+		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El pago con el id %d no existe", id)));
+		entity.setMonto(pago.getMonto());
+		return mapper.getPagoDtoFromEntity(repository.save(entity));
+	}
 
 	public void deletePago(String folio, Integer id) throws InvoiceManagerException {
 		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
