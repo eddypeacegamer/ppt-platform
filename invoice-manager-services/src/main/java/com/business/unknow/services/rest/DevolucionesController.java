@@ -48,9 +48,11 @@ public class DevolucionesController {
 	
 	@GetMapping("/facturas/{folio}/devoluciones")
 	public ResponseEntity<List<DevolucionDto>> getAllDevolutionsByFoliofactura(
-			@PathVariable(name = "folio") String folio) {
+			@PathVariable(name = "folio") String folio,
+			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
+			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor) {
 		return new ResponseEntity<>(
-				service.getDevolucionesByFolio(folio), HttpStatus.OK);
+				service.getDevolucionesByFolioAndParams(folio, tipoReceptor, idReceptor), HttpStatus.OK);
 	}
 	
 	@PutMapping("/facturas/{folio}/devoluciones")

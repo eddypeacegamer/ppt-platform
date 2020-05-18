@@ -122,8 +122,14 @@ public class DevolucionService {
 	}
 	
 	
-	public List<DevolucionDto> getDevolucionesByFolio(String folio){
-		return  mapper.getDevolucionesDtoFromEntities(repository.findByFolio(folio));
+	public List<DevolucionDto> getDevolucionesByFolioAndParams(String folio, Optional<String> tipoReceptor, Optional<String> idReceptor){
+		if(tipoReceptor.isPresent() && idReceptor.isPresent()) {
+			return  mapper.getDevolucionesDtoFromEntities(repository.findByFolioAndTipoReceptorAndReceptor(folio, tipoReceptor.get(), idReceptor.get()));
+		}else if(tipoReceptor.isPresent()) {
+			return  mapper.getDevolucionesDtoFromEntities(repository.findByFolioAndTipoReceptor(folio, tipoReceptor.get()));
+		}else {
+			return  mapper.getDevolucionesDtoFromEntities(repository.findByFolio(folio));	
+		}
 	}
 	
 	public List<DevolucionDto> upadteDevoluciones(String folio,List<DevolucionDto> devoluciones) throws InvoiceManagerException{
@@ -140,7 +146,7 @@ public class DevolucionService {
 			}
 			return devoluciones;	
 		}else {
-			throw new InvoiceManagerException("El monto total de las devoluciones no iguala al pago dado", HttpStatus.CONFLICT.value());
+			throw new InvoiceManagerException("El monto total de las devoluciones no igual  al pago dado", HttpStatus.CONFLICT.value());
 		}
 	}
 
