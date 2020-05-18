@@ -274,6 +274,7 @@
                 <tr>
                   <th class="text-center">Acciones</th>
                   <th class="text-center">Folio</th>
+                  <th class="text-center">Status</th>
                   <th class="text-center">Emisor</th>
                   <th class="text-center">Receptor</th>
                   <th class="text-center">Metodo Pago</th>
@@ -293,13 +294,14 @@
                       (click)="downloadXml(complemento.folio)">
                       <i class="fa fa-code"></i>
                     </button>&nbsp;&nbsp;
-                    <button type="button" [disabled]="complemento.statusFactura != 'Por Timbrar' || loading" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Por Timbrar', 'btn-outline-success':complemento.statusFactura =='Por Timbrar'}"
+                    <button type="button" [disabled]="complemento.statusFactura == 'Timbrada' || loading" class="btn"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
                       (click)="timbrarFactura(complemento,dialog)">
                       <i class="fa fa-check-circle"></i>
                     </button>
                   </td>
                   <td scope="row" class="text-center">{{complemento.folio}}</td>
+                  <td scope="row" class="text-center">{{complemento.statusFactura}}</td>
                   <td scope="row" class="text-center">{{complemento.rfcEmisor}}</td>
                   <td scope="row" class="text-center">{{complemento.rfcRemitente}}</td>
                   <td scope="row" class="text-center">{{complemento.metodoPago}}</td>
