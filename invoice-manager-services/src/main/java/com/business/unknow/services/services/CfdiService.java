@@ -88,6 +88,9 @@ public class CfdiService {
 		CfdiDto cfdiDto = mapper.getCfdiDtoFromEntity(
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("No se encontro CFDI con folio %s", folio))));
+		if (cfdiDto.getConceptos() == null || cfdiDto.getConceptos().isEmpty()) {
+			cfdiDto.setConceptos(mapper.getDtosFromConceptoEntities(conceptoRepository.findByCfdi(cfdiDto.getId())));
+		}
 		for (ConceptoDto conceptoDto : cfdiDto.getConceptos()) {
 			conceptoDto.setImpuestos(getImpuestosByConcepto(conceptoDto.getId()));
 		}

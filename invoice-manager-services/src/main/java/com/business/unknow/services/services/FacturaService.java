@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.services.PagoDto;
@@ -275,8 +277,16 @@ public class FacturaService {
 				.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
 		for (FacturaDto fact : complementos) {
 			Optional<PagoDto> pago = pagoService.findPagosByFolio(fact.getFolio()).stream().findFirst();
-			if (pago.isPresent()) {
+			if (pago.isPresent() && pago.get().getMonto().compareTo(BigDecimal.ZERO) > 0) {
 				fact.setTotal(pago.get().getMonto());
+			} else {
+				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(fact.getFolio());
+				if (cfdiDto != null && cfdiDto.getComplemento() != null
+						&& cfdiDto.getComplemento().getPagos() != null) {
+					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
+						fact.setTotal(cfdiPagoDto.getMonto());
+					}
+				}
 			}
 		}
 		return complementos;
@@ -284,9 +294,24 @@ public class FacturaService {
 	}
 
 	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		List<FacturaDto> comlplementos = getComplementos(folio);
+		BigDecimal saldo = new BigDecimal(0);
+		saldo=saldo.add(pagoDto.getMonto());
+		for (FacturaDto complemento : comlplementos) {
+			CfdiDto cfdiDto=cfdiService.getCfdiByFolio(complemento.getFolio());
+			if (cfdiDto != null && cfdiDto.getComplemento() != null
+					&& cfdiDto.getComplemento().getPagos() != null) {
+				for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
+					saldo = saldo.add(cfdiPagoDto.getMonto());
+				}
+			}
+		}
 		FacturaDto facturaPadre = getFacturaByFolio(folio);
-		FacturaDto complemento = generateComplemento(facturaPadre, pagoDto);
-		return timbrarFactura(complemento.getFolio(), complemento).getFacturaDto();
+		if (saldo.compareTo(facturaPadre.getCfdi().getTotal()) > 0) {
+			throw new InvoiceManagerException("Incosistencia en el saldo de la factura", HttpStatus.CONFLICT.value());
+		} else {
+			return generateComplemento(facturaPadre, pagoDto);
+		}
 	}
 
 	// TIMBRADO
@@ -343,7 +368,6 @@ public class FacturaService {
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
-		System.out.println(facturaDto);
 		validator.validateTimbrado(facturaDto, folio);
 		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")
 				|| facturaDto.getFolioPadre() == null) {

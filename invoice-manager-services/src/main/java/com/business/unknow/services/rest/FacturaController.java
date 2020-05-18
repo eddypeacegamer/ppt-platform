@@ -124,7 +124,8 @@ public class FacturaController {
 	@PostMapping("/{folio}/complementos")
 	public ResponseEntity<FacturaDto> getComplementos(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.createComplemento(folio, pago), HttpStatus.OK);
+		FacturaDto facturaDto=service.createComplemento(folio, pago);
+		return new ResponseEntity<>(service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(), HttpStatus.OK);
 	}
 
 	// CFDI
