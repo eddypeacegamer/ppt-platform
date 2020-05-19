@@ -4,54 +4,86 @@
       <nb-card-header>Usuario</nb-card-header>
       <nb-card-body>
         <div class="row">
-          <div class="col-md-2">
-            <label for="InputCorreo" class="label">Correo Usuario</label>
-            <input type="text" class="form-control" id="inputCorreo" [(ngModel)]="filterParams.correo" 
-             placeholder="Correo Electronico">
-          </div>
-          <div class="col-md-1">
-            <label for="inputActivo" class="label">Activo</label>
-            <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.activo" style="display:block;"
+            <!--   <form [formGroup]="registerForm" (ngSubmit)="Registry()"> -->
+            <div class="col" >
+              <div [formGroup]="registerForm">
+                <label for="inputCorreo" class="label">Email</label>
+                <input [disabled]="true" type="text" formControlName="email" class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                  <div *ngIf="f.email.errors.required">El correo es requerido.</div>
+                  <div *ngIf="f.email.errors.email">La direccion introducida no es valida.</div>
+                  <div *ngIf="f.email.errors.pattern">Los caracteres son invalidos.</div>
+                </div>
+              </div>
+              <label for="inputActivo" class="label">Activo</label>
+              <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.activo" style="display:block;"
                 fullWidth>
                 <option value="true">Si</option>
                 <option value="false">No</option>
-                
-              </select>
-          </div>
-          <div class="col-md-5" id="col5">
-            <label for="InputActivo" class="label">Roles del Usuario</label>
-            <div class="row form-inline">
 
-              <table class="tg">
-                <thead>
-                  <tr>
-                    <th class="tg-nrix"> <nb-checkbox (checkedChange)="toggle($event,0,'PROMOTOR')">PROMOTOR</nb-checkbox></th>
-                    <th class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,1,'TESORERIA')">TESORERIA</nb-checkbox></th>
-                    <th class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,2,'OPERADOR')">OPERADOR</nb-checkbox></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,3,'CONTABILIDAD')">CONTABILIDAD</nb-checkbox></td>
-                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,4,'ADMINISTRADOR')">ADMINISTRADOR</nb-checkbox></td>
-                    <td class="tg-0lax"> <nb-checkbox (checkedChange)="toggle($event,5,'BOVEDA')">BOVEDA</nb-checkbox></td>
-                  </tr>
-                </tbody>
+              </select>
+            </div>
+            <div class="col">
+              <label for="InputActivo" class="label">Roles del Usuario</label>
+              <div class="row form-inline">
+
+                <table class="tg">
+                  <thead>
+                    <tr>
+                      <th class="tg-nrix">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['PROMOTOR']" (checkedChange)="toggle($event,'PROMOTOR')">PROMOTOR</nb-checkbox>
+                      </th>
+                      <th class="tg-0lax">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['TESORERIA']" (checkedChange)="toggle($event,'TESORERIA')">TESORERIA</nb-checkbox>
+                      </th>
+                      <th class="tg-0lax">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR']" (checkedChange)="toggle($event,'OPERADOR')">OPERADOR</nb-checkbox>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="tg-0lax">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONTABILIDAD']" (checkedChange)="toggle($event,'CONTABILIDAD')">CONTABILIDAD</nb-checkbox>
+                      </td>
+                      <td class="tg-0lax">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['ADMINISTRADOR']" (checkedChange)="toggle($event,'ADMINISTRADOR')">ADMINISTRADOR</nb-checkbox>
+                      </td>
+                      <td class="tg-0lax">
+                        <nb-checkbox [(ngModel)]="rolesArrayUpdate['BOVEDA']" (checkedChange)="toggle($event,'BOVEDA')">BOVEDA</nb-checkbox>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
 
-          </div> 
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="Registry()">Registrar</button>
-        </div>
+              </div>
+             <!--  <p>&nbsp;&nbsp;&nbsp;&nbsp;</p> -->
+              
+              
+            </div>
+        <!--   </form> -->
         </div>
         <br>
-
+       
+        <div class="float-right">
+          <button  class="btn btn-primary" (click)="Registry()">{{buttontext}}</button>
+        
+        </div>
+          
+        
       </nb-card-body>
 
-      <nb-card-body>
+
+    <!--   <nb-card-body>
         <p>{{user | json}}</p>
-      </nb-card-body>
+      </nb-card-body> -->
     </nb-card>
+    <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+      <p *ngFor="let message of errorMessages">{{message}}</p>
+    </div>
+
+    <p class="alert alert-success" *ngIf="filterParams.success.length > 0" role="alert">{{filterParams.success}}</p>
     <!-- <p class="alert alert-warning"
     *ngIf="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) != 16"
     role="alert">La suma de los porcentajes debe ser igual al 16%</p>

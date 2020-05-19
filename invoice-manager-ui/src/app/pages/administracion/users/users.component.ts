@@ -33,8 +33,12 @@ export class UsersComponent implements OnInit {
     this.updateDataTable(this.page.number, pageSize);
   }
 
-  public redirectToUser(email: string) {
-    this.router.navigate([`./pages/administracion/usuarios/${email}`]);
+  public redirectToUser(id: string) {
+    this.router.navigate([`./pages/administracion/usuarios/${id}`]);
+  }
+
+  public Editar(id:number){
+    this.router.navigate([`./pages/administracion/usuarios/${id}`]);
   }
 
 }

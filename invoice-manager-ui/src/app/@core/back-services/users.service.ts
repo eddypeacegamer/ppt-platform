@@ -66,22 +66,28 @@ export class UsersService {
 
   }
 
-  public Checkcorreo(rol: string, id: number): Observable<Object> {
-
-    console.log('rooooooool ' + rol + ' / ' + id);
-
-    return this.httpClient.post(`../api/users/${id}/roles`,
-
-      {
-
-
-        "role": rol,
-        "description": id
-
-
-      });
-
+  public getOneUser(id: number): Observable<Object> {
+    
+    return this.httpClient.get(`../api/users/${id}`);
+  
   }
 
+  public UpdateUser(id: number,activo: boolean): Observable<Object> {
+    console.log('ieddd ' + id);
+    return this.httpClient.put(`../api/users/${id}`,
+
+    {
+      "id": id,
+      "activo": activo
+
+    });
+  }
+
+    public DeleteRoles(userid: number,rolId: number): Observable<Object> {
+      console.log('ieddd ' + userid);
+      return this.httpClient.delete(`../api/users/${userid}/roles/${rolId}`);
+  
+
+  }
 
 }

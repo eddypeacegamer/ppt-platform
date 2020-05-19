@@ -25,9 +25,10 @@
                 <option value="0">INACTIVO</option>
               </select>
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>     
               <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
               <button class="btn btn-primary" (click)="redirectToUser('*')">NUEVO USUARIO</button>
+             
             </div>
           </div>
         </div>
@@ -64,12 +65,14 @@
               <tr>
                 <th class="text-center">Correo</th>
                 <th class="text-center">Activo</th>
+                <th class="text-center">Editar</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row">{{fila.email}}</td>
                 <td scope="row">{{fila.activo ? 'SI' : 'NO'}}</td>
+                <td scope="row" ><button  class="btn btn-primary" (click)="Editar(fila.id)">Editar</button></td>
               </tr>
             </tbody>
           </table>
