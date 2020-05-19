@@ -5,7 +5,7 @@
       <nb-card-body>
         <div class="row">
             <!--   <form [formGroup]="registerForm" (ngSubmit)="Registry()"> -->
-            <div class="col" >
+            <div class="col-md-5" >
               <div >
                 <label for="inputCorreo" class="label">Email</label>
                 <input [disabled]="user.id !== undefined" type="text" class="form-control" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
@@ -23,7 +23,7 @@
 
               </select>
             </div>
-            <div class="col">
+            <div class="col-md-7">
               <label for="InputActivo" class="label">Roles del Usuario</label>
               <div class="row form-inline">
 
