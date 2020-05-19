@@ -2,7 +2,7 @@ import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { PagoFactura } from '../../models/pago-factura';
 import { Catalogo } from '../../models/catalogos/catalogo';
-import { Rolesdata } from './users-data';
+import { Role } from '../../models/role';
 
 export abstract class PaymentsData {
 
@@ -16,7 +16,7 @@ export abstract class PaymentsData {
 
     abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<PagoFactura>>;
 
-    abstract getFormasPago(roles?: Rolesdata[]): Observable<Catalogo[]>;
+    abstract getFormasPago(roles?: string[]): Observable<Catalogo[]>;
 
     abstract getIncomes(page: number, size: number, filterParams?: any) : Observable<GenericPage<PagoFactura>>;
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData} from '../../../@core/data/users-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from '../../../models/user';
 
 interface IHash {
   [key: string]: boolean;
@@ -40,7 +41,7 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.user =  new User();
     //Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"),
     //^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$"
     this.registerForm = this.formBuilder.group({

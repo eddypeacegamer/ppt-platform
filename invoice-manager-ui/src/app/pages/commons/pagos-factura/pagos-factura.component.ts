@@ -6,11 +6,11 @@ import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CuentasData } from '../../../@core/data/cuentas-data';
-import { User } from '../../../@core/data/users-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
 import { FilesData } from '../../../@core/data/files-data';
 import { ResourceFile } from '../../../models/resource-file';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-pagos-factura',
@@ -42,7 +42,8 @@ export class PagosFacturaComponent implements OnInit {
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
     if (this.factura !== undefined && this.factura.folio !== undefined) {
-      this.paymentsService.getFormasPago(this.user.roles).subscribe(payTypes => this.payTypeCat = payTypes);
+      this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
+        .subscribe(payTypes => this.payTypeCat = payTypes);
       this.paymentsService.getPaymentsByFolio(this.factura.folio)
               .subscribe((payments: PagoFactura[]) => {
                 this.invoicePayments = payments;

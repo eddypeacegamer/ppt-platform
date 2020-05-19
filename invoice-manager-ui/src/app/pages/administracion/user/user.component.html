@@ -6,15 +6,14 @@
         <div class="row">
             <!--   <form [formGroup]="registerForm" (ngSubmit)="Registry()"> -->
             <div class="col" >
-              <div [formGroup]="registerForm">
+              <div >
                 <label for="inputCorreo" class="label">Email</label>
-                <input [disabled]="true" type="text" formControlName="email" class="form-control" 
-                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
-                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <input [disabled]="user.id !== undefined" type="text" class="form-control" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
+                <!--div-- *ngIf="submitted && f.email.errors" class="invalid-feedback">
                   <div *ngIf="f.email.errors.required">El correo es requerido.</div>
                   <div *ngIf="f.email.errors.email">La direccion introducida no es valida.</div>
                   <div *ngIf="f.email.errors.pattern">Los caracteres son invalidos.</div>
-                </div>
+                </div-->
               </div>
               <label for="inputActivo" class="label">Activo</label>
               <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.activo" style="display:block;"

@@ -18,7 +18,7 @@ export class ClienteComponent implements OnInit {
   public module: string = 'promotor';
   public clientInfo: Client;
   public messages: string[] = [];
-  public formInfo: any = {rfc:'',coloniaId:'*', success:''};
+  public formInfo: any = {rfc: '', coloniaId: '*', success: ''};
   public coloniaId: number= 0;
   public colonias = [];
   public paises = ['México'];
