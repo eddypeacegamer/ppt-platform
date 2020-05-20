@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
@@ -232,4 +233,14 @@ public class PagoService {
 		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
 	}
 
+	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
+		List<Pago> pagos = repository.findByFolio(folio);
+		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))
+				.findFirst();
+		if (pago.isPresent()) {
+			Pago entity = pago.get();
+			entity.setMonto(entity.getMonto().subtract(pagoDto.getMonto()));
+			repository.save(entity);
+		}
+	}
 }

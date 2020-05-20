@@ -314,6 +314,27 @@ public class FacturaService {
 		}
 	}
 
+	public BigDecimal getFacturaSaldo(String folio) throws InvoiceManagerException {
+		FacturaDto factura = getFacturaByFolio(folio);
+		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
+				&& factura.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+			List<FacturaDto> comlplementos = getComplementos(folio);
+			BigDecimal saldo = new BigDecimal(0);
+			for (FacturaDto complemento : comlplementos) {
+				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
+				if (cfdiDto != null && cfdiDto.getComplemento() != null
+						&& cfdiDto.getComplemento().getPagos() != null) {
+					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
+						saldo = saldo.add(cfdiPagoDto.getMonto());
+					}
+				}
+			}
+			return factura.getTotal().subtract(saldo);
+		} else {
+			return new BigDecimal(0);
+		}
+	}
+
 	// TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validateTimbrado(facturaDto, folio);

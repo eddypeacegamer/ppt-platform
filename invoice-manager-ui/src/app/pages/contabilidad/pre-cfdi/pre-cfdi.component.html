@@ -227,7 +227,6 @@
         </div>
 
         <div *ngIf="factura">
-
           <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
           <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD'">
             <div class="col-sm-2">
@@ -294,8 +293,9 @@
                       (click)="downloadXml(complemento.folio)">
                       <i class="fa fa-code"></i>
                     </button>&nbsp;&nbsp;
-                    <button type="button" [disabled]="complemento.statusFactura == 'Timbrada' || loading" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada', 'btn-outline-success':complemento.statusFactura !='Timbrada'}"
+                    <button type="button" [disabled]="complemento.statusFactura == 'Timbrada'||  complemento.statusFactura == 'Cancelada' || loading" class="btn"
+                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada'||  complemento.statusFactura == 'Cancelada',
+                         'btn-outline-success':complemento.statusFactura !='Timbrada'&&  complemento.statusFactura != 'Cancelada' }"
                       (click)="timbrarFactura(complemento,dialog)">
                       <i class="fa fa-check-circle"></i>
                     </button>

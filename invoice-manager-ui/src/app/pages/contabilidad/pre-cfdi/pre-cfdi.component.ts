@@ -138,6 +138,9 @@ export class PreCfdiComponent implements OnInit {
       })).subscribe(invoice => {
         this.factura = invoice;
         if (invoice.cfdi.metodoPago === 'PPD') {
+          this.invoiceService.getInvoiceSaldo(folio).subscribe(a => { this.payment.monto=a},
+            (error: HttpErrorResponse) =>
+              this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
           this.invoiceService.getComplementosInvoice(folio)
             .pipe(
               map((facturas: Factura[]) => {
@@ -405,6 +408,9 @@ export class PreCfdiComponent implements OnInit {
     if (this.errorMessages.length === 0) {
       this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
       .subscribe(complement => {
+        this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => {this.payment.monto = a;},
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
         this.invoiceService.getComplementosInvoice(this.factura.folio)
         .pipe(
           map((facturas: Factura[]) => {
