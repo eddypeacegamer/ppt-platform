@@ -13,8 +13,16 @@ export class UsersService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getUsers(page: number, size: number): Observable<Object> {
+  public getUsers(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
+    for (const key in filterParams) {
+      if (filterParams[key] !== undefined) {
+        const value: string = filterParams[key];
+        if (value.length > 0 && value !== '*') {
+          pageParams = pageParams.append(key, value);
+        }
+      }
+    }
     return this.httpClient.get('../api/users', { params: pageParams });
   }
 
@@ -37,7 +45,6 @@ export class UsersService {
   }
 
   public insertNewUser(user: User): Observable<Object> {
-    console.log("user  "+user.email)
     return this.httpClient.post('../api/users', user);
   }
 
@@ -45,8 +52,8 @@ export class UsersService {
     return this.httpClient.post(`../api/users/${idUser}/roles`,rol);
   }
 
-  public getOneUser(user: User): Observable<Object> {
-    return this.httpClient.get(`../api/users/${user.id}`);
+  public getOneUser(userid: number): Observable<Object> {
+    return this.httpClient.get(`../api/users/${userid}`);
   }
 
   public updateUser(user: User): Observable<Object> {

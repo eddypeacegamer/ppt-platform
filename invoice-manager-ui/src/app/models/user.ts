@@ -10,4 +10,9 @@ export class  User {
     public menu: NbMenuItem[];
     public id: number;
     public alias: string;
+
+
+    constructor() {
+        this.activo = false;
+    }
 }

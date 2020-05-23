@@ -4,9 +4,12 @@
 package com.business.unknow.model.dto.services;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+import com.business.unknow.Constants;
 import com.business.unknow.model.menu.MenuItem;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -33,6 +36,12 @@ public class UserDto implements Serializable {
 	private List<RoleDto> roles;
 	
 	private List<MenuItem> menu;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	private Date fechaCreacion;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+	private Date fechaActualizacion;
 
 	private static final long serialVersionUID = -4269713581531174125L;
 
@@ -98,6 +107,22 @@ public class UserDto implements Serializable {
 
 	public void setMenu(List<MenuItem> menu) {
 		this.menu = menu;
+	}
+	
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	@Override

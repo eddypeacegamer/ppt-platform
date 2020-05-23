@@ -66,7 +66,6 @@ public class UserService {
 
 	public UserDto createUser(UserDto userDto) {
 		Optional<User> entity = repository.findByEmail(userDto.getEmail());
-		userDto.setActivo(false);
 		if (entity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("user ya  existe %s", userDto.getEmail()));
