@@ -46,7 +46,7 @@ export class ClienteComponent implements OnInit {
             let index = 0;
             this.formInfo.coloniaId = '*';
             data.colonias.forEach(element => {
-              if ( data.colonias[index] === client.informacionFiscal.localidad){
+              if ( data.colonias[index] === client.informacionFiscal.localidad) {
                 this.formInfo.coloniaId = index;
               }
               index ++;

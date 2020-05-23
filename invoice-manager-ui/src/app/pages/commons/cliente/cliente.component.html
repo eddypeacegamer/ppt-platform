@@ -41,7 +41,7 @@
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
               <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth [disabled]="clientInfo.activo" class="form-control"
-                (selectedChange)="onLocation($event)" style="display:block;">
+                (change)="onLocation($event.target.value)" style="display:block;">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
                 <option value="other">Otra</option>
