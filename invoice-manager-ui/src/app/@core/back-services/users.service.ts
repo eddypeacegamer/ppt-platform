@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from '../../models/user';
-
+import { Role } from '../../models/role';
 @Injectable({
   providedIn: 'root',
 })
@@ -37,35 +37,23 @@ export class UsersService {
   }
 
   public insertNewUser(user: User): Observable<Object> {
+    console.log("user  "+user.email)
     return this.httpClient.post('../api/users', user);
-
   }
 
-  public insertRoles(rol: string, id: number): Observable<Object> {
-
-    console.log('rooooooool ' + rol + ' / ' + id);
-
-    return this.httpClient.post(`../api/users/${id}/roles`,
-
-      {
-
-
-        "role": rol,
-        "description": id
-
-      });
-
+  public insertRoles(rol: Role, idUser: number): Observable<Object> {
+    return this.httpClient.post(`../api/users/${idUser}/roles`,rol);
   }
 
-  public getOneUser(id: number): Observable<Object> {
-    return this.httpClient.get(`../api/users/${id}`);
+  public getOneUser(user: User): Observable<Object> {
+    return this.httpClient.get(`../api/users/${user.id}`);
   }
 
-  public UpdateUser(id: number, user: User): Observable<Object> {
-    return this.httpClient.put(`../api/users/${id}`, user);
+  public updateUser(user: User): Observable<Object> {
+    return this.httpClient.put(`../api/users/${user.id}`, user);
   }
 
-    public DeleteRoles(userid: number,rolId: number): Observable<Object> {
+    public deleteRoles(userid: number,rolId: number): Observable<Object> {
       return this.httpClient.delete(`../api/users/${userid}/roles/${rolId}`);
   }
 

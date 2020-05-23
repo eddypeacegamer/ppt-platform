@@ -9,4 +9,5 @@ export class  User {
     public roles: Role[];
     public menu: NbMenuItem[];
     public id: number;
+    public alias: string;
 }

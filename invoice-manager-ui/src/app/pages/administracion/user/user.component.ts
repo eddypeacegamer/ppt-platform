@@ -4,7 +4,7 @@ import { UsersData } from '../../../@core/data/users-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../../models/user';
-
+import { Role } from '../../../models/role';
 interface IHash {
   [key: string]: boolean;
 }
@@ -22,7 +22,7 @@ export class UserComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
   public user: User;
-
+  public role: Role;
   public rolesArrayUpdate: IHash = { "PROMOTOR": false, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false, "ADMINISTRADOR": false, "BOVEDA": false, "CONSULTOR": false, "OPERADOR-B": false, "OPERADOR-C": false };
 
   public errorMessages: string[] = [];
@@ -57,7 +57,8 @@ export class UserComponent implements OnInit {
 
         this.mode = 1;
         this.buttontext = "Actualiza";
-        this.userService.getOneUser(+id).subscribe(
+        this.user.id = +id;
+        this.userService.getOneUser(this.user).subscribe(
           user => {
             this.filterParams.activo = user.activo;
             this.user = user;
@@ -94,12 +95,17 @@ export class UserComponent implements OnInit {
     this.errorMessages = [];
 
     if (this.mode == 0) {
-      this.userService.insertNewUser(this.filterParams.correo, this.filterParams.activo).subscribe(
+      
+      this.user.activo=this.filterParams.activo;
+      this.user.email=this.filterParams.correo;
+    // this.user.alias="none";
+      this.userService.insertNewUser(this.user).subscribe(
         data => {
           this.filterParams.success = 'El usuario ha sido creado satisfactoriamente.'
           for (let i in this.rolesArrayUpdate) {
             if (this.rolesArrayUpdate[i] != false) {
-              this.userService.insertRoles(i, data.id).subscribe(
+              this.role = new Role(i);
+              this.userService.insertRoles(this.role, data.id).subscribe(
                 data => {
                   this.filterParams.success = 'El usuario ha sido creado satisfactoriamente.'
                 },
@@ -111,15 +117,15 @@ export class UserComponent implements OnInit {
           || `${error.statusText} : ${error.message}`));
     }
     if (this.mode == 1) {
-
-      this.userService.UpdateUser(+this.user.id, this.filterParams.activo).subscribe(
+      this.user.activo = this.filterParams.activo
+      this.userService.updateUser(this.user).subscribe(
         data => {
           this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.'
           for (let i in this.user.roles) {
 
             if (this.rolesArrayUpdate[this.user.roles[i].role] == false && !this.user.roles.find(x => x.role == i)) {
 
-              this.userService.DeleteRoles(this.user.id, this.user.roles[i].id).subscribe(
+              this.userService.deleteRoles(this.user.id, this.user.roles[i].id).subscribe(
                 data => {
                   this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.'
                   this.actialuza();
@@ -173,7 +179,7 @@ export class UserComponent implements OnInit {
   }
 
   public actialuza() {
-    this.userService.getOneUser(this.user.id).subscribe(
+    this.userService.getOneUser(this.user).subscribe(
       user => {
         this.filterParams.correo = user.email;
         this.filterParams.activo = user.activo;
