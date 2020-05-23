@@ -51,12 +51,9 @@ public class UserService {
 	
 	public Page<UserDto> getAllUsersByParams(String status, String email,
 			String alias, int page, int size){
-//		Page<User> result = repository.findAllByParams(String.format("%%%s%%", status),
-//				String.format("%%%s%%", email), String.format("%%%s%%", alias),PageRequest.of(page, size, 
-//						Sort.by("fechaActualizacion").descending()));
-		Page<User> result = repository.findAll(PageRequest.of(page, size, 
-						Sort.by("fechaActualizacion").descending()));
-		
+		Page<User> result = repository.findAllByParams(String.format("%%%s%%", status),
+				String.format("%%%s%%", email), String.format("%%%s%%", alias),PageRequest.of(page, size, 
+						Sort.by("fechaActualizacion").descending()));		
 		return  new PageImpl<>(mapper.getUsersDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
