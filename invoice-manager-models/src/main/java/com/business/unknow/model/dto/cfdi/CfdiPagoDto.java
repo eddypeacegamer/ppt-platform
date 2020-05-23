@@ -22,6 +22,7 @@ public class CfdiPagoDto implements Serializable {
 	private String monedaDr;
 	private int numeroParcialidad;
 	private String serie;
+	private String montoDesc;
 
 	public int getId() {
 		return id;
@@ -143,13 +144,22 @@ public class CfdiPagoDto implements Serializable {
 		this.serie = serie;
 	}
 
+	public String getMontoDesc() {
+		return montoDesc;
+	}
+
+	public void setMontoDesc(String montoDesc) {
+		this.montoDesc = montoDesc;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiPagoDto [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago="
 				+ formaPago + ", moneda=" + moneda + ", monto=" + monto + ", folio=" + folio + ", idDocumento="
 				+ idDocumento + ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
-				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + "]";
+				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", montoDesc="
+				+ montoDesc + "]";
 	}
 
 }

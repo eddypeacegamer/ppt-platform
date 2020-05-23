@@ -1,6 +1,8 @@
 package com.business.unknow.model.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -44,7 +46,11 @@ public class FacturaPdfModelDto implements Serializable {
 	@XmlElement(name = "factura")
 	private Cfdi factura;
 	@XmlElement(name = "pagoComplemento")
-	private CfdiPagoDto  pagoComplemento;
+	private List<CfdiPagoDto> pagoComplemento;
+	@XmlElement(name = "montoTotalDesc")
+	private String montoTotalDesc;
+	@XmlElement(name = "montoTotal")
+	private BigDecimal montoTotal;
 
 	public FacturaPdfModelDto() {
 		super();
@@ -88,7 +94,7 @@ public class FacturaPdfModelDto implements Serializable {
 	public void setCadenaOriginal(String cadenaOriginal) {
 		this.cadenaOriginal = cadenaOriginal;
 	}
-	
+
 	public String getDireccionEmisor() {
 		return direccionEmisor;
 	}
@@ -169,12 +175,28 @@ public class FacturaPdfModelDto implements Serializable {
 		this.folioPadre = folioPadre;
 	}
 
-	public CfdiPagoDto getPagoComplemento() {
+	public List<CfdiPagoDto> getPagoComplemento() {
 		return pagoComplemento;
 	}
 
-	public void setPagoComplemento(CfdiPagoDto pagoComplemento) {
+	public void setPagoComplemento(List<CfdiPagoDto> pagoComplemento) {
 		this.pagoComplemento = pagoComplemento;
+	}
+
+	public String getMontoTotalDesc() {
+		return montoTotalDesc;
+	}
+
+	public void setMontoTotalDesc(String montoTotalDesc) {
+		this.montoTotalDesc = montoTotalDesc;
+	}
+
+	public BigDecimal getMontoTotal() {
+		return montoTotal;
+	}
+
+	public void setMontoTotal(BigDecimal montoTotal) {
+		this.montoTotal = montoTotal;
 	}
 
 	@Override

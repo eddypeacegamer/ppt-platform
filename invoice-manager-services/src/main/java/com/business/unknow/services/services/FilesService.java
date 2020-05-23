@@ -10,8 +10,10 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -160,13 +162,15 @@ public class FilesService {
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
 				.setTipoDeComprobanteDesc(
 						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
-				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal(),facturaDto.getCfdi().getMoneda()))
-				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal(),facturaDto.getCfdi().getMoneda()));
+				.setTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getTotal(),
+						facturaDto.getCfdi().getMoneda()))
+				.setSubTotalDesc(numberTranslatorHelper.getStringNumber(facturaDto.getCfdi().getSubtotal(),
+						facturaDto.getCfdi().getMoneda()));
 
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
 		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
-		
+
 		fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
 		fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
 		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
@@ -179,14 +183,17 @@ public class FilesService {
 		}
 		fBuilder.setRegimenFiscalDesc(regimenFiscal == null ? null : regimenFiscal.getDescripcion());
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
-		
+
 		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
-			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
-			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
-					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto()),
-					pagoComplemento.getMoneda()));
+			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
+			BigDecimal montoTotal = new BigDecimal(0);
+			for (CfdiPagoDto pago : pagoComplemento) {
+				montoTotal = montoTotal.add(pago.getImportePagado());
+			}
+			fBuilder.setPagoComplemento(pagoComplemento)
+					.setTotalDesc(numberTranslatorHelper.getStringNumber(montoTotal, facturaDto.getCfdi().getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -209,7 +216,7 @@ public class FilesService {
 
 		fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
 		fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
-		
+
 		RegimenFiscal regimenFiscal = catalogCacheService.getRegimenFiscalPagoMappings()
 				.get(facturaDto.getCfdi().getEmisor().getRegimenFiscal());
 		UsoCfdi usoCfdi = catalogCacheService.getUsoCfdiMappings().get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
@@ -226,10 +233,14 @@ public class FilesService {
 		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
 		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
-			CfdiPagoDto pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos().get(0);
-			fBuilder.setPagoComplemento(pagoComplemento).setTotalDesc(numberTranslatorHelper.getStringNumber(
-					pagoComplemento.getImporteSaldoAnterior().subtract(pagoComplemento.getImporteSaldoInsoluto()),
-					facturaDto.getCfdi().getMoneda()));
+			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
+			BigDecimal montoTotal = new BigDecimal(0);
+			for (CfdiPagoDto pago : pagoComplemento) {
+				montoTotal = montoTotal.add(pago.getImportePagado());
+			}
+
+			fBuilder.setPagoComplemento(pagoComplemento).setMontoTotal(montoTotal).setMontoTotalDesc(
+					numberTranslatorHelper.getStringNumber(montoTotal, facturaDto.getCfdi().getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -314,34 +325,39 @@ public class FilesService {
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			if (model.getFolioPadre() != null && model.getPagoComplemento() == null) {
-				ComplementoPago contextComplementoPago = context.getCfdi().getComplemento().getComplemntoPago()
-						.getComplementoPagos().get(0);
-
-				CfdiPagoDto cfdiPagoDto = new CfdiPagoDto();
-				try {
-					cfdiPagoDto.setFechaPago(
-							new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(contextComplementoPago.getFechaPago()));
-				} catch (ParseException e) {
-					log.error("Error parsing complemento date");
+				List<ComplementoPago> contextComplementoPago = context.getCfdi().getComplemento().getComplemntoPago()
+						.getComplementoPagos();
+				List<CfdiPagoDto> cfdiPagos = new ArrayList<>();
+				for (ComplementoPago complementoPago : contextComplementoPago) {
+					CfdiPagoDto cfdiPagoDto = new CfdiPagoDto();
+					try {
+						cfdiPagoDto.setFechaPago(
+								new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(complementoPago.getFechaPago()));
+					} catch (ParseException e) {
+						log.error("Error parsing complemento date");
+					}
+					cfdiPagoDto.setFormaPago(complementoPago.getFormaDePago());
+					cfdiPagoDto.setMoneda(complementoPago.getMoneda());
+					cfdiPagoDto.setSerie(complementoPago.getComplementoDocRelacionado().getSerie());
+					cfdiPagoDto
+							.setNumeroParcialidad(complementoPago.getComplementoDocRelacionado().getNumParcialidad());
+					cfdiPagoDto.setMetodoPago(complementoPago.getComplementoDocRelacionado().getMetodoDePagoDR());
+					cfdiPagoDto.setImporteSaldoAnterior(
+							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpSaldoAnt()));
+					cfdiPagoDto.setImportePagado(
+							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpPagado()));
+					cfdiPagoDto.setImporteSaldoInsoluto(
+							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpSaldoInsoluto()));
+					cfdiPagos.add(cfdiPagoDto);
 				}
-				cfdiPagoDto.setFormaPago(contextComplementoPago.getFormaDePago());
-				cfdiPagoDto.setMoneda(contextComplementoPago.getMoneda());
-				cfdiPagoDto.setSerie(contextComplementoPago.getComplementoDocRelacionado().getSerie());
-				cfdiPagoDto.setNumeroParcialidad(
-						contextComplementoPago.getComplementoDocRelacionado().getNumParcialidad());
-				cfdiPagoDto.setMetodoPago(contextComplementoPago.getComplementoDocRelacionado().getMetodoDePagoDR());
-				cfdiPagoDto.setImporteSaldoAnterior(
-						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoAnt()));
-				cfdiPagoDto.setImportePagado(
-						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpPagado()));
-				cfdiPagoDto.setImporteSaldoInsoluto(
-						new BigDecimal(contextComplementoPago.getComplementoDocRelacionado().getImpSaldoInsoluto()));
 
-				model.setPagoComplemento(cfdiPagoDto);
-				model.setTotalDesc(numberTranslatorHelper.getStringNumber(
-						cfdiPagoDto.getImporteSaldoAnterior().subtract(cfdiPagoDto.getImporteSaldoInsoluto()),
-						contextComplementoPago.getMoneda()));
-
+				model.setPagoComplemento(cfdiPagos);
+				BigDecimal montoTotal = new BigDecimal(0);
+				for (CfdiPagoDto pago : cfdiPagos) {
+					montoTotal = montoTotal.add(pago.getImportePagado());
+				}
+				Optional<CfdiPagoDto> primerPago = cfdiPagos.stream().findFirst();
+				model.setTotalDesc(numberTranslatorHelper.getStringNumber(montoTotal, primerPago.get().getMoneda()));
 			}
 
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
