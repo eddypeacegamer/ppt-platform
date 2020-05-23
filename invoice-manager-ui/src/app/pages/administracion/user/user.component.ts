@@ -43,6 +43,8 @@ export class UserComponent implements OnInit {
       if (id !== '*') {
         // actualiza informacion usuario
         this.updateUserInfo(+id);
+        this.registerForm = this.formBuilder.group({
+          email: [{ value: this.user.email, disabled: true }]});
       } else {
         //nuevo usuario
         this.registerForm = this.formBuilder.group({
@@ -57,33 +59,23 @@ export class UserComponent implements OnInit {
   get f() { return this.registerForm.controls; }
 
 
-  public update() {
+  public  async update() {
     const id = this.user.id;
       this.userService.updateUser(this.user).toPromise()
-      .then(updateduser => {
+      .then(async updateduser => {
           this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.';
-        console.log(updateduser);
           for (const role in this.rolesArrayUpdate) { // QUITA ROLES EXISTENTES
-            if (this.rolesArrayUpdate[this.user.roles[role].role] === false // ROLE EN FALSO
+            if (this.rolesArrayUpdate[role] === false // ROLE EN FALSO
                     && this.user.roles.find(x => x.role === role)) { // PERO YA EXISTE EN EL USER
-              this.userService.deleteRoles(this.user.id, this.user.roles[role].id).subscribe(
-                data => {
-                  this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.';
-                }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-                  || `${error.statusText} : ${error.message}`));
+              await this.userService.deleteRoles(this.user.id,
+                this.user.roles.find(x => x.role === role).id).toPromise();
             }
           }
-
           for (const role in this.rolesArrayUpdate) { // AGREGAR NUEVOS ROLES
 
             if (this.rolesArrayUpdate[role] === true // ROLE EN TRUE
               && !this.user.roles.find(x => x.role === role)) { // PERO NO EXISTE EN EL USER
-              this.userService.insertRoles(new Role(role), updateduser.id).subscribe(
-                data => {
-                  this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.';
-                },
-                (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-                  || `${error.statusText} : ${error.message}`));
+                await this.userService.insertRoles(new Role(role), updateduser.id).toPromise();
             }
           }
         }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
@@ -124,9 +116,6 @@ export class UserComponent implements OnInit {
             this.rolesArrayUpdate[this.user.roles[role].role] = true;
           }
         }
-        this.registerForm = this.formBuilder.group({
-          email: [{ value: this.user.email, disabled: true }],
-        });
       },
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));

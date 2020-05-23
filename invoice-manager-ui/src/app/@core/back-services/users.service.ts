@@ -60,7 +60,7 @@ export class UsersService {
     return this.httpClient.put(`../api/users/${user.id}`, user);
   }
 
-    public deleteRoles(userid: number,rolId: number): Observable<Object> {
+    public  deleteRoles(userid: number,rolId: number): Observable <any> {
       return this.httpClient.delete(`../api/users/${userid}/roles/${rolId}`);
   }
 
