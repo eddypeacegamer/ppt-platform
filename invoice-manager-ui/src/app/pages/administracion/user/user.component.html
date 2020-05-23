@@ -5,15 +5,16 @@
       <nb-card-body>
         <div class="row">
             <!--   <form [formGroup]="registerForm" (ngSubmit)="Registry()"> -->
-            <div class="col-md-5" >
-              <div >
+            <div class="col" >
+              <div [formGroup]="registerForm" (ngSubmit)="Registry()">
                 <label for="inputCorreo" class="label">Email</label>
-                <input [disabled]="user.id !== undefined" type="text" class="form-control" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
-                <!--div-- *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <input  type="text" formControlName="email" class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }" [(ngModel)]="filterParams.correo" placeholder="Correo Electronico" />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                   <div *ngIf="f.email.errors.required">El correo es requerido.</div>
                   <div *ngIf="f.email.errors.email">La direccion introducida no es valida.</div>
                   <div *ngIf="f.email.errors.pattern">Los caracteres son invalidos.</div>
-                </div-->
+                </div>
               </div>
               <label for="inputActivo" class="label">Activo</label>
               <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.activo" style="display:block;"
@@ -23,7 +24,7 @@
 
               </select>
             </div>
-            <div class="col-md-7">
+            <div class="col">
               <label for="InputActivo" class="label">Roles del Usuario</label>
               <div class="row form-inline">
 
@@ -52,6 +53,16 @@
                       <td class="tg-0lax">
                         <nb-checkbox [(ngModel)]="rolesArrayUpdate['BOVEDA']" (checkedChange)="toggle($event,'BOVEDA')">BOVEDA</nb-checkbox>
                       </td>
+                      <tr>
+                        <td class="tg-0lax">
+                          <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONSULTOR']" (checkedChange)="toggle($event,'CONSULTOR')">CONSULTOR</nb-checkbox>
+                        </td>
+                        <td class="tg-0lax">
+                          <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR-B']" (checkedChange)="toggle($event,'OPERADOR-B')">OPERADOR-B</nb-checkbox>
+                        </td>
+                        <td class="tg-0lax">
+                          <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR-C']" (checkedChange)="toggle($event,'OPERADOR-C')">OPERADOR-C</nb-checkbox>
+                        </td>
                     </tr>
                   </tbody>
                 </table>
