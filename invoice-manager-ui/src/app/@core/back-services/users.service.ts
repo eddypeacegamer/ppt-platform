@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { User } from '../../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -35,17 +36,8 @@ export class UsersService {
     return this.httpClient.post('../api/logout', {});
   }
 
-  public insertNewUser(correo: string, activo: boolean = true): Observable<Object> {
-
-    console.log('Creadooo nuevo usuario22 ' + correo + ' / ' + activo);
-
-    return this.httpClient.post('../api/users',
-      {
-
-        "email": correo,
-        "activo": activo
-
-      });
+  public insertNewUser(user: User): Observable<Object> {
+    return this.httpClient.post('../api/users', user);
 
   }
 
@@ -61,33 +53,20 @@ export class UsersService {
         "role": rol,
         "description": id
 
-
       });
 
   }
 
   public getOneUser(id: number): Observable<Object> {
-    
     return this.httpClient.get(`../api/users/${id}`);
-  
   }
 
-  public UpdateUser(id: number,activo: boolean): Observable<Object> {
-    console.log('ieddd ' + id);
-    return this.httpClient.put(`../api/users/${id}`,
-
-    {
-      "id": id,
-      "activo": activo
-
-    });
+  public UpdateUser(id: number, user: User): Observable<Object> {
+    return this.httpClient.put(`../api/users/${id}`, user);
   }
 
     public DeleteRoles(userid: number,rolId: number): Observable<Object> {
-      console.log('ieddd ' + userid);
       return this.httpClient.delete(`../api/users/${userid}/roles/${rolId}`);
-  
-
   }
 
 }
