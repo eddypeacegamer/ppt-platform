@@ -1,17 +1,22 @@
 <div class="row">
   <div class="col-md-12">
-    <nb-card>
-      <nb-card-header>Usuario</nb-card-header>
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+      <nb-card-header>Usuario
+        <div class="float-right">
+          <button class="btn btn-primary" *ngIf="user.id === undefined" (click)="clearInput()"><nb-icon icon="trash-2-outline"></nb-icon></button>
+        </div>
+       </nb-card-header>
+      
       <nb-card-body>
+     
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
-        <p class="alert alert-success" *ngIf="filterParams.success.length > 0" role="alert">{{filterParams.success}}</p>
+        <p class="alert alert-success" *ngIf="Params.success.length > 0" role="alert">{{Params.success}}</p>
         <div class="row">
-          <!--   <form [formGroup]="registerForm" (ngSubmit)="Registry()"> -->
-          <div class="col">
+          <form [formGroup]="registerForm" class="col" >
             <div class="row">
-              <div [formGroup]="registerForm" (ngSubmit)="Registry()" class="col">
+              <div class="col">
                 <label for="inputCorreo" class="label">Email</label>
                 <input type="text" formControlName="email" class="form-control"
                   [ngClass]="{ 'is-invalid': submitted && f.email.errors }" [(ngModel)]="user.email"
@@ -19,14 +24,14 @@
                 <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                   <div *ngIf="f.email.errors.required">El correo es requerido.</div>
                   <div *ngIf="f.email.errors.email">La direccion introducida no es valida.</div>
-                  <div *ngIf="f.email.errors.pattern">Los caracteres son invalidos.</div>
+                  <div *ngIf="f.email.errors.pattern">Hay caracteres invalidos.</div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-3">
                 <label for="inputActivo" class="label">Activo</label>
-                <select id="inputActivo" class="form-control" [(ngModel)]="user.activo" style="display:block;" 
+                <select id="inputActivo" formControlName="activo" class="form-control" [(ngModel)]="user.activo" style="display:block;" 
                   fullWidth>
                   <option value="true">Si</option>
                   <option value="false">No</option>
@@ -34,12 +39,18 @@
                 </select>
               </div>
               <div class="col-md-9">
-                <label for="inputAlias" class="label">Sobrenombre</label>
-                <input id="inputAlias" class="form-control" [(ngModel)]="user.alias" fullWidth placeholder=" Sobrenombre o alias"/>
+                <label for="inputAlias"  class="label">Sobrenombre</label>
+                <input type="text" formControlName="alias" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.alias.errors }" [(ngModel)]="user.alias"
+                placeholder="Sobrenombre o alias"  />
+                <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+                  <div *ngIf="f.alias.errors.required">El alias es requerido.</div>               
+                  <div *ngIf="f.alias.errors.pattern">Hay caracteres invalidos.</div>
+                </div>
               </div>
             </div>
-
-          </div>
+       
+          </form>
           <div class="col">
             <label for="InputActivo" class="label">Roles del Usuario</label>
             <div class="row form-inline">
@@ -91,23 +102,20 @@
                   </tr>
                 </tbody>
               </table>
-
-            </div>
-            <!--  <p>&nbsp;&nbsp;&nbsp;&nbsp;</p> -->
-
-
-          </div>
-          <!--   </form> -->
+            </div>        
+          </div>       
         </div>
         <br>
 
         <div class="float-right">
-          <button class="btn btn-primary" *ngIf="user.id === undefined" (click)="registry()"> Registrar</button>
-          <button class="btn btn-primary" *ngIf="user.id !== undefined" (click)="update()"> Actualizar</button>
+
+          <button class="btn btn-primary" *ngIf="user.id === undefined" [disabled]="this.Params.success !== ''" (click)="registry()"> Registrar</button>
+          <button class="btn btn-primary" *ngIf="user.id !== undefined" [disabled]="this.actualizando == true" 
+          [nbSpinner]="this.loading" nbSpinnerStatus="info" (click)="update()"> Actualizar</button>
 
         </div>
 
-
+      <!-- </form> -->
       </nb-card-body>
 
     </nb-card>

@@ -9,8 +9,6 @@ interface IHash {
   [key: string]: boolean;
 }
 
-
-
 @Component({
   selector: 'ngx-user',
   templateUrl: './user.component.html',
@@ -21,14 +19,14 @@ export class UserComponent implements OnInit {
 
   registerForm: FormGroup;
   submitted = false;
+  public loading = true;
   public user: User = new User();
   public rolesArrayUpdate: IHash = { 'PROMOTOR': false, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false,
     "ADMINISTRADOR": false, "BOVEDA": false, "CONSULTOR": false, "OPERADOR-B": false, "OPERADOR-C": false };
 
   public errorMessages: string[] = [];
-  public correorandom: string;
-  public inputabalible: boolean;
-  public filterParams: any = { correo: this.correorandom, activo: 'true', success: '', message: '', id: '*' };
+ 
+  public Params: any = { success: '', message: '', id: '*'};
 
   constructor(
     private route: ActivatedRoute,
@@ -37,33 +35,44 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.errorMessages = [];
     this.route.paramMap.subscribe(route => {
       const id = route.get('id');
       if (id !== '*') {
         // actualiza informacion usuario
         this.updateUserInfo(+id);
+
         this.registerForm = this.formBuilder.group({
-          email: [{ value: this.user.email, disabled: true }]});
+          email: [{ value: this.user.email, disabled: true }],
+          alias: ['', [Validators.required, Validators.pattern('^([0-9a-zA-Z]+)$')]],
+          activo: ['Si', Validators.required],
+        });
+       
       } else {
         //nuevo usuario
         this.registerForm = this.formBuilder.group({
-          email: [{ value: this.user.email, disabled: false },
-            [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+          email: [{ value: this.user.email, disabled: false, },
+              [Validators.required, Validators.email, Validators.pattern('^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+          alias: ['', [Validators.required, Validators.pattern('^([0-9a-zA-Z]+)$')] ],
+          activo: ['Si', Validators.required],
         });
+        this.loading = false;
       }
+     
     });
-
   }
 
   get f() { return this.registerForm.controls; }
 
-
   public  async update() {
+    this.submitted = true;
+    this.loading = true;
+    if (this.registerForm.invalid) { return;}
     const id = this.user.id;
       this.userService.updateUser(this.user).toPromise()
       .then(async updateduser => {
-          this.filterParams.success = 'El usuario ha sido actualizado satisfactoriamente.';
+          this.Params.success = 'El usuario ha sido actualizado satisfactoriamente.';
           for (const role in this.rolesArrayUpdate) { // QUITA ROLES EXISTENTES
             if (this.rolesArrayUpdate[role] === false // ROLE EN FALSO
                     && this.user.roles.find(x => x.role === role)) { // PERO YA EXISTE EN EL USER
@@ -85,15 +94,17 @@ export class UserComponent implements OnInit {
 
   public registry() {
     this.submitted = true;
+    if (this.registerForm.invalid) { return;}
     this.errorMessages = [];
+    
       this.userService.insertNewUser(this.user).subscribe(
         createdUser => {
-          this.filterParams.success = 'El usuario ha sido creado satisfactoriamente.';
+          this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
           for (const role in this.rolesArrayUpdate) {
             if (this.rolesArrayUpdate[role] !== false) {
               this.userService.insertRoles(new Role(role), createdUser.id).subscribe(
                 data => {
-                  this.filterParams.success = 'El usuario ha sido creado satisfactoriamente.';
+                  this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
                 },
                 (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
                   || `${error.statusText} : ${error.message}`));
@@ -107,6 +118,16 @@ export class UserComponent implements OnInit {
     this.rolesArrayUpdate[rol] = checked;
   }
 
+  public clearInput(){
+    this.user = new User();
+    for (const role in this.rolesArrayUpdate) {     
+        this.rolesArrayUpdate[role] = false;   
+    }
+    this.Params.success = '';
+    this.errorMessages = [];
+    this.submitted = false;
+  }
+
   private updateUserInfo(id: number) {
     this.userService.getOneUser(id).subscribe(
       userdata => {
@@ -116,6 +137,7 @@ export class UserComponent implements OnInit {
             this.rolesArrayUpdate[this.user.roles[role].role] = true;
           }
         }
+        this.loading = false;
       },
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));
