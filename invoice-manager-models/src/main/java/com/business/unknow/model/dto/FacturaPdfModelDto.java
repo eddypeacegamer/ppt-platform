@@ -2,7 +2,6 @@ package com.business.unknow.model.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,7 +9,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 
 @XmlRootElement(name = "FacturaPdfModel")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -45,8 +43,6 @@ public class FacturaPdfModelDto implements Serializable {
 	private String logotipo;
 	@XmlElement(name = "factura")
 	private Cfdi factura;
-	@XmlElement(name = "pagoComplemento")
-	private List<CfdiPagoDto> pagoComplemento;
 	@XmlElement(name = "montoTotalDesc")
 	private String montoTotalDesc;
 	@XmlElement(name = "montoTotal")
@@ -173,14 +169,6 @@ public class FacturaPdfModelDto implements Serializable {
 
 	public void setFolioPadre(String folioPadre) {
 		this.folioPadre = folioPadre;
-	}
-
-	public List<CfdiPagoDto> getPagoComplemento() {
-		return pagoComplemento;
-	}
-
-	public void setPagoComplemento(List<CfdiPagoDto> pagoComplemento) {
-		this.pagoComplemento = pagoComplemento;
 	}
 
 	public String getMontoTotalDesc() {

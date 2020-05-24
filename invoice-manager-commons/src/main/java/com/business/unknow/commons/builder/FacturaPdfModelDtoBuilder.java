@@ -1,21 +1,13 @@
 package com.business.unknow.commons.builder;
 
 import java.math.BigDecimal;
-import java.util.List;
-
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 
 public class FacturaPdfModelDtoBuilder extends AbstractBuilder<FacturaPdfModelDto> {
 
 	public FacturaPdfModelDtoBuilder() {
 		super(new FacturaPdfModelDto());
-	}
-
-	public FacturaPdfModelDtoBuilder setPagoComplemento(List<CfdiPagoDto> pago) {
-		instance.setPagoComplemento(pago);
-		return this;
 	}
 
 	public FacturaPdfModelDtoBuilder setFolioPadre(String folioPadre) {

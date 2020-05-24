@@ -8,21 +8,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.cfdi.ComplementoPago;
-import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
-import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
-import com.business.unknow.services.util.pdf.PDFGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +29,12 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.cfdi.ComplementoPago;
+import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
@@ -51,9 +45,11 @@ import com.business.unknow.services.entities.catalogs.UsoCfdi;
 import com.business.unknow.services.entities.files.FacturaFile;
 import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
+import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import com.business.unknow.services.services.translators.FacturaTranslator;
+import com.business.unknow.services.util.pdf.PDFGenerator;
 
 /**
  * @author ralfdemoledor
@@ -192,8 +188,6 @@ public class FilesService {
 			for (CfdiPagoDto pago : pagoComplemento) {
 				montoTotal = montoTotal.add(pago.getImportePagado());
 			}
-			fBuilder.setPagoComplemento(pagoComplemento)
-					.setTotalDesc(numberTranslatorHelper.getStringNumber(montoTotal, facturaDto.getCfdi().getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -239,8 +233,6 @@ public class FilesService {
 				montoTotal = montoTotal.add(pago.getImportePagado());
 			}
 
-			fBuilder.setPagoComplemento(pagoComplemento).setMontoTotal(montoTotal).setMontoTotalDesc(
-					numberTranslatorHelper.getStringNumber(montoTotal, facturaDto.getCfdi().getMoneda()));
 		}
 		return fBuilder.build();
 	}
@@ -314,6 +306,7 @@ public class FilesService {
 			log.info("PDF for factura {} was generated successfully", factura.getFolio());
 			return factFile;
 		} catch (InvoiceCommonException e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}
@@ -324,42 +317,16 @@ public class FilesService {
 
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
-			if (model.getFolioPadre() != null && model.getPagoComplemento() == null) {
-				List<ComplementoPago> contextComplementoPago = context.getCfdi().getComplemento().getComplemntoPago()
-						.getComplementoPagos();
-				List<CfdiPagoDto> cfdiPagos = new ArrayList<>();
-				for (ComplementoPago complementoPago : contextComplementoPago) {
-					CfdiPagoDto cfdiPagoDto = new CfdiPagoDto();
-					try {
-						cfdiPagoDto.setFechaPago(
-								new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(complementoPago.getFechaPago()));
-					} catch (ParseException e) {
-						log.error("Error parsing complemento date");
-					}
-					cfdiPagoDto.setFormaPago(complementoPago.getFormaDePago());
-					cfdiPagoDto.setMoneda(complementoPago.getMoneda());
-					cfdiPagoDto.setSerie(complementoPago.getComplementoDocRelacionado().getSerie());
-					cfdiPagoDto
-							.setNumeroParcialidad(complementoPago.getComplementoDocRelacionado().getNumParcialidad());
-					cfdiPagoDto.setMetodoPago(complementoPago.getComplementoDocRelacionado().getMetodoDePagoDR());
-					cfdiPagoDto.setImporteSaldoAnterior(
-							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpSaldoAnt()));
-					cfdiPagoDto.setImportePagado(
-							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpPagado()));
-					cfdiPagoDto.setImporteSaldoInsoluto(
-							new BigDecimal(complementoPago.getComplementoDocRelacionado().getImpSaldoInsoluto()));
-					cfdiPagos.add(cfdiPagoDto);
-				}
-
-				model.setPagoComplemento(cfdiPagos);
+			if (context.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 				BigDecimal montoTotal = new BigDecimal(0);
-				for (CfdiPagoDto pago : cfdiPagos) {
-					montoTotal = montoTotal.add(pago.getImportePagado());
+				for (ComplementoPago complementoPago : context.getCfdi().getComplemento().getComplemntoPago()
+						.getComplementoPagos()) {
+					montoTotal = montoTotal.add(new BigDecimal(complementoPago.getMonto()));
 				}
-				Optional<CfdiPagoDto> primerPago = cfdiPagos.stream().findFirst();
+				Optional<ComplementoPago> primerPago = context.getCfdi().getComplemento().getComplemntoPago()
+						.getComplementoPagos().stream().findFirst();
 				model.setTotalDesc(numberTranslatorHelper.getStringNumber(montoTotal, primerPago.get().getMoneda()));
 			}
-
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
@@ -377,7 +344,9 @@ public class FilesService {
 			insertfacturaFile(factFile);
 			log.info("PDF for factura {} was generated successfully", context.getFacturaDto().getFolio());
 			return factFile;
-		} catch (InvoiceCommonException e) {
+		} catch (
+
+		InvoiceCommonException e) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
 		}
 	}

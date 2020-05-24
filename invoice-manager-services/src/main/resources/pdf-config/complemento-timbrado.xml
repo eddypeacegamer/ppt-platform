@@ -164,104 +164,70 @@
                             </inline-container>
                         </block>
 
-                        <table>
-                            <table-column column-width="35.1mm" />
-                            <table-column column-width="64.3mm" />
-                            <table-column column-width="23.4mm" />
-                            <table-column column-width="32.3mm" />
-                            <table-column column-width="39.9mm" />
-                            <table-body>
-                                <table-row text-align="center">
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                            <xsl:value-of select="pagoComplemento/fechaPago" />
-                                        </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                            <xsl:value-of select="pagoComplemento/formaPago" />
-                                            -
-                                            <xsl:value-of select="FormaPagoDesc" />
-                                        </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                            <xsl:value-of select="pagoComplemento/moneda" />
-                                        </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid">
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm"></block>
-                                    </table-cell>
-                                    <table-cell>
-                                        <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                            $
-                                            <xsl:value-of select="format-number(pagoComplemento/importePagado, '###,##0.00')" />
-                                        </block>
-                                    </table-cell>
-                                </table-row>
-                            </table-body>
-                        </table>
+                        
                         <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
                             DOCUMENTOS RELACIONADOS AL PAGO 
                         </block>
-                        <block>
-                            <inline-container width="73.2mm" text-align="left" margin="3mm">
-                                <block>
-                                    Id documento:
-                                    <xsl:value-of select="factura/cfdi:Complemento/pago10:Pagos/pago10:Pago/pago10:DoctoRelacionado/@IdDocumento" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="18.8mm" text-align="center">
-                                <block>
-                                    Serie:
-                                    <xsl:value-of select="pagoComplemento/serie" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="50.5mm" text-align="center">
-                                <block>
-                                    Folio:
-                                    <xsl:value-of select="folioPadre" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="25.1mm" text-align="center">
-                                <block>
-                                    No. Parcialidad:
-                                    <xsl:value-of select="pagoComplemento/numeroParcialidad" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="26.9mm" text-align="center">
-                                <block>
-                                    Método Pago:
-                                    <xsl:value-of select="pagoComplemento/metodoPago" />
-                                </block>
-                            </inline-container>
-                        </block>
-                        <block margin-bottom="5mm">
-                            <inline-container width="21.9mm" text-align="center">
-                                <block>
-                                    Moneda:
-                                    <xsl:value-of select="pagoComplemento/moneda" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="36.6mm" text-align="center">
-                                <block>
-                                    Saldo anterior: $
-                                    <xsl:value-of select="format-number(pagoComplemento/importeSaldoAnterior, '###,##0.00')" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="36.3mm" text-align="center">
-                                <block>
-                                    Importe pagado: $
-                                    <xsl:value-of select="format-number(pagoComplemento/importePagado, '###,##0.00')" />
-                                </block>
-                            </inline-container>
-                            <inline-container width="100.1mm" text-align="left" margin-left="1mm">
-                                <block>
-                                    Saldo insoluto: $
-                                    <xsl:value-of select="format-number(pagoComplemento/importeSaldoInsoluto, '###,##0.00')" />
-                                </block>
-                            </inline-container>
-                        </block>
+                        <xsl:for-each select="./*[local-name()='pagosComplemento']/*[local-name()='pagoComplemento']]">
+	                        <block>
+	                            <inline-container width="73.2mm" text-align="left" margin="3mm">
+	                                <block>
+	                                    Id documento:
+	                                    <xsl:value-of select="@IdDocumento" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="18.8mm" text-align="center">
+	                                <block>
+	                                    Serie:
+	                                    <xsl:value-of select="@serie" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="50.5mm" text-align="center">
+	                                <block>
+	                                    Folio:
+	                                    <xsl:value-of select="folioPadre" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="25.1mm" text-align="center">
+	                                <block>
+	                                    No. Parcialidad:
+	                                    <xsl:value-of select="@numeroParcialidad" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="26.9mm" text-align="center">
+	                                <block>
+	                                    Método Pago:
+	                                    <xsl:value-of select="@metodoPago" />
+	                                </block>
+	                            </inline-container>
+	                        </block>
+	                        <block margin-bottom="5mm">
+	                            <inline-container width="21.9mm" text-align="center">
+	                                <block>
+	                                    Moneda:
+	                                    <xsl:value-of select="@moneda" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="36.6mm" text-align="center">
+	                                <block>
+	                                    Saldo anterior: $
+	                                    <xsl:value-of select="format-number(@importeSaldoAnterior, '###,##0.00')" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="36.3mm" text-align="center">
+	                                <block>
+	                                    Importe pagado: $
+	                                    <xsl:value-of select="format-number(@importePagado, '###,##0.00')" />
+	                                </block>
+	                            </inline-container>
+	                            <inline-container width="100.1mm" text-align="left" margin-left="1mm">
+	                                <block>
+	                                    Saldo insoluto: $
+	                                    <xsl:value-of select="format-number(@importeSaldoInsoluto, '###,##0.00')" />
+	                                </block>
+	                            </inline-container>
+	                        </block>
+                        </xsl:for-each>
                     </block-container>
 
                     <!-- Subtotales y Totales -->
