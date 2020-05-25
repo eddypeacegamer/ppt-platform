@@ -5,7 +5,7 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Empresa } from '../../../models/empresa';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Concepto } from '../../../models/factura/concepto';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
@@ -25,6 +25,7 @@ import { Pago } from '../../../models/factura/pago';
 import { PagoFactura } from '../../../models/pago-factura';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-linea-c',

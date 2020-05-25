@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientsData } from '../../../@core/data/clients-data';
-import { CompaniesData } from '../../../@core/data/companies-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute } from '@angular/router';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { Factura } from '../../../models/factura/factura';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
@@ -16,6 +15,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { PagoFactura } from '../../../models/pago-factura';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-devolution-preferences',
