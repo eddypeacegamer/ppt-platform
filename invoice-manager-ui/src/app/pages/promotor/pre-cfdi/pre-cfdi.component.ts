@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { Giro } from '../../../models/catalogos/giro';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
@@ -16,10 +15,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
+import { User } from '../../../models/user';
 
 
 @Component({
@@ -187,7 +187,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   onClientSelected(id: string) {
     const value = +id;
     if (!isNaN(value)) {
-      this.errorMessages = [];
       const client = this.clientsCat.find(c => c.id === Number(value));
       this.clientInfo = client.informacionFiscal;
       if (!client.activo) {

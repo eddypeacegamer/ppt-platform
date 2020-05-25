@@ -89,6 +89,7 @@
             <a class="nav-link" [ngClass]="{'active': formParams.tab === 'CONTACTO'}"  (click)="selectTab('CONTACTO')" id="contact-tab" role="tab">Contacto</a>
           </li>
         </ul>
+        <!-- CLIENTE-->
         <div class="alert alert-warning" *ngIf="!clientInfo.activo" role="alert">
           <p>{{clientInfo.informacionFiscal.razonSocial}} no se encuentra activo en el sistema, no es posible generar pre-devoluciones para clientes inactivos</p>
         </div>
@@ -135,7 +136,7 @@
               </div>
             </div>
             
-            <form *ngIf="solicitud.id === undefined || solicitud.status ==='RECHAZADO'">
+            <!--form *ngIf="solicitud.id === undefined || solicitud.status ==='RECHAZADO'">
               <div class="form-row">
                 <div class="form-group col-md-8">
                   <label for="inputBenerficario1" class="label">Beneficiario</label>
@@ -196,17 +197,19 @@
                     name="cometarios" placeholder="Observaciones o comentarios adicionales">
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)" [disabled]="!solicitud || solicitud.monto<=0">Solicitar
+              <small id="message" class="form-text text-muted">El modulo de devoluciones se encuentra dehabilitado temporalmente, favor de enviar un correo a operaciones</small>
+              <button type="submit" class="btn btn-primary" (click)="devolutionRequest(solicitud)" [disabled]="true">Solicitar
                 Devolucion</button>
-            </form>
+            </!--form-->
+            <small id="message" class="form-text text-muted">El modulo de devoluciones se encuentra en reconstrucción temporalmente, favor de enviar un correo a operaciones para solicitar su devolución</small>
           </div>
         </div>
 
 
 
-        <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
+        <!--div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
           <p *ngFor="let message of messages">{{message}}</p>
-        </div>
+        </!--div-->
 
       </nb-card-body>
     </nb-card>

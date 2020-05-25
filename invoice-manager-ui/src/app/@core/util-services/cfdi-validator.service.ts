@@ -56,7 +56,10 @@ export class CfdiValidatorService {
     }
     if (concepto.descripcion === undefined || concepto.descripcion.length < 1) {
       messages.push('La descripción del concepto es un valor requerido.');
+        
     }
+    //if(!this.validRegExpAphaNumeric(concepto.descripcion))
+    //    messages.push('La descripción del concepto contiene caracteres invalidos.');
     if (concepto.valorUnitario <= 0) {
       messages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
     }
@@ -146,5 +149,12 @@ export class CfdiValidatorService {
       messages.push('En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos');
     }
     return messages;
+  }
+
+  public validRegExpAphaNumeric(input: string): boolean {
+    var inputvalid: boolean;
+    let regexp = new RegExp('^([0-9a-zA-Z]+)$');
+    inputvalid = regexp.test(input);
+    return inputvalid
   }
 }

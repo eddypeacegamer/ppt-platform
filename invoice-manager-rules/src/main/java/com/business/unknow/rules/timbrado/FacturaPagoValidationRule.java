@@ -7,7 +7,7 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.Timbrado;
@@ -18,7 +18,7 @@ public class FacturaPagoValidationRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		
-		if(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor().equals(fc.getFacturaDto().getStatusFactura())){
+		if(!fc.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())){
 			return false;
 		}else if(fc.getPagos()!=null && !fc.getPagos().isEmpty()) {
 			BigDecimal paymentsAmmount = fc.getPagos().stream()

@@ -5,7 +5,8 @@ import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router } from '@angular/router';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-clientes',

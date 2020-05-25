@@ -25,7 +25,7 @@ const routes: Routes = [{
       path: 'cliente/:rfc',
       component: ClienteComponent,
     }, {
-      path: 'reportes/:status',
+      path: 'reportes/:linea/:status',
       component: InvoiceReportsComponent,
     }, {
       path: 'devoluciones',

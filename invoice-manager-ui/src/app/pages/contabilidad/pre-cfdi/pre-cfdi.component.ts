@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Pago } from '../../../models/factura/pago';
@@ -25,6 +25,7 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { Contribuyente } from '../../../models/contribuyente';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-pre-cfdi',
