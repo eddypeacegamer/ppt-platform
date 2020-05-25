@@ -37,6 +37,9 @@ public class User implements Serializable {
 	@Column(name = "CORREO")
 	private String email;
 	
+	@Column(name = "ALIAS")
+	private String alias;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -50,37 +53,31 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="user")
 	private List<Role> roles;
 
+	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-
-
 	public boolean isActivo() {
 		return activo;
 	}
-
-
-
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-
-
-
 	public String getEmail() {
 		return email;
 	}
-
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	public String getAlias() {
+		return alias;
+	}
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -96,14 +93,9 @@ public class User implements Serializable {
 	public List<Role> getRoles() {
 		return roles;
 	}
-
-
-
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-
-
 
 	@Override
 	public String toString() {

@@ -11,8 +11,9 @@ import com.business.unknow.services.entities.User;
 
 @Mapper
 public interface UserMapper {
-	@Mappings({ @Mapping(target = "roles", ignore = true), @Mapping(target = "menu", ignore = true),
-			@Mapping(target = "urlPicture", ignore = true), @Mapping(target = "name", ignore = true) })
+	@Mappings({ @Mapping(target = "menu", ignore = true),
+			@Mapping(target = "urlPicture", ignore = true), 
+			@Mapping(target = "name", ignore = true) })
 	UserDto getUserDtoFromentity(User entity);
 	List<UserDto> getUsersDtoFromEntities(List<User> entities);
 

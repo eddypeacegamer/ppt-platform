@@ -2,6 +2,7 @@ import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { PagoFactura } from '../../models/pago-factura';
 import { Catalogo } from '../../models/catalogos/catalogo';
+import { Role } from '../../models/role';
 
 export abstract class PaymentsData {
 

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Factura } from '../../../models/factura/factura';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Concepto } from '../../../models/factura/concepto';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { Empresa } from '../../../models/empresa';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
@@ -25,6 +25,7 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Pago } from '../../../models/factura/pago';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-linea-b',

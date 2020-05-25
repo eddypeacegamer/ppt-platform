@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { GenericPage } from '../../../models/generic-page';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionDevolucionComponent } from './validacion-devolucion/validacion-devolucion.component';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-solicitudes',
