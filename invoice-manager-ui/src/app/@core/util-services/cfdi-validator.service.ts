@@ -58,8 +58,8 @@ export class CfdiValidatorService {
       messages.push('La descripción del concepto es un valor requerido.');
         
     }
-    if(!this.validRegExpAphaNumeric(concepto.descripcion))
-        messages.push('La descripción del concepto contiene caracteres invalidos.');
+    //if(!this.validRegExpAphaNumeric(concepto.descripcion))
+    //    messages.push('La descripción del concepto contiene caracteres invalidos.');
     if (concepto.valorUnitario <= 0) {
       messages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
     }
