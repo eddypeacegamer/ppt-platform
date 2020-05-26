@@ -413,33 +413,34 @@ export class PreCfdiComponent implements OnInit {
       this.errorMessages.push('La fecha de pago es un valor requerido');
     }
     if (this.payment.fechaPago instanceof Date) {
-      this.errorMessages.push('La fecha de pago es un valor requerido');
-    }
-
-    if (this.errorMessages.length === 0) {
-      this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
-      .subscribe(complement => {
-        this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
-        this.invoiceService.getComplementosInvoice(this.factura.folio)
-        .pipe(
-          map((facturas: Factura[]) => {
-            return facturas.map(record => {
-              record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-              record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
-              record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-              return record;
-            });
-          })).subscribe(complementos => {
-          this.factura.complementos = complementos;
-          this.calculatePaymentSum(complementos);
+      if (this.errorMessages.length === 0) {
+        this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
+        .subscribe(complement => {
+          this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
+          this.invoiceService.getComplementosInvoice(this.factura.folio)
+          .pipe(
+            map((facturas: Factura[]) => {
+              return facturas.map(record => {
+                record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
+                record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
+                record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
+                return record;
+              });
+            })).subscribe(complementos => {
+            this.factura.complementos = complementos;
+            this.calculatePaymentSum(complementos);
+            this.loading = false;
+          });
+        }, ( error: HttpErrorResponse) => {
+          this.errorMessages.push((error.error != null && error.error !== undefined)
+            ? error.error.message : `${error.statusText} : ${error.message}`);
           this.loading = false;
         });
-      }, ( error: HttpErrorResponse) => {
-        this.errorMessages.push((error.error != null && error.error !== undefined)
-          ? error.error.message : `${error.statusText} : ${error.message}`);
+      }else {
         this.loading = false;
-      });
+      }
     }else {
+      this.errorMessages.push('La fecha es invalida');
       this.loading = false;
     }
   }
