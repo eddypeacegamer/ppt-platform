@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
   public  async update() {
     this.submitted = true;
     this.loading = true;
-    if (this.registerForm.invalid) { return;}
+    if (this.registerForm.invalid) { this.loading = false ; return;}
     const id = this.user.id;
       this.userService.updateUser(this.user).toPromise()
       .then(async updateduser => {
@@ -94,7 +94,7 @@ export class UserComponent implements OnInit {
 
   public registry() {
     this.submitted = true;
-    if (this.registerForm.invalid) { return; }
+    if (this.registerForm.invalid) { this.loading = false ; return;}
     this.errorMessages = [];
     if (this.user.email === undefined) {
       this.errorMessages.push('El email es un campo obligatorio');
