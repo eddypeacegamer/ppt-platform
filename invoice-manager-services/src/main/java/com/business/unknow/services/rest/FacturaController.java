@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -124,7 +126,16 @@ public class FacturaController {
 	@PostMapping("/{folio}/complementos")
 	public ResponseEntity<FacturaDto> getComplementos(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.createComplemento(folio, pago), HttpStatus.OK);
+		FacturaDto facturaDto=service.createComplemento(folio, pago);
+		facturaDto=service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto();
+		pagoService.actualizarCreditoContabilidad(folio, pago);
+		return new ResponseEntity<>(facturaDto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{folio}/saldos")
+	public ResponseEntity<BigDecimal> getSaldo(@PathVariable String folio)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.getFacturaSaldo(folio), HttpStatus.OK);
 	}
 
 	// CFDI

@@ -11,7 +11,9 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 
 /**
@@ -22,8 +24,9 @@ import com.business.unknow.rules.common.Constants.PaymentsSuite;
 public class UpdatePaymentInvoiceStatusRule {
 	
 	@Condition
-	public boolean condition(@Fact("factura") FacturaDto factura) {
-		return FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura()) ||
+	public boolean condition(@Fact("factura") FacturaDto factura, @Fact("currentPayment") PagoDto currentPayment) {
+		return (RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())) ? false : // rechazo de pago
+			FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura()) ||
 				 FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura()) ||
 				 	FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura());
 	}
