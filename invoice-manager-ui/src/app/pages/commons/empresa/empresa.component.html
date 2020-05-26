@@ -8,8 +8,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
-              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC" [disabled]="companyInfo.activo"
-                placeholder="RFC Empresa" [disabled]="companyInfo.id!=undefined" >
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC"
+                placeholder="RFC Empresa" [disabled]="companyInfo.id!==undefined || companyInfo.activo" >
             </div>
           </div>
           <div class="col-md-5">
@@ -35,6 +35,7 @@
           </div>
           <div class="col-md-1">
             <button type="button" class="btn btn-outline-danger" *ngIf="companyInfo.activo" (click)="inactivateCompany()">Desactivar</button>
+            <button type="button" class="btn btn-outline-success" *ngIf="!companyInfo.activo" (click)="activateCompany()">Activar</button>
           </div>
         </div>
         <div class="row">
@@ -53,12 +54,13 @@
           </div>
           <div class="col-sm-6">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
-              <select id="inputColonia" fullWidth class="form-control" [disabled]="companyInfo.activo"
-                (selectedChange)="onLocation($event)" style="display:block;">
+              <select id="inputColonia" fullWidth class="form-control"  *ngIf="!companyInfo.activo" [(ngModel)]="formInfo.coloniaId"
+                (change)="onLocation($event.target.value)" style="display:block;">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
               </select>
-            
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.localidad" class="form-control" fullWidth [disabled]="companyInfo.activo" *ngIf="companyInfo.activo"
+                id="inputLocalidad" placeholder="Colonia">
           </div>
 
         </div>
@@ -75,13 +77,13 @@
                 placeholder="Municipio/Delegación">
             </div>
           </div>
-          <div class="col-sm-4">
+          <!--div-- class="col-sm-4">
             <div class="form-group">
               <label for="inputLocalidad" class="label">Colonia</label>
               <input type="text" [(ngModel)]="companyInfo.informacionFiscal.localidad" class="form-control" fullWidth [disabled]="companyInfo.activo"
                 id="inputLocalidad" placeholder="Colonia">
             </div>
-          </div>
+          </!--div-->
         </div>
         <div class="row">
           <div class="col-md-6">

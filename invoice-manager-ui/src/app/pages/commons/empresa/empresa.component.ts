@@ -50,8 +50,23 @@ export class EmpresaComponent implements OnInit {
       const rfc = route.get('rfc');
       if (rfc !== '*') {
         this.empresaService.getCompanyByRFC(rfc)
-          .subscribe((data: Empresa) => { console.log(data);this.companyInfo = data, this.formInfo.rfc = rfc; },
-            (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
+          .subscribe((company: Empresa) => {
+            this.companyInfo = company;
+            this.formInfo.rfc = rfc;
+            this.catalogsService.getZipCodeInfo(company.informacionFiscal.cp).then(
+              (data: ZipCodeInfo) => {
+                this.colonias = data.colonias;
+              let index = 0;
+              this.formInfo.coloniaId = '*';
+              data.colonias.forEach(element => {
+              if ( data.colonias[index] === company.informacionFiscal.localidad) {
+                this.formInfo.coloniaId = index;
+              }
+              index ++;
+            });
+              },
+              (error: HttpErrorResponse) => console.error(error));
+          },(error: HttpErrorResponse) => this.errorMessages.push(error.error.message
               || `${error.statusText} : ${error.message}`));
         this.resourcesService.getResourceFile(rfc,'EMPRESA','LOGO')
           .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);
@@ -173,6 +188,13 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.activo = false;
     this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo)
       .subscribe((data: Empresa) => this.formInfo.success = 'la empresa ha sido desactivada satisfactoriamente',
+        (error: HttpErrorResponse) => { this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); });
+  }
+
+  public activateCompany() {
+    this.companyInfo.activo = true;
+    this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo)
+      .subscribe((data: Empresa) => this.formInfo.success = 'la empresa ha sido activada satisfactoriamente',
         (error: HttpErrorResponse) => { this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); });
   }
 

@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
     this.updateDataTable(0, 10);
   }
 
-  public updateDataTable(currentPage?: number, pageSize?: number) {
+  public updateDataTable(currentPage?: number, pageSize?: number, filterParams?: any) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
     this.userService.getUsers(pageValue, sizeValue, this.filterParams).subscribe(data => this.page = data);

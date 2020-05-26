@@ -59,7 +59,7 @@ export class LineaCComponent implements OnInit {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'C', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
@@ -174,7 +174,6 @@ export class LineaCComponent implements OnInit {
 
   onGiroReceptorSelection(giroId: string) {
     const value = +giroId;
-    console.log(value);
     if (isNaN(value)) {
       this.receptoresCat = [];
     } else {
@@ -298,7 +297,7 @@ export class LineaCComponent implements OnInit {
       this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
-      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
+      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'C';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
       this.factura.statusFactura = '4'; // sets automatically to stamp directly
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
@@ -389,7 +388,14 @@ export class LineaCComponent implements OnInit {
   }
 
   generateComplement() {
+    this.loading = true;
     this.errorMessages = [];
+    if (this.payment.monto === undefined) {
+      this.errorMessages.push('El monto del complemento es un valor requerido');
+    }
+    if (this.payment.monto <= 0) {
+      this.errorMessages.push('El monto del complemento no puede ser igual a 0');
+    }
     if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
       this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
     }
@@ -399,13 +405,14 @@ export class LineaCComponent implements OnInit {
     if (this.payment.formaPago === undefined) {
       this.errorMessages.push('La forma de pago es requerida');
     }
-    if (this.payment.monto === undefined) {
-      this.errorMessages.push('El monto del complemento es un valor requerido');
+    if (this.payment.fechaPago === undefined) {
+      this.errorMessages.push('La fecha de pago es un valor requerido');
     }
 
     if (this.errorMessages.length === 0) {
       this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
       .subscribe(complement => {
+        this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
         this.invoiceService.getComplementosInvoice(this.factura.folio)
         .pipe(
           map((facturas: Factura[]) => {
@@ -418,11 +425,15 @@ export class LineaCComponent implements OnInit {
           })).subscribe(complementos => {
           this.factura.complementos = complementos;
           this.calculatePaymentSum(complementos);
+          this.loading = false;
         });
       }, ( error: HttpErrorResponse) => {
-        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+        this.errorMessages.push((error.error != null && error.error !== undefined)
+          ? error.error.message : `${error.statusText} : ${error.message}`);
         this.loading = false;
       });
+    }else {
+      this.loading = false;
     }
   }
 
