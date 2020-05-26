@@ -139,22 +139,7 @@ export class PreCfdiComponent implements OnInit {
       })).subscribe(invoice => {
         this.factura = invoice;
         if (invoice.cfdi.metodoPago === 'PPD') {
-          this.invoiceService.getInvoiceSaldo(folio).subscribe(a => { this.payment.monto=a},
-            (error: HttpErrorResponse) =>
-              this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-          this.invoiceService.getComplementosInvoice(folio)
-            .pipe(
-              map((facturas: Factura[]) => {
-                return facturas.map(record => {
-                  record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                  record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
-                  record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
-                  return record;
-                })}
-            )).subscribe(complementos => {
-              this.factura.complementos = complementos;
-              this.calculatePaymentSum(complementos);
-            });
+          this.loadConceptos();
         }
       },
         error => {
@@ -409,14 +394,26 @@ export class PreCfdiComponent implements OnInit {
     if (this.payment.formaPago === undefined) {
       this.errorMessages.push('La forma de pago es requerida');
     }
-    if (this.payment.fechaPago === undefined) {
+    if (this.payment.fechaPago === undefined || this.payment.fechaPago === null) {
       this.errorMessages.push('La fecha de pago es un valor requerido');
     }
-    if (this.payment.fechaPago instanceof Date) {
-      if (this.errorMessages.length === 0) {
+    if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
-          this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
+          this.loadConceptos();
+        }, ( error: HttpErrorResponse) => {
+          this.errorMessages.push((error.error != null && error.error !== undefined)
+            ? error.error.message : `${error.statusText} : ${error.message}`);
+          this.loadConceptos();
+          this.loading = false;
+        });
+      }else {
+        this.loading = false;
+      }
+  }
+
+  private loadConceptos() {
+    this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
           this.invoiceService.getComplementosInvoice(this.factura.folio)
           .pipe(
             map((facturas: Factura[]) => {
@@ -431,18 +428,6 @@ export class PreCfdiComponent implements OnInit {
             this.calculatePaymentSum(complementos);
             this.loading = false;
           });
-        }, ( error: HttpErrorResponse) => {
-          this.errorMessages.push((error.error != null && error.error !== undefined)
-            ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loading = false;
-        });
-      }else {
-        this.loading = false;
-      }
-    }else {
-      this.errorMessages.push('La fecha es invalida');
-      this.loading = false;
-    }
   }
 
   calculatePaymentSum(complementos: Factura[]){
