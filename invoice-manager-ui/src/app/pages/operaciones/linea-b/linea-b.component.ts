@@ -389,7 +389,14 @@ export class LineaBComponent implements OnInit {
   }
 
   generateComplement() {
+    this.loading = true;
     this.errorMessages = [];
+    if (this.payment.monto === undefined) {
+      this.errorMessages.push('El monto del complemento es un valor requerido');
+    }
+    if (this.payment.monto <= 0) {
+      this.errorMessages.push('El monto del complemento no puede ser igual a 0');
+    }
     if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
       this.errorMessages.push('El monto del complemento no puede ser superior al monto total de la factura');
     }
@@ -399,13 +406,14 @@ export class LineaBComponent implements OnInit {
     if (this.payment.formaPago === undefined) {
       this.errorMessages.push('La forma de pago es requerida');
     }
-    if (this.payment.monto === undefined) {
-      this.errorMessages.push('El monto del complemento es un valor requerido');
+    if (this.payment.fechaPago === undefined) {
+      this.errorMessages.push('La fecha de pago es un valor requerido');
     }
 
     if (this.errorMessages.length === 0) {
       this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
       .subscribe(complement => {
+        this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
         this.invoiceService.getComplementosInvoice(this.factura.folio)
         .pipe(
           map((facturas: Factura[]) => {
@@ -418,11 +426,15 @@ export class LineaBComponent implements OnInit {
           })).subscribe(complementos => {
           this.factura.complementos = complementos;
           this.calculatePaymentSum(complementos);
+          this.loading = false;
         });
       }, ( error: HttpErrorResponse) => {
-        this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
+        this.errorMessages.push((error.error != null && error.error !== undefined)
+          ? error.error.message : `${error.statusText} : ${error.message}`);
         this.loading = false;
       });
+    }else {
+      this.loading = false;
     }
   }
 

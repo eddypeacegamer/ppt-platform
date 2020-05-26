@@ -94,9 +94,19 @@ export class UserComponent implements OnInit {
 
   public registry() {
     this.submitted = true;
-    if (this.registerForm.invalid) { return;}
+    if (this.registerForm.invalid) { return; }
     this.errorMessages = [];
-    
+    if (this.user.email === undefined) {
+      this.errorMessages.push('El email es un campo obligatorio');
+    }else if (this.user.email.length === 0) {
+      this.errorMessages.push('El email es un campo obligatorio');
+    }
+    if (this.user.alias === undefined) {
+      this.errorMessages.push('El alias es un campo obligatorio');
+    }else if ( this.user.alias.length === 0) {
+      this.errorMessages.push('El alias es un campo obligatorio');
+    }
+
       this.userService.insertNewUser(this.user).subscribe(
         createdUser => {
           this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
@@ -129,6 +139,13 @@ export class UserComponent implements OnInit {
   }
 
   private updateUserInfo(id: number) {
+    this.errorMessages = [];
+
+    if (this.user.alias === undefined) {
+      this.errorMessages.push('El alias es un campo obligatorio');
+    }else if ( this.user.alias.length === 0) {
+      this.errorMessages.push('El alias es un campo obligatorio');
+    }
     this.userService.getOneUser(id).subscribe(
       userdata => {
         this.user = userdata;
