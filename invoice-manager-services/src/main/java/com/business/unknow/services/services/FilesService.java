@@ -25,6 +25,7 @@ import com.business.unknow.commons.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberTranslatorHelper;
+import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
@@ -319,17 +320,21 @@ public class FilesService {
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			if (context.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 				BigDecimal montoTotal = new BigDecimal(0);
+				context.getCfdi().getComplemento().getComplemntoPago().getComplementoPagos().forEach(
+						a -> a.setFormaDePagoDesc(FormaPagoEnum.findByPagoClave(a.getFormaDePago()).getDescripcion()));
 				for (ComplementoPago complementoPago : context.getCfdi().getComplemento().getComplemntoPago()
 						.getComplementoPagos()) {
 					montoTotal = montoTotal.add(new BigDecimal(complementoPago.getMonto()));
 				}
 				Optional<ComplementoPago> primerPago = context.getCfdi().getComplemento().getComplemntoPago()
 						.getComplementoPagos().stream().findFirst();
+				model.setMontoTotal(montoTotal);
 				model.setTotalDesc(numberTranslatorHelper.getStringNumber(montoTotal, primerPago.get().getMoneda()));
 			}
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
+			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(model);
 			InputStreamReader templateReader = new InputStreamReader(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));

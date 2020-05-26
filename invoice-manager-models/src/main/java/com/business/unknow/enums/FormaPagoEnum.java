@@ -37,6 +37,15 @@ public enum FormaPagoEnum {
 		}
 		return NOT_VALID;
 	}
+	
+	public static FormaPagoEnum findByPagoClave(String clave) {
+		for (FormaPagoEnum v : values()) {
+			if (v.getClave().equals(clave)) {
+				return v;
+			}
+		}
+		return NOT_VALID;
+	}
 
 	public Integer getValor() {
 		return valor;

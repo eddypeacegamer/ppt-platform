@@ -16,6 +16,8 @@ public class ComplementoPago {
 	private String fechaPago;
 	@XmlAttribute(name = "FormaDePagoP")
 	private String formaDePago;
+	@XmlAttribute(name = "FormaDePagoDesc")
+	private String formaDePagoDesc;
 	@XmlAttribute(name = "MonedaP")
 	private String moneda;
 	@XmlAttribute(name = "Monto")
@@ -61,6 +63,14 @@ public class ComplementoPago {
 
 	public void setComplementoDocRelacionado(List<ComplementoDocRelacionado> complementoDocRelacionado) {
 		this.complementoDocRelacionado = complementoDocRelacionado;
+	}
+
+	public String getFormaDePagoDesc() {
+		return formaDePagoDesc;
+	}
+
+	public void setFormaDePagoDesc(String formaDePagoDesc) {
+		this.formaDePagoDesc = formaDePagoDesc;
 	}
 
 	@Override
