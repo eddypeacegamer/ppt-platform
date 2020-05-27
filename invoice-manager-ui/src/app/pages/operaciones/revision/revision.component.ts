@@ -19,9 +19,10 @@ import { ActivatedRoute} from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-revision',

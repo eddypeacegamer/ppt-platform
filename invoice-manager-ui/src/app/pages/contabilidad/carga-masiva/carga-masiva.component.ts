@@ -7,8 +7,9 @@ import { Cfdi } from '../../../models/factura/cfdi';
 import { Concepto } from '../../../models/factura/concepto';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-carga-masiva',

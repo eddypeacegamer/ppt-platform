@@ -8,8 +8,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
-              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC" [disabled]="companyInfo.activo"
-                placeholder="RFC Empresa" [disabled]="companyInfo.id!=undefined" >
+              <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth id="inputRFC"
+                placeholder="RFC Empresa" [disabled]="companyInfo.id!==undefined || companyInfo.activo" >
             </div>
           </div>
           <div class="col-md-5">

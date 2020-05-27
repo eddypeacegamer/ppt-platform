@@ -149,4 +149,8 @@ export class InvoicesService {
   public generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable <any> {
     return this.httpClient.post(`../api/facturas/${folioPadre}/complementos`, complemento);
   }
+
+  public getInvoiceSaldo(folio:string): Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folio}/saldos`);
+  }
 }
