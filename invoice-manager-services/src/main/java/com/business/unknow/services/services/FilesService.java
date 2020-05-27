@@ -291,7 +291,6 @@ public class FilesService {
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
-			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(model);
 			InputStreamReader templateReader = new InputStreamReader(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
@@ -320,8 +319,12 @@ public class FilesService {
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			if (context.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 				BigDecimal montoTotal = new BigDecimal(0);
-				context.getCfdi().getComplemento().getComplemntoPago().getComplementoPagos().forEach(
-						a -> a.setFormaDePagoDesc(FormaPagoEnum.findByPagoClave(a.getFormaDePago()).getDescripcion()));
+				Optional<ComplementoPago> compLo = context.getCfdi().getComplemento().getComplemntoPago()
+						.getComplementoPagos().stream().findFirst();
+				if (compLo.isPresent()) {
+					model.setFormaPagoDesc(
+							FormaPagoEnum.findByPagoClave(compLo.get().getFormaDePago()).getDescripcion());
+				}
 				for (ComplementoPago complementoPago : context.getCfdi().getComplemento().getComplemntoPago()
 						.getComplementoPagos()) {
 					montoTotal = montoTotal.add(new BigDecimal(complementoPago.getMonto()));
