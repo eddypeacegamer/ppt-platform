@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.cfdi.ComplementoPago;
+import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Retencion;
 import com.business.unknow.model.cfdi.Translado;
@@ -75,20 +75,17 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "valorUnitario", target = "valorUnitario") })
 	public Concepto complementoConcepto(ConceptoDto dto);
 
-	@Mappings({ @Mapping(target = "fechaPago", source = "cfdiPago.fechaPago"),
-			@Mapping(target = "formaDePago", source = "cfdiPago.formaPago"),
-			@Mapping(target = "moneda", source = "cfdiPago.moneda"),
-			@Mapping(target = "monto", source = "cfdiPago.monto"),
-			@Mapping(target = "complementoDocRelacionado.folio", source = "cfdiPago.folio"),
-			@Mapping(target = "complementoDocRelacionado.idDocumento", source = "cfdiPago.idDocumento"),
-			@Mapping(target = "complementoDocRelacionado.impPagado", source = "cfdiPago.importePagado"),
-			@Mapping(target = "complementoDocRelacionado.impSaldoAnt", source = "cfdiPago.importeSaldoAnterior"),
-			@Mapping(target = "complementoDocRelacionado.impSaldoInsoluto", source = "cfdiPago.importeSaldoInsoluto"),
-			@Mapping(target = "complementoDocRelacionado.metodoDePagoDR", source = "cfdiPago.metodoPago"),
-			@Mapping(target = "complementoDocRelacionado.monedaDR", source = "cfdiPago.monedaDr"),
-			@Mapping(target = "complementoDocRelacionado.numParcialidad", source = "cfdiPago.numeroParcialidad"),
-			@Mapping(target = "complementoDocRelacionado.serie", source = "cfdiPago.serie") })
-	public ComplementoPago complementoComponente(CfdiPagoDto cfdiPago);
+	@Mappings({
+			@Mapping(target = "folio", source = "cfdiPago.folio"),
+			@Mapping(target = "idDocumento", source = "cfdiPago.idDocumento"),
+			@Mapping(target = "impPagado", source = "cfdiPago.importePagado"),
+			@Mapping(target = "impSaldoAnt", source = "cfdiPago.importeSaldoAnterior"),
+			@Mapping(target = "impSaldoInsoluto", source = "cfdiPago.importeSaldoInsoluto"),
+			@Mapping(target = "metodoDePagoDR", source = "cfdiPago.metodoPago"),
+			@Mapping(target = "monedaDR", source = "cfdiPago.monedaDr"),
+			@Mapping(target = "numParcialidad", source = "cfdiPago.numeroParcialidad"),
+			@Mapping(target = "serie", source = "cfdiPago.serie") })
+	public ComplementoDocRelacionado complementoComponente(CfdiPagoDto cfdiPago);
 
 	@Mappings({ @Mapping(target = "impuestos", ignore = true) })
 	public Concepto cfdiConcepto(ConceptoDto dto);
