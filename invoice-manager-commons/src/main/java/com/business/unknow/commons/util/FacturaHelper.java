@@ -40,6 +40,7 @@ public class FacturaHelper {
 			jaxbMarshaller.marshal(modelDto, sw);
 			return sw.toString();
 		} catch (JAXBException e) {
+			e.printStackTrace();
 			throw new InvoiceCommonException(e.getMessage());
 		}
 		

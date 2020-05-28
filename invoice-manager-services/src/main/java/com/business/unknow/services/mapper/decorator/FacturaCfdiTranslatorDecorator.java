@@ -88,15 +88,15 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
 		return conpeto;
 	}
 
-	@Override
-	public ComplementoPago complementoComponente(CfdiPagoDto cfdiPago) {
-		ComplementoPago complementoPago = delegate.complementoComponente(cfdiPago);
-		complementoPago.setFechaPago(
-				dateHelper.getStringFromFecha(cfdiPago.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
-		complementoPago.setMonto(String.format("%.2f", cfdiPago.getMonto()));
-		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f", cfdiPago.getMonto()));
-		return complementoPago;
-	}
+//	@Override
+//	public ComplementoPago complementoComponente(CfdiPagoDto cfdiPago) {
+//		ComplementoPago complementoPago = delegate.complementoComponente(cfdiPago);
+//		complementoPago.setFechaPago(
+//				dateHelper.getStringFromFecha(cfdiPago.getFechaPago(), FacturaConstants.FACTURA_DATE_FORMAT));
+//		complementoPago.setMonto(String.format("%.2f", cfdiPago.getMonto()));
+//		complementoPago.getComplementoDocRelacionado().setImpPagado(String.format("%.2f", cfdiPago.getMonto()));
+//		return complementoPago;
+//	}
 
 	
 }

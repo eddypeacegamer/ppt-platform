@@ -1,5 +1,7 @@
 package com.business.unknow.model.cfdi;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -14,12 +16,14 @@ public class ComplementoPago {
 	private String fechaPago;
 	@XmlAttribute(name = "FormaDePagoP")
 	private String formaDePago;
+	@XmlAttribute(name = "FormaDePagoDesc")
+	private String formaDePagoDesc;
 	@XmlAttribute(name = "MonedaP")
 	private String moneda;
 	@XmlAttribute(name = "Monto")
 	private String monto;
 	@XmlElement(name = "DoctoRelacionado", namespace = "http://www.sat.gob.mx/Pagos")
-	private ComplementoDocRelacionado complementoDocRelacionado;
+	private List<ComplementoDocRelacionado> complementoDocRelacionado;
 
 	public String getFechaPago() {
 		return fechaPago;
@@ -53,12 +57,20 @@ public class ComplementoPago {
 		this.monto = monto;
 	}
 
-	public ComplementoDocRelacionado getComplementoDocRelacionado() {
+	public List<ComplementoDocRelacionado> getComplementoDocRelacionado() {
 		return complementoDocRelacionado;
 	}
 
-	public void setComplementoDocRelacionado(ComplementoDocRelacionado complementoDocRelacionado) {
+	public void setComplementoDocRelacionado(List<ComplementoDocRelacionado> complementoDocRelacionado) {
 		this.complementoDocRelacionado = complementoDocRelacionado;
+	}
+
+	public String getFormaDePagoDesc() {
+		return formaDePagoDesc;
+	}
+
+	public void setFormaDePagoDesc(String formaDePagoDesc) {
+		this.formaDePagoDesc = formaDePagoDesc;
 	}
 
 	@Override
