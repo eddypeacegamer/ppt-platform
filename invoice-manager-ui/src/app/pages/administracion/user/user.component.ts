@@ -45,8 +45,8 @@ export class UserComponent implements OnInit {
 
         this.registerForm = this.formBuilder.group({
           email: [{ value: this.user.email, disabled: true }],
-          alias: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2)
-            , Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡" \' ]+)$')]],
+          alias: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2),
+             Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡" \' ]+)$')]],
           activo: ['Si', Validators.required],
         });
        
@@ -55,7 +55,8 @@ export class UserComponent implements OnInit {
         this.registerForm = this.formBuilder.group({
           email: [{ value: this.user.email, disabled: false, },
               [Validators.required, Validators.email, Validators.pattern('^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-          alias: ['', [Validators.required, Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡"\' ]+)$')] ],
+          alias: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2),
+             Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡"\' ]+)$')] ],
           activo: ['Si', Validators.required],
         });
         this.loading = false;
