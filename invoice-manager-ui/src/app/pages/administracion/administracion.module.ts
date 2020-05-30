@@ -6,17 +6,23 @@ import { UsersComponent } from './users/users.component';
 import { CommonsModule } from '../commons/commons.module';
 import { UserComponent } from './user/user.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NbTreeGridModule } from '@nebular/theme';
+
+
+import { TestComponent } from './solicitudes12/test/test.component';
 
 @NgModule({
   declarations: [
     AdministracionComponent,
     UsersComponent,
-    UserComponent],
+    UserComponent,
+    TestComponent],
    
   imports: [
     AdministracionRoutingModule,
     CommonsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NbTreeGridModule
   ],
   providers: [ DownloadCsvService ],
 })

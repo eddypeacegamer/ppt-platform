@@ -7,11 +7,16 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { UserComponent } from './user/user.component';
+import { TestComponent } from './solicitudes12/test/test.component';
 
 const routes: Routes = [{
   path: '',
   component: AdministracionComponent,
   children: [
+    {
+      path: 'Test',
+      component: TestComponent,
+    },
     {
       path: 'usuarios',
       component: UsersComponent,

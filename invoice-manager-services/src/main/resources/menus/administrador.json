@@ -3,6 +3,10 @@
     "icon": "layout-outline",
     "children": [
     	{
+			"title": "Test",
+			"link": "/pages/administracion/Test"
+		},
+    	{
 			"title": "Usuarios",
 			"link": "/pages/administracion/usuarios"
 		},

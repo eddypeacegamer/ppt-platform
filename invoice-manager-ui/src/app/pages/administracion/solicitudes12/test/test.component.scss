@@ -1,0 +1,110 @@
+button[nbTreeGridRowToggle] {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+/* 
+  .nb-tree-grid-footer-cell {
+    height: 2rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid #f7f9fc;
+  }
+   */
+  .search-label {
+    display: block;
+  }
+  .search-input {
+    margin-bottom: 1rem;
+  }
+  
+  .nb-column-name {
+    width: 100%;
+  }
+  
+  @media screen and (min-width: 400px) {
+    .nb-column-name,
+    .nb-column-size {
+      width: 50%;
+    }
+  }
+  
+  @media screen and (min-width: 500px) {
+    .nb-column-name,
+    .nb-column-size,
+    .nb-column-kind {
+      width: 33.333%;
+    }
+  }
+  
+  @media screen and (min-width: 600px) {
+    .nb-column-name {
+      width: 31%;
+    }
+    .nb-column-size,
+    .nb-column-kind,
+    .nb-column-items {
+      width: 23%;
+    }
+  }
+
+  .tg {
+    margin: 30px;
+    table-layout: fixed;
+    border-spacing: 30px;
+   /*  border-collapse: collapse; */
+   box-sizing: border-box;
+    width: 90%;
+   /*  width: minmax(max-content, 300px) minmax(200px, 1fr) 150px; */
+   /*  max-width: 100%;
+    min-width: 80%; */
+    overflow: auto;
+    height: 2rem;
+    padding: 10.875rem 11.25rem;
+    border: 1px solid #f7f9fc; 
+    /* border: none; */
+   /*  border-collapse: collapse;
+    border-radius: 30px;
+    border-style: hidden; 
+    */
+    /* border-spacing: 0; */
+  
+    td {
+      border-style: solid;
+      border-width: 0px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      overflow: hidden;
+      padding: 10px 5px;
+      word-break: normal;
+      width: 100%;
+      max-width: 100%;
+      min-width: 80%;
+    }
+  
+    th {
+        width: 100%;
+        max-width: 100%;
+        min-width: 80%;
+      border-style: solid;
+      border-width: 0px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      overflow: hidden;
+      padding: 10px 5px;
+      word-break: normal;
+    }
+  
+    .tg-xwyw {
+      border-color: #000000;
+      text-align: center;
+      vertical-align: middle;
+    }
+  
+    .tg-0pky {
+      border-color: inherit;
+      text-align: left;
+      vertical-align: top;
+    }
+  
+  }
