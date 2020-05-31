@@ -43,9 +43,10 @@ export class PreCfdiComponent implements OnInit {
   public validationCat: Catalogo[] = [];
   public payCat: Catalogo[] = [];
   public devolutionCat: Catalogo[] = [];
-  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'), new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
+  public payTypeCat: Catalogo[] = [new Catalogo('01', 'Efectivo'), new Catalogo('02', 'Cheque nominativo'),
+    new Catalogo('03', 'Transferencia electrónica de fondos'), new Catalogo('99', 'Por definir')];
 
-  public complementPayTypeCat: Catalogo[] =[];
+  public complementPayTypeCat: Catalogo[] = [];
   public newConcep: Concepto;
   public payment: Pago;
   public factura: Factura;
@@ -59,7 +60,8 @@ export class PreCfdiComponent implements OnInit {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'A', usoCfdi: '*', payType: '*' };
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*',
+    lineaEmisor: 'B', lineaReceptor: 'A', usoCfdi: '*', payType: '*' };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
