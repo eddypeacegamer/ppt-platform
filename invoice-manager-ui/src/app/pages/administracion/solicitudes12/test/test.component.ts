@@ -19,6 +19,9 @@ interface FSEntry {
   styleUrls: ['./test.component.scss']
 })
 export class TestComponent implements OnInit {
+    
+  num: number = 6;
+
   customColumn = 'name';
   defaultColumns = [ 'size', 'kind', 'items' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -95,6 +98,8 @@ export class TestComponent implements OnInit {
   }
 
   ngOnInit() {
+
+
   }
 
 }
