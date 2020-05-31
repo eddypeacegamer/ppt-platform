@@ -162,7 +162,6 @@ export class PreCfdiComponent implements OnInit {
 
   onGiroReceptorSelection(giroId: string) {
     const value = +giroId;
-    console.log(value);
     if (isNaN(value)) {
       this.receptoresCat = [];
     } else {

@@ -6,7 +6,7 @@
       <div class="form-inline">
         <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
           (ngModelChange)="buscarClaveProductoServicio($event)" placeholder="palabra clave producto servicio">
-        <button class="btn btn-primary" (click)="openSatCatalog(dialog)"> Catalogo SAT</button>
+        <button class="btn btn-primary" (click)="openSatCatalog()"> Catalogo SAT</button>
       </div>
     </div>
     <div class="col-sm-4">
@@ -142,19 +142,3 @@
   </table>
 
 </div>
-
-
-<ng-template #dialog let-data let-ref="dialogRef">
-  <nb-card>
-    <nb-card-header>Catalogo producto servicio SAT</nb-card-header>
-    <nb-card-body>
-      <div style="width: 90vw; height: 80vh;">
-        <iframe width="100%" height="100%" src="http://pys.sat.gob.mx/PyS/catPyS.aspx"></iframe>  
-      </div>
-      
-    </nb-card-body>
-    <nb-card-footer>
-      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
-    </nb-card-footer>
-  </nb-card>
-</ng-template>
