@@ -44,7 +44,9 @@
                 [ngClass]="{ 'is-invalid': submitted && f.alias.errors }" [(ngModel)]="user.alias"
                 placeholder="Sobrenombre o alias"  />
                 <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-                  <div *ngIf="f.alias.errors.required">El alias es requerido.</div>               
+                  <div *ngIf="f.alias.errors.required">El alias es requerido.</div>
+                  <div *ngIf="f.alias.errors.minlength">Nececitas un minimo de 2 caracteres.</div> 
+                  <div *ngIf="f.alias.errors.maxlength">No mas de 20 caracteres.</div>              
                   <div *ngIf="f.alias.errors.pattern">Hay caracteres invalidos.</div>
                 </div>
               </div>

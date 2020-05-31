@@ -45,7 +45,8 @@ export class UserComponent implements OnInit {
 
         this.registerForm = this.formBuilder.group({
           email: [{ value: this.user.email, disabled: true }],
-          alias: ['', [Validators.required, Validators.pattern('^([0-9a-zA-Z]+)$')]],
+          alias: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2),
+             Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡" \' ]+)$')]],
           activo: ['Si', Validators.required],
         });
        
@@ -54,7 +55,8 @@ export class UserComponent implements OnInit {
         this.registerForm = this.formBuilder.group({
           email: [{ value: this.user.email, disabled: false, },
               [Validators.required, Validators.email, Validators.pattern('^[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-          alias: ['', [Validators.required, Validators.pattern('^([0-9a-zA-Z]+)$')] ],
+          alias: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(2),
+             Validators.pattern('^([0-9a-zA-ZÀ-ú.,&-_!¡"\' ]+)$')] ],
           activo: ['Si', Validators.required],
         });
         this.loading = false;
@@ -96,17 +98,6 @@ export class UserComponent implements OnInit {
     this.submitted = true;
     if (this.registerForm.invalid) { this.loading = false ; return;}
     this.errorMessages = [];
-    if (this.user.email === undefined) {
-      this.errorMessages.push('El email es un campo obligatorio');
-    }else if (this.user.email.length === 0) {
-      this.errorMessages.push('El email es un campo obligatorio');
-    }
-    if (this.user.alias === undefined) {
-      this.errorMessages.push('El alias es un campo obligatorio');
-    }else if ( this.user.alias.length === 0) {
-      this.errorMessages.push('El alias es un campo obligatorio');
-    }
-
       this.userService.insertNewUser(this.user).subscribe(
         createdUser => {
           this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
@@ -140,12 +131,6 @@ export class UserComponent implements OnInit {
 
   private updateUserInfo(id: number) {
     this.errorMessages = [];
-
-    if (this.user.alias === undefined) {
-      this.errorMessages.push('El alias es un campo obligatorio');
-    }else if ( this.user.alias.length === 0) {
-      this.errorMessages.push('El alias es un campo obligatorio');
-    }
     this.userService.getOneUser(id).subscribe(
       userdata => {
         this.user = userdata;
