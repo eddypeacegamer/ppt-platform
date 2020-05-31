@@ -19,8 +19,8 @@ import { User } from '../../../models/user';
 })
 export class PagosFacturaComponent implements OnInit {
 
-  @Input() factura: Factura;
-  @Input() user: User;
+  factura: Factura;
+  user: User;
 
   public fileInput: any;
 
