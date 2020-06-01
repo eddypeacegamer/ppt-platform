@@ -7,6 +7,7 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
+import { PagoFactura } from '../../models/pago-factura';
 
 const routes: Routes = [{
   path: '',
@@ -30,6 +31,9 @@ const routes: Routes = [{
     }, {
       path: 'devoluciones',
       component: DevolucionesComponent,
+    }, {
+      path: 'pago-facturas',
+      component: PagoFactura,
     },
   ]}];
 

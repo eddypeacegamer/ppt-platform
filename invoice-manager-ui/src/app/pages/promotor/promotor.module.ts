@@ -16,7 +16,8 @@ import { DevolutionPreferencesComponent } from './devolution-preferences/devolut
   declarations: [PromotorComponent,
     PreCfdiComponent,
     DevolucionesComponent,
-    DevolutionPreferencesComponent],
+    DevolutionPreferencesComponent,
+  ],
   imports: [
     PromotorRoutingModule,
     CommonsModule,
