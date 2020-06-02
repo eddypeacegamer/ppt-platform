@@ -6,6 +6,7 @@ import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { Contribuyente } from '../../models/contribuyente';
+import { add, subtract, bignumber, multiply, number } from 'mathjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,17 +25,17 @@ export class CfdiValidatorService {
   }
 
   public buildConcepto(concepto: Concepto): Concepto {
-    concepto.importe = concepto.cantidad * concepto.valorUnitario;
-    const base = concepto.importe - concepto.descuento;
+    concepto.importe = number(multiply(bignumber(concepto.cantidad), bignumber(concepto.valorUnitario)));
+    const base = subtract(bignumber(concepto.importe), bignumber(concepto.descuento));
     if (concepto.iva) {
-      const impuesto = base * 0.16; // TODO calcular impuestos dinamicamente no solo IVA
-      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
+      const impuesto = number(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
+      concepto.impuestos = [new Impuesto('002', '0.160000', number(base), impuesto)];
     } else {
       concepto.impuestos = [];
     }
     if (concepto.retencionFlag) {
-      const retencion = base * 0.06; // TODO calcular retencion dinamicamente
-      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)];
+      const retencion = number(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
+      concepto.retenciones = [new Impuesto('002', '0.060000', number(base), retencion)];
     } else {
       concepto.retenciones = [];
     }
@@ -67,23 +68,25 @@ export class CfdiValidatorService {
   }
 
   public calcularImportes(cfdi: Cfdi): Cfdi {
-    let total = 0;
-    let subtotal = 0;
+    let total: number = 0.0;
+    let subtotal: number  = 0.0;
     for (const concepto of cfdi.conceptos) {
-      let impuesto = 0;
-      let retencion = 0;
+      let impuesto = bignumber(0.0);
+      let retencion = bignumber(0.0);
+      let base = bignumber(0.0);
       for (const imp of concepto.retenciones) {
-        retencion = (imp.importe * 3 + retencion * 3) / 3;
+        retencion =  add(bignumber(imp.importe) + bignumber(retencion));
       }
-      const base = concepto.importe - concepto.descuento;
-      subtotal += base;
       for (const imp of concepto.impuestos) {
-        impuesto = (imp.importe * 3 + impuesto * 3) / 3;
+        impuesto = add(bignumber(imp.importe), bignumber(impuesto));
       }
-      total += (base * 3 + impuesto * 3 - retencion * 3) / 3;
+      base = subtract(bignumber(concepto.importe), bignumber(concepto.descuento));
+
+      subtotal = add(subtotal, base);
+      total = add(total, add(subtract(base, retencion), impuesto));
     }
-    cfdi.total = total;
-    cfdi.subtotal = subtotal;
+    cfdi.total = number(total);
+    cfdi.subtotal = number(subtotal);
     return cfdi;
   }
 
@@ -152,9 +155,7 @@ export class CfdiValidatorService {
   }
 
   public validRegExpAphaNumeric(input: string): boolean {
-    var inputvalid: boolean;
-    let regexp = new RegExp('^([0-9a-zA-Z]+)$');
-    inputvalid = regexp.test(input);
-    return inputvalid
+    const regexp = new RegExp(`^([A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+)$`);
+    return regexp.test(input);
   }
 }
