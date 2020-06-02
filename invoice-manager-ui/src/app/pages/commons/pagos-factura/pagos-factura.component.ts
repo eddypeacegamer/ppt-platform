@@ -11,6 +11,9 @@ import { Cuenta } from '../../../models/cuenta';
 import { FilesData } from '../../../@core/data/files-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { User } from '../../../models/user';
+import { UsersData } from '../../../@core/data/users-data';
+import { GenericPage } from '../../../models/generic-page';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-pagos-factura',
@@ -19,41 +22,37 @@ import { User } from '../../../models/user';
 })
 export class PagosFacturaComponent implements OnInit {
 
-  factura: Factura;
-  user: User;
+  public user: User;
 
   public fileInput: any;
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoFactura = new PagoFactura();
-  public invoicePayments: PagoFactura[] = [];
+  public promotorPayments: GenericPage<PagoFactura> = new GenericPage();
   public paymentSum: number = 0;
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
   public cuentas: Cuenta[];
   public loading: boolean = false;
 
-  constructor(private paymentsService: PaymentsData,
+  constructor(
+    private paymentsService: PaymentsData,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
+    private usersService: UsersData,
     private invoiceService: InvoicesData) { }
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
-    if (this.factura !== undefined && this.factura.folio !== undefined) {
-      this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
-        .subscribe(payTypes => this.payTypeCat = payTypes);
-      this.paymentsService.getPaymentsByFolio(this.factura.folio)
-              .subscribe((payments: PagoFactura[]) => {
-                this.invoicePayments = payments;
-                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-                if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
-                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
-                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
-                }
+    this.usersService.getUserInfo()
+      .then(user => this.user = user)
+      .then(() => {
+        this.paymentsService.getAllPayments(0, 10, {})
+              .subscribe((page: GenericPage<PagoFactura>) => {
+                this.promotorPayments = page;
                 });
-    }
+      });
   }
 
   /******* PAGOS ********/
@@ -70,13 +69,14 @@ export class PagosFacturaComponent implements OnInit {
       this.newPayment.banco = 'No aplica';
             this.newPayment.cuenta = 'Sin especificar';
     }else {
+      /*
       this.accountsService.getCuentasByCompany(this.factura.rfcEmisor)
           .subscribe(cuentas => {
             this.cuentas = cuentas;
             this.paymentForm.bankAccount = cuentas[0].id;
             this.newPayment.banco = cuentas[0].banco;
             this.newPayment.cuenta = cuentas[0].cuenta;
-          });
+          });*/
     }
   }
 
@@ -103,6 +103,7 @@ export class PagosFacturaComponent implements OnInit {
   }
 
   deletePayment(paymentId) {
+    /*
     this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
       result => {
         this.paymentsService.getPaymentsByFolio(this.factura.folio)
@@ -113,10 +114,11 @@ export class PagosFacturaComponent implements OnInit {
         this.invoiceService.getComplementosInvoice(this.factura.folio)
           .subscribe(complementos => this.factura.complementos = complementos);
       }, (error: HttpErrorResponse) =>
-      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));*/
   }
 
   sendPayment() {
+    /*
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
@@ -156,6 +158,6 @@ export class PagosFacturaComponent implements OnInit {
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';
-    }
+    }*/
   }
 }
