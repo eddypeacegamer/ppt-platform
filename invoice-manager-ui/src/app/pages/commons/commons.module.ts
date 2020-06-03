@@ -14,8 +14,10 @@ import {
   NbStepperModule,
   NbDialogModule,
   NbIconModule,
+  NbTreeGridModule,
   NbSpinnerModule,
 } from '@nebular/theme';
+
 import { ClientesComponent } from './clientes/clientes.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { EmpresaComponent } from './empresa/empresa.component';
@@ -52,6 +54,7 @@ import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-d
     NbDialogModule.forChild(),
     NbIconModule,
     NbSpinnerModule,
+    NbTreeGridModule,
   ],
   exports: [
     ClientesComponent,
@@ -77,6 +80,6 @@ import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-d
     NbDialogModule,
     NbIconModule,
     NbSpinnerModule,
-  ]
-})
+    NbTreeGridModule,
+  ]})
 export class CommonsModule { }

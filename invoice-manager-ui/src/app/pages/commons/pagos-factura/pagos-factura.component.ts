@@ -2,18 +2,29 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
 import { PagoFactura } from '../../../models/pago-factura';
-import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
 import { FilesData } from '../../../@core/data/files-data';
-import { ResourceFile } from '../../../models/resource-file';
 import { User } from '../../../models/user';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
-import { map } from 'rxjs/operators';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+
+
+interface TreeNode<T> {
+  data: T;
+  children?: TreeNode<T>[];
+  expanded?: boolean;
+}
+
+interface FSEntry {
+  name: string;
+  size: string;
+  kind: string;
+  items?: number;
+}
 
 @Component({
   selector: 'ngx-pagos-factura',
@@ -35,13 +46,51 @@ export class PagosFacturaComponent implements OnInit {
   public cuentas: Cuenta[];
   public loading: boolean = false;
 
+  customColumn = 'name';
+  defaultColumns = [ 'size', 'kind', 'items' ];
+  allColumns = [ this.customColumn, ...this.defaultColumns ];
+
+  dataSource: NbTreeGridDataSource<FSEntry>;
+
+  sortColumn: string;
+  sortDirection: NbSortDirection = NbSortDirection.NONE;
+
+  private data: TreeNode<FSEntry>[] = [
+    {
+      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      children: [
+        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
+        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
+        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
+        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+      ],
+    },
+    {
+      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
+      children: [
+        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
+        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
+      ],
+    },
+    {
+      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
+      children: [
+        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
+        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
+      ],
+    },
+  ];
+
   constructor(
     private paymentsService: PaymentsData,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
     private usersService: UsersData,
-    private invoiceService: InvoicesData) { }
+    private invoiceService: InvoicesData,
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+      this.dataSource = this.dataSourceBuilder.create(this.data);
+    }
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
@@ -53,6 +102,23 @@ export class PagosFacturaComponent implements OnInit {
                 this.promotorPayments = page;
                 });
       });
+  }
+
+  getShowOn(index: number) {
+    const minWithForMultipleColumns = 400;
+    const nextColumnStep = 100;
+    return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+  updateSort(sortRequest: NbSortRequest): void {
+    this.sortColumn = sortRequest.column;
+    this.sortDirection = sortRequest.direction;
+  }
+
+  getSortDirection(column: string): NbSortDirection {
+    if (this.sortColumn === column) {
+      return this.sortDirection;
+    }
+    return NbSortDirection.NONE;
   }
 
   /******* PAGOS ********/
@@ -161,3 +227,4 @@ export class PagosFacturaComponent implements OnInit {
     }*/
   }
 }
+
