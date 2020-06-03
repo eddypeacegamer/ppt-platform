@@ -4,7 +4,10 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { FilesData } from '../../../@core/data/files-data';
+import { Factura } from '../../../models/factura/factura';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -19,11 +22,15 @@ export class InvoiceReportsComponent implements OnInit {
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
   public userEmail: string;
+  public factura: Factura = new Factura();
+  public loading = false;
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
     private donwloadService: DownloadCsvService,
     private router: Router,
+    private downloadService: DonwloadFileService,
+    private filesService: FilesData,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -162,5 +169,39 @@ export class InvoiceReportsComponent implements OnInit {
       this.donwloadService.exportCsv(result.content, 'Complementos');
     });
   }
+
+
+  public downloadPdf(folio: string) {
+    this.loading = true;
+    this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => {
+      this.factura = invoice;
+      this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
+      );
+      this.loading = false;
+    },
+      error => {
+        console.error('Info cant found, creating a new invoice:', error);
+        this.loading = false;
+      });
+   
+  }
+  public downloadXml(folio: string) {
+    this.loading = true;
+    this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => {
+      this.factura = invoice;
+   
+      this.filesService.getFacturaFile(folio, 'XML').subscribe(
+        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
+      );
+      this.loading = false;
+    },
+      error => {
+        console.error('Info cant found, creating a new invoice:', error);
+        this.loading = false;
+      });
+  
+  }
+
 
 }
