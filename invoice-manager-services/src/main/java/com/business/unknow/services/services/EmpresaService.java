@@ -99,6 +99,13 @@ public class EmpresaService {
 		empresa.setSucursal(empresaDto.getSucursal());
 		empresa.setPwSat(empresaDto.getPwSat());
 		empresa.setCorreo(empresaDto.getCorreo());
+		
+		empresa.setGiro(empresaDto.getGiro());
+		empresa.setContactoAdmin(empresaDto.getContactoAdmin());
+		empresa.setEncabezado(empresaDto.getEncabezado());
+		empresa.setPiePagina(empresaDto.getPiePagina());
+		empresa.setRegimenFiscal(empresaDto.getRegimenFiscal());
+		
 		empresa.setPwCorreo(empresa.getPwCorreo());
 		empresa.setActivo(empresaDto.getActivo());
 		empresa.setNoCertificado(empresaDto.getNoCertificado());
