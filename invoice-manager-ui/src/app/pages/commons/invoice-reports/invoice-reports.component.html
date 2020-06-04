@@ -224,7 +224,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <nb-card>
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header>Facturas</nb-card-header>
       <nb-card-body>
 
@@ -253,7 +253,7 @@
           <table class="table">
             <thead class="thead-light">
               <tr>
-                <th class="text-center">Acciones</th>
+                <th class="text-center" style="width: 170px;">Acciones</th>
                 <th class="text-center">Folio</th>
                 <th class="text-center">RFC Empresa</th>
                 <th class="text-center">Razón Social Empresa</th>
@@ -271,9 +271,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let fila of page.content">
-                <td scope="row" class="text-center">
-                  <button type="button" class="btn-sm btn-outline-primary "
+              
+              <tr *ngFor="let fila of page.content" >
+               
+                <td scope="row p-1" class="text-center" style="min-width: 160px;">
+                  <button type="button" class="btn-sm btn-outline-primary" 
                     (click)="redirectToCfdi(fila.folioPadre || fila.folio)"><i class="fa fa-search"></i>
                   </button>
                   <button type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
@@ -287,7 +289,17 @@
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                   </button>
+                  <button type="button"  class="btn-sm btn-outline-primary" 
+                    (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
+                    <i class="fa fa-file-pdf"></i>
+                  </button>
+                  <button type="button" class="btn-sm btn-outline-primary" [disabled]="fila.statusFactura !== 'Timbrada'"
+                  [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada' , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
+                  (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
+                    <i class="fa fa-code"></i>
+                  </button>
                 </td>
+              
                 <td scope="row">{{fila.folio}}</td>
                 <td scope="row">{{fila.rfcEmisor}}</td>
                 <td scope="row">{{fila.razonSocialEmisor}}</td>
@@ -302,6 +314,7 @@
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>
+            
             </tbody>
           </table>
 
