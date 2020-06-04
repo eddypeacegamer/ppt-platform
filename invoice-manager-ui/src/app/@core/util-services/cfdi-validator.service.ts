@@ -75,7 +75,7 @@ export class CfdiValidatorService {
       let retencion = bignumber(0.0);
       let base = bignumber(0.0);
       for (const imp of concepto.retenciones) {
-        retencion =  add(bignumber(imp.importe) + bignumber(retencion));
+        retencion =  add(bignumber(imp.importe), bignumber(retencion));
       }
       for (const imp of concepto.impuestos) {
         impuesto = add(bignumber(imp.importe), bignumber(impuesto));
