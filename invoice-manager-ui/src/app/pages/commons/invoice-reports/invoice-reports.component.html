@@ -290,11 +290,12 @@
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                   </button>
                   <button type="button"  class="btn-sm btn-outline-primary" 
-                    (click)="downloadPdf(fila.folioPadre || fila.folio)">
+                    (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-file-pdf"></i>
                   </button>
-                  <button type="button" *ngIf="fila.statusFactura == 'Timbrada'"
-                    class="btn-sm btn-outline-primary" (click)="downloadXml(fila.folioPadre || fila.folio)">
+                  <button type="button" class="btn-sm btn-outline-primary" [disabled]="fila.statusFactura !== 'Timbrada'"
+                  [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada' , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
+                  (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-code"></i>
                   </button>
                 </td>

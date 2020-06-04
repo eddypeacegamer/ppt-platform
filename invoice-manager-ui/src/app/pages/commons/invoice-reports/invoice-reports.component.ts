@@ -22,7 +22,6 @@ export class InvoiceReportsComponent implements OnInit {
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
   public userEmail: string;
-  public factura: Factura = new Factura();
   public loading = false;
 
   constructor(private invoiceService: InvoicesData,
@@ -101,11 +100,11 @@ export class InvoiceReportsComponent implements OnInit {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
       case 'operaciones':
-        if ( this.filterParams.lineaEmisor === 'A') {
+        if (this.filterParams.lineaEmisor === 'A') {
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
-        }else if (this.filterParams.lineaEmisor === 'B') {
+        } else if (this.filterParams.lineaEmisor === 'B') {
           this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
-        }else {
+        } else {
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         }
         break;
@@ -171,37 +170,26 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
 
-  public downloadPdf(folio: string) {
+  public downloadPdf(emisor: string, receptor: string, folio: string) {
     this.loading = true;
-    this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => {
-      this.factura = invoice;
-      this.filesService.getFacturaFile(folio, 'PDF').subscribe(
-        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`, 'application/pdf;')
-      );
-      this.loading = false;
-    },
-      error => {
-        console.error('Info cant found, creating a new invoice:', error);
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => {
+        this.downloadService.downloadFile(file.data, `${emisor}_${receptor}_${folio}.pdf`, 'application/pdf;');
+        this.loading = false;
+      }, error => {
+        console.error('Error recovering PDF file:', error);
         this.loading = false;
       });
-   
   }
-  public downloadXml(folio: string) {
+  public downloadXml(emisor: string, receptor: string, folio: string) {
     this.loading = true;
-    this.invoiceService.getInvoiceByFolio(folio).subscribe(invoice => {
-      this.factura = invoice;
-   
-      this.filesService.getFacturaFile(folio, 'XML').subscribe(
-        file => this.downloadService.downloadFile(file.data, `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
-      );
-      this.loading = false;
-    },
-      error => {
-        console.error('Info cant found, creating a new invoice:', error);
+    this.filesService.getFacturaFile(folio, 'XML').subscribe(
+      file => {
+        this.downloadService.downloadFile(file.data, `${emisor}_${receptor}_${folio}.xml`, 'text/xml;charset=utf8;');
+        this.loading = false;
+      }, error => {
+        console.error('Error recovering XML file', error);
         this.loading = false;
       });
-  
   }
-
-
 }
