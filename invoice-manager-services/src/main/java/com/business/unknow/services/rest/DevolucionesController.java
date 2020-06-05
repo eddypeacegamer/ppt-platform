@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class DevolucionesController {
 	}
 
 	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}/saldo")
-	public ResponseEntity<Double> getSaldoDevoluciones(
+	public ResponseEntity<BigDecimal> getSaldoDevoluciones(
 			@PathVariable(name = "tipoReceptor", required = true) String tipoReceptor,
 			@PathVariable(name = "idReceptor", required = true) String idReceptor) {
 		return new ResponseEntity<>(service.getMontoDevoluciones(tipoReceptor, idReceptor), HttpStatus.OK);

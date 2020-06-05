@@ -39,27 +39,13 @@ public class FacturaCalculator {
 	}
 
 	public void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
-		String date = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_FORMAT);
-		String emisor;
-		String receptor;
-		if (dto.getRfcEmisor() != null && dto.getRfcEmisor().length() > 4) {
-			emisor = dto.getRfcEmisor().substring(0, 4);
-		} else {
-			throw new InvoiceManagerException("Error generando Folio unico",
-					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
-		}
-		if (dto.getRfcRemitente() != null && dto.getRfcRemitente().length() > 4) {
-			receptor = dto.getRfcRemitente().substring(0, 4);
-		} else {
-			throw new InvoiceManagerException("Error generando Folio unico",
-					"El emisor es nulo o no tiene el tamaño adecuadoa", Constants.INTERNAL_ERROR);
-		}
-		String folio = emisor.concat(receptor).concat(date)
-				.concat(dto.getMetodoPago());
+		String folio = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_GENERIC_FORMAT);
 		dto.setFolio(folio);
 		if (dto.getCfdi() != null) {
 			dto.getCfdi().setFolio(folio);
 		}
 	}
+	
+	
 
 }

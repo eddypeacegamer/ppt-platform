@@ -66,8 +66,8 @@ export class ConceptosComponent implements OnInit {
     }
   }
 
-  openSatCatalog(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog);
+  openSatCatalog() {
+    window.open('http://pys.sat.gob.mx/PyS/catPyS.aspx', "_blank");
   }
 
 

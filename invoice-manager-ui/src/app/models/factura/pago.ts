@@ -16,4 +16,9 @@ export class Pago {
     public numeroParcialidad: number;
     public serie: string;
 
+
+    constructor() {
+        this.moneda = 'MXN';
+    }
+
 }

@@ -20,6 +20,7 @@ import com.business.unknow.commons.validator.EmpresaValidator;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
+import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.executor.EmpresaExecutorService;
@@ -36,6 +37,9 @@ public class EmpresaService {
 
 	@Autowired
 	private EmpresaExecutorService empresaEvaluatorService;
+	
+	@Autowired
+	private ContribuyenteMapper contribuyenteMapper;
 
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
@@ -95,11 +99,18 @@ public class EmpresaService {
 		empresa.setSucursal(empresaDto.getSucursal());
 		empresa.setPwSat(empresaDto.getPwSat());
 		empresa.setCorreo(empresaDto.getCorreo());
+		
+		empresa.setGiro(empresaDto.getGiro());
+		empresa.setContactoAdmin(empresaDto.getContactoAdmin());
+		empresa.setEncabezado(empresaDto.getEncabezado());
+		empresa.setPiePagina(empresaDto.getPiePagina());
+		empresa.setRegimenFiscal(empresaDto.getRegimenFiscal());
+		
 		empresa.setPwCorreo(empresa.getPwCorreo());
 		empresa.setActivo(empresaDto.getActivo());
 		empresa.setNoCertificado(empresaDto.getNoCertificado());
-//		empresa.setInformacionFiscal(
-//				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		empresa.setInformacionFiscal(
+				contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
 		empresaEvaluatorService.updateLogo(rfc, empresaDto.getLogotipo());
 		empresaEvaluatorService.updateCertificado(rfc, empresaDto.getCertificado());
 		empresaEvaluatorService.updateKey(rfc, empresaDto.getLlavePrivada());

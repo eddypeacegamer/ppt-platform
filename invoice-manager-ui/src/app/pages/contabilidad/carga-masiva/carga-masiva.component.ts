@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Factura } from '../../../models/factura/factura';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Concepto } from '../../../models/factura/concepto';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
-import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-carga-masiva',

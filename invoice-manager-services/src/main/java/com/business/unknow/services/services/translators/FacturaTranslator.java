@@ -13,12 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.Constants.FacturaComplemento;
+import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.Complemento;
+import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
+import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.cfdi.ComplementoPagos;
 import com.business.unknow.model.cfdi.Concepto;
 import com.business.unknow.model.cfdi.Retencion;
@@ -49,10 +52,8 @@ public class FacturaTranslator {
 
 	@Autowired
 	private SignHelper signHelper;
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
 
+	private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
 
 	public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
 		try {
@@ -77,16 +78,16 @@ public class FacturaTranslator {
 			if (!retenciones.isEmpty()) {
 				cfdi.getImpuestos().setRetenciones(retenciones);
 			}
-			
+
 			if (!totalImpuestos.equals(BigDecimal.ZERO)) {
 				cfdi.getImpuestos().setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
-			}else {
+			} else {
 				cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
 			}
-			
+
 			if (!totalRetenciones.equals(BigDecimal.ZERO)) {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
-			}else {
+			} else {
 				cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
 			}
 			context.setCfdi(cfdi);
@@ -106,12 +107,29 @@ public class FacturaTranslator {
 			for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
 				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
 			}
+			Optional<CfdiPagoDto> primerPago = context.getFacturaDto().getCfdi().getComplemento().getPagos().stream()
+					.findFirst();
 			Complemento complemento = new Complemento();
 			ComplementoPagos complementoPagos = new ComplementoPagos();
+			ComplementoPago complementoPago = new ComplementoPago();
+			complementoPago.setFechaPago(dateHelper.getStringFromFecha(primerPago.get().getFechaPago(),
+					FacturaConstants.FACTURA_DATE_FORMAT));
+			complementoPago.setFormaDePago(primerPago.get().getFormaPago());
+			complementoPago.setMoneda(primerPago.get().getMoneda());
 			complemento.setComplemntoPago(complementoPagos);
+			BigDecimal montoTotal = new BigDecimal(0);
+			List<ComplementoPago> complementosPago = new ArrayList<>();
+			List<ComplementoDocRelacionado> complementosRelacionados = new ArrayList<>();
+			complementosPago.add(complementoPago);
+			complementoPagos.setComplementoPagos(complementosPago);
+			complementoPago.setComplementoDocRelacionado(complementosRelacionados);
 			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
-				complementoPagos.getComplementoPagos().add(facturaCfdiTranslatorMapper.complementoComponente(cfdiPago));
+				ComplementoDocRelacionado complementoRelacionado = facturaCfdiTranslatorMapper
+						.complementoComponente(cfdiPago);
+				complementosRelacionados.add(complementoRelacionado);
+				montoTotal = montoTotal.add(new BigDecimal(complementoRelacionado.getImpPagado()));
 			}
+			complementoPago.setMonto(montoTotal.toString());
 			cfdi.setComplemento(complemento);
 			cfdi.setImpuestos(null);
 			context.setCfdi(cfdi);
@@ -166,11 +184,11 @@ public class FacturaTranslator {
 		}
 		return totalImpuestos;
 	}
-	
+
 	public BigDecimal calculaRetenciones(FacturaContext context) {
 		return calculaRetenciones(context.getFacturaDto());
 	}
-	
+
 	public BigDecimal calculaRetenciones(FacturaDto facturaDto) {
 		BigDecimal totalRetenciones = new BigDecimal(0);
 		List<Retencion> retenciones = new ArrayList<>();
@@ -180,7 +198,7 @@ public class FacturaTranslator {
 				totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
 			}
 		}
-		
+
 		return totalRetenciones;
 	}
 

@@ -19,9 +19,10 @@ import { ActivatedRoute} from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-revision',
@@ -286,24 +287,29 @@ export class RevisionComponent implements OnInit {
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
 
-    this.dialogService.open(dialog, { context: fact })
+    this.clientsService.getClientByRFC(this.factura.cfdi.receptor.rfc)
+    .subscribe((client: Client) => {
+    if ( client.activo) {
+      this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
-            .subscribe(result => { 
+            .subscribe(result => {
               this.loading = false;
-              console.log('factura timbrada correctamente');
               this.getInvoiceByFolio(fact.folioPadre || fact.folio);},
               (error: HttpErrorResponse) => {
                 this.loading = false;
-                this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
-              });
-        }else{
+                this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);});
+        }else {
           this.loading = false;
         }
-      }
-      );
+      });
+    } else {
+      this.loading = false;
+      this.errorMessages.push('No es posible timbrar con clientes inactivos');
+    }});
   }
+
 
   public cancelarFactura(factura: Factura) {
     this.loading = true;

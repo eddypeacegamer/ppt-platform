@@ -3,12 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
 import { PagoFactura } from '../../../models/pago-factura';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-pagos',

@@ -7,6 +7,7 @@ import { Catalogo } from '../../models/catalogos/catalogo';
 import { CatalogsData } from '../data/catalogs-data';
 import { map } from 'rxjs/operators';
 import { GenericPage } from '../../models/generic-page';
+import { Pago } from '../../models/factura/pago';
 
 @Injectable({
   providedIn: 'root',
@@ -143,5 +144,13 @@ export class InvoicesService {
 
   public deleteConcepto(folio: string, conceptoId: number): Observable<any> {
     return this.httpClient.delete(`../api/facturas/${folio}/conceptos/${conceptoId}`);
+  }
+
+  public generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable <any> {
+    return this.httpClient.post(`../api/facturas/${folioPadre}/complementos`, complemento);
+  }
+
+  public getInvoiceSaldo(folio:string): Observable<any>{
+    return this.httpClient.get(`../api/facturas/${folio}/saldos`);
   }
 }

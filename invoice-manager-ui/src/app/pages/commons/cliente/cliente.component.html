@@ -37,21 +37,23 @@
                 nbInput fullWidth id="inputZipCode" placeholder="00300">
             </div>
           </div>
-          <div class="col-sm-6" *ngIf="clientInfo.id === undefined || !clientInfo.activo">
+          <div [ngClass]="{'col-sm-6': formInfo.coloniaId !=='other', 'col-sm-2': formInfo.coloniaId ==='other'}" *ngIf="clientInfo.id === undefined || !clientInfo.activo">
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
               <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth [disabled]="clientInfo.activo" class="form-control"
-                (selectedChange)="onLocation($event)" style="display:block;">
+                (change)="onLocation($event.target.value)" style="display:block;">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
+                <option value="other">Otra</option>
               </select>
             </div>
           </div>
-          <div class="col-sm-6" *ngIf="clientInfo.activo">
+          
+          <div [ngClass]="{'col-sm-6': formInfo.coloniaId !=='other', 'col-sm-4': formInfo.coloniaId ==='other'}"  *ngIf="clientInfo.activo || formInfo.coloniaId==='other'">
             <div class="form-group">
               <label for="inputLocalidad" class="label">Colonia</label>
               <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth [disabled]="clientInfo.activo"
-                id="inputLocalidad" placeholder="Colonia">
+                id="inputLocalidad" placeholder="Escriba la colonia">
             </div>
           </div>
         </div>

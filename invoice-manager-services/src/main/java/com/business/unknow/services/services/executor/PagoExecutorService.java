@@ -57,7 +57,5 @@ public class PagoExecutorService extends AbstractExecutorService {
 		}
 		return pagoMapper.getPagoDtoFromEntity(pagoRepository.save(pagoMapper.getEntityFromPagoDto(payment)));
 	}
-
 	
-
 }

@@ -40,14 +40,13 @@ public class PagoReportDtoRowMapper implements RowMapper<PagoReportDto> {
 				.setStatusFactura(rs.getString("STATUS_FACTURA"))
 				.setStatusPago(rs.getString("STATUS_PAGO"))
 				.setFechaCancelacion(rs.getDate("FECHA_CANCELADO"))
-				
 				.setFolioPago(rs.getString("FOLIO_PAGO"))
 				.setFolioFiscalPago(rs.getString("UUID_PAGO"))
 				.setImportePagado(rs.getBigDecimal("IMPORTE_PAGADO"))
 				.setSaldoAnterior(rs.getBigDecimal("IMPORTE_SALDO_ANTERIOR"))
 				.setSaldoInsoluto(rs.getBigDecimal("IMPORTE_SALDO_INSOLUTO"))
 				.setNumeroParcialidad(rs.getInt("NUM_PARCIALIDAD"))
-				
+				.setFechaPago(rs.getString("FECHA_PAGO"))
 				.build();
 	}
 

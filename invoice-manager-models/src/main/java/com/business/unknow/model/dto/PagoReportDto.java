@@ -14,14 +14,13 @@ public class PagoReportDto extends ReportDto implements Serializable {
 
 	private static final long serialVersionUID = -5168858340000054635L;
 	
-	//FOLIO_PAGO               |UUID_PAGO                           |IMPORTE_PAGADO|IMPORTE_SALDO_ANTERIOR|IMPORTE_SALDO_INSOLUTO|NUM_PARCIALIDAD
-	
 	private String folioPago;
 	private String folioFiscalPago;
 	private BigDecimal importePagado;
 	private BigDecimal saldoAnterior;
 	private BigDecimal saldoInsoluto;
 	private Integer numeroParcialidad;
+	private String fechaPago;
 	
 	public String getFolioPago() {
 		return folioPago;
@@ -59,8 +58,11 @@ public class PagoReportDto extends ReportDto implements Serializable {
 	public void setNumeroParcialidad(Integer numeroParcialidad) {
 		this.numeroParcialidad = numeroParcialidad;
 	}
+	public String getFechaPago() {
+		return fechaPago;
+	}
+	public void setFechaPago(String fechaPago) {
+		this.fechaPago = fechaPago;
+	}
 	
-	
-	
-
 }

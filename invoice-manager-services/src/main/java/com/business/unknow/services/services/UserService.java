@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.model.menu.MenuItem;
 import com.business.unknow.services.entities.User;
+import com.business.unknow.services.mapper.RoleMapper;
 import com.business.unknow.services.mapper.UserMapper;
 import com.business.unknow.services.repositories.RoleRepository;
 import com.business.unknow.services.repositories.UserRepository;
@@ -39,15 +40,20 @@ public class UserService {
 
 	@Autowired
 	private UserMapper mapper;
+	
+	@Autowired
+	private RoleMapper roleMapper;
 
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
 	private ObjectMapper objMapper = new ObjectMapper();
 	
 	
-	public Page<UserDto> getAllUsers(int page, int size){
-		Page<User> result = repository.findAll(PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		
+	public Page<UserDto> getAllUsersByParams(String status, String email,
+			String alias, int page, int size){
+		Page<User> result = repository.findAllByParams(String.format("%%%s%%", status),
+				String.format("%%%s%%", email), String.format("%%%s%%", alias),PageRequest.of(page, size, 
+						Sort.by("fechaActualizacion").descending()));		
 		return  new PageImpl<>(mapper.getUsersDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
@@ -60,7 +66,6 @@ public class UserService {
 
 	public UserDto createUser(UserDto userDto) {
 		Optional<User> entity = repository.findByEmail(userDto.getEmail());
-		userDto.setActivo(false);
 		if (entity.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("user ya  existe %s", userDto.getEmail()));
@@ -70,9 +75,18 @@ public class UserService {
 		}
 	}
 	
+	public UserDto updateUser(Integer userId,UserDto userDto) {
+		User entity = repository.findById(userDto.getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,
+				String.format("El usuario %s no existe", userDto.getEmail())));
+		entity.setActivo(userDto.isActivo());
+		entity.setAlias(userDto.getAlias());
+		return mapper.getUserDtoFromentity(repository.save(entity));
+	}
+	
 	public void deleteUser(Integer id) {
 		User entity = repository.findById(id).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
+		
 		rolRepository.findByUserId(id).stream().forEach(a->rolRepository.delete(a));
 		repository.delete(entity);
 	}
@@ -88,11 +102,11 @@ public class UserService {
 			user.setUrlPicture(oidcUser.getAttributes().get("picture").toString());
 			if (userInfo.isPresent()) {
 				user.setActivo(userInfo.get().isActivo());
-				user.setRoles(userInfo.get().getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList()));
+				user.setRoles(roleMapper.getRoleDtosFromEntities(userInfo.get().getRoles()));
+				return setMenuItems(user);
 			} else {
 				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", oidcUser.getEmail()));
 			}
-			return setMenuItems(user);
 		}
 		log.error("Usuario sin credenciales intenta acceder a la plataforma.");
 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, String.format("%s no es un usuario autorizado", "anonymous"));
@@ -102,7 +116,7 @@ public class UserService {
 		List<MenuItem> menu = new ArrayList<>();
 		menu.add(getMenuFromResource("dashboard"));
 		menu.add(getMenuFromResource("division"));
-		for (String role : user.getRoles()) {
+		for (String role : user.getRoles().stream().map(r->r.getRole()).collect(Collectors.toList())) {
 			menu.add(getMenuFromResource(role.toLowerCase()));
 		}
 		user.setMenu(menu);

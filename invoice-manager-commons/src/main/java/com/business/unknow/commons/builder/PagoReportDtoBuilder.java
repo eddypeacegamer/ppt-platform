@@ -147,5 +147,10 @@ public class PagoReportDtoBuilder extends AbstractBuilder<PagoReportDto> {
 		instance.setNumeroParcialidad(numeroParcialidad);
 		return this;
 	}
+	
+	public PagoReportDtoBuilder setFechaPago(String fechaPago) {
+		instance.setFechaPago(fechaPago);
+		return this;
+	}
 
 }

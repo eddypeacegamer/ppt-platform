@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { Giro } from '../../../models/catalogos/giro';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
@@ -16,10 +15,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
+import { User } from '../../../models/user';
 
 
 @Component({
@@ -119,7 +119,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                   record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
                   record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
                   return record;
-                })
+                });
               }))
             .subscribe(complementos => this.factura.complementos = complementos);
         }
@@ -188,10 +188,10 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     const value = +id;
     if (!isNaN(value)) {
       const client = this.clientsCat.find(c => c.id === Number(value));
-      if (client.activo === true) {
-        this.clientInfo = client.informacionFiscal;
-      } else {
-        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
+      this.clientInfo = client.informacionFiscal;
+      if (!client.activo) {
+        this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
+        this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');
       }
     }
   }

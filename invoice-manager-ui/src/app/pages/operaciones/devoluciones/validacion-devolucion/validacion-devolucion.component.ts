@@ -3,10 +3,11 @@ import { PagoDevolucion } from '../../../../models/pago-devolucion';
 import { NbDialogRef } from '@nebular/theme';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DevolutionData } from '../../../../@core/data/devolution-data';
-import { User, UsersData } from '../../../../@core/data/users-data';
+import { UsersData } from '../../../../@core/data/users-data';
 import { DonwloadFileService } from '../../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../../@core/data/files-data';
 import { ResourceFile } from '../../../../models/resource-file';
+import { User } from '../../../../models/user';
 
 @Component({
   selector: 'ngx-validacion-devolucion',

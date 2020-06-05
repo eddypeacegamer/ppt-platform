@@ -167,7 +167,7 @@
         </div>
         <br>
         <p class="font-weight-bold">Conceptos factura</p>
-          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones'"></ngx-conceptos>
+          <ngx-conceptos [cfdi]="factura.cfdi" [concepto]= "newConcep" [allowEdit]= "this.factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria'"></ngx-conceptos>
         <br>
         
         <div *ngIf="factura.complementos!==undefined  && factura.metodoPago=='PPD' && factura.complementos.length>0">
@@ -191,10 +191,10 @@
               <tbody>
                 <tr *ngFor="let complemento of factura.complementos">
                   <td scope="row" class="text-center">
-                    <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
+                    <button type="button" [disabled]="!(complemento.statusFactura =='Timbrada'||complemento.statusFactura =='Cancelada')" class="btn"
+                      [ngClass]="{'btn-outline-secondary': !(complemento.statusFactura =='Timbrada'||complemento.statusFactura =='Cancelada'), 'btn-outline-primary':(complemento.statusFactura =='Timbrada'||complemento.statusFactura =='Cancelada')}"
                       (click)="downloadPdf(complemento.folio)">
-                      <i class="fa fa-file-pdf"></i>
+                      <i class="fa fa-file-pdf"></i> 
                     </button>&nbsp;&nbsp;
                     <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
                       [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"

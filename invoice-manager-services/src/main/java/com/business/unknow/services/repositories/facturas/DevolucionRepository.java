@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.repositories.facturas;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Integer>
 	@Query("select d from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor and d.tipo=:tipo")
 	public List<Devolucion> findDevolucionesByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor,@Param("tipo")String tipo);
 	@Query("select sum(d.monto) from Devolucion d where d.tipoReceptor =:tipoReceptor and d.receptor =:idReceptor")
-	public Double findMontoByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
+	public BigDecimal findMontoByParams(@Param("tipoReceptor")String tipoReceptor,@Param("idReceptor")String idReceptor);
 	
 	public List<Devolucion> findByFolio(String folio);
 	

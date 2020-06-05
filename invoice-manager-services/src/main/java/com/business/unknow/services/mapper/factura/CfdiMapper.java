@@ -53,6 +53,8 @@ public interface CfdiMapper {
 	List<ClientDto> getconceptoDtosFromEntities(List<Concepto> entities);
 
 	List<Concepto> getEntitiesFromConceptoDtos(List<ConceptoDto> dto);
+	
+	List<ConceptoDto> getDtosFromConceptoEntities(List<Concepto> dto);
 
 	ImpuestoDto getImpuestoDtoFromEntity(Impuesto entity);
 

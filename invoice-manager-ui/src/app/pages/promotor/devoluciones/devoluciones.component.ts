@@ -4,7 +4,7 @@ import { Devolucion } from '../../../models/devolucion';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { DevolucionValidatorService } from '../../../@core/util-services/devolucion-validator.service';
 import { Router } from '@angular/router';
-import { UsersData, User } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { Catalogo } from '../../../models/catalogos/catalogo';
@@ -16,6 +16,7 @@ import { FilesData } from '../../../@core/data/files-data';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-devoluciones',

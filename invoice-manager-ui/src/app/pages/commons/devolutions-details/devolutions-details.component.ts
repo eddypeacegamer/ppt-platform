@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User, UsersData } from '../../../@core/data/users-data';
+import { UsersData } from '../../../@core/data/users-data';
 import { Factura } from '../../../models/factura/factura';
 import { PagoFactura } from '../../../models/pago-factura';
 import { Catalogo } from '../../../models/catalogos/catalogo';
@@ -13,6 +13,7 @@ import { Devolucion } from '../../../models/devolucion';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PagoDevolucion } from '../../../models/pago-devolucion';
 import { GenericPage } from '../../../models/generic-page';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-devolutions-details',
