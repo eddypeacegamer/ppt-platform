@@ -73,7 +73,8 @@
 
   <br>
   <!--TABLA CONCEPTOS-->
-  <table class="table" *ngIf="cfdi.conceptos.length>0">
+  <div class="table-responsive">
+  <table class="table table-sm" *ngIf="cfdi.conceptos.length>0">
     <thead class="thead-light">
       <tr>
         <th scope="col" *ngIf="allowEdit"
@@ -140,5 +141,5 @@
       </tr>
     </tbody>
   </table>
-
+</div>
 </div>
