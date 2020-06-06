@@ -174,7 +174,7 @@
           <p class="font-weight-bold">Complementos</p>
           <br>
           <div class="table-responsive">
-            <table class="table">
+            <table class="table table-sm">
               <thead class="thead-light">
                 <tr>
                   <th class="text-center">Acciones</th>
@@ -200,11 +200,6 @@
                       [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
                       (click)="downloadXml(complemento.folio)">
                       <i class="fa fa-code"></i>
-                    </button>&nbsp;&nbsp;
-                    <button type="button" [disabled]="complemento.statusFactura != 'Por Timbrar' || loading" class="btn"
-                      [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Por Timbrar', 'btn-outline-success':complemento.statusFactura =='Por Timbrar'}"
-                      (click)="timbrarFactura(complemento,dialog)">
-                      <i class="fa fa-check-circle"></i>
                     </button>
                   </td>
                   <td scope="row" class="text-center">{{complemento.folio}}</td>

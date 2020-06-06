@@ -4,7 +4,10 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { FilesData } from '../../../@core/data/files-data';
+import { Factura } from '../../../models/factura/factura';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -19,11 +22,14 @@ export class InvoiceReportsComponent implements OnInit {
   public pageSize = '10';
   public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
   public userEmail: string;
+  public loading = false;
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
     private donwloadService: DownloadCsvService,
     private router: Router,
+    private downloadService: DonwloadFileService,
+    private filesService: FilesData,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -94,11 +100,11 @@ export class InvoiceReportsComponent implements OnInit {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
       case 'operaciones':
-        if ( this.filterParams.lineaEmisor === 'A') {
+        if (this.filterParams.lineaEmisor === 'A') {
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
-        }else if (this.filterParams.lineaEmisor === 'B') {
+        } else if (this.filterParams.lineaEmisor === 'B') {
           this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
-        }else {
+        } else {
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         }
         break;
@@ -163,4 +169,27 @@ export class InvoiceReportsComponent implements OnInit {
     });
   }
 
+
+  public downloadPdf(emisor: string, receptor: string, folio: string) {
+    this.loading = true;
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => {
+        this.downloadService.downloadFile(file.data, `${emisor}_${receptor}_${folio}.pdf`, 'application/pdf;');
+        this.loading = false;
+      }, error => {
+        console.error('Error recovering PDF file:', error);
+        this.loading = false;
+      });
+  }
+  public downloadXml(emisor: string, receptor: string, folio: string) {
+    this.loading = true;
+    this.filesService.getFacturaFile(folio, 'XML').subscribe(
+      file => {
+        this.downloadService.downloadFile(file.data, `${emisor}_${receptor}_${folio}.xml`, 'text/xml;charset=utf8;');
+        this.loading = false;
+      }, error => {
+        console.error('Error recovering XML file', error);
+        this.loading = false;
+      });
+  }
 }

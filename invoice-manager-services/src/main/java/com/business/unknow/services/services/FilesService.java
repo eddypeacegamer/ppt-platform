@@ -247,7 +247,6 @@ public class FilesService {
 			cfdi.setConceptos(dto.getCfdi().getConceptos().stream().map(cfdiXmlMapper::getEntityFromConceptoDto)
 					.collect(Collectors.toList()));
 			cfdi.setFecha((dto.getFechaCreacion() == null) ? new Date().toString() : dto.getFechaCreacion().toString());
-			cfdi.getImpuestos().setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
 			return cfdi;
 		}
 	}
@@ -287,9 +286,10 @@ public class FilesService {
 	public FacturaFileDto generateInvoicePDF(FacturaDto factura, Cfdi cfdi) {
 		try {
 			BigDecimal retenciones = facturaTranslator.calculaRetenciones(factura);
-
+			BigDecimal impuestos = facturaTranslator.calculaImpuestos(factura);
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
+			model.getFactura().getImpuestos().setTotalImpuestosTrasladados(impuestos);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 			String xslfoTemplate = getXSLFOTemplate(model);
 			InputStreamReader templateReader = new InputStreamReader(
