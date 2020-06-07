@@ -1,18 +1,12 @@
 package com.business.unknow.services.rest;
 
-import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.FacturaReportDto;
-import com.business.unknow.model.dto.PagoReportDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
-import com.business.unknow.model.dto.services.PagoDevolucionDto;
-import com.business.unknow.model.dto.services.PagoDto;
-import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.CfdiService;
-import com.business.unknow.services.services.DevolucionService;
-import com.business.unknow.services.services.FacturaService;
-import com.business.unknow.services.services.PagoService;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,12 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaReportDto;
+import com.business.unknow.model.dto.PagoReportDto;
+import com.business.unknow.model.dto.services.PagoDevolucionDto;
+import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.services.DevolucionService;
+import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.PagoService;
 
 /**
  * @author eej000f
@@ -45,8 +43,6 @@ public class FacturaController {
 	@Autowired
 	private FacturaService service;
 
-	@Autowired
-	private CfdiService cfdiService;
 
 	@Autowired
 	private PagoService pagoService;
@@ -138,82 +134,31 @@ public class FacturaController {
 		return new ResponseEntity<>(service.getFacturaSaldo(folio), HttpStatus.OK);
 	}
 
-	// CFDI
-	@PostMapping("/cfdi/validacion")
-	public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
-		cfdiService.validateCfdi(cfdi);
-		return new ResponseEntity<>("VALIDA", HttpStatus.OK);
-	}
-
-	@GetMapping("/{folio}/cfdi")
-	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable String folio) throws InvoiceManagerException {
-		return new ResponseEntity<>(cfdiService.getCfdiByFolio(folio), HttpStatus.OK);
-	}
-
-	@PostMapping("/{folio}/cfdi")
-	public ResponseEntity<CfdiDto> insertFacturaCfdi(@PathVariable String folio, @RequestBody @Valid CfdiDto cfdi)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(cfdiService.insertNewCfdi(cfdi), HttpStatus.OK);
-	}
-
-	@PutMapping("/{folio}/cfdi/{id}")
-	public ResponseEntity<CfdiDto> updateFacturaCfdi(@PathVariable String folio, @PathVariable Integer id,
-			@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
-		return new ResponseEntity<>(cfdiService.updateCfdiBody(folio, id, cfdi), HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{folio}/cfdi/{id}")
-	public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
-		cfdiService.deleteCfdi(folio);
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
-
-	// CONCEPTOS
-	@PostMapping("/{folio}/conceptos")
-	public ResponseEntity<CfdiDto> insertConcepto(@PathVariable String folio,
-			@RequestBody @Valid ConceptoDto conceptoDto) throws InvoiceManagerException {
-		CfdiDto dto = cfdiService.insertNewConceptoToCfdi(folio, conceptoDto);
-		service.recreatePdf(dto);
-		return new ResponseEntity<>(dto, HttpStatus.CREATED);
-
-	}
-
-	@PutMapping("/{folio}/conceptos/{id}")
-	public ResponseEntity<CfdiDto> updateConcepto(@PathVariable String folio, @PathVariable Integer id,
-			@RequestBody @Valid ConceptoDto concepto) throws InvoiceManagerException {
-		CfdiDto dto = cfdiService.updateConceptoFromCfdi(folio, id, concepto);
-		service.recreatePdf(dto);
-		return new ResponseEntity<>(dto, HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{folio}/conceptos/{id}")
-	public ResponseEntity<CfdiDto> deleteConcepto(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
-		CfdiDto dto = cfdiService.removeConceptFromCfdi(folio, id);
-		service.recreatePdf(dto);
-		return new ResponseEntity<>(dto, HttpStatus.NO_CONTENT);
-	}
+	
 
 	// PAGOS
 	@GetMapping("/{folio}/pagos")
+	@Deprecated
 	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
 		return new ResponseEntity<>(pagoService.findPagosByFolioPadre(folio), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/pagos")
+	@Deprecated
 	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{folio}/pagos/{id}")
+	@Deprecated
 	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{folio}/pagos/{id}")
+	@Deprecated
 	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
 			throws InvoiceManagerException {
 		pagoService.deletePago(folio, id);

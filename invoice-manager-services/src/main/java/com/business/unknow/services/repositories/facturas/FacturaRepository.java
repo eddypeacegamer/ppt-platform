@@ -20,6 +20,9 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
 	public Optional<Factura> findByFolio(String folio);
 	
+	public Optional<Factura> findByIdCfdi(Integer id);
+	
+	
 	public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
 	
 	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor=:lineaEmisor and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")

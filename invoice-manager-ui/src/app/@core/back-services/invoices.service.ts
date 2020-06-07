@@ -17,7 +17,7 @@ export class InvoicesService {
   private validationCat: Catalogo[] = [];
   private payCat: Catalogo[] = [];
   private devolutionCat: Catalogo[] = [];
-  private formaPagoCat: Catalogo[] = []
+  private formaPagoCat: Catalogo[] = [];
 
   constructor(private httpClient: HttpClient,
               private catalogService: CatalogsData) {
@@ -94,7 +94,6 @@ export class InvoicesService {
                                       === record.statusPago.toString()).nombre;
           record.formaPago = this.formaPagoCat.find(v => v.id.toString()
                                       === record.formaPago.toString()).nombre;
-          
           return record;
         });
         invPage.content = records;
@@ -130,27 +129,11 @@ export class InvoicesService {
     return this.httpClient.put(`../api/facturas/${invoice.folio}`, invoice);
   }
 
-  public getCfdiByFolio(folio: string): Observable<any > {
-    return this.httpClient.get(`../api/facturas/${folio}/cfdi`);
-  }
-
-  public insertConcepto(folio: string, concepto: Concepto): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folio}/conceptos`, concepto);
-  }
-
-  public updateConcepto(folio: string, id: number, concepto: Concepto): Observable<any> {
-    return this.httpClient.put(`../api/facturas/${folio}/conceptos/${id}`, concepto);
-  }
-
-  public deleteConcepto(folio: string, conceptoId: number): Observable<any> {
-    return this.httpClient.delete(`../api/facturas/${folio}/conceptos/${conceptoId}`);
-  }
-
   public generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable <any> {
     return this.httpClient.post(`../api/facturas/${folioPadre}/complementos`, complemento);
   }
 
-  public getInvoiceSaldo(folio:string): Observable<any>{
+  public getInvoiceSaldo(folio: string): Observable<any>{
     return this.httpClient.get(`../api/facturas/${folio}/saldos`);
   }
 }

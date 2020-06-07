@@ -26,6 +26,7 @@ import { PagosFacturaComponent } from './pagos-factura/pagos-factura.component';
 import { ConceptosComponent } from './conceptos/conceptos.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
 import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-details.component';
+import { CfdiComponent } from './cfdi/cfdi.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-d
     ConceptosComponent,
     InvoiceReportsComponent,
     DevolutionsDetailsComponent,
+    CfdiComponent,
   ],
   imports: [
     CommonModule,
@@ -65,6 +67,7 @@ import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-d
     DevolutionsDetailsComponent,
     PagosFacturaComponent,
     ConceptosComponent,
+    CfdiComponent,
     FormsModule,
     CommonModule,
     NbActionsModule,

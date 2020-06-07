@@ -95,7 +95,7 @@ public class Empresa implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 
-	@OneToOne(cascade = CascadeType.REFRESH)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
 	private Contribuyente informacionFiscal;
 

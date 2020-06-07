@@ -13,8 +13,8 @@ export abstract class CatalogsData {
 
     abstract getAllClavesProductoServicio(page:number, size:number): Promise<GenericPage<any>>;
     abstract getProductoServiciosByDescription(description: string): Promise<ClaveProductoServicio[]>;
-    abstract getProductoServiciosByClave(clave: string) : Promise<ClaveProductoServicio[]>;
-    abstract getClaveUnidadByName(name:string): Promise<ClaveUnidad[]>;
+    abstract getProductoServiciosByClave(clave: string): Promise<ClaveProductoServicio[]>;
+    abstract getClaveUnidadByName(name: string): Promise<ClaveUnidad[]>;
     abstract getAllUsoCfdis(): Promise<UsoCfdi[]>;
     abstract getAllRegimenFiscal(): Promise<RegimenFiscal[]>;
     abstract getAllGiros(): Promise<Catalogo[]>;

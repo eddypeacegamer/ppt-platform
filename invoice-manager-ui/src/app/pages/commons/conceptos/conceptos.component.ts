@@ -5,10 +5,8 @@ import { ClaveProductoServicio } from '../../../models/catalogos/producto-servic
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 import { Concepto } from '../../../models/factura/concepto';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NbDialogService } from '@nebular/theme';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { InvoicesData } from '../../../@core/data/invoices-data';
-import { Impuesto } from '../../../models/factura/impuesto';
+import { CfdiData } from '../../../@core/data/cfdi-data';
 
 @Component({
   selector: 'ngx-conceptos',
@@ -26,8 +24,8 @@ export class ConceptosComponent implements OnInit {
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
 
-  constructor(private dialogService: NbDialogService,
-    private invoiceService: InvoicesData,
+  constructor(
+    private cfdiService: CfdiData,
     private catalogsService: CatalogsData,
     private cfdiValidator: CfdiValidatorService ) { }
 
@@ -88,7 +86,7 @@ export class ConceptosComponent implements OnInit {
   removeConcepto(index: number) {
     this.conceptoMessages = [];
     if (this.cfdi.folio !== undefined) {
-      this.invoiceService.deleteConcepto(this.cfdi.folio, this.cfdi.conceptos[index].id)
+      this.cfdiService.deleteConcepto(this.cfdi.id, this.cfdi.conceptos[index].id)
       .subscribe((cfdi: Cfdi) => {
         this.cfdi.conceptos.splice(index, 1);
         this.conceptoMessages = [];
@@ -118,12 +116,12 @@ export class ConceptosComponent implements OnInit {
     const concepto = this.cfdiValidator.buildConcepto({... this.concepto});
     this.conceptoMessages = this.cfdiValidator.validarConcepto(concepto);
     if (this.conceptoMessages.length === 0) {
-      if (this.cfdi.folio !== undefined) {
+      if (this.cfdi.id !== undefined) {
         let promise;
         if (id === undefined) {
-          promise = this.invoiceService.insertConcepto(this.cfdi.folio, concepto).toPromise();
+          promise = this.cfdiService.insertConcepto(this.cfdi.id, concepto).toPromise();
         }else {
-          promise = this.invoiceService.updateConcepto(this.cfdi.folio, id, concepto).toPromise();
+          promise = this.cfdiService.updateConcepto(this.cfdi.id, id, concepto).toPromise();
         }
         promise.then((cfdi) => {
               this.formInfo.prodServ = '*';
@@ -134,7 +132,7 @@ export class ConceptosComponent implements OnInit {
               this.conceptoMessages.push((error.error != null && error.error !== undefined)
                 ? error.error.message : `${error.statusText} : ${error.message}`);
             }).then(() => {
-              this.invoiceService.getCfdiByFolio(this.cfdi.folio)
+              this.cfdiService.getCfdiByFolio(this.cfdi.id)
               .subscribe((cfdi: Cfdi) => this.cfdi = cfdi,
               (error: HttpErrorResponse) => { this.conceptoMessages.push((error.error != null && error.error !== undefined) 
                   ? error.error.message : `${error.statusText} : ${error.message}`)});
@@ -179,7 +177,7 @@ export class ConceptosComponent implements OnInit {
    }
 
   public handleIvaInputChange() {
-    if(!this.concepto.iva) this.concepto.retencionFlag = false;
+    if (!this.concepto.iva) this.concepto.retencionFlag = false;
   }
 
 }

@@ -12,6 +12,8 @@ import com.business.unknow.services.entities.cfdi.CfdiPago;
 @Repository
 public interface CfdiPagoRepository extends JpaRepository<CfdiPago, Integer> {
 
-	@Query("select f from CfdiPago f where f.cfdi.id=:id")
+	@Query("select p from CfdiPago p where p.cfdi.id=:id")
 	public List<CfdiPago> findByCfdi(@Param("id") int id);
+	
+	public List<CfdiPago> findByFolio(String folio);
 }

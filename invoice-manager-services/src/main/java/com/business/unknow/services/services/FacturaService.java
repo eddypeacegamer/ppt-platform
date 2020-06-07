@@ -34,7 +34,6 @@ import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -205,6 +204,12 @@ public class FacturaService {
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
 	}
+	
+	public FacturaDto getFacturaBaseByPrefolio(Integer id) {
+		return mapper.getFacturaDtoFromEntity(
+				repository.findByIdCfdi(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el pre-folio %d no existe", id))));
+	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
@@ -254,22 +259,16 @@ public class FacturaService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public void deleteFactura(String folio) throws InvoiceManagerException {
-		repository.delete(
-				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("La factura con el folio %s no existe", folio))));
-		cfdiService.deleteCfdi(folio);
+		Factura fact = repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("La factura con el folio %s no existe", folio)));
+		repository.delete(fact);
+		cfdiService.deleteCfdi(fact.getIdCfdi());
 	}
 
-	// CFDI
-	public CfdiDto getCfdiByFolio(String folio) {
-		return cfdiService.getCfdiByFolio(folio);
-	}
+	
+	
 
-	public CfdiDto insertNewConcepto(String folio, ConceptoDto concepto) throws InvoiceManagerException {
-		cfdiService.insertNewConceptoToCfdi(folio, concepto);
-		return cfdiService.getCfdiByFolio(folio);
 
-	}
 
 	// COMPLEMNENTOS
 	public List<FacturaDto> getComplementos(String folioPadre) {

@@ -1,0 +1,127 @@
+<div class="row" *ngIf="cfdi">
+  <div class="col-md-12">
+
+    <!-- FOLIOS, RFC EMISOR, RAZON SOCIAL, RFC RECEPTOR Y RAZON SOCIAL RECEPTOR NO SON EDITABLES-->
+    <div>
+      <p class="font-weight-bold">Información Emisor y Receptor</p>
+      <div class="form-inline">
+        <p class="font-weight-bold">Pre-folio:</p>
+        &nbsp;&nbsp;
+        <p>{{cfdi.id}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+        <p class="font-weight-bold">Emisor:</p>
+        &nbsp;&nbsp;
+        <p>{{cfdi.emisor | json}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold">Receptor:</p>
+        &nbsp;&nbsp;
+        <p>{{cfdi.receptor | json}}</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+      </div>
+    </div>
+    <!-- CREAR APARTADO DE EDICION DE DIRECCION-->
+   
+    <!-- INFORMACION CFDI EDITABLE-->
+    
+      <div class="row">
+        <div class="col-sm-2">
+          <label for="inputDocType" class="label">Tipo Documento</label>
+          <select id="inputDocType" style="display:block;" class="form-control" [disabled]="!allowEdit" disabled
+            [(ngModel)]="cfdi.tipoDeComprobante">
+            <option value="*">Seleccionar</option>
+            <option value="I">Factura Ingreso</option>
+            <option value="P">Complemento(pago)</option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <label for="inputPaytype" class="label">Uso CFDI</label>
+          <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="!allowEdit"
+            [(ngModel)]="cfdi.receptor.usoCfdi">
+            <option value="*">Seleccionar</option>
+            <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.clave}}-{{clave.descripcion}}</option>
+          </select>
+        </div>
+        <div class="col-sm-1">
+          <label for="inputCoin" class="label">Moneda</label>
+          <select id="inputCoin" style="display:block;" class="form-control" [disabled]="!allowEdit"
+            [(ngModel)]="cfdi.moneda">
+            <option value="*">Seleccionar</option>
+            <option value="XXX">N/A</option>
+            <option value="MXN">Peso MX</option>
+            <option value="USD">Dollar US</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPayMethod" class="label">Metodo de Pago</label>
+          <select id="inputPayMethod" style="display:block;" class="form-control" [(ngModel)]="cfdi.metodoPago" [disabled]="!allowEdit"
+            (change)="onPayMethodSelected($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option value="PUE">Factura pagada (PUE)</option>
+            <option value="PPD">Factura pago por definir(PPD)</option>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label for="inputPaytype" class="label">Forma de Pago</label>
+          <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="cfdi.metodoPago === '*' || !allowEdit"
+            [(ngModel)]="cfdi.formaPago">
+            <option value="*">Seleccionar</option>
+            <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.nombre}}</option>
+          </select>
+        </div>
+      </div>
+    
+    <br>
+    <p class="font-weight-bold">Conceptos factura</p>
+      <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
+    <br>
+    
+    <div *ngIf="pagos.length>0">
+      <p class="font-weight-bold">Complementos</p>
+      <br>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">Acciones</th>
+              <th class="text-center">Folio</th>
+              <th class="text-center">UUID</th>
+              <th class="text-center">Fecha pago</th>
+              <th class="text-center">Parcialidad</th>
+              <th class="text-center">Importe Pagado</th>
+              <th class="text-center">Saldo Anterior</th>
+              <th class="text-center">Saldo Insoluto</th>
+              <th class="text-center">Moneda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let complemento of pagos">
+              <td scope="row" class="text-center">
+                <button type="button" [disabled]="complemento.idDocumento === undefined" class="btn btn-sm"
+                  [ngClass]="{'btn-outline-secondary': complemento.idDocumento === undefined, 'btn-outline-primary':complemento.idDocumento !== undefined}"
+                  (click)="downloadPdf(complemento.folio)">
+                  <i class="fa fa-file-pdf"></i> 
+                </button>&nbsp;&nbsp;
+                <button type="button" [disabled]="complemento.idDocumento === undefined" class="btn btn-sm"
+                [ngClass]="{'btn-outline-secondary': complemento.idDocumento === undefined, 'btn-outline-primary':complemento.idDocumento !== undefined}"
+                  (click)="downloadXml(complemento.folio)">
+                  <i class="fa fa-code"></i>
+                </button>
+              </td>
+              <td scope="row" class="text-center">{{complemento.folio}}</td>
+              <td scope="row" class="text-center">{{complemento.idDocumento}}</td>
+              <td scope="row" class="text-center">{{complemento.fechaPago}}</td>
+              <td scope="row" class="text-center">{{complemento.numeroParcialidad}}</td>
+              <td scope="row" class="text-center">{{complemento.importePagado | currency}}</td>
+              <td scope="row" class="text-center">{{complemento.importeSaldoAnterior | currency}}</td>
+              <td scope="row" class="text-center">{{complemento.importeSaldoInsoluto | currency}}</td>
+              <td scope="row" class="text-center">{{complemento.moneda}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+  </div>
+</div>

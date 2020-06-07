@@ -46,7 +46,7 @@ import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 import com.business.unknow.services.repositories.facturas.RetencionRepository;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 @Service
@@ -72,13 +72,13 @@ public class CfdiService {
 
 	@Autowired
 	private RetencionRepository retencionRepository;
-	
+
 	@Autowired
 	private PagoService pagoService;
 
 	@Autowired
 	private CfdiMapper mapper;
-	
+
 	@Autowired
 	private CatalogCacheService cacheCatalogsService;
 
@@ -116,6 +116,22 @@ public class CfdiService {
 		return cfdiDto;
 	}
 
+	public CfdiDto getCfdibyId(Integer id) {
+		CfdiDto cfdiDto = mapper.getCfdiDtoFromEntity(
+				repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("El cfdi con folio %d no fue encontrado", id))));
+
+		if (cfdiDto.getComplemento() == null) {
+			cfdiDto.setComplemento(new ComplementoDto());
+			List<CfdiPagoDto> pagosCfdi = getCfdiPagosByCfdi(cfdiDto.getId());
+			if (pagosCfdi != null && !pagosCfdi.isEmpty()) {
+				cfdiDto.getComplemento().setPagos(pagosCfdi);
+			}
+		}
+
+		return cfdiDto;
+	}
+
 	private List<ImpuestoDto> getImpuestosByConcepto(int id) {
 		return mapper.getImpuestosDtosFromEntities(impuestoRepository.findById(id));
 	}
@@ -123,8 +139,12 @@ public class CfdiService {
 	private List<CfdiPagoDto> getCfdiPagosByCfdi(int id) {
 		return mapper.getCfdiPagosDtoFromEntities(cfdiPagoRepository.findByCfdi(id));
 	}
-	
-	
+
+	public List<CfdiPagoDto> getPagosPPD(Integer id) {
+		Cfdi cfdi = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El cfdi con folio %d no fue encontrado", id)));
+		return mapper.getCfdiPagosDtoFromEntities(cfdiPagoRepository.findByFolio(cfdi.getFolio()));
+	}
 
 	public CfdiDto insertNewCfdi(CfdiDto cfdi) throws InvoiceManagerException {
 		validateCfdi(cfdi);
@@ -154,8 +174,8 @@ public class CfdiService {
 		}
 		if (cfdi.getComplemento() != null && cfdi.getComplemento().getPagos() != null
 				&& !cfdi.getComplemento().getPagos().isEmpty()) {
-			for(CfdiPagoDto cfdiPagoDto:cfdi.getComplemento().getPagos()) {
-				CfdiPago cfdiPago=mapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
+			for (CfdiPagoDto cfdiPagoDto : cfdi.getComplemento().getPagos()) {
+				CfdiPago cfdiPago = mapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
 				cfdiPago.setCfdi(entity);
 				cfdiPagoRepository.save(cfdiPago);
 			}
@@ -166,23 +186,25 @@ public class CfdiService {
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public CfdiDto updateCfdiBody(String folio, Integer id, CfdiDto cfdi) throws InvoiceManagerException {
+	public CfdiDto updateCfdiBody(Integer id, CfdiDto cfdi) throws InvoiceManagerException {
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
 		repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-				String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+				String.format("El cfdi con el prefolio %d no existe", id), HttpStatus.NOT_FOUND.value()));
 		return mapper.getCfdiDtoFromEntity(repository.save(mapper.getEntityFromCfdiDto(cfdi)));
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public void deleteCfdi(String folio) throws InvoiceManagerException {
-		Cfdi entity = repository.findByFolio(folio)
-				.orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-						String.format("El cfdi con el folio %s no existe", folio), HttpStatus.NOT_FOUND.value()));
+	public void deleteCfdi(Integer id) throws InvoiceManagerException {
+		Cfdi entity = repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
+				String.format("El cfdi con el prefolio %d no existe", id), HttpStatus.NOT_FOUND.value()));
 
 		for (Concepto concepto : entity.getConceptos()) {
 			for (Impuesto impuesto : concepto.getImpuestos()) {
 				impuestoRepository.delete(impuesto);
+			}
+			for (Retencion retencion : concepto.getRetenciones()) {
+				retencionRepository.delete(retencion);
 			}
 			conceptoRepository.delete(concepto);
 		}
@@ -191,10 +213,10 @@ public class CfdiService {
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class,
 			SQLException.class }, isolation = Isolation.READ_UNCOMMITTED)
-	public CfdiDto insertNewConceptoToCfdi(String folio, ConceptoDto newConcept) throws InvoiceManagerException {
+	public CfdiDto insertNewConceptoToCfdi(Integer idCfdi, ConceptoDto newConcept) throws InvoiceManagerException {
 		CfdiDto cfdi = mapper.getCfdiDtoFromEntity(
-				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No se ecnontro CFDI con folio %s", folio))));
+				repository.findById(idCfdi).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("No se ecnontro CFDI con prefolio %d", idCfdi))));
 		cfdi.getConceptos().add(newConcept);
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
@@ -220,8 +242,10 @@ public class CfdiService {
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public CfdiDto removeConceptFromCfdi(String folio, Integer conceptoId) throws InvoiceManagerException {
-		CfdiDto cfdi = getCfdiByFolio(folio);
+	public CfdiDto removeConceptFromCfdi(Integer idCfdi, Integer conceptoId) throws InvoiceManagerException {
+		CfdiDto cfdi = mapper.getCfdiDtoFromEntity(
+				repository.findById(idCfdi).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("No se ecnontro CFDI con prefolio %d", idCfdi))));
 		Concepto concepto = conceptoRepository.findById(conceptoId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("No se encontro concepto con id %d", conceptoId)));
@@ -243,11 +267,11 @@ public class CfdiService {
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public CfdiDto updateConceptoFromCfdi(String folio, Integer conceptoId, ConceptoDto concepto)
+	public CfdiDto updateConceptoFromCfdi(Integer idCfdi, Integer conceptoId, ConceptoDto concepto)
 			throws InvoiceManagerException {
 		CfdiDto cfdi = mapper.getCfdiDtoFromEntity(
-				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format("No se encontro el CFDI con folio  %s", folio))));
+				repository.findById(idCfdi).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("No se ecnontro CFDI con prefolio %d", idCfdi))));
 		int index = cfdi.getConceptos()
 				.indexOf(cfdi.getConceptos().stream().filter(c -> c.getId().equals(conceptoId)).findFirst()
 						.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -274,10 +298,10 @@ public class CfdiService {
 			retencionRepository.save(ret);
 		}
 		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && cfdi.getTotal().compareTo(BigDecimal.ZERO) > 0) {
-			List<PagoDto> pagos=pagoService.findPagosByFolioPadre(cfdi.getFolio());
-			Optional<PagoDto> pagoCredito=pagos.stream().filter(a->a.getFormaPago().equals("CREDITO")).findFirst();
-			if(pagos.size()==1&&pagoCredito.isPresent()) {
-				PagoDto pago=pagoCredito.get();
+			List<PagoDto> pagos = pagoService.findPagosByFolioPadre(cfdi.getFolio());
+			Optional<PagoDto> pagoCredito = pagos.stream().filter(a -> a.getFormaPago().equals("CREDITO")).findFirst();
+			if (pagos.size() == 1 && pagoCredito.isPresent()) {
+				PagoDto pago = pagoCredito.get();
 				pago.setMonto(cfdi.getTotal());
 				pagoService.updateMontoPago(pago.getId(), pago);
 			}
@@ -287,31 +311,32 @@ public class CfdiService {
 	}
 
 	public void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
-		if(cfdi.getEmisor().getRfc() == null || cfdi.getEmisor().getNombre() == null) {
+		if (cfdi.getEmisor().getRfc() == null || cfdi.getEmisor().getNombre() == null) {
 			throw new InvoiceManagerException("La informacion del emisor es requerida", "Informacion emisor faltante",
 					HttpStatus.CONFLICT.value());
 		}
-		
-		if(cfdi.getReceptor().getRfc() == null || cfdi.getReceptor().getNombre() == null) {
-			throw new InvoiceManagerException("La informacion del receptor es requerida", "Informacion receptor faltante",
-					HttpStatus.CONFLICT.value());
+
+		if (cfdi.getReceptor().getRfc() == null || cfdi.getReceptor().getNombre() == null) {
+			throw new InvoiceManagerException("La informacion del receptor es requerida",
+					"Informacion receptor faltante", HttpStatus.CONFLICT.value());
 		}
-		
-		if(!cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && !cfdi.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
-			throw new InvoiceManagerException("El metodo de pago de la factura solo puede ser PUE o PPD", "Metodo de pago invalido",
-					HttpStatus.CONFLICT.value());
+
+		if (!cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
+				&& !cfdi.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+			throw new InvoiceManagerException("El metodo de pago de la factura solo puede ser PUE o PPD",
+					"Metodo de pago invalido", HttpStatus.CONFLICT.value());
 		}
-		
-		if(!cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
+
+		if (!cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
 			throw new InvoiceManagerException("Uso de CFDI invalido", "Uso de CFDI invalido",
 					HttpStatus.CONFLICT.value());
 		}
-		
-		if(!cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
-			throw new InvoiceManagerException(String.format("La forma de pago %s es invalida", cfdi.getFormaPago()), "Forma de pago invalida",
-					HttpStatus.CONFLICT.value());
+
+		if (!cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
+			throw new InvoiceManagerException(String.format("La forma de pago %s es invalida", cfdi.getFormaPago()),
+					"Forma de pago invalida", HttpStatus.CONFLICT.value());
 		}
-	
+
 		if (cfdi.getConceptos().isEmpty()) {
 			throw new InvoiceManagerException("El CFDI no puede tener 0 conceptos", "Numero de comceptos invalido",
 					HttpStatus.CONFLICT.value());
@@ -321,18 +346,18 @@ public class CfdiService {
 					"En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos",
 					"Metodo de pago invalido", HttpStatus.CONFLICT.value());
 		}
-		
-		
+
 		// TODO add more validations here
 	}
-	
+
 	/**
-	 * This method recalculate CFDI amounts based on SAT  rounding rules, do not move or update this method without carefully review.
+	 * This method recalculate CFDI amounts based on SAT rounding rules, do not move
+	 * or update this method without carefully review.
 	 * 
 	 * @param cfdi
 	 */
 	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
-		
+
 		// Importes, retenciones y traslados recalculo
 		cfdi.getConceptos().forEach(a -> {
 			a.setImporte(a.getValorUnitario().multiply(a.getCantidad()));
@@ -357,7 +382,7 @@ public class CfdiService {
 
 		BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
 		log.info("Calculating cfdi values subtotal = {}, impuestos = {} , total = {}", subtotal, impuestos, total);
-		
+
 		cfdi.setImpuestosTrasladados(impuestos);
 		cfdi.setImpuestosRetenidos(retenciones);
 		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));

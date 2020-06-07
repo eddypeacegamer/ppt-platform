@@ -18,6 +18,7 @@ import { UsersService } from './back-services/users.service';
 import { CatalogsData } from './data/catalogs-data';
 import { CompaniesData } from './data/companies-data';
 import { InvoicesData } from './data/invoices-data';
+import { CfdiData } from './data/cfdi-data';
 import { DevolutionData } from './data/devolution-data';
 import { ClientsData } from './data/clients-data';
 import { PaymentsData } from './data/payments-data';
@@ -26,6 +27,7 @@ import { CatalogsService } from './back-services/catalogs.service';
 import { ClientsService } from './back-services/clients.service';
 import { CompaniesService } from './back-services/companies.service';
 import { InvoicesService } from './back-services/invoices.service';
+import { CfdiService } from './back-services/cfdi.service';
 import { DevolutionService } from './back-services/devolution.service';
 import { PaymentsService } from './back-services/payments.service';
 import { FilesData } from './data/files-data';
@@ -42,6 +44,7 @@ const DATA_SERVICES = [
   {provide: CompaniesData, useClass: CompaniesService},
   {provide: CuentasData, useClass: CuentasService},
   {provide: InvoicesData, useClass: InvoicesService},
+  {provide: CfdiData, useClass: CfdiService},
   {provide: PaymentsData, useClass : PaymentsService},
   {provide: DevolutionData, useClass: DevolutionService},
   {provide: TransferData , useClass: TransferService},
