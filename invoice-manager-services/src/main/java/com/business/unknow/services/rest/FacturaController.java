@@ -220,6 +220,12 @@ public class FacturaController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@PostMapping("/{folio}/correos")
+	public ResponseEntity<FacturaContext> renviarCorreos(@PathVariable String folio,
+			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(service.renviarCorreo(folio, facturaDto), HttpStatus.OK);
+	}
+	
 	// TIMBRADO
 	@PostMapping("/{folio}/timbrar")
 	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio,
