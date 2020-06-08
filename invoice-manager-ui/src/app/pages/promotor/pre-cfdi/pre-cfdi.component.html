@@ -65,7 +65,7 @@
           [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
         </ngx-cfdi>
 
-        <div class="alert alert-danger" *ngIf="factura.statusDetail !== undefined" role="alert">
+        <div class="alert alert-danger" *ngIf="factura.statusDetail !== undefined && factura.folio !== undefined" role="alert">
           <p>{{factura.statusDetail}}</p>
         </div>
         <br>

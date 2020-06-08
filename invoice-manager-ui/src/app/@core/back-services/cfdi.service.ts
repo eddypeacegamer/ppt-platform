@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Concepto } from '../../models/factura/concepto';
+import { Cfdi } from '../../models/factura/cfdi';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,10 @@ export class CfdiService {
 
   public getCfdiByFolio(prefolio: number): Observable<any > {
     return this.httpClient.get(`../api/cfdis/${prefolio}`);
+  }
+
+  public updateCfdi(cfdi: Cfdi): Observable<any> {
+    return this.httpClient.put(`../api/cfdis/${cfdi.id}`, cfdi);
   }
 
   public insertConcepto(prefolio: number, concepto: Concepto): Observable<any> {

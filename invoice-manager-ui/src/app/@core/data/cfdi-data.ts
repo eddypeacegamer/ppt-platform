@@ -7,6 +7,7 @@ import { Factura } from '../../models/factura/factura';
 export abstract class CfdiData {
 
     abstract getCfdiByFolio(prefolio: number): Observable<Cfdi>;
+    abstract updateCfdi(cfdi: Cfdi): Observable<Cfdi>;
     abstract insertConcepto(prefolio: number, concepto: Concepto): Observable<Concepto>;
     abstract updateConcepto(prefolio: number, id: number, concepto: Concepto): Observable<Concepto>;
     abstract deleteConcepto(prefolio: number, conceptoId: number): Observable<any>;

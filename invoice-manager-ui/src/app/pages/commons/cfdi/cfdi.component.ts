@@ -5,6 +5,7 @@ import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Concepto } from '../../../models/factura/concepto';
+import { CfdiData } from '../../../@core/data/cfdi-data';
 
 @Component({
   selector: 'ngx-cfdi',
@@ -28,7 +29,8 @@ export class CfdiComponent implements OnInit {
   public payTypeCat: Catalogo[] = [];
 
   constructor(
-    private catalogsService: CatalogsData) { }
+    private catalogsService: CatalogsData,
+    private cfdiservice: CfdiData) { }
 
   ngOnInit() {
     //catalogs info
@@ -53,12 +55,8 @@ export class CfdiComponent implements OnInit {
       });
   }
 
-  onUsoCfdiSelected(clave: string) {
-    this.cfdi.receptor.usoCfdi = clave;
-  }
-
-  onFormaDePagoSelected(clave: string) {
-    this.cfdi.formaPago = clave;
+  updateCfdi() {
+    this.cfdiservice.updateCfdi(this.cfdi).subscribe(cfdi => this.cfdi = cfdi);
   }
 
 }
