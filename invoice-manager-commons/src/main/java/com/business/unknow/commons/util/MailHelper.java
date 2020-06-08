@@ -27,7 +27,6 @@ import com.business.unknow.model.error.InvoiceCommonException;
 public class MailHelper {
 
 	public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
-		System.out.println(emailConfig);
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", emailConfig.getDominio());
 		props.put("mail.smtp.auth", "true");
