@@ -71,7 +71,7 @@
               <option value="USD">Dollar US</option>
             </select>
             <input id="inputChangeType" style="width: 100px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
-            <button class="btn btn-primary" (click)="updateCfdi()"><i class="fa fa-sync"></i></button>
+            <button class="btn btn-primary" (click)="updateCfdi()" *ngIf="allowEdit && cfdi.id !== undefined "><i class="fa fa-sync"></i></button>
           </div>
           
         </div>

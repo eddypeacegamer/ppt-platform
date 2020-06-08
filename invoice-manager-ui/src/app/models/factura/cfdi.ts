@@ -14,6 +14,7 @@ export class Cfdi {
     noCertificado: string;
     certificado: string;
     moneda: string;
+    tipoCambio: number;
     subtotal: number;
     descuento: number;
     total: number;
@@ -43,6 +44,7 @@ export class Cfdi {
         this.total = 0;
         this.subtotal = 0;
         this.descuento = 0;
+        this.tipoCambio = 1.0;
         this.serie = '1';//should be generated
     }
 }
