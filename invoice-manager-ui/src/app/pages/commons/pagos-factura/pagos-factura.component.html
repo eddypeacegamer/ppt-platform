@@ -105,21 +105,37 @@
               {{customColumn}}
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="fileIcon">
-              </nb-tree-grid-row-toggle>
-              <ng-template #fileIcon>
-                <nb-icon icon="file-text-outline"></nb-icon>
-              </ng-template>
-              {{row.data[customColumn]}}
+              <div *ngIf="row.data['TIPO']==='D'">
+                <nb-tree-grid-row-toggle [expanded]="row.expanded">
+                </nb-tree-grid-row-toggle>
+                <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2" [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
+                
+              </div>
+              <div *ngIf="row.data['TIPO']==='P'">
+                <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-file-pdf"></i></button>
+                <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2" [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-calendar-times"></i></button>
+              </div>
             </td>
           </ng-container>
+          
 
           <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column"
             [showOn]="getShowOn(index)">
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
               {{column}}
             </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              <div *ngIf="column !== 'MONTO'">
+                {{row.data[column] || '-'}}
+              </div>
+              <div *ngIf="row.data['TIPO']==='D' && column == 'MONTO'">
+                <p class="d-inline p-2">{{row.data['SALDO'] | currency }} de {{row.data['MONTO'] | currency}}</p>
+              </div>
+              <div *ngIf="row.data['TIPO']==='P' && column == 'MONTO'">
+                <p class="d-inline p-2">{{row.data['MONTO'] | currency }}</p>
+              </div>
+            </td>
           </ng-container>
 
         </table>

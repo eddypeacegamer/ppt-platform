@@ -19,11 +19,14 @@ interface TreeNode<T> {
   expanded?: boolean;
 }
 
-interface FSEntry {
-  name: string;
-  size: string;
-  kind: string;
-  items?: number;
+interface PagoFacturaModel {
+  ID: string;
+  TIPO: string;
+  MONTO: number;
+  FECHA: string;
+  STATUS?: string;
+  SALDO?: number;
+  FOLIO?: number;
 }
 
 @Component({
@@ -46,40 +49,39 @@ export class PagosFacturaComponent implements OnInit {
   public cuentas: Cuenta[];
   public loading: boolean = false;
 
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
+  customColumn = 'ACCIONES';
+  defaultColumns = [ 'MONTO', 'STATUS', 'FOLIO', 'FECHA' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
-  dataSource: NbTreeGridDataSource<FSEntry>;
+  dataSource: NbTreeGridDataSource<PagoFacturaModel>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  private data: TreeNode<FSEntry>[] = [
+  private data: TreeNode<PagoFacturaModel>[] = [
     {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      data: { ID: '22', MONTO: 3500, TIPO: 'D', FECHA: '2020-05-20', SALDO: 1000, STATUS: 'VALIDACION'},
       children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+        { data: { ID: '22', MONTO: -1500, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456789034} },
+        { data: { ID: '22', MONTO: -1000, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456783456} },
       ],
     },
     {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
+      data: { ID: '19', MONTO: 7500, TIPO: 'D', FECHA: '2020-05-12', SALDO: 500, STATUS: 'RECHAZADO' },
       children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
+        { data: { ID: '19', MONTO: -3000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020456789876} },
+        { data: { ID: '19', MONTO: -4000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020434567899 } },
       ],
     },
     {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
+      data: { ID: '11', MONTO: 10000, TIPO: 'D', FECHA: '2020-05-03', SALDO: 0, STATUS: 'ACEPTADO'},
       children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
+        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020498765455 } },
+        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020764234578 } },
+        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020567887895 } },
+        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020386468909 } },
       ],
-    },
-  ];
+    }];
 
   constructor(
     private paymentsService: PaymentsData,
@@ -88,7 +90,7 @@ export class PagosFacturaComponent implements OnInit {
     private paymentValidator: PagosValidatorService,
     private usersService: UsersData,
     private invoiceService: InvoicesData,
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {
       this.dataSource = this.dataSourceBuilder.create(this.data);
     }
 
