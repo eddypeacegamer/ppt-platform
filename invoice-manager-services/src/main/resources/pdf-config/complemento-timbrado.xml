@@ -205,8 +205,8 @@
                             DOCUMENTOS RELACIONADOS AL PAGO 
                     </block>
                     <table border="solid">
-                        <table-column column-width="24.5mm" />
-                       <table-column column-width="32.5mm" />
+                       <table-column column-width="10.5mm" />
+                       <table-column column-width="46.5mm" />
                        <table-column column-width="20.5mm" />
                        <table-column column-width="20.5mm" />
                        <table-column column-width="24.5mm" />
