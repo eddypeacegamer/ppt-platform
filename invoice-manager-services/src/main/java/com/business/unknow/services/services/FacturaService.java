@@ -28,6 +28,7 @@ import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
@@ -334,6 +335,14 @@ public class FacturaService {
 			return new BigDecimal(0);
 		}
 	}
+	
+	//RENVIAR CORREOS
+		public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+			facturaDto= getFacturaByFolio(folio);
+			FacturaContext facturaContext= facturaBuilderService.buildEmailContext(folio, facturaDto);
+			timbradoExecutorService.sentEmail(facturaContext,TipoEmail.GMAIL);
+			return facturaContext;
+		}
 
 	// TIMBRADO
 	public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
@@ -372,7 +381,7 @@ public class FacturaService {
 		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
 		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
+			timbradoExecutorService.sentEmail(facturaContext,TipoEmail.SEMEL_JACK);
 		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext

@@ -65,4 +65,11 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
 		instance.setArchivos(archivos);
 		return this;
 	}
+	
+	public EmailConfigBuilder setPort(String port) {
+		instance.setPort(port);
+		return this;
+	}
+	
+	
 }

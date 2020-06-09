@@ -10,6 +10,7 @@ public class EmailConfig {
 	private String asunto;
 	private String cuerpo;
 	private String pwEmisor;
+	private String port;
 	private List<FileConfig> archivos;
 
 	public List<String> getReceptor() {
@@ -67,11 +68,22 @@ public class EmailConfig {
 	public void setDominio(String dominio) {
 		this.dominio = dominio;
 	}
+	
+	
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
 
 	@Override
 	public String toString() {
 		return "EmailConfig [receptor=" + receptor + ", emisor=" + emisor + ", dominio=" + dominio + ", asunto="
-				+ asunto + ", cuerpo=" + cuerpo + ", pwEmisor=" + pwEmisor + ", archivos=" + archivos + "]";
+				+ asunto + ", cuerpo=" + cuerpo + ", pwEmisor=" + pwEmisor + ", port=" + port + ", archivos=" + archivos
+				+ "]";
 	}
 
 }

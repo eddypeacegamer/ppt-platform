@@ -23,6 +23,6 @@ export abstract class InvoicesData {
     abstract insertConcepto(folio: string, concepto: Concepto): Observable<Concepto>;
     abstract updateConcepto(folio: string, id: number, concepto: Concepto): Observable<Concepto>;
     abstract deleteConcepto(folio: string, conceptoId: number): Observable<any>;
-
+    abstract reSendEmail(folio: string, factura: Factura): Observable<any>;
     abstract generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable<Factura>;
 }

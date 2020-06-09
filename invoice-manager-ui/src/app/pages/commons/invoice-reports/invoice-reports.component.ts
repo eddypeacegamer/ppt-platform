@@ -192,4 +192,15 @@ export class InvoiceReportsComponent implements OnInit {
         this.loading = false;
       });
   }
+
+  public reSendEmail(folio: string) {
+    this.loading = true;
+    this.invoiceService.reSendEmail(folio,new Factura).subscribe(
+      factura => {
+        this.loading = false;
+      }, error => {
+        console.error('Error sending email', error);
+        this.loading = false;
+      });
+  }
 }
