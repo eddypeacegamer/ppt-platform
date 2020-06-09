@@ -216,6 +216,10 @@ public class PagoService {
 			}
 			facturaService.updateFactura(factura, folio);
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+		}else if(entity.getRevision1() && !pago.getRevision2()) {
+			throw new InvoiceManagerException(
+					"No se puede validar dos veces por primera vez",
+					"Incongruencia de pago.", HttpStatus.CONFLICT.value());
 		}
 
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
