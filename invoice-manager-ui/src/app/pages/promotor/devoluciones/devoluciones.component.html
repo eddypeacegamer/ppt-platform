@@ -112,7 +112,9 @@
           <button nbButton status="primary" size="medium" (click)="devolutionRequest(solicitud)"  [nbSpinner]="loading" [disabled]="true"
               nbSpinnerStatus="primary" nbSpinnerSize="small" nbSpinnerMessage="">Solicitar Devolución</button>
         </form-->
-        <small id="message" class="form-text text-muted">El modulo de devoluciones se encuentra en reconstrucción temporalmente, favor de enviar un correo a operaciones para solicitar su devolución</small>
+        <div class="alert alert-warning" role="alert">
+          <p class="font-weight-bold" style="color: red;">El modulo de devoluciones se encuentra en reconstrucción temporalmente, favor de enviar un correo a operaciones para solicitar su devolución</p>
+        </div>
         <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
           <p *ngFor="let message of messages">{{message}}</p>
         </div>
