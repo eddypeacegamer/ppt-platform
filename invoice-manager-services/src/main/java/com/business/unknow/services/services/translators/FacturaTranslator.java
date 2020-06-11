@@ -201,6 +201,19 @@ public class FacturaTranslator {
 
 		return totalRetenciones;
 	}
+	
+	public BigDecimal calculaImpuestos(FacturaDto facturaDto) {
+		BigDecimal totalImpuestos = new BigDecimal(0);
+		List<Translado> traslados = new ArrayList<>();
+		for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
+			Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
+			if (!conceptoDto.getImpuestos().isEmpty()) {
+				totalImpuestos = calculaImpuestos(traslados, concepto, totalImpuestos);
+			}
+		}
+
+		return totalImpuestos;
+	}
 
 	public BigDecimal calculaRetenciones(List<Retencion> retenciones, Concepto concepto, BigDecimal totalRetenciones) {
 		for (Retencion translado : concepto.getImpuestos().getRetenciones()) {

@@ -1,5 +1,7 @@
 package com.business.unknow.commons.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -25,13 +27,14 @@ import com.business.unknow.model.error.InvoiceCommonException;
 public class MailHelper {
 
 	public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
-
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", emailConfig.getDominio());
 		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.user", emailConfig.getEmisor());
+	    props.put("mail.smtp.clave", emailConfig.getPwEmisor());
 		props.put("mail.smtp.ssl.trust", emailConfig.getDominio());
 		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.port", "587");
+		props.put("mail.smtp.port", emailConfig.getPort());
 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -75,5 +78,26 @@ public class MailHelper {
 					emailConfig.getEmisor(), emailConfig.getReceptor()), me.getMessage());
 		}
 	}
-
+	
+	public static void main(String[] args) throws InvoiceCommonException {
+		MailHelper mh = new MailHelper();
+		EmailConfig ec= new EmailConfig();
+		ec.setEmisor("re-envio_facts@semmeljack.com");
+		ec.setDominio("smtp.gmail.com");
+		ec.setPwEmisor("D3s4rr0ll0-2021.*");
+		
+//		ec.setEmisor("facturacion01@blakeintegral.com");
+//		ec.setDominio("p3plcpnl1041.prod.phx3.secureserver.net");
+//		ec.setPwEmisor("D3s4rr0ll0-2020.*");
+		List<String> lista = new ArrayList<String>();
+		lista.add("edcgamer@gmail.com");
+		ec.setReceptor(lista);
+ 		ec.setPort("587");
+ 		ec.setAsunto("eddy");
+ 		ec.setCuerpo("te amo");
+ 		mh.enviarCorreo(ec);
+ 		
+	}
+	
+	
 }
