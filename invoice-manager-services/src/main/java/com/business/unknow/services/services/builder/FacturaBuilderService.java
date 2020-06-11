@@ -18,6 +18,7 @@ import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -27,6 +28,7 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
 import com.business.unknow.model.dto.cfdi.ReceptorDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -42,6 +44,7 @@ import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.services.FilesService;
 
 @Service
 public class FacturaBuilderService extends AbstractBuilderService {
@@ -69,6 +72,10 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
+	
+	
+	@Autowired
+	private FilesService filesService;
 
 	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaPadreDto, String folio)
 			throws InvoiceManagerException {
@@ -183,4 +190,21 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
 	}
 
+	public FacturaContext buildEmailContext(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema",
+						String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
+						Constants.BAD_REQUEST));
+		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
+						Constants.BAD_REQUEST));
+		FacturaFileDto xml = filesService.getFileByFolioAndType(facturaDto.getFolio(), TipoArchivoEnum.XML.name());
+		FacturaFileDto pdf = filesService.getFileByFolioAndType(facturaDto.getFolio(), TipoArchivoEnum.PDF.name());
+		List<FacturaFileDto> archivos = new ArrayList<>();
+		archivos.add(xml);
+		archivos.add(pdf);
+		return new FacturaContextBuilder().setFacturaDto(facturaDto).setFacturaFilesDto(archivos)
+				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
+	}
 }

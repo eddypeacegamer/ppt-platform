@@ -198,7 +198,10 @@ public class PagoService {
 				throw new InvoiceManagerException("No puede ser rechazado un pago que ya fue aprobado",
 						"El pago ya fue aprobado por dos personas.", HttpStatus.CONFLICT.value());
 			} else {
-				factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+				if (!(factura.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
+						|| factura.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor()))) {
+					factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+				}
 				factura.setStatusDetail(pago.getComentarioPago());
 				facturaService.updateFactura(factura, folio);
 				pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
@@ -206,11 +209,17 @@ public class PagoService {
 		} else if (entity.getRevision1() && pago.getRevision2()) {
 			entity.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 			factura.setStatusPago(PagoStatusEnum.PAGADA.getValor());
-			if (!factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor())) {
+			if (!(factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor())
+					||factura.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())
+					|| factura.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor()))) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 			}
 			facturaService.updateFactura(factura, folio);
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+		}else if(entity.getRevision1() && !pago.getRevision2()) {
+			throw new InvoiceManagerException(
+					"No se puede validar dos veces por primera vez",
+					"Incongruencia de pago.", HttpStatus.CONFLICT.value());
 		}
 
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));

@@ -153,4 +153,8 @@ export class InvoicesService {
   public getInvoiceSaldo(folio:string): Observable<any>{
     return this.httpClient.get(`../api/facturas/${folio}/saldos`);
   }
+
+  public reSendEmail(folio:string,factura:Factura) : Observable<any>{
+    return this.httpClient.post(`../api/facturas/${folio}/correos`,factura);
+  }
 }

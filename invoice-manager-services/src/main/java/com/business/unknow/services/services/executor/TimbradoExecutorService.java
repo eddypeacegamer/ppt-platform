@@ -8,6 +8,7 @@ import com.business.unknow.commons.builder.EmailConfigBuilder;
 import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.config.FileConfig;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -61,8 +62,8 @@ public class TimbradoExecutorService {
 
 	}
 
-	public void createFilesAndSentEmail(FacturaContext context) throws InvoiceManagerException {
-		if (context.getEmpresaDto().getTipo().equals(LineaEmpresaEnum.A.name())) {
+	public void sentEmail(FacturaContext context, TipoEmail tipoEmail) throws InvoiceManagerException {
+		if (context.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
 			Client client = clientRepository.findByRfc(context.getFacturaDto().getRfcRemitente())
 					.orElseThrow(() -> new InvoiceManagerException("Error sending the email",
 							String.format("The client %s does not exists", context.getFacturaDto().getRfcEmisor()),
@@ -75,12 +76,16 @@ public class TimbradoExecutorService {
 					.filter(a -> a.getTipoArchivo().equals(TipoArchivoEnum.PDF.name())).findFirst()
 					.orElseThrow(() -> new InvoiceManagerException("Error getting PDF",
 							"No se guardo el PDF correctamente", HttpStatus.SC_CONFLICT));
-			EmailConfigBuilder emailBuilder = new EmailConfigBuilder().setEmisor(context.getEmpresaDto().getCorreo())
-					.setPwEmisor(context.getEmpresaDto().getPwCorreo())
+			EmailConfigBuilder emailBuilder = new EmailConfigBuilder()
+					.setEmisor(tipoEmail.equals(TipoEmail.SEMEL_JACK) ? context.getEmpresaDto().getCorreo()
+							: tipoEmail.getEmail())
+					.setPwEmisor(tipoEmail.equals(TipoEmail.SEMEL_JACK) ? context.getEmpresaDto().getPwCorreo()
+							: tipoEmail.getPw())
 					.setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
 					.addReceptor(client.getCorreoPromotor()).addReceptor(client.getInformacionFiscal().getCorreo())
-					.addReceptor(context.getEmpresaDto().getCorreo())
-					.setDominio(context.getEmpresaDto().getDominioCorreo())
+					.addReceptor(context.getEmpresaDto().getCorreo()).setPort(tipoEmail.getPort())
+					.setDominio(tipoEmail.equals(TipoEmail.SEMEL_JACK) ? context.getEmpresaDto().getDominioCorreo()
+							: tipoEmail.getHost())
 					.addArchivo(new FileConfig(TipoArchivoEnum.XML,
 							context.getFacturaDto().getFolio().concat(TipoArchivoEnum.XML.getFormat()), xml.getData()))
 					.addArchivo(new FileConfig(TipoArchivoEnum.PDF,
