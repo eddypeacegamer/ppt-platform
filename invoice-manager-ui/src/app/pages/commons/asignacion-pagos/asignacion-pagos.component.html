@@ -1,0 +1,110 @@
+<nb-card *ngIf="payment">
+  <nb-card-header>
+    <div class="clearfix">
+      <p class="h6 float-left">Asignacion múltiple de pagos</p>
+      <div class="alert alert-success form-control float-right" role="alert" style="width: 200px;">
+        <p class="font-weight-bold">{{payment.monto | currency}}</p>
+      </div>
+    </div>
+
+  </nb-card-header>
+  <br>
+  <nb-card-body>
+    <div style="width: 90vw; height: 80vh;">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="ng-autocomplete">
+            <ng-autocomplete
+              [data]="clientsCat"
+              [searchKeyword]="keyword"
+              placeHolder="Escribe el nombre del cliente"
+              historyIdentifier="Clientes"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+            </ng-autocomplete>
+          
+            <ng-template #itemTemplate let-item>
+              <div>
+                <span [innerHTML]="item.razonSocial"></span> &nbsp; | &nbsp;
+                <small>{{item.rfc}}</small>
+              </div>
+            </ng-template>
+          
+            <ng-template #notFoundTemplate let-notFound>
+              <div>Cliente desconocido</div>
+            </ng-template>
+          </div>
+           
+          
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive" *ngIf="page.empty == false">
+
+            <table class="table table-sm table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th class="text-center" style="width: 170px;">Saldo a pagar</th>
+                  <th class="text-center">Saldo a pagar</th>
+                  <th class="text-center">Total Factura</th>
+                  <th class="text-center">Pre-Folio</th>
+                  
+                  <th class="text-center">Razón Social Empresa</th>
+                  
+                  <th class="text-center">Razón Social Cliente</th>
+                  
+                  <th class="text-center">Método Pago</th>
+                  <th class="text-center">Estatus factura</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <tr *ngFor="let fila of page.content" >
+                 
+                  <td scope="row p-1" class="text-center" style="min-width: 160px;">
+                    <input type="number" class="form-control" id="inputImporte" placeholder="Importe a pagar MXN" [(ngModel)]="monto" name="monto" [disabled]="fila.saldo <0.01">
+                  </td>
+                
+                  <td scope="row">{{fila.saldo | currency}}</td>
+                  <td scope="row">{{fila.total | currency}}</td>
+                  <td scope="row">{{fila.idCfdi}}</td>
+                  
+                  <td scope="row">{{fila.razonSocialEmisor}}</td>
+                  
+                  <td scope="row">{{fila.razonSocialRemitente}}</td>
+                  
+                  <td scope="row">{{fila.metodoPago}}</td>
+                  <td scope="row">{{fila.statusFactura}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="clearfix">
+              <ul class="pagination float-right" *ngIf="page.totalElements > 1">
+                <li class="page-item" *ngIf="page.first==false"><button class="btn btn-sm page-link"
+                    (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+                <li class="page-item" *ngIf="page.first==false"><button class="btn btn-sm page-link"
+                    (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+                <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+                <li class="page-item" *ngIf="page.last==false"><button class="btn btn-sm page-link"
+                    (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+                <li class="page-item" *ngIf="page.last==false"><button class="btn btn-sm page-link"
+                    (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+        </div>
+
+      </div>
+
+      
+
+  </nb-card-body>
+  <nb-card-footer>
+    <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+  </nb-card-footer>
+</nb-card>

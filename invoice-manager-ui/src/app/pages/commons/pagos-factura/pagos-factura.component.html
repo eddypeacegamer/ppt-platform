@@ -108,7 +108,7 @@
               <div *ngIf="row.data['TIPO']==='D'">
                 <nb-tree-grid-row-toggle [expanded]="row.expanded">
                 </nb-tree-grid-row-toggle>
-                <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-search"></i></button>
+                <button class="btn btn-sm btn-outline-primary d-inline p-2" (click)="openPaymentAssigments(dialog)" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-search"></i></button>
                 <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2" [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
                 
               </div>

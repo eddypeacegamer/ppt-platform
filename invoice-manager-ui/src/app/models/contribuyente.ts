@@ -2,8 +2,8 @@ export class Contribuyente{
 
     public id: number;
     public rfc: string;
-    public giro : string;
-    public nombre : string;
+    public giro: string;
+    public nombre: string;
     public razonSocial: string;
     public calle: string;
     public noInterior: number;

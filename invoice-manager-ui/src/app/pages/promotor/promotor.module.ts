@@ -10,6 +10,7 @@ import {DownloadCsvService } from '../../@core/util-services/download-csv.servic
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { CommonsModule } from '../commons/commons.module';
 import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
+import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 
 
 @NgModule({
@@ -21,6 +22,9 @@ import { DevolutionPreferencesComponent } from './devolution-preferences/devolut
   imports: [
     PromotorRoutingModule,
     CommonsModule,
+  ],
+  entryComponents: [
+    AsignacionPagosComponent,
   ],
   providers: [ DownloadCsvService , DonwloadFileService ],
 })
