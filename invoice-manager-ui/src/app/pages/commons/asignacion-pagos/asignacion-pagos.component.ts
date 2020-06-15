@@ -22,8 +22,6 @@ export class AsignacionPagosComponent implements OnInit {
   public user: User;
 
   public clientsCat: Contribuyente[] = [];
-  public keyword = 'razonSocial';
-
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
@@ -32,20 +30,18 @@ export class AsignacionPagosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.invoiceData();
     this.userService.getUserInfo().then(user => {
       this.user = user;
       this.clientsService.getClientsByPromotor(user.email)
         .pipe(
           map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
         ).subscribe(clients => {
-          console.log(clients);
           this.clientsCat = clients;
         });
     });
   }
 
-  public invoiceData(currentPage?: number, pageSize?: number) {
+  public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
     this.invoiceService.getInvoices(pageValue, sizeValue, {})

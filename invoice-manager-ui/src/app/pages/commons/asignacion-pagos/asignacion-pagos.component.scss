@@ -1,6 +1,5 @@
 .ng-autocomplete {
     width:100%;
-    max-width: 600px;
     display: table;
     margin: 0 auto;
   }
@@ -15,7 +14,19 @@
     text-align: left;
     max-width: 100%;
     box-sizing: border-box;
+    
   }
   span {
     margin-left: 5px;
   }
+.select-full {
+    font-size: 14px;
+    box-shadow: gainsboro;
+    outline: 0;
+    background-color: #ffffff;
+    color: rgba(0,0,0,.87);
+    width: 70%;
+    padding: 0 15px;
+    line-height: 45px;
+    height: 40px;
+}

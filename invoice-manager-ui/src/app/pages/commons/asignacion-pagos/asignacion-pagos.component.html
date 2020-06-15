@@ -2,21 +2,26 @@
   <nb-card-header>
     <div class="clearfix">
       <p class="h6 float-left">Asignacion múltiple de pagos</p>
-      <div class="alert alert-success form-control float-right" role="alert" style="width: 200px;">
-        <p class="font-weight-bold">{{payment.monto | currency}}</p>
+      
+      <div class="form-inline float-right">
+        <p class="font-weight-bold align-bottom">Saldo disponible : &nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <p class="font-weight-bold text-right alert alert-success" role="alert" style="width: 150px;">{{payment.monto | currency}}</p>
       </div>
+      
     </div>
 
   </nb-card-header>
   <br>
   <nb-card-body>
-    <div style="width: 90vw; height: 80vh;">
+    <div style="width: 90vw; height: 60vh;">
       <div class="row">
         <div class="col-md-5">
-          <div class="ng-autocomplete">
+          <label for="inputClients" class="label">Cliente Receptor</label>
+          <div class="ng-autocomplete border border-dark">
             <ng-autocomplete
+              id="inputClients"
               [data]="clientsCat"
-              [searchKeyword]="keyword"
+              [searchKeyword]="'razonSocial'"
               placeHolder="Escribe el nombre del cliente"
               historyIdentifier="Clientes"
               [itemTemplate]="itemTemplate"
@@ -34,7 +39,20 @@
               <div>Cliente desconocido</div>
             </ng-template>
           </div>
-           
+        </div>
+        <div class="col-md-7">
+          <label for="inputCompany" class="label">Empresa Emisora</label>
+          <div class="form-inline">
+            <select id="inputCompany" class="select-full border border-dark">
+              <option value="1">Lineas Areas Nacionales</option>
+              <option value="2">Transportes Camioneros Mendoza</option>
+              <option value="3">Macro Servicios Empresariales</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="search-button" type="button" class="btn btn-outline-dark" (click)="updateDataTable(0,10)">BUSCAR</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="assign-button" type="button" class="btn btn-outline-success">PAGAR FACTURAS</button>
+          </div>
           
         </div>
       </div>
