@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 ">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>
         <div class="clearfix" *ngIf="preFolio !== '*'">
@@ -7,20 +7,21 @@
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
-          &nbsp;&nbsp;
+         
           <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
             class="btn btn-sm btn-outline-primary float-right" (click)="downloadXml(factura.folio)">
             <i class="fa fa-code"></i>
           </button>
         </div>
+        <p *ngIf="preFolio == '*'" class="h6 float-left puff_center">Pre Cfdi</p>
       </nb-card-header>
-      <nb-card-body>
-        <div *ngIf="preFolio === '*'">
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
+      <nb-card-body >
+        <div class="slide_1" *ngIf="preFolio === '*'">
+          <p class="font-weight-bold ">Información Emisor y Receptor</p>
           <div class="row">
-
+            
             <div class="col-sm-3">
-              <div class="form-group">
+              <div class="form-group ">
                 <label for="inputGiro" class="label">Giro Empresa</label>
                 <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
                   style="display:block;" [(ngModel)]="formInfo.giro">
@@ -41,9 +42,9 @@
             </div>
             <div class="col-md-3">
               <label for="inputCliente" class="label">Razón social</label>
-              <div class="row form-inline">
-                <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control"
-                  (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
+              <div class=""  >
+                <input type="text" [(ngModel)]="formInfo.clientName"  
+                class="form-control" fullWidth (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
               </div>
             </div>
             <div class="col-md-3">
@@ -58,24 +59,23 @@
             </div>
           </div>
         </div>
-        <br>
-
-
-        <ngx-cfdi [cfdi]="factura.cfdi" [pagos]="pagosCfdi"
-          [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
-        </ngx-cfdi>
+        
+          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi"
+            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
+          </ngx-cfdi>
+        
 
         <div class="alert alert-danger" *ngIf="factura.statusDetail !== undefined && factura.folio !== undefined" role="alert">
           <p>{{factura.statusDetail}}</p>
         </div>
         <br>
 
-        <div class="form-inline" *ngIf="factura.folio === undefined">
+        <div class="row slide_3" *ngIf="factura.folio === undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
             [disabled]="loading || !isValidCfdi()" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
-          <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button>
+         <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
         </div>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>

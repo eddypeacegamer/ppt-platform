@@ -16,3 +16,37 @@
     }
   }
 }
+
+
+.row{
+        padding-bottom: 10px;
+    }
+
+.center{
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}    
+
+.centerJustify{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+}
+
+.table td {
+        
+        vertical-align: middle;
+}
+
+.table th {
+        
+        vertical-align: middle;
+}
+
+.font-weight-bold{
+        margin-top: 7px; 
+        margin-bottom: 7px;
+}

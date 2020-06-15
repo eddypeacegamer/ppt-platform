@@ -22,13 +22,21 @@
           <br>
           <h6>Contacta a operaciones para darte de alta en el sistema</h6>
 
+          <img src="/assets/data/pala1.gif" />
+          <br>
+          <button class="btn-sm btn-outline-info" style="margin: 15px;" (click)="mute()" >
+            <i class="fa fa-volume-off" *ngIf="audio.volume == 0"></i>
+            <i class="fa fa-volume-up" *ngIf="audio.volume == 1"></i>
+          </button>
         </div>
         <!-- 404 Error Text -->
-        <div class="text-center" style="width: 90vw; height: 80vh;">
+
+
+        <!-- <div class="text-center" style="width: 90vw; height: 80vh;">
           <iframe [src]="safeSrc" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen
             allowfullscreen></iframe>
         </div>
-
+ -->
 
       </div>
       <!-- /.container-fluid -->

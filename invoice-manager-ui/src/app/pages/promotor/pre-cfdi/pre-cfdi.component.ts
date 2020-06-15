@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
@@ -27,7 +27,7 @@ import { CfdiData } from '../../../@core/data/cfdi-data';
 @Component({
   selector: 'ngx-pre-cfdi',
   templateUrl: './pre-cfdi.component.html',
-  styleUrls: ['./pre-cfdi.component.scss'],
+  styleUrls: ['../../pages.component.scss'],
 })
 export class PreCfdiComponent implements OnInit, OnDestroy {
 
@@ -47,6 +47,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public companyInfo: Empresa;
 
   public loading: boolean = false;
+
 
   constructor(
     private catalogsService: CatalogsData,
@@ -77,6 +78,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         });
       });
   }
+
+
 
   ngOnDestroy() {
     /** CLEAN VARIABLES **/

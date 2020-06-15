@@ -18,6 +18,9 @@
 @import './layout';
 @import './overrides';
 
+@import './animations';
+
+
 // install the framework and custom global styles
 @include nb-install() {
 

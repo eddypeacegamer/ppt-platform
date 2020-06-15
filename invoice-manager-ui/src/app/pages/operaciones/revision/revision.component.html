@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
-    <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header>
         <div class="clearfix" *ngIf="preFolio !== '*'">
-          <p class="h6 float-left">Validación CFDI</p>
+          <p class="h6 float-left puff_center">Validación CFDI {{preFolio}}</p>
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
@@ -16,7 +16,7 @@
       </nb-card-header>
       <nb-card-body>
         <div *ngIf="preFolio === '*'">
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
+          <p class="">Información Emisor y Receptor</p>
           <div class="row">
 
             <div class="col-sm-3">
@@ -59,14 +59,17 @@
           </div>
         </div>
         <br>
+      
+      
+        <div  *ngIf="!loading"> 
+          <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
+            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
+          </ngx-cfdi>
+        </div>
 
-
-        <ngx-cfdi [cfdi]="factura.cfdi" [pagos]="pagosCfdi"
-          [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
-        </ngx-cfdi>
-
+        
         <div class="row" *ngIf="factura.folio !== undefined && (factura.statusFactura !== 'Timbrada' || factura.statusFactura !== 'Cancelada')">
-          <div class="col-sm-8">
+          <div class="col-sm-12">
             <label for="inputdesc" class="label">Descripción Rechazo CFDI</label>
             <input id="statusDetail" class="form-control" fullWidth type="text" placeholder="Motivo rechazo factura"
               [(ngModel)]="factura.statusDetail"

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef} from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -21,12 +21,17 @@ import { Pago } from '../../../models/factura/pago';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 
+
+
 @Component({
   selector: 'ngx-revision',
   templateUrl: './revision.component.html',
   styleUrls: ['./revision.component.scss'],
+ 
 })
+
 export class RevisionComponent implements OnInit {
+
 
   public preFolio: string;
   public pagosCfdi: Pago[] = [];
@@ -43,7 +48,7 @@ export class RevisionComponent implements OnInit {
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
 
-  public loading: boolean = false;
+  public loading: boolean = true;
 
   constructor(
     private catalogsService: CatalogsData,
@@ -59,6 +64,7 @@ export class RevisionComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.loading = true;
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
     /* preloaded cats*/
@@ -69,9 +75,11 @@ export class RevisionComponent implements OnInit {
           this.preFolio = route.get('folio');
           if (this.preFolio !== '*') {
             this.getInvoiceInfoByPreFolio(this.preFolio);
+           
           } else {
             this.initVariables();
           }
+        
         });
       });
   }
@@ -84,7 +92,7 @@ export class RevisionComponent implements OnInit {
   public initVariables() {
     /** INIT VARIABLES **/
     this.factura = new Factura();
-    this.loading = false;
+    /* this.loading = false; */
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';
     this.factura.cfdi.formaPago = '*';
@@ -105,12 +113,15 @@ export class RevisionComponent implements OnInit {
             this.factura.cfdi = cfdi;
             if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
               this.pagosCfdi = cfdi.complemento.pagos;
+             // this.loading = false;
             }
           });
           if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
             this.cfdiService.findPagosPPD(idCfdi)
-              .subscribe(pagos => this.pagosCfdi = pagos);
+              .subscribe(pagos => {this.pagosCfdi = pagos; });
           }
+        
+          setTimeout(() => { this.loading = false; }, 1800);
       },
         error => {
           console.error('Info cant found, creating a new invoice:', error);
@@ -278,4 +289,5 @@ export class RevisionComponent implements OnInit {
           console.error(this.errorMessages); });
   }
 
+ 
 }

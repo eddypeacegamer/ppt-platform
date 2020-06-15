@@ -11,7 +11,7 @@ import { CfdiData } from '../../../@core/data/cfdi-data';
 @Component({
   selector: 'ngx-conceptos',
   templateUrl: './conceptos.component.html',
-  styleUrls: ['./conceptos.component.scss']
+  styleUrls: ['../../pages.component.scss']
 })
 export class ConceptosComponent implements OnInit {
 

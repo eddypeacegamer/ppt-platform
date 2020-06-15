@@ -1,30 +1,53 @@
-<div class="row" *ngIf="cfdi">
-  <div class="col-md-12">
-
-    <!-- FOLIOS, RFC EMISOR, RAZON SOCIAL, RFC RECEPTOR Y RAZON SOCIAL RECEPTOR NO SON EDITABLES-->
-    <div>
-      <p class="font-weight-bold">Información Emisor y Receptor</p>
-      <div class="form-inline">
-        <p class="font-weight-bold">Pre-folio:</p>
-        &nbsp;&nbsp;
-        <p>{{cfdi.id}}</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-
-        <p class="font-weight-bold">Emisor:</p>
-        &nbsp;&nbsp;
-        <p>{{cfdi.emisor | json}}</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-        <p class="font-weight-bold">Receptor:</p>
-        &nbsp;&nbsp;
-        <p>{{cfdi.receptor | json}}</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<div class="row" *ngIf="cfdi" >
+  <div class="col-md-12 " >
+      <div *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined">
+        <p class="font-weight-bold slide_2">Emisor:</p>
+        <div class="row slide_2" >
+          <div class="col-sm-3" >
+            <label for="rfcEmisor" class="label">RFC Emisor</label>
+            <input id="rfcEmisor"  class="form-control"  type="text" [(ngModel)]="cfdi?.emisor.rfc"
+            fullWidth  placeholder="Rfc" disabled>
+          </div>
+          <div class="col-sm-9">
+            <label for="nombreEmisor" class="label">Nombre Emisor</label>
+            <input id="nombreEmisor" type="text" [(ngModel)]="cfdi?.emisor.nombre" class="form-control" 
+            fullWidth  placeholder="Nombre" disabled>
+          </div>
+        </div>
+        <div class="row slide_2">
+          <div class="col-sm-12">
+            <label for="direccioneEmisor" class="label">Direccion Emisor</label>
+            <textarea id="direccioneEmisor" type="text" style="margin-top: 0px; margin-bottom: 0px; height: 38px;" 
+            [(ngModel)]="cfdi.emisor.direccion" [disabled]="!allowEdit"  
+            placeholder="Direccion Emisor" class="form-control"></textarea>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- CREAR APARTADO DE EDICION DE DIRECCION-->
-   
-    <!-- INFORMACION CFDI EDITABLE-->
-    
-      <div class="row">
+
+      <div *ngIf="cfdi.receptor && cfdi.receptor.rfc !== undefined">
+        <p class="font-weight-bold slide_2">Receptor:</p>
+        <div class="row slide_3">
+          <div class="col-sm-3" >
+            <label for="rfcReceptor" class="label">RFC Receptor</label>
+            <input id="rfcReceptor" type="text" [(ngModel)]="cfdi.receptor.rfc" class="form-control" 
+            fullWidth  placeholder="Rfc" disabled>
+          </div>
+          <div class="col-sm-9">
+            <label for="nombreReceptor" class="label">Nombre Receptor</label>
+            <input id="nombreReceptor" type="text" [(ngModel)]="cfdi.receptor.nombre" class="form-control" 
+            fullWidth placeholder="Nombre" disabled>
+          </div>
+        </div>
+        <div class="row slide_3">
+          <div class="col-sm-12">
+            <label for="direccioneReceptor" class="label">Direccion Receptor</label>
+            <textarea id="direccioneReceptor" type="text" style="margin-top: 0px; margin-bottom: 0px; height: 38px;" 
+            [(ngModel)]="cfdi.receptor.direccion"  [disabled]="!allowEdit"
+            placeholder="Direccion Receptor" class="form-control"></textarea>
+          </div>
+        </div>
+      </div>     
+      <div class="row slide_4">
         <div class="col-md-2">
           <label for="inputDocType" class="label">Tipo Documento</label>
           <select id="inputDocType" style="display:block;" class="form-control" [disabled]="!allowEdit" disabled
@@ -34,7 +57,7 @@
             <option value="P">Complemento(pago)</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2"  *ngIf="cfdi.receptor">
           <label for="inputPaytype" class="label">Uso CFDI</label>
           <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="!allowEdit"
             [(ngModel)]="cfdi.receptor.usoCfdi">
@@ -43,7 +66,7 @@
           </select>
         </div>
         
-        <div class="col-md-2">
+        <div class="col-md-3">
           <label for="inputPayMethod" class="label">Metodo de Pago</label>
           <select id="inputPayMethod" style="display:block;" class="form-control" [(ngModel)]="cfdi.metodoPago" [disabled]="!allowEdit"
             (change)="onPayMethodSelected($event.target.value)">
@@ -52,7 +75,7 @@
             <option value="PPD">Factura pago por definir(PPD)</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <label for="inputPaytype" class="label">Forma de Pago</label>
           <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="cfdi.metodoPago === '*' || !allowEdit"
             [(ngModel)]="cfdi.formaPago">
@@ -60,9 +83,9 @@
             <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">{{payType.nombre}}</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="inputCoin" class="label">Moneda</label>
-          <div class="form-inline">
+          <div class="">
             <select id="inputCoin" style="display:block;" class="form-control" [disabled]="!allowEdit"
             [(ngModel)]="cfdi.moneda">
               <option value="*">Seleccionar</option>
@@ -70,7 +93,7 @@
               <option value="MXN">Peso MX</option>
               <option value="USD">Dollar US</option>
             </select>
-            <input id="inputChangeType" style="width: 100px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
+            <input id="inputChangeType" style=" margin-top: 15px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
             <button class="btn btn-primary" (click)="updateCfdi()" *ngIf="allowEdit && cfdi.id !== undefined "><i class="fa fa-sync"></i></button>
           </div>
           
@@ -78,7 +101,7 @@
       </div>
     
     <br>
-    <p class="font-weight-bold">Conceptos factura</p>
+    
       <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
     <br>
     
@@ -87,7 +110,7 @@
       <br>
       <div class="table-responsive">
         <table class="table table-sm">
-          <thead class="thead-light">
+          <thead class="thead-dark">
             <tr>
               <th class="text-center">Acciones</th>
               <th class="text-center">Folio</th>
