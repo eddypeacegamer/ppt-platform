@@ -1,15 +1,17 @@
 <div *ngIf="cfdi">
   <!-- START CONCEPTOS-->
   <div class="row" *ngIf="allowEdit">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
-      <div class="form-inline">
+      <div class="">
         <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
-          (ngModelChange)="buscarClaveProductoServicio($event)" placeholder="palabra clave producto servicio">
-        <button class="btn btn-primary" (click)="openSatCatalog()"> Catalogo SAT</button>
+          (ngModelChange)="buscarClaveProductoServicio($event)" placeholder="Palabra clave producto">        
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-2">
+        <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="openSatCatalog()"> Catalogo SAT</button>
+    </div>
+    <div class="col-sm-3">
       <label for="inputProdServ" class="label">Selección clave producto servicio</label>
       <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
         (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
@@ -18,17 +20,14 @@
         </option>
       </select>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4" >
       <label for="inputdesc" class="label">Descripción</label>
       <input id="inputdesc" class="form-control" fullWidth type="text" [(ngModel)]="concepto.descripcion"
         placeholder="Descripción del producto">
     </div>
-
   </div>
-
-
   <div class="row" *ngIf="allowEdit">
-    <div class="col-sm-2">
+    <div class="col-sm-3">
       <label for="inputunidad" class="label">Unidad Medida</label>
       <select id="inputunidad" style="display:block;" class="form-control" [(ngModel)]="formInfo.unidad"
         (change)="onSelectUnidad($event.target.value)">
@@ -46,100 +45,101 @@
       <input id="inputPrecio" class="form-control" fullWidth type="number" placeholder="Precio Unitario"
         [(ngModel)]="concepto.valorUnitario">
     </div>
-
     <!--div class="col-sm-2">
           <label for="inputDescuento" class="label">Descuento</label>
           <input id="inputDescuento" class="form-control" fullWidth type="number" placeholder="Descuento aplicado"
-            [(ngModel)]="concepto.descuento">
+            [(ngModel)]="concepto.descuento"> style="margin-left: 15px;"
         </div-->
-    <div class="col-sm-4">
-      <label for="inputImpuesto" class="label"></label>
-      <div class="row form-inline">
-        <input type="checkbox" [(ngModel)]="concepto.iva" class="form-check-input" id="iva" (change)="handleIvaInputChange()">
-        <label class="form-check-label" for="iva">IVA</label>
+     <div class="col-sm-1 align-self-end">
+        <input type="checkbox"  [(ngModel)]="concepto.iva" class="form-check-input" id="iva" (change)="handleIvaInputChange()">
+        <label class="form-check-label"  for="iva">IVA</label> 
+        <br>
         <input type="checkbox" [(ngModel)]="concepto.retencionFlag" class="form-check-input" id="retencion" [disabled]="!concepto.iva">
-        <label class="form-check-label" for="retencion">RETENCIÓN</label>
-        <button *ngIf="concepto.id === undefined" class="btn btn-success" (click)="agregarConcepto()">Agregar
-          Concepto</button>
-        <button *ngIf="concepto.id !== undefined" class="btn btn-success"
-          (click)="agregarConcepto(concepto.id)">Actualizar Concepto</button>
+        <label class="form-check-label "  for="retencion">RETENCIÓN</label>
       </div>
-    </div>
+      <div class="col-sm-1 align-self-end"></div>
+      <div class="col-sm-3 ">           
+        <button *ngIf="concepto.id === undefined" style="width: 100%; margin-top: 28px;" class="btn btn-success" (click)="agregarConcepto()">Agregar
+          Concepto</button>
+        <button *ngIf="concepto.id !== undefined" style="width: 100%; margin-top: 28px;" class="btn btn-success"
+          (click)="agregarConcepto(concepto.id)">Actualizar Concepto</button>     
+      </div>
   </div>
   <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
     <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
   </div>
-
-
   <br>
   <!--TABLA CONCEPTOS-->
-  <div class="table-responsive">
-  <table class="table table-sm" *ngIf="cfdi.conceptos.length>0">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col" *ngIf="allowEdit"
-          class="text-center">Acciones</th>
-        <th scope="col" class="text-center">Producto Servicio</th>
-        <th scope="col" class="text-center">Cantidad</th>
-        <th scope="col" class="text-center">Clave Unidad</th>
-        <th scope="col" class="text-center">Unidad</th>
-        <th scope="col" class="text-center">Descripcion</th>
-        <th scope="col" class="text-center">Valor Unitario</th>
-        <th scope="col" class="text-center">Impuesto</th>
-        <th scope="col" class="text-center">Retencion</th>
-        <th scope="col" class="text-center">Importe</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let fila of cfdi.conceptos; let i = index">
-        <td scope="row" class="text-center"
-          *ngIf="allowEdit">
-          <button class="btn-sm btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
-          <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
-        </td>
-        <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
-        <td scope="row" class="text-center">{{fila.cantidad}}</td>
-        <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
-        <td scope="row" class="text-center">{{fila.unidad}}</td>
-        <td scope="row" class="text-center">{{fila.descripcion}}</td>
-        <td scope="row" class="text-center">{{fila.valorUnitario | currency :'MXN':'symbol':'.2-6'}}</td>
-        <td scope="row" class="text-center">{{calcularImportes(fila.impuestos) | currency :'MXN':'symbol':'.2-6'}}</td>
-        <td scope="row" class="text-center">{{calcularImportes(fila.retenciones) | currency :'MXN':'symbol':'.2-6'}}</td>
-        <td scope="row" class="text-center">{{fila.importe | currency :'MXN':'symbol':'.2-6'}}</td>
-      </tr>
-      <tr>
-        <td *ngIf="!allowEdit" colspan="7">
-        </td>
-        <td *ngIf="allowEdit" colspan="8">
-        </td>
-        <td class="text-center"><p class="font-weight-bold">Subtotal</p></td>
-        <td class="text-center">{{cfdi.subtotal | currency :'MXN':'symbol':'.2'}}</td>
-      </tr>
-      <tr>
-        <td *ngIf="!allowEdit" colspan="7">
-        </td>
-        <td *ngIf="allowEdit" colspan="8">
-        </td>
-        <td class="text-center"><p class="font-weight-bold">Impuestos Trasladados:</p></td>
-        <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
-      </tr>
-      <tr>
-        <td *ngIf="!allowEdit" colspan="7">
-        </td>
-        <td *ngIf="allowEdit" colspan="8">
-        </td>
-        <td class="text-center" ><p class="font-weight-bold">Impuestos Retenidos:</p></td>
-        <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
-      </tr>
-      <tr>
-        <td *ngIf="!allowEdit" colspan="7">
-        </td>
-        <td *ngIf="allowEdit" colspan="8">
-        </td>
-        <td class="text-center"><p class="font-weight-bold">Total</p></td>
-        <td class="text-center">{{cfdi.total | currency :'MXN':'symbol':'.2'}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div *ngIf="cfdi.complemento.length==0 || cfdi.conceptos.length>0">
+    <p class="font-weight-bold">Conceptos factura</p>
+    <div class="table-responsive">
+    <table class="table table-sm " >
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" *ngIf="allowEdit"
+            class="text-center">Acciones</th>
+          <th scope="col" class="text-center">Producto Servicio</th>
+          <th scope="col" class="text-center">Cantidad</th>
+          <th scope="col" class="text-center">Clave Unidad</th>
+          <th scope="col" class="text-center">Unidad</th>
+          <th scope="col" class="text-center">Descripcion</th>
+          <th scope="col" class="text-center">Valor Unitario</th>
+          <th scope="col" class="text-center">Impuesto</th>
+          <th scope="col" class="text-center">Retencion</th>
+          <th scope="col" class="text-center">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fila of cfdi.conceptos; let i = index">
+          <td scope="row" class="text-center"
+            *ngIf="allowEdit">
+            <button class="btn-sm btn-outline-danger" (click)="removeConcepto(i)"><i class="fa fa-trash"></i></button>
+            <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
+          </td>
+          <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
+          <td scope="row" class="text-center">{{fila.cantidad}}</td>
+          <td scope="row" class="text-center">{{fila.claveUnidad}}</td>
+          <td scope="row" class="text-center">{{fila.unidad}}</td>
+          <td scope="row" class="text-center">{{fila.descripcion}}</td>
+          <td scope="row" class="text-center">{{fila.valorUnitario | currency :'MXN':'symbol':'.2-6'}}</td>
+          <td scope="row" class="text-center">{{calcularImportes(fila.impuestos) | currency :'MXN':'symbol':'.2-6'}}</td>
+          <td scope="row" class="text-center">{{calcularImportes(fila.retenciones) | currency :'MXN':'symbol':'.2-6'}}</td>
+          <td scope="row" class="text-center">{{fila.importe | currency :'MXN':'symbol':'.2-6'}}</td>
+        </tr>
+        <tr>
+          <td *ngIf="!allowEdit" colspan="7">
+          </td>
+          <td *ngIf="allowEdit" colspan="8">
+          </td>
+          <td class="text-center"><p class="font-weight-bold">Subtotal</p></td>
+          <td class="text-center">{{cfdi.subtotal | currency :'MXN':'symbol':'.2'}}</td>
+        </tr>
+        <tr>
+          <td *ngIf="!allowEdit" colspan="7">
+          </td>
+          <td *ngIf="allowEdit" colspan="8">
+          </td>
+          <td class="text-center"><p class="font-weight-bold">Impuestos Trasladados:</p></td>
+          <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
+        </tr>
+        <tr>
+          <td *ngIf="!allowEdit" colspan="7">
+          </td>
+          <td *ngIf="allowEdit" colspan="8">
+          </td>
+          <td class="text-center" ><p class="font-weight-bold">Impuestos Retenidos:</p></td>
+          <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency :'MXN':'symbol':'.2'}}</td>
+        </tr>
+        <tr>
+          <td *ngIf="!allowEdit" colspan="7">
+          </td>
+          <td *ngIf="allowEdit" colspan="8">
+          </td>
+          <td class="text-center" ><p class="font-weight-bold">Total</p></td>
+          <td class="text-center" >{{cfdi.total | currency :'MXN':'symbol':'.2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
 </div>
