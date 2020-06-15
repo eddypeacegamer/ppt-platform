@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
 import { PagoFactura } from '../../../models/pago-factura';
@@ -10,7 +10,10 @@ import { FilesData } from '../../../@core/data/files-data';
 import { User } from '../../../models/user';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme';
+import { Factura } from '../../../models/factura/factura';
+import { map } from 'rxjs/operators';
+import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 
 
 interface TreeNode<T> {
@@ -39,6 +42,8 @@ export class PagosFacturaComponent implements OnInit {
   public user: User;
 
   public fileInput: any;
+
+  
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoFactura = new PagoFactura();
@@ -85,6 +90,7 @@ export class PagosFacturaComponent implements OnInit {
 
   constructor(
     private paymentsService: PaymentsData,
+    private dialogService: NbDialogService,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
@@ -122,6 +128,8 @@ export class PagosFacturaComponent implements OnInit {
     }
     return NbSortDirection.NONE;
   }
+
+ 
 
   /******* PAGOS ********/
 
@@ -168,6 +176,18 @@ export class PagosFacturaComponent implements OnInit {
         reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); };
       }
     }
+  }
+
+
+  public openPaymentAssigments(pago?: PagoFactura) {
+    const payment = pago || new PagoFactura();
+    payment.monto = 3500;
+    payment.moneda = 'MXN';
+    this.dialogService.open(AsignacionPagosComponent, {
+      context: {
+        payment : payment,
+      },
+    }).onClose.subscribe(() => console.log('Closing view'));
   }
 
   deletePayment(paymentId) {
