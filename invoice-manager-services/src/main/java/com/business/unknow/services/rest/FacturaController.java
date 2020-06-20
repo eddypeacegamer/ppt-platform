@@ -1,8 +1,6 @@
 package com.business.unknow.services.rest;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +24,9 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.services.PagoDevolucionDto;
-import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
-import com.business.unknow.services.services.PagoService;
 
 /**
  * @author eej000f
@@ -43,9 +38,6 @@ public class FacturaController {
 	@Autowired
 	private FacturaService service;
 
-
-	@Autowired
-	private PagoService pagoService;
 
 	@Autowired
 	private DevolucionService devolucionService;
@@ -114,56 +106,7 @@ public class FacturaController {
 		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
 	}
 
-	@GetMapping("/{folio}/complementos")
-	public ResponseEntity<List<FacturaDto>> getComplementos(@PathVariable String folio) {
-		return new ResponseEntity<>(service.getComplementos(folio), HttpStatus.OK);
-	}
-
-	@PostMapping("/{folio}/complementos")
-	public ResponseEntity<FacturaDto> getComplementos(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
-			throws InvoiceManagerException {
-		FacturaDto facturaDto=service.createComplemento(folio, pago);
-		facturaDto=service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto();
-		pagoService.actualizarCreditoContabilidad(folio, pago);
-		return new ResponseEntity<>(facturaDto, HttpStatus.OK);
-	}
 	
-	@GetMapping("/{folio}/saldos")
-	public ResponseEntity<BigDecimal> getSaldo(@PathVariable String folio)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getFacturaSaldo(folio), HttpStatus.OK);
-	}
-
-	
-
-	// PAGOS
-	@GetMapping("/{folio}/pagos")
-	@Deprecated
-	public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
-		return new ResponseEntity<>(pagoService.findPagosByFolioPadre(folio), HttpStatus.OK);
-	}
-
-	@PostMapping("/{folio}/pagos")
-	@Deprecated
-	public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
-	}
-
-	@PutMapping("/{folio}/pagos/{id}")
-	@Deprecated
-	public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
-			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
-	}
-
-	@DeleteMapping("/{folio}/pagos/{id}")
-	@Deprecated
-	public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
-			throws InvoiceManagerException {
-		pagoService.deletePago(folio, id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
 
 	// TIMBRADO
 	@PostMapping("/{folio}/timbrar")

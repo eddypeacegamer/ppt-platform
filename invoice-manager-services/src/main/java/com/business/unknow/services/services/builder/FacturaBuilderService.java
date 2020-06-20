@@ -70,37 +70,42 @@ public class FacturaBuilderService extends AbstractBuilderService {
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
 
+	
+	// TODO refactor this code Complementos no estan ligados a una sola factura padre
 	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaPadreDto, String folio)
 			throws InvoiceManagerException {
-		List<Pago> pagos = pagoRepository.findByFolioPadre(facturaPadreDto.getFolio());
-		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
-				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-						String.format("Verificar consitencia de pagos del folio %s", folio), HttpStatus.SC_NOT_FOUND));
+//		List<Pago> pagos = pagoRepository.findByFolioPadre(facturaPadreDto.getFolio());
+//		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
+//				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
+//						String.format("Verificar consitencia de pagos del folio %s", folio), HttpStatus.SC_NOT_FOUND));
 		EmpresaDto empresaDto = empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaPadreDto.getRfcEmisor())
 						.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
 								String.format("No existe El emisor %s", facturaPadreDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
 		getEmpresaFiles(empresaDto, facturaPadreDto);
-		return new FacturaContextBuilder().setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setEmpresaDto(empresaDto)
-				.setFacturaPadreDto(facturaPadreDto).setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre))
-				.setCtdadComplementos(repository.findComplementosByFolioPadre(facturaPadreDto.getFolio()).size()).setCurrentPago(pagoDto).build();
+		return null;
+//		return new FacturaContextBuilder().setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setEmpresaDto(empresaDto)
+//				.setFacturaPadreDto(facturaPadreDto).setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre))
+//				.setCtdadComplementos(repository.findComplementosByFolioPadre(facturaPadreDto.getFolio()).size()).setCurrentPago(pagoDto).build();
 	}
 
 	public FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto) {
-		List<Pago> pagos = pagoRepository.findByFolio(folio);
+		//List<Pago> pagos = pagoRepository.findByFolio(folio);
 		Optional<Factura> factura = repository.findByFolio(folio);
-		Optional<Pago> pagoCredito = pagos.stream()
-				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
-		return new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto))
-				.setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setCurrentPago(pagoDto)
-				.setFacturaDto(factura.isPresent() ? mapper.getFacturaDtoFromEntity(factura.get()) : null)
-				.setPagoCredito(pagoCredito.isPresent() ? pagoMapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
-				.build();
+//		Optional<Pago> pagoCredito = pagos.stream()
+//				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
+//		return new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto))
+//				.setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setCurrentPago(pagoDto)
+//				.setFacturaDto(factura.isPresent() ? mapper.getFacturaDtoFromEntity(factura.get()) : null)
+//				.setPagoCredito(pagoCredito.isPresent() ? pagoMapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
+//				.build();
+		return null;
 	}
 
 	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto facturaPadre, PagoDto pagoActual) {
-		return new FacturaBuilder().setFolioPadre(facturaPadre.getFolio())
+		
+		return new FacturaBuilder()
 				.setPackFacturacion(facturaPadre.getPackFacturacion())
 				.setCfdi(facturaPadre.getCfdi())
 				.setTotal(pagoActual.getMonto())

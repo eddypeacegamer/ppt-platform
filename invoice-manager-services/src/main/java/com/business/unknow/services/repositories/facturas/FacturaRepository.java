@@ -44,9 +44,7 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	@Query("select f from Factura f where  f.tipoDocumento=:tipo and f.lineaEmisor=:lineaEmisor and upper(f.statusFactura) = upper(:status) and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
 	public Page<Factura> findReportsByLineaAndStatusEmisorWithParams(@Param("tipo") String tipoDocumento,@Param("status") String status,@Param("lineaEmisor") String lineaEmisor,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);
 	
-	@Query("select f from Factura f where folioPadre= :folioPadre")
-	public List<Factura> findComplementosByFolioPadre(@Param("folioPadre") String folioPadre);
 	
-	public List<Factura> findByFolioPadre(String folioPadre);
+
 
 }

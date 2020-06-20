@@ -270,33 +270,15 @@ public class FacturaService {
 
 
 
-	// COMPLEMNENTOS
-	public List<FacturaDto> getComplementos(String folioPadre) {
-		List<FacturaDto> complementos = mapper
-				.getFacturaDtosFromEntities(repository.findComplementosByFolioPadre(folioPadre));
-		for (FacturaDto fact : complementos) {
-			Optional<PagoDto> pago = pagoService.findPagosByFolio(fact.getFolio()).stream().findFirst();
-			if (pago.isPresent() && pago.get().getMonto().compareTo(BigDecimal.ZERO) > 0) {
-				fact.setTotal(pago.get().getMonto());
-			} else {
-				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(fact.getFolio());
-				if (cfdiDto != null && cfdiDto.getComplemento() != null
-						&& cfdiDto.getComplemento().getPagos() != null) {
-					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
-						fact.setTotal(cfdiPagoDto.getMonto());
-					}
-				}
-			}
-		}
-		return complementos;
-
-	}
-
-	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
-		List<FacturaDto> comlplementos = getComplementos(folio);
+	
+	// TODO REFACTOR CREATE COMPLEMENTO LOGIC
+	public FacturaDto createComplemento(Integer idCfdi, PagoDto pagoDto) throws InvoiceManagerException {
+		
+		List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);
+		
 		BigDecimal saldo = new BigDecimal(0);
 		saldo=saldo.add(pagoDto.getMonto());
-		for (FacturaDto complemento : comlplementos) {
+		for (CfdiPagoDto complemento : pagosPPD) {
 			CfdiDto cfdiDto=cfdiService.getCfdiByFolio(complemento.getFolio());
 			if (cfdiDto != null && cfdiDto.getComplemento() != null
 					&& cfdiDto.getComplemento().getPagos() != null) {
@@ -305,33 +287,35 @@ public class FacturaService {
 				}
 			}
 		}
-		FacturaDto facturaPadre = getFacturaByFolio(folio);
-		if (saldo.compareTo(facturaPadre.getCfdi().getTotal()) > 0) {
-			throw new InvoiceManagerException("Incosistencia en el saldo de la factura", HttpStatus.CONFLICT.value());
-		} else {
-			return generateComplemento(facturaPadre, pagoDto);
-		}
+		return null;
+//		if (saldo.compareTo(facturaPadre.getCfdi().getTotal()) > 0) {
+//			throw new InvoiceManagerException("Incosistencia en el saldo de la factura", HttpStatus.CONFLICT.value());
+//		} else {
+//			return generateComplemento(facturaPadre, pagoDto);
+//		}
 	}
 
-	public BigDecimal getFacturaSaldo(String folio) throws InvoiceManagerException {
-		FacturaDto factura = getFacturaByFolio(folio);
-		if (factura.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
-				&& factura.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
-			List<FacturaDto> comlplementos = getComplementos(folio);
-			BigDecimal saldo = new BigDecimal(0);
-			for (FacturaDto complemento : comlplementos) {
-				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
-				if (cfdiDto != null && cfdiDto.getComplemento() != null
-						&& cfdiDto.getComplemento().getPagos() != null) {
-					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
-						saldo = saldo.add(cfdiPagoDto.getMonto());
-					}
-				}
-			}
-			return factura.getTotal().subtract(saldo);
-		} else {
-			return new BigDecimal(0);
-		}
+	// TODO Maybe this service is not needed with last changes
+	public BigDecimal getFacturaSaldo(Integer idCfdi) throws InvoiceManagerException {
+		CfdiDto cfdi = cfdiService.getCfdibyId(idCfdi);
+//		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
+//				&& factura.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+//			List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);
+//			BigDecimal saldo = new BigDecimal(0);
+//			for (CfdiPagoDto complemento : pagosPPD) {
+//				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
+//				if (cfdiDto != null && cfdiDto.getComplemento() != null
+//						&& cfdiDto.getComplemento().getPagos() != null) {
+//					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
+//						saldo = saldo.add(cfdiPagoDto.getMonto());
+//					}
+//				}
+//			}
+//			return factura.getTotal().subtract(saldo);
+//		} else {
+//			return new BigDecimal(0);
+//		}
+		return new BigDecimal(0);
 	}
 
 	// TIMBRADO
@@ -387,40 +371,42 @@ public class FacturaService {
 		return facturaContext;
 	}
 
+	//TODO review cancelation logic
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
-		validator.validateTimbrado(facturaDto, folio);
-		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")
-				|| facturaDto.getFolioPadre() == null) {
-			List<FacturaDto> complementos = getComplementos(folio);
-			for (FacturaDto complemento : complementos) {
-				if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
-					cancelarFactura(complemento.getFolio(), complemento);
-				} else {
-					if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
-						complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
-						updateFactura(complemento, complemento.getFolio());
-					}
-				}
-			}
-		}
-		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
-		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
-		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-		case SW_SAPIENS:
-			swSapinsExecutorService.cancelarFactura(facturaContext);
-			break;
-		case FACTURACION_MODERNA:
-			facturacionModernaExecutor.cancelarFactura(facturaContext);
-			break;
-		case NTLINK:
-			ntinkExecutorService.cancelarFactura(facturaContext);
-			break;
-		default:
-			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
-					HttpStatus.BAD_REQUEST.value());
-		}
-		timbradoExecutorService.updateCanceladoValues(facturaContext);
-		return facturaContext;
+		
+//		validator.validateTimbrado(facturaDto, folio);
+//		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")) {
+//			List<FacturaDto> complementos = getComplementos(folio);
+//			for (FacturaDto complemento : complementos) {
+//				if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+//					cancelarFactura(complemento.getFolio(), complemento);
+//				} else {
+//					if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+//						complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
+//						updateFactura(complemento, complemento.getFolio());
+//					}
+//				}
+//			}
+//		}
+//		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
+//		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
+//		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+//		case SW_SAPIENS:
+//			swSapinsExecutorService.cancelarFactura(facturaContext);
+//			break;
+//		case FACTURACION_MODERNA:
+//			facturacionModernaExecutor.cancelarFactura(facturaContext);
+//			break;
+//		case NTLINK:
+//			ntinkExecutorService.cancelarFactura(facturaContext);
+//			break;
+//		default:
+//			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+//					HttpStatus.BAD_REQUEST.value());
+//		}
+//		timbradoExecutorService.updateCanceladoValues(facturaContext);
+//		return facturaContext;
+		return null;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

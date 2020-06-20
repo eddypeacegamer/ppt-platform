@@ -5,8 +5,6 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.Timbrado;
 
@@ -20,13 +18,14 @@ public class FacturaDatosValidationRule {
 				|| fc.getFacturaDto().getUuid() != null) {
 			return true;
 		} else {
-			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
-				return fc.getFacturaDto().getFolioPadre() != null;
-			}
-			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
-				return fc.getFacturaDto().getFolioPadre() == null
-						&& MetodosPagoEnum.PPD.name().equals(fc.getFacturaDto().getCfdi().getMetodoPago());
-			}
+			// TODO Validate if this rules are  needed  with refactor
+//			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+//				return fc.getFacturaDto().getFolioPadre() != null;
+//			}
+//			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+//				return fc.getFacturaDto().getFolioPadre() == null
+//						&& MetodosPagoEnum.PPD.name().equals(fc.getFacturaDto().getCfdi().getMetodoPago());
+//			}
 			return true;// invalid document type
 		}
 	}

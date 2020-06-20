@@ -60,11 +60,6 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		return this;
 	}
 
-	public FacturaBuilder setFolioPadre(String folioPadre) {
-		instance.setFolioPadre(folioPadre);
-		return this;
-	}
-	
 	public FacturaBuilder setCfdi(CfdiDto cfdi) {
 		if(cfdi==null) {
 			instance.setCfdi(new CfdiDto());

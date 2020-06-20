@@ -61,7 +61,6 @@ public class PagoService {
 	@Autowired
 	private FacturaService facturaService;
 
-
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
 	public Page<PagoDto> getPaginatedPayments(Optional<String> folio, Optional<String> acredor, Optional<String> deudor,
@@ -91,55 +90,12 @@ public class PagoService {
 				result.getTotalElements());
 	}
 
-	public List<PagoDto> findPagosByFolioPadre(String folio) {
-		return mapper.getPagosDtoFromEntities(repository.findByFolioPadre(folio));
-	}
 	
 	public List<PagoDto> findPagosByFolio(String folio) {
 		return mapper.getPagosDtoFromEntities(repository.findByFolio(folio));
 	}
 
-	public Page<PagoDto> getIngresosPaginados(String formaPago, String status, String banco, String cuenta, Date since,
-			Date to, int page, int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		log.info("Search ingresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
-				start, end);
-		Page<Pago> result = repository.findIngresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
-				start, end, PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
-
-		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-
-	public Page<PagoDto> getEgresosPaginados(String formaPago, String status, String banco, String cuenta, Date since,
-			Date to, int page, int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		log.info("Search egresos by status {}, formapago {}, banco {} and start {} y end {}", status, formaPago, banco,
-				start, end);
-		Page<Pago> result = repository.findEgresosByFilterParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), String.format("%%%s%%", cuenta),
-				start, end, PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
-
-		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
-	}
-
-	public Double getSumaIngresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		return repository.sumIngresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
-				String.format("%%%s%%", cuenta), start, end);
-	}
-
-	public Double getSumaEgresosbyParams(String formaPago, String banco, String cuenta, Date since, Date to) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		return repository.sumEgresosByFilterParams(String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
-				String.format("%%%s%%", cuenta), start, end);
-	}
+	
 
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
 		Optional<Pago> payment = repository.findById(id);
@@ -217,30 +173,30 @@ public class PagoService {
 	}
 	
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public PagoDto updateMontoPago(Integer id, PagoDto pago) throws InvoiceManagerException {
+	public PagoDto updateMontoPago(Integer id, PagoDto pago) {
 		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", id)));
 		entity.setMonto(pago.getMonto());
 		return mapper.getPagoDtoFromEntity(repository.save(entity));
 	}
 
-	public void deletePago(String folio, Integer id) throws InvoiceManagerException {
-		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
-				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value())));
-		FacturaDto factura = facturaService.getBaseFacturaByFolio(payment.getFolio());
-		List<PagoDto> payments = findPagosByFolioPadre(folio);
-		pagoEvaluatorService.deletepaymentValidation(payment, factura);
-		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
-	}
-
-	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
-		List<Pago> pagos = repository.findByFolio(folio);
-		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))
-				.findFirst();
-		if (pago.isPresent()) {
-			Pago entity = pago.get();
-			entity.setMonto(entity.getMonto().subtract(pagoDto.getMonto()));
-			repository.save(entity);
-		}
-	}
+//	public void deletePago(String folio, Integer id) throws InvoiceManagerException {
+//		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
+//				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value())));
+//		FacturaDto factura = facturaService.getBaseFacturaByFolio(payment.getFolio());
+//		List<PagoDto> payments = findPagosByFolioPadre(folio);
+//		pagoEvaluatorService.deletepaymentValidation(payment, factura);
+//		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
+//	}
+//
+//	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
+//		List<Pago> pagos = repository.findByFolio(folio);
+//		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))
+//				.findFirst();
+//		if (pago.isPresent()) {
+//			Pago entity = pago.get();
+//			entity.setMonto(entity.getMonto().subtract(pagoDto.getMonto()));
+//			repository.save(entity);
+//		}
+//	}
 }

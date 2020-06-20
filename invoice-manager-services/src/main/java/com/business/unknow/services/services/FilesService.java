@@ -153,7 +153,8 @@ public class FilesService {
 	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi) throws InvoiceCommonException {
 
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder()
-				.setFactura(getCfdiModelFromFacturaDto(facturaDto)).setFolioPadre(facturaDto.getFolioPadre())
+				.setFactura(getCfdiModelFromFacturaDto(facturaDto))
+				//.setFolioPadre(facturaDto.getFolioPadre()) Recuperar folio padre del CFDI
 				.setQr(getQRData(facturaDto.getFolio()))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
@@ -183,13 +184,14 @@ public class FilesService {
 
 		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
-		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
-			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
-			BigDecimal montoTotal = new BigDecimal(0);
-			for (CfdiPagoDto pago : pagoComplemento) {
-				montoTotal = montoTotal.add(pago.getImportePagado());
-			}
-		}
+		// TODO Recalcular saldo insoluto para pagos multiples
+//		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
+//			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
+//			BigDecimal montoTotal = new BigDecimal(0);
+//			for (CfdiPagoDto pago : pagoComplemento) {
+//				montoTotal = montoTotal.add(pago.getImportePagado());
+//			}
+//		}
 		return fBuilder.build();
 	}
 
@@ -198,7 +200,8 @@ public class FilesService {
 		FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
 		FacturaDto facturaDto = context.getFacturaDto();
 
-		fBuilder.setFactura(getCfdiModelFromContext(context)).setFolioPadre(facturaDto.getFolioPadre())
+		fBuilder.setFactura(getCfdiModelFromContext(context))
+				//.setFolioPadre(facturaDto.getFolioPadre()) recuperar folio padre del CFDI
 				.setQr(getQRData(facturaDto.getFolio()))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(getLogoData(facturaDto.getRfcEmisor()))
@@ -227,14 +230,15 @@ public class FilesService {
 		fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
 		fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
-		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
-			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
-			BigDecimal montoTotal = new BigDecimal(0);
-			for (CfdiPagoDto pago : pagoComplemento) {
-				montoTotal = montoTotal.add(pago.getImportePagado());
-			}
-
-		}
+		// TODO Rehacer logica de calculo de Saldo insoluto en factura
+//		if (facturaDto.getFolioPadre() != null && !facturaDto.getCfdi().getComplemento().getPagos().isEmpty()) {
+//			List<CfdiPagoDto> pagoComplemento = facturaDto.getCfdi().getComplemento().getPagos();
+//			BigDecimal montoTotal = new BigDecimal(0);
+//			for (CfdiPagoDto pago : pagoComplemento) {
+//				montoTotal = montoTotal.add(pago.getImportePagado());
+//			}
+//
+//		}
 		return fBuilder.build();
 	}
 

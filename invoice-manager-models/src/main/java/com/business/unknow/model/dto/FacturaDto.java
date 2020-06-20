@@ -25,7 +25,6 @@ public class FacturaDto implements Serializable {
 	private String tipoDocumento;
 	private String solicitante;
 	private String folio;
-	private String folioPadre;
 	private String uuid;
 	private Integer statusPago;
 	private Integer statusDevolucion;
@@ -126,14 +125,6 @@ public class FacturaDto implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
-	}
-
-	public String getFolioPadre() {
-		return folioPadre;
-	}
-
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
 	}
 
 	public String getUuid() {
@@ -293,15 +284,14 @@ public class FacturaDto implements Serializable {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
-				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", uuid=" + uuid + ", statusPago=" + statusPago + ", statusDevolucion="
-				+ statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", packFacturacion=" + packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas
-				+ ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
-				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
-				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ ", total=" + total + ", cfdi=" + cfdi + "]";
+				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio + ", uuid="
+				+ uuid + ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
+				+ statusFactura + ", statusDetail=" + statusDetail + ", packFacturacion=" + packFacturacion
+				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", fechaCreacion=" + fechaCreacion
+				+ ", statusCancelacion=" + statusCancelacion + ", fechaCancelacion=" + fechaCancelacion
+				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
+				+ ", statusCancelado=" + statusCancelado + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
+				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", cfdi=" + cfdi + "]";
 	}
 
 }

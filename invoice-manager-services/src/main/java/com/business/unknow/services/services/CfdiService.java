@@ -27,7 +27,6 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
-import com.business.unknow.model.dto.services.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
@@ -72,9 +71,6 @@ public class CfdiService {
 
 	@Autowired
 	private RetencionRepository retencionRepository;
-
-	@Autowired
-	private PagoService pagoService;
 
 	@Autowired
 	private CfdiMapper mapper;
@@ -311,15 +307,16 @@ public class CfdiService {
 			ret.setConcepto(conceptoEntity);
 			retencionRepository.save(ret);
 		}
-		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && cfdi.getTotal().compareTo(BigDecimal.ZERO) > 0) {
-			List<PagoDto> pagos = pagoService.findPagosByFolioPadre(cfdi.getFolio());
-			Optional<PagoDto> pagoCredito = pagos.stream().filter(a -> a.getFormaPago().equals("CREDITO")).findFirst();
-			if (pagos.size() == 1 && pagoCredito.isPresent()) {
-				PagoDto pago = pagoCredito.get();
-				pago.setMonto(cfdi.getTotal());
-				pagoService.updateMontoPago(pago.getId(), pago);
-			}
-		}
+		// TODO Talvez esto no sea necesario con el Saldo pendiente de factura
+//		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && cfdi.getTotal().compareTo(BigDecimal.ZERO) > 0) {
+//			List<PagoDto> pagos = pagoService.findPagosByFolioPadre(cfdi.getFolio());
+//			Optional<PagoDto> pagoCredito = pagos.stream().filter(a -> a.getFormaPago().equals("CREDITO")).findFirst();
+//			if (pagos.size() == 1 && pagoCredito.isPresent()) {
+//				PagoDto pago = pagoCredito.get();
+//				pago.setMonto(cfdi.getTotal());
+//				pagoService.updateMontoPago(pago.getId(), pago);
+//			}
+//		}
 		// 4.- recalculate pdf
 		return cfdi;
 	}

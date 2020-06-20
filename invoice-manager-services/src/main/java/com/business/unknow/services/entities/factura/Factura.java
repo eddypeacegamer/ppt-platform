@@ -58,9 +58,6 @@ public class Factura implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
-	@Column(name = "FOLIO_PADRE")
-	private String folioPadre;
-
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
 
@@ -191,14 +188,6 @@ public class Factura implements Serializable {
 
 	public void setFolio(String folio) {
 		this.folio = folio;
-	}
-
-	public String getFolioPadre() {
-		return folioPadre;
-	}
-
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
 	}
 
 	public String getUuid() {
@@ -335,13 +324,12 @@ public class Factura implements Serializable {
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
-				+ ", folioPadre=" + folioPadre + ", metodoPago=" + metodoPago + ", statusPago=" + statusPago
-				+ ", statusDevolucion=" + statusDevolucion + ", statusFactura=" + statusFactura + ", statusDetail="
-				+ statusDetail + ", uuid=" + uuid + ", total=" + total + ", packFacturacion=" + packFacturacion
-				+ ", notas=" + notas + ", fechaActualizacion=" + fechaActualizacion + ", fechaCancelacion="
-				+ fechaCancelacion + ", statusCancelado=" + statusCancelado + ", fechaCreacion=" + fechaCreacion
+				+ ", metodoPago=" + metodoPago + ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion
+				+ ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail + ", uuid=" + uuid + ", total="
+				+ total + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion + ", statusCancelado=" + statusCancelado
+				+ ", fechaCreacion=" + fechaCreacion + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
 				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + "]";
 	}
 
-	
 }
