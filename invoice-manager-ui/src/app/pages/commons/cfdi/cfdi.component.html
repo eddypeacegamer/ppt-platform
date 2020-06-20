@@ -1,7 +1,19 @@
+<div class="clearfix">
+    <button nbButton status="success" size="medium" (click)="updateCfdi()" [nbSpinner]="loading" class="float-right"
+            [disabled]="loading" nbSpinnerStatus="success"  *ngIf="allowEdit && cfdi.id !== undefined"
+            nbSpinnerSize="small" nbSpinnerMessage="">
+            <i class="fa fa-sync"></i>Actualizar CFDI
+    </button>
+</div>
+<div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+  <p *ngFor="let message of errorMessages">{{message}}</p>
+</div>
+<div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
+  {{successMessage}}
+</div>
 <div class="row" *ngIf="cfdi" >
-  <div class="col-md-12 " >
+  <div class="col-md-12">
       <div *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined">
-        <p class="font-weight-bold slide_2">Emisor:</p>
         <div class="row slide_2" >
           <div class="col-sm-3" >
             <label for="rfcEmisor" class="label">RFC Emisor</label>
@@ -10,7 +22,7 @@
           </div>
           <div class="col-sm-9">
             <label for="nombreEmisor" class="label">Nombre Emisor</label>
-            <input id="nombreEmisor" type="text" [(ngModel)]="cfdi?.emisor.nombre" class="form-control" 
+            <input id="nombreEmisor" type="text" [(ngModel)]="cfdi.emisor.nombre" class="form-control" 
             fullWidth  placeholder="Nombre" disabled>
           </div>
         </div>
@@ -25,7 +37,6 @@
       </div>
 
       <div *ngIf="cfdi.receptor && cfdi.receptor.rfc !== undefined">
-        <p class="font-weight-bold slide_2">Receptor:</p>
         <div class="row slide_3">
           <div class="col-sm-3" >
             <label for="rfcReceptor" class="label">RFC Receptor</label>
@@ -50,7 +61,7 @@
       <div class="row slide_4">
         <div class="col-md-2">
           <label for="inputDocType" class="label">Tipo Documento</label>
-          <select id="inputDocType" style="display:block;" class="form-control" [disabled]="!allowEdit" disabled
+          <select id="inputDocType" style="display:block;" class="form-control" disabled
             [(ngModel)]="cfdi.tipoDeComprobante">
             <option value="*">Seleccionar</option>
             <option value="I">Factura Ingreso</option>
@@ -94,7 +105,6 @@
               <option value="USD">Dollar US</option>
             </select>
             <input id="inputChangeType" style=" margin-top: 15px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
-            <button class="btn btn-primary" (click)="updateCfdi()" *ngIf="allowEdit && cfdi.id !== undefined "><i class="fa fa-sync"></i></button>
           </div>
           
         </div>
@@ -104,7 +114,7 @@
     
       <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
     <br>
-    
+
     <div *ngIf="pagos.length>0">
       <p class="font-weight-bold">Complementos</p>
       <br>

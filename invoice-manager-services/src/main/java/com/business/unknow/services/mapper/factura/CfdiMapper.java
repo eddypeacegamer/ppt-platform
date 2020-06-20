@@ -27,6 +27,7 @@ import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 public interface CfdiMapper {
 
 	CfdiDto getCfdiDtoFromEntity(Cfdi entity);
+	
 	@Mappings({ @Mapping(target = "conceptos", ignore = true),
 		@Mapping(target = "emisor", ignore = true), @Mapping(target = "receptor", ignore = true) })
 	Cfdi getEntityFromCfdiDto(CfdiDto dto);

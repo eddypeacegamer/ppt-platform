@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class ReceptorDto implements Serializable {
 
 	private static final long serialVersionUID = 171758513601059506L;
+	private Integer id;
 	private String rfc;
 	private String nombre;
 	private String usoCfdi;
@@ -20,6 +21,14 @@ public class ReceptorDto implements Serializable {
 		this.nombre = nombre;
 		this.usoCfdi = usoCfdi;
 		this.direccion = direccion;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getRfc() {

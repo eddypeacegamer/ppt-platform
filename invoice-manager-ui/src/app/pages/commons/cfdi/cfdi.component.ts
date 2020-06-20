@@ -6,6 +6,7 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Concepto } from '../../../models/factura/concepto';
 import { CfdiData } from '../../../@core/data/cfdi-data';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-cfdi',
@@ -18,6 +19,8 @@ export class CfdiComponent implements OnInit {
   @Input() cfdi: Cfdi;
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
+
+  public loading: boolean = false;
 
   // auxiliar variables
   public newConcep: Concepto;
@@ -36,9 +39,10 @@ export class CfdiComponent implements OnInit {
     //catalogs info
     this.catalogsService.getAllUsoCfdis().then(cat => this.usoCfdiCat = cat);
     this.catalogsService.getFormasPago().then(cat => this.payTypeCat = cat);
-
     this.errorMessages = [];
+    this.successMessage = undefined;
     this.newConcep = new Concepto();
+    this.loading = false;
   }
 
 
@@ -56,7 +60,19 @@ export class CfdiComponent implements OnInit {
   }
 
   updateCfdi() {
-    this.cfdiservice.updateCfdi(this.cfdi).subscribe(cfdi => this.cfdi = cfdi);
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    this.cfdiservice.updateCfdi(this.cfdi)
+      .subscribe(cfdi => {
+        this.cfdi = cfdi;
+        this.loading = false;
+        this.successMessage = "CFDI actualizado correctamente";
+      } , (error: HttpErrorResponse) => {
+        this.loading = false;
+        this.errorMessages.push((error.error != null && error.error !== undefined) ?
+          error.error.message : `${error.statusText} : ${error.message}`);
+      });
   }
 
 }

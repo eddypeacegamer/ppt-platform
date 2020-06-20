@@ -68,7 +68,7 @@
         </div>
 
         
-        <div class="row" *ngIf="factura.folio !== undefined && (factura.statusFactura !== 'Timbrada' || factura.statusFactura !== 'Cancelada')">
+        <div class="row" *ngIf="factura.folio !== undefined && factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada'">
           <div class="col-sm-12">
             <label for="inputdesc" class="label">Descripción Rechazo CFDI</label>
             <input id="statusDetail" class="form-control" fullWidth type="text" placeholder="Motivo rechazo factura"

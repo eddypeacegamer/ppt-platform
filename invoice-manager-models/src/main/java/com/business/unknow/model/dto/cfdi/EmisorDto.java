@@ -6,6 +6,7 @@ public class EmisorDto implements Serializable {
 
 	private static final long serialVersionUID = -6859374411200231323L;
 
+	private Integer id;
 	private String rfc;
 	private String nombre;
 	private String regimenFiscal;
@@ -21,6 +22,14 @@ public class EmisorDto implements Serializable {
 		this.nombre = nombre;
 		this.regimenFiscal = regimenFiscal;
 		this.direccion = direccion;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getRfc() {

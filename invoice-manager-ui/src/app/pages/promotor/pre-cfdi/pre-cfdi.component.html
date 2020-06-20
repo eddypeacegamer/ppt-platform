@@ -65,7 +65,7 @@
           </ngx-cfdi>
         
 
-        <div class="alert alert-danger" *ngIf="factura.statusDetail !== undefined && factura.folio !== undefined" role="alert">
+        <div class="alert alert-danger" *ngIf="factura.statusFactura.indexOf('Rechazo')==0" role="alert">
           <p>{{factura.statusDetail}}</p>
         </div>
         <br>

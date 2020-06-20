@@ -65,7 +65,7 @@ public class CfdiService {
 	private CfdiPagoRepository cfdiPagoRepository;
 
 	@Autowired
-	private ReceptorRepository receptorReceptor;
+	private ReceptorRepository receptorRepository;
 
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
@@ -108,7 +108,7 @@ public class CfdiService {
 			}
 		}
 		if (cfdiDto.getReceptor() == null) {
-			Optional<Receptor> receptor = receptorReceptor.findByIdCfdi(cfdiDto.getId());
+			Optional<Receptor> receptor = receptorRepository.findByIdCfdi(cfdiDto.getId());
 			if (receptor.isPresent()) {
 				cfdiDto.setReceptor(mapper.getRecetorDtoFromEntity(receptor.get()));
 			}
@@ -155,7 +155,7 @@ public class CfdiService {
 		emisorRepository.save(emisor);
 		Receptor receptor = mapper.getEntityFromReceptorDto(cfdi.getReceptor());
 		receptor.setCfdi(entity);
-		receptorReceptor.save(receptor);
+		receptorRepository.save(receptor);
 		for (ConceptoDto concepto : cfdi.getConceptos()) {
 			Concepto conceptoEntity = mapper.getEntityFromConceptoDto(concepto);
 			conceptoEntity.setCfdi(entity);
@@ -189,9 +189,23 @@ public class CfdiService {
 	public CfdiDto updateCfdiBody(Integer id, CfdiDto cfdi) throws InvoiceManagerException {
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
-		repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Error al obtener el Cfdi",
-				String.format("El cfdi con el prefolio %d no existe", id), HttpStatus.NOT_FOUND.value()));
-		return mapper.getCfdiDtoFromEntity(repository.save(mapper.getEntityFromCfdiDto(cfdi)));
+		repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+				String.format("El cfdi con el prefolio %d no existe", id)));
+
+		Emisor emisor = emisorRepository.findById(cfdi.getEmisor().getId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, String
+						.format("EL emisor %s no esta ligado al CFDI %d", cfdi.getEmisor().getRfc(), cfdi.getId())));
+		emisor.setDireccion(cfdi.getEmisor().getDireccion());
+		emisorRepository.save(emisor);
+
+		Receptor receptor = receptorRepository.findById(cfdi.getReceptor().getId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, String.format(
+						"El receptor %s no esta ligado al CFDI %d", cfdi.getReceptor().getRfc(), cfdi.getId())));
+		receptor.setDireccion(cfdi.getReceptor().getDireccion());
+		receptorRepository.save(receptor);
+
+		repository.save(mapper.getEntityFromCfdiDto(cfdi));
+		return cfdi;
 	}
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
