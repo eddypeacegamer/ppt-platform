@@ -50,7 +50,7 @@ public class CfdiController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable Integer id) {
-		return new ResponseEntity<>(cfdiService.getCfdibyId(id), HttpStatus.OK);
+		return new ResponseEntity<>(cfdiService.getCfdiById(id), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}/facturaInfo")

@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.dto.FacturaDto;
@@ -34,7 +32,6 @@ import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Pago;
-import com.business.unknow.services.entities.PagoFactura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
@@ -80,23 +77,23 @@ public class PagoService {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Pago> result = null;
-		if (folio.isPresent()) {
+		//if (folio.isPresent()) {
 			//TODO verify if is posible make finds by folio fact
 //			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
 //					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
-		} else if (acredor.isPresent()) {
-			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
-					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		} else if (deudor.isPresent()) {
-			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
-					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		} else {
+//		} else if (acredor.isPresent()) {
+//			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
+//					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+//					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+//		} else if (deudor.isPresent()) {
+//			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
+//					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+//					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+//		} else {
 			result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		}
+		
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
