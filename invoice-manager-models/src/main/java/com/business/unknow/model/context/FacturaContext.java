@@ -6,9 +6,9 @@ import java.util.List;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
-import com.business.unknow.model.dto.services.PagoDto;
 
 public class FacturaContext implements Serializable {
 

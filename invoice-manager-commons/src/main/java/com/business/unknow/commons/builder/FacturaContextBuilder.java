@@ -5,9 +5,9 @@ import java.util.List;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
-import com.business.unknow.model.dto.services.PagoDto;
 
 public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 

@@ -112,7 +112,7 @@ public class CfdiService {
 		return cfdiDto;
 	}
 
-	public CfdiDto getCfdibyId(Integer id) {
+	public CfdiDto getCfdiById(Integer id) {
 		CfdiDto cfdiDto = mapper.getCfdiDtoFromEntity(
 				repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("El cfdi con folio %d no fue encontrado", id))));

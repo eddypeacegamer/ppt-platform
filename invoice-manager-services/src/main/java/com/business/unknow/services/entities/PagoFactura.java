@@ -12,6 +12,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,10 +35,7 @@ public class PagoFactura {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Integer id;
-	
-	@Column(name = "ID_PAGO")
-	private Integer idPago;
-	
+		
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
 	
@@ -45,6 +44,15 @@ public class PagoFactura {
 	
 	@Column(name = "MONTO")
 	private BigDecimal monto;
+	
+	@Column(name = "TOTAL_FACTURA")
+	private BigDecimal totalFactura;
+	
+	@Column(name = "ACREDOR")
+	private String acredor;
+	
+	@Column(name = "DEUDOR")
+	private String deudor;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -55,6 +63,10 @@ public class PagoFactura {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_PAGO", nullable = false)
+	private Pago pago;
 
 	public Integer getId() {
 		return id;
@@ -62,14 +74,6 @@ public class PagoFactura {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getIdPago() {
-		return idPago;
-	}
-
-	public void setIdPago(Integer idPago) {
-		this.idPago = idPago;
 	}
 
 	public Integer getIdCfdi() {
@@ -114,7 +118,7 @@ public class PagoFactura {
 
 	@Override
 	public String toString() {
-		return "PagoFactura [id=" + id + ", idPago=" + idPago + ", idCfdi=" + idCfdi + ", folio=" + folio + ", monto="
+		return "PagoFactura [id=" + id  + ", idCfdi=" + idCfdi + ", folio=" + folio + ", monto="
 				+ monto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
 	}
 }

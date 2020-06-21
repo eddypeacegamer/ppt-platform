@@ -3,7 +3,7 @@ package com.business.unknow.commons.builder;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.business.unknow.model.dto.services.PagoDevolucionDto;
+import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 
 public class PagoDevolucionBuilder extends AbstractBuilder<PagoDevolucionDto> {
 

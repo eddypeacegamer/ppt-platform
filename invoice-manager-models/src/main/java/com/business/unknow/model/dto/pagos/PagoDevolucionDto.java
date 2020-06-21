@@ -1,4 +1,4 @@
-package com.business.unknow.model.dto.services;
+package com.business.unknow.model.dto.pagos;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.business.unknow.commons.builder.AbstractBuilder;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 
 public class PagoBuilder extends AbstractBuilder<PagoDto> {
 
@@ -42,12 +42,6 @@ public class PagoBuilder extends AbstractBuilder<PagoDto> {
 	return this; }
 	public PagoBuilder setMonto(BigDecimal monto) {
 		instance.setMonto(monto);
-	return this; }
-	public PagoBuilder setAcredor(String acredor) {
-		instance.setAcredor(acredor);
-	return this; }
-	public PagoBuilder setDeudor(String deudor) {
-		instance.setDeudor(deudor);
 	return this; }
 	public PagoBuilder setStatusPago(String statusPago) {
 		instance.setStatusPago(statusPago);

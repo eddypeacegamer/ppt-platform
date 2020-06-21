@@ -8,7 +8,7 @@ import java.util.Date;
 import com.business.unknow.model.dto.PagoReportDto;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 public class PagoReportDtoBuilder extends AbstractBuilder<PagoReportDto> {

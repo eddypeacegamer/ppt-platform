@@ -45,6 +45,7 @@ public class FacturaDto implements Serializable {
 	private String selloCfd;
 	private Integer idCfdi;
 	private BigDecimal total;
+	private BigDecimal saldoPendiente;
 	private CfdiDto cfdi;
 
 	public Integer getId() {
@@ -271,6 +272,14 @@ public class FacturaDto implements Serializable {
 		this.total = total;
 	}
 
+	public BigDecimal getSaldoPendiente() {
+		return saldoPendiente;
+	}
+
+	public void setSaldoPendiente(BigDecimal saldoPendiente) {
+		this.saldoPendiente = saldoPendiente;
+	}
+
 	public String getSelloCfd() {
 		return selloCfd;
 	}
@@ -291,7 +300,7 @@ public class FacturaDto implements Serializable {
 				+ ", statusCancelacion=" + statusCancelacion + ", fechaCancelacion=" + fechaCancelacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
 				+ ", statusCancelado=" + statusCancelado + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
-				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", cfdi=" + cfdi + "]";
+				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", saldoPendiente="
+				+ saldoPendiente + ", cfdi=" + cfdi + "]";
 	}
-
 }

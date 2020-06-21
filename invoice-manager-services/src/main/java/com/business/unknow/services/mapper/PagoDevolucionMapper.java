@@ -3,7 +3,8 @@ package com.business.unknow.services.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import com.business.unknow.model.dto.services.PagoDevolucionDto;
+
+import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.services.entities.PagoDevolucion;
 
 @Mapper

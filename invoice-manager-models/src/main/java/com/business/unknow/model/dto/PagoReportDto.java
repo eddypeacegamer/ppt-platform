@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 public class PagoReportDto extends ReportDto implements Serializable {

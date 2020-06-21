@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 
 @Rule(name = PaymentsSuite.CREATE_CREDIT_VALIDATION_RULE, description = PaymentsSuite.CREATE_CREDIT_VALIDATION)

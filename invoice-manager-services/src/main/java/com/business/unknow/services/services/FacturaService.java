@@ -35,7 +35,7 @@ import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -237,17 +237,18 @@ public class FacturaService {
 					&& factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 			}
-			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
-				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
-				for (PagoDto pago : pagos) {
-					pago.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
-					try {
-						pagoService.updatePago(pago.getFolio(), pago.getId(), pago);
-					} catch (InvoiceManagerException e) {
-						System.out.println("Error updating factura");
-					}
-				}
-			}
+			//TODO review this custom logic
+//			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
+//				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
+//				for (PagoDto pago : pagos) {
+//					pago.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+//					try {
+//						pagoService.updatePago(pago.getFolio(), pago.getId(), pago);
+//					} catch (InvoiceManagerException e) {
+//						System.out.println("Error updating factura");
+//					}
+//				}
+//			}
 			Factura entity = mapper.getEntityFromFacturaDto(factura);
 
 			return mapper.getFacturaDtoFromEntity(repository.save(entity));
@@ -297,7 +298,7 @@ public class FacturaService {
 
 	// TODO Maybe this service is not needed with last changes
 	public BigDecimal getFacturaSaldo(Integer idCfdi) throws InvoiceManagerException {
-		CfdiDto cfdi = cfdiService.getCfdibyId(idCfdi);
+		CfdiDto cfdi = cfdiService.getCfdiById(idCfdi);
 //		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
 //				&& factura.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
 //			List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);

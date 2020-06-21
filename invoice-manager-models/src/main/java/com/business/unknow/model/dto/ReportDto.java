@@ -11,7 +11,7 @@ import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 public class ReportDto implements Serializable{

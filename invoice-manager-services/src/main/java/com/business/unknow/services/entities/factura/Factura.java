@@ -61,12 +61,6 @@ public class Factura implements Serializable {
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
 
-	@Column(name = "STATUS_PAGO")
-	private Integer statusPago;
-
-	@Column(name = "STATUS_DEVOLUCION")
-	private Integer statusDevolucion;
-
 	@Column(name = "STATUS_FACTURA")
 	private Integer statusFactura;
 
@@ -78,6 +72,9 @@ public class Factura implements Serializable {
 	
 	@Column(name = "TOTAL")
 	private BigDecimal total;
+	
+	@Column(name = "SALDO_PENDIENTE")
+	private BigDecimal saldoPendiente;
 
 	@Column(name = "PACK_FACTURACION")
 	private String packFacturacion;
@@ -93,8 +90,6 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CANCELADO")
 	private Date fechaCancelacion;
 
-	@Column(name = "STATUS_CANCELADO")
-	private Integer statusCancelado;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -190,36 +185,12 @@ public class Factura implements Serializable {
 		this.folio = folio;
 	}
 
-	public String getUuid() {
-		return uuid;
+	public String getMetodoPago() {
+		return metodoPago;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-	
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
-
-	public Integer getStatusPago() {
-		return statusPago;
-	}
-
-	public void setStatusPago(Integer statusPago) {
-		this.statusPago = statusPago;
-	}
-
-	public Integer getStatusDevolucion() {
-		return statusDevolucion;
-	}
-
-	public void setStatusDevolucion(Integer statusDevolucion) {
-		this.statusDevolucion = statusDevolucion;
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
 	}
 
 	public Integer getStatusFactura() {
@@ -236,6 +207,30 @@ public class Factura implements Serializable {
 
 	public void setStatusDetail(String statusDetail) {
 		this.statusDetail = statusDetail;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	public BigDecimal getSaldoPendiente() {
+		return saldoPendiente;
+	}
+
+	public void setSaldoPendiente(BigDecimal saldoPendiente) {
+		this.saldoPendiente = saldoPendiente;
 	}
 
 	public String getPackFacturacion() {
@@ -278,30 +273,6 @@ public class Factura implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Integer getIdCfdi() {
-		return idCfdi;
-	}
-
-	public void setIdCfdi(Integer idCfdi) {
-		this.idCfdi = idCfdi;
-	}
-
-	public String getMetodoPago() {
-		return metodoPago;
-	}
-
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
-
-	public Integer getStatusCancelado() {
-		return statusCancelado;
-	}
-
-	public void setStatusCancelado(Integer statusCancelado) {
-		this.statusCancelado = statusCancelado;
-	}
-
 	public String getCadenaOriginalTimbrado() {
 		return cadenaOriginalTimbrado;
 	}
@@ -318,18 +289,26 @@ public class Factura implements Serializable {
 		this.selloCfd = selloCfd;
 	}
 
+	public Integer getIdCfdi() {
+		return idCfdi;
+	}
+
+	public void setIdCfdi(Integer idCfdi) {
+		this.idCfdi = idCfdi;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
-				+ ", metodoPago=" + metodoPago + ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion
-				+ ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail + ", uuid=" + uuid + ", total="
-				+ total + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
-				+ fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion + ", statusCancelado=" + statusCancelado
-				+ ", fechaCreacion=" + fechaCreacion + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
-				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + "]";
+				+ ", metodoPago=" + metodoPago + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
+				+ ", uuid=" + uuid + ", total=" + total + ", SaldoPendiente=" + saldoPendiente + ", packFacturacion="
+				+ packFacturacion + ", notas=" + notas + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
+				+ "]";
 	}
 
 }

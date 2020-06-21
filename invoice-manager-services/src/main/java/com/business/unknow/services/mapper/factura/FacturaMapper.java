@@ -4,7 +4,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.services.entities.Pago;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;

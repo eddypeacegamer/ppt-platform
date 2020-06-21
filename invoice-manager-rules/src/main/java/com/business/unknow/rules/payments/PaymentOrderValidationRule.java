@@ -7,7 +7,7 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 
 @Rule(name = PaymentsSuite.ORDER_PAYMENT_VALIDATION_RULE, description = PaymentsSuite.ORDER_PAYMENT_VALIDATION_RULE_DESC)

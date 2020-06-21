@@ -23,7 +23,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
-import com.business.unknow.model.dto.services.PagoDevolucionDto;
+import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;

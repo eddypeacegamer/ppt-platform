@@ -3,6 +3,7 @@ package com.business.unknow.services.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,12 +33,6 @@ public class Pago implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PAGO")
 	private Integer id;
-
-	@Column(name = "FOLIO")
-	private String folio;
-
-	@Column(name = "FOLIO_PADRE")
-	private String folioPadre;
 
 	@NotEmpty
 	@Column(name = "MONEDA")
@@ -61,17 +57,6 @@ public class Pago implements Serializable {
 
 	@Column(name = "MONTO")
 	private BigDecimal monto;
-
-	@Column(name = "TOTAL")
-	private BigDecimal total;
-
-	@NotEmpty
-	@Column(name = "ACREDOR")
-	private String acredor;
-
-	@NotEmpty
-	@Column(name = "DEUDOR")
-	private String deudor;
 
 	@Column(name = "STATUS_PAGO")
 	private String statusPago;
@@ -106,6 +91,9 @@ public class Pago implements Serializable {
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
+	
+	@OneToMany(mappedBy = "pago")
+	private List<PagoFactura> facturas;
 
 	public Integer getId() {
 		return id;
@@ -113,22 +101,6 @@ public class Pago implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getFolio() {
-		return folio;
-	}
-
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
-
-	public String getFolioPadre() {
-		return folioPadre;
-	}
-
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
 	}
 
 	public String getMoneda() {
@@ -177,22 +149,6 @@ public class Pago implements Serializable {
 
 	public void setMonto(BigDecimal monto) {
 		this.monto = monto;
-	}
-
-	public String getAcredor() {
-		return acredor;
-	}
-
-	public void setAcredor(String acredor) {
-		this.acredor = acredor;
-	}
-
-	public String getDeudor() {
-		return deudor;
-	}
-
-	public void setDeudor(String deudor) {
-		this.deudor = deudor;
 	}
 
 	public String getStatusPago() {
@@ -275,22 +231,21 @@ public class Pago implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public BigDecimal getTotal() {
-		return total;
+	public List<PagoFactura> getFacturas() {
+		return facturas;
 	}
 
-	public void setTotal(BigDecimal total) {
-		this.total = total;
+	public void setFacturas(List<PagoFactura> facturas) {
+		this.facturas = facturas;
 	}
 
 	@Override
 	public String toString() {
-		return "Pago [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda + ", banco="
-				+ banco + ", cuenta=" + cuenta + ", tipoDeCambio=" + tipoDeCambio + ", formaPago=" + formaPago
-				+ ", monto=" + monto + ", total=" + total + ", acredor=" + acredor + ", deudor=" + deudor
-				+ ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante
-				+ ", revision1=" + revision1 + ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2="
-				+ revisor2 + ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + "]";
+		return "Pago [id=" + id + ", moneda=" + moneda + ", banco=" + banco + ", cuenta=" + cuenta + ", tipoDeCambio="
+				+ tipoDeCambio + ", formaPago=" + formaPago + ", monto=" + monto + ", statusPago=" + statusPago
+				+ ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1=" + revision1
+				+ ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago="
+				+ fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", facturas=" + facturas + "]";
 	}
 }

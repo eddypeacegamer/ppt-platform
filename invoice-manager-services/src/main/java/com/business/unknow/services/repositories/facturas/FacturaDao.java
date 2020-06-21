@@ -22,7 +22,7 @@ import com.business.unknow.services.repositories.rowmappers.PagoReportDtoRowMapp
 import com.business.unknow.services.repositories.rowmappers.PagoReportDtoRsExtractor;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 

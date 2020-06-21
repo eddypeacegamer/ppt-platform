@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 
 @Rule(name = PaymentsSuite.MONTO_PAGO_VALIDATION_RULE, description = PaymentsSuite.MONTO_PAGO_VALIDATION)

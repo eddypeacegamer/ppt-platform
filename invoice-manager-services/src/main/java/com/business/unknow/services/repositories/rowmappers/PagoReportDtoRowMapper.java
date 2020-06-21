@@ -12,7 +12,7 @@ import com.business.unknow.commons.builder.PagoReportDtoBuilder;
 import com.business.unknow.model.dto.PagoReportDto;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 public class PagoReportDtoRowMapper implements RowMapper<PagoReportDto> {

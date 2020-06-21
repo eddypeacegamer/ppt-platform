@@ -7,8 +7,10 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.services.entities.Pago;
+import com.business.unknow.services.entities.PagoFactura;
 
 /**
  *@author ralfdemoledor
@@ -23,5 +25,15 @@ public interface PagoMapper {
 	
 	public Pago getEntityFromPagoDto(PagoDto pago);
 	public List<Pago> getEntitiesFromDtos(List<PagoDto> pagos);
+	
+	
+	public PagoFacturaDto getPagoFacturaDtoFromEntity(PagoFactura pago);
+	public List<PagoFacturaDto> getPagosFacturaDtoFromEntities(List<PagoFactura> pagos);
+	
+	public PagoFactura getEntityFromPagoFacturaDto(PagoFacturaDto pago);
+	public List<PagoFactura> getEntitiesFromPagosFacturaDtos(List<PagoFacturaDto> pagos);
+	
+	
+	
 
 }

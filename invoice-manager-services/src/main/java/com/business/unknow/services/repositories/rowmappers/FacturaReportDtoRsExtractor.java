@@ -14,7 +14,7 @@ import com.business.unknow.commons.builder.FacturaReportDtoBuilder;
 import com.business.unknow.model.dto.FacturaReportDto;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 public class FacturaReportDtoRsExtractor implements ResultSetExtractor<Optional<FacturaReportDto>>{

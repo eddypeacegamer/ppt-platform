@@ -1,6 +1,6 @@
 package com.business.unknow.commons.validator;
 
-import com.business.unknow.model.dto.services.PagoDevolucionDto;
+import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
 public class DevolucionValidator extends AbstractValidator{

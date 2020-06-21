@@ -10,7 +10,7 @@ import org.jeasy.rules.annotation.Rule;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.DeletePagoSuite;
 
 @Rule(name = DeletePagoSuite.DELETE_CREDIT_PAYMANT_RULE, description = DeletePagoSuite.DELETE_CREDIT_PAYMANT_RULE_DESC)

@@ -11,7 +11,7 @@ import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
 public class FacturaDefaultValues {
@@ -32,8 +32,6 @@ public class FacturaDefaultValues {
 	public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
 		return new PagoBuilder().setBanco(PagoPpdCreditoDefaults.BANCO)
 				.setSolicitante(PagoPpdCreditoDefaults.USER)
-				.setAcredor(cfdi.getEmisor().getRfc())
-				.setDeudor(cfdi.getReceptor().getRfc())
 				.setCuenta(PagoPpdCreditoDefaults.CUENTA)
 				.setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
 				.setFechaPago(new Date()).setFolio(cfdi.getFolio()).setFolioPadre(cfdi.getFolio())

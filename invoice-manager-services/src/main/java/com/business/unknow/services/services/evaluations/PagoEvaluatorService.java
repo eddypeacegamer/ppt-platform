@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.business.unknow.commons.validator.AbstractValidator;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.services.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
 import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
@@ -47,11 +47,10 @@ public class PagoEvaluatorService extends AbstractValidator {
 		}
 	}
 
-	public void validatePaymentCreation(PagoDto currentPayment, List<PagoDto> payments,CfdiDto cfdi) throws InvoiceManagerException {
+	public void validatePaymentCreation(PagoDto currentPayment,CfdiDto cfdi) throws InvoiceManagerException {
 		Facts facts = new Facts();
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		facts.put("currentPayment", currentPayment);
-		facts.put("payments", payments);
 		facts.put("cfdi", cfdi);
 		facts.put("results", results);
 		
@@ -61,9 +60,9 @@ public class PagoEvaluatorService extends AbstractValidator {
 		}
 	}
 
-	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment, List<PagoDto> payments,FacturaDto factura) throws InvoiceManagerException {
+	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment,FacturaDto factura) throws InvoiceManagerException {
 		Facts facts = new Facts();
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		facts.put("currentPayment", currentPayment);
 		facts.put("dbPayment", dbPayment);
 		facts.put("factura", factura);
@@ -77,12 +76,11 @@ public class PagoEvaluatorService extends AbstractValidator {
 	
 	
 	public void validatePayment(PagoDto dto) throws InvoiceManagerException {
-		checkNotNull(dto.getAcredor(), "Acredor");
+		//checkNotNull(dto.getAcredor(), "Acredor");
+		//checkNotNull(dto.getDeudor(), "Deudor");
 		checkNotNull(dto.getBanco(), "Banco");
 		checkNotNull(dto.getCuenta(), "Cuenta");
-		checkNotNull(dto.getDeudor(), "Deudor");
 		checkNotNull(dto.getFechaPago(), "Fecha de pago");
-		checkNotNull(dto.getFolio(), "Folio factura");
 		checkNotNull(dto.getFormaPago(), "Forma de pago");
 		checkNotNull(dto.getMoneda(), "Moneda");
 		checkNotNull(dto.getMonto(), "Monto");

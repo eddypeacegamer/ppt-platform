@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.business.unknow.model.dto.services.PagoDto;
+
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.PagoService;
 
@@ -61,6 +62,12 @@ public class PagosController {
 	public ResponseEntity<PagoDto> getPagoById(@PathVariable(name = "idPago") Integer idPago)
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.getPaymentById(idPago), HttpStatus.OK);
+	}
+	
+	
+	@PostMapping
+	public ResponseEntity<PagoDto> insertPago( @RequestBody  @Valid PagoDto pago) throws InvoiceManagerException{
+		return new ResponseEntity<>(pagoService.insertNewPayment(pago), HttpStatus.CREATED);
 	}
 	
 	

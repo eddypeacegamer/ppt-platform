@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 //@Entity
