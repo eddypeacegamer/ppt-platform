@@ -26,7 +26,6 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.PagoStatusEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -66,9 +65,6 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaMapper mapper;
-
-	@Autowired
-	private PagoService pagoService;
 
 	@Autowired
 	private TimbradoEvaluatorService timbradoServiceEvaluator;
@@ -221,11 +217,8 @@ public class FacturaService {
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
 		entity.setIdCfdi(cfdi.getId());
 		entity.setTotal(cfdi.getTotal());
+		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		if (entity.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-			pagoService.insertNewPaymentWithoutValidation(
-					facturaDefaultValues.assignaDefaultsPagoPPD(facturaBuilded.getCfdi()));
-		}
 		fileService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;

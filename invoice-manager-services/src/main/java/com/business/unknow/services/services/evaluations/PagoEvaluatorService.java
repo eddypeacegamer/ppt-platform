@@ -13,6 +13,7 @@ import com.business.unknow.commons.validator.AbstractValidator;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
 import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
@@ -76,8 +77,6 @@ public class PagoEvaluatorService extends AbstractValidator {
 	
 	
 	public void validatePayment(PagoDto dto) throws InvoiceManagerException {
-		//checkNotNull(dto.getAcredor(), "Acredor");
-		//checkNotNull(dto.getDeudor(), "Deudor");
 		checkNotNull(dto.getBanco(), "Banco");
 		checkNotNull(dto.getCuenta(), "Cuenta");
 		checkNotNull(dto.getFechaPago(), "Fecha de pago");
@@ -87,6 +86,13 @@ public class PagoEvaluatorService extends AbstractValidator {
 		checkNotNull(dto.getSolicitante(), "Solicitante");
 		checkNotNull(dto.getStatusPago(), "Estatus de pago");
 		checkNotNull(dto.getTipoDeCambio(), "Tipo de cambio");
+		if(!dto.getFacturas().isEmpty()) {
+			for (PagoFacturaDto fact : dto.getFacturas()) {
+				checkNotNull(fact.getFolio(), "Folio factura");
+				checkNotEmpty(fact.getFolio(), "Folio factura");
+				checkNotNull(fact.getMonto(), "Monto pago");
+			}
+		}
 	}
 	
 	

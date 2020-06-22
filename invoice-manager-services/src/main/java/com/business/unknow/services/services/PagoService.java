@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.FormaPagoEnum;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -48,8 +49,7 @@ public class PagoService {
 
 	@Autowired
 	private PagoRepository repository;
-	
-	
+
 	@Autowired
 	private PagoFacturaRepository facturaPagosRepository;
 
@@ -59,13 +59,12 @@ public class PagoService {
 	@Autowired
 	private PagoEvaluatorService pagoEvaluatorService;
 
-
 	@Autowired
 	private PagoExecutorService pagoExecutorService;
 
 	@Autowired
 	private FacturaService facturaService;
-	
+
 	@Autowired
 	private CfdiService cfdiService;
 
@@ -77,8 +76,8 @@ public class PagoService {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Pago> result = null;
-		//if (folio.isPresent()) {
-			//TODO verify if is posible make finds by folio fact
+		// if (folio.isPresent()) {
+		// TODO verify if is posible make finds by folio fact
 //			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
 //					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
 //		} else if (acredor.isPresent()) {
@@ -90,21 +89,17 @@ public class PagoService {
 //					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
 //					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 //		} else {
-			result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
-					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		
+		result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
+				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
-	
 	public List<PagoFacturaDto> findPagosByFolio(String folio) {
 		return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
 	}
-
-	
 
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
 		Optional<Pago> payment = repository.findById(id);
@@ -122,30 +117,34 @@ public class PagoService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPayment(PagoDto pagoDto) throws InvoiceManagerException {
-		//1.- validate fields required
-		//2.- validate if payment is credit or real payment
-		//3.- Validate payment amount can't be greater than invoice total
-		//4.- Populate invoice total in payment
-		//5.- PPD crean en automatico complemento
 		
+		// Validate fields required
 		pagoEvaluatorService.validatePayment(pagoDto);
-		
-		for (PagoFacturaDto factura : pagoDto.getFacturas()) {
-			CfdiDto cfdi = cfdiService.getCfdiById(factura.getIdCfdi());
-			factura.setAcredor(cfdi.getEmisor().getNombre());
-			factura.setDeudor(cfdi.getReceptor().getNombre());
-			factura.setTotalFactura(cfdi.getTotal());
+		//  TODO Apply validation rules
+		// - payments sum should be equal to payment ammount
+		// - 0 or negative payments are invalid
+		for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
+			// find factura by folio factura
+			FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+			//Populate missing information
+			pagoFact.setAcredor(factura.getRazonSocialEmisor());
+			pagoFact.setDeudor(factura.getRazonSocialRemitente());
+			pagoFact.setTotalFactura(factura.getTotal());
+			pagoFact.setIdCfdi(factura.getIdCfdi());
+			if (MetodosPagoEnum.PPD.name().equals(factura.getMetodoPago())) {
+				// PPD crean en automatico complemento
+				log.info("Generando complemento para CFDI : {}", factura.getIdCfdi());
+				facturaService.generateComplemento(factura, pagoDto);
+			}
+			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())) {
+				log.info("Updating saldo pendiente factura");
+				factura.setSaldoPendiente(factura.getSaldoPendiente().subtract(pagoFact.getMonto()));
+				facturaService.updateFactura(factura, factura.getFolio());
+			}
 		}
-		// TODO refactor logic for  insert payment
-//		
-//		pagoEvaluatorService.validatePaymentCreation(pagoDto,facturaPadre.getCfdi());
-//		if (facturaPadre.getCfdi().getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-//			FacturaDto complemento = facturaService.generateComplemento(facturaPadre, pagoDto);
-//			pagoDto.setFolio(complemento.getFolio()); //Override folio payment
-//		} 
-		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));//pagoExecutorService.createPagoExecutor(pagoDto, payments);
+		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));
 	}
-	
+
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto updatePago(String folio, Integer id, PagoDto pago) throws InvoiceManagerException {
 		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -157,10 +156,9 @@ public class PagoService {
 		pagoEvaluatorService.validatePayment(pago);
 
 		pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), factura);
-		
-		if (entity.getRevision1()&&entity.getRevision2()) {
-			throw new InvoiceManagerException(
-					"Incongruencia en la validacion de pagos ya se valido dos veces ",
+
+		if (entity.getRevision1() && entity.getRevision2()) {
+			throw new InvoiceManagerException("Incongruencia en la validacion de pagos ya se valido dos veces ",
 					"Incongruencia de pago.", HttpStatus.CONFLICT.value());
 		} else if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
 			if (entity.getRevision1() && entity.getRevision2()) {
@@ -184,7 +182,7 @@ public class PagoService {
 
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}
-	
+
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto updateMontoPago(Integer id, PagoDto pago) {
 		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
