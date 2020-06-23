@@ -35,7 +35,7 @@ public class PagoEvaluatorService extends AbstractValidator {
 	private PaymentUpdateSuite updateSuite;
 
 
-	public void deletepaymentValidation(PagoDto payment,FacturaDto factura) throws InvoiceManagerException {
+	public void deletepaymentValidation(PagoDto payment,FacturaDto factura,List<FacturaDto> facturas) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<String>();
 		facts.put("payment", payment);
@@ -61,12 +61,12 @@ public class PagoEvaluatorService extends AbstractValidator {
 		}
 	}
 
-	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment,FacturaDto factura) throws InvoiceManagerException {
+	public void validatePaymentUpdate(PagoDto currentPayment,PagoDto dbPayment,List<FacturaDto> facturas) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
-		facts.put("currentPayment", currentPayment);
+		facts.put("payment", currentPayment);
 		facts.put("dbPayment", dbPayment);
-		facts.put("factura", factura);
+		facts.put("facturas", facturas);
 		facts.put("results", results);
 		
 		rulesEngine.fire(updateSuite.getSuite(), facts);

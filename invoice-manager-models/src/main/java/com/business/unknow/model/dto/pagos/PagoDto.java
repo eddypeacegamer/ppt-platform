@@ -17,8 +17,6 @@ public class PagoDto implements Serializable {
 	private static final long serialVersionUID = -8495281362684756977L;
 
 	private Integer id;
-	private String folio;
-	private String folioPadre;
 	private String moneda;
 	private String banco;
 	private String cuenta;
@@ -47,22 +45,6 @@ public class PagoDto implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getFolio() {
-		return folio;
-	}
-
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
-
-	public String getFolioPadre() {
-		return folioPadre;
-	}
-
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
 	}
 
 	public String getMoneda() {
@@ -203,12 +185,11 @@ public class PagoDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PagoDto [id=" + id + ", folio=" + folio + ", folioPadre=" + folioPadre + ", moneda=" + moneda
-				+ ", banco=" + banco + ", cuenta=" + cuenta + ", tipoDeCambio=" + tipoDeCambio + ", formaPago="
-				+ formaPago + ", monto=" + monto + ", statusPago=" + statusPago + ", comentarioPago=" + comentarioPago
-				+ ", solicitante=" + solicitante + ", revision1=" + revision1 + ", revision2=" + revision2
-				+ ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago=" + fechaPago + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", facturas=" + facturas + "]";
-	}
-		
+		return "PagoDto [id=" + id + ", moneda=" + moneda + ", banco=" + banco + ", cuenta=" + cuenta
+				+ ", tipoDeCambio=" + tipoDeCambio + ", formaPago=" + formaPago + ", monto=" + monto + ", statusPago="
+				+ statusPago + ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1="
+				+ revision1 + ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2
+				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
+				+ fechaActualizacion + ", facturas=" + facturas + "]";
+	}	
 }

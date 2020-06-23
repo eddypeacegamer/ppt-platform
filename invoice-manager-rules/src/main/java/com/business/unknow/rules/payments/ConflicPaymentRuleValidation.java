@@ -12,6 +12,7 @@ import org.jeasy.rules.annotation.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 
@@ -25,7 +26,7 @@ public class ConflicPaymentRuleValidation {
 	private static final Logger log  = LoggerFactory.getLogger(ConflicPaymentRuleValidation.class); 
 	
 	@Condition
-	public boolean condition(@Fact("currentPayment") PagoDto currentPayment,
+	public boolean condition(@Fact("payment") PagoDto currentPayment,
 			@Fact("dbPayment") PagoDto dbPayment,@Fact("results") List<String>results) {	
 		
 		if(currentPayment.getRevisor1()!=null) {
@@ -41,6 +42,11 @@ public class ConflicPaymentRuleValidation {
 				return true;
 			}
 		}
+		if (dbPayment.getRevision1() && dbPayment.getRevision2() && currentPayment.getRevision1() && currentPayment.getRevision2() ) {
+			results.add("Incongruencia en la validacion de pagos, el pago ya fue aceptado previamente.");
+			return true;
+		}
+		
 		if (dbPayment.getRevision1() && !currentPayment.getRevision2()&&!currentPayment.getRevision1().equals(dbPayment.getRevision1())) {
 			results.add("Ya se realizo la primera validacion.");
 			return true;
@@ -51,6 +57,10 @@ public class ConflicPaymentRuleValidation {
 		}
 		if(currentPayment.getRevision1() && currentPayment.getRevision2() && !dbPayment.getRevision1() && !dbPayment.getRevision2()) {
 			results.add("Inconsistencia en los estatus de validacion, un pago no puede ser validado doblemente");
+			return true;
+		}
+		if (RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago()) && dbPayment.getRevision1() && dbPayment.getRevision2()) {
+			results.add("No puede ser rechazado un pago que ya fue aprobado");
 			return true;
 		}
 		if( dbPayment.getId()!=null && currentPayment.getRevisor1() == null && currentPayment.getRevision2() == null) {

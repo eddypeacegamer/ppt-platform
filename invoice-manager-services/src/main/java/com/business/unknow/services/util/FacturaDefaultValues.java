@@ -34,7 +34,7 @@ public class FacturaDefaultValues {
 				.setSolicitante(PagoPpdCreditoDefaults.USER)
 				.setCuenta(PagoPpdCreditoDefaults.CUENTA)
 				.setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
-				.setFechaPago(new Date()).setFolio(cfdi.getFolio()).setFolioPadre(cfdi.getFolio())
+				.setFechaPago(new Date())
 				.setFormaPago(PagoPpdCreditoDefaults.FORMA_PAGO).setMoneda(PagoPpdCreditoDefaults.MONEDA)
 				.setMonto(cfdi.getTotal()).setRevision1(false).setRevision2(false)
 				.setTipoDeCambio(new BigDecimal(PagoPpdCreditoDefaults.TIPO_CAMBIO))

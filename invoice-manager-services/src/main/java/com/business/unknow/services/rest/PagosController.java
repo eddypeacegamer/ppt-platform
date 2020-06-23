@@ -4,7 +4,6 @@
 package com.business.unknow.services.rest;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -70,35 +69,20 @@ public class PagosController {
 		return new ResponseEntity<>(pagoService.insertNewPayment(pago), HttpStatus.CREATED);
 	}
 	
+	@PutMapping("/{idPago}")
+	public ResponseEntity<PagoDto> updatePago(@PathVariable(name = "idPago") Integer idPago,
+			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
+		return new ResponseEntity<>(pagoService.updatePago(idPago,pagoDto), HttpStatus.OK);
+	}
 	
-	// PAGOS
-	//TODO refactor pagos controller
-//		@GetMapping("/{folio}/pagos")
-//		@Deprecated
-//		public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
-//			return new ResponseEntity<>(pagoService.findPagosByFolioPadre(folio), HttpStatus.OK);
-//		}
-//
-//		@PostMapping("/{folio}/pagos")
-//		@Deprecated
-//		public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
-//				throws InvoiceManagerException {
-//			return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
-//		}
-//
-//		@PutMapping("/{folio}/pagos/{id}")
-//		@Deprecated
-//		public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
-//				@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-//			return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
-//		}
-//
-//		@DeleteMapping("/{folio}/pagos/{id}")
-//		@Deprecated
-//		public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
-//				throws InvoiceManagerException {
-//			pagoService.deletePago(folio, id);
-//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//		}
+	@DeleteMapping("/{idPago}")
+	public ResponseEntity<Void> deletePago(@PathVariable(name = "idPago") Integer idPago)
+			throws InvoiceManagerException {
+		pagoService.deletePago(idPago);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+
 
 }

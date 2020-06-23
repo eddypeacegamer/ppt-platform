@@ -52,9 +52,11 @@ public class DevolucionesBuilderService {
 	}
 
 	public FacturaContext buildFacturaContextForComplementoDevolution(FacturaDto facturaDto, PagoDto pagoDto) {
-		FacturaContextBuilder fcb = new FacturaContextBuilder().setFacturaDto(facturaDto).setCurrentPago(pagoDto)
-				.setFacturaPadreDto(facturaService.getFacturaByFolio(pagoDto.getFolioPadre()));
-		return fcb.build();
+		// TODO review this logic
+//		FacturaContextBuilder fcb = new FacturaContextBuilder().setFacturaDto(facturaDto).setCurrentPago(pagoDto)
+//				.setFacturaPadreDto(facturaService.getFacturaByFolio(pagoDto.getFolioPadre()));
+//		return fcb.build();
+		return null;
 	}
 	
 	

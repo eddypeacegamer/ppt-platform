@@ -19,12 +19,6 @@ public class PagoBuilder extends AbstractBuilder<PagoDto> {
 	public PagoBuilder setId(Integer id) {
 		instance.setId(id);
 	return this; }
-	public PagoBuilder setFolio(String folio) {
-		instance.setFolio(folio);
-	return this; }
-	public PagoBuilder setFolioPadre(String folioPadre) {
-		instance.setFolioPadre(folioPadre);
-	return this; }
 	public PagoBuilder setMoneda(String moneda) {
 		instance.setMoneda(moneda);
 	return this; }

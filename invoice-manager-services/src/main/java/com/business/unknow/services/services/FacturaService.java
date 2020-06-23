@@ -224,8 +224,8 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	public FacturaDto updateFactura(FacturaDto factura, String folio) {
-		if (repository.findByFolio(folio).isPresent()) {
+	public FacturaDto updateFactura(Integer idCfdi,FacturaDto factura) {
+		if (repository.findByIdCfdi(idCfdi).isPresent()) {
 			if (factura.getStatusPago().equals(PagoStatusEnum.PAGADA.getValor())
 					&& factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
@@ -247,7 +247,7 @@ public class FacturaService {
 			return mapper.getFacturaDtoFromEntity(repository.save(entity));
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("La factura con el folio %s no existe", folio));
+					String.format("La factura con el pre-folio %d no existe", idCfdi));
 		}
 	}
 

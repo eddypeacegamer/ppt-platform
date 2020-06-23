@@ -21,18 +21,25 @@ import com.business.unknow.rules.common.Constants.PaymentsSuite;
  *
  */
 @Rule(name = PaymentsSuite.INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE, description = PaymentsSuite.INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE_DESC)
-public class UpdatePaymentInvoiceStatusRule {
-	
+public class PaymentInvoiceStatusRule {
+
 	@Condition
-	public boolean condition(@Fact("factura") FacturaDto factura, @Fact("currentPayment") PagoDto currentPayment) {
-		return (RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())) ? false : // rechazo de pago
-			FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura()) ||
-				 FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura()) ||
-				 	FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura());
+	public boolean condition(@Fact("facturas") List<FacturaDto> facturas,@Fact("results") List<String>results,
+			@Fact("payment") PagoDto currentPayment) {
+		for (FacturaDto factura : facturas) {
+			if (!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago()) &&
+					(FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
+						|| FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura())
+						|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))) {
+					results.add(String.format("La factura con pre folio %d no es valida", factura.getIdCfdi()));
+					return true;
+			}
+		}
+		return false;
 	}
 
 	@Action
-	public void execute(@Fact("results") List<String>results) {
+	public void execute(@Fact("results") List<String> results) {
 		results.add(PaymentsSuite.INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE_DESC);
 	}
 

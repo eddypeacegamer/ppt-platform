@@ -100,11 +100,11 @@ public class FacturaController {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{folio}")
-	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
-			@RequestBody @Valid FacturaDto factura) {
-		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
-	}
+//	@PutMapping("/{folio}")
+//	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
+//			@RequestBody @Valid FacturaDto factura) {
+//		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
+//	}
 
 	
 

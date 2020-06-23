@@ -14,7 +14,7 @@ import com.business.unknow.rules.common.Constants.PaymentsSuite;
 public class PaymentOrderValidationRule {
 	
 	@Condition
-	public boolean condition(@Fact("currentPayment") PagoDto currentPayment,
+	public boolean condition(@Fact("payment") PagoDto currentPayment,
 			@Fact("dbPayment") PagoDto dbPayment) {	
 		return !dbPayment.getRevision1() && currentPayment.getRevision2();
 		 
