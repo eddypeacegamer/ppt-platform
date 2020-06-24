@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.business.unknow.commons.validator.AbstractValidator;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -35,11 +34,11 @@ public class PagoEvaluatorService extends AbstractValidator {
 	private PaymentUpdateSuite updateSuite;
 
 
-	public void deletepaymentValidation(PagoDto payment,FacturaDto factura,List<FacturaDto> facturas) throws InvoiceManagerException {
+	public void deletepaymentValidation(PagoDto payment,List<FacturaDto> facturas) throws InvoiceManagerException {
 		Facts facts = new Facts();
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		facts.put("payment", payment);
-		facts.put("factura", factura);
+		facts.put("facturas", facturas);
 		facts.put("results", results);
 		
 		rulesEngine.fire(deletePagoSuite.getSuite(), facts);
@@ -48,16 +47,16 @@ public class PagoEvaluatorService extends AbstractValidator {
 		}
 	}
 
-	public void validatePaymentCreation(PagoDto currentPayment,CfdiDto cfdi) throws InvoiceManagerException {
+	public void validatePaymentCreation(PagoDto currentPayment,List<FacturaDto> facturas) throws InvoiceManagerException {
 		Facts facts = new Facts();
 		List<String> results = new ArrayList<>();
-		facts.put("currentPayment", currentPayment);
-		facts.put("cfdi", cfdi);
+		facts.put("payment", currentPayment);
+		facts.put("facturas", facturas);
 		facts.put("results", results);
 		
 		rulesEngine.fire(creationSuite.getSuite(), facts);
 		if(!results.isEmpty()) {
-			throw new InvoiceManagerException(results.toString(), "Some payment creation rules was triggered.", HttpStatus.CONFLICT.value());
+			throw new InvoiceManagerException(results.toString(), "Alguna regla de creacion de pagos fue ejecutada.", HttpStatus.CONFLICT.value());
 		}
 	}
 
@@ -71,7 +70,7 @@ public class PagoEvaluatorService extends AbstractValidator {
 		
 		rulesEngine.fire(updateSuite.getSuite(), facts);
 		if(!results.isEmpty()) {
-			throw new InvoiceManagerException(results.toString(), "Some payment update rules was triggered.", HttpStatus.CONFLICT.value());
+			throw new InvoiceManagerException(results.toString(), "Alguna regla de actualizacion de pagos fue ejecutada.", HttpStatus.CONFLICT.value());
 		}
 	}
 	

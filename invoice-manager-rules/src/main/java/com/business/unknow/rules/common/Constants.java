@@ -25,7 +25,7 @@ public class Constants {
 		
 		public static final String DELETE_STATUS_PAYMENT = "DeletePpdPayment";
 		public static final String DELETE_STATUS_PAYMENT_RULE = "DeletePpdPaymentRule";
-		public static final String DELETE_STATUS_PAYMENT_RULE_DESC = "El estatus del pago o de la factura no permiten el borrado";
+		public static final String DELETE_STATUS_PAYMENT_RULE_DESC = "El estatus del pago de una o varias facturas no permiten el borrado";
 		
 		public static final String DELETE_PAYMENT = "DeletePayment";
 		public static final String DELETE_PAYMENT_RULE = "DeletePaymentRule";
@@ -37,16 +37,17 @@ public class Constants {
 	}
 	
 	public class PaymentsSuite {
+		
 		public static final String PAGO_PPD_SUITE = "PagoPpdSuite";
 		public static final String PAGO_PUE_SUITE = "PagoPueSuite";
 		
 		public static final String MONTO_PAGO_VALIDATION = "MontoPagoValidation";
 		public static final String MONTO_PAGO_VALIDATION_RULE = "MontoPagoValidationRule";
-		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "Monto invalido de pago, el pago  no puede ser superior al monto faltante por acreditar en la factura  o menor a $0:00.";
+		public static final String MONTO_PAGO_VALIDATION_RULE_DESC = "Monto invalido de pago, la suma de los pagos no puede ser superior o diferente al moto total del pago raiz";
 		
-		public static final String CREATE_CREDIT_VALIDATION = "CreateCreditValidation";
-		public static final String CREATE_CREDIT_VALIDATION_RULE = "CreateCreditValidationRule";
-		public static final String CREATE_CREDIT_VALIDATION_RULE_DESC = "El pago  no puede ser superior al monto faltante por acreditar en la factura.";
+		public static final String ZERO_AMMOUNT_VALIDATION = "ZeroAmountValidationRule";
+		public static final String ZERO_AMMOUNT_VALIDATION_RULE = "ZeroAmountValidationRule";
+		public static final String ZERO_AMMOUNT_VALIDATION_RULE_DESC = "Uno o varios pagos asignados son  iguales o menores a $0.00.";
 		
 		public static final String ORDER_PAYMENT_VALIDATION = "PaymentOrderValidation";
 		public static final String ORDER_PAYMENT_VALIDATION_RULE = "PaymentOrderValidationRule";

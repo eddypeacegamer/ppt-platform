@@ -27,7 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
@@ -115,16 +114,20 @@ public class PagoService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPayment(PagoDto pagoDto) throws InvoiceManagerException {
-		
+
 		// Validate fields required
 		pagoEvaluatorService.validatePayment(pagoDto);
-		//  TODO Apply validation rules
-		// - payments sum should be equal to payment ammount
-		// - 0 or negative payments are invalid
+		List<FacturaDto> facturas = new ArrayList<>();
+		for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
+			FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+			facturas.add(factura);
+		}
+		pagoEvaluatorService.validatePaymentCreation(pagoDto, facturas);
+
 		for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
 			// find factura by folio factura
 			FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
-			//Populate missing information
+			// Populate missing information
 			pagoFact.setAcredor(factura.getRazonSocialEmisor());
 			pagoFact.setDeudor(factura.getRazonSocialRemitente());
 			pagoFact.setTotalFactura(factura.getTotal());
@@ -147,21 +150,17 @@ public class PagoService {
 	public PagoDto updatePago(Integer idPago, PagoDto pago) throws InvoiceManagerException {
 		Pago entity = repository.findById(idPago).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El pago con el id %d no existe", idPago)));
-		
+
 		PagoBuilder pagoBuilder = new PagoBuilder(mapper.getPagoDtoFromEntity(entity)) // payment only update revision
-				.setRevision1(pago.getRevision1())
-				.setRevision2(pago.getRevision2())
-				.setRevisor1(pago.getRevisor1())
+				.setRevision1(pago.getRevision1()).setRevision2(pago.getRevision2()).setRevisor1(pago.getRevisor1())
 				.setRevisor2(pago.getRevisor2());
 		pagoEvaluatorService.validatePayment(pago);
-		
+
 		List<FacturaDto> facturas = new ArrayList<>();
 		for (PagoFacturaDto pagoFact : pago.getFacturas()) {
 			FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
 			facturas.add(factura);
 		}
-		
-
 		pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
 
 		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
@@ -178,27 +177,24 @@ public class PagoService {
 					factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 					facturaService.updateFactura(factura.getIdCfdi(), factura);
 				}
-				
-			}			
+
+			}
 		}
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}
 
-//	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-//	public PagoDto updateMontoPago(Integer id, PagoDto pago) {
-//		Pago entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-//				String.format("El pago con el id %d no existe", id)));
-//		entity.setMonto(pago.getMonto());
-//		return mapper.getPagoDtoFromEntity(repository.save(entity));
-//	}
-
 	public void deletePago(Integer idPago) throws InvoiceManagerException {
-//		PagoDto payment =  mapper.getPagoDtoFromEntity(repository.findById(id).orElseThrow(() -> new InvoiceManagerException("Metodo de pago no soportado",
-//				String.format("El pago con el id no existe %d", id), HttpStatus.BAD_REQUEST.value())));
-//		FacturaDto factura = facturaService.getBaseFacturaByFolio(payment.getFolio());
-//		List<PagoDto> payments = findPagosByFolioPadre(folio);
-//		pagoEvaluatorService.deletepaymentValidation(payment, factura);
-//		pagoExecutorService.deletePagoExecutor(payment, payments, factura);
+
+		PagoDto payment = mapper.getPagoDtoFromEntity(
+				repository.findById(idPago).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("El pago con id %d no existe", idPago))));
+		List<FacturaDto> facturas = new ArrayList<>();
+		for (PagoFacturaDto pagoFact : payment.getFacturas()) {
+			FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+			facturas.add(factura);
+		}
+		pagoEvaluatorService.deletepaymentValidation(payment, facturas);
+		pagoExecutorService.deletePagoExecutor(payment);
 	}
 
 //	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
