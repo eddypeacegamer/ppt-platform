@@ -1,47 +1,12 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
-      <nb-card-header>Registro CFDI Contabilidad</nb-card-header>
+      <nb-card-header>Registro CFDI Contabilidad <span class="badge badge-primary" style="margin-left: 10px;" 
+        *ngIf="preFolio != '*' && factura" >{{factura.statusFactura}}</span></nb-card-header>
       <nb-card-body>
-        <div *ngIf="factura.folio !== undefined">
-          <p class="font-weight-bold">Información Emisor y Receptor</p>
-          <div class="form-inline">
+        <div *ngIf="preFolio !== '*'">
+          <div class="d-flex float-right">
 
-
-            <p class="font-weight-bold">Emisor</p>
-            &nbsp;&nbsp;
-            <p>{{factura.rfcEmisor}}</p>
-            &nbsp;&nbsp;
-            <p>{{factura.razonSocialEmisor}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Receptor</p>
-            &nbsp;&nbsp;
-            <p>{{factura.rfcRemitente}}</p>
-            &nbsp;&nbsp;
-            <p>{{factura.razonSocialRemitente}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <span class="badge badge-primary">{{factura.statusFactura}}</span>
-          </div>
-          <p class="font-weight-bold">Información CFDI</p>
-          <br>
-
-          <div class="form-inline">
-            <p class="font-weight-bold">Uso CFDI</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Moneda</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.moneda}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Metodo de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.metodoPago}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Forma de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.formaPago}}</p>
-            &nbsp;&nbsp;
             <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
               <i class="fa fa-file-pdf"></i>
             </button>
@@ -67,11 +32,128 @@
             &nbsp;&nbsp;
             <button type="button" class="btn btn-danger" (click)="rechazarFactura()"
               *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
-
+  
 
           </div>
         </div>
-        <div *ngIf="factura.folio === undefined && folioParam === '*'">
+        <div *ngIf="factura.folio !== undefined">
+         <!--  <p class="font-weight-bold">Información Emisor y Receptor</p> -->
+          <div class="form-inline">
+
+<!-- 
+            <p class="font-weight-bold">Emisor</p>
+            &nbsp;&nbsp;
+            <p>{{factura.rfcEmisor}}</p>
+            &nbsp;&nbsp;
+            <p>{{factura.razonSocialEmisor}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p class="font-weight-bold">Receptor</p>
+            &nbsp;&nbsp;
+            <p>{{factura.rfcRemitente}}</p>
+            &nbsp;&nbsp;
+            <p>{{factura.razonSocialRemitente}}</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <span class="badge badge-primary">{{factura.statusFactura}}</span>
+          </div>
+          <p class="font-weight-bold">Información CFDI</p>
+          <br> -->
+
+        <!--   <div class="form-inline">
+            <p class="font-weight-bold">Uso CFDI</p>
+            &nbsp;&nbsp;
+            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
+            &nbsp;&nbsp;
+            <p class="font-weight-bold">Moneda</p>
+            &nbsp;&nbsp;
+            <p>{{factura.cfdi.moneda}}</p>
+            &nbsp;&nbsp;
+            <p class="font-weight-bold">Metodo de Pago</p>
+            &nbsp;&nbsp;
+            <p>{{factura.cfdi.metodoPago}}</p>
+            &nbsp;&nbsp;
+            <p class="font-weight-bold">Forma de Pago</p>
+            &nbsp;&nbsp;
+            <p>{{factura.cfdi.formaPago}}</p>
+            &nbsp;&nbsp; -->
+           <!--  <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
+              <i class="fa fa-file-pdf"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
+              (click)="downloadXml(factura.folio)">
+              <i class="fa fa-code"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)"
+              [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
+              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+              Timbrar
+            </button>
+            &nbsp;&nbsp;
+            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
+              [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
+              nbSpinnerSize="small" nbSpinnerMessage="">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-success" (click)="aceptarFactura()"
+              *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-danger" (click)="rechazarFactura()"
+              *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
+
+ -->
+          </div>
+        </div>
+
+        <p class="font-weight-bold">Información Emisor y Receptor</p>
+        <div class="row" *ngIf="preFolio === '*'">
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="inputGiro" class="label">Giro Empresa</label>
+              <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
+                style="display:block;" [(ngModel)]="formInfo.giro">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="inputEmpresa" class="label">Empresa</label>
+            <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
+              [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let company of companiesCat" [(value)]="company.id">
+                {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="inputCliente" class="label">Razón social</label>
+            <div class="row form-inline">
+              <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control"
+                (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="inputClient" class="label">Cliente</label>
+            <select id="inputClient" class="form-control" (change)="onClientSelected($event.target.value)"
+              [(ngModel)]="formInfo.clientRfc" style="display:block;" fullWidth>
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let client of clientsCat" [(value)]="client.id">
+                {{client.informacionFiscal.rfc}}-{{client.informacionFiscal.razonSocial}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+
+        <div  *ngIf="!loading"> 
+          <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
+            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
+          </ngx-cfdi>
+        </div>
+       <!--  <div *ngIf="factura.folio === undefined && folioParam === '*'">
           <p class="font-weight-bold">Información Emisor</p>
           <div class="row">
             <div class="col-md-2">
@@ -234,6 +316,15 @@
               </div>
             </div>
           </div>
+        </div> -->
+
+        <br>
+        <div class="form-inline" *ngIf="this.factura.folio == undefined">
+          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
+          [disabled]="loading || !isValidCfdi()" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+            SOLICITAR CFDI
+          </button>
+          <!-- <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
         </div>
 
 

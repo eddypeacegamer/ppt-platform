@@ -26,6 +26,7 @@ import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Pago } from '../../../models/factura/pago';
 import { User } from '../../../models/user';
+import { CfdiData } from '../../../@core/data/cfdi-data';
 
 @Component({
   selector: 'ngx-linea-b',
@@ -49,17 +50,19 @@ export class LineaBComponent implements OnInit {
   public newConcep: Concepto;
   public payment: Pago;
   public factura: Factura;
-  public folioParam: string;
+  public preFolio: string;
   public user: User;
 
   public complementos: Factura[] = [];
+
+  public pagosCfdi: Pago[] = [];
 
   public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*' };
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*',clientRfc: '*',clientName: '', companyRfc: '', giro: '*', empresa: '*'  };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
@@ -73,11 +76,16 @@ export class LineaBComponent implements OnInit {
   public invoicePayments = [];
   public paymentSum: number = 0;
 
+  //
+
+  public companiesCat: Empresa[] = [];
+
   constructor(private dialogService: NbDialogService,
     private catalogsService: CatalogsData,
     private clientsService: ClientsData,
     private companiesService: CompaniesData,
     private invoiceService: InvoicesData,
+    private cfdiService: CfdiData,
     private filesService: FilesData,
     private userService: UsersData,
     private cfdiValidator: CfdiValidatorService,
@@ -86,6 +94,7 @@ export class LineaBComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.loading = true;
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
     this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
@@ -99,9 +108,9 @@ export class LineaBComponent implements OnInit {
     this.catalogsService.getAllGiros().then(cat => this.girosCat = cat)
       .then(() => {
         this.route.paramMap.subscribe(route => {
-          this.folioParam = route.get('folio');
-          if (this.folioParam !== '*') {
-            this.getInvoiceByFolio(this.folioParam);
+          this.preFolio = route.get('folio');
+          if (this.preFolio !== '*') {
+            this.getInvoiceByFolio(this.preFolio);
           } else {
             this.initVariables();
           }
@@ -125,22 +134,45 @@ export class LineaBComponent implements OnInit {
     this.factura.cfdi.metodoPago = '*';
     this.payment = new Pago();
     this.payment.formaPago = '*';
+    this.factura.cfdi.formaPago = '*';
+    this.factura.cfdi.receptor.usoCfdi = '*';
+   
   }
 
-  public getInvoiceByFolio(folio: string) {
-    this.invoiceService.getInvoiceByFolio(folio).pipe(
+  public getInvoiceByFolio(preFolio: string) {
+    const idCfdi: number = +preFolio;
+    this.pagosCfdi = [];
+  
+    this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
-        fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
+        
+       /*  fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
         fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
         fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
+        return fac; */
+        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
+        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
+        fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
         this.factura = invoice;
-        if (invoice.cfdi.metodoPago === 'PPD') {
-          this.loadConceptos();
+        
+        this.cfdiService.getCfdiByFolio(idCfdi)
+        .subscribe(cfdi => {
+        this.factura.cfdi = cfdi;
+        if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
+          this.pagosCfdi = cfdi.complemento.pagos;           
         }
+        
+      });
+        if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
+          this.cfdiService.findPagosPPD(idCfdi)
+            .subscribe(pagos => {this.pagosCfdi = pagos; });
+        }      
+      
+        setTimeout(() => { this.loading = false; }, 1800);
       },
         error => {
           console.error('Info cant found, creating a new invoice:', error);
@@ -181,7 +213,7 @@ export class LineaBComponent implements OnInit {
     this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId)).informacionFiscal;
   }
 
-  buscarClientInfo( razonSocial: string) {
+ /*  buscarClientInfo( razonSocial: string) {
     if ( razonSocial !== undefined && razonSocial.length > 5) {
       this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
           .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
@@ -212,7 +244,7 @@ export class LineaBComponent implements OnInit {
         alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
       }
     }
-  }
+  } */
 
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
@@ -288,14 +320,17 @@ export class LineaBComponent implements OnInit {
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
+      this.factura.metodoPago = this.factura.cfdi.metodoPago;
       this.factura.statusFactura = '4'; // sets automatically to stamp directly
       this.errorMessages = this.cfdiValidator.validarCfdi({ ...this.factura.cfdi });
     }
     if (this.errorMessages.length === 0) {
+
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
-          this.factura.folio = invoice.folio;
-          this.getInvoiceByFolio(invoice.folio);
+          this.factura= invoice;
+         
+          this.getInvoiceByFolio(invoice.cfdi.id.toString());
           this.loading = false;
         }, (error: HttpErrorResponse) => {
           this.loading = false;
@@ -317,7 +352,7 @@ export class LineaBComponent implements OnInit {
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
-      this.getInvoiceByFolio(fact.folioPadre || fact.folio);
+      this.getInvoiceByFolio(fact.cfdi.id.toString());
     },
       (error: HttpErrorResponse) => {
         this.loading = false;
@@ -339,10 +374,10 @@ export class LineaBComponent implements OnInit {
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         if (invoice !== undefined) {
-          this.invoiceService.timbrarFactura(fact.folio, invoice)
+          this.invoiceService.timbrarFactura(fact.cfdi.id.toString(), invoice)
             .subscribe(result => {
               this.loading = false;
-              this.getInvoiceByFolio(fact.folioPadre || fact.folio);
+              this.getInvoiceByFolio(fact.cfdi.id.toString());
             },
               (error: HttpErrorResponse) => {
                 this.loading = false;
@@ -365,10 +400,10 @@ export class LineaBComponent implements OnInit {
     fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
     fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
     
-    this.invoiceService.cancelarFactura(fact.folio, fact)
+    this.invoiceService.cancelarFactura(fact.cfdi.id.toString(), fact)
       .subscribe(success => {
       this.successMessage = 'Factura correctamente cancelada';
-        this.getInvoiceByFolio(fact.folioPadre || fact.folio);
+        this.getInvoiceByFolio(fact.cfdi.id.toString());
         this.loading = false;
       },(error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
@@ -437,4 +472,74 @@ export class LineaBComponent implements OnInit {
       this.paymentSum = complementos.map((c: Factura) => c.total).reduce((total, c) => total + c);
     }
   }
+
+//////
+
+isValidCfdi(): boolean {
+  return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
+}
+
+onGiroSelection(giroId: string) {
+  const value = +giroId;
+  if (isNaN(value)) {
+    this.companiesCat = [];
+  } else {
+    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId))
+      .subscribe(companies => this.companiesCat = companies,
+        (error: HttpErrorResponse) =>
+          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  }
+}
+
+onCompanySelected(companyId: string) {
+  this.companyInfo = this.companiesCat.find(c => c.id === Number(companyId));
+  // TODO Mover todo esta logica a un servicio de contrsuccion
+  this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
+  this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+  this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
+  this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
+  this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+  this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
+  this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+}
+
+buscarClientInfo( razonSocial: string) {
+  if ( razonSocial !== undefined && razonSocial.length > 5) {
+    this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
+        .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+        .subscribe(clients => {
+          this.clientsCat = clients;
+          if ( clients.length > 0) {
+            this.formInfo.clientRfc = clients[0].id.toString();
+            this.onClientSelected(this.formInfo.clientRfc);
+          }
+        }, (error: HttpErrorResponse) => {
+          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+          this.clientsCat = [];
+          this.clientInfo = undefined;
+        });
+  }else {
+    this.clientsCat = [];
+    this.clientInfo = undefined;
+  }
+}
+
+onClientSelected(id: string) {
+  const value = +id;
+  if (!isNaN(value)) {
+    const client = this.clientsCat.find(c => c.id === Number(value));
+    this.clientInfo = client.informacionFiscal;
+    // mover esta logica a un servicio de construccion
+    this.factura.rfcRemitente = this.clientInfo.rfc;
+    this.factura.razonSocialRemitente = this.clientInfo.razonSocial.toUpperCase();
+    this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
+    this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial.toUpperCase();
+    this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
+    if (!client.activo) {
+      this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
+      this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');
+    }
+  }
+}
+
 }

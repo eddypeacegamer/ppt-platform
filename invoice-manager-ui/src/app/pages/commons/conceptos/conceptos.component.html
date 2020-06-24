@@ -1,6 +1,8 @@
 <div *ngIf="cfdi">
   <!-- START CONCEPTOS-->
+  <p class="font-weight-bold">Conceptos factura</p>
   <div class="row" *ngIf="allowEdit">
+    
     <div class="col-sm-3">
       <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
       <div class="">
@@ -65,13 +67,16 @@
           (click)="agregarConcepto(concepto.id)">Actualizar Concepto</button>     
       </div>
   </div>
-  <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
+ <!--  <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
     <p *ngFor="let conceptMessage of conceptoMessages">{{conceptMessage}}</p>
-  </div>
+  </div> -->
   <br>
   <!--TABLA CONCEPTOS-->
-  <div *ngIf="cfdi.complemento.length==0 || cfdi.conceptos.length>0">
-    <p class="font-weight-bold">Conceptos factura</p>
+  <div  >
+    
+  
+  <div *ngIf="(cfdi.complemento && cfdi.complemento.length==0) || cfdi.conceptos.length>0">
+    <!-- <p class="font-weight-bold">Conceptos factura</p> -->
     <div class="table-responsive">
     <table class="table table-sm " >
       <thead class="thead-dark">
@@ -141,5 +146,6 @@
       </tbody>
     </table>
     </div>
+  </div>
   </div>
 </div>

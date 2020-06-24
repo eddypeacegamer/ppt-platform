@@ -1,9 +1,11 @@
-<div class="clearfix">
-    <button nbButton status="success" size="medium" (click)="updateCfdi()" [nbSpinner]="loading" class="float-right"
-            [disabled]="loading" nbSpinnerStatus="success"  *ngIf="allowEdit && cfdi.id !== undefined"
-            nbSpinnerSize="small" nbSpinnerMessage="">
-            <i class="fa fa-sync"></i>Actualizar CFDI
-    </button>
+<div class="row" *ngIf="cfdi"> 
+  <div class="clearfix col align-self-end">
+      <button nbButton status="success" size="medium" (click)="updateCfdi()" [nbSpinner]="loading" class="float-right puff_center"
+              [disabled]="loading" nbSpinnerStatus="success"  *ngIf="allowEdit && cfdi.id !== undefined"
+              nbSpinnerSize="small" nbSpinnerMessage="">
+              Actualizar CFDI <i class="fa fa-sync" style="margin-left: 10px;"></i>
+      </button>
+  </div>
 </div>
 <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
   <p *ngFor="let message of errorMessages">{{message}}</p>
@@ -37,7 +39,9 @@
       </div>
 
       <div *ngIf="cfdi.receptor && cfdi.receptor.rfc !== undefined">
+        
         <div class="row slide_3">
+          
           <div class="col-sm-3" >
             <label for="rfcReceptor" class="label">RFC Receptor</label>
             <input id="rfcReceptor" type="text" [(ngModel)]="cfdi.receptor.rfc" class="form-control" 
@@ -58,6 +62,8 @@
           </div>
         </div>
       </div>     
+      <p class="font-weight-bold">Información CFDI</p>
+        
       <div class="row slide_4">
         <div class="col-md-2">
           <label for="inputDocType" class="label">Tipo Documento</label>
@@ -115,7 +121,7 @@
       <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
     <br>
 
-    <div *ngIf="pagos.length>0">
+    <div *ngIf=" pagos && pagos.length>0">
       <p class="font-weight-bold">Complementos</p>
       <br>
       <div class="table-responsive">
