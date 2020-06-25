@@ -20,5 +20,7 @@ public interface FacturaFileRepository extends JpaRepository<FacturaFile, Intege
 	
 	
 	public Optional<FacturaFile> findByFolioAndTipoArchivo(String folio, String tipoArchivo);
+	
+	public long deleteByFolioAndTipoArchivo(String folio, String tipoArchivo);
 
 }

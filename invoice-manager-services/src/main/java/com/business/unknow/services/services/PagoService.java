@@ -28,6 +28,7 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -37,7 +38,6 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
-import com.business.unknow.services.services.executor.PagoExecutorService;
 import com.business.unknow.services.util.PagoBuilder;
 
 /**
@@ -60,7 +60,7 @@ public class PagoService {
 	private PagoEvaluatorService pagoEvaluatorService;
 
 	@Autowired
-	private PagoExecutorService pagoExecutorService;
+	private FilesService filesService;
 
 	@Autowired
 	private FacturaService facturaService;
@@ -194,9 +194,24 @@ public class PagoService {
 			facturas.add(factura);
 		}
 		pagoEvaluatorService.deletepaymentValidation(payment, facturas);
-		pagoExecutorService.deletePagoExecutor(payment);
+		for (PagoFacturaDto factRef : payment.getFacturas()) {
+			FacturaDto fact = facturaService.getFacturaBaseByPrefolio(factRef.getIdCfdi());
+			if(TipoDocumentoEnum.COMPLEMENTO.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
+				facturaService.deleteFactura(fact.getFolio());
+				filesService.deleteFacturaFileByFolioAndType(fact.getFolio(), "PDF");
+			}
+			if(TipoDocumentoEnum.FACTURA.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento())) &&
+					MetodosPagoEnum.PUE.getClave().equals(fact.getMetodoPago())) {
+				fact.setSaldoPendiente(fact.getSaldoPendiente().add(factRef.getMonto()));
+				facturaService.updateFactura(fact.getIdCfdi(), fact);
+			}
+		}
+		filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");
+		repository.delete(mapper.getEntityFromPagoDto(payment));
 	}
 
+	
+	//TODO check  why we need this?
 //	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
 //		List<Pago> pagos = repository.findByFolio(folio);
 //		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))

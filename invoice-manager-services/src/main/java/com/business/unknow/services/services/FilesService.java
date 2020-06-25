@@ -10,7 +10,6 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,6 @@ import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
@@ -149,6 +147,20 @@ public class FilesService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
 		}
 	}
+	
+	public void deleteFacturaFileByFolioAndType(String folio, String type){
+		facturaRepo.deleteByFolioAndTipoArchivo(folio, type);
+		
+	}
+
+	public void deleteResourceFileByResourceReferenceAndType(String resource, String referencia, String type){
+		resourceRepo.deleteTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia, type);
+	}
+	
+	
+	
+	//TODO move this code implementation to its own service
+	/********** PDF CODE **********/
 
 	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi) throws InvoiceCommonException {
 
