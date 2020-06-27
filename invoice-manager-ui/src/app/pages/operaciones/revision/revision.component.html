@@ -3,7 +3,9 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header>
         <div class="clearfix" *ngIf="preFolio !== '*'">
-          <p class="h6 float-left puff_center">Validación CFDI {{preFolio}}</p>
+          <p class="h6 float-left puff_center">Validación CFDI {{preFolio}}</p> 
+          <span class="badge badge-primary" style="margin-left: 10px;" 
+           *ngIf="factura" >{{factura.statusFactura}}</span>
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
@@ -63,7 +65,7 @@
       
         <div  *ngIf="!loading"> 
           <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
-            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
+            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
         </div>
 

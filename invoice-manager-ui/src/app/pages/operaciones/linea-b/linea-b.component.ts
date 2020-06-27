@@ -62,7 +62,9 @@ export class LineaBComponent implements OnInit {
   public conceptoMessages: string[] = [];
   public payErrorMessages: string[] = [];
 
-  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaEmisor: 'B', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*',clientRfc: '*',clientName: '', companyRfc: '', giro: '*', empresa: '*'  };
+  public LINEAEMISOR : string = 'B';
+
+  public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*',clientRfc: '*',clientName: '', companyRfc: '', giro: '*', empresa: '*'  };
 
   public clientInfo: Contribuyente;
   public companyInfo: Empresa;
@@ -185,7 +187,7 @@ export class LineaBComponent implements OnInit {
     if (isNaN(value)) {
       this.emisoresCat = [];
     } else {
-      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.lineaEmisor, Number(giroId))
+      this.companiesService.getCompaniesByLineaAndGiro(this.LINEAEMISOR, Number(giroId))
         .subscribe(companies => this.emisoresCat = companies,
           (error: HttpErrorResponse) =>
             this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
@@ -318,7 +320,7 @@ export class LineaBComponent implements OnInit {
       this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
-      this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
+      this.factura.lineaEmisor = this.LINEAEMISOR;
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
       this.factura.metodoPago = this.factura.cfdi.metodoPago;
       this.factura.statusFactura = '4'; // sets automatically to stamp directly
@@ -484,7 +486,7 @@ onGiroSelection(giroId: string) {
   if (isNaN(value)) {
     this.companiesCat = [];
   } else {
-    this.companiesService.getCompaniesByLineaAndGiro('A', Number(giroId))
+    this.companiesService.getCompaniesByLineaAndGiro(this.LINEAEMISOR, Number(giroId))
       .subscribe(companies => this.companiesCat = companies,
         (error: HttpErrorResponse) =>
           this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
@@ -505,7 +507,7 @@ onCompanySelected(companyId: string) {
 
 buscarClientInfo( razonSocial: string) {
   if ( razonSocial !== undefined && razonSocial.length > 5) {
-    this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
+    this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
         .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
         .subscribe(clients => {
           this.clientsCat = clients;
