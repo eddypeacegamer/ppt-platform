@@ -41,6 +41,8 @@ public class FilesDao {
 	
 	private static final String DELETE_RESOURCE_FILE_BY_ID = "DELETE FROM RESOURCE_FILES WHERE FILE_ID= ?";
 	
+	private static final String INSERT_RESOURCE_FILE = "INSERT INTO RESOURCE_FILES (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATA, FECHA_CREACION) VALUES(?,?,?,?,?)";
+	
 	
 	public Optional<ResourceFileDto> findResourceFileByResourceTypeAndReference(String resource, String fileType, String reference) {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {

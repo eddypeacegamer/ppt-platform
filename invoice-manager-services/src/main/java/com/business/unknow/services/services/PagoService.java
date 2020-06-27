@@ -131,11 +131,15 @@ public class PagoService {
 			pagoFact.setAcredor(factura.getRazonSocialEmisor());
 			pagoFact.setDeudor(factura.getRazonSocialRemitente());
 			pagoFact.setTotalFactura(factura.getTotal());
-			pagoFact.setIdCfdi(factura.getIdCfdi());
+			
 			if (MetodosPagoEnum.PPD.name().equals(factura.getMetodoPago())) {
 				// PPD crean en automatico complemento
 				log.info("Generando complemento para CFDI : {}", factura.getIdCfdi());
-				facturaService.generateComplemento(factura, pagoDto);
+				FacturaDto fact = facturaService.generateComplemento(factura, pagoDto);
+				pagoFact.setIdCfdi(fact.getIdCfdi());
+			}
+			if (MetodosPagoEnum.PUE.name().equals(factura.getMetodoPago())) {
+				pagoFact.setIdCfdi(factura.getIdCfdi());
 			}
 			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())) {
 				log.info("Updating saldo pendiente factura");

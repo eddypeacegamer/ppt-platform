@@ -46,6 +46,7 @@ import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.FilesMapper;
 import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
 import com.business.unknow.services.repositories.files.FacturaFileRepository;
+import com.business.unknow.services.repositories.files.FilesDao;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.pdf.PDFGenerator;
@@ -86,6 +87,10 @@ public class FilesService {
 
 	@Autowired
 	private FacturaTranslator facturaTranslator;
+	
+	
+	@Autowired
+	private FilesDao filesDao;
 
 	private static final Logger log = LoggerFactory.getLogger(FilesService.class);
 
@@ -100,13 +105,8 @@ public class FilesService {
 
 	public ResourceFileDto getFileByResourceReferenceAndType(String resource, String referencia, String type)
 			throws InvoiceManagerException {
-		Optional<ResourceFile> file = resourceRepo.findByTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia,
-				type);
-		if (file.isPresent()) {
-			return mapper.getResourceFileDtoFromEntity(file.get());
-		} else {
-			throw new InvoiceManagerException("El recurso solicitado no existe.", HttpStatus.NOT_FOUND.value());
-		}
+		return filesDao.findResourceFileByResourceTypeAndReference(resource, type, referencia)
+				.orElseThrow(()-> new InvoiceManagerException("El recurso solicitado no existe.", HttpStatus.NOT_FOUND.value()));
 	}
 
 	public ResourceFileDto insertResourceFile(ResourceFileDto resourceFile) {
