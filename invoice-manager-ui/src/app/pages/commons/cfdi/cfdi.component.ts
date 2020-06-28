@@ -7,6 +7,7 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Concepto } from '../../../models/factura/concepto';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Factura } from '../../../models/factura/factura';
 
 @Component({
   selector: 'ngx-cfdi',
@@ -19,6 +20,7 @@ export class CfdiComponent implements OnInit {
   @Input() cfdi: Cfdi;
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
+  @Input() factura?: Factura;
 
   public loading: boolean = false;
 
