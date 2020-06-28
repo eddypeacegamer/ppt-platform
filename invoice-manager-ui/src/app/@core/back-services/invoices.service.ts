@@ -53,10 +53,6 @@ export class InvoicesService {
           record.cadenaOriginalTimbrado = '';
           record.statusFactura = this.validationCat.find(v => v.id.toString()
                                       === record.statusFactura.toString()).nombre;
-          record.statusPago = this.payCat.find(v => v.id.toString()
-                                      === record.statusPago.toString()).nombre;
-          record.statusDevolucion = this.devolutionCat.find(v => v.id.toString()
-                                      === record.statusDevolucion.toString()).nombre;
           return record;
         });
         invPage.content = records;

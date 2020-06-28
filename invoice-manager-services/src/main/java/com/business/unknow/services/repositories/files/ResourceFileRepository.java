@@ -21,6 +21,5 @@ public interface ResourceFileRepository extends JpaRepository<ResourceFile, Inte
 	public Optional<ResourceFile> findByTipoRecursoAndReferenciaAndTipoArchivo(String tipoRecurso, String referencia, String tipoArchivo);
 	public List<ResourceFile> findByReferencia(String referencia);
 	
-	long deleteTipoRecursoAndReferenciaAndTipoArchivo(String tipoRecurso, String referencia, String tipoArchivo);
 
 }

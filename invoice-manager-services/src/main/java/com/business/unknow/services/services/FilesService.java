@@ -154,7 +154,7 @@ public class FilesService {
 	}
 
 	public void deleteResourceFileByResourceReferenceAndType(String resource, String referencia, String type){
-		resourceRepo.deleteTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia, type);
+		//resourceRepo.deleteTipoRecursoAndReferenciaAndTipoArchivo(resource, referencia, type);
 	}
 	
 	
