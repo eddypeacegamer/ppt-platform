@@ -102,6 +102,7 @@ export class RevisionComponent implements OnInit {
   public getInvoiceInfoByPreFolio(preFolio: string) {
     const idCfdi: number = +preFolio;
     this.pagosCfdi = [];
+  
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
@@ -112,15 +113,13 @@ export class RevisionComponent implements OnInit {
             .subscribe(cfdi => {
             this.factura.cfdi = cfdi;
             if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
-              this.pagosCfdi = cfdi.complemento.pagos;
-             // this.loading = false;
+              this.pagosCfdi = cfdi.complemento.pagos;           
             }
           });
           if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
             this.cfdiService.findPagosPPD(idCfdi)
               .subscribe(pagos => {this.pagosCfdi = pagos; });
-          }
-        
+          }      
           setTimeout(() => { this.loading = false; }, 1800);
       },
         error => {
@@ -289,5 +288,8 @@ export class RevisionComponent implements OnInit {
           console.error(this.errorMessages); });
   }
 
+  isValidCfdi(): boolean {
+    return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
+}
  
 }
