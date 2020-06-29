@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.executor.AbstractExecutorService;;
 
-public class AbstractEvaluatorService extends AbstractExecutorService {
+public class AbstractEvaluatorService {
 
 	@Autowired
 	protected RulesEngine rulesEngine;

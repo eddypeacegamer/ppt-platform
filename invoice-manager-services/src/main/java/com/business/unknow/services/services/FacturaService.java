@@ -97,7 +97,7 @@ public class FacturaService {
 	private DevolucionService devolucionService;
 
 	@Autowired
-	private FilesService fileService;
+	private PDFService pdfService;
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
@@ -219,7 +219,7 @@ public class FacturaService {
 		entity.setTotal(cfdi.getTotal());
 		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		fileService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
+		pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
@@ -346,7 +346,7 @@ public class FacturaService {
 
 		timbradoExecutorService.updateFacturaAndCfdiValues(facturaContext);
 		// PDF GENERATION
-		FacturaFileDto pdfFile = fileService.generateInvoicePDF(facturaContext);
+		FacturaFileDto pdfFile = pdfService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
 		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
@@ -425,7 +425,7 @@ public class FacturaService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", dto.getFolio()))));
 		factura.setCfdi(dto);
-		fileService.generateInvoicePDF(factura, null);
+		pdfService.generateInvoicePDF(factura, null);
 	}
 
 }

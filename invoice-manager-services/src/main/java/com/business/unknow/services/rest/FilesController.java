@@ -36,37 +36,39 @@ public class FilesController {
 	@GetMapping("/facturas/{folio}/files/{fileType}")
 	public ResponseEntity<FacturaFileDto> getFacturaFiles(@PathVariable(name = "folio") String folio,
 			@PathVariable(name = "fileType") String fileType) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getFileByFolioAndType(folio, fileType), HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturaFileByFolioAndType(folio, fileType), HttpStatus.OK);
 	}
 
 	@GetMapping("/recursos/{recurso}/files/{fileType}/referencias/{referencia}")
 	public ResponseEntity<ResourceFileDto> getResourceFiles(@PathVariable(name = "recurso") String recurso,
 			@PathVariable(name = "fileType") String fileType, @PathVariable(name = "referencia") String referencia)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.getFileByResourceReferenceAndType(recurso, referencia, fileType),
+		return new ResponseEntity<>(service.getResourceFileByResourceReferenceAndType(recurso, referencia, fileType),
 				HttpStatus.OK);
 	}
 
 	@PostMapping("/facturas/{folio}/files")
-	public ResponseEntity<FacturaFileDto> insertFacturaFile(@RequestBody @Valid FacturaFileDto facturaFile) {
-		return new ResponseEntity<>(service.insertfacturaFile(facturaFile), HttpStatus.CREATED);
+	public ResponseEntity<Void> insertFacturaFile(@RequestBody @Valid FacturaFileDto facturaFile) {
+		service.upsertFacturaFile(facturaFile);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("/recursos/{recurso}/files")
-	public ResponseEntity<ResourceFileDto> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile) {
-		return new ResponseEntity<>(service.insertResourceFile(resourceFile), HttpStatus.CREATED);
+	public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile) {
+		service.upsertResourceFile(resourceFile);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/facturas/files/{id}")
 	public ResponseEntity<Void> deleteFacturaFile(@PathVariable Integer id) {
 		service.deleteFacturaFile(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@DeleteMapping("/recursos/files/{id}")
 	public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
 		service.deleteResourceFile(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 

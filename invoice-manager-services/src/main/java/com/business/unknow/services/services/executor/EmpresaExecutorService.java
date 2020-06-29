@@ -1,21 +1,20 @@
 package com.business.unknow.services.services.executor;
 
 import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.enums.ResourceFileEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
-import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.files.ResourceFile;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
+import com.business.unknow.services.services.FilesService;
 
 @Service
-public class EmpresaExecutorService extends AbstractExecutorService {
+public class EmpresaExecutorService {
 
 	@Autowired
 	private EmpresaRepository empresaRepository;
@@ -23,62 +22,47 @@ public class EmpresaExecutorService extends AbstractExecutorService {
 	@Autowired
 	private EmpresaMapper empresaMapper;
 
-	public EmpresaDto createEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
+	@Autowired
+	private FilesService filesService;
+
+	public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
 		empresaDto.getInformacionFiscal().setFechaActualizacion(new Date());
 		empresaDto.getInformacionFiscal().setFechaCreacion(new Date());
-		createResourceFile(empresaDto.getCertificado(), empresaDto.getInformacionFiscal().getRfc(),
-				TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.CERT.name());
-		createResourceFile(empresaDto.getLlavePrivada(), empresaDto.getInformacionFiscal().getRfc(),
-				TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.KEY.name());
+
 		String logo = empresaDto.getLogotipo();
-		createResourceFile(logo.substring(logo.indexOf("base64")+7), empresaDto.getInformacionFiscal().getRfc(),
-				TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.LOGO.name());
+		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
+				empresaDto.getInformacionFiscal().getRfc(), ResourceFileEnum.CERT.name(), empresaDto.getCertificado()));
+		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
+				empresaDto.getInformacionFiscal().getRfc(), ResourceFileEnum.KEY.name(), empresaDto.getLlavePrivada()));
+		filesService.upsertResourceFile(
+				new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(), empresaDto.getInformacionFiscal().getRfc(),
+						ResourceFileEnum.LOGO.name(), logo.substring(logo.indexOf("base64") + 7)));
+
 		return empresaMapper
 				.getEmpresaDtoFromEntity(empresaRepository.save(empresaMapper.getEntityFromEmpresaDto(empresaDto)));
 	}
-	
-	public void updateLogo(String rfc , String data) {
-		if(data!=null) {
-			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.LOGO.name());
-			if(logoOpt.isPresent()) {
-				ResourceFile resource= logoOpt.get(); 
-				resource.setData(data.substring(data.indexOf("base64")+7).getBytes());
-				resourceFileRepository.save(resource);
-			}else {
-				createResourceFile(data, rfc,
-						TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.LOGO.name());
-			}
-		}
-	}
-	
-	public void updateCertificado(String rfc , String data) {
-		if(data!=null) {
-			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.CERT.name());
-			if(logoOpt.isPresent()) {
-				ResourceFile resource= logoOpt.get(); 
-				resource.setData(data.getBytes());
-				resourceFileRepository.save(resource);
-			}else {
-				createResourceFile(data, rfc,
-						TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.CERT.name());
-			}
-		}
-	}
-	
-	public void updateKey(String rfc , String data) {
-		if(data!=null) {
-			Optional<ResourceFile> logoOpt = resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(TipoRecursoEnum.EMPRESA.name(), rfc,  ResourceFileEnum.KEY.name());
-			if(logoOpt.isPresent()) {
-				ResourceFile resource= logoOpt.get(); 
-				resource.setData(data.getBytes());
-				resourceFileRepository.save(resource);
-			}else {
-				createResourceFile(data, rfc,
-						TipoRecursoEnum.EMPRESA.name(), ResourceFileEnum.KEY.name());
-			}
-		}
-	}
-	
 
+	public void updateLogo(String rfc, String data) {
+		if(data!=null) {
+			filesService.upsertResourceFile(
+					new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(), rfc,
+							ResourceFileEnum.LOGO.name(), data.substring(data.indexOf("base64") + 7)));
+		}
+		
+	}
+
+	public void updateCertificado(String rfc, String data) {
+		if(data!=null) {
+		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
+				rfc, ResourceFileEnum.CERT.name(), data));
+		}
+	}
+
+	public void updateKey(String rfc, String data) {
+		if(data!=null) {
+		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
+				rfc, ResourceFileEnum.KEY.name(), data));
+		}
+	}
 
 }

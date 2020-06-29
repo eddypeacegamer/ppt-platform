@@ -12,32 +12,31 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobHandler;
 
-import com.business.unknow.model.dto.files.ResourceFileDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 
 /**
  * @author ralfdemoledor
  *
  */
-public class ResourceFileRsExtractor implements ResultSetExtractor<Optional<ResourceFileDto>> {
+public class FacturaFileRsExtractor implements ResultSetExtractor<Optional<FacturaFileDto>> {
 
 	@Override
-	public Optional<ResourceFileDto> extractData(ResultSet rs) throws SQLException {
+	public Optional<FacturaFileDto> extractData(ResultSet rs) throws SQLException {
 		LobHandler lobHandler = new DefaultLobHandler();
-		if (rs.next()) {
-			ResourceFileDto result = new ResourceFileDto();
+		if(rs.next()) {
+			FacturaFileDto result =new FacturaFileDto();
 			result.setId(rs.getInt("FILE_ID"));
-			result.setReferencia(rs.getString("REFERENCIA"));
+			result.setFolio(rs.getString("FOLIO"));
 			result.setTipoArchivo(rs.getString("TIPO_ARCHIVO"));
-			result.setTipoRecurso(rs.getString("TIPO_RECURSO"));
 			result.setFechaCreacion(rs.getTimestamp("FECHA_CREACION"));
-
-			byte[] fileData = lobHandler.getBlobAsBytes(rs, "DATA");
+			byte[] fileData = lobHandler.getBlobAsBytes(rs,"DATA");
 			result.setData(new String(fileData,StandardCharsets.UTF_8));
-
 			return Optional.of(result);
-		} else {
+		}else {
 			return Optional.empty();
 		}
 	}
 
+	
+	
 }
