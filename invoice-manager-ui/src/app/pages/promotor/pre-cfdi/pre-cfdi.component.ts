@@ -5,10 +5,8 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
-import { Concepto } from '../../../models/factura/concepto';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Client } from '../../../models/client';
-import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute } from '@angular/router';
@@ -22,6 +20,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { User } from '../../../models/user';
 import { Pago } from '../../../models/factura/pago';
 import { CfdiData } from '../../../@core/data/cfdi-data';
+import { PagoBase } from '../../../models/pago-base';
 
 
 @Component({
@@ -47,7 +46,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public companyInfo: Empresa;
 
   public loading: boolean = false;
-
 
   constructor(
     private catalogsService: CatalogsData,

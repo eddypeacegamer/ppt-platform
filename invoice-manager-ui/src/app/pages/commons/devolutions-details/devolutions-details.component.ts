@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersData } from '../../../@core/data/users-data';
 import { Factura } from '../../../models/factura/factura';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -27,7 +27,7 @@ export class DevolutionsDetailsComponent implements OnInit {
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
-  public pago: PagoFactura;
+  public pago: PagoBase;
   public devoluciones: Devolucion[]= [];
   public pageDevolutions: GenericPage<PagoDevolucion> = new GenericPage();
 

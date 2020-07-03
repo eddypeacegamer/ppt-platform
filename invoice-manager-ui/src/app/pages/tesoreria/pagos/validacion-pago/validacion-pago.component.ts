@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
-import { PagoFactura } from '../../../../models/pago-factura';
+import { PagoBase } from '../../../../models/pago-base';
 import { FilesData } from '../../../../@core/data/files-data';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -12,9 +12,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class ValidacionPagoComponent implements OnInit {
 
 
-  @Input() pago: PagoFactura;
+  @Input() pago: PagoBase;
   public comprobanteUrl: SafeUrl;
-  public updatedPayment: PagoFactura;
+  public updatedPayment: PagoBase;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
     private filesService: FilesData,
@@ -25,9 +25,9 @@ export class ValidacionPagoComponent implements OnInit {
     this.updatedPayment = {... this.pago};
   }
 
-  public mostrarComprobante(pago:PagoFactura){
+  public mostrarComprobante(pago: PagoBase) {
     this.comprobanteUrl = undefined;
-    if(pago.formaPago!='CREDITO'){
+    if(pago.formaPago !== 'CREDITO'){
       this.filesService.getResourceFile(`${pago.id}_${pago.folio}`, 'PAGO', 'IMAGEN').subscribe(
         (file) => this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
     }

@@ -84,6 +84,12 @@
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
         </div>
+        <br>
+
+        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
+          <ngx-pago-factura [factura]="factura" [user]="user"></ngx-pago-factura>
+        </div>
+      
 
       </nb-card-body>
     </nb-card>

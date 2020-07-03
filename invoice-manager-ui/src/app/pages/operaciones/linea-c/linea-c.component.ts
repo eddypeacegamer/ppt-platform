@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 import { Pago } from '../../../models/factura/pago';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { User } from '../../../models/user';
@@ -78,7 +78,7 @@ export class LineaCComponent implements OnInit {
   public companiesCat: Empresa[] = [];
 
   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
-  public newPayment: PagoFactura;
+  public newPayment: PagoBase;
   public invoicePayments = [];
   public paymentSum: number = 0;
 

@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DevolutionData } from '../../../@core/data/devolution-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { User } from '../../../models/user';
 
@@ -28,7 +28,7 @@ export class DevolutionPreferencesComponent implements OnInit {
   public fileInput: any = {};
   public user: User;
   public factura: Factura= new Factura();
-  public pago: PagoFactura;
+  public pago: PagoBase;
  
   public formParams: any = {tab: 'CLIENTE', filename: ''};
   public solicitud: PagoDevolucion = new PagoDevolucion();

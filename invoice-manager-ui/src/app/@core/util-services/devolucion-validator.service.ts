@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PagoDevolucion } from '../../models/pago-devolucion';
-import { Cfdi } from '../../models/factura/cfdi';
 import { Client } from '../../models/client';
 import { Concepto } from '../../models/factura/concepto';
-import { PaymentsData } from '../data/payments-data';
 import { Factura } from '../../models/factura/factura';
-import { filter } from 'rxjs/operators';
-import { PagoFactura } from '../../models/pago-factura';
+import { PagoBase } from '../../models/pago-base';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +12,7 @@ export class DevolucionValidatorService {
 
   constructor() { }
 
-  public calculateDevolutionAmmount(factura: Factura, payment: PagoFactura, client: Client, tipoReceptor: string): number {
+  public calculateDevolutionAmmount(factura: Factura, payment: PagoBase, client: Client, tipoReceptor: string): number {
     //TODO set this methiod as promise
 
     const impuestos = this.getTotalImpuestos(factura.cfdi.conceptos);

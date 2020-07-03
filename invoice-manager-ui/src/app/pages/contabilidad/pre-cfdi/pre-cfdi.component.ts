@@ -11,7 +11,7 @@ import { Cfdi } from '../../../models/factura/cfdi';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
@@ -75,7 +75,7 @@ export class PreCfdiComponent implements OnInit {
   /** PAYMENT SECCTION**/
 
   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false};
-  public newPayment: PagoFactura;
+  public newPayment: PagoBase;
   public invoicePayments = [];
   public paymentSum: number = 0;
 

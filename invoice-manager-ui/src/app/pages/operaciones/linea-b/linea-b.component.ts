@@ -21,7 +21,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Pago } from '../../../models/factura/pago';
@@ -74,7 +74,7 @@ export class LineaBComponent implements OnInit {
   /** PAYMENT SECCTION**/
 
   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
-  public newPayment: PagoFactura;
+  public newPayment: PagoBase;
   public invoicePayments = [];
   public paymentSum: number = 0;
 

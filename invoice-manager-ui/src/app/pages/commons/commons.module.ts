@@ -29,6 +29,7 @@ import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-d
 import { CfdiComponent } from './cfdi/cfdi.component';
 import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+import { PagoFacturaComponent } from './pago-factura/pago-factura.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {AutocompleteLibModule} from 'angular-ng-autocomplete';
     DevolutionsDetailsComponent,
     CfdiComponent,
     AsignacionPagosComponent,
+    PagoFacturaComponent,
   ],
   imports: [
     CommonModule,
@@ -70,6 +72,7 @@ import {AutocompleteLibModule} from 'angular-ng-autocomplete';
     InvoiceReportsComponent,
     DevolutionsDetailsComponent,
     PagosFacturaComponent,
+    PagoFacturaComponent,
     ConceptosComponent,
     CfdiComponent,
     AsignacionPagosComponent,

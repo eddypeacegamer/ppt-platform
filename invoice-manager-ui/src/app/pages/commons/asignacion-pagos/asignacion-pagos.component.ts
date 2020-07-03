@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PagoFactura } from '../../../models/pago-factura';
+import { PagoBase } from '../../../models/pago-base';
 import { GenericPage } from '../../../models/generic-page';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -17,7 +17,7 @@ import { Contribuyente } from '../../../models/contribuyente';
 })
 export class AsignacionPagosComponent implements OnInit {
 
-  @Input() payment: PagoFactura;
+  @Input() payment: PagoBase;
   public page: GenericPage<any>;
   public user: User;
 

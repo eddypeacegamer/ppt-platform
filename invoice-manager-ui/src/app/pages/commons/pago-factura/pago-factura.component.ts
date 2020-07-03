@@ -1,133 +1,60 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, TemplateRef } from '@angular/core';
-import { PaymentsData } from '../../../@core/data/payments-data';
-import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { InvoicesData } from '../../../@core/data/invoices-data';
-import { CuentasData } from '../../../@core/data/cuentas-data';
+import { Component, OnInit, Input } from '@angular/core';
+import { Factura } from '../../../models/factura/factura';
+import { User } from '../../../models/user';
+import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
+import { PaymentsData } from '../../../@core/data/payments-data';
+import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { User } from '../../../models/user';
-import { UsersData } from '../../../@core/data/users-data';
-import { GenericPage } from '../../../models/generic-page';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme';
-import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
-import { PagoBase } from '../../../models/pago-base';
-
-
-interface TreeNode<T> {
-  data: T;
-  children?: TreeNode<T>[];
-  expanded?: boolean;
-}
-
-interface PagoFacturaModel {
-  ID: string;
-  TIPO: string;
-  MONTO: number;
-  FECHA: string;
-  STATUS?: string;
-  SALDO?: number;
-  FOLIO?: number;
-}
+import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
+import { InvoicesData } from '../../../@core/data/invoices-data';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ResourceFile } from '../../../models/resource-file';
 
 @Component({
-  selector: 'ngx-pagos-factura',
-  templateUrl: './pagos-factura.component.html',
-  styleUrls: ['./pagos-factura.component.scss'],
+  selector: 'ngx-pago-factura',
+  templateUrl: './pago-factura.component.html',
+  styleUrls: ['./pago-factura.component.scss'],
 })
-export class PagosFacturaComponent implements OnInit {
+export class PagoFacturaComponent implements OnInit {
 
-  public user: User;
+  @Input() factura: Factura;
+  @Input() user: User;
 
   public fileInput: any;
 
-  
-
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoBase = new PagoBase();
-  public promotorPayments: GenericPage<PagoBase> = new GenericPage();
+  public invoicePayments: PagoBase[] = [];
   public paymentSum: number = 0;
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
   public cuentas: Cuenta[];
   public loading: boolean = false;
 
-  customColumn = 'ACCIONES';
-  defaultColumns = [ 'MONTO', 'STATUS', 'FOLIO', 'FECHA' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
-
-  dataSource: NbTreeGridDataSource<PagoFacturaModel>;
-
-  sortColumn: string;
-  sortDirection: NbSortDirection = NbSortDirection.NONE;
-
-  private data: TreeNode<PagoFacturaModel>[] = [
-    {
-      data: { ID: '22', MONTO: 3500, TIPO: 'D', FECHA: '2020-05-20', SALDO: 1000, STATUS: 'VALIDACION'},
-      children: [
-        { data: { ID: '22', MONTO: -1500, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456789034} },
-        { data: { ID: '22', MONTO: -1000, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456783456} },
-      ],
-    },
-    {
-      data: { ID: '19', MONTO: 7500, TIPO: 'D', FECHA: '2020-05-12', SALDO: 500, STATUS: 'RECHAZADO' },
-      children: [
-        { data: { ID: '19', MONTO: -3000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020456789876} },
-        { data: { ID: '19', MONTO: -4000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020434567899 } },
-      ],
-    },
-    {
-      data: { ID: '11', MONTO: 10000, TIPO: 'D', FECHA: '2020-05-03', SALDO: 0, STATUS: 'ACEPTADO'},
-      children: [
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020498765455 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020764234578 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020567887895 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020386468909 } },
-      ],
-    }];
-
-  constructor(
-    private paymentsService: PaymentsData,
-    private dialogService: NbDialogService,
+  constructor(private paymentsService: PaymentsData,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
-    private usersService: UsersData,
-    private invoiceService: InvoicesData,
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {
-      this.dataSource = this.dataSourceBuilder.create(this.data);
-    }
+    private invoiceService: InvoicesData) { }
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
-    this.usersService.getUserInfo()
-      .then(user => this.user = user)
-      .then(() => {
-        this.paymentsService.getAllPayments(0, 10, {})
-              .subscribe((page: GenericPage<PagoBase>) => {
-                this.promotorPayments = page;
+    if (this.factura !== undefined && this.factura.folio !== undefined) {
+      this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
+        .subscribe(payTypes => this.payTypeCat = payTypes);
+      this.paymentsService.getPaymentsByFolio(this.factura.folio)
+              .subscribe((payments: PagoBase[]) => {
+                this.invoicePayments = payments;
+                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
+                if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
+                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
+                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
+                }
                 });
-      });
-  }
-
-  getShowOn(index: number) {
-    const minWithForMultipleColumns = 400;
-    const nextColumnStep = 100;
-    return minWithForMultipleColumns + (nextColumnStep * index);
-  }
-  updateSort(sortRequest: NbSortRequest): void {
-    this.sortColumn = sortRequest.column;
-    this.sortDirection = sortRequest.direction;
-  }
-
-  getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
-      return this.sortDirection;
     }
-    return NbSortDirection.NONE;
   }
-
- 
 
   /******* PAGOS ********/
 
@@ -143,14 +70,13 @@ export class PagosFacturaComponent implements OnInit {
       this.newPayment.banco = 'No aplica';
             this.newPayment.cuenta = 'Sin especificar';
     }else {
-      /*
       this.accountsService.getCuentasByCompany(this.factura.rfcEmisor)
           .subscribe(cuentas => {
             this.cuentas = cuentas;
             this.paymentForm.bankAccount = cuentas[0].id;
             this.newPayment.banco = cuentas[0].banco;
             this.newPayment.cuenta = cuentas[0].cuenta;
-          });*/
+          });
     }
   }
 
@@ -176,20 +102,7 @@ export class PagosFacturaComponent implements OnInit {
     }
   }
 
-
-  public openPaymentAssigments(pago?: PagoBase) {
-    const payment = pago || new PagoBase();
-    payment.monto = 3500;
-    payment.moneda = 'MXN';
-    this.dialogService.open(AsignacionPagosComponent, {
-      context: {
-        payment : payment,
-      },
-    }).onClose.subscribe(() => console.log('Closing view'));
-  }
-
   deletePayment(paymentId) {
-    /*
     this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
       result => {
         this.paymentsService.getPaymentsByFolio(this.factura.folio)
@@ -200,11 +113,10 @@ export class PagosFacturaComponent implements OnInit {
         this.invoiceService.getComplementosInvoice(this.factura.folio)
           .subscribe(complementos => this.factura.complementos = complementos);
       }, (error: HttpErrorResponse) =>
-      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));*/
+      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
   sendPayment() {
-    /*
     this.newPayment.folioPadre = this.factura.folio;
     this.newPayment.folio = this.factura.folio;
     this.newPayment.tipoPago = 'INGRESO';
@@ -217,7 +129,7 @@ export class PagosFacturaComponent implements OnInit {
       this.loading = true;
       this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
         result => {
-          this.newPayment = new PagoFactura();
+          this.newPayment = new PagoBase();
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
           resourceFile.tipoRecurso = 'PAGO';
@@ -225,7 +137,7 @@ export class PagosFacturaComponent implements OnInit {
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe((payments: PagoFactura[]) => { this.invoicePayments = payments;
+          .subscribe((payments: PagoBase[]) => { this.invoicePayments = payments;
             this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
             this.loading = false;
              if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
@@ -240,11 +152,10 @@ export class PagosFacturaComponent implements OnInit {
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
         });
     }
-    this.newPayment = new PagoFactura();
+    this.newPayment = new PagoBase();
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';
-    }*/
+    }
   }
 }
-
