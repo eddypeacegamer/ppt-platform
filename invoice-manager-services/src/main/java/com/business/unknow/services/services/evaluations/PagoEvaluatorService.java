@@ -56,7 +56,7 @@ public class PagoEvaluatorService extends AbstractValidator {
 		
 		rulesEngine.fire(creationSuite.getSuite(), facts);
 		if(!results.isEmpty()) {
-			throw new InvoiceManagerException(results.toString(), "Alguna regla de creacion de pagos fue ejecutada.", HttpStatus.CONFLICT.value());
+			throw new InvoiceManagerException(results.toString(), "Una o varias reglas de creacion de pagos fue ejecutada.", HttpStatus.CONFLICT.value());
 		}
 	}
 

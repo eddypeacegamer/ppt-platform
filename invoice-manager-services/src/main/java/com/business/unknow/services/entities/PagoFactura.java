@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -29,8 +30,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PAGO_FACTURAS")
-public class PagoFactura {
+public class PagoFactura implements Serializable{
 	
+	private static final long serialVersionUID = 8969604798644430857L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

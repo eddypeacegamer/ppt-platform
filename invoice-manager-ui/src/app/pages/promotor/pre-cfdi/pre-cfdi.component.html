@@ -65,15 +65,11 @@
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
         
-
-        <div class="alert alert-danger" *ngIf="factura.statusFactura.indexOf('Rechazo')==0" role="alert">
-          <p>{{factura.statusDetail}}</p>
-        </div>
         <br>
 
         <div class="row slide_3" *ngIf="factura.folio === undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
-            [disabled]="loading || !isValidCfdi()" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+            [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
          <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->

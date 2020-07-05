@@ -404,11 +404,12 @@ public class FacturaService {
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public FacturaDto generateComplemento(FacturaDto facturaPadre, PagoDto pagoPpd) throws InvoiceManagerException {
+	public FacturaDto generateComplemento(List<FacturaDto> facturasPadre, PagoDto pagoPpd) throws InvoiceManagerException {
 
-		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturaPadre,
-				facturaPadre.getFolio());
-		FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturaPadre, pagoPpd);
+		// TODO refactor this code to allow create muticomplements 
+		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturasPadre.get(0),
+				facturasPadre.get(0).getFolio());
+		FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturasPadre.get(0), pagoPpd);
 		complemento.setCfdi(facturaBuilderService.buildFacturaComplementoCreation(factContext));
 		facturaDefaultValues.assignaDefaultsComplemento(complemento);
 		factContext.setFacturaDto(complemento);

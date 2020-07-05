@@ -5,9 +5,9 @@ import { Catalogo } from '../../models/catalogos/catalogo';
 
 export abstract class PaymentsData {
 
-    abstract getPaymentsByFolio(folio : string): Observable<PagoBase[]>
+    abstract getPaymentsByFolio(folio : string): Observable<PagoBase[]>;
 
-    abstract insertNewPayment(folio : string, payment : PagoBase): Observable<PagoBase>;
+    abstract insertNewPayment(payment: PagoBase): Observable<PagoBase>;
 
     abstract deletePayment(folio : string, paymentId : number): Observable<PagoBase>;
 

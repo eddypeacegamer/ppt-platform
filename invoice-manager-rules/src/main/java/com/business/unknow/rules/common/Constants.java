@@ -61,6 +61,10 @@ public class Constants {
 		public static final String DOUBLE_PAYMENT_VALIDATION_RULE = "DoubleOrderValidationRule";
 		public static final String DOUBLE_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion del segundo pago, el primer pago  no ha sido validado.";
 		
+		public static final String CREDIT_PAYMENT_VALIDATION = "CreditPaymentRule";
+		public static final String CREDIT_PAYMENT_VALIDATION_RULE = "CreditPaymentRule";
+		public static final String CREDIT_PAYMENT_VALIDATION_RULE_DESC = "Las facturas PPD no pueden cargar pagos a credito.";
+		
 		public static final String CONFLICT_PAYMENT_VALIDATION = "ConflictOrderValidation";
 		public static final String CONFLICT_PAYMENT_VALIDATION_RULE = "ConflictOrderValidationRule";
 		public static final String CONFLICT_PAYMENT_VALIDATION_RULE_DESC = "Incongruencia en la validacion del pago.";

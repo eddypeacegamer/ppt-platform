@@ -11,6 +11,7 @@ import { PagosValidatorService } from '../../../@core/util-services/pagos-valida
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ResourceFile } from '../../../models/resource-file';
+import { PagoFactura } from '../../../models/pago-factura';
 
 @Component({
   selector: 'ngx-pago-factura',
@@ -41,6 +42,8 @@ export class PagoFacturaComponent implements OnInit {
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
+    this.newPayment.facturas = [new PagoFactura()];
+
     if (this.factura !== undefined && this.factura.folio !== undefined) {
       this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
         .subscribe(payTypes => this.payTypeCat = payTypes);
@@ -117,23 +120,20 @@ export class PagoFacturaComponent implements OnInit {
   }
 
   sendPayment() {
-    this.newPayment.folioPadre = this.factura.folio;
-    this.newPayment.folio = this.factura.folio;
-    this.newPayment.tipoPago = 'INGRESO';
-    this.newPayment.acredor = this.factura.razonSocialEmisor;
-    this.newPayment.deudor = this.factura.razonSocialRemitente;
+
     this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
     this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
-      this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
+      payment.facturas[0].folio = this.factura.folio;
+      this.paymentsService.insertNewPayment(payment).subscribe(
         result => {
           this.newPayment = new PagoBase();
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
           resourceFile.tipoRecurso = 'PAGO';
-          resourceFile.referencia  = `${result.id}_${result.folio}`;
+          resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)

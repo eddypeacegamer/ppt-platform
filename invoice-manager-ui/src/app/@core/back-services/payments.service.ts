@@ -20,8 +20,8 @@ export class PaymentsService {
   }
 
 
-  public insertNewPayment(folio: string, payment: PagoBase): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folio}/pagos`, payment);
+  public insertNewPayment(payment: PagoBase): Observable<any> {
+    return this.httpClient.post(`../api/pagos`, payment);
   }
 
   public deletePayment(folio: string, paymentId: number): Observable<any> {

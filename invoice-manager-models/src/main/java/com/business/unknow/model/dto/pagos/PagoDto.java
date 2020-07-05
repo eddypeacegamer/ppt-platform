@@ -24,6 +24,8 @@ public class PagoDto implements Serializable {
 	private String formaPago;
 	private BigDecimal monto;
 	private String statusPago;
+	private String acredor;
+	private String deudor;
 	private String comentarioPago;
 	private String solicitante;
 	private Boolean revision1;
@@ -38,6 +40,8 @@ public class PagoDto implements Serializable {
 	private Date fechaActualizacion;
 	
 	private List<PagoFacturaDto> facturas;
+	
+	private String comprobante;
 
 	public Integer getId() {
 		return id;
@@ -101,6 +105,22 @@ public class PagoDto implements Serializable {
 
 	public void setStatusPago(String statusPago) {
 		this.statusPago = statusPago;
+	}
+	
+	public String getAcredor() {
+		return acredor;
+	}
+
+	public void setAcredor(String acredor) {
+		this.acredor = acredor;
+	}
+
+	public String getDeudor() {
+		return deudor;
+	}
+
+	public void setDeudor(String deudor) {
+		this.deudor = deudor;
 	}
 
 	public String getComentarioPago() {
@@ -182,14 +202,23 @@ public class PagoDto implements Serializable {
 	public void setFacturas(List<PagoFacturaDto> facturas) {
 		this.facturas = facturas;
 	}
+	
+	public String getComprobante() {
+		return comprobante;
+	}
+
+	public void setComprobante(String comprobante) {
+		this.comprobante = comprobante;
+	}
 
 	@Override
 	public String toString() {
 		return "PagoDto [id=" + id + ", moneda=" + moneda + ", banco=" + banco + ", cuenta=" + cuenta
 				+ ", tipoDeCambio=" + tipoDeCambio + ", formaPago=" + formaPago + ", monto=" + monto + ", statusPago="
-				+ statusPago + ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1="
-				+ revision1 + ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2
-				+ ", fechaPago=" + fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion="
-				+ fechaActualizacion + ", facturas=" + facturas + "]";
+				+ statusPago + ", acredor=" + acredor + ", deudor=" + deudor + ", comentarioPago=" + comentarioPago
+				+ ", solicitante=" + solicitante + ", revision1=" + revision1 + ", revision2=" + revision2
+				+ ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago=" + fechaPago + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", facturas=" + facturas
+				+ ", comprobante=" + comprobante + "]";
 	}	
 }

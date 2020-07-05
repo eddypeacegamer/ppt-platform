@@ -63,6 +63,12 @@ public class Pago implements Serializable {
 
 	@Column(name = "COMENTARIO_PAGO")
 	private String comentarioPago;
+	
+	@Column(name = "ACREDOR")
+	private String acredor;
+	
+	@Column(name = "DEUDOR")
+	private String deudor;
 
 	@Column(name = "SOLICITANTE")
 	private String solicitante;
@@ -166,6 +172,22 @@ public class Pago implements Serializable {
 	public void setComentarioPago(String comentarioPago) {
 		this.comentarioPago = comentarioPago;
 	}
+	
+	public String getAcredor() {
+		return acredor;
+	}
+
+	public void setAcredor(String acredor) {
+		this.acredor = acredor;
+	}
+
+	public String getDeudor() {
+		return deudor;
+	}
+
+	public void setDeudor(String deudor) {
+		this.deudor = deudor;
+	}
 
 	public String getSolicitante() {
 		return solicitante;
@@ -243,9 +265,11 @@ public class Pago implements Serializable {
 	public String toString() {
 		return "Pago [id=" + id + ", moneda=" + moneda + ", banco=" + banco + ", cuenta=" + cuenta + ", tipoDeCambio="
 				+ tipoDeCambio + ", formaPago=" + formaPago + ", monto=" + monto + ", statusPago=" + statusPago
-				+ ", comentarioPago=" + comentarioPago + ", solicitante=" + solicitante + ", revision1=" + revision1
-				+ ", revision2=" + revision2 + ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago="
-				+ fechaPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", facturas=" + facturas + "]";
+				+ ", comentarioPago=" + comentarioPago + ", acredor=" + acredor + ", deudor=" + deudor
+				+ ", solicitante=" + solicitante + ", revision1=" + revision1 + ", revision2=" + revision2
+				+ ", revisor1=" + revisor1 + ", revisor2=" + revisor2 + ", fechaPago=" + fechaPago + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", facturas=" + facturas + "]";
 	}
+
+	
 }

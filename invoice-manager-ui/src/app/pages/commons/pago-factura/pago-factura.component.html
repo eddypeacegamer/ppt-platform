@@ -36,7 +36,7 @@
 <div class="row" *ngIf="factura.cfdi.total > paymentSum">
   <div class="col-sm-2">
     <label for="payAmmount" class="label">Monto Pago</label>
-    <input id="payAmmount" class="form-control" fullWidth type="number" min="0" placeholder="Monto" [(ngModel)]="newPayment.monto">
+    <input id="payAmmount" class="form-control" fullWidth type="number" min="0" placeholder="Monto" [(ngModel)]="newPayment.facturas[0].monto">
   </div>
   <div class="col-md-3">
         <label for="payAmmount" class="label">Fecha de pago</label>
