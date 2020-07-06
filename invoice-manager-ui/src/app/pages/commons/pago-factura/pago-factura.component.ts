@@ -27,7 +27,7 @@ export class PagoFacturaComponent implements OnInit {
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoBase = new PagoBase();
-  public invoicePayments: PagoFactura[] = [];
+  public invoicePayments: PagoBase[] = [];
   public paymentSum: number = 0;
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
@@ -50,7 +50,7 @@ export class PagoFacturaComponent implements OnInit {
       this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
         .subscribe(payTypes => this.payTypeCat = payTypes);
       this.paymentsService.getPaymentsByFolio(this.factura.folio)
-              .subscribe((payments: PagoFactura[]) => this.invoicePayments = payments);
+              .subscribe((payments: PagoBase[]) => this.invoicePayments = payments);
     }
   }
 
@@ -133,7 +133,7 @@ export class PagoFacturaComponent implements OnInit {
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe((payments: PagoFactura[]) => {
+          .subscribe((payments: PagoBase[]) => {
             this.invoicePayments = payments;
             this.loading = false; });
             if (this.factura.metodoPago === 'PPD') {

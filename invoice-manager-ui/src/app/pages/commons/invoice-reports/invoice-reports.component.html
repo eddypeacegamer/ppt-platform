@@ -261,6 +261,7 @@
                 <th class="text-center">Método Pago</th>
                 <th class="text-center">Estatus factura</th>
                 <th class="text-center">Total</th>
+                <th class="text-center">Saldo</th>
                 <th class="text-center">Promotor</th>
                 <th class="text-center">Solicitud</th>
                 <th class="text-center">Actualización</th>
@@ -271,7 +272,7 @@
               
               <tr *ngFor="let fila of page.content" >
                
-                <td scope="row p-1" class="text-center" style="min-width: 160px;">
+                <td scope="row" class="text-center" style="min-width: 160px;">
                   <button type="button" class="btn-sm btn-outline-primary" 
                     (click)="redirectToCfdi(fila.idCfdi)"><i class="fa fa-search"></i>
                   </button>
@@ -303,7 +304,8 @@
                 <td scope="row">{{fila.tipoDocumento}}</td>
                 <td scope="row">{{fila.metodoPago}}</td>
                 <td scope="row">{{fila.statusFactura}}</td>
-                <td scope="row">{{fila.total}}</td>
+                <td scope="row">{{fila.total | currency}}</td>
+                <td scope="row">{{fila.saldoPendiente | currency}}</td>
                 <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>

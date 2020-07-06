@@ -96,8 +96,8 @@ public class PagoService {
 				result.getTotalElements());
 	}
 
-	public List<PagoFacturaDto> findPagosByFolio(String folio) {
-		return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
+	public List<PagoDto> findPagosByFolio(String folio) {
+		return mapper.getPagosDtoFromEntities(repository.findPagosByFolio(folio));
 	}
 
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {

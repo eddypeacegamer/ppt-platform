@@ -24,7 +24,7 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
@@ -99,7 +99,7 @@ public class FacturaController {
 	}
 	
 	@GetMapping("/{folio}/pagos")
-	public ResponseEntity<List<PagoFacturaDto>> getPagosbyFolio(@PathVariable String folio) {
+	public ResponseEntity<List<PagoDto>> getPagosbyFolio(@PathVariable String folio) {
 		return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
 	}
 

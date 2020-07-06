@@ -6,7 +6,7 @@ import { PagoFactura } from '../../models/pago-factura';
 
 export abstract class PaymentsData {
 
-    abstract getPaymentsByFolio(folio: string): Observable<PagoFactura[]>;
+    abstract getPaymentsByFolio(folio: string): Observable<PagoBase[]>;
 
     abstract insertNewPayment(payment: PagoBase): Observable<PagoBase>;
 

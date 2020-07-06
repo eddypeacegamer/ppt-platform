@@ -5,7 +5,7 @@ import { PagoBase } from '../../models/pago-base';
 import { Catalogo } from '../../models/catalogos/catalogo';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentsService {
 
