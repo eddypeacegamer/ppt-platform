@@ -35,6 +35,7 @@ import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Pago;
+import com.business.unknow.services.entities.PagoFactura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
@@ -167,7 +168,13 @@ public class PagoService {
 				
 			}
 		});
-		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));
+		Pago payment = repository.save(mapper.getEntityFromPagoDto(pagoDto));
+		for (PagoFacturaDto fact : pagoDto.getFacturas()) {
+			PagoFactura pagoFact = mapper.getEntityFromPagoFacturaDto(fact);
+			pagoFact.setPago(payment);
+			payment.addFactura(facturaPagosRepository.save(pagoFact));
+		}
+		return mapper.getPagoDtoFromEntity(payment);
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

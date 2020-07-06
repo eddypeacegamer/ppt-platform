@@ -58,7 +58,8 @@ export class DevolutionPreferencesComponent implements OnInit {
     this.route.paramMap.subscribe(route => {
       this.folioParam = route.get('folio');
       if (this.folioParam !== '*') {
-        this.invoiceService.getInvoiceByFolio(this.folioParam)
+        // refactor
+       /* this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
               if ( invoice.tipoDocumento === 'Complemento') {
                 this.invoiceService.getInvoiceByFolio(invoice.folioPadre).subscribe(padre => {
@@ -77,7 +78,7 @@ export class DevolutionPreferencesComponent implements OnInit {
                     this.clientsService.getClientByRFC(invoice.rfcRemitente)
                     .subscribe(client => {this.clientInfo = client; this.selectTab('CLIENTE'); })});
               }
-            });
+            });*/
       } else {
         this.initVariables();
       }

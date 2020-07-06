@@ -66,7 +66,7 @@ public class DevolucionExecutorService {
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
 						String.format("El pago %s  no existe", context.getCurrentPago().toString()),
 						HttpStatus.CONFLICT.value()));
-		context.getFacturaDto().setStatusDevolucion(DevolucionStatusEnum.DEVUELTA.getValor());
+		//context.getFacturaDto().setStatusDevolucion(DevolucionStatusEnum.DEVUELTA.getValor());
 		facturaRepository.save(facturaMapper.getEntityFromFacturaDto(context.getFacturaDto()));
 	}
 
@@ -106,9 +106,10 @@ public class DevolucionExecutorService {
 				.orElseThrow(() -> new InvoiceManagerException("No se pueden generar devoluciones a pagos inexistentes",
 						String.format("El pago %s  no existe", context.getCurrentPago().toString()),
 						HttpStatus.CONFLICT.value()));
-		context.getFacturaDto().setStatusDevolucion(DevolucionStatusEnum.DEVUELTA.getValor());
+		// TODO refactor this code on devoluciones implementation
+		//context.getFacturaDto().setStatusDevolucion(DevolucionStatusEnum.DEVUELTA.getValor());
 		facturaRepository.save(facturaMapper.getEntityFromFacturaDto(context.getFacturaDto()));
-		context.getFacturaPadreDto().setStatusDevolucion(DevolucionStatusEnum.PARCIALMENTE_DEVUELTA.getValor());
+		//context.getFacturaPadreDto().setStatusDevolucion(DevolucionStatusEnum.PARCIALMENTE_DEVUELTA.getValor());
 		facturaRepository.save(facturaMapper.getEntityFromFacturaDto(context.getFacturaPadreDto()));
 	}
 

@@ -16,7 +16,7 @@ export class PaymentsService {
   }
 
   public getPaymentById(id: number): Observable<any> {
-    return this.httpClient.get(`../api/pagos/${id}`)
+    return this.httpClient.get(`../api/pagos/${id}`);
   }
 
 
@@ -24,12 +24,12 @@ export class PaymentsService {
     return this.httpClient.post(`../api/pagos`, payment);
   }
 
-  public deletePayment(folio: string, paymentId: number): Observable<any> {
-    return this.httpClient.delete(`../api/facturas/${folio}/pagos/${paymentId}`);
+  public deletePayment(paymentId: number): Observable<any> {
+    return this.httpClient.delete(`../api/pagos/${paymentId}`);
   }
 
-  public updatePaymentWithValidation(folio: string, paymentId: number, payment: PagoBase): Observable<any> {
-    return this.httpClient.put(`../api/facturas/${folio}/pagos/${paymentId}`, payment);
+  public updatePaymentWithValidation(paymentId: number, payment: PagoBase): Observable<any> {
+    return this.httpClient.put(`../api/pagos/${paymentId}`, payment);
   }
 
   public getFormasPago(roles?: string[]): Observable<any> {

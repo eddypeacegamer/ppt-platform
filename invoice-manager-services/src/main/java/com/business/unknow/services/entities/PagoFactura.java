@@ -103,6 +103,30 @@ public class PagoFactura implements Serializable{
 		this.monto = monto;
 	}
 
+	public BigDecimal getTotalFactura() {
+		return totalFactura;
+	}
+
+	public void setTotalFactura(BigDecimal totalFactura) {
+		this.totalFactura = totalFactura;
+	}
+
+	public String getAcredor() {
+		return acredor;
+	}
+
+	public void setAcredor(String acredor) {
+		this.acredor = acredor;
+	}
+
+	public String getDeudor() {
+		return deudor;
+	}
+
+	public void setDeudor(String deudor) {
+		this.deudor = deudor;
+	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
@@ -119,9 +143,19 @@ public class PagoFactura implements Serializable{
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public Pago getPago() {
+		return pago;
+	}
+
+	public void setPago(Pago pago) {
+		this.pago = pago;
+	}
+
 	@Override
 	public String toString() {
-		return "PagoFactura [id=" + id  + ", idCfdi=" + idCfdi + ", folio=" + folio + ", monto="
-				+ monto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
+		return "PagoFactura [id=" + id + ", idCfdi=" + idCfdi + ", folio=" + folio + ", monto=" + monto
+				+ ", totalFactura=" + totalFactura + ", acredor=" + acredor + ", deudor=" + deudor + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", pago=" + pago + "]";
 	}
+
 }

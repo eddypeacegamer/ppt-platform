@@ -27,7 +27,7 @@ export class PagoFacturaComponent implements OnInit {
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoBase = new PagoBase();
-  public invoicePayments: PagoBase[] = [];
+  public invoicePayments: PagoFactura[] = [];
   public paymentSum: number = 0;
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
@@ -38,24 +38,19 @@ export class PagoFacturaComponent implements OnInit {
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
-    private invoiceService: InvoicesData) { }
+    private invoiceService: InvoicesData) {
+      this.factura = new Factura();
+      this.newPayment.moneda = 'MXN';
+      this.newPayment.facturas = [new PagoFactura()];
+    }
 
   ngOnInit() {
-    this.newPayment.moneda = 'MXN';
-    this.newPayment.facturas = [new PagoFactura()];
 
     if (this.factura !== undefined && this.factura.folio !== undefined) {
       this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
         .subscribe(payTypes => this.payTypeCat = payTypes);
       this.paymentsService.getPaymentsByFolio(this.factura.folio)
-              .subscribe((payments: PagoBase[]) => {
-                this.invoicePayments = payments;
-                this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-                if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
-                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
-                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
-                }
-                });
+              .subscribe((payments: PagoFactura[]) => this.invoicePayments = payments);
     }
   }
 
@@ -106,12 +101,11 @@ export class PagoFacturaComponent implements OnInit {
   }
 
   deletePayment(paymentId) {
-    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
+    this.paymentsService.deletePayment(paymentId).subscribe(
       result => {
         this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe(payments => {
             this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
           });
         this.invoiceService.getComplementosInvoice(this.factura.folio)
           .subscribe(complementos => this.factura.complementos = complementos);
@@ -123,13 +117,15 @@ export class PagoFacturaComponent implements OnInit {
 
     this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
-    this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
+    payment.facturas[0].folio = this.factura.folio;
+    payment.facturas[0].monto = payment.monto;
+    this.payErrorMessages = this.paymentValidator.validatePago(payment, this.factura);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
-      payment.facturas[0].folio = this.factura.folio;
+      payment.acredor = this.factura.razonSocialEmisor;
+      payment.deudor = this.factura.razonSocialRemitente;
       this.paymentsService.insertNewPayment(payment).subscribe(
         result => {
-          this.newPayment = new PagoBase();
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
           resourceFile.tipoRecurso = 'PAGO';
@@ -137,22 +133,21 @@ export class PagoFacturaComponent implements OnInit {
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe((payments: PagoBase[]) => { this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-            this.loading = false;
-             if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
-                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
-                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
-              }
-          });
-          this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => this.factura.complementos = complementos);
+          .subscribe((payments: PagoFactura[]) => {
+            this.invoicePayments = payments;
+            this.loading = false; });
+            if (this.factura.metodoPago === 'PPD') {
+              this.invoiceService.getComplementosInvoice(this.factura.folio)
+                .subscribe(complementos => this.factura.complementos = complementos);
+            }
         }, (error: HttpErrorResponse) => {
           this.loading = false;
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
         });
     }
     this.newPayment = new PagoBase();
+    this.newPayment.moneda = 'MXN';
+    this.newPayment.facturas = [new PagoFactura()];
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';

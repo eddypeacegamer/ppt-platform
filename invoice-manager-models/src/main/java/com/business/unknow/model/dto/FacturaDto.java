@@ -26,8 +26,6 @@ public class FacturaDto implements Serializable {
 	private String solicitante;
 	private String folio;
 	private String uuid;
-	private Integer statusPago;
-	private Integer statusDevolucion;
 	private Integer statusFactura;
 	private String statusDetail;
 	private String packFacturacion;
@@ -135,23 +133,7 @@ public class FacturaDto implements Serializable {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-
-	public Integer getStatusPago() {
-		return statusPago;
-	}
-
-	public void setStatusPago(Integer statusPago) {
-		this.statusPago = statusPago;
-	}
-
-	public Integer getStatusDevolucion() {
-		return statusDevolucion;
-	}
-
-	public void setStatusDevolucion(Integer statusDevolucion) {
-		this.statusDevolucion = statusDevolucion;
-	}
-
+	
 	public Integer getStatusFactura() {
 		return statusFactura;
 	}
@@ -294,13 +276,13 @@ public class FacturaDto implements Serializable {
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio + ", uuid="
-				+ uuid + ", statusPago=" + statusPago + ", statusDevolucion=" + statusDevolucion + ", statusFactura="
-				+ statusFactura + ", statusDetail=" + statusDetail + ", packFacturacion=" + packFacturacion
-				+ ", metodoPago=" + metodoPago + ", notas=" + notas + ", fechaCreacion=" + fechaCreacion
-				+ ", statusCancelacion=" + statusCancelacion + ", fechaCancelacion=" + fechaCancelacion
+				+ uuid + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail + ", packFacturacion="
+				+ packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas + ", fechaCreacion="
+				+ fechaCreacion + ", statusCancelacion=" + statusCancelacion + ", fechaCancelacion=" + fechaCancelacion
 				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
 				+ ", statusCancelado=" + statusCancelado + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
 				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", saldoPendiente="
 				+ saldoPendiente + ", cfdi=" + cfdi + "]";
 	}
+
 }

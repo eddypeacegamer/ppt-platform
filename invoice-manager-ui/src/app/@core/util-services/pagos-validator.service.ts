@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PagoBase } from '../../models/pago-base';
 import { Cfdi } from '../../models/factura/cfdi';
+import { PagoFactura } from '../../models/pago-factura';
+import { Factura } from '../../models/factura/factura';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,7 @@ export class PagosValidatorService {
   constructor() { }
 
 
-  public validatePago(pago: PagoBase, pagos: PagoBase[], cfdi: Cfdi): string[] {
+  public validatePago(pago: PagoBase, factura: Factura): string[] {
     const messages = [];
     if (pago.banco === undefined || pago.banco === '*') {
       messages.push('El banco es un valor requerido');
@@ -34,27 +36,15 @@ export class PagosValidatorService {
            && pago.documento === undefined) {
       messages.push('La imagen del documento de pago es requerida.');
     }
-    if (cfdi.metodoPago === 'PUE' && Math.abs(cfdi.total - pago.monto) > 0.01) {
+    if (factura.cfdi.metodoPago === 'PUE' && Math.abs(factura.cfdi.total - pago.monto) > 0.01) {
       messages.push('Para pagos en una unica exibicion,' +
       'el monto del pago debe coincidir con el monto total de la factura.');
     }
-    if ((this.getPaymentAmmount(pagos) + pago.monto - cfdi.total) > 0.01) {
+    if (factura.saldoPendiente - pago.monto < -0.01) {
       messages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
 
     return messages;
   }
 
-  getPaymentAmmount(pagos: PagoBase[]): number {
-    if (pagos.length === 0) {
-      return 0;
-    } else {
-      const payments: PagoBase[] = pagos.filter(p => p.formaPago !== 'CREDITO');
-      if (payments.length === 0) {
-        return  0;
-      } else {
-        return payments.map((p: PagoBase) => p.monto).reduce((total, p) => total + p);
-      }
-    }
-  }
 }

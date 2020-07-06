@@ -5,7 +5,6 @@ import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.DevolucionSuite;
@@ -17,9 +16,7 @@ public class FacturaPpdStatusDevolucionRule {
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		return (fc.getFacturaDto() != null
 				&& fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				&& fc.getFacturaPadreDto() != null
-				&& (fc.getFacturaPadreDto().getStatusDevolucion().equals(DevolucionStatusEnum.DEVUELTA.getValor())
-						|| fc.getFacturaDto().getStatusDevolucion().equals(DevolucionStatusEnum.DEVUELTA.getValor())));
+				&& fc.getFacturaPadreDto() != null);
 	}
 
 	@Action

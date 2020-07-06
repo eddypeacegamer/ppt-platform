@@ -67,7 +67,7 @@ export class PagosComponent implements OnInit {
     if (pago.solicitante !== this.user.email) {
       pago.revision1 = true;
       pago.revisor1 = this.user.email;
-      this.paymentService.updatePaymentWithValidation(pago.folio, pago.id, pago)
+      this.paymentService.updatePaymentWithValidation(pago.id, pago)
       .subscribe(updatedPayment => pago = updatedPayment,
       (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
     }else {
@@ -80,7 +80,7 @@ export class PagosComponent implements OnInit {
     if (pago.solicitante !== this.user.email && pago.revisor1 !== this.user.email ) {
       pago.revision2 = true;
       pago.revisor2 = this.user.email;
-      this.paymentService.updatePaymentWithValidation(pago.folio, pago.id, pago)
+      this.paymentService.updatePaymentWithValidation(pago.id, pago)
       .subscribe(updatedPayment => pago = updatedPayment,
       (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
     }else {
@@ -102,7 +102,7 @@ export class PagosComponent implements OnInit {
         }else {
           pago.revisor1 = this.user.email;
         }
-        this.paymentService.updatePaymentWithValidation(pago.folio,pago.id,pago).toPromise()
+        this.paymentService.updatePaymentWithValidation(pago.id, pago).toPromise()
         .then( success => console.log(success), (error:HttpErrorResponse)=>this.errors.push(error.error.message || `${error.statusText} : ${error.message}`))
         .then(() => this.updateDataTable(this.page.number, this.page.size))
       }else {

@@ -60,7 +60,7 @@ export class DevolutionsDetailsComponent implements OnInit {
           .subscribe(devs => this.devoluciones = devs.filter(d => 'D' === d.tipo));
         this.devolutionService.findDevolutionsRequests(0, 1, { folio: this.folioParam})
           .subscribe(page => this.pageDevolutions = page);
-        this.invoiceService.getInvoiceByFolio(this.folioParam)
+        /*this.invoiceService.getInvoiceByFolio(this.folioParam)
             .subscribe( invoice => {
               this.clientsService.getClientByRFC(invoice.rfcRemitente).subscribe(client => this.clientInfo = client);
               if ( invoice.tipoDocumento === 'Complemento') {
@@ -76,7 +76,7 @@ export class DevolutionsDetailsComponent implements OnInit {
                 .then(pagos =>
                   this.pago = pagos.filter(p => p.formaPago !== 'CREDITO').find(p => p.folio === this.folioParam));
               }
-            });
+            });*/
       } else {
         this.initVariables();
       }

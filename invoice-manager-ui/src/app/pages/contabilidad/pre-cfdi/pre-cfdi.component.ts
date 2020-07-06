@@ -152,9 +152,6 @@ export class PreCfdiComponent implements OnInit {
         fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
         fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
         return fac; */
-
-        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
@@ -360,11 +357,8 @@ export class PreCfdiComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...this.factura };
     fact.statusFactura = '9';// update to recahzo contabilidad
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
-      this.getInvoiceByFolio(fact.folioPadre || fact.folio);
     },
       (error: HttpErrorResponse) => {
         this.loading = false;
@@ -380,8 +374,6 @@ export class PreCfdiComponent implements OnInit {
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
 
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
@@ -389,7 +381,6 @@ export class PreCfdiComponent implements OnInit {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => {
               this.loading = false;
-              this.getInvoiceByFolio(fact.folioPadre || fact.folio);
             },
               (error: HttpErrorResponse) => {
                 this.loading = false;
@@ -409,13 +400,10 @@ export class PreCfdiComponent implements OnInit {
     let fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
     
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success => {
       this.successMessage = 'Factura correctamente cancelada';
-        this.getInvoiceByFolio(fact.folioPadre || fact.folio);
         this.loading = false;
       },(error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
@@ -466,8 +454,6 @@ export class PreCfdiComponent implements OnInit {
             map((facturas: Factura[]) => {
               return facturas.map(record => {
                 record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
-                record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
                 return record;
               });
             })).subscribe(complementos => {

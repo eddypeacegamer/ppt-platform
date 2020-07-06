@@ -82,6 +82,8 @@ public class PagoEvaluatorService extends AbstractValidator {
 		checkNotNull(dto.getFormaPago(), "Forma de pago");
 		checkNotNull(dto.getMoneda(), "Moneda");
 		checkNotNull(dto.getMonto(), "Monto");
+		checkNotNull(dto.getAcredor(), "Razon social empresa");
+		checkNotNull(dto.getDeudor(), "Razon social cliente");
 		checkNotNull(dto.getSolicitante(), "Solicitante");
 		checkNotNull(dto.getStatusPago(), "Estatus de pago");
 		checkNotNull(dto.getTipoDeCambio(), "Tipo de cambio");

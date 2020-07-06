@@ -2,9 +2,11 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -98,8 +100,19 @@ public class Pago implements Serializable {
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
 	
-	@OneToMany(mappedBy = "pago")
+	@OneToMany(mappedBy = "pago",cascade = CascadeType.PERSIST)
 	private List<PagoFactura> facturas;
+	
+	public Pago() {
+		this.facturas = new ArrayList<>();
+		this.tipoDeCambio=BigDecimal.ONE;
+	}
+	
+	
+	public void addFactura(PagoFactura factura) {
+		this.facturas.add(factura);
+		factura.setPago(this);
+	}
 
 	public Integer getId() {
 		return id;

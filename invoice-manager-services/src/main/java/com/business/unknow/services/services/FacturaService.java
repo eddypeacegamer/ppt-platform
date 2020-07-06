@@ -25,7 +25,6 @@ import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
-import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -226,8 +225,7 @@ public class FacturaService {
 
 	public FacturaDto updateFactura(Integer idCfdi,FacturaDto factura) {
 		if (repository.findByIdCfdi(idCfdi).isPresent()) {
-			if (factura.getStatusPago().equals(PagoStatusEnum.PAGADA.getValor())
-					&& factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
+			if (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 			}
 			//TODO review this custom logic

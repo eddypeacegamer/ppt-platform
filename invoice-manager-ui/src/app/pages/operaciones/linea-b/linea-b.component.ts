@@ -154,8 +154,6 @@ export class LineaBComponent implements OnInit {
         fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
         fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
         return fac; */
-        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
@@ -350,8 +348,6 @@ export class LineaBComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...this.factura };
     fact.statusFactura = '6';// update to recahzo operaciones
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
       this.getInvoiceByFolio(fact.cfdi.id.toString());
@@ -370,9 +366,6 @@ export class LineaBComponent implements OnInit {
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre === fact.statusDevolucion).id;
-
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         if (invoice !== undefined) {
@@ -398,10 +391,7 @@ export class LineaBComponent implements OnInit {
     this.errorMessages = [];
     let fact = { ...factura };
     fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    fact.statusPago = this.payCat.find(v => v.nombre === fact.statusPago).id;
-    fact.statusDevolucion = this.devolutionCat.find(v => v.nombre == fact.statusDevolucion).id;
-    
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;  
     this.invoiceService.cancelarFactura(fact.cfdi.id.toString(), fact)
       .subscribe(success => {
       this.successMessage = 'Factura correctamente cancelada';
@@ -456,8 +446,6 @@ export class LineaBComponent implements OnInit {
             map((facturas: Factura[]) => {
               return facturas.map(record => {
                 record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                record.statusPago = this.payCat.find(v => v.id === record.statusPago).nombre;
-                record.statusDevolucion = this.devolutionCat.find(v => v.id === record.statusDevolucion).nombre;
                 return record;
               });
             })).subscribe(complementos => {

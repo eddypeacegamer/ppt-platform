@@ -1,6 +1,7 @@
 package com.business.unknow.services.rest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +24,11 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
 import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.PagoService;
 
 /**
  * @author eej000f
@@ -38,6 +40,8 @@ public class FacturaController {
 	@Autowired
 	private FacturaService service;
 
+	@Autowired
+	private PagoService pagoService;
 
 	@Autowired
 	private DevolucionService devolucionService;
@@ -92,6 +96,11 @@ public class FacturaController {
 	@GetMapping("/{folio}")
 	public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{folio}/pagos")
+	public ResponseEntity<List<PagoFacturaDto>> getPagosbyFolio(@PathVariable String folio) {
+		return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
 	}
 
 	@PostMapping

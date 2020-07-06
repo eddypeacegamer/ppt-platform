@@ -5,10 +5,8 @@ import java.util.Date;
 
 import com.business.unknow.Constants.PagoPpdCreditoDefaults;
 import com.business.unknow.commons.util.FacturaCalculator;
-import com.business.unknow.enums.DevolucionStatusEnum;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
-import com.business.unknow.enums.PagoStatusEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
@@ -19,8 +17,9 @@ public class FacturaDefaultValues {
 	private FacturaCalculator facturaCalculator = new FacturaCalculator();
 
 	public void assignaDefaultsFactura(FacturaDto facturaDto) throws InvoiceManagerException {
-		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
-		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
+		//facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
+		//facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
+		facturaDto.setSaldoPendiente(facturaDto.getTotal());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name());
 		facturaDto.getCfdi().setTipoCambio(BigDecimal.ONE);
 		if (facturaDto.getStatusFactura() == null) {
@@ -46,8 +45,8 @@ public class FacturaDefaultValues {
 		facturaDto.setFechaCreacion(new Date());
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
-		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
-		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
+		//facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
+		//facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
 	}
 	

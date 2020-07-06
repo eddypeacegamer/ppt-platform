@@ -18,7 +18,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 	public Page<Pago> findAll(Pageable pageable);
 	
 	public Optional<Pago> findById(Integer id);
-	
+		
 	@Query("select p from Pago p where p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
 	public Page<Pago> findPagosFilteredByParams(@Param("status") String status,@Param("formaPago") String formaPago,@Param("banco") String banco, @Param("since") Date since, @Param("to") Date to, Pageable pageable);
 	
