@@ -12,6 +12,9 @@ import { GenericPage } from '../../../models/generic-page';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme';
 import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 import { PagoBase } from '../../../models/pago-base';
+import { map } from 'rxjs/operators';
+import { empty } from 'rxjs';
+import { PagoFactura } from '../../../models/pago-factura';
 
 
 interface TreeNode<T> {
@@ -21,13 +24,27 @@ interface TreeNode<T> {
 }
 
 interface PagoFacturaModel {
-  ID: string;
-  TIPO: string;
-  MONTO: number;
-  FECHA: string;
-  STATUS?: string;
-  SALDO?: number;
-  FOLIO?: number;
+  id: number;
+  monto: number;
+  acredor: string;
+  deudor: string;
+  fechaCreacion: Date;
+  fechaActualizacion: Date;
+  moneda?: string;
+  banco?: string;
+  cuenta?: string;
+  tipoDeCambio?: number;
+  formaPago?: string;
+  statusPago?: string;
+  solicitante?: string;
+  revision1?: boolean;
+  revision2?: boolean;
+  revisor1?: string;
+  revisor2?: string;
+  fechaPago?: Date;
+  idCfdi?: number;
+  folio?: string;
+  totalFactura?: number;
 }
 
 @Component({
@@ -53,44 +70,16 @@ export class PagosFacturaComponent implements OnInit {
   public loading: boolean = false;
 
   customColumn = 'ACCIONES';
-  defaultColumns = [ 'MONTO', 'STATUS', 'FOLIO', 'FECHA' ];
+  defaultColumns = [ 'MONTO', 'statusPago', 'folio', 'fechaPago' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<PagoFacturaModel>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+  public page: GenericPage<any> = new GenericPage();
 
-  private data: TreeNode<PagoFacturaModel>[] ;
-/*     {
-      data: { ID: '22', MONTO: 3500, TIPO: 'D', FECHA: '2020-05-20', SALDO: 1000, STATUS: 'VALIDACION'},
-      children: [
-        { data: { ID: '22', MONTO: -1500, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456789034} },
-        { data: { ID: '22', MONTO: -1000, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456783456} },
-      ],
-    },
-    {
-      data: { ID: '19', MONTO: 7500, TIPO: 'D', FECHA: '2020-05-12', SALDO: 500, STATUS: 'RECHAZADO' },
-      children: [
-        { data: { ID: '19', MONTO: -3000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020456789876} },
-        { data: { ID: '19', MONTO: -4000, TIPO: 'P', FECHA: '2020-05-15', FOLIO: 2020434567899 } },
-      ],
-    },
-    {
-      data: { ID: '11', MONTO: 10000, TIPO: 'D', FECHA: '2020-05-03', SALDO: 0, STATUS: 'ACEPTADO'},
-      children: [
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020498765455 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-08', FOLIO: 2020764234578 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020567887895 } },
-        { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020386468909 } },
-      ],
-    }]; */
-
-    public page: GenericPage<any> = new GenericPage();
-  // public pagee: GenericPage<TreeNode<PagoFacturaModel>>;
-    public pageSize = '10';
-
-    public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
+  public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
 
   constructor(
     private paymentsService: PaymentsData,
@@ -109,18 +98,7 @@ export class PagosFacturaComponent implements OnInit {
     this.newPayment.moneda = 'MXN';
     this.usersService.getUserInfo()
       .then(user => this.user = user)
-      .then(() => {
-        this.paymentsService.getAllPaymentsDummy(0, 10, {})
-              .subscribe((page: GenericPage<any>) => {
-                this.page = page;
-               /*  console.log(JSON.stringify(page));
-                console.log("sss   "+JSON.stringify(page.content)); */
-
-                this.data = page.content;
-                this.dataSource = this.dataSourceBuilder.create(this.data);
-                //this.page = page.content;
-                });
-      });
+      .then(() => this.updateDataTable());
   }
 
   getShowOn(index: number) {
@@ -172,20 +150,39 @@ export class PagosFacturaComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.paymentsService.getAllPaymentsDummy(pageValue, sizeValue, this.filterParams)
-      .subscribe((result: GenericPage<any>) =>{
-        this.page = result;
-        this.data = result.content;
-        this.dataSource = this.dataSourceBuilder.create(this.data); 
-          console.log("update   "+ console.log(JSON.stringify(result))); } );
-    
+    this.paymentsService.getAllPayments(pageValue, sizeValue, {})
+    .pipe(
+      map((page: GenericPage<PagoBase>) => {
+        const newPage: GenericPage<TreeNode<PagoFacturaModel>> =
+                      Object.assign({}, page, {content: undefined});
+        newPage.content = page.content
+                      .map( (pago: PagoBase) => {
+                        const children: TreeNode<PagoFacturaModel>[] = pago.facturas
+                                  .map((fact: PagoFactura) => {
+                                    const childNode: TreeNode<PagoFacturaModel> = {
+                                      data : Object.assign({}, fact),
+                                    };
+                                    return childNode;
+                                  });
+                        const node: TreeNode<PagoFacturaModel> = {
+                          data : Object.assign({}, pago, {facturas: undefined}),
+                          children : children,
+                        };
+                        return node;
+                      });
+        return newPage;
+      }),
+    ).subscribe((page: GenericPage<TreeNode<PagoFacturaModel>>) => {
+      console.log(page);
+      this.page = page;
+      this.dataSource = this.dataSourceBuilder.create(page.content);
+      });
   }
 
   public onChangePageSize(pageSize: number) {
-  //  this.paymentService(this.page.number, pageSize);
+    this.updateDataTable(this.page.number, pageSize);
   }
 
-  //
 
   onPaymentBankSelected(clave: string) {
     this.newPayment.banco = clave;

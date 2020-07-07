@@ -1,15 +1,15 @@
 export class GenericPage<T> {
     public content: T[];
-    public totalElements:number;
+    public totalElements: number;
     public last: boolean;
-    public totalPages:number;
-    public first:boolean;
-    public numberOfElements:number;
-    public size:number;
-    public number:number;
-    public empty:boolean;
+    public totalPages: number;
+    public first: boolean;
+    public numberOfElements: number;
+    public size: number;
+    public number: number;
+    public empty: boolean;
 
-    constructor(){
+    constructor() {
         this.totalElements = 0;
         this.last = false ;
         this.totalPages = 0;

@@ -147,13 +147,6 @@ export class LineaBComponent implements OnInit {
   
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
-        
-       /*  fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
-        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
-        return fac; */
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
