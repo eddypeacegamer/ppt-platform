@@ -140,6 +140,23 @@
 
         </table>
 
+        
+        <div class="row">
+          
+        <div class="col align-self-center"> 
+        <ul class="pagination" *ngIf="page.totalElements > 1" >
+          <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+              (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+          <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+              (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+          <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+          <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+              (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+          <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+              (click)="updateDataTable(1,page.size)"><i class="nb-arrow-right"></i></button></li>
+        </ul>
+      </div>
+    </div>
         <!--div class="table-responsive" *ngIf="promotorPayments.empty == false">
         <table class="table">
           <thead class="thead-light">

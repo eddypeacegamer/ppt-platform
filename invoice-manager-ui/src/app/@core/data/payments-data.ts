@@ -15,6 +15,7 @@ export abstract class PaymentsData {
     abstract updatePaymentWithValidation(folio : string, paymentId : number, payment : PagoFactura) : Observable<PagoFactura>;
 
     abstract getAllPayments(page: number, size: number, filterParams?: any) : Observable<GenericPage<PagoFactura>>;
+    abstract getAllPaymentsDummy(page: number, size: number, filterParams?: any) : Observable<GenericPage<PagoFactura>>;
 
     abstract getFormasPago(roles?: string[]): Observable<Catalogo[]>;
 

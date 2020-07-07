@@ -62,36 +62,5 @@ public class PagosController {
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.getPaymentById(idPago), HttpStatus.OK);
 	}
-	
-	
-	// PAGOS
-	//TODO refactor pagos controller
-//		@GetMapping("/{folio}/pagos")
-//		@Deprecated
-//		public ResponseEntity<List<PagoDto>> getFacturaPagos(@PathVariable String folio) {
-//			return new ResponseEntity<>(pagoService.findPagosByFolioPadre(folio), HttpStatus.OK);
-//		}
-//
-//		@PostMapping("/{folio}/pagos")
-//		@Deprecated
-//		public ResponseEntity<PagoDto> insertPago(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
-//				throws InvoiceManagerException {
-//			return new ResponseEntity<>(pagoService.insertNewPayment(folio, pago), HttpStatus.CREATED);
-//		}
-//
-//		@PutMapping("/{folio}/pagos/{id}")
-//		@Deprecated
-//		public ResponseEntity<PagoDto> updatePago(@PathVariable String folio, @PathVariable Integer id,
-//				@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-//			return new ResponseEntity<>(pagoService.updatePago(folio, id, pagoDto), HttpStatus.OK);
-//		}
-//
-//		@DeleteMapping("/{folio}/pagos/{id}")
-//		@Deprecated
-//		public ResponseEntity<Void> deletePago(@PathVariable String folio, @PathVariable Integer id)
-//				throws InvoiceManagerException {
-//			pagoService.deletePago(folio, id);
-//			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//		}
 
 }

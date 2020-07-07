@@ -1,19 +1,19 @@
 
 .slide_1{
-    -webkit-animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    -webkit-animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
   }
   .slide_2{
-    -webkit-animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
-            animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+    -webkit-animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
+            animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
   }
   .slide_3{
-    -webkit-animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s both;
-            animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.4s both;
+    -webkit-animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+            animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
   }
   .slide_4{
-    -webkit-animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.6s both;
-            animation: slide-in-blurred-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.6s both;
+    -webkit-animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s both;
+            animation: slide-in-blurred-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s both;
   }
   
   @-webkit-keyframes slide-in-blurred-right {
@@ -59,8 +59,8 @@
   
   
   .puff_center {
-      -webkit-animation: puff_center 0.7s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
-              animation: puff_center 0.7s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+      -webkit-animation: puff_center 0.6s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+              animation: puff_center 0.6s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
   }
   
   
