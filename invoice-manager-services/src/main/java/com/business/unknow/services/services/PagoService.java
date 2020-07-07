@@ -39,6 +39,7 @@ import com.business.unknow.services.entities.PagoFactura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.repositories.PagosDao;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.PagoBuilder;
 
@@ -66,6 +67,10 @@ public class PagoService {
 
 	@Autowired
 	private FacturaService facturaService;
+	
+	
+	@Autowired
+	private PagosDao pagosDao;
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
