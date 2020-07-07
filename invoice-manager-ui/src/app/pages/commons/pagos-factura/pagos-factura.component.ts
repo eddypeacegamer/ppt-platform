@@ -61,8 +61,8 @@ export class PagosFacturaComponent implements OnInit {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  private data: TreeNode<PagoFacturaModel>[] = [
-    {
+  private data: TreeNode<PagoFacturaModel>[] ;
+/*     {
       data: { ID: '22', MONTO: 3500, TIPO: 'D', FECHA: '2020-05-20', SALDO: 1000, STATUS: 'VALIDACION'},
       children: [
         { data: { ID: '22', MONTO: -1500, TIPO: 'P', FECHA: '2020-05-22', FOLIO: 2020456789034} },
@@ -84,10 +84,17 @@ export class PagosFacturaComponent implements OnInit {
         { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020567887895 } },
         { data: { ID: '11', MONTO: -2500, TIPO: 'P', FECHA: '2020-05-05', FOLIO: 2020386468909 } },
       ],
-    }];
+    }]; */
+
+    public page: GenericPage<any> = new GenericPage();
+  // public pagee: GenericPage<TreeNode<PagoFacturaModel>>;
+    public pageSize = '10';
+
+    public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
 
   constructor(
     private paymentsService: PaymentsData,
+    private paymentService: PaymentsData,
     private dialogService: NbDialogService,
     private accountsService: CuentasData,
     private fileService: FilesData,
@@ -103,9 +110,15 @@ export class PagosFacturaComponent implements OnInit {
     this.usersService.getUserInfo()
       .then(user => this.user = user)
       .then(() => {
-        this.paymentsService.getAllPayments(0, 10, {})
-              .subscribe((page: GenericPage<PagoBase>) => {
-                this.promotorPayments = page;
+        this.paymentsService.getAllPaymentsDummy(0, 10, {})
+              .subscribe((page: GenericPage<any>) => {
+                this.page = page;
+               /*  console.log(JSON.stringify(page));
+                console.log("sss   "+JSON.stringify(page.content)); */
+
+                this.data = page.content;
+                this.dataSource = this.dataSourceBuilder.create(this.data);
+                //this.page = page.content;
                 });
       });
   }
@@ -153,6 +166,26 @@ export class PagosFacturaComponent implements OnInit {
           });*/
     }
   }
+
+  //
+
+  public updateDataTable(currentPage?: number, pageSize?: number) {
+    const pageValue = currentPage || 0;
+    const sizeValue = pageSize || 10;
+    this.paymentsService.getAllPaymentsDummy(pageValue, sizeValue, this.filterParams)
+      .subscribe((result: GenericPage<any>) =>{
+        this.page = result;
+        this.data = result.content;
+        this.dataSource = this.dataSourceBuilder.create(this.data); 
+          console.log("update   "+ console.log(JSON.stringify(result))); } );
+    
+  }
+
+  public onChangePageSize(pageSize: number) {
+  //  this.paymentService(this.page.number, pageSize);
+  }
+
+  //
 
   onPaymentBankSelected(clave: string) {
     this.newPayment.banco = clave;
