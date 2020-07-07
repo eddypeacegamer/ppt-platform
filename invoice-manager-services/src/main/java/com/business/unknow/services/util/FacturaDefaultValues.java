@@ -50,6 +50,8 @@ public class FacturaDefaultValues {
 		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		facturaDto.setStatusPago(PagoStatusEnum.SIN_PAGAR.getValor());
 		facturaDto.setStatusDevolucion(DevolucionStatusEnum.SIN_DEVOLVER.getValor());
+		facturaDto.getCfdi().getComplemento().getPagos().forEach(a->a.setTipoCambio(BigDecimal.ONE));
+		facturaDto.getCfdi().getComplemento().getPagos().forEach(a->a.setTipoCambioDr(BigDecimal.ONE));
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
 	}
 	
