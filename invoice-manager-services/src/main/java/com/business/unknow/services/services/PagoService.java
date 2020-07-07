@@ -69,28 +69,28 @@ public class PagoService {
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
-	public Page<PagoDto> getPaginatedPayments(Optional<String> folio, Optional<String> acredor, Optional<String> deudor,
+	public Page<PagoDto> getPaginatedPayments(Optional<String> solicitante, Optional<String> acredor, Optional<String> deudor,
 			String formaPago, String status, String banco, Date since, Date to, int page, int size) {
 
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Pago> result = null;
-		// if (folio.isPresent()) {
-		// TODO verify if is posible make finds by folio fact
-//			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
-//					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
-//		} else if (acredor.isPresent()) {
-//			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
-//					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-//					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-//		} else if (deudor.isPresent()) {
-//			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
-//					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-//					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-//		} else {
-		result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
-				String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		if (solicitante.isPresent()) {
+			result = repository.findBySolicitanteIgnoreCaseContaining(solicitante.get(),
+					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
+		} else if (acredor.isPresent()) {
+			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
+					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		} else if (deudor.isPresent()) {
+			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
+					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		} else {
+			result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
+					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+		}
 
 		return new PageImpl<>(mapper.getPagosDtoFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
