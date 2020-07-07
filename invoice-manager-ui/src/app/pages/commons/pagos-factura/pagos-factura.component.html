@@ -78,10 +78,9 @@
 
         <!--TABLA PAGOS-->
 
-        <div *ngIf="promotorPayments.empty == true" class="alert alert-primary" role="alert">
+        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-
         <div class="clearfix" *ngIf="promotorPayments.empty == false">
           <strong>Lista de pagos</strong>
           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>

@@ -70,7 +70,7 @@ export class PagosFacturaComponent implements OnInit {
   public loading: boolean = false;
 
   customColumn = 'ACCIONES';
-  defaultColumns = [ 'MONTO', 'statusPago', 'folio', 'fechaPago' ];
+  defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<PagoFacturaModel>;
@@ -90,9 +90,7 @@ export class PagosFacturaComponent implements OnInit {
     private paymentValidator: PagosValidatorService,
     private usersService: UsersData,
     private invoiceService: InvoicesData,
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {
-      this.dataSource = this.dataSourceBuilder.create(this.data);
-    }
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
