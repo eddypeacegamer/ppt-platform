@@ -133,13 +133,12 @@ export class PagosFacturaComponent implements OnInit {
   /******* PAGOS ********/
 
   selectClient(cliente: Contribuyente) {
-    console.log(cliente);
     this.invoiceService
-      .getInvoices(0,10000,{remitente: cliente.razonSocial, solicitante:this.user.email })
+      .getInvoices(0, 10000, {remitente: cliente.razonSocial, solicitante:this.user.email })
       .pipe(
         map((page: GenericPage<Factura>) => {
           return page.content.map(f => new Contribuyente(f.rfcEmisor,f.razonSocialEmisor));
-        })).subscribe(companies =>{this.companiesCat = companies; console.log(companies)});
+        })).subscribe(companies => this.companiesCat = companies);
   }
 
   onPaymentCoinSelected(clave: string) {

@@ -37,7 +37,7 @@
               <select id="inputCompany"  style="display:block;" class="select-full border border-dark">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let company of companiesCat" [(value)]="company.rfc">
-                  {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                  {{company.rfc}}-{{company.razonSocial}}
                 </option>
               </select>
             </div>
