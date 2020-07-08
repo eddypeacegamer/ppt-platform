@@ -15,4 +15,10 @@ export class Contribuyente{
     public cp: string;
     public coo: string;
     public correo: string;
+
+
+    constructor(rfc?: string, razonSocial?: string) {
+        this.rfc = rfc;
+        this.razonSocial = razonSocial;
+    }
 }

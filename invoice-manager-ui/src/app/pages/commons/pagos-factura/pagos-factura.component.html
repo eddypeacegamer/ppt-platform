@@ -5,6 +5,46 @@
       <nb-card-body>
         <p class="font-weight-bold">Pagos</p>
         <div class="row">
+          <div class="col-md-6">
+            <label for="inputClients" class="label">Cliente emisor de pago</label>
+            <div class="ng-autocomplete border border-dark">
+              <ng-autocomplete
+                id="inputClients"
+                [data]="clientsCat"
+                [searchKeyword]="'razonSocial'"
+                (selected)='selectClient($event)'
+                placeHolder="Razon social cliente que acredita pago"
+                historyIdentifier="Clientes"
+                [itemTemplate]="itemTemplate"
+                [notFoundTemplate]="notFoundTemplate">
+              </ng-autocomplete>
+            
+              <ng-template #itemTemplate let-item>
+                <div>
+                  <span [innerHTML]="item.razonSocial"></span> &nbsp; | &nbsp;
+                  <small>{{item.rfc}}</small>
+                </div>
+              </ng-template>
+            
+              <ng-template #notFoundTemplate let-notFound>
+                <div>Cliente desconocido</div>
+              </ng-template>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="inputCompany" class="label">Empresa receptora de pago</label>
+            <div class="form-inline">
+              <select id="inputCompany"  style="display:block;" class="select-full border border-dark">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let company of companiesCat" [(value)]="company.rfc">
+                  {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="col-sm-2">
             <label for="inputPayCoin" class="label">Moneda</label>
             <select id="inputPayCoin" style="display:block;" class="form-control" [(ngModel)]="newPayment.moneda">
@@ -77,84 +117,92 @@
         <br>
 
         <!--TABLA PAGOS-->
+        <p class="font-weight-bold">Ultimos pagos</p>
+        <br>
 
-        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+        <div *ngIf="page.empty" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix" *ngIf="promotorPayments.empty == false">
-          <strong>Lista de pagos</strong>
+        <div class="clearfix" *ngIf="page.empty == false">
+         
           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
-          <nb-select *ngIf="promotorPayments.last==false || promotorPayments.first" [selected]="pageSize"
+          <nb-select *ngIf="page.last==false || page.first" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
-            <nb-option *ngIf="promotorPayments.number<(promotorPayments.totalElements/20)" value="20">20</nb-option>
-            <nb-option *ngIf="promotorPayments.number<(promotorPayments.totalElements/50)" value="50">50</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
+            <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
         </div>
 
         <br>
-        <table [nbTreeGrid]="dataSource">
+        <div class="table-responsive" *ngIf="!page.empty">
+          <table [nbTreeGrid]="dataSource">
 
-          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-          <ng-container [nbTreeGridColumnDef]="customColumn">
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-              {{customColumn}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <div *ngIf="row.data['solicitante']!==undefined">
-                <nb-tree-grid-row-toggle [expanded]="row.expanded">
-                </nb-tree-grid-row-toggle>
-                <button class="btn btn-sm btn-outline-primary d-inline p-2" (click)="openPaymentAssigments(dialog)" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-search"></i></button>
-                <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2" [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
-                
-              </div>
-              <div *ngIf="row.data['folio']!==undefined">
-                <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-file-pdf"></i></button>
-                <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2" [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-calendar-times"></i></button>
-              </div>
-            </td>
-          </ng-container>
-          
+            <ng-container [nbTreeGridColumnDef]="customColumn">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+                {{customColumn}}
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                <div *ngIf="row.data['solicitante']!==undefined">
+                  <nb-tree-grid-row-toggle [expanded]="row.expanded">
+                  </nb-tree-grid-row-toggle>
+                  <button class="btn btn-sm btn-outline-primary d-inline p-2" (click)="openPaymentAssigments(dialog)"
+                    [disabled]="row.data['SALDO'] <= 0"><i class="fa fa-search"></i></button>
+                  <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2"
+                    [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
 
-          <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column"
-            [showOn]="getShowOn(index)">
-            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-              {{column}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <div *ngIf="column !== 'MONTO'">
-                {{row.data[column] || '-'}}
-              </div>
-              <div *ngIf="column === 'MONTO'">
-                <p class="d-inline p-2">{{row.data['monto'] | currency}}</p>
-              </div>
-      
-            </td>
-          </ng-container>
+                </div>
+                <div *ngIf="row.data['folio']!==undefined">
+                  <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i
+                      class="fa fa-file-pdf"></i></button>
+                  <button type="button" class="btn btn-sm btn-outline-danger d-inline p-2"
+                    [disabled]="row.data['STATUS']==='ACEPTADO'"><i class="fa fa-calendar-times"></i></button>
+                </div>
+              </td>
+            </ng-container>
 
-        </table>
 
-        
-        <div class="row">
-          
-        <div class="col align-self-center"> 
-          <ul class="pagination" *ngIf="page.totalElements > 1">
-            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
-            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
-            <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
-            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
-            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-          </ul>
-      </div>
-    </div>
-        
+            <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column"
+              [showOn]="getShowOn(index)">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+                {{column}}
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                <div *ngIf="column !== 'MONTO'">
+                  {{row.data[column] || '-'}}
+                </div>
+                <div *ngIf="column === 'MONTO'">
+                  <p class="d-inline p-2">{{row.data['monto'] | currency}}</p>
+                </div>
+
+              </td>
+            </ng-container>
+
+          </table>
+
+
+          <div class="row">
+
+            <div class="col align-self-center">
+              <ul class="pagination" *ngIf="page.totalElements > 1">
+                <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                    (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+                <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                    (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+                <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+                <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                    (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+                <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                    (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
       </nb-card-body>
 
     </nb-card>

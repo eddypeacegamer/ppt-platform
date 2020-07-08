@@ -15,6 +15,10 @@ import { PagoBase } from '../../../models/pago-base';
 import { map } from 'rxjs/operators';
 import { empty } from 'rxjs';
 import { PagoFactura } from '../../../models/pago-factura';
+import { Contribuyente } from '../../../models/contribuyente';
+import { ClientsData } from '../../../@core/data/clients-data';
+import { Client } from '../../../models/client';
+import { Factura } from '../../../models/factura/factura';
 
 
 interface TreeNode<T> {
@@ -55,19 +59,19 @@ interface PagoFacturaModel {
 export class PagosFacturaComponent implements OnInit {
 
   public user: User;
-
   public fileInput: any;
-
-  
 
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoBase = new PagoBase();
   public promotorPayments: GenericPage<PagoBase> = new GenericPage();
-  public paymentSum: number = 0;
+  public pageSize = '10';
   public payErrorMessages: string[] = [];
   public payTypeCat: Catalogo[] = [];
   public cuentas: Cuenta[];
   public loading: boolean = false;
+
+  public clientsCat: Contribuyente[] = [];
+  public companiesCat: Contribuyente[] = [];
 
   customColumn = 'ACCIONES';
   defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
@@ -79,24 +83,32 @@ export class PagosFacturaComponent implements OnInit {
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   public page: GenericPage<any> = new GenericPage();
 
-  public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
+  public filterParams: any = {};
 
   constructor(
     private paymentsService: PaymentsData,
-    private paymentService: PaymentsData,
     private dialogService: NbDialogService,
+    private invoiceService : InvoicesData,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
+    private clientsService: ClientsData,
     private usersService: UsersData,
-    private invoiceService: InvoicesData,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
     this.usersService.getUserInfo()
-      .then(user => this.user = user)
-      .then(() => this.updateDataTable());
+      .then(user => {
+        this.user = user;
+        this.filterParams.solicitante = user.email;
+        this.clientsService.getClientsByPromotor(user.email)
+        .pipe(
+          map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
+        ).subscribe(clients => {
+          this.clientsCat = clients;
+        });
+      }).then(() => this.updateDataTable());
   }
 
   getShowOn(index: number) {
@@ -119,6 +131,16 @@ export class PagosFacturaComponent implements OnInit {
  
 
   /******* PAGOS ********/
+
+  selectClient(cliente: Contribuyente) {
+    console.log(cliente);
+    this.invoiceService
+      .getInvoices(0,10000,{remitente: cliente.razonSocial, solicitante:this.user.email })
+      .pipe(
+        map((page: GenericPage<Factura>) => {
+          return page.content.map(f => new Contribuyente(f.rfcEmisor,f.razonSocialEmisor));
+        })).subscribe(companies =>{this.companiesCat = companies; console.log(companies)});
+  }
 
   onPaymentCoinSelected(clave: string) {
     this.newPayment.moneda = clave;
@@ -148,7 +170,7 @@ export class PagosFacturaComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
-    this.paymentsService.getAllPayments(pageValue, sizeValue, {})
+    this.paymentsService.getAllPayments(pageValue, sizeValue, this.filterParams)
     .pipe(
       map((page: GenericPage<PagoBase>) => {
         const newPage: GenericPage<TreeNode<PagoFacturaModel>> =

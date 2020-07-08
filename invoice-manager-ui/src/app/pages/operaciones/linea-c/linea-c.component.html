@@ -321,7 +321,7 @@
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
-          [disabled]="loading || !isValidCfdi()" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+          [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
           <!-- <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->

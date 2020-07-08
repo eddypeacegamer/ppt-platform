@@ -121,26 +121,7 @@
           </div>
          
 
-          <div class="form-inline">
-           <!--  <p class="font-weight-bold">Uso CFDI</p>
-            &nbsp;&nbsp;
-            <p>{{fac.cfdi.receptor.usoCfdi}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Moneda</p>
-            &nbsp;&nbsp;
-            <p>{{fac.cfdi.moneda}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Metodo de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{fac.cfdi.metodoPago}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Forma de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{fac.cfdi.formaPago}}</p>
-            &nbsp;&nbsp; -->
-           
 
-          </div>
         
         <!-- <div *ngIf="factura.folio === undefined && folioParam === '*'">
           <p class="font-weight-bold">Información Emisor</p>
@@ -252,26 +233,19 @@
         </div>
         <br>
 
-      <!--   <p class="font-weight-bold">Conceptos factura</p>
-        <ngx-conceptos [cfdi]="factura.cfdi" [concepto]="newConcep"
-          [allowEdit]="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura !== 'Rechazo Contabilidad'">
-        </ngx-conceptos>
-        <br> -->
-        <!-- <p *ngIf="preFolio === '*'" class="font-weight-bold">Información CFDI</p>
-        <br> -->
+  
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
-          [disabled]="loading || !isValidCfdi()" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+          [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
-          <!-- <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
         </div>
 
         <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
           {{successMessage}}
         </div>
 
-        <div *ngIf="factura && cfdi">
+        <div *ngIf="factura">
 
           <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
           <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">

@@ -82,7 +82,7 @@ public class PagoService {
 		Page<Pago> result = null;
 		if (solicitante.isPresent()) {
 			result = repository.findBySolicitanteIgnoreCaseContaining(solicitante.get(),
-					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else if (acredor.isPresent()) {
 			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
