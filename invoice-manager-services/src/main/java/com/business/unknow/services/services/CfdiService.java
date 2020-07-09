@@ -283,7 +283,7 @@ public class CfdiService {
 		
 		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
 		// 4.- recalculate pdf
-		facturaService.recreatePdf(cfdi);
+		//facturaService.recreatePdf(cfdi);
 		
 		return cfdi;
 	}
@@ -322,7 +322,7 @@ public class CfdiService {
 		
 		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
 		// 4.- recalculate pdf
-		facturaService.recreatePdf(cfdi);
+		//facturaService.recreatePdf(cfdi);
 		
 		return cfdi;
 	}

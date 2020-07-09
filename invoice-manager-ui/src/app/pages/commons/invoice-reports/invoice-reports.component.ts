@@ -6,8 +6,7 @@ import { DownloadCsvService } from '../../../@core/util-services/download-csv.se
 import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
-import { Factura } from '../../../models/factura/factura';
-import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -20,7 +19,7 @@ export class InvoiceReportsComponent implements OnInit {
   public statusFlag = false;
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', folio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
+  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
   public userEmail: string;
   public loading = false;
 

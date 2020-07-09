@@ -43,7 +43,6 @@ export class CfdiValidatorService {
   }
 
   public validarConcepto(concepto: Concepto): string[] {
-    console.log('validating', concepto)
     const messages: string[] = [];
     if (concepto.cantidad <= 0) {
       messages.push('La cantidad requerida debe ser mayor a 0');
@@ -114,10 +113,12 @@ export class CfdiValidatorService {
 
   public validarCfdi(cfdi: Cfdi): string[] {
     const messages: string[] = [];
-    if (cfdi.receptor === undefined || cfdi.receptor.rfc === undefined  || cfdi.receptor.rfc.length < 8) {
+    if (cfdi.receptor === undefined || cfdi.receptor.rfc === undefined
+        || cfdi.receptor.rfc.length < 8 || cfdi.receptor.nombre.length < 8) {
       messages.push('La información del receptor es un valor solicitado');
     }
-    if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined || cfdi.emisor.rfc.length < 8) {
+    if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined
+        || cfdi.emisor.rfc.length < 8 || cfdi.emisor.nombre.length < 8) {
       messages.push('La información del emisor es un valor solicitado');
     }
     if (cfdi.emisor.rfc === cfdi.receptor.rfc) {

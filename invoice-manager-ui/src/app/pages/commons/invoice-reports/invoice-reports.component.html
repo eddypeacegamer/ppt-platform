@@ -9,7 +9,7 @@
             <label for="inputFolio" class="label">Folio</label>
           </div>
           <div class="col-md-3">
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio"
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
@@ -18,7 +18,7 @@
           </div>
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
           <div class="col-md-1">
@@ -26,7 +26,7 @@
           </div>
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
         </div>
@@ -76,7 +76,7 @@
             <label for="inputFolio" class="label">Folio</label>
           </div>
           <div class="col-md-2">
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.folio"
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
@@ -85,7 +85,7 @@
           </div>
           <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
           <div class="col-md-1">
@@ -93,7 +93,7 @@
           </div>
           <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
           <div class="col-md-1">
@@ -163,7 +163,7 @@
           </div>
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.folio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
           <div class="col-md-1">
@@ -171,7 +171,7 @@
           </div>
           <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.folio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
+              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
 

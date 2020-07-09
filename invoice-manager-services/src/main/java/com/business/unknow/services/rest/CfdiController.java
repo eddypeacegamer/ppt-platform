@@ -97,7 +97,6 @@ public class CfdiController {
 	public ResponseEntity<CfdiDto> updateConcepto(@PathVariable Integer idCfdi, @PathVariable Integer id,
 			@RequestBody @Valid ConceptoDto concepto) throws InvoiceManagerException {
 		CfdiDto dto = cfdiService.updateConceptoFromCfdi(idCfdi, id, concepto);
-		facturaService.recreatePdf(dto);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
@@ -105,7 +104,6 @@ public class CfdiController {
 	public ResponseEntity<CfdiDto> deleteConcepto(@PathVariable Integer idCfdi, @PathVariable Integer id)
 			throws InvoiceManagerException {
 		CfdiDto dto = cfdiService.removeConceptFromCfdi(idCfdi, id);
-		facturaService.recreatePdf(dto);
 		return new ResponseEntity<>(dto, HttpStatus.NO_CONTENT);
 	}
 

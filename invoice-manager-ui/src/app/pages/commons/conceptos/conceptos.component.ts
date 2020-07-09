@@ -7,6 +7,7 @@ import { Concepto } from '../../../models/factura/concepto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { CfdiData } from '../../../@core/data/cfdi-data';
+import { NbDialogService } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-conceptos',
@@ -19,15 +20,17 @@ export class ConceptosComponent implements OnInit {
   @Input() concepto: Concepto;
   @Input() allowEdit: Boolean;
 
+  public errors: string[];
+
   public formInfo = { prodServ: '*', unidad: '*', claveProdServ: ''};
-  public conceptoMessages: string[] = [];
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
 
   constructor(
     private cfdiService: CfdiData,
     private catalogsService: CatalogsData,
-    private cfdiValidator: CfdiValidatorService ) { }
+    private cfdiValidator: CfdiValidatorService,
+    private dialogService: NbDialogService ) { }
 
   ngOnInit() {
     this.catalogsService.getClaveUnidadByName('').then(unidadCat => this.claveUnidadCat = unidadCat);
@@ -35,7 +38,7 @@ export class ConceptosComponent implements OnInit {
 
 
   public buscarClaveProductoServicio(claveProdServ: string) {
-    this.conceptoMessages = [];
+    this.errors = [];
     const value = +claveProdServ;
     if (isNaN(value)) {
       if (claveProdServ.length > 5) {
@@ -45,8 +48,8 @@ export class ConceptosComponent implements OnInit {
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
         }, (error: HttpErrorResponse) => {
-          this.conceptoMessages = [];
-          this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`)
+          this.errors = [];
+          this.errors.push(error.error.message || `${error.statusText} : ${error.message}`)
         });
       }
     } else {
@@ -57,8 +60,8 @@ export class ConceptosComponent implements OnInit {
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
         }, (error: HttpErrorResponse) => {
-          this.conceptoMessages = [];
-          this.conceptoMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+          this.errors = [];
+          this.errors.push(error.error.message || `${error.statusText} : ${error.message}`);
           });
       }
     }
@@ -83,16 +86,19 @@ export class ConceptosComponent implements OnInit {
 
 
 
-  removeConcepto(index: number) {
-    this.conceptoMessages = [];
+  removeConcepto(dialog: TemplateRef<any>, index: number) {
+    this.errors = [];
     if (this.cfdi.folio !== undefined) {
       this.cfdiService.deleteConcepto(this.cfdi.id, this.cfdi.conceptos[index].id)
       .subscribe((cfdi: Cfdi) => {
         this.cfdi.conceptos.splice(index, 1);
-        this.conceptoMessages = [];
+        this.errors = [];
         this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
-      }, (error: HttpErrorResponse) => { this.conceptoMessages.push((error.error != null && error.error !== undefined)
-          ? error.error.message : `${error.statusText} : ${error.message}`)});
+      }, (error: HttpErrorResponse) => { 
+        this.errors.push((error.error != null && error.error !== undefined)
+          ? error.error.message : `${error.statusText} : ${error.message}`);
+        this.dialogService.open(dialog, { context: this.errors });
+        });
     }else {
       this.cfdi.conceptos.splice(index, 1);
       this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
@@ -111,11 +117,12 @@ export class ConceptosComponent implements OnInit {
     this.formInfo.claveProdServ = concepto.claveProdServ;
     this.buscarClaveProductoServicio(concepto.claveProdServ);
   }
-  agregarConcepto(id?: number) {
-    this.conceptoMessages = [];
+  agregarConcepto(dialog: TemplateRef<any>, id?: number) {
+    this.errors = [];
     const concepto = this.cfdiValidator.buildConcepto({... this.concepto});
-    this.conceptoMessages = this.cfdiValidator.validarConcepto(concepto);
-    if (this.conceptoMessages.length === 0) {
+    this.errors = this.cfdiValidator.validarConcepto(concepto);
+
+    if (this.errors.length === 0) {
       if (this.cfdi.id !== undefined) {
         let promise;
         if (id === undefined) {
@@ -127,15 +134,19 @@ export class ConceptosComponent implements OnInit {
               this.formInfo.prodServ = '*';
               this.formInfo.unidad = '*';
               this.concepto = new Concepto();
-              this.conceptoMessages = [];
+              this.errors = [];
             }, (error: HttpErrorResponse) => {
-              this.conceptoMessages.push((error.error != null && error.error !== undefined)
+              this.errors.push((error.error != null && error.error !== undefined)
                 ? error.error.message : `${error.statusText} : ${error.message}`);
+              this.dialogService.open(dialog, { context: this.errors });
             }).then(() => {
               this.cfdiService.getCfdiByFolio(this.cfdi.id)
               .subscribe((cfdi: Cfdi) => this.cfdi = cfdi,
-              (error: HttpErrorResponse) => { this.conceptoMessages.push((error.error != null && error.error !== undefined) 
-                  ? error.error.message : `${error.statusText} : ${error.message}`)});
+              (error: HttpErrorResponse) => {
+                this.errors.push((error.error != null && error.error !== undefined)
+                  ? error.error.message : `${error.statusText} : ${error.message}`);
+                this.dialogService.open(dialog, { context: this.errors });
+                });
             });
       }else {
         this.cfdi.conceptos.push(concepto);
@@ -143,9 +154,10 @@ export class ConceptosComponent implements OnInit {
         this.formInfo.prodServ = '*';
         this.formInfo.unidad = '*';
         this.concepto = new Concepto();
-        this.conceptoMessages = [];
+        this.errors = [];
       }
     }else {
+      this.dialogService.open(dialog, { context: this.errors });
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.concepto = new Concepto();
