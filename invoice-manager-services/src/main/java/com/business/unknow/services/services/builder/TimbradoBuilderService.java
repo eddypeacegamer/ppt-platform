@@ -4,8 +4,10 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
@@ -37,7 +39,8 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 
 	public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
-		//TODO refactorizar logica de cancelacion, las facturas ya no estaran ligadas a un padre.
+		// TODO refactorizar logica de cancelacion, las facturas ya no estaran ligadas a
+		// un padre.
 //		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
 //		FacturaDto factura=facturaService.getFacturaByFolio(folio);
 //		EmpresaDto empresaDto = empresaMapper
@@ -58,18 +61,21 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 
 	public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
-		
+		FacturaDto currentFacturaDto = facturaService.getFacturaByFolio(folio);
+		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
+		EmpresaDto empresaDto = empresaMapper
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(currentFacturaDto.getRfcEmisor())
+						.orElseThrow(() -> new InvoiceManagerException("Empresa not found",
+								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
+								HttpStatus.SC_NOT_FOUND)));
+		getEmpresaFiles(empresaDto, currentFacturaDto);
+		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
+				.setTipoDocumento(currentFacturaDto.getTipoDocumento()).setEmpresaDto(empresaDto).build();
 		// TODO Rehacer logica de timbrado, el concepto de folio padre dejo de existir
 //		FacturaDto currentFacturaDto = facturaService.getFacturaByFolio(folio);
-//		currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
 //		FacturaDto facturaPadre = (TipoDocumentoEnum.COMPLEMENTO.getDescripcion().equals(currentFacturaDto.getTipoDocumento())) ?
 //				facturaService.getFacturaByFolio(currentFacturaDto.getFolioPadre()):null;
 //		validatePackFacturacion(currentFacturaDto, facturaPadre);
-//		EmpresaDto empresaDto = empresaMapper
-//				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(currentFacturaDto.getRfcEmisor())
-//						.orElseThrow(() -> new InvoiceManagerException("Empresa not found",
-//								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
-//								HttpStatus.SC_NOT_FOUND)));
 //		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(
 //				currentFacturaDto.getFolioPadre(), FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
 //		Optional<Pago> currentPago = pagoRepository.findByFolio(folio).stream()
@@ -87,13 +93,12 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 //								: currentFacturaDto.getFolio())
 //						.size())
 //				.build();
-		
-		return null;
+
 	}
 
 	private void validatePackFacturacion(FacturaDto currentFacturaDto, FacturaDto facturaPadre)
 			throws InvoiceManagerException {
-		if (facturaPadre!=null && !facturaPadre.getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
+		if (facturaPadre != null && !facturaPadre.getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
 			throw new InvoiceManagerException("El pack del complemento debe ser el mismo",
 					String.format("El pack de facturacion del complemento %s no es el correcto",
 							currentFacturaDto.getPackFacturacion()),

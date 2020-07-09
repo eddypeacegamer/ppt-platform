@@ -122,7 +122,7 @@ export class InvoicesService {
   }
 
   public updateInvoice(invoice: Factura): Observable<any> {
-    return this.httpClient.put(`../api/facturas/${invoice.folio}`, invoice);
+    return this.httpClient.put(`../api/facturas/${invoice.cfdi.id}`, invoice);
   }
 
   public generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable <any> {

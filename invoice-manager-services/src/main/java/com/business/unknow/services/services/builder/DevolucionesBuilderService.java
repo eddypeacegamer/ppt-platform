@@ -14,13 +14,12 @@ import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.mapper.DevolucionMapper;
-import com.business.unknow.services.services.FacturaService;
 
 @Service
 public class DevolucionesBuilderService {
 	
-	@Autowired
-	private FacturaService facturaService;
+//	@Autowired
+//	private FacturaService facturaService;
 	
 	@Autowired
 	private DevolucionMapper devolucionMapper;

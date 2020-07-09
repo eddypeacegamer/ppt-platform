@@ -14,19 +14,10 @@ public class FacturaDatosValidationRule {
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 
-		if (fc.getFacturaDto().getCfdi().getComplemento() != null && fc.getFacturaDto().getFechaTimbrado() != null
-				|| fc.getFacturaDto().getUuid() != null) {
+		if (fc.getFacturaDto().getUuid()!=null || fc.getFacturaDto().getFechaTimbrado() != null) {
 			return true;
 		} else {
-			// TODO Validate if this rules are  needed  with refactor
-//			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
-//				return fc.getFacturaDto().getFolioPadre() != null;
-//			}
-//			if (fc.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
-//				return fc.getFacturaDto().getFolioPadre() == null
-//						&& MetodosPagoEnum.PPD.name().equals(fc.getFacturaDto().getCfdi().getMetodoPago());
-//			}
-			return true;// invalid document type
+			return false;
 		}
 	}
 

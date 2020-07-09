@@ -20,16 +20,15 @@ public class FacturaPagoValidationRule {
 		
 		if(!fc.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())){
 			return false;
-		}else if(fc.getPagos()!=null && !fc.getPagos().isEmpty()) {
-			BigDecimal paymentsAmmount = fc.getPagos().stream()
-				.filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
-				.map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
-			BigDecimal totalfactura = (fc.getFacturaPadreDto()!=null)? fc.getFacturaPadreDto().getCfdi().getTotal(): fc.getFacturaDto().getCfdi().getTotal();
-			return paymentsAmmount.compareTo(totalfactura)!=0;
-			
-		}else{
-			return true;
+//		}else if(fc.getPagos()!=null && !fc.getPagos().isEmpty()) {
+//			BigDecimal paymentsAmmount = fc.getPagos().stream()
+//				.filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+//				.map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
+//			BigDecimal totalfactura = (fc.getFacturaPadreDto()!=null)? fc.getFacturaPadreDto().getCfdi().getTotal(): fc.getFacturaDto().getCfdi().getTotal();
+//			return paymentsAmmount.compareTo(totalfactura)!=0;
+//			return false;
 		}
+		return false;
 	}
 
 	@Action
