@@ -3,11 +3,7 @@
  */
 package com.business.unknow.services.repositories.files;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.sql.Blob;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -42,8 +38,6 @@ public class FilesDao {
 	private static final String DELETE_FACTURA_FILE_BY_ID = "DELETE FROM FACTURA_FILES WHERE FILE_ID=?";
 
 	private static final String INSERT_FACTURA_FILE = "INSERT INTO FACTURA_FILES (FOLIO, TIPO_ARCHIVO, DATA, FECHA_CREACION) VALUES(?,?,?,?)";
-
-	private static final String UPDATE_FACTURA_FILE = "UPADTE FACTURA_FILES SET DATA=?, FECHA_CREACION = ? WHERE FILE_ID = ?";
 
 	private static final String FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "SELECT * FROM RESOURCE_FILES WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? 	AND TIPO_RECURSO = ?  ";
 

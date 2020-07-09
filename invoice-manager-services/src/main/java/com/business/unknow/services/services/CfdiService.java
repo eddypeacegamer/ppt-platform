@@ -206,8 +206,8 @@ public class CfdiService {
 						"El receptor %s no esta ligado al CFDI %d", cfdi.getReceptor().getRfc(), cfdi.getId())));
 		receptor.setDireccion(cfdi.getReceptor().getDireccion());
 		receptorRepository.save(receptor);
-
 		repository.save(mapper.getEntityFromCfdiDto(cfdi));
+		facturaService.recreatePdf(cfdi);
 		return cfdi;
 	}
 
@@ -283,7 +283,7 @@ public class CfdiService {
 		
 		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
 		// 4.- recalculate pdf
-		//facturaService.recreatePdf(cfdi);
+		facturaService.recreatePdf(cfdi);
 		
 		return cfdi;
 	}
@@ -322,7 +322,7 @@ public class CfdiService {
 		
 		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
 		// 4.- recalculate pdf
-		//facturaService.recreatePdf(cfdi);
+		facturaService.recreatePdf(cfdi);
 		
 		return cfdi;
 	}

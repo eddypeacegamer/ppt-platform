@@ -207,7 +207,7 @@ public class FacturaTranslator {
 		List<Translado> traslados = new ArrayList<>();
 		for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
 			Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
-			if (!conceptoDto.getRetenciones().isEmpty()) {
+			if (!conceptoDto.getImpuestos().isEmpty()) {
 				totalImpuestos = calculaImpuestos(traslados, concepto, totalImpuestos);
 			}
 		}
