@@ -144,12 +144,6 @@ export class LineaCComponent implements OnInit {
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
-        /* fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
-        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
-        return fac; */
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
@@ -177,95 +171,6 @@ export class LineaCComponent implements OnInit {
         });
   }
 
-  onGiroEmisorSelection(giroId: string) {
-    const value = +giroId;
-    if (isNaN(value)) {
-      this.emisoresCat = [];
-    } else {
-      this.companiesService.getCompaniesByLineaAndGiro(this.LINEAEMISOR, Number(giroId))
-        .subscribe(companies => this.emisoresCat = companies,
-          (error: HttpErrorResponse) =>
-            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    }
-  }
-
-  onGiroReceptorSelection(giroId: string) {
-    const value = +giroId;
-    if (isNaN(value)) {
-      this.receptoresCat = [];
-    } else {
-      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.lineaReceptor, Number(giroId))
-        .subscribe(companies => this.receptoresCat = companies,
-          (error: HttpErrorResponse) =>
-            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-    }
-  }
-
-  onEmnisorSelected(companyId: string) {
-    this.companyInfo = this.emisoresCat.find(c => c.id === Number(companyId));
-  }
-
-  onReceptorSelected(companyId: string) {
-    this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId)).informacionFiscal;
-  }
-
-/*   buscarClientInfo( razonSocial: string) {
-    if ( razonSocial !== undefined && razonSocial.length > 5) {
-      this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
-          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
-          .subscribe(clients => {
-            this.clientsCat = clients;
-            if ( clients.length > 0) {
-              this.formInfo.receptorRfc = clients[0].informacionFiscal.rfc;
-              this.onClientSelected(this.formInfo.receptorRfc);
-            }
-          }, (error: HttpErrorResponse) => {
-            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-          });
-    }else {
-      this.clientsCat = [];
-      this.clientInfo = undefined;
-    }
-  } */
-
-/*   onClientSelected(id: string) {
-    const value = +id;
-    if (!isNaN(value)) {
-      const client = this.clientsCat.find(c => c.id === Number(value));
-      if (client.activo === true) {
-        this.clientInfo = client.informacionFiscal;
-      } else {
-        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
-      }
-    }
-  } */
-
-  onPayMethodSelected(clave: string) {
-    if (clave === 'PPD') {
-      this.payTypeCat = [new Catalogo('99', 'Por definir')];
-      this.factura.cfdi.formaPago = '99';
-      this.factura.cfdi.metodoPago = 'PPD';
-      this.factura.metodoPago = 'PPD';
-      this.formInfo.payType = '99';
-    } else {
-      this.payTypeCat = [new Catalogo('02', 'Cheque nominativo'),
-      new Catalogo('03', 'Transferencia electrónica de fondos')];
-      this.factura.metodoPago = 'PUE';
-      this.factura.cfdi.metodoPago = 'PUE';
-      this.factura.cfdi.formaPago = '03';
-      this.formInfo.payType = '03';
-    }
-  }
-
-  onUsoCfdiSelected(clave: string) {
-    this.factura.cfdi.receptor.usoCfdi = clave;
-  }
-
-  onFormaDePagoSelected(clave: string) {
-    this.factura.cfdi.formaPago = clave;
-  }
 
   limpiarForma() {
     this.initVariables();

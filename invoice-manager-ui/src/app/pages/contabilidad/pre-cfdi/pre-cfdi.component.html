@@ -38,75 +38,11 @@
         <div *ngIf="factura.folio !== undefined">
           <p class="font-weight-bold">Información Emisor y Receptor</p>
           <div class="form-inline">
-
-
-<!--             <p class="font-weight-bold">Emisor</p>
-            &nbsp;&nbsp;
-            <p>{{factura.rfcEmisor}}</p>
-            &nbsp;&nbsp;
-            <p>{{factura.razonSocialEmisor}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p class="font-weight-bold">Receptor</p>
-            &nbsp;&nbsp;
-            <p>{{factura.rfcRemitente}}</p>
-            &nbsp;&nbsp;
-            <p>{{factura.razonSocialRemitente}}</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> -->
-            
-          </div>
-           <!--  <p class="font-weight-bold">Información CFDI</p>
-            <br>
-
-           |<div class="form-inline">
-            <p class="font-weight-bold">Uso CFDI</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.receptor.usoCfdi}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Moneda</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.moneda}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Metodo de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.metodoPago}}</p>
-            &nbsp;&nbsp;
-            <p class="font-weight-bold">Forma de Pago</p>
-            &nbsp;&nbsp;
-            <p>{{factura.cfdi.formaPago}}</p>
-            &nbsp;&nbsp; -->
-    <!--         <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(factura.folio)">
-              <i class="fa fa-file-pdf"></i>
-            </button>
-            &nbsp;&nbsp;
-            <button type="button" *ngIf="factura.statusFactura == 'Timbrada'" class="btn btn-outline-primary"
-              (click)="downloadXml(factura.folio)">
-              <i class="fa fa-code"></i>
-            </button>
-            &nbsp;&nbsp;
-            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)"
-              [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar Contabilidad'"
-              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
-              Timbrar
-            </button>
-            &nbsp;&nbsp;
-            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-              [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
-              nbSpinnerSize="small" nbSpinnerMessage="">
-              Cancelar
-            </button>
-            <button type="button" class="btn btn-success" (click)="aceptarFactura()"
-              *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" (click)="rechazarFactura()"
-              *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
-
- -->
-         
         </div>
+
         <div *ngIf="preFolio === '*'">
           <p class="font-weight-bold">Información Emisor</p>
-          <div class="row">
-            
+          <div class="row">    
             <div class="col-md-2">
               <label for="inputGiro" class="label">Línea Emisor</label>
               <select id="inputGiro" fullWidth class="form-control" style="display:block;"
@@ -206,11 +142,6 @@
         </div>
         <br>
 
-      
-      <!--   <ngx-conceptos [cfdi]="factura.cfdi" [concepto]="newConcep"
-          [allowEdit]="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura !== 'Rechazo Contabilidad'">
-        </ngx-conceptos>
-        <br> -->
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
             [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
