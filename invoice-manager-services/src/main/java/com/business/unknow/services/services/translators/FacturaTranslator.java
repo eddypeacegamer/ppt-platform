@@ -116,6 +116,9 @@ public class FacturaTranslator {
 					FacturaConstants.FACTURA_DATE_FORMAT));
 			complementoPago.setFormaDePago(primerPago.get().getFormaPago());
 			complementoPago.setMoneda(primerPago.get().getMoneda());
+			if(!primerPago.get().getMoneda().equals("MXN")) {
+				complementoPago.setTipoCambioP(primerPago.get().getTipoCambio());
+			}
 			complemento.setComplemntoPago(complementoPagos);
 			BigDecimal montoTotal = new BigDecimal(0);
 			List<ComplementoPago> complementosPago = new ArrayList<>();
@@ -126,6 +129,9 @@ public class FacturaTranslator {
 			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
 				ComplementoDocRelacionado complementoRelacionado = facturaCfdiTranslatorMapper
 						.complementoComponente(cfdiPago);
+				if(!cfdiPago.getMoneda().equals(cfdiPago.getMonedaDr())) {
+					complementoRelacionado.setTipoCambioDR(cfdiPago.getTipoCambioDr());
+				}
 				complementosRelacionados.add(complementoRelacionado);
 				montoTotal = montoTotal.add(new BigDecimal(complementoRelacionado.getImpPagado()));
 			}

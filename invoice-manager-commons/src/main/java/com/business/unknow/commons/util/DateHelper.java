@@ -2,6 +2,7 @@ package com.business.unknow.commons.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -34,5 +35,14 @@ public class DateHelper {
 
 	public Date epochTimeToDate(int date) {
 		return new Date(new Long(date) * Constants.MILISECONDS);
+	}
+	
+	public Date setMidNigthDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		return cal.getTime();
 	}
 }

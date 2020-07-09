@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -107,6 +108,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
+	
+	@Autowired
+	private DateHelper dateHelper;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -116,6 +120,7 @@ public class FacturaService {
 			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end= dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (folio.isPresent()) {
 			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
@@ -149,6 +154,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end= dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
@@ -173,6 +179,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end= dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(

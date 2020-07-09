@@ -39,6 +39,8 @@ public class CfdiPagoDto implements Serializable {
 	@XmlAttribute(name = "Serie")
 	private String serie;
 	private String montoDesc;
+	private BigDecimal tipoCambioDr;
+	private BigDecimal tipoCambio;
 
 	public int getId() {
 		return id;
@@ -168,6 +170,22 @@ public class CfdiPagoDto implements Serializable {
 		this.montoDesc = montoDesc;
 	}
 
+	public BigDecimal getTipoCambioDr() {
+		return tipoCambioDr;
+	}
+
+	public void setTipoCambioDr(BigDecimal tipoCambioDr) {
+		this.tipoCambioDr = tipoCambioDr;
+	}
+
+	public BigDecimal getTipoCambio() {
+		return tipoCambio;
+	}
+
+	public void setTipoCambio(BigDecimal tipoCambio) {
+		this.tipoCambio = tipoCambio;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiPagoDto [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago="
@@ -175,7 +193,7 @@ public class CfdiPagoDto implements Serializable {
 				+ idDocumento + ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
 				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", montoDesc="
-				+ montoDesc + "]";
+				+ montoDesc + ", tipoCambioDr=" + tipoCambioDr + ", tipoCambio=" + tipoCambio + "]";
 	}
 
 }
