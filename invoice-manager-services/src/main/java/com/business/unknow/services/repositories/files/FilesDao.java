@@ -3,7 +3,11 @@
  */
 package com.business.unknow.services.repositories.files;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -41,7 +45,7 @@ public class FilesDao {
 
 	private static final String UPDATE_FACTURA_FILE = "UPADTE FACTURA_FILES SET DATA=?, FECHA_CREACION = ? WHERE FILE_ID = ?";
 
-	private static final String FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "SELECT * FROM RESOURCE_FILES WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
+	private static final String FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "SELECT * FROM RESOURCE_FILES WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? 	AND TIPO_RECURSO = ?  ";
 
 	private static final String DELETE_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "DELETE FROM RESOURCE_FILES WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
 
@@ -51,15 +55,15 @@ public class FilesDao {
 
 	private static final String UPDATE_RESOURCE_FILE = "UPADTE RESOURCE_FILES SET DATA=?, FECHA_CREACION = ? WHERE FILE_ID = ?";
 
-	public Optional<ResourceFileDto> findResourceFileByResourceTypeAndReference(String resource, String fileType,
-			String reference) {
+	public Optional<ResourceFileDto> findResourceFileByResourceTypeAndReference(String resource, String reference,
+			String fileType) {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE);
 				ps.setString(1, resource);
-				ps.setString(2, fileType);
-				ps.setString(3, reference);
+				ps.setString(2, reference);
+				ps.setString(3, fileType);
 				return ps;
 			}
 		}, new ResourceFileRsExtractor());
@@ -144,10 +148,9 @@ public class FilesDao {
 				new int[] { Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.TIMESTAMP });
 	}
 
-	public int updateFacturaFile(int id, String data) {
-		return invoiceManagerTemplate.update(UPDATE_FACTURA_FILE,
-				new Object[] { new SqlLobValue(data.getBytes()), new Timestamp(System.currentTimeMillis()), id },
-				new int[] { Types.BLOB, Types.TIMESTAMP, Types.INTEGER });
+	public int updateFacturaFile(FacturaFileDto dto) {
+		deletFacturaFileById(dto.getId());
+		return insertFacturaFile(dto);
 	}
 
 }

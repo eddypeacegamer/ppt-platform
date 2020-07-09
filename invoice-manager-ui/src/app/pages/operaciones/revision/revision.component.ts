@@ -247,6 +247,7 @@ export class RevisionComponent implements OnInit {
     this.errorMessages = [];
     const fact = { ...factura };
     fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     this.clientsService.getClientByRFC(this.factura.cfdi.receptor.rfc)
     .subscribe((client: Client) => {
     if ( client.activo) {

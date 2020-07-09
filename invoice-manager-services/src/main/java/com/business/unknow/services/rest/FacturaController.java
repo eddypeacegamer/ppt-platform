@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,13 +110,11 @@ public class FacturaController {
 		return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
 	}
 
-//	@PutMapping("/{folio}")
-//	public ResponseEntity<FacturaDto> updateFactura(@PathVariable String folio,
-//			@RequestBody @Valid FacturaDto factura) {
-//		return new ResponseEntity<>(service.updateFactura(factura, folio), HttpStatus.OK);
-//	}
-
-	
+	@PutMapping("/{idCfdi}")
+	public ResponseEntity<FacturaDto> updateFactura(@PathVariable Integer idCfdi,
+			@RequestBody @Valid FacturaDto factura) {
+		return new ResponseEntity<>(service.updateFactura(idCfdi,factura), HttpStatus.OK);
+	}
 
 	// TIMBRADO
 	@PostMapping("/{folio}/timbrar")
