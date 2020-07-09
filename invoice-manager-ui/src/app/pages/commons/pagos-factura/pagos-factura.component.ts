@@ -73,6 +73,11 @@ export class PagosFacturaComponent implements OnInit {
   public clientsCat: Contribuyente[] = [];
   public companiesCat: Contribuyente[] = [];
 
+  public selectedClient: Contribuyente;
+  public selectedCompany: Contribuyente;
+
+
+
   customColumn = 'ACCIONES';
   defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -88,7 +93,7 @@ export class PagosFacturaComponent implements OnInit {
   constructor(
     private paymentsService: PaymentsData,
     private dialogService: NbDialogService,
-    private invoiceService : InvoicesData,
+    private invoiceService: InvoicesData,
     private accountsService: CuentasData,
     private fileService: FilesData,
     private paymentValidator: PagosValidatorService,
@@ -98,6 +103,8 @@ export class PagosFacturaComponent implements OnInit {
 
   ngOnInit() {
     this.newPayment.moneda = 'MXN';
+    this.paymentsService.getFormasPago()
+        .subscribe(payTypes => this.payTypeCat = payTypes);
     this.usersService.getUserInfo()
       .then(user => {
         this.user = user;
@@ -133,12 +140,18 @@ export class PagosFacturaComponent implements OnInit {
   /******* PAGOS ********/
 
   selectClient(cliente: Contribuyente) {
+    this.selectedClient = cliente;
     this.invoiceService
-      .getInvoices(0, 10000, {remitente: cliente.razonSocial, solicitante:this.user.email })
+      .getInvoices(0, 10000, {remitente: cliente.razonSocial, solicitante: this.user.email })
       .pipe(
         map((page: GenericPage<Factura>) => {
-          return page.content.map(f => new Contribuyente(f.rfcEmisor,f.razonSocialEmisor));
+          return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
         })).subscribe(companies => this.companiesCat = companies);
+  }
+
+  onCompanySelected(company: any) {
+    this.selectedCompany = this.companiesCat.find(c => c.rfc === company);
+    console.log(this.selectedCompany);
   }
 
   onPaymentCoinSelected(clave: string) {
@@ -153,14 +166,13 @@ export class PagosFacturaComponent implements OnInit {
       this.newPayment.banco = 'No aplica';
             this.newPayment.cuenta = 'Sin especificar';
     }else {
-      /*
-      this.accountsService.getCuentasByCompany(this.factura.rfcEmisor)
+      this.accountsService.getCuentasByCompany(this.selectedCompany.rfc)
           .subscribe(cuentas => {
             this.cuentas = cuentas;
             this.paymentForm.bankAccount = cuentas[0].id;
             this.newPayment.banco = cuentas[0].banco;
             this.newPayment.cuenta = cuentas[0].cuenta;
-          });*/
+          });
     }
   }
 
