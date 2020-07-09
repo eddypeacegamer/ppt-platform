@@ -15,7 +15,6 @@ import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.commons.util.NumberHelper;
 import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.commons.util.StringHelper;
-import com.business.unknow.rules.suites.DevolucionSuite;
 import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.facturas.CancelacionSuite;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
@@ -64,11 +63,6 @@ public class ServicesApplication {
 	@Bean
 	public PaymentCreationSuite getPagoPpdSuite() {
 		return new PaymentCreationSuite();
-	}
-
-	@Bean
-	public DevolucionSuite getDevolucionSuite() {
-		return new DevolucionSuite();
 	}
 
 	@Bean
@@ -130,7 +124,5 @@ public class ServicesApplication {
 	public NumberTranslatorHelper getNumberTranslatorHelper() {
 		return new NumberTranslatorHelper();
 	}
-
-	
 
 }

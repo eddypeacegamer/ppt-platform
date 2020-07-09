@@ -40,7 +40,6 @@ import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.PagoDevolucionRepository;
 import com.business.unknow.services.repositories.facturas.DevolucionRepository;
 import com.business.unknow.services.services.builder.DevolucionesBuilderService;
-import com.business.unknow.services.services.evaluations.DevolucionEvaluatorService;
 import com.business.unknow.services.services.executor.DevolucionExecutorService;
 
 /**
@@ -58,7 +57,7 @@ public class DevolucionService {
 
 	@Autowired
 	private PagoDevolucionRepository pagoDevolucionRepository;
-	
+
 	@Autowired
 	private PagoService pagoService;
 
@@ -70,9 +69,6 @@ public class DevolucionService {
 
 	@Autowired
 	private DevolucionesBuilderService devolucionesBuilderService;
-
-	@Autowired
-	private DevolucionEvaluatorService devolucionEvaluatorService;
 
 	@Autowired
 	private DevolucionExecutorService devolucionExecutorService;
@@ -99,10 +95,10 @@ public class DevolucionService {
 
 	public BigDecimal getMontoDevoluciones(String tipoReceptor, String idReceptor) {
 		BigDecimal result = repository.findMontoByParams(tipoReceptor, idReceptor);
-		
-		if(result==null||result.compareTo(BigDecimal.ZERO)==0) {
+
+		if (result == null || result.compareTo(BigDecimal.ZERO) == 0) {
 			return new BigDecimal(0.0);
-		}else {
+		} else {
 			return result.setScale(2, BigDecimal.ROUND_DOWN);
 		}
 	}
@@ -119,14 +115,14 @@ public class DevolucionService {
 		}
 		return pagos;
 	}
-	
-	
-	public List<DevolucionDto> getDevolucionesByFolio(String folio){
-		return  mapper.getDevolucionesDtoFromEntities(repository.findByFolio(folio));
+
+	public List<DevolucionDto> getDevolucionesByFolio(String folio) {
+		return mapper.getDevolucionesDtoFromEntities(repository.findByFolio(folio));
 	}
-	
-	public List<DevolucionDto> upadteDevoluciones(String folio,List<DevolucionDto> devoluciones) throws InvoiceManagerException{
-		//TODO refactor this code with new implementation
+
+	public List<DevolucionDto> upadteDevoluciones(String folio, List<DevolucionDto> devoluciones)
+			throws InvoiceManagerException {
+		// TODO refactor this code with new implementation
 		return devoluciones;
 //		PagoDto pago = pagoService.findPagosByFolio(folio).stream().filter(p->!FormaPagoEnum.CREDITO.getPagoValue().equals(p.getFormaPago()))
 //			.findAny().orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("No se encontraron pagos para el folio %s", folio)));
@@ -190,22 +186,20 @@ public class DevolucionService {
 		BigDecimal realSubtotal;
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
 		case FACTURA:
-			impuestos=calculaImpuestos(facturaDto.getCfdi());
+			impuestos = calculaImpuestos(facturaDto.getCfdi());
 			realSubtotal = calculaImporteBaseFactura(facturaDto.getCfdi());
 			context = devolucionesBuilderService.buildFacturaContextForPueDevolution(facturaDto, pagoDto);
-			devolucionEvaluatorService.devolucionPueValidation(context);
 			devolucionExecutorService.executeDevolucionForPue(context, client, facturaDto.getCfdi().getTotal(),
-					impuestos,realSubtotal);
+					impuestos, realSubtotal);
 			break;
 		case COMPLEMENTO:
 			context = devolucionesBuilderService.buildFacturaContextForComplementoDevolution(facturaDto, pagoDto);
-			impuestos=calculaImpuestos(context.getFacturaPadreDto().getCfdi());
+			impuestos = calculaImpuestos(context.getFacturaPadreDto().getCfdi());
 			realSubtotal = calculaImporteBaseFactura(context.getFacturaPadreDto().getCfdi());
-			baseComisiones = impuestos
-					.divide(context.getFacturaPadreDto().getCfdi().getTotal(), 6, RoundingMode.HALF_UP);
-			devolucionEvaluatorService.devolucionPpdValidation(context);
+			baseComisiones = impuestos.divide(context.getFacturaPadreDto().getCfdi().getTotal(), 6,
+					RoundingMode.HALF_UP);
 			devolucionExecutorService.executeDevolucionForPpd(context, client,
-					context.getFacturaPadreDto().getCfdi().getTotal(), baseComisiones,realSubtotal);
+					context.getFacturaPadreDto().getCfdi().getTotal(), baseComisiones, realSubtotal);
 			break;
 		default:
 			throw new InvoiceManagerException("The type of document not supported",
@@ -228,12 +222,12 @@ public class DevolucionService {
 		return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(pagoDevolucion);
 	}
 
-	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> folio,String status, String formaPago, String beneficiario,
-			String tipoReceptor, String idReceptor, int page, int size) {
+	public Page<PagoDevolucionDto> getPagoDevolucionesByParams(Optional<String> folio, String status, String formaPago,
+			String beneficiario, String tipoReceptor, String idReceptor, int page, int size) {
 		Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
-		if(folio.isPresent()) {
-			result = pagoDevolucionRepository.findByFolioFactura(folio.get(), PageRequest.of(0,10));
-		}else if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
+		if (folio.isPresent()) {
+			result = pagoDevolucionRepository.findByFolioFactura(folio.get(), PageRequest.of(0, 10));
+		} else if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {
 			result = pagoDevolucionRepository.findByTipoReceptorAndReceptor(tipoReceptor, idReceptor,
 					PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
 		} else if (status.length() > 0) {
@@ -252,11 +246,11 @@ public class DevolucionService {
 	}
 
 	public BigDecimal calculaImporteBaseFactura(CfdiDto cfdiDto) {
-		BigDecimal subtotal = cfdiDto.getConceptos().stream().map(c -> c.getImporte()).reduce(BigDecimal.ZERO,
-				(i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal retenciones = cfdiDto
-				.getConceptos().stream().map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte())
-						.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))
+		BigDecimal subtotal = cfdiDto.getConceptos().stream().map(c -> c.getImporte())
+				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal retenciones = cfdiDto.getConceptos().stream()
+				.map(i -> i.getRetenciones().stream().map(imp -> imp.getImporte()).reduce(BigDecimal.ZERO,
+						(i1, i2) -> i1.add(i2)))
 				.reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return subtotal.subtract(retenciones);
 	}

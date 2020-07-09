@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -100,6 +101,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
+	
+	@Autowired
+	private DateHelper dateHelper;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -109,6 +113,7 @@ public class FacturaService {
 			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end=dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (prefolio.isPresent()) {
 			result = repository.findByIdCfdi(prefolio.get(),PageRequest.of(0, 10));
@@ -141,6 +146,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end=dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
@@ -165,6 +171,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
+		end=dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(
@@ -351,9 +358,10 @@ public class FacturaService {
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
 				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")
 				&& facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
-					facturaContext.getCurrentPago());
-			devolucionService.updateSolicitudDevoluciones(folio);
+			//TODO Reconstruir todo el calculo de las devolucioness por que esta basado en pagos
+//			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
+//					facturaContext.getCurrentPago());
+//			devolucionService.updateSolicitudDevoluciones(folio);
 		}
 
 		// TODO Insertar en tabla de ingresos

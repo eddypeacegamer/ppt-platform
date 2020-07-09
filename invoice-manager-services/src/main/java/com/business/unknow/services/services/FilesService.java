@@ -36,7 +36,7 @@ public class FilesService {
 
 	public ResourceFileDto getResourceFileByResourceReferenceAndType(String resource, String referencia, String type)
 			throws InvoiceManagerException {
-		return filesDao.findResourceFileByResourceTypeAndReference(resource, type, referencia).orElseThrow(
+		return filesDao.findResourceFileByResourceTypeAndReference(resource,referencia,type).orElseThrow(
 				() -> new InvoiceManagerException("El recurso solicitado no existe.", HttpStatus.NOT_FOUND.value()));
 	}
 	
@@ -58,7 +58,8 @@ public class FilesService {
 	public void upsertFacturaFile(FacturaFileDto facturaFile) {
 		Optional<FacturaFileDto> file = filesDao.findFacturaFileByResourceTypeAndReference(facturaFile.getFolio(), facturaFile.getTipoArchivo());
 		if (file.isPresent()) {
-			filesDao.updateFacturaFile(file.get().getId(), facturaFile.getData());
+			facturaFile.setId(file.get().getId());
+			filesDao.updateFacturaFile(facturaFile);
 		}else {
 			filesDao.insertFacturaFile(facturaFile);
 		}

@@ -113,7 +113,7 @@ export class PreCfdiComponent implements OnInit {
         this.route.paramMap.subscribe(route => {
           this.preFolio = route.get('folio');
           if (this.preFolio !== '*') {
-            this.getInvoiceByFolio(this.preFolio);
+            this.getInvoiceByIdCdfi(this.preFolio);
           } else {
             this.initVariables();
           }
@@ -141,17 +141,12 @@ export class PreCfdiComponent implements OnInit {
     this.factura.cfdi.receptor.usoCfdi = '*';
   }
 
-  public getInvoiceByFolio(preFolio: string) {
+  public getInvoiceByIdCdfi(preFolio: string) {
     const idCfdi: number = +preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
-        /* fac.cfdi.receptor.usoCfdi = this.usoCfdiCat.find(u => u.clave === fac.cfdi.receptor.usoCfdi).descripcion;
-        fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
-        fac.statusPago = this.payCat.find(v => v.id === fac.statusPago).nombre;
-        fac.statusDevolucion = this.devolutionCat.find(v => v.id === fac.statusDevolucion).nombre;
-        fac.cfdi.formaPago = this.payTypeCat.find(v => v.id === fac.cfdi.formaPago).nombre;
-        return fac; */
+
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
         return fac;
       })).subscribe(invoice => {
@@ -224,39 +219,6 @@ export class PreCfdiComponent implements OnInit {
     this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
   }
 
-/*   buscarClientInfo( razonSocial: string) {
-    if ( razonSocial !== undefined && razonSocial.length > 5) {
-      this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
-          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
-          .subscribe(clients => {
-            this.clientsCat = clients;
-            if ( clients.length > 0) {
-              this.formInfo.receptorRfc = clients[0].informacionFiscal.rfc;
-              this.onClientSelected(this.formInfo.receptorRfc);
-            }
-          }, (error: HttpErrorResponse) => {
-            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-          });
-    }else {
-      this.clientsCat = [];
-      this.clientInfo = undefined;
-    }
-  } */
-
-/*   onClientSelected(id: string) {
-    const value = +id;
-    if (!isNaN(value)) {
-      const client = this.clientsCat.find(c => c.id === Number(value));
-      if (client.activo === true) {
-        this.clientInfo = client.informacionFiscal;
-      } else {
-        alert(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema`);
-      }
-    }
-  }
- */
   onPayMethodSelected(clave: string) {
     if (clave === 'PPD') {
       this.payTypeCat = [new Catalogo('99', 'Por definir')];
@@ -339,7 +301,7 @@ export class PreCfdiComponent implements OnInit {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
           this.factura.folio = invoice.folio;
-          this.getInvoiceByFolio(invoice.cfdi.id.toString());
+          this.getInvoiceByIdCdfi(invoice.cfdi.id.toString());
           this.loading = false;
         }, (error: HttpErrorResponse) => {
           this.loading = false;
