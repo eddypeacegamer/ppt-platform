@@ -159,11 +159,11 @@
           <label for="inputCoin" class="label">Moneda</label>
           <div class="">
             <select id="inputCoin" style="display:block;" class="form-control" [disabled]="!allowEdit"
-            [(ngModel)]="cfdi.moneda">
+            [(ngModel)]="cfdi.moneda" (change)="onMonedaChange($event.target.value)">
               <option value="*">Seleccionar</option>
               <option value="XXX">N/A</option>
               <option value="MXN">Peso MX</option>
-              <option value="USD">Dollar US</option>
+              <option value="USD">Dolar US</option>
             </select>
             <input id="inputChangeType" style=" margin-top: 15px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
           </div>

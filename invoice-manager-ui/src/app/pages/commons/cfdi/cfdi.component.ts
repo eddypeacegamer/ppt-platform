@@ -61,6 +61,15 @@ export class CfdiComponent implements OnInit {
       });
   }
 
+  onMonedaChange(moneda: string) {
+    this.errorMessages = [ ];
+    if (moneda === 'MXN') {
+      this.cfdi.tipoCambio = 1.00;
+    }else if (this.cfdi.tipoCambio === 1.00) {
+      this.errorMessages.push(`El tipo de cambio para ${moneda} no puede ser igual a 1`);
+    }
+  }
+
   updateCfdi() {
     this.loading = true;
     this.errorMessages = [];

@@ -104,15 +104,14 @@ public class FacturaService {
 	private FacturaValidator validator = new FacturaValidator();
 
 	// FACTURAS
-	public Page<FacturaDto> getFacturasByParametros(Optional<String> folio, Optional<String> solicitante,
+	public Page<FacturaDto> getFacturasByParametros(Optional<Integer> prefolio, Optional<String> solicitante,
 			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
 			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
 		Page<Factura> result;
-		if (folio.isPresent()) {
-			result = repository.findByFolioIgnoreCaseContaining(folio.get(),
-					PageRequest.of(0, 10, Sort.by("fechaActualizacion").descending()));
+		if (prefolio.isPresent()) {
+			result = repository.findByIdCfdi(prefolio.get(),PageRequest.of(0, 10));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), lineaEmisor, status.get(),
@@ -222,8 +221,29 @@ public class FacturaService {
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
+	
+	
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi,BigDecimal total, BigDecimal saldo) {
+		Factura factura = repository.findByIdCfdi(idCfdi).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		factura.setTotal(total);
+		factura.setSaldoPendiente(saldo);
+		return mapper.getFacturaDtoFromEntity(repository.save(factura));
+	}
+	
+	
+	public FacturaDto updateFacturaStatus(Integer idCfdi,FacturaStatusEnum status) {
+		Factura factura = repository.findByIdCfdi(idCfdi).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		factura.setStatusFactura(status.getValor());
+		return mapper.getFacturaDtoFromEntity(repository.save(factura));
+	}
+	
+	
+	
 
 	public FacturaDto updateFactura(Integer idCfdi,FacturaDto factura) {
+		
 		if (repository.findByIdCfdi(idCfdi).isPresent()) {
 			if (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
@@ -285,29 +305,6 @@ public class FacturaService {
 //		} else {
 //			return generateComplemento(facturaPadre, pagoDto);
 //		}
-	}
-
-	// TODO Maybe this service is not needed with last changes
-	public BigDecimal getFacturaSaldo(Integer idCfdi) throws InvoiceManagerException {
-		CfdiDto cfdi = cfdiService.getCfdiById(idCfdi);
-//		if (cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
-//				&& factura.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
-//			List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);
-//			BigDecimal saldo = new BigDecimal(0);
-//			for (CfdiPagoDto complemento : pagosPPD) {
-//				CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
-//				if (cfdiDto != null && cfdiDto.getComplemento() != null
-//						&& cfdiDto.getComplemento().getPagos() != null) {
-//					for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
-//						saldo = saldo.add(cfdiPagoDto.getMonto());
-//					}
-//				}
-//			}
-//			return factura.getTotal().subtract(saldo);
-//		} else {
-//			return new BigDecimal(0);
-//		}
-		return new BigDecimal(0);
 	}
 
 	// TIMBRADO

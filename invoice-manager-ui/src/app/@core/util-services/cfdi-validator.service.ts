@@ -43,6 +43,7 @@ export class CfdiValidatorService {
   }
 
   public validarConcepto(concepto: Concepto): string[] {
+    console.log('validating', concepto)
     const messages: string[] = [];
     if (concepto.cantidad <= 0) {
       messages.push('La cantidad requerida debe ser mayor a 0');
@@ -57,10 +58,7 @@ export class CfdiValidatorService {
     }
     if (concepto.descripcion === undefined || concepto.descripcion.length < 1) {
       messages.push('La descripción del concepto es un valor requerido.');
-        
     }
-    //if(!this.validRegExpAphaNumeric(concepto.descripcion))
-    //    messages.push('La descripción del concepto contiene caracteres invalidos.');
     if (concepto.valorUnitario <= 0) {
       messages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
     }
@@ -132,8 +130,6 @@ export class CfdiValidatorService {
     }
     if (cfdi.moneda === undefined) {
       messages.push('La moneda es un campo requerido.');
-    }else if (cfdi.moneda !== 'MXN') {
-      messages.push('Solo son soportadas facturas en pesos');
     }
     if (cfdi.formaPago === undefined || cfdi.formaPago === '*' ) {
       messages.push('La forma de pago es un campo requerido.');

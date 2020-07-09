@@ -49,7 +49,7 @@ public class FacturaController {
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
-			@RequestParam(name = "folio", required = false) Optional<String> folio,
+			@RequestParam(name = "prefolio", required = false) Optional<Integer> prefolio,
 			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante, // linea A by default
 			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
 			@RequestParam(name = "emisor", defaultValue = "") String emisor,
@@ -59,7 +59,7 @@ public class FacturaController {
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(folio, solicitante, lineaEmisor, status, since, to,
+		return new ResponseEntity<>(service.getFacturasByParametros(prefolio, solicitante, lineaEmisor, status, since, to,
 				emisor, receptor, page, size), HttpStatus.OK);
 	}
 

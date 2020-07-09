@@ -1,7 +1,6 @@
 package com.business.unknow.services.repositories.facturas;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +23,8 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	
 	
 	public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
+	
+	public Page<Factura> findByIdCfdi(Integer prefolio, Pageable pageable);
 	
 	@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor=:lineaEmisor and f.fechaCreacion between :since and :to and upper(f.razonSocialEmisor) like upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) like upper(:razonSocialRemitente)")
 	public Page<Factura> findBySolicitanteWithParams(@Param("solicitante") String solicitante,@Param("lineaEmisor") String lineaEmisor,@Param("since") Date since, @Param("to") Date to,@Param("razonSocialEmisor") String razonSocialEmisor,@Param("razonSocialRemitente") String razonSocialRemitente,Pageable pageable);

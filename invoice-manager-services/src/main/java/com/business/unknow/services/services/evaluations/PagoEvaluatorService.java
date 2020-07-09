@@ -87,6 +87,8 @@ public class PagoEvaluatorService extends AbstractValidator {
 		checkNotNull(dto.getSolicitante(), "Solicitante");
 		checkNotNull(dto.getStatusPago(), "Estatus de pago");
 		checkNotNull(dto.getTipoDeCambio(), "Tipo de cambio");
+		checkNotNegative(dto.getTipoDeCambio(), "Tipo de cambio");
+		checkNotNegative(dto.getMonto(), "Monto pago");
 		if(!dto.getFacturas().isEmpty()) {
 			for (PagoFacturaDto fact : dto.getFacturas()) {
 				checkNotNull(fact.getFolio(), "Folio factura");
