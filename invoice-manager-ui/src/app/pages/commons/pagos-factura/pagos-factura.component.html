@@ -3,7 +3,7 @@
     <nb-card>
       <nb-card-header>Pagos Factura</nb-card-header>
       <nb-card-body>
-        <p class="font-weight-bold">Pagos</p>
+        <p class="font-weight-bold">Cargar Pagos</p>
         <div class="row">
           <div class="col-md-6">
             <label for="inputClients" class="label">Cliente emisor de pago</label>
@@ -34,7 +34,7 @@
           <div class="col-md-6">
             <label for="inputCompany" class="label">Empresa receptora de pago</label>
             <div class="form-inline">
-              <select id="inputCompany"  style="display:block;" class="select-full border border-dark">
+              <select id="inputCompany"  style="display:block;" class="select-full border border-dark" (change)="onCompanySelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let company of companiesCat" [(value)]="company.rfc">
                   {{company.rfc}}-{{company.razonSocial}}
@@ -47,13 +47,13 @@
         <div class="row">
           <div class="col-sm-2">
             <label for="inputPayCoin" class="label">Moneda</label>
-            <select id="inputPayCoin" style="display:block;" class="form-control" [(ngModel)]="newPayment.moneda">
+            <select id="inputPayCoin" style="display:block;" class="select-full border border-dark" [(ngModel)]="newPayment.moneda">
               <option value="MXN">Peso MX</option>
             </select>
           </div>
           <div class="col-sm-3">
             <label for="inputPayType" class="label">Forma de Pago</label>
-            <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+            <select selected="1" id="inputPayType" style="display:block;" class="select-full border border-dark"
               [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
               <option value="*">Seleccionar</option>
               <option *ngFor="let payType of payTypeCat" [value]="payType.id"> {{payType.nombre}}</option>
@@ -61,7 +61,7 @@
           </div>
           <div class="col-sm-7">
             <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
-            <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+            <select selected="1" id="inputPayType" style="display:block;" class="select-full border border-dark"
               [(ngModel)]="paymentForm.bankAccount" (change)="onPaymentBankSelected($event.target.value)">
               <option value="*">Seleccionar</option>
               <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} --
@@ -79,12 +79,12 @@
         <div class="row">
           <div class="col-sm-2">
             <label for="payAmmount" class="label">Monto Pago</label>
-            <input id="payAmmount" class="form-control" fullWidth type="number" min="0" placeholder="Monto"
+            <input id="payAmmount" style="display:block;" class="select-full border border-dark" fullWidth type="number" min="0" placeholder="Monto"
               [(ngModel)]="newPayment.monto">
           </div>
           <div class="col-md-3">
             <label for="payAmmount" class="label">Fecha de pago</label>
-            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;" class="select-full border border-dark"
               [(ngModel)]="newPayment.fechaPago">
             <nb-datepicker #formpicker></nb-datepicker>
           </div>

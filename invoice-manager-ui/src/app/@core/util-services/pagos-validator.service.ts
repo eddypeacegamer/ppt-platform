@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PagoBase } from '../../models/pago-base';
-import { Cfdi } from '../../models/factura/cfdi';
-import { PagoFactura } from '../../models/pago-factura';
 import { Factura } from '../../models/factura/factura';
 
 @Injectable({
@@ -14,6 +12,9 @@ export class PagosValidatorService {
 
   public validatePago(pago: PagoBase, factura: Factura): string[] {
     const messages = [];
+    if (factura.metodoPago === 'PPD' && factura.statusFactura !== 'Timbrada') {
+      messages.push('Las facturas PPD no pueden agregar pagos hasta que  no se encuentre timbrada la factura.');
+    }
     if (pago.banco === undefined || pago.banco === '*') {
       messages.push('El banco es un valor requerido');
     }
