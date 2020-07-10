@@ -116,6 +116,10 @@
   </div>
 </div>
 
+<div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
+  <ngx-pago-factura [factura]="factura" [user]="user"></ngx-pago-factura>
+</div>
+
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
