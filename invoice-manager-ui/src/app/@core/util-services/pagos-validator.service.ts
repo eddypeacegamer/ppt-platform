@@ -48,4 +48,32 @@ export class PagosValidatorService {
     return messages;
   }
 
+
+  public validatePagoSimple(pago: PagoBase): string[] {
+    const messages = [];
+    if (pago.banco === undefined || pago.banco === '*') {
+      messages.push('El banco es un valor requerido');
+    }
+    if (pago.fechaPago === undefined) {
+      messages.push('La fecha de pago es un valor requerido');
+    }
+    if (pago.moneda === undefined || pago.moneda === '*') {
+      messages.push('Es necesario especificar la moneda con la que se realizo el pago.');
+    }
+    if (pago.monto === undefined) {
+      messages.push('El monto del pago es requerido.');
+    }
+    if (pago.monto <= 0) {
+      messages.push('El monto pagado es invalido');
+    }
+    if (pago.formaPago === undefined || pago.formaPago === '*') {
+      messages.push('El tipo de pago es requerido.');
+    }
+    if ((pago.formaPago === 'CHEQUE' || pago.formaPago === 'TRANSFERENCIA' || pago.formaPago === 'DEPOSITO')
+           && pago.documento === undefined) {
+      messages.push('La imagen del documento de pago es requerida.');
+    }
+    return messages;
+  }
+
 }

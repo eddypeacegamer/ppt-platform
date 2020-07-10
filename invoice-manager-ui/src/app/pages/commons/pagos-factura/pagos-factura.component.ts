@@ -19,6 +19,8 @@ import { Contribuyente } from '../../../models/contribuyente';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
+import { ResourceFile } from '../../../models/resource-file';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 interface TreeNode<T> {
@@ -59,22 +61,7 @@ interface PagoFacturaModel {
 export class PagosFacturaComponent implements OnInit {
 
   public user: User;
-  public fileInput: any;
-
-  public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-  public newPayment: PagoBase = new PagoBase();
-  public promotorPayments: GenericPage<PagoBase> = new GenericPage();
-  public pageSize = '10';
-  public payErrorMessages: string[] = [];
-  public payTypeCat: Catalogo[] = [];
-  public cuentas: Cuenta[];
-  public loading: boolean = false;
-
-  public clientsCat: Contribuyente[] = [];
-  public companiesCat: Contribuyente[] = [];
-
-  public selectedClient: Contribuyente;
-  public selectedCompany: Contribuyente;
+  
 
 
 
@@ -87,34 +74,21 @@ export class PagosFacturaComponent implements OnInit {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   public page: GenericPage<any> = new GenericPage();
-
+  public pageSize = '10';
+  
   public filterParams: any = {};
 
   constructor(
-    private paymentsService: PaymentsData,
     private dialogService: NbDialogService,
-    private invoiceService: InvoicesData,
-    private accountsService: CuentasData,
-    private fileService: FilesData,
-    private paymentValidator: PagosValidatorService,
-    private clientsService: ClientsData,
+    private paymentsService: PaymentsData,
     private usersService: UsersData,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
-    this.newPayment.moneda = 'MXN';
-    this.paymentsService.getFormasPago()
-        .subscribe(payTypes => this.payTypeCat = payTypes);
     this.usersService.getUserInfo()
       .then(user => {
         this.user = user;
         this.filterParams.solicitante = user.email;
-        this.clientsService.getClientsByPromotor(user.email)
-        .pipe(
-          map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
-        ).subscribe(clients => {
-          this.clientsCat = clients;
-        });
       }).then(() => this.updateDataTable());
   }
 
@@ -139,42 +113,7 @@ export class PagosFacturaComponent implements OnInit {
 
   /******* PAGOS ********/
 
-  selectClient(cliente: Contribuyente) {
-    this.selectedClient = cliente;
-    this.invoiceService
-      .getInvoices(0, 10000, {remitente: cliente.razonSocial, solicitante: this.user.email })
-      .pipe(
-        map((page: GenericPage<Factura>) => {
-          return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
-        })).subscribe(companies => this.companiesCat = companies);
-  }
-
-  onCompanySelected(company: any) {
-    this.selectedCompany = this.companiesCat.find(c => c.rfc === company);
-    console.log(this.selectedCompany);
-  }
-
-  onPaymentCoinSelected(clave: string) {
-    this.newPayment.moneda = clave;
-  }
-
-  onPaymentTypeSelected(clave: string) {
-    this.newPayment.formaPago = clave;
-    if (clave === 'EFECTIVO' || clave === 'CHEQUE' || clave === '*') {
-      this.cuentas = [ new Cuenta('N/A', 'No aplica', 'Sin especificar')];
-      this.paymentForm.bankAccount = 'N/A';
-      this.newPayment.banco = 'No aplica';
-            this.newPayment.cuenta = 'Sin especificar';
-    }else {
-      this.accountsService.getCuentasByCompany(this.selectedCompany.rfc)
-          .subscribe(cuentas => {
-            this.cuentas = cuentas;
-            this.paymentForm.bankAccount = cuentas[0].id;
-            this.newPayment.banco = cuentas[0].banco;
-            this.newPayment.cuenta = cuentas[0].cuenta;
-          });
-    }
-  }
+ 
 
   //
 
@@ -204,7 +143,6 @@ export class PagosFacturaComponent implements OnInit {
         return newPage;
       }),
     ).subscribe((page: GenericPage<TreeNode<PagoFacturaModel>>) => {
-      console.log(page);
       this.page = page;
       this.dataSource = this.dataSourceBuilder.create(page.content);
       });
@@ -215,27 +153,7 @@ export class PagosFacturaComponent implements OnInit {
   }
 
 
-  onPaymentBankSelected(clave: string) {
-    this.newPayment.banco = clave;
-  }
-
-  fileUploadListener(event: any): void {
-    this.fileInput = event.target;
-    const reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      if (file.size > 1000000) {
-        alert('El archivo demasiado grande, intenta con un archivo mas pequeño.');
-      } else {
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.paymentForm.filename = file.name;
-          this.newPayment.documento = reader.result.toString();
-        };
-        reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); };
-      }
-    }
-  }
+  
 
 
   public openPaymentAssigments(pago?: PagoBase) {
@@ -264,48 +182,5 @@ export class PagosFacturaComponent implements OnInit {
       this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));*/
   }
 
-  sendPayment() {
-    /*
-    this.newPayment.folioPadre = this.factura.folio;
-    this.newPayment.folio = this.factura.folio;
-    this.newPayment.tipoPago = 'INGRESO';
-    this.newPayment.acredor = this.factura.razonSocialEmisor;
-    this.newPayment.deudor = this.factura.razonSocialRemitente;
-    this.newPayment.solicitante = this.user.email;
-    const payment  = {... this.newPayment};
-    this.payErrorMessages = this.paymentValidator.validatePago(payment, this.invoicePayments, this.factura.cfdi);
-    if (this.payErrorMessages.length === 0) {
-      this.loading = true;
-      this.paymentsService.insertNewPayment(this.factura.folio, payment).subscribe(
-        result => {
-          this.newPayment = new PagoFactura();
-          const resourceFile = new ResourceFile();
-          resourceFile.tipoArchivo = 'IMAGEN';
-          resourceFile.tipoRecurso = 'PAGO';
-          resourceFile.referencia  = `${result.id}_${result.folio}`;
-          resourceFile.data = payment.documento;
-          this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
-          this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe((payments: PagoFactura[]) => { this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-            this.loading = false;
-             if (payments.find(p => p.formaPago === 'CREDITO') !== undefined
-                      && this.payTypeCat.find(c => c.id === 'CREDITO') !== undefined) {
-                    this.payTypeCat.pop();//removes credit as option, there is no posible require a second credit
-              }
-          });
-          this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => this.factura.complementos = complementos);
-        }, (error: HttpErrorResponse) => {
-          this.loading = false;
-          this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
-        });
-    }
-    this.newPayment = new PagoFactura();
-    this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-    if (this.fileInput !== undefined) {
-      this.fileInput.value = '';
-    }*/
-  }
 }
 

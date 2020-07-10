@@ -1,63 +1,61 @@
 <nb-card *ngIf="payment">
   <nb-card-header>
     <div class="clearfix">
-      <p class="h6 float-left">Asignacion múltiple de pagos</p>
-      
-      <div class="form-inline float-right">
-        <p class="font-weight-bold align-bottom">Saldo disponible : &nbsp;&nbsp;&nbsp;&nbsp;</p>
-        <p class="font-weight-bold text-right alert alert-success" role="alert" style="width: 150px;">{{payment.monto | currency}}</p>
-      </div>
-      
+      <p class="h6 float-left">Asignacion múltiple de pagos facturas PPD</p>
     </div>
 
   </nb-card-header>
   <br>
   <nb-card-body>
     <div style="width: 90vw; height: 60vh;">
+      <p class="font-weight-bold">Cargar Pagos</p>
       <div class="row">
         <div class="col-md-5">
-          <label for="inputClients" class="label">Cliente Receptor</label>
+          <label for="inputClients" class="label">Cliente emisor de pago</label>
           <div class="ng-autocomplete border border-dark">
-            <ng-autocomplete
-              id="inputClients"
-              [data]="clientsCat"
-              [searchKeyword]="'razonSocial'"
-              placeHolder="Escribe el nombre del cliente"
-              historyIdentifier="Clientes"
-              [itemTemplate]="itemTemplate"
-              [notFoundTemplate]="notFoundTemplate">
+            <ng-autocomplete id="inputClients" [data]="clientsCat" [searchKeyword]="'razonSocial'"
+              (selected)='selectClient($event)' placeHolder="Escribe la razon social cliente que acredita pago"
+              historyIdentifier="Clientes" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
             </ng-autocomplete>
-          
+
             <ng-template #itemTemplate let-item>
               <div>
                 <span [innerHTML]="item.razonSocial"></span> &nbsp; | &nbsp;
                 <small>{{item.rfc}}</small>
               </div>
             </ng-template>
-          
+
             <ng-template #notFoundTemplate let-notFound>
               <div>Cliente desconocido</div>
             </ng-template>
           </div>
         </div>
-        <div class="col-md-7">
-          <label for="inputCompany" class="label">Empresa Emisora</label>
+        <div class="col-md-5" *ngIf="selectedClient">
+          <label for="inputCompany" class="label">Empresa receptora de pago</label>
           <div class="form-inline">
-            <select id="inputCompany" class="select-full border border-dark">
-              <option value="1">Lineas Areas Nacionales</option>
-              <option value="2">Transportes Camioneros Mendoza</option>
-              <option value="3">Macro Servicios Empresariales</option>
+            <select id="inputCompany" style="display:block;" class="select-full border border-dark"
+              (change)="onCompanySelected($event.target.value)">
+              <option value="*">Seleccionar</option>
+              <option *ngFor="let company of companiesCat" [(value)]="company.rfc">
+                {{company.rfc}}-{{company.razonSocial}}
+              </option>
             </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <button id="search-button" type="button" class="btn btn-outline-dark" (click)="updateDataTable(0,10)">BUSCAR</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <button id="assign-button" type="button" class="btn btn-outline-success">PAGAR FACTURAS</button>
           </div>
-          
+        </div>
+        <div class="col-sm-2" *ngIf="selectedClient">
+          <label for="inputPayCoin" class="label">Moneda</label>
+          <select id="inputPayCoin" style="display:block;" class="select-full border border-dark"
+            [(ngModel)]="newPayment.moneda">
+            <option value="MXN">Peso MX</option>
+          </select>
         </div>
       </div>
       <br>
-      <br>
+
+      <div *ngIf="page.empty === true && selectedClient && selectedCompany" class="alert alert-primary" role="alert">
+        No hay facturas con saldo pendiente
+      </div>
+
       <div class="row">
         <div class="col-md-12">
           <div class="table-responsive" *ngIf="page.empty == false">
@@ -69,31 +67,25 @@
                   <th class="text-center">Saldo a pagar</th>
                   <th class="text-center">Total Factura</th>
                   <th class="text-center">Pre-Folio</th>
-                  
                   <th class="text-center">Razón Social Empresa</th>
-                  
                   <th class="text-center">Razón Social Cliente</th>
-                  
                   <th class="text-center">Método Pago</th>
                   <th class="text-center">Estatus factura</th>
                 </tr>
               </thead>
               <tbody>
-                
-                <tr *ngFor="let fila of page.content" >
-                 
+
+                <tr *ngFor="let fila of page.content">
                   <td scope="row p-1" class="text-center" style="min-width: 160px;">
-                    <input type="number" class="form-control" id="inputImporte" placeholder="Importe a pagar MXN" [(ngModel)]="monto" name="monto" [disabled]="fila.saldo <0.01">
+                    <small *ngIf="fila.saldoPendiente === undefined || fila.saldoPendiente<0.01 || fila.statusFactura !== 'Timbrada'" id="emailHelp" class="form-text text-muted">Sin saldo pendiente o factura no timbrada.</small>
+                    <input type="number" class="form-control" id="inputImporte" placeholder="Importe a pagar MXN" *ngIf="fila.saldoPendiente>0.01 && fila.statusFactura === 'Timbrada'"
+                      [(ngModel)]="monto" name="monto">
                   </td>
-                
-                  <td scope="row">{{fila.saldo | currency}}</td>
+                  <td scope="row">{{fila.saldoPendiente | currency}}</td>
                   <td scope="row">{{fila.total | currency}}</td>
                   <td scope="row">{{fila.idCfdi}}</td>
-                  
                   <td scope="row">{{fila.razonSocialEmisor}}</td>
-                  
                   <td scope="row">{{fila.razonSocialRemitente}}</td>
-                  
                   <td scope="row">{{fila.metodoPago}}</td>
                   <td scope="row">{{fila.statusFactura}}</td>
                 </tr>
@@ -112,17 +104,78 @@
                     (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
               </ul>
             </div>
-            
           </div>
         </div>
+      </div>
+
+      <div class="row" *ngIf="page.empty === false && selectedClient && selectedCompany">
+
+        <div class="col-sm-3">
+          <label for="inputPayType" class="label">Forma de Pago</label>
+          <select selected="1" id="inputPayType" style="display:block;" class="select-full border border-dark"
+            [(ngModel)]="paymentForm.payType" (change)="onPaymentTypeSelected($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option *ngFor="let payType of payTypeCat" [value]="payType.id"> {{payType.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-sm-7">
+          <label for="inputPayType" class="label">Cuenta Receptora(Banco -- No cuenta -- CLABE)</label>
+          <select selected="1" id="inputPayType" style="display:block;" class="select-full border border-dark"
+            [(ngModel)]="paymentForm.bankAccount" (change)="onPaymentBankSelected($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} --
+              {{cuenta.clabe}}</option>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label for="payAmmount" class="label">Monto Pago</label>
+          <div id="payAmmount" class="alert alert-secondary form-control" role="alert" style="width: 250px;">
+              <p class="font-weight-bold">{{newPayment.monto | currency}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="page.empty === false && selectedClient && selectedCompany">
+        
+        <div class="col-md-4">
+          <label for="payAmmount" class="label">Fecha de pago</label>
+          <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" fullWidth style="display:block;"
+            class="select-full border border-dark" [(ngModel)]="newPayment.fechaPago">
+          <nb-datepicker #formpicker></nb-datepicker>
+        </div>
+        <div class="form-group col-md-8">
+          <label for="payFile" class="label">Comprobante de pago</label>
+          <div class="input-group">
+            <div class="custom-file" id="payFile">
+              <input #fileInput type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"
+                (change)="fileUploadListener($event)" style="display:block;" aria-describedby="inputGroupFileAddon01">
+              <label class="custom-file-label" for="inputGroupFile01">{{paymentForm.filename}}</label>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button nbButton status="primary" size="medium" (click)="sendPayment()" [nbSpinner]="loading"
+              [disabled]="loading" nbSpinnerStatus="primary" nbSpinnerSize="small" nbSpinnerMessage="">
+              Enviar Pago
+            </button>
+          </div>
         </div>
 
       </div>
+      <br>
+      <div class="row d-flex justify-content-center">
+        <div class="alert alert-success" role="alert">
+          Pago exitosamente enviado.
+        </div>
+      </div>
+      <div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">
+        <p *ngFor="let message of payErrorMessages">{{message}}</p>
+      </div>
+      <br>
+      <br>
 
-      
 
+    </div>
   </nb-card-body>
   <nb-card-footer>
-    <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+    <button class="btn btn-warning" (click)="exit()">Salir</button>
   </nb-card-footer>
 </nb-card>

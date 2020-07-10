@@ -101,7 +101,7 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
-	
+
 	@Autowired
 	private DateHelper dateHelper;
 
@@ -113,15 +113,18 @@ public class FacturaService {
 			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		end=dateHelper.setMidNigthDate(end);
+		end = dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (prefolio.isPresent()) {
-			result = repository.findByIdCfdi(prefolio.get(),PageRequest.of(0, 10));
+			result = repository.findByIdCfdi(prefolio.get(), PageRequest.of(0, 10));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), lineaEmisor, status.get(),
 						start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
 						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+			} else if (emisor != null && emisor.length() > 5 && receptor != null && receptor.length() > 5) {
+				result = repository.findFacturasPPD(solicitante.get(), lineaEmisor, emisor, receptor,
+						PageRequest.of(page, size, Sort.by("saldoPendiente").descending()));
 			} else {
 				result = repository.findBySolicitanteWithParams(solicitante.get(), lineaEmisor, start, end,
 						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
@@ -146,7 +149,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		end=dateHelper.setMidNigthDate(end);
+		end = dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
@@ -171,7 +174,7 @@ public class FacturaService {
 			String receptor, Date since, Date to, int page, int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
-		end=dateHelper.setMidNigthDate(end);
+		end = dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (status.isPresent()) {
 			result = repository.findReportsByLineaAndStatusEmisorWithParams(
@@ -205,7 +208,7 @@ public class FacturaService {
 				repository.findByFolio(folio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", folio))));
 	}
-	
+
 	public FacturaDto getFacturaBaseByPrefolio(Integer id) {
 		return mapper.getFacturaDtoFromEntity(
 				repository.findByIdCfdi(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -228,34 +231,31 @@ public class FacturaService {
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
-	
-	
-	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi,BigDecimal total, BigDecimal saldo) {
-		Factura factura = repository.findByIdCfdi(idCfdi).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("La factura con el pre-folio %d no existe", idCfdi)));
+
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo) {
+		Factura factura = repository.findByIdCfdi(idCfdi)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el pre-folio %d no existe", idCfdi)));
 		factura.setTotal(total);
 		factura.setSaldoPendiente(saldo);
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
-	
-	
-	public FacturaDto updateFacturaStatus(Integer idCfdi,FacturaStatusEnum status) {
-		Factura factura = repository.findByIdCfdi(idCfdi).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("La factura con el pre-folio %d no existe", idCfdi)));
+
+	public FacturaDto updateFacturaStatus(Integer idCfdi, FacturaStatusEnum status) {
+		Factura factura = repository.findByIdCfdi(idCfdi)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el pre-folio %d no existe", idCfdi)));
 		factura.setStatusFactura(status.getValor());
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
-	
-	
-	
 
-	public FacturaDto updateFactura(Integer idCfdi,FacturaDto factura) {
-		
+	public FacturaDto updateFactura(Integer idCfdi, FacturaDto factura) {
+
 		if (repository.findByIdCfdi(idCfdi).isPresent()) {
 			if (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
 				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
 			}
-			//TODO review this custom logic
+			// TODO review this custom logic
 //			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
 //				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
 //				for (PagoDto pago : pagos) {
@@ -284,23 +284,16 @@ public class FacturaService {
 		cfdiService.deleteCfdi(fact.getIdCfdi());
 	}
 
-	
-	
-
-
-
-	
 	// TODO REFACTOR CREATE COMPLEMENTO LOGIC
 	public FacturaDto createComplemento(Integer idCfdi, PagoDto pagoDto) throws InvoiceManagerException {
-		
+
 		List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);
-		
+
 		BigDecimal saldo = new BigDecimal(0);
-		saldo=saldo.add(pagoDto.getMonto());
+		saldo = saldo.add(pagoDto.getMonto());
 		for (CfdiPagoDto complemento : pagosPPD) {
-			CfdiDto cfdiDto=cfdiService.getCfdiByFolio(complemento.getFolio());
-			if (cfdiDto != null && cfdiDto.getComplemento() != null
-					&& cfdiDto.getComplemento().getPagos() != null) {
+			CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
+			if (cfdiDto != null && cfdiDto.getComplemento() != null && cfdiDto.getComplemento().getPagos() != null) {
 				for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
 					saldo = saldo.add(cfdiPagoDto.getMonto());
 				}
@@ -358,7 +351,8 @@ public class FacturaService {
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
 				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")
 				&& facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			//TODO Reconstruir todo el calculo de las devolucioness por que esta basado en pagos
+			// TODO Reconstruir todo el calculo de las devolucioness por que esta basado en
+			// pagos
 //			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
 //					facturaContext.getCurrentPago());
 //			devolucionService.updateSolicitudDevoluciones(folio);
@@ -368,9 +362,9 @@ public class FacturaService {
 		return facturaContext;
 	}
 
-	//TODO review cancelation logic
+	// TODO review cancelation logic
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
-		
+
 //		validator.validateTimbrado(facturaDto, folio);
 //		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")) {
 //			List<FacturaDto> complementos = getComplementos(folio);
@@ -407,11 +401,12 @@ public class FacturaService {
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
-	public FacturaDto generateComplemento(List<FacturaDto> facturasPadre, PagoDto pagoPpd) throws InvoiceManagerException {
+	public FacturaDto generateComplemento(List<FacturaDto> facturasPadre, PagoDto pagoPpd)
+			throws InvoiceManagerException {
 
-		// TODO refactor this code to allow create muticomplements 
-		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, facturasPadre.get(0),
-				facturasPadre.get(0).getFolio());
+		// TODO refactor this code to allow create muticomplements
+		FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd,
+				facturasPadre.get(0), facturasPadre.get(0).getFolio());
 		FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(facturasPadre.get(0), pagoPpd);
 		complemento.setCfdi(facturaBuilderService.buildFacturaComplementoCreation(factContext));
 		facturaDefaultValues.assignaDefaultsComplemento(complemento);
