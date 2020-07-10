@@ -1,11 +1,5 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { InvoicesData } from '../../../@core/data/invoices-data';
-import { CuentasData } from '../../../@core/data/cuentas-data';
-import { Catalogo } from '../../../models/catalogos/catalogo';
-import { Cuenta } from '../../../models/cuenta';
-import { FilesData } from '../../../@core/data/files-data';
 import { User } from '../../../models/user';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
@@ -13,13 +7,8 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 import { PagoBase } from '../../../models/pago-base';
 import { map } from 'rxjs/operators';
-import { empty } from 'rxjs';
 import { PagoFactura } from '../../../models/pago-factura';
-import { Contribuyente } from '../../../models/contribuyente';
-import { ClientsData } from '../../../@core/data/clients-data';
-import { Client } from '../../../models/client';
-import { Factura } from '../../../models/factura/factura';
-import { ResourceFile } from '../../../models/resource-file';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 
@@ -62,9 +51,6 @@ export class PagosFacturaComponent implements OnInit {
 
   public user: User;
   
-
-
-
   customColumn = 'ACCIONES';
   defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -75,13 +61,14 @@ export class PagosFacturaComponent implements OnInit {
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  
+  public errorMessages: string[] = [];
   public filterParams: any = {};
 
   constructor(
     private dialogService: NbDialogService,
     private paymentsService: PaymentsData,
     private usersService: UsersData,
+    private downloadService: DonwloadFileService,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
@@ -153,33 +140,12 @@ export class PagosFacturaComponent implements OnInit {
   }
 
 
-  
-
-
-  public openPaymentAssigments(pago?: PagoBase) {
-    const payment = pago || new PagoBase();
-    payment.monto = 3500;
-    payment.moneda = 'MXN';
-    this.dialogService.open(AsignacionPagosComponent, {
-      context: {
-        payment : payment,
-      },
-    }).onClose.subscribe(() => console.log('Closing view'));
-  }
 
   deletePayment(paymentId) {
-    /*
-    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
-      result => {
-        this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe(payments => {
-            this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-          });
-        this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => this.factura.complementos = complementos);
-      }, (error: HttpErrorResponse) =>
-      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));*/
+    this.paymentsService.deletePayment(+paymentId).subscribe(
+      result => console.log("------   "+JSON.stringify(result)) ,
+      (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
+        || `${error.statusText} : ${error.message}`));
   }
 
 }

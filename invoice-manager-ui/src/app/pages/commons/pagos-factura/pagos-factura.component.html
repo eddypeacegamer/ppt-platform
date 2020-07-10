@@ -44,7 +44,7 @@
 
                 </div>
                 <div *ngIf="row.data['folio']!==undefined">
-                  <button class="btn btn-sm btn-outline-primary d-inline p-2" [disabled]="row.data['SALDO'] <= 0"><i
+                  <button class="btn btn-sm btn-outline-primary d-inline p-2"  (click)="downloadPdf(row.data['folio'],row.data)" [disabled]="row.data['SALDO'] <= 0"><i
                       class="fa fa-file-pdf"></i></button>
                 </div>
               </td>

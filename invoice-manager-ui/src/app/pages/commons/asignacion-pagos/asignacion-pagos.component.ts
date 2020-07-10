@@ -9,7 +9,6 @@ import { Client } from '../../../models/client';
 import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../models/user';
 import { Contribuyente } from '../../../models/contribuyente';
-import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
@@ -19,6 +18,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PagoFactura } from '../../../models/pago-factura';
 import { NbDialogRef } from '@nebular/theme';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 
 @Component({
   selector: 'ngx-asignacion-pagos',
@@ -177,6 +177,12 @@ export class AsignacionPagosComponent implements OnInit {
     this.invoiceService.getInvoices(pageValue, sizeValue, this.filterParams)
       .subscribe((result: GenericPage<any>) => this.page = result,
       error=> console.log(error));
+  }
+
+
+
+  cancel() {
+    this.ref.close();
   }
 
 }
