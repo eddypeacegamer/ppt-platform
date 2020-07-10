@@ -137,6 +137,9 @@ export class LineaCComponent implements OnInit {
     this.payment.formaPago = '*';
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
+   
+    this.conceptoMessages = [];
+    this.payErrorMessages = [];
   }
 
   public getInvoiceByFolio(preFolio: string) {

@@ -9,6 +9,7 @@ import { Client } from '../../../models/client';
 import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../models/user';
 import { Contribuyente } from '../../../models/contribuyente';
+import { NbDialogRef } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-asignacion-pagos',
@@ -25,6 +26,7 @@ export class AsignacionPagosComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
+    protected ref: NbDialogRef<AsignacionPagosComponent>,
     private clientsService: ClientsData) {
     this.page = new GenericPage();
   }
@@ -57,6 +59,12 @@ export class AsignacionPagosComponent implements OnInit {
           return page;
         }))
       .subscribe((result: GenericPage<any>) => this.page = result);
+  }
+
+
+
+  cancel() {
+    this.ref.close();
   }
 
 }

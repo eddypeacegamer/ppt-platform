@@ -124,6 +124,10 @@ export class LineaBComponent implements OnInit {
     /** CLEAN VARIABLES **/
     this.newConcep = new Concepto();
     this.factura = new Factura();
+    this.conceptoMessages = [];
+    this.payErrorMessages = [];
+    this.errorMessages = [];
+   
   }
 
   public initVariables() {
@@ -138,7 +142,9 @@ export class LineaBComponent implements OnInit {
     this.payment.formaPago = '*';
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
-   
+    this.conceptoMessages = [];
+    this.payErrorMessages = [];
+
   }
 
   public getInvoiceByFolio(preFolio: string) {
