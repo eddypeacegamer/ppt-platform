@@ -130,7 +130,7 @@
         <div class="col-sm-2">
           <label for="payAmmount" class="label">Monto Pago</label>
           <div id="payAmmount" class="alert alert-secondary form-control" role="alert" style="width: 250px;">
-              <p class="font-weight-bold">{{newPayment.monto | currency}}</p>
+              <p class="font-weight-bold">{{getMontoTotal() | currency}}</p>
           </div>
         </div>
       </div>

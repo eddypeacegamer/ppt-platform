@@ -143,6 +143,19 @@ export class AsignacionPagosComponent implements OnInit {
     }
   }
 
+
+  getMontoTotal(): number {
+    let total: number = 0;
+    for (const f  of this.page.content){
+      if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
+        total += f.pagoMonto;
+      }
+    }
+    return total;
+  }
+
+
+
   sendPayment() {
     this.successMesagge = '';
     const payment  = {... this.newPayment};
