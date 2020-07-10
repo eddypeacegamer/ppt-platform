@@ -6,7 +6,9 @@
         <!--TABLA PAGOS-->
         <p class="font-weight-bold">Ultimos pagos</p>
         <br>
-
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
         <div *ngIf="page.empty" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
@@ -40,7 +42,7 @@
                   </nb-tree-grid-row-toggle>
                   <button type="button" class="btn d-inline p-2"
                   [ngClass]="{'btn-outline-secondary': row.data['statusPago'] === 'ACEPTADO', 'btn-outline-danger':row.data['statusPago'] !== 'ACEPTADO'}"
-                    [disabled]="row.data['statusPago']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
+                  (click)= "deletePayment(row.data['id'])" [disabled]="row.data['statusPago']==='ACEPTADO'"><i class="fa fa-trash"></i></button>
 
                 </div>
                 <div *ngIf="row.data['folio']!==undefined">

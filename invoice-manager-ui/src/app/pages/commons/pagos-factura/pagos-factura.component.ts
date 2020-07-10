@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { PagoFactura } from '../../../models/pago-factura';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FilesData } from '../../../@core/data/files-data';
 
 
 interface TreeNode<T> {
@@ -66,12 +67,14 @@ export class PagosFacturaComponent implements OnInit {
 
   constructor(
     private dialogService: NbDialogService,
+    private filesService: FilesData,
     private paymentsService: PaymentsData,
     private usersService: UsersData,
     private downloadService: DonwloadFileService,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
+    this.errorMessages = [];
     this.usersService.getUserInfo()
       .then(user => {
         this.user = user;
@@ -96,13 +99,10 @@ export class PagosFacturaComponent implements OnInit {
     return NbSortDirection.NONE;
   }
 
- 
-
-  /******* PAGOS ********/
-
- 
-
-  //
+  openPaymentAssigments() {
+    this.dialogService.open(AsignacionPagosComponent)
+    .onClose.subscribe(() => this.updateDataTable());
+  }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
     const pageValue = currentPage || 0;
@@ -141,11 +141,19 @@ export class PagosFacturaComponent implements OnInit {
 
 
 
-  deletePayment(paymentId) {
+  public deletePayment(paymentId: number) {
+    this.errorMessages = [];
     this.paymentsService.deletePayment(+paymentId).subscribe(
-      result => console.log("------   "+JSON.stringify(result)) ,
-      (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
+      result => this.updateDataTable() ,
+      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));
+  }
+
+  public downloadPdf(folio: string, data:any) {
+    this.errorMessages = [];
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${folio}-${data.deudor}-${data.acredor}.pdf`, 'application/pdf;')
+    )
   }
 
 }
