@@ -19,6 +19,8 @@ import { Contribuyente } from '../../../models/contribuyente';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 interface TreeNode<T> {
@@ -69,6 +71,7 @@ export class PagosFacturaComponent implements OnInit {
   public payTypeCat: Catalogo[] = [];
   public cuentas: Cuenta[];
   public loading: boolean = false;
+  public errorMessages: string[] = [];
 
   public clientsCat: Contribuyente[] = [];
   public companiesCat: Contribuyente[] = [];
@@ -95,10 +98,11 @@ export class PagosFacturaComponent implements OnInit {
     private dialogService: NbDialogService,
     private invoiceService: InvoicesData,
     private accountsService: CuentasData,
-    private fileService: FilesData,
+    private filesService: FilesData,
     private paymentValidator: PagosValidatorService,
     private clientsService: ClientsData,
     private usersService: UsersData,
+    private downloadService: DonwloadFileService,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
@@ -204,7 +208,7 @@ export class PagosFacturaComponent implements OnInit {
         return newPage;
       }),
     ).subscribe((page: GenericPage<TreeNode<PagoFacturaModel>>) => {
-      console.log(page);
+      
       this.page = page;
       this.dataSource = this.dataSourceBuilder.create(page.content);
       });
@@ -250,18 +254,20 @@ export class PagosFacturaComponent implements OnInit {
   }
 
   deletePayment(paymentId) {
-    /*
-    this.paymentsService.deletePayment(this.factura.folio, paymentId).subscribe(
+
+     console.log("------   "+(+paymentId));
+    
+    this.paymentsService.deletePayment(+paymentId).subscribe(
       result => {
-        this.paymentsService.getPaymentsByFolio(this.factura.folio)
-          .subscribe(payments => {
-            this.invoicePayments = payments;
-            this.paymentSum = this.paymentValidator.getPaymentAmmount(payments);
-          });
-        this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => this.factura.complementos = complementos);
-      }, (error: HttpErrorResponse) =>
-      this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));*/
+        console.log("------   "+JSON.stringify(result)
+      );
+     
+      } ,
+      (error: HttpErrorResponse) => {this.errorMessages.push(error.error.message
+        || `${error.statusText} : ${error.message}`)
+        console.log("---2---   "+JSON.stringify(error));
+      
+      });
   }
 
   sendPayment() {
@@ -306,6 +312,14 @@ export class PagosFacturaComponent implements OnInit {
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';
     }*/
+  }
+
+  //
+
+  public downloadPdf(folio: string, data:any) {
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data, `${folio}-${data.deudor}-${data.acredor}.pdf`, 'application/pdf;')
+    )
   }
 }
 

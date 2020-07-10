@@ -64,6 +64,15 @@
           <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi"
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
+
+          <div class="row" *ngIf="factura.cfdi !== undefined && factura.statusFactura !== 'Timbrada' && (factura.statusFactura == 'Rechazo Operaciones' || factura.statusFactura == 'Rechazo tesoreria') ">
+            <div class="col-sm-12">
+              <label for="inputdesc" class="label">Descripción Rechazo CFDI2</label>
+              <input id="statusDetail" class="form-control" fullWidth type="text" placeholder="Motivo rechazo factura"
+                [(ngModel)]="factura.statusDetail"
+                [disabled]="factura.statusFactura.indexOf('Rechazo')===0" />
+            </div>
+          </div>
         
         <br>
 

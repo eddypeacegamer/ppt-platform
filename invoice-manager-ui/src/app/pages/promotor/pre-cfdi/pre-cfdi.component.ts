@@ -69,7 +69,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.route.paramMap.subscribe(route => {
           this.preFolio = route.get('folio');
           if (this.preFolio !== '*') {
-            this.getInvoiceInfoByPreFolio(this.preFolio);
+            this.getInvoiceInfoByIdCdfi(this.preFolio);
           } else {
             this.initVariables();
           }
@@ -92,9 +92,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.metodoPago = '*';
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
+    this.errorMessages = [];
+
   }
 
-  public getInvoiceInfoByPreFolio(preFolio: string) {
+  public getInvoiceInfoByIdCdfi(preFolio: string) {
     const idCfdi: number = +preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
@@ -195,6 +197,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi = new Cfdi();
     this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
+    
   }
 
   isValidCfdi(): boolean {
