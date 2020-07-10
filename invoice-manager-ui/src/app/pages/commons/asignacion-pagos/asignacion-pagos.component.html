@@ -162,8 +162,8 @@
       </div>
       <br>
       <div class="row d-flex justify-content-center">
-        <div class="alert alert-success" role="alert">
-          Pago exitosamente enviado.
+        <div class="alert alert-success" role="alert" *ngIf="successMesagge.length > 0">
+          {{successMesagge}}
         </div>
       </div>
       <div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">

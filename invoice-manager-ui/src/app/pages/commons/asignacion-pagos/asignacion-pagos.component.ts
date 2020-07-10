@@ -60,6 +60,7 @@ export class AsignacionPagosComponent implements OnInit {
   ngOnInit() {
     this.successMesagge = '';
     this.newPayment.moneda = 'MXN';
+    this.loading = false;
     this.page = new GenericPage();
     this.filterParams = {solicitante: '', emisor: '', remitente: ''};
     this.paymentsService.getFormasPago()
@@ -143,6 +144,7 @@ export class AsignacionPagosComponent implements OnInit {
   }
 
   sendPayment() {
+    this.successMesagge = '';
     const payment  = {... this.newPayment};
     let total: number = 0;
     for (const f  of this.page.content){
@@ -153,7 +155,6 @@ export class AsignacionPagosComponent implements OnInit {
     }
     payment.solicitante = this.user.email;
     payment.monto = total;
-    console.log(payment);
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
@@ -167,6 +168,7 @@ export class AsignacionPagosComponent implements OnInit {
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
+          this.successMesagge = 'Pago creado correctamente';
         }, (error: HttpErrorResponse) => {
           this.loading = false;
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
