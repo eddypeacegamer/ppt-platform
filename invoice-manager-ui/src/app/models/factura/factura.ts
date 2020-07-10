@@ -25,11 +25,15 @@ export class Factura {
 	public saldoPendiente: number;
 	public total: number;
 	public cfdi: Cfdi;
+	public validacionTeso:boolean;
+	public validacionOper:boolean;
 	public complementos: Factura[];
 	
 	constructor() {
 		this.tipoDocumento = 'Factura';
 		this.statusFactura = '1';
+		this.validacionOper=false;
+		this.validacionTeso=false;
 		this.statusDetail = '';
 		this.lineaEmisor = 'A';
 		this.lineaRemitente = 'CLIENTE';

@@ -19,6 +19,7 @@ import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.facturas.CancelacionSuite;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
+import com.business.unknow.rules.suites.facturas.FacturaValidationSuite;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
 import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
 import com.business.unknow.rules.suites.payments.PaymentUpdateSuite;
@@ -63,6 +64,11 @@ public class ServicesApplication {
 	@Bean
 	public PaymentCreationSuite getPagoPpdSuite() {
 		return new PaymentCreationSuite();
+	}
+	
+	@Bean
+	public FacturaValidationSuite getFacturaValidationSuite() {
+		return new FacturaValidationSuite();
 	}
 
 	@Bean

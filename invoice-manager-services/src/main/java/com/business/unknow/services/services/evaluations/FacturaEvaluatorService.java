@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
+import com.business.unknow.rules.suites.facturas.FacturaValidationSuite;
 
 @Service
 public class FacturaEvaluatorService extends AbstractEvaluatorService {
@@ -17,6 +19,9 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 	
 	@Autowired
 	private ComplementoSuite complementoSuite;
+	
+	@Autowired
+	private FacturaValidationSuite facturaValidationSuite;
 
 	public FacturaContext facturaEvaluation(FacturaContext facturaContext) throws InvoiceManagerException {
 		Facts facts = new Facts();
@@ -32,6 +37,12 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
 		facts.put("facturaContext", facturaContext);
 		rulesEngine.fire(complementoSuite.getSuite(), facts);
 		validateFacturaContext(facturaContext);
+	}
+	
+	public void facturaStatusValidation(FacturaDto facturaDto){
+		Facts facts = new Facts();
+		facts.put("factura", facturaDto);
+		rulesEngine.fire(facturaValidationSuite.getSuite(), facts);
 	}
 
 }

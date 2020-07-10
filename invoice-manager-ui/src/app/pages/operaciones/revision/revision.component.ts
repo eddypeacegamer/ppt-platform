@@ -206,16 +206,12 @@ export class RevisionComponent implements OnInit {
   }
 
   public aceptarFactura() {
-    this.loading = true;
+    this.loading = true; 
     this.successMessage = undefined;
     this.errorMessages = [];
     const fact = { ...this.factura };
-    if (fact.cfdi.metodoPago === 'PPD') {
-      fact.statusFactura = '4'; // update to por timbrar
-    }else {
-      fact.statusFactura = '2'; // update to validacion tesoreria
-    }
-
+    fact.validacionOper=true;
+    fact.statusFactura='1';
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
       this.getInvoiceInfoByPreFolio(this.preFolio);
@@ -279,6 +275,7 @@ export class RevisionComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessages = [];
     let fact = { ...factura };
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada';
       this.getInvoiceInfoByPreFolio(this.preFolio);
