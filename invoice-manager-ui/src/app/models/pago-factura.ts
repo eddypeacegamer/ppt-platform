@@ -10,7 +10,10 @@ export class PagoFactura {
     public fechaActualizacion: Date;
 
 
-    constructor() {
-
+    constructor(monto?: number, folio?: string, emisor?: string, receptor?: string) {
+        this.monto = monto;
+        this.folio = folio;
+        this.acredor = emisor;
+        this.deudor = receptor;
     }
 }

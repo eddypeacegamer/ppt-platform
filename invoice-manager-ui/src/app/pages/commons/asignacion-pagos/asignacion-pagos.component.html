@@ -79,7 +79,7 @@
                   <td scope="row p-1" class="text-center" style="min-width: 160px;">
                     <small *ngIf="fila.saldoPendiente === undefined || fila.saldoPendiente<0.01 || fila.statusFactura !== 'Timbrada'" id="emailHelp" class="form-text text-muted">Sin saldo pendiente o factura no timbrada.</small>
                     <input type="number" class="form-control" id="inputImporte" placeholder="Importe a pagar MXN" *ngIf="fila.saldoPendiente>0.01 && fila.statusFactura === 'Timbrada'"
-                      [(ngModel)]="monto" name="monto">
+                      [(ngModel)]="fila.pagoMonto" name="monto">
                   </td>
                   <td scope="row">{{fila.saldoPendiente | currency}}</td>
                   <td scope="row">{{fila.total | currency}}</td>

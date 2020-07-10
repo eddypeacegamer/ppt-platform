@@ -33,6 +33,8 @@ export class AsignacionPagosComponent implements OnInit {
   public paymentForm = { payType: '*', bankAccount: '*', filename: ''};
   public newPayment: PagoBase = new PagoBase();
   public payErrorMessages: string[] = [];
+  public successMesagge: string;
+
   public payTypeCat: Catalogo[] = [];
   public cuentas: Cuenta[];
   public loading: boolean = false;
@@ -56,12 +58,12 @@ export class AsignacionPagosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.successMesagge = '';
     this.newPayment.moneda = 'MXN';
     this.page = new GenericPage();
     this.filterParams = {solicitante: '', emisor: '', remitente: ''};
     this.paymentsService.getFormasPago()
         .subscribe(payTypes => this.payTypeCat = payTypes);
-
     this.userService.getUserInfo().then(user => {
       this.user = user;
       this.filterParams.solicitante = user.email;
@@ -141,8 +143,17 @@ export class AsignacionPagosComponent implements OnInit {
   }
 
   sendPayment() {
-    this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
+    let total: number = 0;
+    for (const f  of this.page.content){
+      if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
+        total += f.pagoMonto;
+        payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
+      }
+    }
+    payment.solicitante = this.user.email;
+    payment.monto = total;
+    console.log(payment);
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
