@@ -45,6 +45,8 @@ public class FacturaDto implements Serializable {
 	private BigDecimal total;
 	private BigDecimal saldoPendiente;
 	private CfdiDto cfdi;
+	private Boolean validacionTeso;
+	private Boolean validacionOper;
 
 	public Integer getId() {
 		return id;
@@ -133,7 +135,7 @@ public class FacturaDto implements Serializable {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	
+
 	public Integer getStatusFactura() {
 		return statusFactura;
 	}
@@ -270,6 +272,22 @@ public class FacturaDto implements Serializable {
 		this.selloCfd = selloCfd;
 	}
 
+	public Boolean getValidacionTeso() {
+		return validacionTeso;
+	}
+
+	public void setValidacionTeso(Boolean validacionTeso) {
+		this.validacionTeso = validacionTeso;
+	}
+
+	public Boolean getValidacionOper() {
+		return validacionOper;
+	}
+
+	public void setValidacionOper(Boolean validacionOper) {
+		this.validacionOper = validacionOper;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -282,7 +300,8 @@ public class FacturaDto implements Serializable {
 				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
 				+ ", statusCancelado=" + statusCancelado + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
 				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", saldoPendiente="
-				+ saldoPendiente + ", cfdi=" + cfdi + "]";
+				+ saldoPendiente + ", cfdi=" + cfdi + ", validacionTeso=" + validacionTeso + ", validacionOper="
+				+ validacionOper + "]";
 	}
 
 }

@@ -69,10 +69,10 @@ public class Factura implements Serializable {
 
 	@Column(name = "UUID")
 	private String uuid;
-	
+
 	@Column(name = "TOTAL")
 	private BigDecimal total;
-	
+
 	@Column(name = "SALDO_PENDIENTE")
 	private BigDecimal saldoPendiente;
 
@@ -90,7 +90,6 @@ public class Factura implements Serializable {
 	@Column(name = "FECHA_CANCELADO")
 	private Date fechaCancelacion;
 
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -104,6 +103,12 @@ public class Factura implements Serializable {
 
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
+
+	@Column(name = "VALIDACION_TESO", columnDefinition = "TINYINT")
+	private Boolean validacionTeso;
+
+	@Column(name = "VALIDACION_OPER", columnDefinition = "TINYINT")
+	private Boolean validacionOper;
 
 	public Integer getId() {
 		return id;
@@ -297,6 +302,22 @@ public class Factura implements Serializable {
 		this.idCfdi = idCfdi;
 	}
 
+	public Boolean getValidacionTeso() {
+		return validacionTeso;
+	}
+
+	public void setValidacionTeso(Boolean validacionTeso) {
+		this.validacionTeso = validacionTeso;
+	}
+
+	public Boolean getValidacionOper() {
+		return validacionOper;
+	}
+
+	public void setValidacionOper(Boolean validacionOper) {
+		this.validacionOper = validacionOper;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -304,11 +325,11 @@ public class Factura implements Serializable {
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
 				+ ", metodoPago=" + metodoPago + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", uuid=" + uuid + ", total=" + total + ", SaldoPendiente=" + saldoPendiente + ", packFacturacion="
+				+ ", uuid=" + uuid + ", total=" + total + ", saldoPendiente=" + saldoPendiente + ", packFacturacion="
 				+ packFacturacion + ", notas=" + notas + ", fechaActualizacion=" + fechaActualizacion
 				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
 				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ "]";
+				+ ", validacionTeso=" + validacionTeso + ", validacionOper=" + validacionOper + "]";
 	}
 
 }

@@ -104,6 +104,7 @@ public class FacturaService {
 	
 	@Autowired
 	private DateHelper dateHelper;
+	
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -234,6 +235,7 @@ public class FacturaService {
 		Factura factura = repository.findByIdCfdi(idCfdi).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("La factura con el pre-folio %d no existe", idCfdi)));
 		factura.setTotal(total);
+		//TODO:  BUSCAR PAGOS
 		factura.setSaldoPendiente(saldo);
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
@@ -245,31 +247,15 @@ public class FacturaService {
 		factura.setStatusFactura(status.getValor());
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
-	
-	
-	
 
-	public FacturaDto updateFactura(Integer idCfdi,FacturaDto factura) {
-		
-		if (repository.findByIdCfdi(idCfdi).isPresent()) {
-			if (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
-				factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
-			}
-			//TODO review this custom logic
-//			if (factura.getStatusFactura().equals(FacturaStatusEnum.RECHAZO_OPERACIONES.getValor())) {
-//				List<PagoDto> pagos = pagoService.findPagosByFolio(folio);
-//				for (PagoDto pago : pagos) {
-//					pago.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
-//					try {
-//						pagoService.updatePago(pago.getFolio(), pago.getId(), pago);
-//					} catch (InvoiceManagerException e) {
-//						System.out.println("Error updating factura");
-//					}
-//				}
-//			}
-			Factura entity = mapper.getEntityFromFacturaDto(factura);
-
-			return mapper.getFacturaDtoFromEntity(repository.save(entity));
+	public FacturaDto updateFactura(Integer idCfdi, FacturaDto facturaDto) {
+		Optional<Factura> factura = repository.findByIdCfdi(idCfdi);
+		if (factura.isPresent()) {
+			facturaServiceEvaluator.facturaStatusValidation(facturaDto);
+			factura.get().setStatusFactura(facturaDto.getStatusFactura());
+			factura.get().setValidacionOper(facturaDto.getValidacionOper());
+			factura.get().setValidacionTeso(facturaDto.getValidacionTeso());
+			return mapper.getFacturaDtoFromEntity(repository.save(factura.get()));
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
 					String.format("La factura con el pre-folio %d no existe", idCfdi));
@@ -284,12 +270,6 @@ public class FacturaService {
 		cfdiService.deleteCfdi(fact.getIdCfdi());
 	}
 
-	
-	
-
-
-
-	
 	// TODO REFACTOR CREATE COMPLEMENTO LOGIC
 	public FacturaDto createComplemento(Integer idCfdi, PagoDto pagoDto) throws InvoiceManagerException {
 		
@@ -350,9 +330,6 @@ public class FacturaService {
 		// PDF GENERATION
 		FacturaFileDto pdfFile = pdfService.generateInvoicePDF(facturaContext);
 		facturaContext.getFacturaFilesDto().add(pdfFile);
-		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
-		}
 		if ((facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PUE.name())
 				|| (facturaContext.getFacturaDto().getMetodoPago().equals(MetodosPagoEnum.PPD.name()) && facturaContext
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
@@ -363,17 +340,19 @@ public class FacturaService {
 //					facturaContext.getCurrentPago());
 //			devolucionService.updateSolicitudDevoluciones(folio);
 		}
-
-		// TODO Insertar en tabla de ingresos
+		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
+			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
+		}
 		return facturaContext;
 	}
 
 	//TODO review cancelation logic
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		
-//		validator.validateTimbrado(facturaDto, folio);
-//		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")) {
+		validator.validateTimbrado(facturaDto, folio);
+		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")) {
 //			List<FacturaDto> complementos = getComplementos(folio);
+			//TODO: ADD COMPLEMENTO LOGIC
 //			for (FacturaDto complemento : complementos) {
 //				if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
 //					cancelarFactura(complemento.getFolio(), complemento);
@@ -384,26 +363,25 @@ public class FacturaService {
 //					}
 //				}
 //			}
-//		}
-//		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
-//		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
-//		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-//		case SW_SAPIENS:
-//			swSapinsExecutorService.cancelarFactura(facturaContext);
-//			break;
-//		case FACTURACION_MODERNA:
-//			facturacionModernaExecutor.cancelarFactura(facturaContext);
-//			break;
-//		case NTLINK:
-//			ntinkExecutorService.cancelarFactura(facturaContext);
-//			break;
-//		default:
-//			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
-//					HttpStatus.BAD_REQUEST.value());
-//		}
-//		timbradoExecutorService.updateCanceladoValues(facturaContext);
-//		return facturaContext;
-		return null;
+		}
+		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
+		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
+		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
+		case SW_SAPIENS:
+			swSapinsExecutorService.cancelarFactura(facturaContext);
+			break;
+		case FACTURACION_MODERNA:
+			facturacionModernaExecutor.cancelarFactura(facturaContext);
+			break;
+		case NTLINK:
+			ntinkExecutorService.cancelarFactura(facturaContext);
+			break;
+		default:
+			throw new InvoiceManagerException("Pack not supported yet", "Validate with programers",
+					HttpStatus.BAD_REQUEST.value());
+		}
+		timbradoExecutorService.updateCanceladoValues(facturaContext);
+		return facturaContext;
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })

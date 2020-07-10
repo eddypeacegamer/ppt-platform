@@ -36,6 +36,20 @@ public class Constants {
 		public static final String DELETE_CREDIT_PAYMANT_RULE_DESC = "En facturas PPD no puede ser borrado el pago a credito";
 	}
 	
+	
+	public class FacturaValidationSuite {
+		public static final String FACTURA_VALIDATION_SUITE = "FacturaValidationSuite";
+		
+		public static final String FACTURA_VALIDATION_PUE_RULE = "ValidacionFacturaPueRule";
+		public static final String FACTURA_VALIDATION_PUE_RULE_DESC = "Validar estado de la factura PUE";
+
+		public static final String FACTURA_VALIDATION_PPD_RULE = "ValidacionFacturaPpdRule";
+		public static final String FACTURA_VALIDATION_PPD_RULE_DESC = "Validar estado de la factura PPD";
+		
+		public static final String FACTURA_VALIDATION_COMP_RULE = "ValidacionFacturaComplementoRule";
+		public static final String FACTURA_VALIDATION_COMP_RULE_DESC = "Validar estado del complemento";
+	}
+	
 	public class PaymentsSuite {
 		
 		public static final String PAGO_PPD_SUITE = "PagoPpdSuite";

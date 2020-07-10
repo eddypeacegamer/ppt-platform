@@ -1,14 +1,11 @@
 package com.business.unknow.rules.timbrado;
 
-import java.math.BigDecimal;
-
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.enums.LineaEmpresaEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.Timbrado;
 

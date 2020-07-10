@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.commons.validator.AbstractValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -39,7 +40,6 @@ import com.business.unknow.services.entities.PagoFactura;
 import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
-import com.business.unknow.services.repositories.PagosDao;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.PagoBuilder;
 
@@ -67,15 +67,15 @@ public class PagoService {
 
 	@Autowired
 	private FacturaService facturaService;
-	
-	
+
 	@Autowired
-	private PagosDao pagosDao;
+	private AbstractValidator validator = new AbstractValidator();
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
-	public Page<PagoDto> getPaginatedPayments(Optional<String> solicitante, Optional<String> acredor, Optional<String> deudor,
-			String formaPago, String status, String banco, Date since, Date to, int page, int size) {
+	public Page<PagoDto> getPaginatedPayments(Optional<String> solicitante, Optional<String> acredor,
+			Optional<String> deudor, String formaPago, String status, String banco, Date since, Date to, int page,
+			int size) {
 
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
 		Date end = (to == null) ? new Date() : to;
@@ -84,13 +84,13 @@ public class PagoService {
 			result = repository.findBySolicitanteIgnoreCaseContaining(solicitante.get(),
 					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else if (acredor.isPresent()) {
-			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()), String.format("%%%s%%", status),
-					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+			result = repository.findPagosAcredorFilteredByParams(String.format("%%%s%%", acredor.get()),
+					String.format("%%%s%%", status), String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
+					start, end, PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else if (deudor.isPresent()) {
-			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()), String.format("%%%s%%", status),
-					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+			result = repository.findPagosDeudorFilteredByParams(String.format("%%%s%%", deudor.get()),
+					String.format("%%%s%%", status), String.format("%%%s%%", formaPago), String.format("%%%s%%", banco),
+					start, end, PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		} else {
 			result = repository.findPagosFilteredByParams(String.format("%%%s%%", status),
 					String.format("%%%s%%", formaPago), String.format("%%%s%%", banco), start, end,
@@ -137,42 +137,47 @@ public class PagoService {
 			}
 		}
 		pagoEvaluatorService.validatePaymentCreation(pagoDto, facturas);
-		
-		
-		List<FacturaDto> factPpd = facturas.stream().filter(f->MetodosPagoEnum.PPD.name().equals(f.getMetodoPago())).collect(Collectors.toList());
-		
-		List<FacturaDto> factPue = facturas.stream().filter(f->MetodosPagoEnum.PUE.name().equals(f.getMetodoPago())).collect(Collectors.toList());
-		
-		if(!factPpd.isEmpty()) {
+
+		List<FacturaDto> factPpd = facturas.stream().filter(f -> MetodosPagoEnum.PPD.name().equals(f.getMetodoPago()))
+				.collect(Collectors.toList());
+
+		List<FacturaDto> factPue = facturas.stream().filter(f -> MetodosPagoEnum.PUE.name().equals(f.getMetodoPago()))
+				.collect(Collectors.toList());
+
+		if (!factPpd.isEmpty()) {
 			// PPD crean en automatico complemento
-			log.info("Generando complemento para : {}", factPpd.stream().map(f->f.getFolio()).collect(Collectors.toList()));
+			log.info("Generando complemento para : {}",
+					factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
 			FacturaDto fact = facturaService.generateComplemento(facturas, pagoDto);
-			factPpd.forEach(f->{
-				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream().filter(p->p.getFolio().equals(f.getFolio())).findAny();
-				if(pagoFact.isPresent()) {
+			factPpd.forEach(f -> {
+				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
+						.filter(p -> p.getFolio().equals(f.getFolio())).findAny();
+				if (pagoFact.isPresent()) {
 					pagoFact.get().setIdCfdi(fact.getIdCfdi());
 				}
 			});
 		}
-		if(!factPue.isEmpty()) {
-			factPue.forEach(f->{
-				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream().filter(p->p.getFolio().equals(f.getFolio())).findAny();
-				if(pagoFact.isPresent()) {
+		if (!factPue.isEmpty()) {
+			factPue.forEach(f -> {
+				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
+						.filter(p -> p.getFolio().equals(f.getFolio())).findAny();
+				if (pagoFact.isPresent()) {
 					pagoFact.get().setIdCfdi(f.getIdCfdi());
 				}
 			});
 		}
-		facturas.forEach(f->{
+		for (FacturaDto dto : facturas) {
 			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())) {
-				log.info("Updating saldo pendiente factura {}", f.getFolio());
-				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream().filter(p->p.getFolio().equals(f.getFolio())).findAny();
-				if(pagoFact.isPresent()) {
-					f.setSaldoPendiente(f.getSaldoPendiente().subtract(pagoFact.get().getMonto()));
-					facturaService.updateFactura(f.getIdCfdi(), f);	
+				log.info("Updating saldo pendiente factura {}", dto.getFolio());
+				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
+						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();
+				if (pagoFact.isPresent()) {
+					dto.setSaldoPendiente(dto.getSaldoPendiente().subtract(pagoFact.get().getMonto()));
+					validator.checkNotNegative(dto.getSaldoPendiente(), "Saldo pendiente");
+					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), dto.getTotal(), dto.getSaldoPendiente());
 				}
-				
 			}
-		});
+		}
 		Pago payment = repository.save(mapper.getEntityFromPagoDto(pagoDto));
 		for (PagoFacturaDto fact : pagoDto.getFacturas()) {
 			PagoFactura pagoFact = mapper.getEntityFromPagoFacturaDto(fact);
@@ -204,16 +209,14 @@ public class PagoService {
 			for (FacturaDto factura : facturas) {
 				factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 				factura.setStatusDetail(pago.getComentarioPago());
+				factura.setValidacionTeso(true);
 				facturaService.updateFactura(factura.getIdCfdi(), factura);
 			}
 		} else if (entity.getRevision1() && pago.getRevision2()) {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 			for (FacturaDto factura : facturas) {
-				if (factura.getStatusFactura().equals(FacturaStatusEnum.VALIDACION_TESORERIA.getValor())) {
-					factura.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR.getValor());
-					facturaService.updateFactura(factura.getIdCfdi(), factura);
-				}
-
+				factura.setValidacionTeso(true);
+				facturaService.updateFactura(factura.getIdCfdi(), factura);
 			}
 		}
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));

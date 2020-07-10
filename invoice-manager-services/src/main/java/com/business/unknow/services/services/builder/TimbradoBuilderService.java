@@ -39,24 +39,15 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 
 	public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
-		// TODO refactorizar logica de cancelacion, las facturas ya no estaran ligadas a
-		// un padre.
-//		Optional<Factura> folioPadreEntity = repository.findByFolio(facturaDto.getFolioPadre());
-//		FacturaDto factura=facturaService.getFacturaByFolio(folio);
-//		EmpresaDto empresaDto = empresaMapper
-//				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
-//						.orElseThrow(() -> new InvoiceManagerException("La empresa no existe",
-//								String.format("La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
-//								HttpStatus.SC_NOT_FOUND)));
-//		getEmpresaFiles(empresaDto, facturaDto);
-//		return new FacturaContextBuilder().setFacturaDto(factura)
-//				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolio(folio))).setEmpresaDto(empresaDto)
-//				.setFacturaPadreDto(
-//						folioPadreEntity.isPresent() ? mapper.getFacturaDtoFromEntity(folioPadreEntity.get()) : null)
-//				.setTipoFactura(factura.getCfdi().getMetodoPago())
-//				.setTipoDocumento(factura.getTipoDocumento())
-//				.build();
-		return null;
+		FacturaDto factura = facturaService.getFacturaByFolio(folio);
+		EmpresaDto empresaDto = empresaMapper
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+						.orElseThrow(() -> new InvoiceManagerException("La empresa no existe",
+								String.format("La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
+								HttpStatus.SC_NOT_FOUND)));
+		getEmpresaFiles(empresaDto, facturaDto);
+		return new FacturaContextBuilder().setFacturaDto(factura).setEmpresaDto(empresaDto)
+				.setTipoDocumento(factura.getTipoDocumento()).build();
 	}
 
 	public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)

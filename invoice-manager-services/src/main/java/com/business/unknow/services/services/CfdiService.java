@@ -255,6 +255,8 @@ public class CfdiService {
 			ret.setImporte(ret.getImporte().setScale(6, RoundingMode.DOWN));
 			retencionRepository.save(ret);
 		}
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		// 4.- recalculate pdf
 		return cfdi;
 	}
 

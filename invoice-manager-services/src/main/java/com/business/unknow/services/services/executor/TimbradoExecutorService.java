@@ -93,7 +93,7 @@ public class TimbradoExecutorService {
 				mailHelper.enviarCorreo(emailBuilder.build());
 			} catch (InvoiceCommonException e) {
 				log.error(e.getMessage(),e);
-				new InvoiceManagerException(e.getMessage(), e.getErrorMessage().getDeveloperMessage(),HttpStatus.CONFLICT.value());
+				throw new InvoiceManagerException(e.getMessage(), e.getErrorMessage().getDeveloperMessage(),HttpStatus.CONFLICT.value());
 			}
 		}
 	}
