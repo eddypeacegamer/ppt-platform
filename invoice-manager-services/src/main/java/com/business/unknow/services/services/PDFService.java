@@ -24,6 +24,7 @@ import com.business.unknow.commons.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.commons.util.FacturaHelper;
 import com.business.unknow.commons.util.FileHelper;
 import com.business.unknow.commons.util.NumberTranslatorHelper;
+import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.ResourceFileEnum;
@@ -78,7 +79,6 @@ public class PDFService {
 	private FilesService filesService;
 
 	private static final Logger log = LoggerFactory.getLogger(PDFService.class);
-
 
 	public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi) throws InvoiceCommonException {
 
@@ -218,7 +218,7 @@ public class PDFService {
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			model.getFactura().getImpuestos().setTotalImpuestosTrasladados(impuestos);
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
-			String xslfoTemplate = getXSLFOTemplate(model);
+			String xslfoTemplate = getXSLFOTemplate(factura);
 			InputStreamReader templateReader = new InputStreamReader(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
 			Reader inputReader = new StringReader(xmlContent);
@@ -264,7 +264,7 @@ public class PDFService {
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
-			String xslfoTemplate = getXSLFOTemplate(model);
+			String xslfoTemplate = getXSLFOTemplate(context.getFacturaDto());
 			InputStreamReader templateReader = new InputStreamReader(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
 			Reader inputReader = new StringReader(xmlContent);
@@ -285,11 +285,21 @@ public class PDFService {
 		}
 	}
 
-	private String getXSLFOTemplate(FacturaPdfModelDto model) {
-		if (model.getCadenaOriginal() != null) {
-			return model.getFolioPadre() == null ? "factura-timbrada.xml" : "complemento-timbrado.xml";
-		} else {
-			return model.getFolioPadre() == null ? "factura-sin-timbrar.xml" : "complemento-sin-timbrar.xml";
+	private String getXSLFOTemplate(FacturaDto facturaDto) {
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+			if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+				return "factura-timbrada.xml";
+			} else {
+				return "factura-sin-timbrar.xml";
+			}
+		} else if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+			if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+				return "complemento-timbrado.xml";
+			} else {
+				return "complemento-sin-timbrar.xml";
+			}
+		}else {
+			return "factura-sin-timbrar.xml";
 		}
 	}
 
