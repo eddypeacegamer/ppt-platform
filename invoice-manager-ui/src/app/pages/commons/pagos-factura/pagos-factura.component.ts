@@ -11,6 +11,7 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FilesData } from '../../../@core/data/files-data';
+import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 
 
 interface TreeNode<T> {
@@ -71,6 +72,7 @@ export class PagosFacturaComponent implements OnInit {
     private paymentsService: PaymentsData,
     private usersService: UsersData,
     private downloadService: DonwloadFileService,
+    private downloadCsvService: DownloadCsvService,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
@@ -149,11 +151,18 @@ export class PagosFacturaComponent implements OnInit {
         || `${error.statusText} : ${error.message}`));
   }
 
-  public downloadPdf(folio: string, data:any) {
+  public downloadPdf(folio: string, data: any) {
     this.errorMessages = [];
     this.filesService.getFacturaFile(folio, 'PDF').subscribe(
-      file => this.downloadService.downloadFile(file.data, `${folio}-${data.deudor}-${data.acredor}.pdf`, 'application/pdf;')
-    )
+      file => this.downloadService.downloadFile(file.data,
+        `${folio}-${data.deudor}-${data.acredor}.pdf`, 'application/pdf;'));
+  }
+
+  public downloadHandler() {
+    this.errorMessages = [];
+    this.paymentsService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
+      this.downloadCsvService.exportCsv(result.content, `Pagos_${this.user.email}`);
+    });
   }
 
 }

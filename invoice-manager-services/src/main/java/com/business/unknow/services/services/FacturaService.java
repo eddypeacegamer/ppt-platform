@@ -258,6 +258,7 @@ public class FacturaService {
 			factura.get().setStatusFactura(facturaDto.getStatusFactura());
 			factura.get().setValidacionOper(facturaDto.getValidacionOper());
 			factura.get().setValidacionTeso(facturaDto.getValidacionTeso());
+			factura.get().setStatusDetail(facturaDto.getStatusDetail());
 			return mapper.getFacturaDtoFromEntity(repository.save(factura.get()));
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

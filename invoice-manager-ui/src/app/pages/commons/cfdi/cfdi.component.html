@@ -1,15 +1,13 @@
 <div class="row" *ngIf="cfdi"> 
   <div class="clearfix col align-self-end">
-      <button nbButton status="success" size="medium" (click)="updateCfdi()" [nbSpinner]="loading" class="float-right puff_center"
+      <button nbButton status="success" size="small" (click)="updateCfdi()" [nbSpinner]="loading" class="float-right puff_center"
               [disabled]="loading" nbSpinnerStatus="success"  *ngIf="allowEdit && cfdi.id !== undefined"
               nbSpinnerSize="small" nbSpinnerMessage="">
               Actualizar CFDI <i class="fa fa-sync" style="margin-left: 10px;"></i>
       </button>
   </div>
 </div>
-<div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-  <p *ngFor="let message of errorMessages">{{message}}</p>
-</div>
+
 <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
   {{successMessage}}
 </div>
@@ -227,3 +225,19 @@
 
   </div>
 </div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Error en el CFDI</nb-card-header>
+    <nb-card-body>
+      <div class="row" style="width: 300 px;">
+        <div class="col-sm-12">
+          {{data}}
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

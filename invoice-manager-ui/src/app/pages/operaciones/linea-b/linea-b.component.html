@@ -17,26 +17,27 @@
       <nb-card-body>
         <div *ngIf="preFolio !== '*'">
           <div class="d-flex float-right">
-            <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)"
+            <button nbButton status="success" size="small" (click)="timbrarFactura(factura,dialog)"
               [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
               nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
               Timbrar
             </button>
             &nbsp;&nbsp;
-            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
+            <button nbButton status="danger" size="small" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
               [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
               nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
             </button>
-            <button type="button" class="btn btn-success" (click)="aceptarFactura()"
-              *ngIf="factura.statusFactura == 'Validacion operaciones'">Aceptar</button>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" (click)="rechazarFactura()"
+            <button type="button" class="btn btn-sm btn-danger" (click)="rechazarFactura()"
               *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
-  
-
           </div>
         </div>
+
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
+
         <p class="font-weight-bold">Información Emisor y Receptor</p>
         <div class="row" *ngIf="preFolio === '*'">
 
@@ -85,9 +86,7 @@
             </ngx-cfdi>
           </div>
 
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
+        
         <br>
         <div class="form-inline" *ngIf="this.factura.folio == undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"

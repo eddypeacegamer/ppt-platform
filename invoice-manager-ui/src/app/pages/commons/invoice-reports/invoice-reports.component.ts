@@ -25,7 +25,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
-    private donwloadService: DownloadCsvService,
+    private downloadCsvService: DownloadCsvService,
     private router: Router,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
@@ -152,19 +152,19 @@ export class InvoiceReportsComponent implements OnInit {
 
   public downloadHandler() {
     this.invoiceService.getInvoices(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Facturas');
+      this.downloadCsvService.exportCsv(result.content, 'Facturas');
     });
   }
 
   public downloadInvoicesReports() {
     this.invoiceService.getInvoicesReports(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Facturas');
+      this.downloadCsvService.exportCsv(result.content, 'Facturas');
     });
   }
 
   public downloadComplementReports() {
     this.invoiceService.getComplementReports(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Complementos');
+      this.downloadCsvService.exportCsv(result.content, 'Complementos');
     });
   }
 

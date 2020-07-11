@@ -16,7 +16,9 @@ public class ValidacionFacturaPpdRule {
 
 	@Condition
 	public boolean condition(@Fact("factura") FacturaDto facturaDto) {
-		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+		if ((FacturaStatusEnum.VALIDACION_OPERACIONES.getValor().equals(facturaDto.getStatusFactura()) ||
+				FacturaStatusEnum.VALIDACION_TESORERIA.getValor().equals(facturaDto.getStatusFactura())) &&
+				facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
 				&& facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
 			return true;
 		}
