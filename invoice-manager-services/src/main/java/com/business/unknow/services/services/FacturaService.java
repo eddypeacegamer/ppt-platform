@@ -27,6 +27,7 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
@@ -345,7 +346,11 @@ public class FacturaService {
 //			devolucionService.updateSolicitudDevoluciones(folio);
 		}
 		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			timbradoExecutorService.createFilesAndSentEmail(facturaContext);
+			try {
+				timbradoExecutorService.sentEmail(facturaContext, TipoEmail.SEMEL_JACK);
+			} catch (InvoiceManagerException e) {
+				timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
+			}
 		}
 		return facturaContext;
 	}
@@ -429,6 +434,14 @@ public class FacturaService {
 						String.format("La factura con el folio %s no existe", dto.getFolio()))));
 		factura.setCfdi(dto);
 		pdfService.generateInvoicePDF(factura, null);
+	}
+
+	// RENVIAR CORREOS
+	public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		facturaDto = getFacturaByFolio(folio);
+		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, facturaDto);
+		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
+		return facturaContext;
 	}
 
 }

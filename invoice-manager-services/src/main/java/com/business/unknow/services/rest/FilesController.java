@@ -70,6 +70,5 @@ public class FilesController {
 		service.deleteResourceFile(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-
+	
 }

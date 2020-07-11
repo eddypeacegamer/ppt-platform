@@ -5,6 +5,7 @@ import java.util.List;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
@@ -73,6 +74,11 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 	
 	public FacturaContextBuilder setCurrentPago(PagoDto currentPago) {
 		instance.setCurrentPago(currentPago);
+		return this;
+	}
+
+	public FacturaContextBuilder setFacturaFilesDto(List<FacturaFileDto> facturaFilesDto) {
+		instance.setFacturaFilesDto(facturaFilesDto);
 		return this;
 	}
 

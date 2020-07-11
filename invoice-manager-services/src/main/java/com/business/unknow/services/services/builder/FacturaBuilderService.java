@@ -18,6 +18,7 @@ import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -27,6 +28,7 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
 import com.business.unknow.model.dto.cfdi.ReceptorDto;
+import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
@@ -34,25 +36,15 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
-import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
-import com.business.unknow.services.mapper.PagoMapper;
-import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
-import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
-import com.business.unknow.services.repositories.facturas.FacturaRepository;
+import com.business.unknow.services.services.FilesService;
 
 @Service
 public class FacturaBuilderService extends AbstractBuilderService {
-
-	@Autowired
-	private FacturaRepository repository;
-
-	@Autowired
-	private PagoRepository pagoRepository;
 
 	@Autowired
 	private EmpresaRepository empresaRepository;
@@ -64,16 +56,13 @@ public class FacturaBuilderService extends AbstractBuilderService {
 	private CfdiPagoRepository cfdiPagoRepository;
 
 	@Autowired
-	private FacturaMapper mapper;
-
-	@Autowired
-	private PagoMapper pagoMapper;
-
-	@Autowired
 	private EmpresaMapper empresaMapper;
 
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
+
+	@Autowired
+	private FilesService filesService;
 
 	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
@@ -89,7 +78,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	public FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto) {
 		// List<Pago> pagos = pagoRepository.findByFolio(folio);
-		Optional<Factura> factura = repository.findByFolio(folio);
+//		Optional<Factura> factura = repository.findByFolio(folio);
 //		Optional<Pago> pagoCredito = pagos.stream()
 //				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
 //		return new FacturaContextBuilder().setPagos(Arrays.asList(pagoDto))
@@ -102,22 +91,15 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
 		return new FacturaBuilder()
-				//TODO:SI SOLO ES UNO PONER EL DEL PAADRE
-				.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name())
-				.setTotal(pago.getMonto())
-				.setSaldoPendiente(BigDecimal.ZERO)
-				.setLineaEmisor(factura.getLineaEmisor())
-				.setRfcEmisor(factura.getRfcEmisor())
-				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-				.setRfcRemitente(factura.getRfcRemitente())
-				.setLineaRemitente(factura.getLineaRemitente())
+				// TODO:SI SOLO ES UNO PONER EL DEL PAADRE
+				.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name()).setTotal(pago.getMonto())
+				.setSaldoPendiente(BigDecimal.ZERO).setLineaEmisor(factura.getLineaEmisor())
+				.setRfcEmisor(factura.getRfcEmisor()).setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
+				.setRfcRemitente(factura.getRfcRemitente()).setLineaRemitente(factura.getLineaRemitente())
 				.setRazonSocialEmisor(factura.getRazonSocialEmisor())
-				.setRazonSocialRemitente(factura.getRazonSocialRemitente())
-				.setValidacionTeso(false)
-				.setValidacionOper(false)
-				.setSolicitante(factura.getSolicitante())
-				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				.build();
+				.setRazonSocialRemitente(factura.getRazonSocialRemitente()).setValidacionTeso(false)
+				.setValidacionOper(false).setSolicitante(factura.getSolicitante())
+				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion()).build();
 	}
 
 	public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
@@ -176,8 +158,8 @@ public class FacturaBuilderService extends AbstractBuilderService {
 						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda())
 						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
 						.setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
-						.setImporteSaldoAnterior(dto.getSaldoPendiente()).setImporteSaldoInsoluto(
-								dto.getSaldoPendiente().subtract(pagoFactura.get().getMonto()));
+						.setImporteSaldoAnterior(dto.getSaldoPendiente())
+						.setImporteSaldoInsoluto(dto.getSaldoPendiente().subtract(pagoFactura.get().getMonto()));
 				cfdiPagos.add(cfdiComplementoPagoBuilder.build());
 			} else {
 				throw new InvoiceManagerException("No tiene relacion de pago la factura",
@@ -201,4 +183,27 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
 	}
 
+	public FacturaContext buildEmailContext(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
+		Empresa empresa = empresaRepository.findByRfc(facturaDto.getRfcEmisor())
+				.orElseThrow(() -> new InvoiceManagerException("Emisor de factura no existen en el sistema",
+						String.format("No se encuentra el RFC %s en el sistema", facturaDto.getRfcEmisor()),
+						Constants.BAD_REQUEST));
+		Contribuyente contribuyente = contribuyenteRepository.findByRfc(facturaDto.getRfcRemitente())
+				.orElseThrow(() -> new InvoiceManagerException("Error al crear factura", "El receptor no exite",
+						Constants.BAD_REQUEST));
+		Optional<FacturaFileDto> xml = filesService.findFacturaFileByFolioAndType(facturaDto.getFolio(),
+				TipoArchivoEnum.XML.name());
+		Optional<FacturaFileDto> pdf = filesService.findFacturaFileByFolioAndType(facturaDto.getFolio(),
+				TipoArchivoEnum.PDF.name());
+		List<FacturaFileDto> archivos = new ArrayList<>();
+		if (xml.isPresent() || pdf.isPresent()) {
+			throw new InvoiceManagerException("El PDF o el XMl no existe favor de validar",
+					"Un archivo no existe favor de validar", Constants.BAD_REQUEST);
+		}
+		archivos.add(xml.get());
+		archivos.add(pdf.get());
+		return new FacturaContextBuilder().setFacturaDto(facturaDto).setFacturaFilesDto(archivos)
+				.setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+				.setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente)).build();
+	}
 }
