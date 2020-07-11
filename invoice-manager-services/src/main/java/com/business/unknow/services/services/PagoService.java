@@ -121,8 +121,6 @@ public class PagoService {
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public PagoDto insertNewPayment(PagoDto pagoDto) throws InvoiceManagerException {
-
-		// Validate fields required
 		pagoEvaluatorService.validatePayment(pagoDto);
 		List<FacturaDto> facturas = new ArrayList<>();
 		for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
@@ -167,7 +165,9 @@ public class PagoService {
 			});
 		}
 		for (FacturaDto dto : facturas) {
-			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())) {
+			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
+					&& dto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+					&&dto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 				log.info("Updating saldo pendiente factura {}", dto.getFolio());
 				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
 						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();

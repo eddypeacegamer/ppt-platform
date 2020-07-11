@@ -17,7 +17,6 @@ import com.business.unknow.commons.util.NumberTranslatorHelper;
 import com.business.unknow.commons.util.StringHelper;
 import com.business.unknow.rules.suites.TimbradoSuite;
 import com.business.unknow.rules.suites.facturas.CancelacionSuite;
-import com.business.unknow.rules.suites.facturas.ComplementoSuite;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 import com.business.unknow.rules.suites.facturas.FacturaValidationSuite;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
@@ -42,11 +41,6 @@ public class ServicesApplication {
 	}
 
 	@Bean
-	public ComplementoSuite getComplementoSuite() {
-		return new ComplementoSuite();
-	}
-
-	@Bean
 	public FacturaSuite getFacturaSuite() {
 		return new FacturaSuite();
 	}
@@ -65,7 +59,7 @@ public class ServicesApplication {
 	public PaymentCreationSuite getPagoPpdSuite() {
 		return new PaymentCreationSuite();
 	}
-	
+
 	@Bean
 	public FacturaValidationSuite getFacturaValidationSuite() {
 		return new FacturaValidationSuite();

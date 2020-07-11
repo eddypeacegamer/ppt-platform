@@ -54,6 +54,16 @@ public class CfdiPago implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
+	
+	public CfdiPago(BigDecimal importeSaldoInsoluto, int numeroParcialidad) {
+		super();
+		this.importeSaldoInsoluto = importeSaldoInsoluto;
+		this.numeroParcialidad = numeroParcialidad;
+	}
+
+	public CfdiPago() {
+		super();
+	}
 
 	public int getId() {
 		return id;

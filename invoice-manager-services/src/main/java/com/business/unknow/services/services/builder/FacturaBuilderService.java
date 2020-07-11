@@ -27,10 +27,12 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
 import com.business.unknow.model.dto.cfdi.ReceptorDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
@@ -39,6 +41,7 @@ import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
+import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 
 @Service
@@ -57,6 +60,9 @@ public class FacturaBuilderService extends AbstractBuilderService {
 	private ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
+	private CfdiPagoRepository cfdiPagoRepository;
+
+	@Autowired
 	private FacturaMapper mapper;
 
 	@Autowired
@@ -68,28 +74,20 @@ public class FacturaBuilderService extends AbstractBuilderService {
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
 
-	
-	// TODO refactor this code Complementos no estan ligados a una sola factura padre
-	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaPadreDto, String folio)
+	public FacturaContext buildFacturaContextPagoPpdCreation(PagoDto pagoDto, FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
-//		List<Pago> pagos = pagoRepository.findByFolioPadre(facturaPadreDto.getFolio());
-//		Pago pagoPadre = pagos.stream().filter(p -> p.getFolio().equals(folio)).findFirst()
-//				.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-//						String.format("Verificar consitencia de pagos del folio %s", folio), HttpStatus.SC_NOT_FOUND));
 		EmpresaDto empresaDto = empresaMapper
-				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaPadreDto.getRfcEmisor())
+				.getEmpresaDtoFromEntity(empresaRepository.findByRfc(facturaDto.getRfcEmisor())
 						.orElseThrow(() -> new InvoiceManagerException("Pago a credito no encontrado",
-								String.format("No existe El emisor %s", facturaPadreDto.getRfcEmisor()),
+								String.format("No existe El emisor %s", facturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
-		getEmpresaFiles(empresaDto, facturaPadreDto);
-		return null;
-//		return new FacturaContextBuilder().setPagos(pagoMapper.getPagosDtoFromEntities(pagos)).setEmpresaDto(empresaDto)
-//				.setFacturaPadreDto(facturaPadreDto).setPagoCredito(pagoMapper.getPagoDtoFromEntity(pagoPadre))
-//				.setCtdadComplementos(repository.findComplementosByFolioPadre(facturaPadreDto.getFolio()).size()).setCurrentPago(pagoDto).build();
+		getEmpresaFiles(empresaDto, facturaDto);
+		return new FacturaContextBuilder().setEmpresaDto(empresaDto).setFacturaDto(facturaDto).setCurrentPago(pagoDto)
+				.build();
 	}
 
 	public FacturaContext buildFacturaContextPagoPueCreation(String folio, PagoDto pagoDto) {
-		//List<Pago> pagos = pagoRepository.findByFolio(folio);
+		// List<Pago> pagos = pagoRepository.findByFolio(folio);
 		Optional<Factura> factura = repository.findByFolio(folio);
 //		Optional<Pago> pagoCredito = pagos.stream()
 //				.filter(p -> p.getFormaPago().equals(FormaPagoEnum.CREDITO.getPagoValue())).findFirst();
@@ -101,50 +99,48 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		return null;
 	}
 
-	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto facturaPadre, PagoDto pagoActual) {
-		
-		return new FacturaBuilder()
-				.setPackFacturacion(facturaPadre.getPackFacturacion())
-				.setCfdi(facturaPadre.getCfdi())
-				.setTotal(pagoActual.getMonto())
-				.setLineaEmisor(facturaPadre.getLineaEmisor())
-				.setRfcEmisor(facturaPadre.getRfcEmisor())
-				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-				.setRfcRemitente(facturaPadre.getRfcRemitente())
-				.setLineaRemitente(facturaPadre.getLineaRemitente())
-				.setRazonSocialEmisor(facturaPadre.getRazonSocialEmisor())
-				.setRazonSocialRemitente(facturaPadre.getRazonSocialRemitente())
-				.setSolicitante(facturaPadre.getSolicitante())
-				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-				.setFormaPago(FormaPagoEnum.findByPagoValue(pagoActual.getFormaPago()).getClave())
-				.build();
-	}
+//	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto facturaPadre, PagoDto pagoActual) {
+//		return new FacturaBuilder()
+//				.setPackFacturacion(facturaPadre.getPackFacturacion())
+//				.setCfdi(facturaPadre.getCfdi())
+//				.setTotal(pagoActual.getMonto())
+//				.setLineaEmisor(facturaPadre.getLineaEmisor())
+//				.setRfcEmisor(facturaPadre.getRfcEmisor())
+//				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
+//				.setRfcRemitente(facturaPadre.getRfcRemitente())
+//				.setLineaRemitente(facturaPadre.getLineaRemitente())
+//				.setRazonSocialEmisor(facturaPadre.getRazonSocialEmisor())
+//				.setRazonSocialRemitente(facturaPadre.getRazonSocialRemitente())
+//				.setSolicitante(facturaPadre.getSolicitante())
+//				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
+//				.setFormaPago(FormaPagoEnum.findByPagoValue(pagoActual.getFormaPago()).getClave())
+//				.build();
+//	}
 
 	public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
 		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION_CFDI)
 				.setLugarExpedicion(facturaContext.getEmpresaDto().getInformacionFiscal().getCp())
-				.setMoneda(ComplementoPpdDefaults.MONEDA)
-				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
+				.setMoneda(ComplementoPpdDefaults.MONEDA).setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
 				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
 				.setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
 				.setSerie(ComplementoPpdDefaults.SERIE).setSubtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
 				.setTotal(new BigDecimal(ComplementoPpdDefaults.TOTAL)).setComplemento(new ComplementoDto())
 				.setTipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
-				.setEmisor(new EmisorDto(facturaContext.getFacturaPadreDto().getRfcEmisor(),
-						facturaContext.getFacturaPadreDto().getRazonSocialEmisor(),
-						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getRegimenFiscal(),
-						facturaContext.getFacturaPadreDto().getCfdi().getEmisor().getDireccion()))
-				.setReceptor(new ReceptorDto(facturaContext.getFacturaPadreDto().getRfcRemitente(),
-						facturaContext.getFacturaPadreDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI,
-						facturaContext.getFacturaPadreDto().getCfdi().getReceptor().getDireccion()))
-				.setConceptos(buildFacturaComplementoConceptos())
-				.setPagos(buildFacturaComplementoPagos(facturaContext));
+				.setEmisor(new EmisorDto(facturaContext.getFacturaDto().getRfcEmisor(),
+						facturaContext.getFacturaDto().getRazonSocialEmisor(),
+						facturaContext.getFacturaDto().getCfdi().getEmisor().getRegimenFiscal(),
+						facturaContext.getFacturaDto().getCfdi().getEmisor().getDireccion()))
+				.setReceptor(new ReceptorDto(facturaContext.getFacturaDto().getRfcRemitente(),
+						facturaContext.getFacturaDto().getRazonSocialRemitente(), ComplementoPpdDefaults.USO_CFDI,
+						facturaContext.getFacturaDto().getCfdi().getReceptor().getDireccion()))
+				.setConceptos(buildFacturaComplementoConceptos());
 		return cfdiBuilder.build();
 	}
 
 	public List<ConceptoDto> buildFacturaComplementoConceptos() {
 		List<ConceptoDto> conceptos = new ArrayList<ConceptoDto>();
-		ConceptoDtoBuilder conceptoBuilder = new ConceptoDtoBuilder().setCantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
+		ConceptoDtoBuilder conceptoBuilder = new ConceptoDtoBuilder()
+				.setCantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
 				.setClaveProdServ(ComplementoPpdDefaults.CLAVE_PROD).setClaveUnidad(ComplementoPpdDefaults.CLAVE)
 				.setDescripcion(ComplementoPpdDefaults.DESCRIPCION)
 				.setImporte(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
@@ -153,24 +149,40 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		return conceptos;
 	}
 
-	public List<CfdiPagoDto> buildFacturaComplementoPagos(FacturaContext facturaContext) {
-		List<CfdiPagoDto> pagos = new ArrayList<CfdiPagoDto>();
-		CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
-				.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(facturaContext.getCurrentPago().getFechaPago())
-				.setFormaPago(FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago()).getClave())
-				.setMoneda(facturaContext.getCurrentPago().getMoneda())
-				.setMonto(facturaContext.getCurrentPago().getMonto())
-				.setFolio(facturaContext.getFacturaPadreDto().getFolio())
-				.setIdDocumento(facturaContext.getFacturaPadreDto().getUuid())
-				.setImportePagado(facturaContext.getCurrentPago().getMonto())
-				.setMonedaDr(facturaContext.getCurrentPago().getMoneda())
-				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
-				.setNumeroParcialidad(facturaContext.getCtdadComplementos()+1)
-				.setImporteSaldoAnterior(facturaContext.getPagoCredito().getMonto())
-				.setImporteSaldoInsoluto(facturaContext.getPagoCredito().getMonto()
-						.subtract(facturaContext.getCurrentPago().getMonto()));
-		pagos.add(cfdiComplementoPagoBuilder.build());
-		return pagos;
+	public List<CfdiPagoDto> buildFacturaComplementoPagos(FacturaDto complemento, PagoDto pagoDto,
+			List<FacturaDto> dtos) throws InvoiceManagerException {
+		List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
+		for (FacturaDto dto : dtos) {
+			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByCfdi(dto.getIdCfdi());
+			Optional<PagoFacturaDto> pagoFactura = pagoDto.getFacturas().stream()
+					.filter(a -> a.getFolio().endsWith(dto.getFolio())).findFirst();
+			Optional<CfdiPago> cfdipago = cfdiPAgos.stream()
+					.sorted((o2, o1) -> Integer.valueOf(o1.getNumeroParcialidad())
+							.compareTo(Integer.valueOf(o2.getNumeroParcialidad())))
+					.filter(a -> a.getFolio().endsWith(dto.getFolio())).findFirst();
+
+			if (!cfdipago.isPresent()) {
+				cfdipago = Optional.of(new CfdiPago(pagoDto.getMonto(), 0));
+			}
+			if (pagoFactura.isPresent()) {
+				CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
+						.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(pagoDto.getFechaPago())
+						.setFormaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
+						.setMoneda(pagoDto.getMoneda()).setMonto(dto.getTotal()).setFolio(dto.getFolio())
+						.setIdDocumento(dto.getUuid()).setImportePagado(pagoFactura.get().getMonto())
+						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda())
+						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
+						.setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
+						.setImporteSaldoAnterior(cfdipago.get().getImporteSaldoInsoluto()).setImporteSaldoInsoluto(
+								cfdipago.get().getImporteSaldoInsoluto().subtract(pagoFactura.get().getMonto()));
+				cfdiPagos.add(cfdiComplementoPagoBuilder.build());
+			} else {
+				throw new InvoiceManagerException("No tiene relacion de pago la factura",
+						String.format("La factura %s not tiene pago relacionado", dto.getFolio()),
+						Constants.BAD_REQUEST);
+			}
+		}
+		return cfdiPagos;
 	}
 
 	public FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto) throws InvoiceManagerException {
