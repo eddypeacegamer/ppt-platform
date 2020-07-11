@@ -114,11 +114,11 @@ export class CfdiValidatorService {
   public validarCfdi(cfdi: Cfdi): string[] {
     const messages: string[] = [];
     if (cfdi.receptor === undefined || cfdi.receptor.rfc === undefined
-        || cfdi.receptor.rfc.length < 8 || cfdi.receptor.nombre.length < 8) {
+        || cfdi.receptor.rfc.length < 11 || cfdi.receptor.nombre.length < 8) {
       messages.push('La información del receptor es un valor solicitado');
     }
     if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined
-        || cfdi.emisor.rfc.length < 8 || cfdi.emisor.nombre.length < 8) {
+        || cfdi.emisor.rfc.length < 11 || cfdi.emisor.nombre.length < 8) {
       messages.push('La información del emisor es un valor solicitado');
     }
     if (cfdi.emisor.rfc === cfdi.receptor.rfc) {
@@ -129,7 +129,7 @@ export class CfdiValidatorService {
     }else if (this.usoCfdiCat.find(e => e === cfdi.receptor.usoCfdi) === undefined) {
       messages.push(`El uso de cfdi ${cfdi.receptor.usoCfdi} no es valido.`);
     }
-    if (cfdi.moneda === undefined) {
+    if (cfdi.moneda === undefined || cfdi.moneda === '*') {
       messages.push('La moneda es un campo requerido.');
     }
     if (cfdi.formaPago === undefined || cfdi.formaPago === '*' ) {
@@ -147,6 +147,12 @@ export class CfdiValidatorService {
     }
     if (cfdi.total > 2000 && cfdi.formaPago === '01') {
       messages.push('En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos');
+    }
+    if (cfdi.moneda !== 'MXN' && cfdi.tipoCambio === 1.0) {
+      messages.push(`El tipo de cambio para  ${cfdi.moneda} no puede ser igual a $1.00`);
+    }
+    if (cfdi.moneda === 'MXN' && cfdi.tipoCambio !== 1.0 ) {
+      messages.push('Si la moneda seleccionada es MXN el tipo de cambio debe ser $1.00.');
     }
     return messages;
   }

@@ -2,6 +2,7 @@ import { Cfdi } from './cfdi';
 
 export class Factura {
 	public id: number;
+	public idCfdi: number;
 	public rfcEmisor: string;
 	public razonSocialEmisor: string;
 	public lineaEmisor: string;

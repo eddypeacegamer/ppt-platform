@@ -25,7 +25,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
-    private donwloadService: DownloadCsvService,
+    private downloadCsvService: DownloadCsvService,
     private router: Router,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
@@ -103,6 +103,8 @@ export class InvoiceReportsComponent implements OnInit {
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
         } else if (this.filterParams.lineaEmisor === 'B') {
           this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
+        } else if (this.filterParams.lineaEmisor === 'C') {
+          this.router.navigate([`./pages/operaciones/linea-c/${folio}`]);
         } else {
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         }
@@ -152,19 +154,19 @@ export class InvoiceReportsComponent implements OnInit {
 
   public downloadHandler() {
     this.invoiceService.getInvoices(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Facturas');
+      this.downloadCsvService.exportCsv(result.content, 'Facturas');
     });
   }
 
   public downloadInvoicesReports() {
     this.invoiceService.getInvoicesReports(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Facturas');
+      this.downloadCsvService.exportCsv(result.content, 'Facturas');
     });
   }
 
   public downloadComplementReports() {
     this.invoiceService.getComplementReports(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Complementos');
+      this.downloadCsvService.exportCsv(result.content, 'Complementos');
     });
   }
 

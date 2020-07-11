@@ -20,7 +20,6 @@ import { GenericPage } from '../../../models/generic-page';
 import { User } from '../../../models/user';
 import { Pago } from '../../../models/factura/pago';
 import { CfdiData } from '../../../@core/data/cfdi-data';
-import { PagoBase } from '../../../models/pago-base';
 
 
 @Component({
@@ -215,8 +214,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     if (this.errorMessages.length === 0) {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
-          this.factura = invoice;
           this.loading = false;
+          this.getInvoiceInfoByIdCdfi(invoice.cfdi.id.toString());
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {
           this.loading = false;
@@ -228,6 +227,20 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
   }
 
+  public revalidateInvoice() {
+    this.factura.statusFactura = '1';
+    this.factura.validacionOper = true;
+    this.factura.validacionTeso = false;
+    this.invoiceService.updateInvoice(this.factura)
+    .subscribe((invoice: Factura) => {
+      this.successMessage = 'Factura recuperada exitosamente';
+      this.getInvoiceInfoByIdCdfi(this.preFolio);
+    }, (error: HttpErrorResponse) => {
+      this.loading = false;
+      this.errorMessages.push((error.error != null && error.error !== undefined) ?
+        error.error.message : `${error.statusText} : ${error.message}`);
+    });
+  }
 
   public downloadPdf(folio: string) {
     this.filesService.getFacturaFile(folio, 'PDF').subscribe(

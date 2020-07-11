@@ -118,9 +118,9 @@ public class FacturaController {
 
 	// TIMBRADO
 	@PostMapping("/{folio}/timbrar")
-	public ResponseEntity<FacturaContext> timbrarFactura(@PathVariable String folio,
+	public ResponseEntity<FacturaDto> timbrarFactura(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.timbrarFactura(folio, facturaDto), HttpStatus.OK);
+		return new ResponseEntity<>(service.timbrarFactura(folio, facturaDto).getFacturaDto(), HttpStatus.OK);
 	}
 
 	@PostMapping("/{folio}/cancelar")

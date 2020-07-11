@@ -7,7 +7,7 @@
       <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
       <div class="">
         <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
-          (ngModelChange)="buscarClaveProductoServicio($event)" placeholder="Palabra clave producto">        
+          (ngModelChange)="buscarClaveProductoServicio(dialog,$event)" placeholder="Palabra clave producto">        
       </div>
     </div>
     <div class="col-sm-2">
@@ -60,11 +60,17 @@
         <label class="form-check-label "  for="retencion">RETENCIÓN</label>
       </div>
       <div class="col-sm-1 align-self-end"></div>
-      <div class="col-sm-3 ">           
-        <button *ngIf="concepto.id === undefined" style="width: 100%; margin-top: 28px;" class="btn btn-success" (click)="agregarConcepto(dialog)">Agregar
-          Concepto</button>
-        <button *ngIf="concepto.id !== undefined" style="width: 100%; margin-top: 28px;" class="btn btn-success"
-          (click)="agregarConcepto(dialog,concepto.id)">Actualizar Concepto</button>     
+      <div class="col-sm-3 ">
+        <button nbButton status="success" size="small" (click)="agregarConcepto(dialog)" [nbSpinner]="loading" 
+              style="width: 100%; margin-top: 28px;" class="btn btn-success" 
+              [disabled]="loading" nbSpinnerStatus="success"  *ngIf="concepto.id === undefined"
+              nbSpinnerSize="small" nbSpinnerMessage="">Agregar Concepto
+        </button>
+        <button nbButton status="success" size="small" (click)="agregarConcepto(dialog,concepto.id)" [nbSpinner]="loading" 
+              style="width: 100%; margin-top: 28px;" class="btn btn-success" 
+              [disabled]="loading" nbSpinnerStatus="success"  *ngIf="concepto.id !== undefined"
+              nbSpinnerSize="small" nbSpinnerMessage="">Actualizar Concepto
+        </button>    
       </div>
   </div>
  <!--  <div class="alert alert-warning" *ngIf="conceptoMessages.length > 0" role="alert">
@@ -99,7 +105,7 @@
           <td scope="row" class="text-center"
             *ngIf="allowEdit">
             <button class="btn-sm btn-outline-danger" (click)="removeConcepto(dialog,i)"><i class="fa fa-trash"></i></button>
-            <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
+            <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(dialog,fila)"><i class="fa fa-edit"></i></button>
           </td>
           <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
           <td scope="row" class="text-center">{{fila.cantidad}}</td>
@@ -153,7 +159,7 @@
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
-    <nb-card-header>Error al cargar/actualizar conceptos</nb-card-header>
+    <nb-card-header>Error en el concepto</nb-card-header>
     <nb-card-body>
       <div class="row" style="width: 300 px;">
         <div class="col-sm-12">

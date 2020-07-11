@@ -103,7 +103,6 @@ export class RevisionComponent implements OnInit {
   public getInvoiceInfoByPreFolio(preFolio: string) {
     const idCfdi: number = +preFolio;
     this.pagosCfdi = [];
-  
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
@@ -114,14 +113,14 @@ export class RevisionComponent implements OnInit {
             .subscribe(cfdi => {
             this.factura.cfdi = cfdi;
             if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
-              this.pagosCfdi = cfdi.complemento.pagos;           
+              this.pagosCfdi = cfdi.complemento.pagos;
             }
           });
           if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
             this.cfdiService.findPagosPPD(idCfdi)
               .subscribe(pagos => {this.pagosCfdi = pagos; });
-          }      
-          setTimeout(() => { this.loading = false; }, 1800);
+          }
+          setTimeout(() => { this.loading = false; }, 1000);
       },
         error => {
           console.error('Info cant found, creating a new invoice:', error);
@@ -206,12 +205,12 @@ export class RevisionComponent implements OnInit {
   }
 
   public aceptarFactura() {
-    this.loading = true; 
     this.successMessage = undefined;
     this.errorMessages = [];
     const fact = { ...this.factura };
-    fact.validacionOper=true;
-    fact.statusFactura='1';
+    fact.validacionOper = true;
+    fact.statusFactura = '1';
+    this.loading = true;
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
       this.getInvoiceInfoByPreFolio(this.preFolio);
@@ -239,7 +238,6 @@ export class RevisionComponent implements OnInit {
   }
 
   public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
-    this.loading = true;
     this.successMessage = undefined;
     this.errorMessages = [];
     const fact = { ...factura };
@@ -247,9 +245,10 @@ export class RevisionComponent implements OnInit {
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     this.clientsService.getClientByRFC(this.factura.cfdi.receptor.rfc)
     .subscribe((client: Client) => {
-    if ( client.activo) {
+    if (client.activo) {
       this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
+        this.loading = true;
         if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => {
@@ -265,7 +264,7 @@ export class RevisionComponent implements OnInit {
       });
     } else {
       this.loading = false;
-      this.errorMessages.push('No es posible timbrar con clientes inactivos');
+      this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
     }});
   }
 

@@ -12,7 +12,7 @@ import { NbDialogService } from '@nebular/theme';
 @Component({
   selector: 'ngx-conceptos',
   templateUrl: './conceptos.component.html',
-  styleUrls: ['../../pages.component.scss']
+  styleUrls: ['../../pages.component.scss'],
 })
 export class ConceptosComponent implements OnInit {
 
@@ -20,11 +20,11 @@ export class ConceptosComponent implements OnInit {
   @Input() concepto: Concepto;
   @Input() allowEdit: Boolean;
 
-  public errors: string[];
-
   public formInfo = { prodServ: '*', unidad: '*', claveProdServ: ''};
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
+
+  public loading: boolean;
 
   constructor(
     private cfdiService: CfdiData,
@@ -33,12 +33,20 @@ export class ConceptosComponent implements OnInit {
     private dialogService: NbDialogService ) { }
 
   ngOnInit() {
+    this.loading = false;
     this.catalogsService.getClaveUnidadByName('').then(unidadCat => this.claveUnidadCat = unidadCat);
   }
 
+  private showAlert(dialog: TemplateRef<any>, errors: string[]) {
+    this.dialogService.open(dialog, { context: errors });
+  }
 
-  public buscarClaveProductoServicio(claveProdServ: string) {
-    this.errors = [];
+  private showAlertHttpError(dialog: TemplateRef<any>, error: HttpErrorResponse) {
+    this.dialogService.open(dialog, { context: [error.error.message || `${error.statusText} : ${error.message}`] });
+  }
+
+
+  public buscarClaveProductoServicio(dialog: TemplateRef<any>, claveProdServ: string) {
     const value = +claveProdServ;
     if (isNaN(value)) {
       if (claveProdServ.length > 5) {
@@ -47,10 +55,7 @@ export class ConceptosComponent implements OnInit {
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => {
-          this.errors = [];
-          this.errors.push(error.error.message || `${error.statusText} : ${error.message}`)
-        });
+        }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
       }
     } else {
       if (claveProdServ.length > 5) {
@@ -59,10 +64,7 @@ export class ConceptosComponent implements OnInit {
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => {
-          this.errors = [];
-          this.errors.push(error.error.message || `${error.statusText} : ${error.message}`);
-          });
+        }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
       }
     }
   }
@@ -84,28 +86,20 @@ export class ConceptosComponent implements OnInit {
     this.concepto.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
   }
 
-
-
   removeConcepto(dialog: TemplateRef<any>, index: number) {
-    this.errors = [];
     if (this.cfdi.folio !== undefined) {
       this.cfdiService.deleteConcepto(this.cfdi.id, this.cfdi.conceptos[index].id)
       .subscribe((cfdi: Cfdi) => {
         this.cfdi.conceptos.splice(index, 1);
-        this.errors = [];
         this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
-      }, (error: HttpErrorResponse) => { 
-        this.errors.push((error.error != null && error.error !== undefined)
-          ? error.error.message : `${error.statusText} : ${error.message}`);
-        this.dialogService.open(dialog, { context: this.errors });
-        });
+      }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
     }else {
       this.cfdi.conceptos.splice(index, 1);
       this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
     }
   }
 
-  updateConcepto(concepto: Concepto) {
+  updateConcepto(dialog: TemplateRef<any>,concepto: Concepto) {
     this.concepto = {... concepto};
     if (concepto.impuestos.length > 0 ) {
       this.concepto.iva = true;
@@ -115,14 +109,14 @@ export class ConceptosComponent implements OnInit {
     }
     this.formInfo.unidad = concepto.claveUnidad;
     this.formInfo.claveProdServ = concepto.claveProdServ;
-    this.buscarClaveProductoServicio(concepto.claveProdServ);
+    this.buscarClaveProductoServicio(dialog, concepto.claveProdServ);
   }
-  agregarConcepto(dialog: TemplateRef<any>, id?: number) {
-    this.errors = [];
-    const concepto = this.cfdiValidator.buildConcepto({... this.concepto});
-    this.errors = this.cfdiValidator.validarConcepto(concepto);
 
-    if (this.errors.length === 0) {
+  agregarConcepto(dialog: TemplateRef<any>, id?: number) {
+    const concepto = this.cfdiValidator.buildConcepto({... this.concepto});
+    const errors = this.cfdiValidator.validarConcepto(concepto);
+
+    if (errors.length === 0) {
       if (this.cfdi.id !== undefined) {
         let promise;
         if (id === undefined) {
@@ -130,34 +124,26 @@ export class ConceptosComponent implements OnInit {
         }else {
           promise = this.cfdiService.updateConcepto(this.cfdi.id, id, concepto).toPromise();
         }
+        this.loading = true;
         promise.then((cfdi) => {
               this.formInfo.prodServ = '*';
               this.formInfo.unidad = '*';
               this.concepto = new Concepto();
-              this.errors = [];
-            }, (error: HttpErrorResponse) => {
-              this.errors.push((error.error != null && error.error !== undefined)
-                ? error.error.message : `${error.statusText} : ${error.message}`);
-              this.dialogService.open(dialog, { context: this.errors });
-            }).then(() => {
+            }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error))
+            .then(() => {
               this.cfdiService.getCfdiByFolio(this.cfdi.id)
               .subscribe((cfdi: Cfdi) => this.cfdi = cfdi,
-              (error: HttpErrorResponse) => {
-                this.errors.push((error.error != null && error.error !== undefined)
-                  ? error.error.message : `${error.statusText} : ${error.message}`);
-                this.dialogService.open(dialog, { context: this.errors });
-                });
-            });
+              (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
+            }).then(() => this.loading = false);
       }else {
         this.cfdi.conceptos.push(concepto);
         this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
         this.formInfo.prodServ = '*';
         this.formInfo.unidad = '*';
         this.concepto = new Concepto();
-        this.errors = [];
       }
     }else {
-      this.dialogService.open(dialog, { context: this.errors });
+      this.showAlert(dialog, errors);
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';
       this.concepto = new Concepto();
