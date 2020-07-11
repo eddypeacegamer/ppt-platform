@@ -1,42 +1,21 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header>Registro CFDI Linea B<span class="badge badge-primary" style="margin-left: 10px;" 
-        *ngIf="preFolio != '*' && factura" >{{factura.statusFactura}}</span>
-        
-          <button type="button" *ngIf="preFolio !== '*'" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
-            <i class="fa fa-file-pdf"></i>
-          </button>
-          &nbsp;&nbsp;
-          <button type="button" *ngIf="preFolio !== '*' && factura.statusFactura == 'Timbrada'"
-            class="btn btn-sm btn-outline-primary float-right" (click)="downloadXml(factura.folio)">
-            <i class="fa fa-code"></i>
-          </button>
-       
+      <nb-card-header>Registro CFDI Linea B<span class="badge badge-primary" style="margin-left: 10px;"
+          *ngIf="preFolio != '*' && factura">{{factura.statusFactura}}</span>
+
+        <button type="button" *ngIf="preFolio !== '*'" class="btn btn-sm btn-outline-primary float-right"
+          (click)="downloadPdf(factura.folio)">
+          <i class="fa fa-file-pdf"></i>
+        </button>
+        &nbsp;&nbsp;
+        <button type="button" *ngIf="preFolio !== '*' && factura.statusFactura == 'Timbrada'"
+          class="btn btn-sm btn-outline-primary float-right" (click)="downloadXml(factura.folio)">
+          <i class="fa fa-code"></i>
+        </button>
+
       </nb-card-header>
       <nb-card-body>
-        <div *ngIf="preFolio !== '*'">
-          <div class="d-flex float-right">
-            <button nbButton status="success" size="small" (click)="timbrarFactura(factura,dialog)"
-              [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
-              nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
-              Timbrar
-            </button>
-            &nbsp;&nbsp;
-            <button nbButton status="danger" size="small" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-              [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
-              nbSpinnerSize="small" nbSpinnerMessage="">
-              Cancelar
-            </button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-sm btn-danger" (click)="rechazarFactura()"
-              *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0">Rechazar</button>
-          </div>
-        </div>
-
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
 
         <p class="font-weight-bold">Información Emisor y Receptor</p>
         <div class="row" *ngIf="preFolio === '*'">
@@ -79,30 +58,52 @@
             </select>
           </div>
         </div>
-            <br>
-          <div  *ngIf="!loading"> 
-            <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
-              [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Por Timbrar')">
-            </ngx-cfdi>
-          </div>
-
-        
         <br>
-        <div class="form-inline" *ngIf="this.factura.folio == undefined">
-          <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
-          [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
+        <div *ngIf="!loading">
+          <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi"
+            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Por Timbrar')">
+          </ngx-cfdi>
+        </div>
+
+        <br>
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
+
+        <div class="d-flex float-left" *ngIf="preFolio === '*'">
+          <button nbButton status="success" size="small" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
+            *ngIf="this.factura.folio == undefined" [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small"
+            nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
         </div>
 
-        <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
-          {{successMessage}}
+        <div class="d-flex float-right" *ngIf="factura.idCfdi !== undefined">
+          <button nbButton status="success" size="small" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading"
+            [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'" nbSpinnerStatus="success"
+            nbSpinnerSize="small" nbSpinnerMessage="">
+            Timbrar
+          </button>
+          &nbsp;&nbsp;
+          <button nbButton status="danger" size="small" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
+            [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
+            nbSpinnerSize="small" nbSpinnerMessage="">
+            Cancelar
+          </button>
+          &nbsp;&nbsp;
+          <button type="button" class="btn btn-sm btn-danger" (click)="rechazarFactura()"
+            *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada'">Rechazar</button>
         </div>
-
+        
+        <br>
         <div *ngIf="factura">
 
-          <p class="font-weight-bold" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
-          <div class="row" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">
+          <p class="font-weight-bold"
+            *ngIf="factura.saldoPendiente > 0.01 && factura.metodoPago =='PPD' && factura.statusFactura == 'Timbrada'">
+            Cargar
+            Complementos</p>
+          <div class="row"
+            *ngIf="factura.saldoPendiente > 0.01 && factura.metodoPago =='PPD' && factura.statusFactura == 'Timbrada'">
             <div class="col-sm-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select id="inputPayCoin" style="display:block;" class="form-control" [(ngModel)]="payment.moneda">
@@ -111,7 +112,8 @@
             </div>
             <div class="col-sm-3">
               <label for="inputPayType" class="label">Forma de Pago</label>
-              <select selected="1" id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="payment.formaPago">
+              <select selected="1" id="inputPayType" style="display:block;" class="form-control"
+                [(ngModel)]="payment.formaPago">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let payType of complementPayTypeCat" [value]="payType.id"> {{payType.nombre}}</option>
               </select>
@@ -124,8 +126,7 @@
             <div class="col-md-5">
               <label for="payAmmount" class="label">Fecha de pago</label>
               <div class="input-group">
-                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker"
-                  [(ngModel)]="payment.fechaPago">
+                <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker" [(ngModel)]="payment.fechaPago">
                 <nb-datepicker #formpicker></nb-datepicker>
                 &nbsp;&nbsp;
                 <button nbButton status="primary" size="medium" (click)="generateComplement()" [nbSpinner]="loading"
@@ -157,8 +158,7 @@
               <tbody>
                 <tr *ngFor="let complemento of factura.complementos">
                   <td scope="row" class="text-center">
-                    <button type="button"  class="btn btn-outline-primary"
-                      (click)="downloadPdf(complemento.folio)">
+                    <button type="button" class="btn btn-outline-primary" (click)="downloadPdf(complemento.folio)">
                       <i class="fa fa-file-pdf"></i>
                     </button>&nbsp;&nbsp;
                     <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
@@ -214,5 +214,5 @@
       &nbsp;&nbsp;
       <button class="btn btn-success" (click)="ref.close(data)">Timbrar</button>
     </nb-card-footer>
-  </nb-card> 
+  </nb-card>
 </ng-template>

@@ -103,6 +103,8 @@ export class InvoiceReportsComponent implements OnInit {
           this.router.navigate([`./pages/operaciones/revision/${folio}`]);
         } else if (this.filterParams.lineaEmisor === 'B') {
           this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
+        } else if (this.filterParams.lineaEmisor === 'C') {
+          this.router.navigate([`./pages/operaciones/linea-c/${folio}`]);
         } else {
           this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         }

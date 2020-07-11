@@ -154,6 +154,7 @@ export class LineaBComponent implements OnInit {
         this.cfdiService.getCfdiByFolio(idCfdi)
             .subscribe(cfdi => {
             this.factura.cfdi = cfdi;
+            this.factura.idCfdi = cfdi.id;
             if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
               this.pagosCfdi = cfdi.complemento.pagos;
             }
@@ -272,7 +273,7 @@ export class LineaBComponent implements OnInit {
       this.invoiceService.insertNewInvoice(this.factura)
         .subscribe((invoice: Factura) => {
           this.factura = invoice;
-          this.getInvoiceInfoByPreFolio(this.preFolio);
+          this.getInvoiceInfoByPreFolio(invoice.idCfdi.toString());
           this.successMessage = 'Solicitud de factura enviada correctamente';
         }, (error: HttpErrorResponse) => {
           this.loading = false;
@@ -314,9 +315,10 @@ export class LineaBComponent implements OnInit {
         this.loading = true;
         if (invoice !== undefined) {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
-            .subscribe(result => {
+            .subscribe( result => {
+              console.log(result);
               this.loading = false;
-              this.getInvoiceInfoByPreFolio(this.preFolio);
+              this.getInvoiceInfoByPreFolio(`${result.idCfdi}`);
             }, (error: HttpErrorResponse) => {
                 this.loading = false;
                 this.errorMessages.push((error.error != null && error.error != undefined) ?
