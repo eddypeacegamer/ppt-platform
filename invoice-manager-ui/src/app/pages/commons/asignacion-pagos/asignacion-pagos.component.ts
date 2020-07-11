@@ -90,7 +90,14 @@ export class AsignacionPagosComponent implements OnInit {
       .pipe(
         map((page: GenericPage<Factura>) => {
           return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
-        })).subscribe(companies => this.companiesCat = companies);
+        })).subscribe(companies =>{ 
+          // removing duplicted records
+          const rfcs = companies.map(c => c.rfc);
+          this.companiesCat = [];
+          for (const rfc of rfcs.filter((item, index) => rfcs.indexOf(item) === index)) {
+            this.companiesCat.push(companies.find(c=>c.rfc === rfc));
+          }
+        });
   }
 
   onCompanySelected(company: any) {
