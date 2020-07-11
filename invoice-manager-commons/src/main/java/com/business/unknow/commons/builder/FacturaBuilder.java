@@ -79,13 +79,24 @@ public class FacturaBuilder extends AbstractBuilder<FacturaDto> {
 		return this;
 	}
 	
-	public FacturaBuilder setFormaPago(String formaPago) {
-		instance.getCfdi().setFormaPago(formaPago);
-		return this;
-	}
 	
 	public FacturaBuilder setMetodoPago(String metodoPago) {
 		instance.setMetodoPago(metodoPago);
+		return this;
+	}
+	
+	public FacturaBuilder setSaldoPendiente(BigDecimal saldoPendiente) {
+		instance.setSaldoPendiente(saldoPendiente);
+		return this;
+	}
+	
+	public FacturaBuilder setValidacionOper(boolean validacionOper) {
+		instance.setValidacionOper(validacionOper);
+		return this;
+	}
+	
+	public FacturaBuilder setValidacionTeso(boolean validacionTeso) {
+		instance.setValidacionTeso(validacionTeso);
 		return this;
 	}
 	

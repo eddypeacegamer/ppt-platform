@@ -400,14 +400,15 @@ public class FacturaService {
 			FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, factura,
 					factura.getFolio());
 			CfdiDto cfdiDto = facturaBuilderService.buildFacturaComplementoCreation(factContext);
+			FacturaDto complemento = facturaBuilderService.buildFacturaDtoPagoPpdCreation(factura, pagoPpd);
 			List<CfdiPagoDto> cfdiPagos = facturaBuilderService.buildFacturaComplementoPagos(factura, pagoPpd,
 					facturas);
 			cfdiDto.setComplemento(new ComplementoDto());
 			cfdiDto.getComplemento().setPagos(cfdiPagos);
-			factura.setCfdi(cfdiDto);
-			facturaDefaultValues.assignaDefaultsComplemento(factura);
-			CfdiDto cfdi = cfdiService.insertNewCfdi(factura.getCfdi());
-			Factura fact = mapper.getEntityFromFacturaDto(factura);
+			complemento.setCfdi(cfdiDto);
+			facturaDefaultValues.assignaDefaultsComplemento(complemento);
+			CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
+			Factura fact = mapper.getEntityFromFacturaDto(complemento);
 			fact.setIdCfdi(cfdi.getId());
 			for (FacturaDto dto : facturas) {
 				Optional<PagoFacturaDto> pfDto = pagoPpd.getFacturas().stream()

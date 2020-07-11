@@ -17,6 +17,7 @@ import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
+import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -99,23 +100,25 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		return null;
 	}
 
-//	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto facturaPadre, PagoDto pagoActual) {
-//		return new FacturaBuilder()
-//				.setPackFacturacion(facturaPadre.getPackFacturacion())
-//				.setCfdi(facturaPadre.getCfdi())
-//				.setTotal(pagoActual.getMonto())
-//				.setLineaEmisor(facturaPadre.getLineaEmisor())
-//				.setRfcEmisor(facturaPadre.getRfcEmisor())
-//				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-//				.setRfcRemitente(facturaPadre.getRfcRemitente())
-//				.setLineaRemitente(facturaPadre.getLineaRemitente())
-//				.setRazonSocialEmisor(facturaPadre.getRazonSocialEmisor())
-//				.setRazonSocialRemitente(facturaPadre.getRazonSocialRemitente())
-//				.setSolicitante(facturaPadre.getSolicitante())
-//				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
-//				.setFormaPago(FormaPagoEnum.findByPagoValue(pagoActual.getFormaPago()).getClave())
-//				.build();
-//	}
+	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
+		return new FacturaBuilder()
+				//TODO:SI SOLO ES UNO PONER EL DEL PAADRE
+				.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name())
+				.setTotal(pago.getMonto())
+				.setSaldoPendiente(BigDecimal.ZERO)
+				.setLineaEmisor(factura.getLineaEmisor())
+				.setRfcEmisor(factura.getRfcEmisor())
+				.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
+				.setRfcRemitente(factura.getRfcRemitente())
+				.setLineaRemitente(factura.getLineaRemitente())
+				.setRazonSocialEmisor(factura.getRazonSocialEmisor())
+				.setRazonSocialRemitente(factura.getRazonSocialRemitente())
+				.setValidacionTeso(false)
+				.setValidacionOper(false)
+				.setSolicitante(factura.getSolicitante())
+				.setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
+				.build();
+	}
 
 	public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
 		CfdiDtoBuilder cfdiBuilder = new CfdiDtoBuilder().setVersion(ComplementoPpdDefaults.VERSION_CFDI)
@@ -153,7 +156,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 			List<FacturaDto> dtos) throws InvoiceManagerException {
 		List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
 		for (FacturaDto dto : dtos) {
-			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByCfdi(dto.getIdCfdi());
+			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByFolio(dto.getFolio());
 			Optional<PagoFacturaDto> pagoFactura = pagoDto.getFacturas().stream()
 					.filter(a -> a.getFolio().endsWith(dto.getFolio())).findFirst();
 			Optional<CfdiPago> cfdipago = cfdiPAgos.stream()
@@ -173,8 +176,8 @@ public class FacturaBuilderService extends AbstractBuilderService {
 						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda())
 						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
 						.setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
-						.setImporteSaldoAnterior(cfdipago.get().getImporteSaldoInsoluto()).setImporteSaldoInsoluto(
-								cfdipago.get().getImporteSaldoInsoluto().subtract(pagoFactura.get().getMonto()));
+						.setImporteSaldoAnterior(dto.getSaldoPendiente()).setImporteSaldoInsoluto(
+								dto.getSaldoPendiente().subtract(pagoFactura.get().getMonto()));
 				cfdiPagos.add(cfdiComplementoPagoBuilder.build());
 			} else {
 				throw new InvoiceManagerException("No tiene relacion de pago la factura",

@@ -167,7 +167,7 @@ public class PagoService {
 		for (FacturaDto dto : facturas) {
 			if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
 					&& dto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
-					&&dto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+					&& dto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 				log.info("Updating saldo pendiente factura {}", dto.getFolio());
 				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
 						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();
