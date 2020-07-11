@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PagoBase } from '../../models/pago-base';
 import { Factura } from '../../models/factura/factura';
+import { add, subtract, bignumber, unequal, number } from 'mathjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,12 +45,24 @@ export class PagosValidatorService {
     if (factura.saldoPendiente - pago.monto < -0.01) {
       messages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
+    if(pago.facturas === undefined || pago.facturas.length === 0){
+      messages.push('La asignacion de las facturas al pago no fue realizada');
+    } else {
+      let total = bignumber(0.0);
+      for( const fact of pago.facturas){
+        total = add(bignumber(fact.monto),total);
+      }
+      if(unequal(bignumber(pago.monto),total)){
+        messages.push('La suma de los pagos a las facturas individuales no es igual al monto del pago.');
+      }
+    }
 
     return messages;
   }
 
 
   public validatePagoSimple(pago: PagoBase): string[] {
+    
     const messages = [];
     if (pago.banco === undefined || pago.banco === '*') {
       messages.push('El banco es un valor requerido');
@@ -73,6 +86,18 @@ export class PagosValidatorService {
            && pago.documento === undefined) {
       messages.push('La imagen del documento de pago es requerida.');
     }
+    if(pago.facturas === undefined || pago.facturas.length === 0){
+      messages.push('La asignacion de las facturas al pago no fue realizada');
+    } else {
+      let total = bignumber(0.0);
+      for( const fact of pago.facturas){
+        total = add(bignumber(fact.monto),total);
+      }
+      if(unequal(bignumber(pago.monto),total)){
+        messages.push('La suma de los pagos a las facturas individuales no es igual al monto del pago.');
+      }
+    }
+
     return messages;
   }
 

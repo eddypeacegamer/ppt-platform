@@ -143,31 +143,17 @@ export class AsignacionPagosComponent implements OnInit {
     }
   }
 
-
-  getMontoTotal(): number {
-    let total: number = 0;
-    for (const f  of this.page.content){
-      if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
-        total += f.pagoMonto;
-      }
-    }
-    return total;
-  }
-
-
-
   sendPayment() {
     this.successMesagge = '';
+    this.payErrorMessages = [];
     const payment  = {... this.newPayment};
-    let total: number = 0;
+    console.log('Validating :',payment);
     for (const f  of this.page.content){
       if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
-        total += f.pagoMonto;
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
       }
     }
     payment.solicitante = this.user.email;
-    payment.monto = total;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
@@ -182,18 +168,22 @@ export class AsignacionPagosComponent implements OnInit {
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.successMesagge = 'Pago creado correctamente';
+          this.updateDataTable();
+          this.loading = false;
         }, (error: HttpErrorResponse) => {
           this.loading = false;
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
         });
+    }else{
+      this.newPayment.facturas = [];
     }
+    /*
     this.newPayment = new PagoBase();
     this.newPayment.moneda = 'MXN';
-    this.newPayment.facturas = [new PagoFactura()];
     this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
     if (this.fileInput !== undefined) {
       this.fileInput.value = '';
-    }
+    }*/
   }
 
 
@@ -205,10 +195,5 @@ export class AsignacionPagosComponent implements OnInit {
       error=> console.log(error));
   }
 
-
-
-  cancel() {
-    this.ref.close();
-  }
 
 }
