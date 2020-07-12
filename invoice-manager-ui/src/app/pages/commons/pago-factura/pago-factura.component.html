@@ -1,4 +1,4 @@
-<div *ngIf="factura && factura.statusFactura == 'Timbrada'">
+<div *ngIf="factura">
   <p class="font-weight-bold" *ngIf="factura.saldoPendiente > 0.01">Pagos</p>
   <div class="row" *ngIf="factura.saldoPendiente > 0.01">
     <div class="col-sm-2">

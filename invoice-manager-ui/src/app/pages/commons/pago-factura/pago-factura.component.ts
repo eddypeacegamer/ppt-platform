@@ -45,7 +45,7 @@ export class PagoFacturaComponent implements OnInit {
     }
 
   ngOnInit() {
-
+    
     if (this.factura !== undefined && this.factura.folio !== undefined) {
       this.paymentsService.getFormasPago(this.user.roles.map(r => r.role))
         .subscribe(payTypes => this.payTypeCat = payTypes);
