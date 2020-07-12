@@ -68,10 +68,6 @@ export class InvoicesService {
         const records: any[] = invPage.content.map(record => {
           record.statusFactura = this.validationCat.find(v => v.id.toString()
                                       === record.statusFactura.toString()).nombre;
-          record.statusPago = this.payCat.find(v => v.id.toString()
-                                      === record.statusPago.toString()).nombre;
-          record.formaPago = this.formaPagoCat.find(v => v.id.toString()
-                                      === record.formaPago.toString()).nombre;
           return record;
         });
         invPage.content = records;
@@ -86,10 +82,6 @@ export class InvoicesService {
         const records: any[] = invPage.content.map(record => {
           record.statusFactura = this.validationCat.find(v => v.id.toString()
                                       === record.statusFactura.toString()).nombre;
-          record.statusPago = this.payCat.find(v => v.id.toString()
-                                      === record.statusPago.toString()).nombre;
-          record.formaPago = this.formaPagoCat.find(v => v.id.toString()
-                                      === record.formaPago.toString()).nombre;
           return record;
         });
         invPage.content = records;
