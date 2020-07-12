@@ -337,7 +337,7 @@ export class PreCfdiComponent implements OnInit {
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-
+    console.log(fact)
     this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         if (invoice !== undefined) {
