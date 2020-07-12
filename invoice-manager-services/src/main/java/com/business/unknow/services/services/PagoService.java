@@ -25,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.commons.validator.AbstractValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -68,8 +67,7 @@ public class PagoService {
 	@Autowired
 	private FacturaService facturaService;
 
-	@Autowired
-	private AbstractValidator validator = new AbstractValidator();
+
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
@@ -173,7 +171,6 @@ public class PagoService {
 						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();
 				if (pagoFact.isPresent()) {
 					dto.setSaldoPendiente(dto.getSaldoPendiente().subtract(pagoFact.get().getMonto()));
-					validator.checkNotNegative(dto.getSaldoPendiente(), "Saldo pendiente");
 					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), dto.getTotal(), dto.getSaldoPendiente());
 				}
 			}
@@ -214,10 +211,15 @@ public class PagoService {
 			}
 		} else if (entity.getRevision1() && pago.getRevision2()) {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
-			for (FacturaDto factura : facturas) {
-				factura.setValidacionTeso(true);
-				facturaService.updateFactura(factura.getIdCfdi(), factura);
+			
+			List<Integer> idFacts = pago.getFacturas().stream().map(f-> f.getIdCfdi()).distinct().collect(Collectors.toList());
+			
+			for (Integer idCfdi : idFacts) {
+					FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
+					fact.setValidacionTeso(true);
+					facturaService.updateFactura(idCfdi, fact);
 			}
+			
 		}
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}

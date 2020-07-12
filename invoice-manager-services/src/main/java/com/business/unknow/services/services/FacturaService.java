@@ -235,7 +235,8 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo) {
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo) throws InvoiceManagerException {
+		validator.checkNotNegative(saldo, "Saldo pendiente");
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
