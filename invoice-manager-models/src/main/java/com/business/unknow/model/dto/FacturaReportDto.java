@@ -27,6 +27,7 @@ public class FacturaReportDto extends ReportDto implements Serializable {
 	private String descripcion;
 	private BigDecimal valorUnitario;
 	private BigDecimal importe;
+	private BigDecimal saldoPendiente;
 
 	public BigDecimal getCantidad() {
 		return cantidad;
@@ -132,6 +133,14 @@ public class FacturaReportDto extends ReportDto implements Serializable {
 		this.porcentajeDespacho = porcentajeDespacho;
 	}
 
+	public BigDecimal getSaldoPendiente() {
+		return saldoPendiente;
+	}
+
+	public void setSaldoPendiente(BigDecimal saldoPendiente) {
+		this.saldoPendiente = saldoPendiente;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaReportDto [cantidad=" + cantidad + ", lineaEmisor=" + lineaEmisor + ", correoPromotor="
@@ -139,7 +148,8 @@ public class FacturaReportDto extends ReportDto implements Serializable {
 				+ porcentajeCliente + ", porcentajeConcatco=" + porcentajeConcatco + ", porcentajeDespacho="
 				+ porcentajeDespacho + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", claveProdServ="
 				+ claveProdServ + ", descripcion=" + descripcion + ", valorUnitario=" + valorUnitario + ", importe="
-				+ importe + "]";
+				+ importe + ", saldoPendiente=" + saldoPendiente + "]";
 	}
+
 
 }
