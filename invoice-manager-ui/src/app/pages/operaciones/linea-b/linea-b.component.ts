@@ -144,6 +144,7 @@ export class LineaBComponent implements OnInit {
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
     const idCfdi: number = +preFolio;
+    this.preFolio = preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
@@ -318,7 +319,7 @@ export class LineaBComponent implements OnInit {
             .subscribe( result => {
               console.log(result);
               this.loading = false;
-              this.getInvoiceInfoByPreFolio(`${result.idCfdi}`);
+              this.getInvoiceInfoByPreFolio(this.preFolio);
             }, (error: HttpErrorResponse) => {
                 this.loading = false;
                 this.errorMessages.push((error.error != null && error.error != undefined) ?

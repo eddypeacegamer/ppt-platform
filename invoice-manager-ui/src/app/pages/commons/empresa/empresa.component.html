@@ -1,10 +1,12 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Registro Empresa</nb-card-header>
+      <nb-card-header class="puff_center">Registro Empresa     
+        <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo" (click)="inactivateCompany()">Desactivar</button>
+        <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo" (click)="activateCompany()">Activar</button></nb-card-header>
       <nb-card-body>
-        <p class="font-weight-bold">Informacion Fiscal</p>
-        <div class="row">
+        <p class="font-weight-bold puff_center">Informacion Fiscal</p>
+        <div class="row slide_1">
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
@@ -20,7 +22,7 @@
             </div>
           </div>
           
-          <div class="col-sm-2">
+          <div class="col-sm-3">
               <label for="inputPayType" class="label">Regimen Fiscal</label>
               <select selected="1" id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="companyInfo.regimenFiscal" [disabled]="companyInfo.activo"
                 (change)="onRegimenFiscalSelected($event.target.value)">
@@ -33,12 +35,9 @@
                 <option value="621">Incorporación Fiscal</option>
               </select>
           </div>
-          <div class="col-md-1">
-            <button type="button" class="btn btn-outline-danger" *ngIf="companyInfo.activo" (click)="inactivateCompany()">Desactivar</button>
-            <button type="button" class="btn btn-outline-success" *ngIf="!companyInfo.activo" (click)="activateCompany()">Activar</button>
-          </div>
+    
         </div>
-        <div class="row">
+        <div class="row slide_2">
           <div class="col-sm-3">
             <label for="inputPais" class="label">País</label>
             <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;" [disabled]="companyInfo.activo">
@@ -64,7 +63,7 @@
           </div>
 
         </div>
-        <div class="row">
+        <div class="row slide_3">
           <div class="col-sm-4">
             <label for="inputState" class="label">Estado</label>
             <input type="text" [(ngModel)]="companyInfo.informacionFiscal.estado" class="form-control" fullWidth id="inputState" [disabled]="companyInfo.activo"
@@ -85,7 +84,7 @@
             </div>
           </!--div-->
         </div>
-        <div class="row">
+        <div class="row slide_4">
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputCalle" class="label">Calle</label>
@@ -108,8 +107,8 @@
             </div>
           </div>
         </div>
-        <p class="font-weight-bold">Datos addicionales</p>
-        <div class="row">
+        <p class="font-weight-bold puff_center">Datos addicionales</p>
+        <div class="row slide_4">
             <div class="col-sm-6">
                     <label for="inputGiro" class="label">Giro Empresa</label>
                     <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)" [disabled]="companyInfo.activo"
@@ -129,7 +128,7 @@
               </select>
             </div>
         </div>
-        <div class="row">
+        <div class="row slide_4">
           <div class="col-md-6">
               <label for="inputContact" class="label">Nombre contacto Legal</label>
               <input type="text" [(ngModel)]="companyInfo.contactoAdmin" class="form-control" fullWidth [disabled]="companyInfo.activo"
@@ -143,9 +142,9 @@
             
           </div>
         </div>
-        <p class="font-weight-bold">Datos facturacion</p>
+        <p class="font-weight-bold puff_center">Datos facturacion</p>
         <div >
-          <div class="row">
+          <div class="row slide_4">
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="inputEncabezado" class="label">Encabezado</label>
@@ -162,7 +161,7 @@
             </div>
           </div>
           <label for="logoFile" class="label">Logotipo Empresa</label>
-         <div class="row">
+         <div class="row slide_4">
           <div class="form-group col-md-4" *ngIf="companyInfo.logotipo==undefined && !companyInfo.activo">
             
             <div class="input-group" >
@@ -185,8 +184,8 @@
       
          
         </div>
-        <p class="font-weight-bold">Claves y accessos</p>
-        <div class="row">
+        <p class="font-weight-bold puff_center">Claves y accessos</p>
+        <div class="row slide_4">
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputEmail" class="label">Correo Empresa</label>
@@ -202,7 +201,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row slide_4">
           <div class="form-group col-md-3">
             <label for="certFile" class="label">Certificado SAT</label>
             <div class="input-group">

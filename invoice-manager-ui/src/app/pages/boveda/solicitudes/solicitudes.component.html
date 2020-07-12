@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Pago devoluciones</nb-card-header>
+      <nb-card-header class="puff_center">Pago devoluciones</nb-card-header>
       <nb-card-body>
-          <div class="row">
+          <div class="row slide_1">
 
               <div class="col-sm-2">
                 <label for="inputReceptorType" class="label">Tipo Receptor</label>
@@ -49,7 +49,7 @@
 </div>
 
 
-<div class="row">
+<div class="row slide_2">
   <div class="col-md-12">
     <nb-card>
       <nb-card-header>Pago devoluciones</nb-card-header>
@@ -70,9 +70,9 @@
             </nb-select>
         </div>
 
-        <div class="table-responsive" *ngIf="page.empty == false">
-          <table class="table">
-            <thead class="thead-light">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
+          <table class="table table-sm">
+            <thead class="thead-dark">
               <tr>
                 <th scope="col" class="text-center">Detalle</th>
                 <th scope="col" class="text-center">Folio Devolucion</th>

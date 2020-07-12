@@ -95,10 +95,10 @@
           <div *ngIf="devoluciones.length==0" class="alert alert-primary" role="alert">
             No se encontraron resultados
           </div>
-          <div class="table-responsive" *ngIf="devoluciones.length>0">
+          <div class="table-responsive slide_1" *ngIf="devoluciones.length>0">
 
-            <table class="table">
-              <thead class="thead-light">
+            <table class="table table-sm">
+              <thead class="thead-dark">
                 <tr>
                   <th scope="col" *ngIf="module === 'administracion'" class="text-center">Acciones</th>
                   <th scope="col" class="text-center">Tipo Receptor</th>
@@ -139,8 +139,8 @@
             No se encontraron resultados
           </div>
           <div class="table-responsive" *ngIf="!pageDevolutions.empty">
-            <table class="table">
-              <thead class="thead-light">
+            <table class="table table-sm">
+              <thead class="thead-dark">
                 <tr>
                   <th scope="col" class="text-center">Folio Devolucion</th>
                   <th scope="col" class="text-center">Beneficiario</th>

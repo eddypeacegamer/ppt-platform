@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row slide_2">
   <div class="col-md-12 ">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>
@@ -18,10 +18,10 @@
             <i class="fa fa-code"></i>
           </button>
         </div>
-        <p *ngIf="preFolio == '*'" class="h6 float-left puff_center">Pre Cfdi</p>
+        <p *ngIf="preFolio == '*'" class="h6 float-left ">Pre Cfdi</p>
       </nb-card-header>
       <nb-card-body >
-        <div class="slide_1" *ngIf="preFolio === '*'">
+        <div class="slide_1" *ngIf="preFolio === '*' " >
           <p class="font-weight-bold ">Información Emisor y Receptor</p>
           <div class="row">
             
@@ -68,9 +68,6 @@
           <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi"
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
-
-          
-
 
           <div class="row" *ngIf="factura.cfdi && factura.statusDetail && factura.statusDetail.length > 0">
             <div class="col-sm-12">

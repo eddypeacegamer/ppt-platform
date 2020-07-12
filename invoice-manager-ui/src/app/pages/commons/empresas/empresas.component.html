@@ -1,34 +1,37 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Empresas</nb-card-header>
+      <nb-card-header class="puff_center">Empresas</nb-card-header>
       <nb-card-body>
-        <div class="row">
-          <div class="col-sm-3">
+        <div class="row slide_1">
+          <div class="col-3">
             <label for="inputName" class="label">Razón Social Empresa</label>
             <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.razonSocial"
               [disabled]="filterParams.rfc.length > 0" fullWidth placeholder="Razón Social">
           </div>
-          <div class="col-sm-3">
+          <div class="col-2">
             <label for="inputRfc" class="label">RFC</label>
             <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
               [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
           </div>
-          <div class="col-sm-6">
+          <div class="col-2">
             <label for="inputCompanyType" class="label">Tipo Empresa</label>
             <div class="row form-inline">
-              <select selected="*" id="inputCompanyType" style="display:block;width: 250px;" class="form-control"
+              <select selected="*" id="inputCompanyType" style="display:block;width: 100%;" class="form-control"
                 (change)="onCompanySelected($event.target.value)">
                 <option value="*">Seleccionar</option>
                 <option value="A">Tipo A</option>
                 <option value="B">Tipo B</option>
                 <option value="C">Tipo C</option>
               </select>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="newCompany()">NUEVA EMPRESA</button>
+    
             </div>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="newCompany()">NUEVA EMPRESA</button>
           </div>
         </div>
         <br>
@@ -42,14 +45,14 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Facturas</nb-card-header>
+      <nb-card-header class="puff_center" >Facturas</nb-card-header>
       <nb-card-body>
 
-        <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
+        <div class="puff_center" *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
         
-          <div class="clearfix" *ngIf="page.empty == false">
+          <div class="clearfix puff_center" *ngIf="page.empty == false">
             <strong>Resultados</strong>
             <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
@@ -61,9 +64,9 @@
             </nb-select>
           </div>
 
-        <div class="table-responsive" *ngIf="page.empty == false">
-          <table class="table">
-            <thead class="thead-light">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
+          <table class="table table-sm">
+            <thead class="thead-dark">
               <tr>
                 <th class="text-center">Acciones</th>
                 <th scope="col">RFC</th>

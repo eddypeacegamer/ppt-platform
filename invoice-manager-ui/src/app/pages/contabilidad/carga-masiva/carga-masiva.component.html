@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
-      <nb-card-header>Registro de transferencias</nb-card-header>
+      <nb-card-header class="puff_center" >Registro de transferencias</nb-card-header>
       <nb-card-body>
 
-        <div class="row">
+        <div class="row slide_1">
           <div class="col-sm-2">
             <label for="inputDeposito" class="label">Línea Emisor</label>
             <select id="inputDeposito" style="display:block;" class="form-control" [(ngModel)]="params.lineaDeposito">
@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <small id="helpMessage" class="form-text text-muted">Para descargar el formato muestra presione el siguente
+        <small id="helpMessage" class="form-text text-muted puff_center">Para descargar el formato muestra presione el siguente
           <a href="/FormatoMuestra.xlsx" target="_self" download>
           link <i class="fa fa-download"></i>
           </a>
@@ -61,7 +61,7 @@
         <div *ngIf="loading" class="loader"></div>
         <br>
         
-        <div class="table-responsive" *ngIf="invoices.length > 0 && !loading">
+        <div class="table-responsive slide_1" *ngIf="invoices.length > 0 && !loading">
           <table class="table table-striped table-sm">
             <thead class="thead-dark">
               <tr>

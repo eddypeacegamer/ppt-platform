@@ -1,9 +1,9 @@
 <div *ngIf="clientInfo!=undefined" class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Registro cliente</nb-card-header>
+      <nb-card-header class="puff_center">Registro cliente</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row slide_1">
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
@@ -23,7 +23,7 @@
             <button type="button" class="btn btn-outline-danger" *ngIf="clientInfo.activo" (click)="toggleOff()">Desactivar</button>
           </div>
         </div>
-        <div class="row">
+        <div class="row slide_2">
           <div class="col-sm-3">
             <label for="inputPais" class="label">País</label>
             <nb-select id="inputPais" selected="0" fullWidth style="display:block;" [disabled]="clientInfo.activo">
@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row slide_3">
           <div class="col-sm-4">
             <label for="inputState" class="label">Estado</label>
             <input type="text" [(ngModel)]="clientInfo.informacionFiscal.estado" nbInput fullWidth id="inputState" [disabled]="clientInfo.activo"
@@ -72,7 +72,7 @@
           </div>
           
         </div>
-        <div class="row">
+        <div class="row slide_4">
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputCalle" class="label">Calle</label>
@@ -95,7 +95,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row slide_4">
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputEmail" class="label">Correo Cliente</label>
@@ -105,7 +105,7 @@
           </div>
         </div>
         <h6>Porcentajes Comisiones</h6>
-        <div class="row">
+        <div class="row slide_4">
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputPromotor" class="label">Promotor</label>
@@ -142,7 +142,7 @@
           <div class="alert alert-warning" *ngIf="messages.length > 0" role="alert">
             <p *ngFor="let message of messages">{{message}}</p>
           </div>
-        <div class="form-inline">
+        <div class="puff_center" class="form-inline">
           <button type="button" *ngIf="clientInfo.id === undefined && module === 'promotor'"
             [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>

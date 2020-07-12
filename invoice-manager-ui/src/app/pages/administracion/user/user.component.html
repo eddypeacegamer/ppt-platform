@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header>Usuario
+      <nb-card-header class="puff_center">Usuario
         <!--div-- class="float-right">
           <button class="btn btn-primary" *ngIf="user.id === undefined" (click)="clearInput()"><nb-icon icon="file-remove"></nb-icon></button>
         </!--div-->
@@ -13,7 +13,7 @@
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
         <p class="alert alert-success" *ngIf="Params.success.length > 0" role="alert">{{Params.success}}</p>
-        <div class="row">
+        <div class="row slide_1">
           <form [formGroup]="registerForm" class="col" >
             <div class="row">
               <div class="col">
@@ -109,7 +109,7 @@
         </div>
         <br>
 
-        <div class="float-right">
+        <div class="float-right slide_2">
 
           <button class="btn btn-primary" *ngIf="user.id === undefined" [disabled]="this.Params.success !== ''" (click)="registry()"> Registrar</button>
           <button class="btn btn-primary" *ngIf="user.id !== undefined" [disabled]="this.actualizando == true" 

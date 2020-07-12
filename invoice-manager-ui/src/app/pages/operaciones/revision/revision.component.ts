@@ -102,6 +102,7 @@ export class RevisionComponent implements OnInit {
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
     const idCfdi: number = +preFolio;
+    this.preFolio = preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {

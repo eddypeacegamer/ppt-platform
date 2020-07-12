@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Clientes</nb-card-header>
+      <nb-card-header class="puff_center">Clientes</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row slide_1">
           <div class="col-md-2">
             <label for="inputRFC" class="label">RFC cliente</label>
             <input type="text" class="form-control" [(ngModel)]="filterParams.rfc"
@@ -19,7 +19,7 @@
             <label for="inputPromotor" class="label">Promotor</label>
             <input type="text" class="form-control" [(ngModel)]="filterParams.promotor" nbInput fullWidth id="inputEmail" placeholder="Correo promotor">
           </div>
-          <div class="col-md-5">
+          <div class="col-md-5 align-self-end">
             <label for="inputActivo" class="label">Estado cliente</label>
             <div class="row form-inline">
               <select id="inputActivo" class="form-control" [(ngModel)]="filterParams.status" style="display:block;"
@@ -28,10 +28,10 @@
                 <option value="1">ACTIVO</option>
                 <option value="0">INACTIVO</option>
               </select>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              <button class="btn btn-primary" *ngIf="paths[2] === 'promotor'" (click)="redirectToCliente('*')">NUEVO CLIENTE</button>
+              
+              <button class="btn btn-primary" style="margin-left: 15px;" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+              
+              <button class="btn btn-primary" style="margin-left: 15px;" *ngIf="paths[2] === 'promotor'" (click)="redirectToCliente('*')">NUEVO CLIENTE</button>
             </div>
           </div>
         </div>
@@ -46,14 +46,14 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Clientes</nb-card-header>
+      <nb-card-header class="puff_center">Clientes</nb-card-header>
       <nb-card-body>
 
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix" *ngIf="page.empty == false">
-          <strong>Resultados</strong>
+        <div class="clearfix puff_center" *ngIf="page.empty == false">
+          <strong class="">Resultados</strong>
           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
           <nb-select *ngIf="page.last==false || page.first" [selected]="pageSize" (selectedChange)="onChangePageSize($event)"
             id="inputPageSize" class="float-right">
@@ -62,9 +62,9 @@
             <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
         </div>
-        <div class="table-responsive" *ngIf="page.empty == false">
-          <table class="table">
-            <thead class="thead-light">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
+          <table class="table table-sm">
+            <thead class="thead-dark">
               <tr>
                 <th class="text-center">Acciones</th>
                 <th class="text-center" scope="col">RFC</th>

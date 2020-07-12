@@ -115,7 +115,7 @@
         </div>
       </div>
 
-      <p class="font-weight-bold">Información CFDI</p>
+      <p class="font-weight-bold puff_center">Información CFDI</p>
         
       <div class="row slide_4">
         <div class="col-md-2">
@@ -172,14 +172,15 @@
    <p>{{errorMessages}}</p>
 
     <br>
-    
+    <div class="slide_3" *ngIf="pagos && !(cfdi.total == 0 && pagos.length !==0 )">
       <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
+    </div>
     <br>
 
-    <div *ngIf=" pagos && pagos.length>0">
-      <p class="font-weight-bold">Complementos</p>
+    <div *ngIf="pagos && pagos.length>0">
+      <p class="font-weight-bold puff_center">Complementos</p>
       <br>
-      <div class="table-responsive">
+      <div class="table-responsive slide_1">
         <table class="table table-sm">
           <thead class="thead-dark">
             <tr>

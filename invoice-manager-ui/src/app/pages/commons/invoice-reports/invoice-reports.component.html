@@ -1,41 +1,37 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Reportes</nb-card-header>
+      <nb-card-header class="puff_center">Reportes</nb-card-header>
       <!--  PROMOTOR  -->
       <nb-card-body *ngIf="module === 'promotor'">
-        <div class="row">
-          <div class="col-md-1">
+        <div class="row slide_1">
+          
+          <div class="col-4">
             <label for="inputFolio" class="label">Folio</label>
-          </div>
-          <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
-          <div class="col-md-1">
+         
+          <div class="col-4">
             <label for="inputEmisor" class="label">Emisor</label>
-          </div>
-          <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
-          <div class="col-md-1">
+        
+          <div class="col-4">
             <label for="InputReceptor" class="label">Receptor</label>
-          </div>
-          <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
         </div>
         <br>
-        <div class="row">
-          <div class="col-md-1">
+        <div class="row slide_2">
+         
+          <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-          </div>
-          <div class="col-md-2">
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
               <option value="*">Todos</option>
               <option value="1">Validacion operaciones</option>
@@ -47,59 +43,55 @@
               <option value="7">Cancelada</option>
             </select>
           </div>
-          <div class="col-md-1">
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
-          </div>
-          <div class="col-md-3">
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
+         
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
-          </div>
-          <div class="col-md-3">
-            <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
+            <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block; width: 100%;"
               [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
-            <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+          <div class="col-3">
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
           </div>
         </div>
+        
+         
+          
       </nb-card-body>
 
       <!--  OPERACIONES  -->
       <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion' ||  module === 'tesoreria' ">
-        <div class="row">
-          <div class="col-md-1">
+        <div class="row slide_1">
+          
+          <div class="col-3">
             <label for="inputFolio" class="label">Folio</label>
-          </div>
-          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
-          <div class="col-md-1">
+     
+          <div class="col-3">
             <label for="inputEmisor" class="label">Emisor</label>
-          </div>
-          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
-          <div class="col-md-1">
+
+          <div class="col-3">
             <label for="InputReceptor" class="label">Receptor</label>
-          </div>
-          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
-          <div class="col-md-1">
+
+          <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-          </div>
-          <div class="col-md-2">
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
               [disabled]="statusFlag">
               <option value="*">Todos</option>
@@ -114,43 +106,38 @@
           </div>
         </div>
         <br>
-        <div class="row">
-          <div class="col-md-1">
+        <div class="row slide_2">
+
+          <div class="col-3">
             <label for="inputPromotor" class="label">Promotor</label>
-          </div>
-          <div class="col-md-2">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.solicitante" id="inputPromotor"
               placeholder="Correo promotor">
           </div>
-          <div class="col-md-1">
+
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
-          </div>
-          <div class="col-md-3">
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
-          </div>
-          <div class="col-md-3">
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
-            <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+          <div class="col-3">
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
           </div>
         </div>
       </nb-card-body>
 
       <!--  CONTABILIDAD  -->
       <nb-card-body *ngIf="module === 'contabilidad'">
-        <div class="row">
-          <div class="col-md-1">
+        <div class="row slide_1">
+
+          <div class="col-4">
             <label for="inputLinea" class="label">Línea Emisora</label>
-          </div>
-          <div class="col-md-2">
             <select id="inputLinea" style="display:block;" class="form-control" [(ngModel)]="filterParams.lineaEmisor">
               <option value="A">Línea A</option>
               <option value="B">Línea B</option>
@@ -158,30 +145,27 @@
               <option value="D">Línea D</option>
             </select>
           </div>
-          <div class="col-md-1">
+
+          <div class="col-4">
             <label for="inputEmisor" class="label">Emisor</label>
-          </div>
-          <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
-          <div class="col-md-1">
+
+          <div class="col-4">
             <label for="InputReceptor" class="label">Receptor</label>
-          </div>
-          <div class="col-md-3">
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
               placeholder="Razón Social Receptor">
           </div>
 
         </div>
-        <br>
-        <div class="row">
-          <div class="col-md-1">
+       
+        <div class="row slide_2" style=" margin-top: 5px;">
+
+          <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-          </div>
-          <div class="col-md-2">
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
               [disabled]="statusFlag">
               <option value="8">Por timbrar</option>
@@ -193,24 +177,22 @@
 
             </select>
           </div>
-          <div class="col-md-1">
+
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
-          </div>
-          <div class="col-md-3">
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
+
+          <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
-          </div>
-          <div class="col-md-3">
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
               [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-md-1">
-            <button type="button" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
+          <div class="col-3">
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10,filterParams)" nbButton status="primary">BUSCAR</button>
           </div>
         </div>
       </nb-card-body>
@@ -225,33 +207,32 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header>Facturas</nb-card-header>
+      <nb-card-header class="puff_center">Facturas</nb-card-header>
       <nb-card-body>
-
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix">
-          <strong>Resultados</strong>
-          <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize"
+        <div class="clearfix puff_center">
+          Resultados
+          <nb-select style="margin-left: 15px;" *ngIf="page.last==false || page.first==true" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
-          <button type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
+          <button style="margin-left: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
             class="btn btn-success float-right"><i class="fa fa-download"></i></button>
-          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadInvoicesReports()"
+          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'" (click)="downloadInvoicesReports()"
             class="btn btn-success float-right"><i class="fa fa-download"></i>Facturas</button>
-          <button type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()"
+          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()"
             class="btn btn-success float-right"><i class="fa fa-download"></i>Complementos</button>
 
 
         </div>
-        <div class="table-responsive" *ngIf="page.empty == false">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
 
           <table class="table table-sm">
-            <thead class="thead-light">
+            <thead class="thead-dark">
               <tr>
                 <th class="text-center" style="width: 170px;">Acciones</th>
                 <th class="text-center">Pre-Folio</th>

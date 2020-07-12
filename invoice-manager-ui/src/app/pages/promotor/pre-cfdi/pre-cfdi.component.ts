@@ -97,6 +97,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public getInvoiceInfoByIdCdfi(preFolio: string) {
     const idCfdi: number = +preFolio;
+    this.preFolio = preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {

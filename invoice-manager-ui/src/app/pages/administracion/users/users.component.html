@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Usuarios</nb-card-header>
+      <nb-card-header class="puff_center">Usuarios</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row slide_1">
           <div class="col-md-2">
             <label for="inputCorreo" class="label">Correo Usuario</label>
             <input type="text" class="form-control" [(ngModel)]="filterParams.email"
@@ -41,13 +41,13 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Resultados</nb-card-header>
+      <nb-card-header class="puff_center">Resultados</nb-card-header>
       <nb-card-body>
         
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix">
+        <div class="clearfix puff_center">
           <strong>Resultados</strong>
           <!--button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button-->
 
@@ -58,10 +58,10 @@
             <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
           </nb-select>
         </div>
-        <div class="table-responsive" *ngIf="page.empty == false">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
 
-          <table class="table">
-            <thead class="thead-light">
+          <table class="table table-sm">
+            <thead class="thead-dark">
               <tr>
                 <th class="text-center">Editar</th>
                 <th class="text-center">Correo</th>

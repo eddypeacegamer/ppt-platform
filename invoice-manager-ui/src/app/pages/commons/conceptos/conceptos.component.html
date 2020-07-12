@@ -81,11 +81,11 @@
   <div  >
     
   
-  <div *ngIf="(cfdi.complemento && cfdi.complemento.length==0) || cfdi.conceptos.length>0">
+  <div *ngIf="(cfdi.complemento && cfdi.complemento.length==0)  || cfdi.conceptos.length>0 ">
     <!-- <p class="font-weight-bold">Conceptos factura</p> -->
-    <div class="table-responsive">
-    <table class="table table-sm " >
-      <thead class="thead-dark">
+    <div class="table-responsive slide_1">
+      <table class="table table-sm">
+        <thead class="thead-dark">
         <tr>
           <th scope="col" *ngIf="allowEdit"
             class="text-center">Acciones</th>

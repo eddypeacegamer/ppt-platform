@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Devoluciones</nb-card-header>
+      <nb-card-header class="puff_center">Devoluciones</nb-card-header>
       <nb-card-body>
-        <div class="row">
+        <div class="row slide_1">
 
           <div class="col-sm-3">
             <label for="inputDevType" class="label">Tipo Receptor</label>
@@ -50,8 +50,8 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Solicitud devolución</nb-card-header>
-      <nb-card-body>
+      <nb-card-header class="puff_center">Solicitud devolución</nb-card-header>
+      <nb-card-body class="slide_2">
         <!--form>
           <div class="form-row">
             <div class="form-group col-md-8">
@@ -124,9 +124,9 @@
           <div *ngIf="pageDevolutions.empty" class="alert alert-primary" role="alert">
             No se encontraron resultados
           </div>
-          <div class="table-responsive" *ngIf="!pageDevolutions.empty">
-            <table class="table">
-              <thead class="thead-light">
+          <div class="table-responsive slide_1" *ngIf="!pageDevolutions.empty">
+            <table class="table table-sm">
+              <thead class="thead-dark">
                 <tr>
                   <th scope="col" class="text-center">Detalle</th>
                   <th scope="col" class="text-center">Folio Devolucion</th>
@@ -184,10 +184,10 @@
           <div *ngIf="pageCommissions.empty" class="alert alert-primary" role="alert">
             No se encontraron resultados
           </div>
-          <div class="table-responsive" *ngIf="!pageCommissions.empty">
+          <div class="table-responsive slide_1" *ngIf="!pageCommissions.empty">
 
-            <table class="table">
-              <thead class="thead-light">
+            <table class="table table-sm">
+              <thead class="thead-dark">
                 <tr>
                   <th scope="col" class="text-center">Receptor</th>
                   <th scope="col" class="text-center">Folio Factura</th>

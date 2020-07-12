@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Validación de pagos</nb-card-header>
+      <nb-card-header class="puff_center">Validación de pagos</nb-card-header>
       <nb-card-body>
-        <div class="row" *ngIf="vista==='validacion-pagos'">
+        <div class="row slide_1" *ngIf="vista==='validacion-pagos'">
           <div class="col-md-2">
             <label for="acredor" class="label">Razon Social Empresa</label>
             <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
@@ -27,10 +27,10 @@
               class="form-control" [(ngModel)]="filterParams.to">
             <nb-datepicker #formpicker2></nb-datepicker>
           </div>
-          <div class="col-sm-4">
+          <div class="col-2">
             <label for="inputBank" class="label">Forma de pago</label>
             <div class="form-inline">
-              <select id="inputPayType" style="display:block;" class="form-control"
+              <select id="inputPayType" style="display:block;  width:  100%;" class="form-control"
                 [(ngModel)]="filterParams.formaPago">
                 <option value="*">TODAS</option>
                 <option value="EFECTIVO">Efectivo</option>
@@ -38,63 +38,66 @@
                 <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
                 <option value="DEPOSITO">Depósito bancario</option>
                 <option value="CREDITO">Crédito Despacho</option>
-              </select>
-              <p>&nbsp;&nbsp;</p>
-              <button type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
-                status="primary">BUSCAR</button>
+              </select>             
             </div>
           </div>
-        </div>
-        <div class="row" *ngIf="vista==='historial-pagos'">
-          <div class=" col-md-1">
-          <label for="status" class="label">Estatus</label>
-          <select id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
-            <option value="*">Todos</option>
-            <option value="ACEPTADO">Aceptado(pagado)</option>
-            <option value="VALIDACION">En validacion</option>
-            <option value="RECHAZADO">Rechazado</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label for="acredor" class="label">Razon Social Empresa</label>
-          <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
-            [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'>
-        </div>
-        <div class="col-md-2">
-          <label for="deudor" class="label">Razon Social Cliente</label>
-          <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente"
-            [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
-        </div>
-
-        <div class="col-md-2">
-          <label for="formpicker1" class="label">Desde</label>
-          <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;"
-            class="form-control" [(ngModel)]="filterParams.since">
-          <nb-datepicker #formpicker1></nb-datepicker>
-        </div>
-        <div class="col-md-2">
-          <label for="formpicker2" class="label">Hasta</label>
-          <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;"
-            class="form-control" [(ngModel)]="filterParams.to">
-          <nb-datepicker #formpicker2></nb-datepicker>
-        </div>
-        <div class="col-sm-3">
-          <label for="inputBank" class="label">Forma de pago</label>
-          <div class="form-inline">
-            <select id="inputPayType" style="display:block; width: 100px;" class="form-control" [(ngModel)]="filterParams.formaPago">
-              <option value="*">TODAS</option>
-              <option value="EFECTIVO">Efectivo</option>
-              <option value="CHEQUE">Cheque nominativo</option>
-              <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
-              <option value="DEPOSITO">Depósito bancario</option>
-              <option value="CREDITO">Crédito Despacho</option>
-            </select>
-            <p>&nbsp;&nbsp;</p>
-            <button type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
-              status="primary">BUSCAR</button>
+          <div class="col-lg-2"> 
+            <button style="width: 100%; margin-top: 28px; " type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
+            status="primary">BUSCAR</button>
           </div>
         </div>
-  </div>
+        <div class="row slide_1" *ngIf="vista==='historial-pagos'">
+          <div class=" col-md-1">
+            <label for="status" class="label">Estatus</label>
+            <select id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+              <option value="*">Todos</option>
+              <option value="ACEPTADO">Aceptado(pagado)</option>
+              <option value="VALIDACION">En validacion</option>
+              <option value="RECHAZADO">Rechazado</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="acredor" class="label">Razon Social Empresa</label>
+            <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
+              [(ngModel)]="filterParams.acredor" [disabled]='filterParams.deudor.length>0'>
+          </div>
+          <div class="col-md-2">
+            <label for="deudor" class="label">Razon Social Cliente</label>
+            <input id="deudor" class="form-control" fullWidth type="text" placeholder="Nombre cliente"
+              [(ngModel)]="filterParams.deudor" [disabled]='filterParams.acredor.length>0'>
+          </div>
+
+          <div class="col-md-2">
+            <label for="formpicker1" class="label">Desde</label>
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker1" fullWidth style="display:block;"
+              class="form-control" [(ngModel)]="filterParams.since">
+            <nb-datepicker #formpicker1></nb-datepicker>
+          </div>
+          <div class="col-md-2">
+            <label for="formpicker2" class="label">Hasta</label>
+            <input nbInput placeholder="Fecha de pago" [nbDatepicker]="formpicker2" fullWidth style="display:block;"
+              class="form-control" [(ngModel)]="filterParams.to">
+            <nb-datepicker #formpicker2></nb-datepicker>
+          </div>
+          <div class="col-2">
+            <label for="inputBank" class="label">Forma de pago</label>
+            
+              <select id="inputPayType" style="display:block; width:90%;" class="form-control" [(ngModel)]="filterParams.formaPago">
+                <option value="*">TODAS</option>
+                <option value="EFECTIVO">Efectivo</option>
+                <option value="CHEQUE">Cheque nominativo</option>
+                <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+                <option value="DEPOSITO">Depósito bancario</option>
+                <option value="CREDITO">Crédito Despacho</option>
+              </select>         
+            
+          </div>
+          <div class="col-lg-1"> 
+            <button style="width: 100%; margin-top: 28px; margin-left: -30px; padding-right: 70px;" type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
+            status="primary">BUSCAR</button>
+          </div>
+        </div>
+
   </nb-card-body>
   </nb-card>
 </div>
@@ -104,17 +107,17 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Pagos</nb-card-header>
+      <nb-card-header class="puff_center">Pagos</nb-card-header>
       <nb-card-body>
 
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix" *ngIf="page.empty == false">
-          <strong>Resultados</strong>
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+        <div class="clearfix puff_center" *ngIf="page.empty == false">
+          Resultados
+          <button style="margin-left: 15px;" type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
 
-          <nb-select *ngIf="page.last==false || page.first==true" [selected]="pageSize"
+          <nb-select style="margin-left: 15px;" *ngIf="page.last==false || page.first==true" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
             <nb-option value="10">10</nb-option>
             <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
@@ -122,9 +125,9 @@
           </nb-select>
         </div>
 
-        <div class="table-responsive" *ngIf="page.empty == false">
-          <table class="table">
-            <thead class="thead-light">
+        <div class="table-responsive slide_1" *ngIf="page.empty == false">
+          <table class="table table-sm">
+            <thead class="thead-dark">
               <tr>
                 <th scope="col">Acciones</th>
                 <th scope="col">Fecha captura</th>

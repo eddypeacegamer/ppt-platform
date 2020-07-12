@@ -79,25 +79,25 @@
           </div>
         </div>
         <br>
-        <div class="buttons-row" *ngIf="factura.folio !== undefined">
+        <div  class="mr" class="buttons-row" *ngIf="factura.folio !== undefined">
           <button nbButton status="success" size="medium" (click)="timbrarFactura(factura,dialog)" [nbSpinner]="loading"
             [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'" nbSpinnerStatus="success"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Timbrar
           </button>
-          <button nbButton status="success" size="medium" (click)="aceptarFactura()" [nbSpinner]="loading"
+          <button class="mr" nbButton status="success" size="medium" (click)="aceptarFactura()" [nbSpinner]="loading"
             [disabled]="loading" *ngIf="factura.statusFactura == 'Validacion operaciones'" nbSpinnerStatus="success"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Aceptar
           </button>
       
-          <button nbButton status="danger" size="medium" (click)="rechazarFactura()" [nbSpinner]="loading"
+          <button class="mr" nbButton status="danger" size="medium" (click)="rechazarFactura()" [nbSpinner]="loading"
             [disabled]="loading" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0" nbSpinnerStatus="danger"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Rechazar
           </button>
 
-          <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
+          <button class="mr" nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
             [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Cancelar

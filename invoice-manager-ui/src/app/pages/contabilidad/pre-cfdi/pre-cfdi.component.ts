@@ -143,6 +143,7 @@ export class PreCfdiComponent implements OnInit {
 
   public getInvoiceByIdCdfi(preFolio: string) {
     const idCfdi: number = +preFolio;
+    this.preFolio = preFolio;
     this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
@@ -157,7 +158,7 @@ export class PreCfdiComponent implements OnInit {
         .subscribe(cfdi => {
         this.factura.cfdi = cfdi;
         if (invoice.cfdi.metodoPago === 'PPD') {
-         this.loadConceptos();
+        /*  this.loadConceptos(); */
          this.pagosCfdi = cfdi.complemento.pagos; 
         }
       });
@@ -397,11 +398,11 @@ export class PreCfdiComponent implements OnInit {
     if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
-          this.loadConceptos();
+        /*   this.loadConceptos(); */
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loadConceptos();
+        /*   this.loadConceptos(); */
           this.loading = false;
         });
       }else {
@@ -409,9 +410,9 @@ export class PreCfdiComponent implements OnInit {
       }
   }
 
-  private loadConceptos() {
-    this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
-          this.invoiceService.getComplementosInvoice(this.factura.folio)
+  /* private loadConceptos() {
+    this.invoiceService.getInvoiceSaldo(this.preFolio).subscribe(a => this.payment.monto = a);
+          this.invoiceService.getComplementosInvoice(this.preFolio)
           .pipe(
             map((facturas: Factura[]) => {
               return facturas.map(record => {
@@ -423,7 +424,7 @@ export class PreCfdiComponent implements OnInit {
             this.calculatePaymentSum(complementos);
             this.loading = false;
           });
-  }
+  } */
 
   calculatePaymentSum(complementos: Factura[]){
     if (complementos.length === 0) {
