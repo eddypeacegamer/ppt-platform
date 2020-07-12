@@ -49,7 +49,7 @@ export class PagosComponent implements OnInit {
     const pageValue = currentPage || 0;
     const sizeValue = pageSize || 10;
     this.paymentService.getAllPayments(pageValue, sizeValue, this.filterParams)
-      .subscribe((result: GenericPage<any>) => { this.page = result;  console.log(JSON.stringify(result));});
+      .subscribe((result: GenericPage<any>) => { this.page = result;});
   }
 
   public onChangePageSize(pageSize: number) {

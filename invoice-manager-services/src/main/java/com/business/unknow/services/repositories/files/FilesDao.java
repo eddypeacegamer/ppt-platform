@@ -55,9 +55,9 @@ public class FilesDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE);
-				ps.setString(1, resource);
+				ps.setString(1, fileType);
 				ps.setString(2, reference);
-				ps.setString(3, fileType);
+				ps.setString(3, resource);
 				return ps;
 			}
 		}, new ResourceFileRsExtractor());

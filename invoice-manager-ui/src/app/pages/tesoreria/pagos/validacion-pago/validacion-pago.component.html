@@ -1,4 +1,22 @@
-<nb-card>
+
+<div class="card mb-9">
+  <img class="card-img-top" [src]="comprobanteUrl" style="height: 60vh;width: 80vw;"  alt="Card image cap" *ngIf = "comprobanteUrl!== undefined">
+  <h5 class="card-header" *ngIf = "comprobanteUrl! === undefined" >Sin imagen de Pago</h5>
+  <div class="card-body">
+    <div class="form-group" *ngIf="pago.statusPago=='VALIDACION'">
+      <label for="comments">Razon de rechazo</label>
+      <input type="text" class="form-control" id="comments" placeholder="Comentarios" [(ngModel)]="updatedPayment.comentarioPago" fullWidth  [ngModelOptions]="{standalone: true}">
+      <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago.</small>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-danger" (click)="onRecahzarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Rechazar Pago</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-warning" (click)="cancel()">Salir</button>
+  </div>
+</div>
+
+<!--nb-card>
   <nb-card-header>Validacion Pago</nb-card-header>
   <nb-card-body>
     <div class="row" *ngIf="comprobanteUrl!=undefined">
@@ -21,14 +39,10 @@
   </nb-card-body>
   <nb-card-footer>
     
-    <button class="btn btn-danger" (click)="onRecahzarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Rechazar Pago</button>
-    &nbsp;&nbsp;&nbsp;
-    <button class="btn btn-success" (click)="generateDevolutions()" *ngIf="pago.revision1==true && pago.revision2==true">Generar devoluciones</button>
-    &nbsp;&nbsp;&nbsp;
-    <button class="btn btn-warning" (click)="cancel()">Salir</button>
+   
     
   </nb-card-footer>
-</nb-card>
+</nb-card-->
 
 
 
