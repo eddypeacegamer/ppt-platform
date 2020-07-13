@@ -96,7 +96,7 @@
         <br>
         
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
-          <ngx-pago-factura [factura]="factura" [user]="user"></ngx-pago-factura>
+          <ngx-pago-factura [factura]="factura" [user]="user" (myEvent)="getInvoiceInfoByIdCdfi($event)"></ngx-pago-factura>
         </div>
       
 

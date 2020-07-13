@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Factura } from '../../../models/factura/factura';
 import { User } from '../../../models/user';
 import { PagoBase } from '../../../models/pago-base';
@@ -22,6 +22,7 @@ export class PagoFacturaComponent implements OnInit {
 
   @Input() factura: Factura;
   @Input() user: User;
+  @Output() myEvent = new EventEmitter<string>();
 
   public fileInput: any;
 
@@ -140,6 +141,7 @@ export class PagoFacturaComponent implements OnInit {
               this.invoiceService.getComplementosInvoice(this.factura.folio)
                 .subscribe(complementos => this.factura.complementos = complementos);
             }
+            this.myEvent.emit(this.factura.cfdi.id.toString());          
         }, (error: HttpErrorResponse) => {
           this.loading = false;
           this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);

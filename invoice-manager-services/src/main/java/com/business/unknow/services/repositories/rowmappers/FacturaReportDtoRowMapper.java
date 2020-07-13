@@ -40,6 +40,7 @@ public class FacturaReportDtoRowMapper implements RowMapper<FacturaReportDto> {
 				.setImpuestosRetenidos(rs.getBigDecimal("IMP_RETENIDOS"))
 				.setSubtotal(rs.getBigDecimal("SUB_TOTAL"))
 				.setTotal(rs.getBigDecimal("TOTAL"))
+				.setTotal(rs.getBigDecimal("SALDO_PENDIENTE"))
 				.setMetodoPago(rs.getString("METODO_PAGO"))
 				.setFormaPago(rs.getString("FORMA_PAGO"))
 				.setMoneda(rs.getString("MONEDA"))

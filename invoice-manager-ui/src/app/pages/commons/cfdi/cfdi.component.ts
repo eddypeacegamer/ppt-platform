@@ -25,6 +25,7 @@ export class CfdiComponent implements OnInit {
   @Input() cfdi: Cfdi;
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
+  @Input() factura: Factura;
 
   public loading: boolean = false;
 

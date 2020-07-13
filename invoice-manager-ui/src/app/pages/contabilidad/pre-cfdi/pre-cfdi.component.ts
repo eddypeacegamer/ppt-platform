@@ -344,6 +344,7 @@ export class PreCfdiComponent implements OnInit {
           this.invoiceService.timbrarFactura(fact.folio, invoice)
             .subscribe(result => {
               this.loading = false;
+              this.getInvoiceByIdCdfi(this.preFolio);
             },
               (error: HttpErrorResponse) => {
                 this.loading = false;
