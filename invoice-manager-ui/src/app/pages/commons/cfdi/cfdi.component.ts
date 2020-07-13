@@ -9,6 +9,10 @@ import { CfdiData } from '../../../@core/data/cfdi-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NbDialogService } from '@nebular/theme';
 import { Factura } from '../../../models/factura/factura';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { FilesData } from '../../../@core/data/files-data';
+import { Router } from '@angular/router';
+import { InvoicesData } from '../../../@core/data/invoices-data';
 
 @Component({
   selector: 'ngx-cfdi',
@@ -21,7 +25,6 @@ export class CfdiComponent implements OnInit {
   @Input() cfdi: Cfdi;
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
-  @Input() factura: Factura;
 
   public loading: boolean = false;
 
@@ -35,7 +38,11 @@ export class CfdiComponent implements OnInit {
 
   constructor(
     private catalogsService: CatalogsData,
+    private filesService: FilesData,
+    private downloadService: DonwloadFileService,
     private cfdiservice: CfdiData,
+    private invoiceService : InvoicesData,
+    private router: Router,
     private dialogService: NbDialogService) {
     }
 
@@ -81,6 +88,24 @@ export class CfdiComponent implements OnInit {
           { context: (error.error != null && error.error !== undefined) ?
           error.error.message : `${error.statusText} : ${error.message}`});
       });
+  }
+
+  public downloadPdf(folio: string) {
+    this.filesService.getFacturaFile(folio, 'PDF').subscribe(
+      file => this.downloadService.downloadFile(file.data,
+        `${folio}-${this.cfdi.emisor.nombre}-${this.cfdi.receptor.nombre}.pdf`, 'application/pdf;')
+    );
+  }
+  public downloadXml(folio: string) {
+    this.filesService.getFacturaFile(folio, 'XML').subscribe(
+      file => this.downloadService.downloadFile(file.data,
+        `${folio}-${this.cfdi.emisor.nombre}-${this.cfdi.receptor.nombre}.xml`, 'text/xml;charset=utf8;')
+    );
+  }
+
+  public redirectToCfdi(folio: string){
+    this.invoiceService.getInvoiceByFolio(folio)
+      .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
   }
 
 }

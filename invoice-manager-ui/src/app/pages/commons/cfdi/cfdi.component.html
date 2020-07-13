@@ -198,6 +198,9 @@
           <tbody>
             <tr *ngFor="let complemento of pagos">
               <td scope="row" class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P'"
+                    (click)="redirectToCfdi(complemento.folio)"><i class="fa fa-search"></i>
+                  </button> &nbsp;&nbsp;
                 <button type="button" [disabled]="complemento.idDocumento === undefined" class="btn btn-sm"
                   [ngClass]="{'btn-outline-secondary': complemento.idDocumento === undefined, 'btn-outline-primary':complemento.idDocumento !== undefined}"
                   (click)="downloadPdf(complemento.folio)">

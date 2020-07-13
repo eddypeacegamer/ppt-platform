@@ -254,25 +254,25 @@
               <tr *ngFor="let fila of page.content" >
                
                 <td scope="row" class="text-center" style="min-width: 160px;">
-                  <button type="button" class="btn-sm btn-outline-primary" 
+                  <button type="button" class="btn btn-sm btn-outline-primary" 
                     (click)="redirectToCfdi(fila.idCfdi)"><i class="fa fa-search"></i>
                   </button>
-                  <button type="button" class="btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
+                  <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' ), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Validacion operaciones' || fila.statusFactura === 'Validacion tesoreria') }"
                     [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                     (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                   </button>
-                  <button type="button" class="btn-sm btn-outline-primary"
+                  <button type="button" class="btn btn-sm btn-outline-primary"
                     *ngIf="module !== 'promotor' && module !== 'contabilidad'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                   </button>
-                  <button type="button"  class="btn-sm btn-outline-primary" 
+                  <button type="button"  class="btn btn-sm btn-outline-primary" 
                     (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-file-pdf"></i>
                   </button>
-                  <button type="button" class="btn-sm btn-outline-primary" [disabled]="fila.statusFactura !== 'Timbrada'"
+                  <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="fila.statusFactura !== 'Timbrada'"
                   [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada' , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
                   (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-code"></i>
