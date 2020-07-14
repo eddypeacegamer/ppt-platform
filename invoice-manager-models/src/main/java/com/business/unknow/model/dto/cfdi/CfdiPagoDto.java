@@ -39,6 +39,7 @@ public class CfdiPagoDto implements Serializable {
 	@XmlAttribute(name = "Serie")
 	private String serie;
 	private String montoDesc;
+	private CfdiDto cfdi;
 
 	public int getId() {
 		return id;
@@ -166,6 +167,14 @@ public class CfdiPagoDto implements Serializable {
 
 	public void setMontoDesc(String montoDesc) {
 		this.montoDesc = montoDesc;
+	}
+
+	public CfdiDto getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(CfdiDto cfdi) {
+		this.cfdi = cfdi;
 	}
 
 	@Override

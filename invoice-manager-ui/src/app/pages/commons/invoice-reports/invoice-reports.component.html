@@ -277,6 +277,12 @@
                   (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-code"></i>
                   </button>
+                  <button type="button"  class="btn-sm btn-outline-primary" [disabled]="(fila.statusFactura !== 'Timbrada')"
+                  *ngIf=" fila.lineaEmisor ==='A'"
+                  [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada'  , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
+                  (click)="reSendEmail(fila.folio)">
+                    <i class="fa fa-reply-all"></i>
+                  </button>
                 </td>
               
                 <td scope="row">{{fila.idCfdi}}</td>

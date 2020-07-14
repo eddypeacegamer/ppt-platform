@@ -19,4 +19,5 @@ export abstract class InvoicesData {
     abstract insertNewInvoice(invoice: Factura): Observable<Factura>;
     abstract updateInvoice(invoice: Factura): Observable<Factura>;
     abstract generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable<Factura>;
+    abstract reSendEmail(folio: string, factura: Factura): Observable<any>;
 }

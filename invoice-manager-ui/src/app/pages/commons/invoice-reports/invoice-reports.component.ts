@@ -6,6 +6,7 @@ import { DownloadCsvService } from '../../../@core/util-services/download-csv.se
 import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
+import { Factura } from '../../../models/factura/factura';
 
 
 @Component({
@@ -190,6 +191,17 @@ export class InvoiceReportsComponent implements OnInit {
         this.loading = false;
       }, error => {
         console.error('Error recovering XML file', error);
+        this.loading = false;
+      });
+  }
+
+  public reSendEmail(folio: string) {
+    this.loading = true;
+    this.invoiceService.reSendEmail(folio,new Factura).subscribe(
+      factura => {
+        this.loading = false;
+      }, error => {
+        console.error('Error sending email', error);
         this.loading = false;
       });
   }

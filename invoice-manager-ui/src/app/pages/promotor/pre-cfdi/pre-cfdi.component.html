@@ -8,7 +8,7 @@
           <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading" class="float-right puff_center"
               [disabled]="loading" nbSpinnerStatus="success"  *ngIf="factura.statusFactura.indexOf('Rechazo')===0"
               nbSpinnerSize="small" nbSpinnerMessage="">
-               Revalidar<i class="fa fa-check" style="margin-left: 10px;"></i>
+               revalidar Factura<i class="fa fa-check" style="margin-left: 10px;"></i>
           </button>
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>

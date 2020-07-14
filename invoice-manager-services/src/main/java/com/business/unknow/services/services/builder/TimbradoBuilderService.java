@@ -10,26 +10,14 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.EmpresaMapper;
-import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
-import com.business.unknow.services.repositories.PagoRepository;
-import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FacturaService;
 
 @Service
 public class TimbradoBuilderService extends AbstractBuilderService {
 
 	@Autowired
-	private FacturaRepository repository;
-
-	@Autowired
 	private EmpresaRepository empresaRepository;
-
-	@Autowired
-	private PagoRepository pagoRepository;
-
-	@Autowired
-	private FacturaMapper mapper;
 
 	@Autowired
 	private EmpresaMapper empresaMapper;
@@ -63,37 +51,17 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
 				.setTipoDocumento(currentFacturaDto.getTipoDocumento()).setEmpresaDto(empresaDto).build();
 		// TODO Rehacer logica de timbrado, el concepto de folio padre dejo de existir
-//		FacturaDto currentFacturaDto = facturaService.getFacturaByFolio(folio);
-//		FacturaDto facturaPadre = (TipoDocumentoEnum.COMPLEMENTO.getDescripcion().equals(currentFacturaDto.getTipoDocumento())) ?
-//				facturaService.getFacturaByFolio(currentFacturaDto.getFolioPadre()):null;
 //		validatePackFacturacion(currentFacturaDto, facturaPadre);
-//		Optional<Pago> pagoCredito = pagoRepository.findByFolioAndFormaPagoAndComentarioPago(
-//				currentFacturaDto.getFolioPadre(), FacturaComplemento.FORMA_PAGO, FacturaComplemento.PAGO_COMENTARIO);
-//		Optional<Pago> currentPago = pagoRepository.findByFolio(folio).stream()
-//				.filter(a -> !a.getFormaPago().equals(FormaPagoEnum.CREDITO.getDescripcion())).findFirst();
-//		getEmpresaFiles(empresaDto, currentFacturaDto);
-//		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
-//				.setPagos(mapper.getPagosDtoFromEntity(pagoRepository.findByFolioPadre((facturaPadre!=null)?facturaPadre.getFolio():folio)))
-//				.setCfdi(currentFacturaDto.getCfdi()).setEmpresaDto(empresaDto)
-//				.setCurrentPago(currentPago.isPresent() ? mapper.getPagoDtoFromEntity(currentPago.get()) : null)
-//				.setPagoCredito(pagoCredito.isPresent() ? mapper.getPagoDtoFromEntity(pagoCredito.get()) : null)
-//				.setFacturaPadreDto(facturaPadre).setTipoFactura(currentFacturaDto.getCfdi().getMetodoPago())
-//				.setTipoDocumento(currentFacturaDto.getTipoDocumento())
-//				.setCtdadComplementos(repository
-//						.findByFolioPadre(currentFacturaDto.getFolioPadre() != null ? currentFacturaDto.getFolioPadre()
-//								: currentFacturaDto.getFolio())
-//						.size())
-//				.build();
 
 	}
 
-	private void validatePackFacturacion(FacturaDto currentFacturaDto, FacturaDto facturaPadre)
-			throws InvoiceManagerException {
-		if (facturaPadre != null && !facturaPadre.getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
-			throw new InvoiceManagerException("El pack del complemento debe ser el mismo",
-					String.format("El pack de facturacion del complemento %s no es el correcto",
-							currentFacturaDto.getPackFacturacion()),
-					HttpStatus.SC_BAD_REQUEST);
-		}
-	}
+//	private void validatePackFacturacion(FacturaDto currentFacturaDto, FacturaDto facturaPadre)
+//			throws InvoiceManagerException {
+//		if (facturaPadre != null && !facturaPadre.getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
+//			throw new InvoiceManagerException("El pack del complemento debe ser el mismo",
+//					String.format("El pack de facturacion del complemento %s no es el correcto",
+//							currentFacturaDto.getPackFacturacion()),
+//					HttpStatus.SC_BAD_REQUEST);
+//		}
+//	}
 }

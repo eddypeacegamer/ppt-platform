@@ -42,12 +42,10 @@ public class FilesDao {
 	private static final String FIND_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "SELECT * FROM RESOURCE_FILES WHERE 1=1 AND TIPO_ARCHIVO= ? AND REFERENCIA = ? 	AND TIPO_RECURSO = ?  ";
 
 	private static final String DELETE_RESOURCE_FILE_BY_RESOURCE_TYPE_AND_REFERENCE = "DELETE FROM RESOURCE_FILES WHERE TIPO_RECURSO = ? AND TIPO_ARCHIVO= ? AND REFERENCIA = ?";
-
+	
 	private static final String DELETE_RESOURCE_FILE_BY_ID = "DELETE FROM RESOURCE_FILES WHERE FILE_ID= ?";
 
 	private static final String INSERT_RESOURCE_FILE = "INSERT INTO RESOURCE_FILES (REFERENCIA, TIPO_ARCHIVO, TIPO_RECURSO, DATA, FECHA_CREACION) VALUES(?,?,?,?,?)";
-
-	private static final String UPDATE_RESOURCE_FILE = "UPADTE RESOURCE_FILES SET DATA=?, FECHA_CREACION = ? WHERE FILE_ID = ?";
 
 	public Optional<ResourceFileDto> findResourceFileByResourceTypeAndReference(String resource, String reference,
 			String fileType) {
@@ -94,12 +92,11 @@ public class FilesDao {
 				new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.TIMESTAMP });
 	}
 
-	public int updateResourceFile(int id, String data) {
-		return invoiceManagerTemplate.update(UPDATE_RESOURCE_FILE,
-				new Object[] { new SqlLobValue(data.getBytes()), new Timestamp(System.currentTimeMillis()), id },
-				new int[] { Types.BLOB, Types.TIMESTAMP, Types.INTEGER });
+	public int updateResourceFile(int id, ResourceFileDto dto) {
+		deletResourceFileById(id);
+		return insertResourceFile(dto);
 	}
-
+	
 	public Optional<FacturaFileDto> findFacturaFileByResourceTypeAndReference(String folio, String fileType) {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
 			@Override

@@ -196,7 +196,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		Optional<FacturaFileDto> pdf = filesService.findFacturaFileByFolioAndType(facturaDto.getFolio(),
 				TipoArchivoEnum.PDF.name());
 		List<FacturaFileDto> archivos = new ArrayList<>();
-		if (xml.isPresent() || pdf.isPresent()) {
+		if (!xml.isPresent() || !pdf.isPresent()) {
 			throw new InvoiceManagerException("El PDF o el XMl no existe favor de validar",
 					"Un archivo no existe favor de validar", Constants.BAD_REQUEST);
 		}

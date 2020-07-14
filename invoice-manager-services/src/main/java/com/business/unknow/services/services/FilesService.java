@@ -49,7 +49,7 @@ public class FilesService {
 				resourceFile.getTipoRecurso(), resourceFile.getReferencia(), resourceFile.getTipoArchivo());
 		if (resource.isPresent()) {
 			resourceFile.setId(resource.get().getId());
-			filesDao.updateResourceFile(resource.get().getId(), resourceFile.getData());
+			filesDao.updateResourceFile(resource.get().getId(), resourceFile);
 		} else {
 			filesDao.insertResourceFile(resourceFile);
 		}

@@ -230,7 +230,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   public revalidateInvoice() {
     this.factura.statusFactura = '1';
-    this.factura.validacionOper = true;
+    this.factura.validacionOper = false;
     this.factura.validacionTeso = false;
     this.invoiceService.updateInvoice(this.factura)
     .subscribe((invoice: Factura) => {
