@@ -106,7 +106,7 @@ public class EmpresaService {
 		empresa.setPiePagina(empresaDto.getPiePagina());
 		empresa.setRegimenFiscal(empresaDto.getRegimenFiscal());
 		
-		empresa.setPwCorreo(empresa.getPwCorreo());
+		empresa.setPwCorreo(empresaDto.getPwCorreo());
 		empresa.setActivo(empresaDto.getActivo());
 		empresa.setNoCertificado(empresaDto.getNoCertificado());
 		empresa.setInformacionFiscal(

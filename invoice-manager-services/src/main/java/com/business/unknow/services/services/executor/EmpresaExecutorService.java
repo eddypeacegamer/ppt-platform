@@ -23,7 +23,7 @@ public class EmpresaExecutorService {
 	private EmpresaMapper empresaMapper;
 
 	@Autowired
-	private FilesService filesService;
+	private FilesService filesService;	
 
 	public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
 		empresaDto.getInformacionFiscal().setFechaActualizacion(new Date());
@@ -42,11 +42,12 @@ public class EmpresaExecutorService {
 				.getEmpresaDtoFromEntity(empresaRepository.save(empresaMapper.getEntityFromEmpresaDto(empresaDto)));
 	}
 
-	public void updateLogo(String rfc, String data) {
+	public void updateLogo( String rfc, String data) {
+
 		if(data!=null) {
 			filesService.upsertResourceFile(
-					new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(), rfc,
-							ResourceFileEnum.LOGO.name(), data.substring(data.indexOf("base64") + 7)));
+					new ResourceFileDto(ResourceFileEnum.LOGO.name(), rfc,
+							TipoRecursoEnum.EMPRESA.name(), data.substring(data.indexOf("base64") + 7)));
 		}
 		
 	}

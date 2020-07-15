@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Factura } from '../../../models/factura/factura';
 import { Pago } from '../../../models/factura/pago';
 import { PaymentsData } from '../../../@core/data/payments-data';
@@ -17,6 +17,7 @@ export class GenerarComplementoComponent implements OnInit {
 
   @Input() factura: Factura;
   @Input() loading: boolean;
+  @Output() myEvent = new EventEmitter<string>();
 
   public complementPayTypeCat: Catalogo[] = [];
   public payment: Pago;
@@ -40,6 +41,7 @@ export class GenerarComplementoComponent implements OnInit {
     
     this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
     this.initVariables();
+    this.loading = false;
   }
 
   public initVariables() {
@@ -50,6 +52,7 @@ export class GenerarComplementoComponent implements OnInit {
 
    generateComplement() {
     this.loading = true;
+    console.log("cargando");
     this.payErrorMessages = [];
     if (this.payment.monto === undefined) {
       this.payErrorMessages.push('El monto del complemento es un valor requerido');
@@ -72,11 +75,14 @@ export class GenerarComplementoComponent implements OnInit {
     if (this.payErrorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
-          this.loadConceptos();
+          this.myEvent.emit(this.factura.cfdi.id.toString()); 
+          this.loading = false; 
+       //   this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.payErrorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loadConceptos();
+        //  this.loadConceptos();
+      
           this.loading = false;
         });
       }else {
@@ -86,12 +92,13 @@ export class GenerarComplementoComponent implements OnInit {
 
   
   private loadConceptos() {
-    this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
+   /*  this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a); */
           this.invoiceService.getComplementosInvoice(this.factura.folio)
           .pipe(
             map((facturas: Factura[]) => {
               return facturas.map(record => {
                 record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
+                this.myEvent.emit(this.factura.cfdi.id.toString());     
                 return record;
               });
             })).subscribe(complementos => {

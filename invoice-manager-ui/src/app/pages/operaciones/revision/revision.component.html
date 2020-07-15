@@ -91,7 +91,7 @@
             Aceptar
           </button>
       
-          <button class="mr" nbButton status="danger" size="medium" (click)="rechazarFactura()" [nbSpinner]="loading"
+          <button class="ml" nbButton status="danger" size="medium" (click)="rechazarFactura()" [nbSpinner]="loading"
             [disabled]="loading" *ngIf="factura.statusFactura !== 'Timbrada' && factura.statusFactura !== 'Cancelada' && factura.statusFactura.indexOf('Rechazo')<0" nbSpinnerStatus="danger"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Rechazar

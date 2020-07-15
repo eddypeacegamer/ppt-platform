@@ -7,7 +7,9 @@
       </button>
   </div>
 </div>
-
+<div class="alert alert-warning" *ngIf="errorMessagesCdfi && errorMessagesCdfi.length > 0" role="alert">
+  <p *ngFor="let message of errorMessagesCdfi">{{message}}</p>
+</div>
 <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
   {{successMessage}}
 </div>
@@ -30,7 +32,7 @@
           <div class="col-sm-12">
             <label for="direccioneEmisor" class="label">Direccion Emisor</label>
             <textarea id="direccioneEmisor" type="text" style="margin-top: 0px; margin-bottom: 0px; height: 38px;" 
-            [(ngModel)]="cfdi.emisor.direccion" [disabled]="!allowEdit"  
+            [(ngModel)]="cfdi.emisor.direccion" [disabled]="!allowEdit || module === 'P'"
             placeholder="Direccion Emisor" class="form-control"></textarea>
           </div>
         </div>

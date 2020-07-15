@@ -107,9 +107,12 @@ export class PagoFacturaComponent implements OnInit {
         this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe(payments => {
             this.invoicePayments = payments;
+            this.myEvent.emit(this.factura.cfdi.id.toString());     
           });
         this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => this.factura.complementos = complementos);
+          .subscribe(complementos => {this.factura.complementos = complementos; 
+           
+          });
       }, (error: HttpErrorResponse) =>
       this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }

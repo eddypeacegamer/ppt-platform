@@ -1,6 +1,6 @@
 
-<div *ngIf="!loading">
-    <div *ngIf="factura && factura.cfdi">
+<div >
+    <div *ngIf="factura && factura.cfdi && factura.saldoPendiente > 0.1">
      
       <p class="font-weight-bold" *ngIf=" factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
       <div class="row slide_1" *ngIf="factura.cfdi.total > paymentSum && factura.metodoPago =='PPD'">
