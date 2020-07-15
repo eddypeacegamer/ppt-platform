@@ -180,6 +180,9 @@ public class PagoService {
 			if(currentFactura.isPresent()&&currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 				currentFactura.get().setValidacionTeso(true);
 				facturaService.updateFactura(currentFactura.get().getIdCfdi(), currentFactura.get());
+				pagoDto.setStatusPago("ACEPTADO");
+				pagoDto.setRevision1(true);
+				pagoDto.setRevision2(true);
 			}
 		}
 		Pago payment = repository.save(mapper.getEntityFromPagoDto(pagoDto));

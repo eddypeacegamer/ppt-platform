@@ -40,7 +40,6 @@ import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
@@ -69,9 +68,6 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaMapper mapper;
-	
-	@Autowired
-	private CfdiMapper cfdiMapper;
 
 	@Autowired
 	private TimbradoEvaluatorService timbradoServiceEvaluator;
@@ -99,9 +95,6 @@ public class FacturaService {
 
 	@Autowired
 	private TimbradoExecutorService timbradoExecutorService;
-
-	@Autowired
-	private DevolucionService devolucionService;
 
 	@Autowired
 	private PDFService pdfService;
@@ -209,11 +202,11 @@ public class FacturaService {
 		factura.setCfdi(cfdiService.getCfdiByFolio(folio));
 		return factura;
 	}
-	
+
 	public FacturaDto getFacturaByIdCfdi(int id) {
-		CfdiDto cfdiDto=cfdiService.getCfdiById(id);
-		FacturaDto factura = mapper.getFacturaDtoFromEntity(
-				repository.findByFolio(cfdiDto.getFolio()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+		CfdiDto cfdiDto = cfdiService.getCfdiById(id);
+		FacturaDto factura = mapper.getFacturaDtoFromEntity(repository.findByFolio(cfdiDto.getFolio())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el folio %s no existe", cfdiDto.getFolio()))));
 		return factura;
 	}
@@ -247,7 +240,8 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo) throws InvoiceManagerException {
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo)
+			throws InvoiceManagerException {
 		validator.checkNotNegative(saldo, "Saldo pendiente");
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -290,13 +284,13 @@ public class FacturaService {
 	}
 
 	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
-		FacturaDto facturaDto=getBaseFacturaByFolio(folio);
-		List<FacturaDto> facturas= new ArrayList<>();
-		List<PagoFacturaDto> facturaPagos=new ArrayList<>();
-		PagoFacturaDto facturaPagoDto=new PagoFacturaDto();
+		FacturaDto facturaDto = getBaseFacturaByFolio(folio);
+		List<FacturaDto> facturas = new ArrayList<>();
+		List<PagoFacturaDto> facturaPagos = new ArrayList<>();
+		PagoFacturaDto facturaPagoDto = new PagoFacturaDto();
 		facturaPagoDto.setMonto(pagoDto.getMonto());
 		facturaPagoDto.setFolio(folio);
-		facturaPagos.add(facturaPagoDto); 
+		facturaPagos.add(facturaPagoDto);
 		facturas.add(facturaDto);
 		pagoDto.setFacturas(facturaPagos);
 		return generateComplemento(facturas, pagoDto);
@@ -362,19 +356,19 @@ public class FacturaService {
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
 		validator.validateTimbrado(facturaDto, folio);
 		if (facturaDto.getTipoDocumento().equals("Factura") || facturaDto.getMetodoPago().equals("PPD")) {
-			for(CfdiPagoDto cfdiPagoDto:cfdiService.getCfdiPagosByFolio(facturaDto.getFolio())) {
-				FacturaDto complemento=getFacturaByIdCfdi(cfdiPagoDto.getCfdi().getId());
+			for (CfdiPagoDto cfdiPagoDto : cfdiService.getCfdiPagosByFolio(facturaDto.getFolio())) {
+				FacturaDto complemento = getFacturaByIdCfdi(cfdiPagoDto.getCfdi().getId());
 				if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
 					cancelarFactura(complemento.getFolio(), complemento);
 				} else {
 					if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
 						complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
-						updateFactura(complemento.getIdCfdi(),complemento);
+						updateFactura(complemento.getIdCfdi(), complemento);
 					}
 				}
 			}
 		}
-		
+
 		timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
 		switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
 		case SW_SAPIENS:
