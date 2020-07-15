@@ -138,7 +138,7 @@
         
         <div class="col-md-3">
           <label for="inputPayMethod" class="label">Metodo de Pago</label>
-          <select id="inputPayMethod" style="display:block;" class="form-control" [(ngModel)]="cfdi.metodoPago" [disabled]="!allowEdit"
+          <select id="inputPayMethod" style="display:block;" class="form-control" [(ngModel)]="cfdi.metodoPago" [disabled]="cfdi.id !== undefined" 
             (change)="onPayMethodSelected($event.target.value)">
             <option value="*">Seleccionar</option>
             <option value="PUE">Factura pagada (PUE)</option>

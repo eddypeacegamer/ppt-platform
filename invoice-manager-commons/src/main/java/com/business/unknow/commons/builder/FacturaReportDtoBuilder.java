@@ -87,6 +87,11 @@ public class FacturaReportDtoBuilder extends AbstractBuilder<FacturaReportDto> {
 		instance.setTotal(total);
 		return this;
 	}
+	
+	public FacturaReportDtoBuilder setSaldoPendiente(BigDecimal saldoPendiente) {
+		instance.setSaldoPendiente(saldoPendiente);
+		return this;
+	}
 
 	public FacturaReportDtoBuilder setMetodoPago(String metodoPago) {
 		instance.setMetodoPago(metodoPago);
