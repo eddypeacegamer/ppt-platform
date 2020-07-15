@@ -47,7 +47,7 @@ public class TimbradoExecutorService {
 	private FilesService filesService;
 
 	public void updateFacturaAndCfdiValues(FacturaContext context) {
-		context.getFacturaDto().setTotal(context.getFacturaDto().getCfdi().getTotal());
+		
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
