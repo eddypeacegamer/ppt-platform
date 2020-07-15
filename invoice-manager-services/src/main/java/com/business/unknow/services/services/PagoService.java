@@ -251,15 +251,4 @@ public class PagoService {
 		repository.delete(mapper.getEntityFromPagoDto(payment));
 	}
 
-	// TODO check why we need this?
-//	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
-//		List<Pago> pagos = repository.findByFolio(folio);
-//		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))
-//				.findFirst();
-//		if (pago.isPresent()) {
-//			Pago entity = pago.get();
-//			entity.setMonto(entity.getMonto().subtract(pagoDto.getMonto()));
-//			repository.save(entity);
-//		}
-//	}
 }

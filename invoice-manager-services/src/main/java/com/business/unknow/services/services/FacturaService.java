@@ -289,27 +289,17 @@ public class FacturaService {
 		cfdiService.deleteCfdi(fact.getIdCfdi());
 	}
 
-	// TODO REFACTOR CREATE COMPLEMENTO LOGIC CONTACT
-	public FacturaDto createComplemento(Integer idCfdi, PagoDto pagoDto) throws InvoiceManagerException {
-
-		List<CfdiPagoDto> pagosPPD = cfdiService.getPagosPPD(idCfdi);
-
-		BigDecimal saldo = new BigDecimal(0);
-		saldo = saldo.add(pagoDto.getMonto());
-		for (CfdiPagoDto complemento : pagosPPD) {
-			CfdiDto cfdiDto = cfdiService.getCfdiByFolio(complemento.getFolio());
-			if (cfdiDto != null && cfdiDto.getComplemento() != null && cfdiDto.getComplemento().getPagos() != null) {
-				for (CfdiPagoDto cfdiPagoDto : cfdiDto.getComplemento().getPagos()) {
-					saldo = saldo.add(cfdiPagoDto.getMonto());
-				}
-			}
-		}
-		return null;
-//		if (saldo.compareTo(facturaPadre.getCfdi().getTotal()) > 0) {
-//			throw new InvoiceManagerException("Incosistencia en el saldo de la factura", HttpStatus.CONFLICT.value());
-//		} else {
-//			return generateComplemento(facturaPadre, pagoDto);
-//		}
+	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		FacturaDto facturaDto=getBaseFacturaByFolio(folio);
+		List<FacturaDto> facturas= new ArrayList<>();
+		List<PagoFacturaDto> facturaPagos=new ArrayList<>();
+		PagoFacturaDto facturaPagoDto=new PagoFacturaDto();
+		facturaPagoDto.setMonto(pagoDto.getMonto());
+		facturaPagoDto.setFolio(folio);
+		facturaPagos.add(facturaPagoDto); 
+		facturas.add(facturaDto);
+		pagoDto.setFacturas(facturaPagos);
+		return generateComplemento(facturas, pagoDto);
 	}
 
 	// TIMBRADO
