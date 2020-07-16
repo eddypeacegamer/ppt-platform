@@ -9,7 +9,7 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.pagos.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.rules.common.Constants.Prevalidations;
 
 @Rule(name = Prevalidations.FACTURA_PADRE_PAGOS_RULE, description = Prevalidations.FACTURA_PADRE_PAGOS)
@@ -22,9 +22,9 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 			return true;
 		} else {
 			BigDecimal pagos = new BigDecimal("0");
-			for (PagoDto pago : fc.getPagos())
+			for (PagoFacturaDto pago : fc.getPagos())
 				pagos.add(pago.getMonto());
-			Optional<PagoDto> pagoDto = fc.getPagos().stream()
+			Optional<PagoFacturaDto> pagoDto = fc.getPagos().stream()
 					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(a.getMonto()) == 0// TODO
 					// here is a potential
 					// issue when the

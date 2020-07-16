@@ -1,11 +1,16 @@
 package com.business.unknow.rules.timbrado;
 
+import java.math.BigDecimal;
+
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.enums.LineaEmpresaEnum;
+import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.RevisionPagosEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.rules.common.Constants.Timbrado;
 
@@ -14,16 +19,29 @@ public class FacturaPagoValidationRule {
 
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
-		
-		if(!fc.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())){
+
+		if (!fc.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
 			return false;
-//		}else if(fc.getPagos()!=null && !fc.getPagos().isEmpty()) {
-//			BigDecimal paymentsAmmount = fc.getPagos().stream()
-//				.filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
-//				.map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
-//			BigDecimal totalfactura = (fc.getFacturaPadreDto()!=null)? fc.getFacturaPadreDto().getCfdi().getTotal(): fc.getFacturaDto().getCfdi().getTotal();
-//			return paymentsAmmount.compareTo(totalfactura)!=0;
-//			return false;
+		} else if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(fc.getFacturaDto().getTipoDocumento())) {
+			if (fc.getPagos() == null && fc.getPagos().isEmpty()) {
+				return true;
+			} else {
+				if (MetodosPagoEnum.PUE.getClave().equals(fc.getFacturaDto().getMetodoPago())) {
+					BigDecimal paymentsAmmount = fc.getPagos().stream()
+							// .filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+							.map(p -> p.getMonto()).reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
+					BigDecimal totalfactura = fc.getFacturaDto().getCfdi().getTotal();
+					return paymentsAmmount.compareTo(totalfactura) != 0;
+				}
+				if (MetodosPagoEnum.PPD.getClave().equals(fc.getFacturaDto().getMetodoPago())) {
+					BigDecimal paymentsAmmount = fc.getPagos().stream()
+							// .filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+							.map(p -> p.getMonto()).reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
+					BigDecimal paidAmmount = fc.getFacturaDto().getTotal().subtract(fc.getFacturaDto().getSaldoPendiente());
+					return paymentsAmmount.compareTo(paidAmmount) != 0;
+				}
+
+			}
 		}
 		return false;
 	}

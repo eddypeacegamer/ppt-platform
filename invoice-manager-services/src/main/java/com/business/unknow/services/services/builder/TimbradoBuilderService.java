@@ -1,17 +1,22 @@
 package com.business.unknow.services.services.builder;
 
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.business.unknow.commons.builder.FacturaContextBuilder;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.PagoService;
 
 @Service
 public class TimbradoBuilderService extends AbstractBuilderService {
@@ -24,6 +29,9 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 
 	@Autowired
 	private FacturaService facturaService;
+	
+	@Autowired
+	private PagoService pagosService;
 
 	public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
 			throws InvoiceManagerException {
@@ -48,8 +56,16 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
 		getEmpresaFiles(empresaDto, currentFacturaDto);
+		List<PagoFacturaDto> pagosFactura= null;
+		if(TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
+			pagosFactura = pagosService.findPagosFacturaByFolio(folio);
+		}
+		
+		
 		return new FacturaContextBuilder().setFacturaDto(currentFacturaDto)
-				.setTipoDocumento(currentFacturaDto.getTipoDocumento()).setEmpresaDto(empresaDto).build();
+				.setPagos(pagosFactura)
+				.setTipoDocumento(currentFacturaDto.getTipoDocumento())
+				.setEmpresaDto(empresaDto).build();
 		// TODO Rehacer logica de timbrado, el concepto de folio padre dejo de existir
 //		validatePackFacturacion(currentFacturaDto, facturaPadre);
 

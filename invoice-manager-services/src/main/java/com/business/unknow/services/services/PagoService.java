@@ -102,6 +102,10 @@ public class PagoService {
 	public List<PagoDto> findPagosByFolio(String folio) {
 		return mapper.getPagosDtoFromEntities(repository.findPagosByFolio(folio));
 	}
+	
+	public List<PagoFacturaDto> findPagosFacturaByFolio(String folio) {
+		return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
+	}
 
 	public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
 		Optional<Pago> payment = repository.findById(id);

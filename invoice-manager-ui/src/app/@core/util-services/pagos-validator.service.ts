@@ -38,10 +38,11 @@ export class PagosValidatorService {
            && pago.documento === undefined) {
       messages.push('La imagen del documento de pago es requerida.');
     }
+    /* Disable PUE payment rule
     if (factura.cfdi.metodoPago === 'PUE' && Math.abs(factura.cfdi.total - pago.monto) > 0.01) {
       messages.push('Para pagos en una unica exibicion,' +
       'el monto del pago debe coincidir con el monto total de la factura.');
-    }
+    }*/
     if (factura.saldoPendiente - pago.monto < -0.01) {
       messages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
