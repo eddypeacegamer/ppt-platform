@@ -44,7 +44,7 @@
             <label for="inputCliente" class="label">Razón social</label>
             <div class="row form-inline">
               <input type="text" [(ngModel)]="formInfo.clientName" fullWidth class="form-control"
-                (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
+                (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social" style="width: 100%;">
             </div>
           </div>
           <div class="col-3">
@@ -97,10 +97,10 @@
         </div>
 
        
-        <div *ngIf="!loading">
-        <br>
-         <ngx-generar-complemento class="slide_1" [factura]="factura" [(loading)]="loading" *ngIf="factura.statusFactura==='Timbrada'" ></ngx-generar-complemento>
-        </div>
+      <!--   <div *ngIf="!loading">
+        <br> -->
+         <ngx-generar-complemento class="slide_1" [factura]="factura" (loading)="loading" (myEvent)="getInvoiceInfoByPreFolio($event)" *ngIf="factura.statusFactura==='Timbrada'" ></ngx-generar-complemento>
+        <!-- </div> -->
 
       </nb-card-body>
     </nb-card>

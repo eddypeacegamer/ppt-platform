@@ -375,11 +375,12 @@ export class LineaBComponent implements OnInit {
     if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
-          this.loadConceptos();
+          
+        //  this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loadConceptos();
+      //    this.loadConceptos();
           this.loading = false;
         });
       }else {
@@ -389,6 +390,7 @@ export class LineaBComponent implements OnInit {
 
   private loadConceptos() {
     this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
+    console.log("logggg  ");
           this.invoiceService.getComplementosInvoice(this.factura.folio)
           .pipe(
             map((facturas: Factura[]) => {

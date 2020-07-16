@@ -26,7 +26,10 @@ export class CfdiComponent implements OnInit {
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
   @Input() factura: Factura;
-
+  @Input() module: string = '';
+  
+  public errorMessagesCdfi: string[] = [];
+ 
   public loading: boolean = false;
 
   // auxiliar variables
@@ -44,6 +47,7 @@ export class CfdiComponent implements OnInit {
     private cfdiservice: CfdiData,
     private invoiceService : InvoicesData,
     private router: Router,
+    
     private dialogService: NbDialogService) {
     }
 
@@ -78,6 +82,17 @@ export class CfdiComponent implements OnInit {
   updateCfdi(dialog: TemplateRef<any>) {
     this.loading = true;
     this.successMessage = undefined;
+    this.errorMessagesCdfi = [];
+    if(this.cfdi.emisor.direccion === undefined || this.cfdi.emisor.direccion === ""){
+      this.cfdi.emisor.direccion == "."
+    }
+    if(this.cfdi.receptor.direccion === undefined || this.cfdi.receptor.direccion === ""){
+      this.errorMessagesCdfi.push('La direccion del emisor es un valor solicitado');
+      console.log("11"+this.cfdi.receptor.direccion);
+      this.loading = false;
+      return;
+    }
+     
     this.cfdiservice.updateCfdi(this.cfdi)
       .subscribe(cfdi => {
         this.cfdi = cfdi;

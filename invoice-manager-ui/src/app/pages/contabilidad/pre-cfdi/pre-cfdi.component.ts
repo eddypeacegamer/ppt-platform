@@ -132,6 +132,7 @@ export class PreCfdiComponent implements OnInit {
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.errorMessages = [];
+    this.successMessage = undefined;
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';

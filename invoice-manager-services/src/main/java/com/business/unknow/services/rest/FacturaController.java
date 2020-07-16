@@ -60,8 +60,8 @@ public class FacturaController {
 			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(prefolio, solicitante, lineaEmisor, status, since, to,
-				emisor, receptor, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getFacturasByParametros(prefolio, solicitante, lineaEmisor, status, since,
+				to, emisor, receptor, page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/factura-reports")
@@ -98,7 +98,7 @@ public class FacturaController {
 	public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
 		return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{folio}/pagos")
 	public ResponseEntity<List<PagoDto>> getPagosbyFolio(@PathVariable String folio) {
 		return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
@@ -113,7 +113,7 @@ public class FacturaController {
 	@PutMapping("/{idCfdi}")
 	public ResponseEntity<FacturaDto> updateFactura(@PathVariable Integer idCfdi,
 			@RequestBody @Valid FacturaDto factura) {
-		return new ResponseEntity<>(service.updateFactura(idCfdi,factura), HttpStatus.OK);
+		return new ResponseEntity<>(service.updateFactura(idCfdi, factura), HttpStatus.OK);
 	}
 
 	// TIMBRADO
@@ -141,5 +141,13 @@ public class FacturaController {
 	public ResponseEntity<FacturaContext> renviarCorreos(@PathVariable String folio,
 			@RequestBody @Valid FacturaDto facturaDto) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.renviarCorreo(folio, facturaDto), HttpStatus.OK);
+	}
+
+	@PostMapping("/{folio}/complementos")
+	public ResponseEntity<FacturaDto> getComplementos(@PathVariable String folio, @RequestBody @Valid PagoDto pago)
+			throws InvoiceManagerException {
+		FacturaDto facturaDto = service.createComplemento(folio, pago);
+		return new ResponseEntity<>(service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(),
+				HttpStatus.OK);
 	}
 }

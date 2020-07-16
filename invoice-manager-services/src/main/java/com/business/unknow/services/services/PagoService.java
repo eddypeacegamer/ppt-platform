@@ -145,7 +145,6 @@ public class PagoService {
 				.collect(Collectors.toList());
 
 		if (!factPpd.isEmpty()) {
-			// PPD crean en automatico complemento
 			log.info("Generando complemento para : {}",
 					factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
 			FacturaDto fact = facturaService.generateComplemento(facturas, pagoDto);
@@ -177,6 +176,17 @@ public class PagoService {
 					dto.setSaldoPendiente(dto.getSaldoPendiente().subtract(pagoFact.get().getMonto()));
 					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), dto.getTotal(), dto.getSaldoPendiente());
 				}
+			}
+		}
+		if (FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
+				&&facturas.size()==1){
+			Optional<FacturaDto> currentFactura= facturas.stream().findFirst();
+			if(currentFactura.isPresent()&&currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+				currentFactura.get().setValidacionTeso(true);
+				facturaService.updateFactura(currentFactura.get().getIdCfdi(), currentFactura.get());
+				pagoDto.setStatusPago("ACEPTADO");
+				pagoDto.setRevision1(true);
+				pagoDto.setRevision2(true);
 			}
 		}
 		Pago payment = repository.save(mapper.getEntityFromPagoDto(pagoDto));
@@ -255,15 +265,4 @@ public class PagoService {
 		repository.delete(mapper.getEntityFromPagoDto(payment));
 	}
 
-	// TODO check why we need this?
-//	public void actualizarCreditoContabilidad(String folio, PagoDto pagoDto) {
-//		List<Pago> pagos = repository.findByFolio(folio);
-//		Optional<Pago> pago = pagos.stream().filter(a -> a.getFormaPago().equals(FormaPagoEnum.CREDITO.name()))
-//				.findFirst();
-//		if (pago.isPresent()) {
-//			Pago entity = pago.get();
-//			entity.setMonto(entity.getMonto().subtract(pagoDto.getMonto()));
-//			repository.save(entity);
-//		}
-//	}
 }

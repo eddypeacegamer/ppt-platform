@@ -51,8 +51,8 @@ public class PagosController {
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
-		Page<PagoDto> pagos = pagoService.getPaginatedPayments(solicitante, acredor, deudor, formaPago, status, banco, since, to,
-				page, size);
+		Page<PagoDto> pagos = pagoService.getPaginatedPayments(solicitante, acredor, deudor, formaPago, status, banco,
+				since, to, page, size);
 
 		return new ResponseEntity<>(pagos, HttpStatus.OK);
 	}
@@ -62,27 +62,23 @@ public class PagosController {
 			throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.getPaymentById(idPago), HttpStatus.OK);
 	}
-	
-	
+
 	@PostMapping
-	public ResponseEntity<PagoDto> insertPago( @RequestBody  @Valid PagoDto pago) throws InvoiceManagerException{
+	public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago) throws InvoiceManagerException {
 		return new ResponseEntity<>(pagoService.insertNewPayment(pago), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{idPago}")
 	public ResponseEntity<PagoDto> updatePago(@PathVariable(name = "idPago") Integer idPago,
 			@RequestBody @Valid PagoDto pagoDto) throws InvoiceManagerException {
-		return new ResponseEntity<>(pagoService.updatePago(idPago,pagoDto), HttpStatus.OK);
+		return new ResponseEntity<>(pagoService.updatePago(idPago, pagoDto), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{idPago}")
 	public ResponseEntity<Void> deletePago(@PathVariable(name = "idPago") Integer idPago)
 			throws InvoiceManagerException {
 		pagoService.deletePago(idPago);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-	
-	
-
 
 }
