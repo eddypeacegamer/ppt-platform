@@ -24,23 +24,18 @@ public class FacturaPagoValidationRule {
 			return false;
 		} else if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(fc.getFacturaDto().getTipoDocumento())) {
 			if (fc.getPagos() == null && fc.getPagos().isEmpty()) {
-				return true;
+				return !MetodosPagoEnum.PPD.getClave().equals(fc.getFacturaDto().getMetodoPago());
+				// PPD never has payments and PUE always should have payments
 			} else {
 				if (MetodosPagoEnum.PUE.getClave().equals(fc.getFacturaDto().getMetodoPago())) {
 					BigDecimal paymentsAmmount = fc.getPagos().stream()
-							// .filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+							.filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+							.flatMap(p->p.getFacturas().stream())
+							.filter(f->f.getFolio().equals(fc.getFacturaDto().getFolio()))
 							.map(p -> p.getMonto()).reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
 					BigDecimal totalfactura = fc.getFacturaDto().getCfdi().getTotal();
 					return paymentsAmmount.compareTo(totalfactura) != 0;
 				}
-				if (MetodosPagoEnum.PPD.getClave().equals(fc.getFacturaDto().getMetodoPago())) {
-					BigDecimal paymentsAmmount = fc.getPagos().stream()
-							// .filter(p->RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
-							.map(p -> p.getMonto()).reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
-					BigDecimal paidAmmount = fc.getFacturaDto().getTotal().subtract(fc.getFacturaDto().getSaldoPendiente());
-					return paymentsAmmount.compareTo(paidAmmount) != 0;
-				}
-
 			}
 		}
 		return false;

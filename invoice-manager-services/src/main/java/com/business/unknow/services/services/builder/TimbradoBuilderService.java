@@ -10,7 +10,7 @@ import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.EmpresaMapper;
@@ -56,9 +56,9 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 								String.format("La empresa con el rfc no existe", currentFacturaDto.getRfcEmisor()),
 								HttpStatus.SC_NOT_FOUND)));
 		getEmpresaFiles(empresaDto, currentFacturaDto);
-		List<PagoFacturaDto> pagosFactura= null;
+		List<PagoDto> pagosFactura= null;
 		if(TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
-			pagosFactura = pagosService.findPagosFacturaByFolio(folio);
+			pagosFactura = pagosService.findPagosByFolio(folio);
 		}
 		
 		

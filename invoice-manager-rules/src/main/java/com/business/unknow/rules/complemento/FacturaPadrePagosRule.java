@@ -9,12 +9,15 @@ import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.rules.common.Constants.Prevalidations;
 
 @Rule(name = Prevalidations.FACTURA_PADRE_PAGOS_RULE, description = Prevalidations.FACTURA_PADRE_PAGOS)
 public class FacturaPadrePagosRule extends AbstractPrevalidations {
 
+	
+	// TODO this rule is disabled and is never used, looks is needed but for any reason was not implemented.
 	@Condition
 	public boolean condition(@Fact("facturaContext") FacturaContext fc) {
 		if (fc.getPagos().isEmpty() || fc.getFacturaDto().getCfdi().getTotal() == null
@@ -22,22 +25,23 @@ public class FacturaPadrePagosRule extends AbstractPrevalidations {
 			return true;
 		} else {
 			BigDecimal pagos = new BigDecimal("0");
-			for (PagoFacturaDto pago : fc.getPagos())
-				pagos.add(pago.getMonto());
-			Optional<PagoFacturaDto> pagoDto = fc.getPagos().stream()
-					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(a.getMonto()) == 0// TODO
-					// here is a potential
-					// issue when the
-					// complement will be
-					// created with one
-					// ammount equal to a
-					// previous ammount
-					).findFirst();
-			return (fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO) == 0
-					|| pagos.compareTo(BigDecimal.ZERO) == 0
-					// || pagos > fc.getFacturaDto().getTotal() //validate how to handle this
-					// condition, this is not allowing generate complements
-					|| !pagoDto.isPresent());
+			return false;
+//			for (PagoDto pago : fc.getPagos())
+//				pagos.add(pago.getMonto());
+//			Optional<PagoFacturaDto> pagoDto = fc.getPagos().stream()
+//					.filter(a -> fc.getFacturaDto().getCfdi().getTotal().compareTo(a.getMonto()) == 0// TODO
+//					// here is a potential
+//					// issue when the
+//					// complement will be
+//					// created with one
+//					// ammount equal to a
+//					// previous ammount
+//					).findFirst();
+//			return (fc.getFacturaDto().getCfdi().getTotal().compareTo(BigDecimal.ZERO) == 0
+//					|| pagos.compareTo(BigDecimal.ZERO) == 0
+//					// || pagos > fc.getFacturaDto().getTotal() //validate how to handle this
+//					// condition, this is not allowing generate complements
+//					|| !pagoDto.isPresent());
 		}
 
 	}

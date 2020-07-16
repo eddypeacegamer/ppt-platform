@@ -29,7 +29,7 @@ public class PaymentInvoiceStatusRule {
 		for (FacturaDto factura : facturas) {
 			if (!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago()) &&
 					(FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
-						|| FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura())
+						|| FacturaStatusEnum.TIMBRADA.getValor().equals(factura.getStatusFactura())
 						|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))) {
 					results.add(String.format("La factura con pre folio %d no es valida", factura.getIdCfdi()));
 					return true;

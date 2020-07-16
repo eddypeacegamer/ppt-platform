@@ -7,7 +7,6 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 
@@ -63,7 +62,7 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		return this;
 	}
 	
-	public FacturaContextBuilder setPagos(List<PagoFacturaDto> pagos) {
+	public FacturaContextBuilder setPagos(List<PagoDto> pagos) {
 		instance.setPagos(pagos);
 		return this;
 	}

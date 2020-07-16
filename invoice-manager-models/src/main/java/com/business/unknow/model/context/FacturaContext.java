@@ -7,7 +7,6 @@ import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 
@@ -19,7 +18,7 @@ public class FacturaContext implements Serializable {
 	private FacturaDto facturaDto;
 	private FacturaDto facturaPadreDto;
 	private List<FacturaDto> complementos;
-	private List<PagoFacturaDto> pagos;
+	private List<PagoDto> pagos;
 	private PagoDto pagoCredito;
 	private PagoDto currentPago;
 	private boolean valid;
@@ -92,11 +91,11 @@ public class FacturaContext implements Serializable {
 		this.facturaPadreDto = facturaPadreDto;
 	}
 
-	public List<PagoFacturaDto> getPagos() {
+	public List<PagoDto> getPagos() {
 		return pagos;
 	}
 
-	public void setPagos(List<PagoFacturaDto> pagos) {
+	public void setPagos(List<PagoDto> pagos) {
 		this.pagos = pagos;
 	}
 
