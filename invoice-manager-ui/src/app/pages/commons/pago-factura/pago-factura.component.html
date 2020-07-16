@@ -1,6 +1,6 @@
 <div *ngIf="factura">
-  <p class="font-weight-bold" *ngIf="factura.saldoPendiente > 0.01">Pagos</p>
-  <div class="row" *ngIf="factura.saldoPendiente > 0.01">
+  <p class="font-weight-bold" *ngIf="factura.saldoPendiente > 0.005">Pagos</p>
+  <div class="row" *ngIf="factura.saldoPendiente > 0.005">
     <div class="col-sm-2">
       <label for="inputPayCoin" class="label">Moneda</label>
       <select id="inputPayCoin" style="display:block;" class="form-control"
@@ -32,7 +32,7 @@
     </div-->
   </div>
 
-<div class="row" *ngIf="factura.saldoPendiente > 0.01">
+<div class="row" *ngIf="factura.saldoPendiente > 0.005">
   <div class="col-sm-2">
     <label for="payAmmount" class="label">Monto Pago</label>
     <input id="payAmmount" class="form-control" fullWidth type="number" min="0" placeholder="Monto" [(ngModel)]="newPayment.monto">
