@@ -31,6 +31,7 @@ import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.co
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { PagoFacturaComponent } from './pago-factura/pago-factura.component';
 import { GenerarComplementoComponent } from './generar-complemento/generar-complemento.component';
+import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { GenerarComplementoComponent } from './generar-complemento/generar-compl
     AsignacionPagosComponent,
     PagoFacturaComponent,
     GenerarComplementoComponent,
+    MulticomplementosComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { GenerarComplementoComponent } from './generar-complemento/generar-compl
     PagosFacturaComponent,
     PagoFacturaComponent,
     GenerarComplementoComponent,
+    MulticomplementosComponent,
     ConceptosComponent,
     CfdiComponent,
     AsignacionPagosComponent,

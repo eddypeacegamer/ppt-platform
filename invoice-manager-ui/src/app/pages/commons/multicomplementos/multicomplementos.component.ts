@@ -1,34 +1,32 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { PagoBase } from '../../../models/pago-base';
+import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
-import { Factura } from '../../../models/factura/factura';
-import { InvoicesData } from '../../../@core/data/invoices-data';
-import { map } from 'rxjs/operators';
-import { ClientsData } from '../../../@core/data/clients-data';
-import { Client } from '../../../models/client';
-import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../models/user';
-import { Contribuyente } from '../../../models/contribuyente';
+import { PagoBase } from '../../../models/pago-base';
+import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
+import { Contribuyente } from '../../../models/contribuyente';
+import { PaymentsData } from '../../../@core/data/payments-data';
+import { UsersData } from '../../../@core/data/users-data';
+import { ClientsData } from '../../../@core/data/clients-data';
+import { InvoicesData } from '../../../@core/data/invoices-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { PaymentsData } from '../../../@core/data/payments-data';
-import { ResourceFile } from '../../../models/resource-file';
-import { HttpErrorResponse } from '@angular/common/http';
-import { PagoFactura } from '../../../models/pago-factura';
-import { NbDialogRef } from '@nebular/theme';
-import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Router } from '@angular/router';
+import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
+import { ResourceFile } from '../../../models/resource-file';
+import { PagoFactura } from '../../../models/pago-factura';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Client } from '../../../models/client';
+import { map } from 'rxjs/operators';
+import { Factura } from '../../../models/factura/factura';
 
 @Component({
-  selector: 'ngx-asignacion-pagos',
-  templateUrl: './asignacion-pagos.component.html',
-  styleUrls: ['./asignacion-pagos.component.scss'],
+  selector: 'ngx-multicomplementos',
+  templateUrl: './multicomplementos.component.html',
+  styleUrls: ['./multicomplementos.component.scss'],
 })
-export class AsignacionPagosComponent implements OnInit {
+export class MulticomplementosComponent implements OnInit {
 
-  public module: string = 'promotor';
 
   public page: GenericPage<any>;
   public user: User;
@@ -50,7 +48,6 @@ export class AsignacionPagosComponent implements OnInit {
 
   public filterParams = {solicitante: '', emisor: '', remitente: ''};
   constructor(
-    protected ref: NbDialogRef<AsignacionPagosComponent>,
     private paymentsService: PaymentsData,
     private userService: UsersData,
     private clientsService: ClientsData,
@@ -62,7 +59,6 @@ export class AsignacionPagosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.module = this.router.url.split('/')[2];
     this.successMesagge = '';
     this.newPayment.moneda = 'MXN';
     this.loading = false;
@@ -80,10 +76,6 @@ export class AsignacionPagosComponent implements OnInit {
           this.clientsCat = clients;
         });
     });
-  }
-
-  exit() {
-    this.ref.close();
   }
 
 
@@ -159,7 +151,6 @@ export class AsignacionPagosComponent implements OnInit {
     this.successMesagge = '';
     this.payErrorMessages = [];
     const payment  = {... this.newPayment};
-    console.log('Validating :',payment);
     for (const f  of this.page.content){
       if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));

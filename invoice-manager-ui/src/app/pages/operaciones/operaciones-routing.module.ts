@@ -12,6 +12,8 @@ import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-repo
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
+import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
+import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -49,8 +51,11 @@ const routes: Routes = [{
     }, {
       path: 'linea-c/:folio',
       component : LineaCComponent,
+    }, {
+      path: 'multicomplementos',
+      component : MulticomplementosComponent,
     },
-     {
+    {
       path: 'facturas/:folio/devoluciones',
       component: DevolutionsDetailsComponent,
     }]}];

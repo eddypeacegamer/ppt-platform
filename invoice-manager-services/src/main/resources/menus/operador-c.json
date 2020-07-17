@@ -9,6 +9,10 @@
 		{
 			"title": "CFDI",
 			"link": "/pages/operaciones/linea-c/*"
+		},
+		{
+			"title": "Multicomplementos",
+			"link": "/pages/operaciones/multicomplementos"
 		}
 	]
 }

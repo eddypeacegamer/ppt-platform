@@ -4,7 +4,6 @@ import { User } from '../../../models/user';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme';
-import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 import { PagoBase } from '../../../models/pago-base';
 import { map } from 'rxjs/operators';
 import { PagoFactura } from '../../../models/pago-factura';
@@ -12,6 +11,7 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { HttpErrorResponse } from '@angular/common/http';
 import { FilesData } from '../../../@core/data/files-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
+import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 
 
 interface TreeNode<T> {
