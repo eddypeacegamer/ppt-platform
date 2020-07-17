@@ -12,7 +12,7 @@
        
         <div class="clearfix">
 
-          <button class="btn btn-success float-left" (click)="openPaymentAssigments(dialog)">Cargar multipago</button>
+          <button class="btn btn-success float-left" (click)="openPaymentAssigments()">Cargar multipago</button>
           <button type="button" (click)="downloadHandler()" class="btn btn-success float-right" *ngIf="page.empty == false">Descarga</button>
 
           <nb-select *ngIf="(page.last==false || page.first) && page.empty=== false" [selected]="pageSize"
