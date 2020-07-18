@@ -90,7 +90,7 @@ public class PDFService {
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
 				.setLogotipo(filesService
 						.findResourceFileByResourceReferenceAndType(TipoRecursoEnum.EMPRESA.name(),
-								facturaDto.getRfcEmisor(), ResourceFileEnum.LOGO.name())
+								ResourceFileEnum.LOGO.name(), facturaDto.getRfcEmisor())
 						.map(q -> q.getData()).orElse(null))
 				.setTipoDeComprobanteDesc(
 						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
@@ -139,9 +139,10 @@ public class PDFService {
 				.setQr(filesService.findFacturaFileByFolioAndType(facturaDto.getFolio(), TipoArchivoEnum.QR.name())
 						.map(q -> q.getData()).orElse(null))
 				.setMetodoPagoDesc(MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
+
 				.setLogotipo(filesService
 						.findResourceFileByResourceReferenceAndType(TipoRecursoEnum.EMPRESA.name(),
-								facturaDto.getRfcEmisor(), ResourceFileEnum.LOGO.name())
+								ResourceFileEnum.LOGO.name(), facturaDto.getRfcEmisor())
 						.map(q -> q.getData()).orElse(null))
 				.setTipoDeComprobanteDesc(
 						TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante()).getDescripcion())
@@ -264,6 +265,7 @@ public class PDFService {
 			model.setQr(context.getFacturaFilesDto().stream().filter(f -> "QR".equalsIgnoreCase(f.getTipoArchivo()))
 					.findFirst().get().getData());
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
+			System.out.println(xmlContent);
 			String xslfoTemplate = getXSLFOTemplate(context.getFacturaDto());
 			InputStreamReader templateReader = new InputStreamReader(
 					Thread.currentThread().getContextClassLoader().getResourceAsStream("pdf-config/" + xslfoTemplate));
@@ -298,7 +300,7 @@ public class PDFService {
 			} else {
 				return "complemento-sin-timbrar.xml";
 			}
-		}else {
+		} else {
 			return "factura-sin-timbrar.xml";
 		}
 	}

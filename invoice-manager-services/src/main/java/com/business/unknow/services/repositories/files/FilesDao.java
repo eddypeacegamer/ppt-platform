@@ -56,6 +56,7 @@ public class FilesDao {
 				ps.setString(1, fileType);
 				ps.setString(2, reference);
 				ps.setString(3, resource);
+
 				return ps;
 			}
 		}, new ResourceFileRsExtractor());
