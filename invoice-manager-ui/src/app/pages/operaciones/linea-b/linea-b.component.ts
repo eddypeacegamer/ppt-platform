@@ -375,6 +375,7 @@ export class LineaBComponent implements OnInit {
     if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
+          this.getInvoiceInfoByPreFolio(this.preFolio);
         //  this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)
@@ -400,6 +401,7 @@ export class LineaBComponent implements OnInit {
             })).subscribe(complementos => {
             this.factura.complementos = complementos;
             this.calculatePaymentSum(complementos);
+            this.getInvoiceInfoByPreFolio(this.preFolio);
             this.loading = false;
           });
   }

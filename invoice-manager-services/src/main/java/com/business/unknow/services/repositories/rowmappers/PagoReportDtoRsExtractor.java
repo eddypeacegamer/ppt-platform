@@ -24,7 +24,7 @@ public class PagoReportDtoRsExtractor implements ResultSetExtractor<Optional<Pag
 		
 		if(rs.next()) {
 			return Optional.of(new PagoReportDtoBuilder()
-					.setFolio(rs.getString("FOLIO"))
+					
 					.setFolioFiscal(rs.getString("UUID"))
 					.setFechaEmision(rs.getDate("FECHA"))
 					.setRfcEmisor(rs.getString("RFC_EMISOR"))

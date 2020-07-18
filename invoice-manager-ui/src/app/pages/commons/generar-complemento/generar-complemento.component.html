@@ -1,5 +1,5 @@
 
-<div >
+<div>
     <div *ngIf="factura && factura.cfdi && factura.saldoPendiente > 0.1">
      
       <p class="font-weight-bold" *ngIf=" factura.cfdi.total > paymentSum && factura.metodoPago =='PPD' && factura.folio!==undefined">Cargar Complementos</p>
@@ -60,7 +60,7 @@
           <tbody>
             <tr *ngFor="let complemento of factura.complementos">
               <td scope="row" class="text-center">
-                <button type="button"  class="btn btn-outline-primary"
+              <!--   <button type="button"  class="btn btn-outline-primary"
                   (click)="downloadPdf(complemento.folio)">
                   <i class="fa fa-file-pdf"></i>
                 </button>&nbsp;&nbsp;
@@ -68,7 +68,7 @@
                   [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
                   (click)="downloadXml(complemento.folio)">
                   <i class="fa fa-code"></i>
-                </button>&nbsp;&nbsp;
+                </button>&nbsp;&nbsp; -->
                 <button type="button" [disabled]="complemento.statusFactura == 'Timbrada'||  complemento.statusFactura == 'Cancelada' || loading" class="btn"
                   [ngClass]="{'btn-outline-secondary': complemento.statusFactura =='Timbrada'||  complemento.statusFactura == 'Cancelada',
                     'btn-outline-success':complemento.statusFactura !='Timbrada'&&  complemento.statusFactura != 'Cancelada' }"
@@ -89,8 +89,10 @@
       </div>
     </div>
   
-</div>
-<br>
-<div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">
-  <p *ngFor="let message of payErrorMessages">{{message}}</p>
+
+  <br>
+  <div class="alert alert-warning" *ngIf="payErrorMessages.length > 0" role="alert">
+    <p *ngFor="let message of payErrorMessages">{{message}}</p>
+  </div>
+
 </div>

@@ -94,10 +94,12 @@ export class PreCfdiComponent implements OnInit {
     private userService: UsersData,
     private cfdiValidator: CfdiValidatorService,
     private paymentsService: PaymentsData,
+
     private downloadService: DonwloadFileService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
     this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
@@ -322,6 +324,7 @@ export class PreCfdiComponent implements OnInit {
     let fact = { ...this.factura };
     fact.statusFactura = '9';// update to recahzo contabilidad
     this.invoiceService.updateInvoice(fact).subscribe(result => {
+      this.getInvoiceByIdCdfi(this.preFolio);
       this.loading = false;
     },
       (error: HttpErrorResponse) => {
@@ -369,6 +372,7 @@ export class PreCfdiComponent implements OnInit {
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success => {
       this.successMessage = 'Factura correctamente cancelada';
+      this.getInvoiceByIdCdfi(this.preFolio);
         this.loading = false;
       },(error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
@@ -400,6 +404,7 @@ export class PreCfdiComponent implements OnInit {
     if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
+          this.getInvoiceByIdCdfi(this.preFolio);
         /*   this.loadConceptos(); */
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)

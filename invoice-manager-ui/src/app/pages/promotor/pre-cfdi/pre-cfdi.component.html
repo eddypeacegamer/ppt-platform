@@ -65,7 +65,7 @@
           </div>
         </div>
         
-          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'" 
+          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'"
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
 

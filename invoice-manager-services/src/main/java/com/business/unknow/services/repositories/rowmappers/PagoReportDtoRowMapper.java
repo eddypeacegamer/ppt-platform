@@ -20,7 +20,7 @@ public class PagoReportDtoRowMapper implements RowMapper<PagoReportDto> {
 	@Override
 	public PagoReportDto mapRow(ResultSet rs, int rowNum) throws SQLException {
 		return new PagoReportDtoBuilder()
-				.setFolio(rs.getString("FOLIO"))
+				
 				.setFolioFiscal(rs.getString("UUID"))
 				.setFechaEmision(rs.getDate("FECHA"))
 				.setRfcEmisor(rs.getString("RFC_EMISOR"))

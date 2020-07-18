@@ -86,7 +86,7 @@
             </button>
             &nbsp;&nbsp;
             <button nbButton status="danger" size="small" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-              [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada'" nbSpinnerStatus="danger"
+              [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada' && factura.tipoDocumento !== 'Complemento'" nbSpinnerStatus="danger"
               nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
             </button>
@@ -99,7 +99,7 @@
        
       <!--   <div *ngIf="!loading">
         <br> -->
-         <ngx-generar-complemento class="slide_1" [factura]="factura" (loading)="loading" (myEvent)="getInvoiceInfoByPreFolio($event)" *ngIf="factura.statusFactura==='Timbrada'" ></ngx-generar-complemento>
+         <ngx-generar-complemento class="slide_1" [factura]="factura" (loading)="loading" (myEvent)="getInvoiceInfoByPreFolio($event)" *ngIf="factura.statusFactura==='Timbrada'  && preFolio !== '*'" ></ngx-generar-complemento>
         <!-- </div> -->
 
       </nb-card-body>

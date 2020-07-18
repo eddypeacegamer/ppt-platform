@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Pago } from '../../../models/factura/pago';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
@@ -27,6 +27,7 @@ export class CfdiComponent implements OnInit {
   @Input() allowEdit: Boolean;
   @Input() factura: Factura;
   @Input() module: string = '';
+
   
   public errorMessagesCdfi: string[] = [];
  
@@ -53,6 +54,10 @@ export class CfdiComponent implements OnInit {
 
   ngOnInit() {
     // catalogs info
+    this.initVariables();
+  }
+
+  initVariables(){
     this.catalogsService.getAllUsoCfdis().then(cat => this.usoCfdiCat = cat);
     this.catalogsService.getFormasPago().then(cat => this.payTypeCat = cat);
     this.successMessage = undefined;
@@ -83,12 +88,14 @@ export class CfdiComponent implements OnInit {
     this.loading = true;
     this.successMessage = undefined;
     this.errorMessagesCdfi = [];
+    //validacion direccion
     if(this.cfdi.emisor.direccion === undefined || this.cfdi.emisor.direccion === ""){
-      this.cfdi.emisor.direccion == "."
+      this.errorMessagesCdfi.push('La direccion del emisor es un valor solicitado');
+      this.loading = false;
+      return;
     }
     if(this.cfdi.receptor.direccion === undefined || this.cfdi.receptor.direccion === ""){
-      this.errorMessagesCdfi.push('La direccion del emisor es un valor solicitado');
-      console.log("11"+this.cfdi.receptor.direccion);
+      this.errorMessagesCdfi.push('La direccion del receptor es un valor solicitado');
       this.loading = false;
       return;
     }
@@ -123,5 +130,9 @@ export class CfdiComponent implements OnInit {
     this.invoiceService.getInvoiceByFolio(folio)
       .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
   }
+
+  public validacionDireccion(){}
+
+
 
 }
