@@ -238,8 +238,8 @@ public class PagoService {
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}
 
+	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public void deletePago(Integer idPago) throws InvoiceManagerException {
-
 		PagoDto payment = mapper.getPagoDtoFromEntity(
 				repository.findById(idPago).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("El pago con id %d no existe", idPago))));
@@ -249,16 +249,19 @@ public class PagoService {
 			facturas.add(factura);
 		}
 		pagoEvaluatorService.deletepaymentValidation(payment, facturas);
-		for (PagoFacturaDto factRef : payment.getFacturas()) {
-			FacturaDto fact = facturaService.getFacturaBaseByPrefolio(factRef.getIdCfdi());
+		
+		
+		for (FacturaDto facturaDto : facturas) {
+			Optional<PagoFacturaDto> pagoFactOpt = payment.getFacturas().stream().filter(p->p.getFolio().equals(facturaDto.getFolio())).findAny();
+			if(pagoFactOpt.isPresent()) {
+				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), facturaDto.getTotal(), facturaDto.getSaldoPendiente().add(pagoFactOpt.get().getMonto()));
+			}
+		}
+		for (Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct().collect(Collectors.toList())) {
+			FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
 			if (TipoDocumentoEnum.COMPLEMENTO.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
 				facturaService.deleteFactura(fact.getFolio());
 				filesService.deleteFacturaFileByFolioAndType(fact.getFolio(), "PDF");
-			}
-			if (TipoDocumentoEnum.FACTURA.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))
-					&& MetodosPagoEnum.PUE.getClave().equals(fact.getMetodoPago())) {
-				fact.setSaldoPendiente(fact.getSaldoPendiente().add(factRef.getMonto()));
-				facturaService.updateFactura(fact.getIdCfdi(), fact);
 			}
 		}
 		filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");
