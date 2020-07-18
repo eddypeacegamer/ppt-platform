@@ -113,11 +113,6 @@ public class FacturaReportDtoBuilder extends AbstractBuilder<FacturaReportDto> {
 		return this;
 	}
 
-	public FacturaReportDtoBuilder setStatusPago(String statusPago) {
-		instance.setStatusPago(statusPago);
-		return this;
-	}
-
 	public FacturaReportDtoBuilder setFechaCancelacion(Date fechaCancelacion) {
 		instance.setFechaCancelacion(fechaCancelacion);
 		return this;

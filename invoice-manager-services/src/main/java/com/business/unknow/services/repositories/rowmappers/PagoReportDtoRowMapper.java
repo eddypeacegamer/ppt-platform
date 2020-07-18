@@ -38,7 +38,6 @@ public class PagoReportDtoRowMapper implements RowMapper<PagoReportDto> {
 				.setFormaPago(rs.getString("FORMA_PAGO"))
 				.setMoneda(rs.getString("MONEDA"))
 				.setStatusFactura(rs.getString("STATUS_FACTURA"))
-				.setStatusPago(rs.getString("STATUS_PAGO"))
 				.setFechaCancelacion(rs.getDate("FECHA_CANCELADO"))
 				.setFolioPago(rs.getString("FOLIO_PAGO"))
 				.setFolioFiscalPago(rs.getString("UUID_PAGO"))

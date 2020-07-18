@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import com.business.unknow.commons.builder.FacturaReportDtoBuilder;
@@ -20,7 +19,7 @@ import com.business.unknow.model.dto.FacturaReportDto;
 public class FacturaReportDtoRsExtractor implements ResultSetExtractor<Optional<FacturaReportDto>>{
 
 	@Override
-	public Optional<FacturaReportDto> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public Optional<FacturaReportDto> extractData(ResultSet rs) throws SQLException {
 		
 		if(rs.next()) {
 			return Optional.of(new FacturaReportDtoBuilder()
@@ -50,7 +49,6 @@ public class FacturaReportDtoRsExtractor implements ResultSetExtractor<Optional<
 					.setFormaPago(rs.getString("FORMA_PAGO"))
 					.setMoneda(rs.getString("MONEDA"))
 					.setStatusFactura(rs.getString("STATUS_FACTURA"))
-					.setStatusPago(rs.getString("STATUS_PAGO"))
 					.setFechaCancelacion(rs.getDate("FECHA_CANCELADO"))
 					.setCantidad(rs.getBigDecimal("CANTIDAD"))
 					.setClaveUnidad(rs.getString("CLAVE_UNIDAD"))

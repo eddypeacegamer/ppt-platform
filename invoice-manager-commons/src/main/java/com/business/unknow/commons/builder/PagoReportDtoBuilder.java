@@ -108,11 +108,6 @@ public class PagoReportDtoBuilder extends AbstractBuilder<PagoReportDto> {
 		return this;
 	}
 	
-	public PagoReportDtoBuilder setStatusPago(String statusPago) {
-		instance.setStatusPago(statusPago);
-		return this;
-	}
-	
 	public PagoReportDtoBuilder setFechaCancelacion(Date fechaCancelacion) {
 		instance.setFechaCancelacion(fechaCancelacion);
 		return this;

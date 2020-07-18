@@ -45,7 +45,6 @@ public class FacturaReportDtoRowMapper implements RowMapper<FacturaReportDto> {
 				.setFormaPago(rs.getString("FORMA_PAGO"))
 				.setMoneda(rs.getString("MONEDA"))
 				.setStatusFactura(rs.getString("STATUS_FACTURA"))
-				.setStatusPago(rs.getString("STATUS_PAGO"))
 				.setFechaCancelacion(rs.getDate("FECHA_CANCELADO"))
 				.setCantidad(rs.getBigDecimal("CANTIDAD"))
 				.setClaveUnidad(rs.getString("CLAVE_UNIDAD"))

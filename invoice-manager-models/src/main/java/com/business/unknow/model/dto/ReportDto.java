@@ -38,7 +38,6 @@ public class ReportDto implements Serializable{
 	private String formaPago;
 	private String moneda;
 	private String statusFactura;
-	private String statusPago;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCancelacion;
 	
@@ -150,12 +149,6 @@ public class ReportDto implements Serializable{
 	}
 	public void setStatusFactura(String statusFactura) {
 		this.statusFactura = statusFactura;
-	}
-	public String getStatusPago() {
-		return statusPago;
-	}
-	public void setStatusPago(String statusPago) {
-		this.statusPago = statusPago;
 	}
 	public Date getFechaCancelacion() {
 		return fechaCancelacion;
