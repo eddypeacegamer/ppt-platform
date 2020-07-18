@@ -17,7 +17,6 @@ import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.commons.builder.FacturaBuilder;
 import com.business.unknow.commons.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
@@ -91,8 +90,8 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
 		return new FacturaBuilder()
-				// TODO:SI SOLO ES UNO PONER EL DEL PAADRE
-				.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name()).setTotal(pago.getMonto())
+				.setTotal(pago.getMonto())
+				.setPackFacturacion(factura.getPackFacturacion())
 				.setSaldoPendiente(BigDecimal.ZERO).setLineaEmisor(factura.getLineaEmisor())
 				.setRfcEmisor(factura.getRfcEmisor()).setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
 				.setRfcRemitente(factura.getRfcRemitente()).setLineaRemitente(factura.getLineaRemitente())

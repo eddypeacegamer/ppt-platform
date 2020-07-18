@@ -413,6 +413,7 @@ public class FacturaService {
 		Optional<FacturaDto> primerfactura = facturas.stream().findFirst();
 		if (primerfactura.isPresent()) {
 			FacturaDto factura = getFacturaByFolio(primerfactura.get().getFolio());
+			factura.setPackFacturacion(primerfactura.get().getPackFacturacion());
 			FacturaContext factContext = facturaBuilderService.buildFacturaContextPagoPpdCreation(pagoPpd, factura,
 					factura.getFolio());
 			CfdiDto cfdiDto = facturaBuilderService.buildFacturaComplementoCreation(factContext);

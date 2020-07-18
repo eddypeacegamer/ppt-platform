@@ -68,13 +68,4 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 				.setEmpresaDto(empresaDto).build();
 	}
 
-//	private void validatePackFacturacion(FacturaDto currentFacturaDto, FacturaDto facturaPadre)
-//			throws InvoiceManagerException {
-//		if (facturaPadre != null && !facturaPadre.getPackFacturacion().equals(currentFacturaDto.getPackFacturacion())) {
-//			throw new InvoiceManagerException("El pack del complemento debe ser el mismo",
-//					String.format("El pack de facturacion del complemento %s no es el correcto",
-//							currentFacturaDto.getPackFacturacion()),
-//					HttpStatus.SC_BAD_REQUEST);
-//		}
-//	}
 }
