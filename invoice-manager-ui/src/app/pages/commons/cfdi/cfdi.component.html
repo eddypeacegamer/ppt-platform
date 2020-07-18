@@ -179,7 +179,7 @@
     </div>
     <br>
 
-    <div *ngIf="pagos && pagos.length>0">
+    <div *ngIf="pagos && pagos.length>0 ">
       <p class="font-weight-bold puff_center">Complementos</p>
       <br>
       <div class="table-responsive slide_1">
@@ -200,6 +200,10 @@
           <tbody>
             <tr *ngFor="let complemento of pagos">
               <td scope="row" class="text-center">
+          <!--       <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="cfdi.metodoPago === 'PPD' && factura.tipoDocumento !== 'Complemento'"
+                  (click)="redirectToChildCfdi(complemento.folio,complemento.Parcialidad)"><i class="fa fa-search"></i>
+                </button> &nbsp;&nbsp; -->
+
                 <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P'"
                     (click)="redirectToCfdi(complemento.folio)"><i class="fa fa-search"></i>
                   </button> &nbsp;&nbsp;
@@ -213,6 +217,10 @@
                   (click)="downloadXml(complemento.folio)">
                   <i class="fa fa-code"></i>
                 </button>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="cfdi.metodoPago === 'PPD' "
+                    (click)="redirectToChildCfdi(complemento.folio,complemento.numeroParcialidad)"><i class="fa fa-search"></i>
+                  </button>
               </td>
               <td scope="row" class="text-center">{{complemento.folio}}</td>
               <td scope="row" class="text-center">{{complemento.idDocumento}}</td>

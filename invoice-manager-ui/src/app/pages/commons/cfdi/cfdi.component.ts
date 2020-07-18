@@ -32,6 +32,7 @@ export class CfdiComponent implements OnInit {
   public errorMessagesCdfi: string[] = [];
  
   public loading: boolean = false;
+  
 
   // auxiliar variables
   public newConcep: Concepto;
@@ -48,7 +49,7 @@ export class CfdiComponent implements OnInit {
     private cfdiservice: CfdiData,
     private invoiceService : InvoicesData,
     private router: Router,
-    
+
     private dialogService: NbDialogService) {
     }
 
@@ -129,6 +130,19 @@ export class CfdiComponent implements OnInit {
   public redirectToCfdi(folio: string){
     this.invoiceService.getInvoiceByFolio(folio)
       .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
+  }
+
+  public redirectToChildCfdi(folio: string,parcialidad:string){
+    console.log("folio "+folio);
+    console.log("parcialidad "+parcialidad);
+    this.cfdiservice.getChildrenCfdi(+folio,+parcialidad).subscribe(factura => {
+      console.log("fol "+factura.folio);
+     
+      this.invoiceService.getInvoiceByFolio(factura.folio)
+      .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
+    
+    });
+   
   }
 
   public validacionDireccion(){}

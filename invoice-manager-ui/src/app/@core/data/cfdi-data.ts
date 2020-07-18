@@ -13,5 +13,6 @@ export abstract class CfdiData {
     abstract deleteConcepto(prefolio: number, conceptoId: number): Observable<any>;
     abstract findPagosPPD(prefolio: number): Observable<Pago[]>;
     abstract getFacturaInfo(prefolio: number): Observable<Factura>;
+    abstract getChildrenCfdi(prefolio: number, parcialidad:number): Observable<Factura>;
 
 }

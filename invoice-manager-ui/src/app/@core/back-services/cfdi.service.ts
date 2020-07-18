@@ -38,6 +38,11 @@ export class CfdiService {
     return this.httpClient.get(`../api/cfdis/${prefolio}/facturaInfo`);
   }
 
+  public getChildrenCfdi(prefolio: number, parcialidad:number): Observable<any> {
+    return this.httpClient.get(`../api/facturas/complementos/${prefolio}?parcialidad=${parcialidad}`);
+   
+  }
+
 
 
 }
