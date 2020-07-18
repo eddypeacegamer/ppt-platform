@@ -25,7 +25,6 @@ import com.business.unknow.model.dto.services.UserDto;
 import com.business.unknow.services.services.RoleService;
 import com.business.unknow.services.services.UserService;
 
-
 /**
  * @author eej000f
  *
@@ -39,7 +38,7 @@ public class UserController {
 
 	@Autowired
 	private RoleService rolService;
-	
+
 	@GetMapping("")
 	public ResponseEntity<Page<UserDto>> getClientsByParameters(
 			@RequestParam(name = "status", defaultValue = "") String status,
@@ -59,7 +58,7 @@ public class UserController {
 	public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
 		return new ResponseEntity<>(service.createUser(userDto), HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/{userId}")
 	public ResponseEntity<UserDto> upadteUser(@PathVariable Integer userId, @RequestBody @Valid UserDto userDto) {
 		return new ResponseEntity<>(service.updateUser(userId, userDto), HttpStatus.OK);
@@ -88,7 +87,7 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}/roles")
-	public ResponseEntity<RoleDto> insertRoleToUser(@PathVariable Integer userId, @RequestBody @Valid  RoleDto roleDto) {
+	public ResponseEntity<RoleDto> insertRoleToUser(@PathVariable Integer userId, @RequestBody @Valid RoleDto roleDto) {
 		return new ResponseEntity<>(rolService.insertNewRole(userId, roleDto), HttpStatus.OK);
 	}
 

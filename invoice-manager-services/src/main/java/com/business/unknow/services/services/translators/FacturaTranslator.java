@@ -154,7 +154,9 @@ public class FacturaTranslator {
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
+		if(context.getFacturaDto().getCfdi().getComplemento()==null) {
+			context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
+		}
 	}
 
 	public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
