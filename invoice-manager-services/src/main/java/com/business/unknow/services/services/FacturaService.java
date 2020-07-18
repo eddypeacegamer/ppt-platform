@@ -39,8 +39,10 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
+import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.builder.FacturaBuilderService;
@@ -62,6 +64,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
+
+	@Autowired
+	private CfdiPagoRepository cfdiPagoRepository;
 
 	@Autowired
 	private CfdiService cfdiService;
@@ -195,6 +200,17 @@ public class FacturaService {
 		} else {
 			return new PageImpl<PagoReportDto>(facturaDao.getComplementsDetailsByFolios(folios), result.getPageable(),
 					result.getTotalElements());
+		}
+	}
+
+	public FacturaDto getComplementoByIdCfdiAnParcialidad(String folio, Integer parcialidad) {
+		List<CfdiPago> pagos = cfdiPagoRepository.findByIdCfdiAndParcialidad(folio, parcialidad);
+		Optional<CfdiPago> pago = pagos.stream().findFirst();
+		if (pago.isPresent()) {
+			return getFacturaBaseByPrefolio(pago.get().getCfdi().getId());
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el pre-folio %s no existe", folio));
 		}
 	}
 
