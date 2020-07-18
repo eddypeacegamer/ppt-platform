@@ -97,6 +97,9 @@ public class FacturaService {
 	private TimbradoExecutorService timbradoExecutorService;
 
 	@Autowired
+	private DevolucionService devolucionService;
+
+	@Autowired
 	private PDFService pdfService;
 
 	@Autowired
@@ -337,10 +340,7 @@ public class FacturaService {
 						.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())))
 				&& facturaContext.getFacturaDto().getLineaEmisor().equals("A")
 				&& facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			// TODO Reconstruir todo el calculo de las devolucioness por que esta basado en
-//			devolucionService.generarDevolucionesPorPago(facturaContext.getFacturaDto(),
-//					facturaContext.getCurrentPago());
-//			devolucionService.updateSolicitudDevoluciones(folio);
+			devolucionService.generarDevoluciones(facturaContext.getFacturaDto());
 		}
 		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			try {

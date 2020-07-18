@@ -30,6 +30,7 @@ public class FacturaContext implements Serializable {
 	private List<FacturaFileDto> facturaFilesDto;
 	private String xml;
 	private int ctdadComplementos;
+	private int idPago;
 
 	public FacturaContext() {
 		valid = true;
@@ -169,6 +170,14 @@ public class FacturaContext implements Serializable {
 
 	public void setCurrentPago(PagoDto currentPago) {
 		this.currentPago = currentPago;
+	}
+
+	public int getIdPago() {
+		return idPago;
+	}
+
+	public void setIdPago(int idPago) {
+		this.idPago = idPago;
 	}
 
 	@Override

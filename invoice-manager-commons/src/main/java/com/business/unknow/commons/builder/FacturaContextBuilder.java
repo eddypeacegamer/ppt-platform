@@ -81,5 +81,10 @@ public class FacturaContextBuilder extends AbstractBuilder<FacturaContext> {
 		instance.setFacturaFilesDto(facturaFilesDto);
 		return this;
 	}
+	
+	public FacturaContextBuilder setIdPago(int idPago) {
+		instance.setIdPago(idPago);
+		return this;
+	}
 
 }

@@ -53,15 +53,6 @@ public class DevolucionesController {
 				service.getDevolucionesByFolio(folio), HttpStatus.OK);
 	}
 	
-	@PutMapping("/facturas/{folio}/devoluciones")
-	public ResponseEntity<List<DevolucionDto>> updateDevoluciones(
-			@PathVariable(name = "folio") String folio,
-			@RequestBody List<DevolucionDto> devoluciones)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.upadteDevoluciones(folio,devoluciones), HttpStatus.OK);
-	}
-	
-	
 	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}")
 	public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
 			@PathVariable(name = "tipoReceptor") String tipoReceptor,

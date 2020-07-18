@@ -66,9 +66,6 @@ public class TimbradoBuilderService extends AbstractBuilderService {
 				.setPagos(pagosFactura)
 				.setTipoDocumento(currentFacturaDto.getTipoDocumento())
 				.setEmpresaDto(empresaDto).build();
-		// TODO Rehacer logica de timbrado, el concepto de folio padre dejo de existir
-//		validatePackFacturacion(currentFacturaDto, facturaPadre);
-
 	}
 
 //	private void validatePackFacturacion(FacturaDto currentFacturaDto, FacturaDto facturaPadre)
