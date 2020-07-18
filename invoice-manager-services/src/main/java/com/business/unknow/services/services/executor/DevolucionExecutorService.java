@@ -26,31 +26,30 @@ public class DevolucionExecutorService {
 
 	@Autowired
 	private DevolucionesBuilderService devolucionesBuilderService;
-	
+
 	@Autowired
 	private FacturaService facturaService;
 
 	public void executeDevolucionForPue(FacturaContext context, Client client) throws InvoiceManagerException {
 		BigDecimal baseComisiones = calculaImpuestos(context.getFacturaDto().getCfdi());
 		BigDecimal realSubtotal = calculaImporteBaseFactura(context.getFacturaDto().getCfdi());
-		BigDecimal total=context.getFacturaDto().getCfdi().getTotal();
-		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total,
-				context.getFacturaDto().getIdCfdi().toString(), context.getIdPago(), baseComisiones,
-				client.getPorcentajePromotor(), client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
-		devolucionRepository
-				.save(devolucionesBuilderService.buildDevolucion(total, context.getFacturaDto().getIdCfdi().toString(),
-						context.getIdPago(), baseComisiones, client.getPorcentajeDespacho(),
-						"invoice.manager.sj@gmail.com", ContactoDevolucionEnum.DESPACHO.name()));
+		BigDecimal total = context.getFacturaDto().getCfdi().getTotal();
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total, context.getFacturaDto().getFolio(),
+				context.getIdPago(), baseComisiones, client.getPorcentajePromotor(), client.getCorreoPromotor(),
+				ContactoDevolucionEnum.PROMOTOR.name()));
+		devolucionRepository.save(devolucionesBuilderService.buildDevolucion(total, context.getFacturaDto().getFolio(),
+				context.getIdPago(), baseComisiones, client.getPorcentajeDespacho(), "invoice.manager.sj@gmail.com",
+				ContactoDevolucionEnum.DESPACHO.name()));
 		if (client.getPorcentajeCliente().compareTo(BigDecimal.ZERO) > 0) {
 			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,
-					context.getFacturaDto().getIdCfdi().toString(), context.getIdPago(), baseComisiones,
+					context.getFacturaDto().getFolio(), context.getIdPago(), baseComisiones,
 					client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
 					ContactoDevolucionEnum.CLIENTE.name());
 			devolucion.setMonto(realSubtotal.add(devolucion.getMonto()));
 			devolucionRepository.save(devolucion);
 		} else {
 			Devolucion devolucion = devolucionesBuilderService.buildDevolucion(total,
-					context.getFacturaDto().getIdCfdi().toString(), context.getIdPago(), baseComisiones,
+					context.getFacturaDto().getFolio(), context.getIdPago(), baseComisiones,
 					client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
 					ContactoDevolucionEnum.CLIENTE.name());
 			devolucion.setMonto(realSubtotal);
@@ -58,50 +57,47 @@ public class DevolucionExecutorService {
 		}
 		if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO) > 0) {
 			devolucionRepository.save(
-					devolucionesBuilderService.buildDevolucion(total, context.getFacturaDto().getIdCfdi().toString(),
+					devolucionesBuilderService.buildDevolucion(total, context.getFacturaDto().getFolio(),
 							context.getIdPago(), baseComisiones, client.getPorcentajeContacto(),
 							client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.name()));
 		}
 	}
 
-	public void executeDevolucionForPpd(FacturaContext context, Client client)
-			throws InvoiceManagerException {
+	public void executeDevolucionForPpd(FacturaContext context, Client client) throws InvoiceManagerException {
 		for (CfdiPagoDto pagoDto : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
-			FacturaDto facturaDto=facturaService.getFacturaByFolio(pagoDto.getFolio());
+			FacturaDto facturaDto = facturaService.getFacturaByFolio(pagoDto.getFolio());
 			BigDecimal impuestos = calculaImpuestos(facturaDto.getCfdi());
-			BigDecimal baseComisiones = impuestos.divide(facturaDto.getTotal(), 6,
-					RoundingMode.HALF_UP);
+			BigDecimal baseComisiones = impuestos.divide(facturaDto.getTotal(), 6, RoundingMode.HALF_UP);
 			devolucionRepository.save(devolucionesBuilderService.buildDevolucion(pagoDto.getImportePagado(),
-					facturaDto.getCfdi().getId().toString(),context.getIdPago(),
-					pagoDto.getImportePagado().multiply(baseComisiones), client.getPorcentajePromotor(),
-					client.getCorreoPromotor(), ContactoDevolucionEnum.PROMOTOR.name()));
+					facturaDto.getFolio(), context.getIdPago(), pagoDto.getImportePagado().multiply(baseComisiones),
+					client.getPorcentajePromotor(), client.getCorreoPromotor(),
+					ContactoDevolucionEnum.PROMOTOR.name()));
 			devolucionRepository.save(devolucionesBuilderService.buildDevolucion(pagoDto.getImportePagado(),
-					facturaDto.getCfdi().getId().toString(),context.getIdPago(),
-					pagoDto.getImportePagado().multiply(baseComisiones), client.getPorcentajeDespacho(),
-					"invoice.manager.sj@gmail.com", ContactoDevolucionEnum.DESPACHO.name()));
+					facturaDto.getFolio(), context.getIdPago(), pagoDto.getImportePagado().multiply(baseComisiones),
+					client.getPorcentajeDespacho(), "invoice.manager.sj@gmail.com",
+					ContactoDevolucionEnum.DESPACHO.name()));
 			if (client.getPorcentajeCliente().compareTo(BigDecimal.ZERO) > 0) {
 				Devolucion devolucion = devolucionesBuilderService.buildDevolucion(pagoDto.getImportePagado(),
-						facturaDto.getCfdi().getId().toString(),context.getIdPago(),
-						pagoDto.getImportePagado().multiply(baseComisiones), client.getPorcentajeCliente(),
-						client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
+						facturaDto.getFolio(), context.getIdPago(), pagoDto.getImportePagado().multiply(baseComisiones),
+						client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
+						ContactoDevolucionEnum.CLIENTE.name());
 				devolucion.setMonto(pagoDto.getImportePagado()
-						.subtract(pagoDto.getImportePagado().multiply(baseComisiones))
-						.add(devolucion.getMonto()));
+						.subtract(pagoDto.getImportePagado().multiply(baseComisiones)).add(devolucion.getMonto()));
 				devolucionRepository.save(devolucion);
 			} else {
 				Devolucion devolucion = devolucionesBuilderService.buildDevolucion(pagoDto.getImportePagado(),
-						facturaDto.getCfdi().getId().toString(),context.getIdPago(),
-						pagoDto.getImportePagado().multiply(baseComisiones), client.getPorcentajeCliente(),
-						client.getInformacionFiscal().getRfc(), ContactoDevolucionEnum.CLIENTE.name());
-				devolucion.setMonto(pagoDto.getImportePagado()
-						.subtract(pagoDto.getImportePagado().multiply(baseComisiones)));
+						facturaDto.getFolio(), context.getIdPago(), pagoDto.getImportePagado().multiply(baseComisiones),
+						client.getPorcentajeCliente(), client.getInformacionFiscal().getRfc(),
+						ContactoDevolucionEnum.CLIENTE.name());
+				devolucion.setMonto(
+						pagoDto.getImportePagado().subtract(pagoDto.getImportePagado().multiply(baseComisiones)));
 				devolucionRepository.save(devolucion);
 			}
 			if (client.getPorcentajeContacto().compareTo(BigDecimal.ZERO) > 0) {
 				devolucionRepository.save(devolucionesBuilderService.buildDevolucion(pagoDto.getImportePagado(),
-						facturaDto.getCfdi().getId().toString(),context.getIdPago(),
-						pagoDto.getImportePagado().multiply(baseComisiones), client.getPorcentajeContacto(),
-						client.getCorreoContacto(), ContactoDevolucionEnum.CONTACTO.name()));
+						facturaDto.getFolio(), context.getIdPago(), pagoDto.getImportePagado().multiply(baseComisiones),
+						client.getPorcentajeContacto(), client.getCorreoContacto(),
+						ContactoDevolucionEnum.CONTACTO.name()));
 			}
 		}
 	}
