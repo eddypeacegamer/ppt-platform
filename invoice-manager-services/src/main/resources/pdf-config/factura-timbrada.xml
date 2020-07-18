@@ -372,7 +372,7 @@
                     <!-- Timbrado -->
                     <block-container>
                         <block border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm" padding-top="-0.4mm" padding-bottom="-0.4mm">
-                            <inline-container width="155mm" alignment-baseline="before-edge">
+                            <inline-container width="161mm" alignment-baseline="before-edge">
                                 <block-container border-right-color="black" border-right-style="solid" border-right-width=".4mm">
                                     <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm">
                                         <inline-container>
@@ -426,13 +426,28 @@
                                         </inline-container>
                                     </block>
                                     <block margin-left="3mm" margin-right="3mm" padding-bottom="0.5mm" padding-top="0.5mm" font-size="2mm">
-                                        <xsl:value-of select="CadenaOriginal" />
+                                         <xsl:variable name="strlen3" select="string-length(CadenaOriginal) div 5" />
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(CadenaOriginal, 0, floor($strlen3))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3), floor($strlen3))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3)*2, floor($strlen3))" />
+                                                </block>
+                                                 <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 3,  floor($strlen3))" />
+                                                </block>
+                                                <block font-size="2mm" wrap-option="no-wrap">
+                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 4,  floor($strlen3))" />
+                                                </block>
                                     </block>
                                 </block-container>
                             </inline-container>
-                            <inline-container width="41mm" alignment-baseline="before-edge">
+                            <inline-container width="35mm" alignment-baseline="before-edge">
                                 <block margin-left="1mm">
-                                    <external-graphic content-height="scale-to-fit" content-width="39mm">
+                                    <external-graphic content-height="scale-to-fit" content-width="34mm">
                                         <xsl:attribute name="src">
                                             <xsl:value-of select="concat('data:image/png;base64,', Qr)" />
                                         </xsl:attribute>
