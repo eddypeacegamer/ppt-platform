@@ -17,7 +17,8 @@ public class ValidacionFacturaPueRule {
 	@Condition
 	public boolean condition(@Fact("factura") FacturaDto facturaDto) {
 		if ((FacturaStatusEnum.VALIDACION_OPERACIONES.getValor().equals(facturaDto.getStatusFactura()) ||
-				FacturaStatusEnum.VALIDACION_TESORERIA.getValor().equals(facturaDto.getStatusFactura())) &&
+				FacturaStatusEnum.VALIDACION_TESORERIA.getValor().equals(facturaDto.getStatusFactura())
+				||FacturaStatusEnum.RECHAZO_TESORERIA.getValor().equals(facturaDto.getStatusFactura())) &&
 				facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
 				&& facturaDto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 			return true;
