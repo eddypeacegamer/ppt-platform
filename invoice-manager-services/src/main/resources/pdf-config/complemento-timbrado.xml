@@ -429,7 +429,7 @@
 
                                     <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.7mm" padding-top="0.7mm">
                                         <inline-container>
-                                            <block margin-left="3mm">CADENA ORIGINAL DEL COMPLEMENTO DE CERTIFICACION DIGITAL DEL CFDI</block>
+                                            <block margin-left="3mm">CADENA ORIGINAL</block>
                                         </inline-container>
                                     </block>
                                     <block margin-left="3mm" margin-right="3mm" padding-bottom="0.5mm" padding-top="0.5mm" font-size="2mm">

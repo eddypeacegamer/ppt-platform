@@ -264,6 +264,9 @@ public class PagoService {
 				filesService.deleteFacturaFileByFolioAndType(fact.getFolio(), "PDF");
 			}
 		}
+		for(PagoFactura pagoFactura:facturaPagosRepository.findByPagoId(payment.getId())) {
+			facturaPagosRepository.delete(pagoFactura);
+		}
 		filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");
 		repository.delete(mapper.getEntityFromPagoDto(payment));
 	}
