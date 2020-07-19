@@ -174,12 +174,12 @@
    <p>{{errorMessages}}</p>
 
     <br>
-    <div class="slide_3" *ngIf="pagos && !(cfdi.total == 0 && pagos.length !==0 )">
+    <div class="slide_3" *ngIf="cfdi.tipoDeComprobante !== 'P'">
       <ngx-conceptos [cfdi]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
     </div>
     <br>
 
-    <div *ngIf="pagos && pagos.length>0 ">
+    <div *ngIf="pagos && pagos.length>0 && cfdi.id !== undefined">
       <p class="font-weight-bold puff_center">Complementos</p>
       <br>
       <div class="table-responsive slide_1">
