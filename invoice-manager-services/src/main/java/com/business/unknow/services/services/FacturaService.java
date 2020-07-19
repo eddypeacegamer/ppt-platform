@@ -303,6 +303,7 @@ public class FacturaService {
 	}
 
 	public FacturaDto createComplemento(String folio, PagoDto pagoDto) throws InvoiceManagerException {
+		pagoDto.setMonto(pagoDto.getMonto().setScale(2));
 		FacturaDto facturaDto = getBaseFacturaByFolio(folio);
 		List<FacturaDto> facturas = new ArrayList<>();
 		List<PagoFacturaDto> facturaPagos = new ArrayList<>();
