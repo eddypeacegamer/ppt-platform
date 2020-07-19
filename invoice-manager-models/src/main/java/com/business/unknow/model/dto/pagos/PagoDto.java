@@ -221,4 +221,9 @@ public class PagoDto implements Serializable {
 				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", facturas=" + facturas
 				+ ", comprobante=" + comprobante + "]";
 	}	
+	
+	public static void main(String[] args) {
+		BigDecimal b= new BigDecimal(500);
+		System.out.println(b.setScale(2));
+	}
 }
