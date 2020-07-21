@@ -3,7 +3,6 @@
  */
 package com.business.unknow.rules.payments;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.jeasy.rules.annotation.Action;
@@ -33,8 +32,7 @@ public class PaymentInvoiceStatusRule {
 				if(!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago()) &&
 						(FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
 							|| FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura())
-							|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))
-								|| BigDecimal.ZERO.compareTo(factura.getSaldoPendiente())>= 0) {
+							|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))) {
 						results.add(String.format("La factura con pre folio %d no es valida", factura.getIdCfdi()));
 						return true;
 				}
@@ -43,8 +41,7 @@ public class PaymentInvoiceStatusRule {
 			if(MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
 				if(!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago()) && 
 						(FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
-							|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))
-								|| BigDecimal.ZERO.compareTo(factura.getSaldoPendiente())>= 0) {
+							|| FacturaStatusEnum.RECHAZO_OPERACIONES.getValor().equals(factura.getStatusFactura()))) {
 						results.add(String.format("La factura con pre folio %d no es valida", factura.getIdCfdi()));
 						return true;
 				}
