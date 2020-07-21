@@ -30,33 +30,36 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PAGO_FACTURAS")
-public class PagoFactura implements Serializable{
-	
+public class PagoFactura implements Serializable {
+
 	private static final long serialVersionUID = 8969604798644430857L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Integer id;
-		
+
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
-	
+
 	@Column(name = "FOLIO")
 	private String folio;
-	
+
 	@Column(name = "MONTO")
 	private BigDecimal monto;
-	
+
 	@Column(name = "TOTAL_FACTURA")
 	private BigDecimal totalFactura;
-	
+
 	@Column(name = "ACREDOR")
 	private String acredor;
-	
+
 	@Column(name = "DEUDOR")
 	private String deudor;
-	
+
+	@Column(name = "METODO_PAGO")
+	private String metodoPago;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "FECHA_CREACION")
@@ -66,7 +69,7 @@ public class PagoFactura implements Serializable{
 	@LastModifiedDate
 	@Column(name = "FECHA_ACTUALIZACION")
 	private Date fechaActualizacion;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "ID_PAGO", nullable = false)
 	private Pago pago;
@@ -151,11 +154,20 @@ public class PagoFactura implements Serializable{
 		this.pago = pago;
 	}
 
+	public String getMetodoPago() {
+		return metodoPago;
+	}
+
+	public void setMetodoPago(String metodoPago) {
+		this.metodoPago = metodoPago;
+	}
+
 	@Override
 	public String toString() {
 		return "PagoFactura [id=" + id + ", idCfdi=" + idCfdi + ", folio=" + folio + ", monto=" + monto
-				+ ", totalFactura=" + totalFactura + ", acredor=" + acredor + ", deudor=" + deudor + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", pago=" + pago + "]";
+				+ ", totalFactura=" + totalFactura + ", acredor=" + acredor + ", deudor=" + deudor + ", metodoPago="
+				+ metodoPago + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", pago=" + pago + "]";
 	}
 
 }

@@ -132,6 +132,7 @@ public class PagoService {
 			pagoFact.setAcredor(factura.getRazonSocialEmisor());
 			pagoFact.setDeudor(factura.getRazonSocialRemitente());
 			pagoFact.setTotalFactura(factura.getTotal());
+			pagoFact.setMetodoPago(factura.getMetodoPago());
 			if (MetodosPagoEnum.PUE.name().equals(factura.getMetodoPago())) {
 				pagoFact.setIdCfdi(factura.getIdCfdi());
 			}
