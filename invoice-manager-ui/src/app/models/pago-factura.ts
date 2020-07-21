@@ -3,6 +3,7 @@ export class PagoFactura {
     public idCfdi: number;
     public folio: string;
     public monto: number;
+    public metodoPago: string;
     public totalFactura: number;
     public acredor: string;
     public deudor: string;

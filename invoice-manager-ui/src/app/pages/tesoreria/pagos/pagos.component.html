@@ -135,12 +135,15 @@
                 <th scope="col">Cliente</th>
                 <th scope="col">Fecha pago</th>
                 <th scope="col">Monto pagado</th>
+                <th scope="col">Total Factura</th>
+                <th scope="col">Metodo Pago</th>
+                <th scope="col">Forma de pago</th>
                 <th scope="col">Promotor</th>
                 <th scope="col">Validador 1</th>
                 <th scope="col">Validador 2</th>
                 <th scope="col">Banco</th>
                 <th scope="col">Cuenta</th>
-                <th scope="col">Forma de pago</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -176,12 +179,15 @@
                 <td scope="row">{{fila.deudor}}</td>
                 <td scope="row">{{fila.fechaPago}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
+                <td scope="row"><p *ngFor="let fact of fila.facturas">{{fact.totalFactura | currency}}</p></td>
+                <td scope="row"><p *ngFor="let fact of fila.facturas">{{fact.metodoPago}}</p></td>
+                <td scope="row">{{fila.formaPago}}</td>
                 <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.revisor1}}</td>
                 <td scope="row">{{fila.revisor2}}</td>
                 <td scope="row">{{fila.banco}}</td>
                 <td scope="row">{{fila.cuenta}}</td>
-                <td scope="row">{{fila.formaPago}}</td>
+                
 
               </tr>
             </tbody>

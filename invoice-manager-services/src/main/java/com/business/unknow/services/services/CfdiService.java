@@ -209,6 +209,7 @@ public class CfdiService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, String.format(
 						"El receptor %s no esta ligado al CFDI %d", cfdi.getReceptor().getRfc(), cfdi.getId())));
 		receptor.setDireccion(cfdi.getReceptor().getDireccion());
+		receptor.setUsoCfdi(cfdi.getReceptor().getUsoCfdi());
 		receptorRepository.save(receptor);
 		repository.save(mapper.getEntityFromCfdiDto(cfdi));
 		facturaService.recreatePdf(cfdi);

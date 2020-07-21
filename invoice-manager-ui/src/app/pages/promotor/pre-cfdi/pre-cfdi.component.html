@@ -80,7 +80,7 @@
         
         <br>
 
-        <div class="row slide_3" *ngIf="factura.cfdi.id === undefined">
+        <div class="row slide_3" *ngIf="factura.idCfdi === undefined">
           <button nbButton status="success" size="medium" (click)="solicitarCfdi(factura,dialog)" [nbSpinner]="loading"
             [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
