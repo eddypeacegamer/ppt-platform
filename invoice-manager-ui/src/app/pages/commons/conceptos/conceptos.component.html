@@ -7,7 +7,7 @@
       <label for="inputProdServ" class="label">Palabra clave producto servicio</label>
       <div class="">
         <input id="inputProdServ" class="form-control" fullWidth type="text" [(ngModel)]="formInfo.claveProdServ"
-          (ngModelChange)="buscarClaveProductoServicio(dialog,$event)" placeholder="Palabra clave producto">        
+          (ngModelChange)="buscarClaveProductoServicio($event)" placeholder="Palabra clave producto">        
       </div>
     </div>
     <div class="col-sm-2">
@@ -15,12 +15,13 @@
     </div>
     <div class="col-sm-3">
       <label for="inputProdServ" class="label">Selección clave producto servicio</label>
-      <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ"
+      <select id="inputProdServ" fullWidth class="form-control" [(ngModel)]="formInfo.prodServ" [disabled]="prodServCat.length === 0"
         (change)="onClaveProdServSelected($event.target.value)" style="display:block;">
         <option value="*">Seleccionar</option>
         <option *ngFor="let clave of prodServCat" [(value)]="clave.clave">{{clave.clave}} - {{clave.descripcion}}
         </option>
       </select>
+      <small id="inputProdServHelp" class="form-text text-danger">{{claveProdServMsg}}</small>
     </div>
     <div class="col-sm-4" >
       <label for="inputdesc" class="label">Descripción</label>
@@ -105,7 +106,7 @@
           <td scope="row" class="text-center"
             *ngIf="allowEdit">
             <button class="btn-sm btn-outline-danger" (click)="removeConcepto(dialog,i)"><i class="fa fa-trash"></i></button>
-            <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(dialog,fila)"><i class="fa fa-edit"></i></button>
+            <button *ngIf="fila.id !==undefined" class="btn-sm btn-outline-primary" (click)="updateConcepto(fila)"><i class="fa fa-edit"></i></button>
           </td>
           <td scope="row" class="text-center">{{fila.claveProdServ}} -- {{fila.descripcionCUPS}}</td>
           <td scope="row" class="text-center">{{fila.cantidad}}</td>

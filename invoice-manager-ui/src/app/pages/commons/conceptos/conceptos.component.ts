@@ -24,6 +24,7 @@ export class ConceptosComponent implements OnInit {
   public prodServCat: ClaveProductoServicio[] = [];
   public claveUnidadCat: ClaveUnidad[] = [];
 
+  public claveProdServMsg = '';
   public loading: boolean;
 
   constructor(
@@ -46,8 +47,9 @@ export class ConceptosComponent implements OnInit {
   }
 
 
-  public buscarClaveProductoServicio(dialog: TemplateRef<any>, claveProdServ: string) {
+  public buscarClaveProductoServicio(claveProdServ: string) {
     const value = +claveProdServ;
+    this.claveProdServMsg = '';
     if (isNaN(value)) {
       if (claveProdServ.length > 5) {
         this.catalogsService.getProductoServiciosByDescription(claveProdServ).then(claves => {
@@ -55,16 +57,25 @@ export class ConceptosComponent implements OnInit {
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
+        }, (error: HttpErrorResponse) =>
+          this.claveProdServMsg = error.error.message || `${error.statusText} : ${error.message}`);
+      }else {
+        this.prodServCat = [];
       }
     } else {
-      if (claveProdServ.length > 5) {
+      if (claveProdServ.length === 8) {
         this.catalogsService.getProductoServiciosByClave(claveProdServ).then(claves => {
           this.prodServCat = claves;
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
           this.concepto.descripcionCUPS = claves[0].descripcion;
-        }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
+        }, (error: HttpErrorResponse) =>
+        this.claveProdServMsg = error.error.message || `${error.statusText} : ${error.message}`);
+      }else {
+        if (claveProdServ.length < 8 && claveProdServ.length > 3) {
+          this.claveProdServMsg = 'Complete los 8 digitos de la clave';
+        }
+        this.prodServCat = [];
       }
     }
   }
@@ -99,7 +110,7 @@ export class ConceptosComponent implements OnInit {
     }
   }
 
-  updateConcepto(dialog: TemplateRef<any>,concepto: Concepto) {
+  updateConcepto(concepto: Concepto) {
     this.concepto = {... concepto};
     if (concepto.impuestos.length > 0 ) {
       this.concepto.iva = true;
@@ -109,7 +120,7 @@ export class ConceptosComponent implements OnInit {
     }
     this.formInfo.unidad = concepto.claveUnidad;
     this.formInfo.claveProdServ = concepto.claveProdServ;
-    this.buscarClaveProductoServicio(dialog, concepto.claveProdServ);
+    this.buscarClaveProductoServicio(concepto.claveProdServ);
   }
 
   agregarConcepto(dialog: TemplateRef<any>, id?: number) {

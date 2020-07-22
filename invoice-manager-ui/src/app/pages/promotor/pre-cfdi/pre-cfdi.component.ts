@@ -45,6 +45,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
   public companyInfo: Empresa;
 
   public loading: boolean = false;
+  public clientSearchMsg = '';
 
   constructor(
     private catalogsService: CatalogsData,
@@ -92,7 +93,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
     this.errorMessages = [];
-
+    this.clientSearchMsg = '';
   }
 
   public getInvoiceInfoByIdCdfi(preFolio: string) {
@@ -147,8 +148,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
   }
 
-  buscarClientInfo( razonSocial: string) {
-    if ( razonSocial !== undefined && razonSocial.length > 5) {
+  buscarClientInfo(razonSocial: string) {
+    if ( razonSocial !== undefined && razonSocial.length >= 5) {
       this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
           .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
           .subscribe(clients => {
@@ -156,6 +157,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             if ( clients.length > 0) {
               this.formInfo.clientRfc = clients[0].id.toString();
               this.onClientSelected(this.formInfo.clientRfc);
+            } else {
+              this.clientSearchMsg = `No se encuentran  clientes con nombre ${razonSocial}`;
             }
           }, (error: HttpErrorResponse) => {
             this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
@@ -165,11 +168,13 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }else {
       this.clientsCat = [];
       this.clientInfo = undefined;
+      this.clientSearchMsg = '';
     }
   }
 
   onClientSelected(id: string) {
     const value = +id;
+    this.clientSearchMsg = '';
     if (!isNaN(value)) {
       const client = this.clientsCat.find(c => c.id === Number(value));
       this.clientInfo = client.informacionFiscal;
@@ -180,8 +185,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial.toUpperCase();
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
       if (!client.activo) {
-        this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
-        this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');
+        this.clientSearchMsg = `El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo,notifique a operciones para activarlo`;
       }
     }
   }

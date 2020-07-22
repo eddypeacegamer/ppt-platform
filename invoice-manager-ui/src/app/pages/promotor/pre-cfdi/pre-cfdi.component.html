@@ -38,7 +38,7 @@
             <div class="col-md-3">
               <label for="inputEmpresa" class="label">Empresa</label>
               <select id="inputEmpresa" class="form-control" (change)="onCompanySelected($event.target.value)"
-                [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
+                [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth [disabled]="companiesCat.length === 0">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let company of companiesCat" [(value)]="company.id">
                   {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
@@ -55,12 +55,13 @@
             <div class="col-md-3">
               <label for="inputClient" class="label">Cliente</label>
               <select id="inputClient" class="form-control" (change)="onClientSelected($event.target.value)"
-                [(ngModel)]="formInfo.clientRfc" style="display:block;" fullWidth>
+                [(ngModel)]="formInfo.clientRfc" style="display:block;" fullWidth [disabled]="clientsCat.length === 0">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let client of clientsCat" [(value)]="client.id">
                   {{client.informacionFiscal.rfc}}-{{client.informacionFiscal.razonSocial}}
                 </option>
               </select>
+              <small id="inputProdServHelp" class="form-text text-danger">{{clientSearchMsg}}</small>
             </div>
           </div>
         </div>
