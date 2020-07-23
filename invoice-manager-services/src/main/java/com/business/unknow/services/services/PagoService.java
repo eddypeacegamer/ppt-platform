@@ -221,7 +221,6 @@ public class PagoService {
 			for (FacturaDto factura : facturas) {
 				factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 				factura.setStatusDetail(pago.getComentarioPago());
-				factura.setValidacionTeso(true);
 				facturaService.updateFactura(factura.getIdCfdi(), factura);
 			}
 		} else if (entity.getRevision1() && pago.getRevision2()) {
