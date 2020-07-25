@@ -34,7 +34,6 @@ export class InvoicesService {
         }
       }
     }
-    console.log('InvoicesService- filter params:', filterParams);
     return pageParams;
   }
 

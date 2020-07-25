@@ -196,7 +196,20 @@ export class InvoiceReportsComponent implements OnInit {
 
   public downloadHandler() {
 
-    const params = {... this.filterParams};
+    const params: any = {};
+    /* Parsing logic */
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        let value: string = this.filterParams[key];
+      if ( this.filterParams[key] instanceof Date) {
+        const date: Date = this.filterParams[key] as Date;
+        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      }
+      if ( value !== null && value.length > 0) {
+          params[key] = value;
+        }
+      }
+    }
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getInvoices(params).subscribe(result => {
@@ -205,7 +218,20 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadInvoicesReports() {
-    const params = {... this.filterParams};
+    const params: any = {};
+    /* Parsing logic */
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        let value: string = this.filterParams[key];
+      if ( this.filterParams[key] instanceof Date) {
+        const date: Date = this.filterParams[key] as Date;
+        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      }
+      if ( value !== null && value.length > 0) {
+          params[key] = value;
+        }
+      }
+    }
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getInvoicesReports(params).subscribe(result => {
@@ -214,7 +240,20 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadComplementReports() {
-    const params = {... this.filterParams};
+    const params: any = {};
+    /* Parsing logic */
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        let value: string = this.filterParams[key];
+      if ( this.filterParams[key] instanceof Date) {
+        const date: Date = this.filterParams[key] as Date;
+        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      }
+      if ( value !== null && value.length > 0) {
+          params[key] = value;
+        }
+      }
+    }
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getComplementReports(params).subscribe(result => {

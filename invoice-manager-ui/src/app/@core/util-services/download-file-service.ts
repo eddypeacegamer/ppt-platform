@@ -20,7 +20,7 @@ export class DonwloadFileService {
         console.log(`Downloading ${filename} ...`)
         if (data == null || data == undefined || data.length < 1) {
             console.error("Donwload service can't generate report from empty or null data.");
-            alert("Donwload service can't generate report from empty or null data.");
+            alert("No se encontro información, imposible generar reporte.");
             return;
           } else {
             const byteString = window.atob(data);
