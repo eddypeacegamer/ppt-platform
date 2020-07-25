@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Factura } from '../../models/factura/factura';
-import { Concepto } from '../../models/factura/concepto';
 import { Catalogo } from '../../models/catalogos/catalogo';
 import { CatalogsData } from '../data/catalogs-data';
 import { map } from 'rxjs/operators';
@@ -16,38 +15,32 @@ export class InvoicesService {
 
   private validationCat: Catalogo[] = [];
   private payCat: Catalogo[] = [];
-  private devolutionCat: Catalogo[] = [];
   private formaPagoCat: Catalogo[] = [];
 
   constructor(private httpClient: HttpClient,
               private catalogService: CatalogsData) {
     this.catalogService.getStatusPago().then(cat => this.payCat = cat);
     this.catalogService.getStatusValidacion().then(cat => this.validationCat = cat);
-    this.catalogService.getStatusDevolucion().then(cat => this.devolutionCat = cat);
     this.catalogService.getFormasPago().then(cat => this.formaPagoCat = cat);
   }
 
-  private getHttpParamsFromFilterParams(page: number, size: number, filterParams: any): HttpParams {
-    console.log('getHttpParamsFromFilterParams',filterParams);
-    let pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
+  private getHttpParams(filterParams: any): HttpParams {
+    let pageParams: HttpParams =  new HttpParams();
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
-        let value: string = filterParams[key];
-      if ( filterParams[key] instanceof Date) {
-        const date: Date = filterParams[key] as Date;
-        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-      if ( value !== null && value.length > 0 && value !== '*' && key !== 'page' && key !== 'size') {
+      const value: string = filterParams[key].toString();
+      if ( value !== null && value.length > 0 && value !== '*') {
           pageParams = pageParams.append(key, value);
         }
       }
     }
+    console.log('InvoicesService- filter params:', filterParams);
     return pageParams;
   }
 
-  public getInvoices(page: number, size: number, filterParams?: any): Observable<any> {
+  public getInvoices(filterParams: any): Observable<any> {
     return this.httpClient.get('../api/facturas',
-    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
+    {params: this.getHttpParams(filterParams)})
     .pipe(
       map((invPage: GenericPage<any>) => {
         const records: any[] = invPage.content.map(record => {
@@ -61,9 +54,9 @@ export class InvoicesService {
       }));
   }
 
-  public getInvoicesReports(page: number, size: number, filterParams?: any): Observable<any>{
-    return this.httpClient.get('../api/facturas/factura-reports', 
-    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
+  public getInvoicesReports(filterParams: any): Observable<any> {
+    return this.httpClient.get('../api/facturas/factura-reports',
+    {params: this.getHttpParams(filterParams)})
     .pipe(
       map((invPage: GenericPage<any>) => {
         const records: any[] = invPage.content.map(record => {
@@ -75,9 +68,9 @@ export class InvoicesService {
         return invPage;
       }));
   }
-  public getComplementReports(page: number, size: number, filterParams?: any): Observable<any>{
+  public getComplementReports(filterParams: any): Observable<any>{
     return this.httpClient.get('../api/facturas/complemento-reports',
-    {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
+    {params: this.getHttpParams(filterParams)})
     .pipe(
       map((invPage: GenericPage<any>) => {
         const records: any[] = invPage.content.map(record => {

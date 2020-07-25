@@ -5,21 +5,21 @@
       <!--  PROMOTOR  -->
       <nb-card-body *ngIf="module === 'promotor'">
         <div class="row slide_1">
-          
+
           <div class="col-4">
             <label for="inputFolio" class="label">Pre-folio</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
-         
+
           <div class="col-4">
             <label for="inputEmisor" class="label">Emisor</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
               [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
               placeholder="Razón Social Emisor">
           </div>
-        
+
           <div class="col-4">
             <label for="InputReceptor" class="label">Receptor</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
@@ -29,7 +29,7 @@
         </div>
         <br>
         <div class="row slide_2">
-         
+
           <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
@@ -49,7 +49,7 @@
               [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
-         
+
           <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block; width: 100%;"
@@ -57,25 +57,26 @@
             <nb-datepicker #topicker></nb-datepicker>
           </div>
           <div class="col-3">
-            <button type="button" style="width: 100%; margin-top: 28px;" (click)="searchData(0,10)" nbButton status="primary">BUSCAR</button>
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
+              status="primary">BUSCAR</button>
           </div>
         </div>
-        
-         
-          
+
+
+
       </nb-card-body>
 
       <!--  OPERACIONES  -->
       <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion' ||  module === 'tesoreria' ">
         <div class="row slide_1">
-          
+
           <div class="col-3">
             <label for="inputFolio" class="label">Pre-folio</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
               [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
               placeholder="Folio PreCFDI">
           </div>
-     
+
           <div class="col-3">
             <label for="inputEmisor" class="label">Emisor</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
@@ -92,8 +93,7 @@
 
           <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
-              [disabled]="statusFlag">
+            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
               <option value="*">Todos</option>
               <option value="1">Validacion operaciones</option>
               <option value="2">Validacion tesoreria</option>
@@ -127,7 +127,8 @@
             <nb-datepicker #topicker></nb-datepicker>
           </div>
           <div class="col-3">
-            <button type="button" style="width: 100%; margin-top: 28px;" (click)="searchData(0,10)" nbButton status="primary">BUSCAR</button>
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
+              status="primary">BUSCAR</button>
           </div>
         </div>
       </nb-card-body>
@@ -161,13 +162,12 @@
           </div>
 
         </div>
-       
+
         <div class="row slide_2" style=" margin-top: 5px;">
 
           <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
-              [disabled]="statusFlag">
+            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
               <option value="8">Por timbrar</option>
               <option value="3">Timbrada</option>
               <option value="7">Cancelada</option>
@@ -192,7 +192,8 @@
             <nb-datepicker #topicker></nb-datepicker>
           </div>
           <div class="col-3">
-            <button type="button" style="width: 100%; margin-top: 28px;" (click)="searchData(0,10)" nbButton status="primary">BUSCAR</button>
+            <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
+              status="primary">BUSCAR</button>
           </div>
         </div>
       </nb-card-body>
@@ -214,18 +215,21 @@
         </div>
         <div class="clearfix puff_center">
           Resultados
-          <nb-select style="margin-left: 15px;" *ngIf="page.last==false || page.first==true" [selected]="pageSize"
-            (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
-            <nb-option value="10">10</nb-option>
-            <nb-option *ngIf="page.number<(page.totalElements/20)" value="20">20</nb-option>
-            <nb-option *ngIf="page.number<(page.totalElements/50)" value="50">50</nb-option>
-          </nb-select>
+          <select id="inputunidad" style="display:block;margin-left: 15px;" class="float-right" [(ngModel)]="filterParams.size"
+            *ngIf="page.last==false || page.first==true"
+            (change)="onChangePageSize($event.target.value)">
+            <option value="10">10</option>
+            <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
+            <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
+          </select>
           <button style="margin-left: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
-            class="btn btn-success float-right"><i class="fa fa-download"></i></button>
-          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'" (click)="downloadInvoicesReports()"
-            class="btn btn-success float-right"><i class="fa fa-download"></i>Facturas</button>
-          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()"
-            class="btn btn-success float-right"><i class="fa fa-download"></i>Complementos</button>
+            class="btn btn-sm btn-success float-right"><i class="fa fa-download"></i></button>
+          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'"
+            (click)="downloadInvoicesReports()" class="btn btn-sm btn-success float-right"><i
+              class="fa fa-download"></i>Facturas</button>
+          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'"
+            (click)="downloadComplementReports()" class="btn btn-sm btn-success float-right"><i
+              class="fa fa-download"></i>Complementos</button>
 
 
         </div>
@@ -240,7 +244,7 @@
                 <th class="text-center">Razón Social Cliente</th>
                 <th class="text-center">Tipo Documento</th>
                 <th class="text-center">Método Pago</th>
-                <th class="text-center">Estatus factura</th>             
+                <th class="text-center">Estatus factura</th>
                 <th class="text-center">Total</th>
                 <th class="text-center">Saldo</th>
                 <th class="text-center">Promotor</th>
@@ -250,12 +254,12 @@
               </tr>
             </thead>
             <tbody>
-              
-              <tr *ngFor="let fila of page.content" >
-               
+
+              <tr *ngFor="let fila of page.content">
+
                 <td scope="row" class="text-center" style="min-width: 180px;">
-                  <button type="button" class="btn btn-sm btn-outline-primary" 
-                    (click)="redirectToCfdi(fila.idCfdi)"><i class="fa fa-search"></i>
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="redirectToCfdi(fila.idCfdi)"><i
+                      class="fa fa-search"></i>
                   </button>
                   <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' ), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Validacion operaciones' || fila.statusFactura === 'Validacion tesoreria') }"
@@ -268,53 +272,53 @@
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
                   </button>
-                  <button type="button"  class="btn btn-sm btn-outline-primary" 
+                  <button type="button" class="btn btn-sm btn-outline-primary"
                     (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-file-pdf"></i>
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="fila.statusFactura !== 'Timbrada'"
-                  [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada' , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
-                  (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                    [disabled]="fila.statusFactura !== 'Timbrada'"
+                    [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada' , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
+                    (click)="downloadXml(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-code"></i>
                   </button>
-                  <button type="button"  class="btn btn-sm btn-outline-primary" [disabled]="(fila.statusFactura !== 'Timbrada')"
-                  *ngIf=" fila.lineaEmisor ==='A'"
-                  [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada'  , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
-                  (click)="reSendEmail(fila.folio)">
+                  <button type="button" class="btn btn-sm btn-outline-primary"
+                    [disabled]="(fila.statusFactura !== 'Timbrada')" *ngIf=" fila.lineaEmisor ==='A'"
+                    [ngClass]="{'btn-outline-secondary': fila.statusFactura !== 'Timbrada'  , 'btn-outline-primary':fila.statusFactura === 'Timbrada'}"
+                    (click)="reSendEmail(fila.folio)">
                     <i class="fa fa-reply-all"></i>
                   </button>
                 </td>
-              
+
                 <td scope="row">{{fila.idCfdi}}</td>
                 <td scope="row">{{fila.razonSocialEmisor}}</td>
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.tipoDocumento}}</td>
                 <td scope="row">{{fila.metodoPago}}</td>
-                <td scope="row">{{fila.statusFactura}}</td>              
+                <td scope="row">{{fila.statusFactura}}</td>
                 <td scope="row">{{fila.total | currency}}</td>
                 <td scope="row">{{fila.saldoPendiente | currency}}</td>
                 <td scope="row">{{fila.solicitante}}</td>
-                <td scope="row">{{fila.statusDetail}}</td> 
+                <td scope="row">{{fila.statusDetail}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>
-            
+
             </tbody>
           </table>
-
-          <div class="clearfix">
-            <ul class="pagination float-right" *ngIf="page.totalElements > 1">
-              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                  (click)="searchData(0,page.size)"><i class="nb-arrow-left"></i></button></li>
-              <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
-                  (click)="searchData(page.number-1,page.size)">{{page.number}}</button></li>
-              <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
-              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                  (click)="searchData(page.number+1,page.size)">{{page.number+2}}</button></li>
-              <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
-                  (click)="searchData(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-            </ul>
-          </div>
+        </div>
+        <div class="clearfix" *ngIf="page.empty == false">
+          <ul class="pagination float-right" *ngIf="page.totalElements > 1">
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+            <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number-1,page.size)">{{page.number}}</button></li>
+            <li class="page-item active"><a class="page-link"><strong>{{page.number+1}}</strong></a></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.number+1,page.size)">{{page.number+2}}</button></li>
+            <li class="page-item" *ngIf="page.last==false"><button class="btn page-link"
+                (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+          </ul>
         </div>
       </nb-card-body>
     </nb-card>
