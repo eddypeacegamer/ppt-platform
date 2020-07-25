@@ -13,7 +13,7 @@ import {
 
 import { UsersData } from './data/users-data';
 import { UsersService } from './back-services/users.service';
-import { SharedService } from './back-services/sharedService';
+import { SharedService } from './util-services/sharedService';
 
 
 import { CatalogsData } from './data/catalogs-data';

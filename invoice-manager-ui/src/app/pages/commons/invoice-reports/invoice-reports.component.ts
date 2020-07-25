@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
@@ -7,14 +7,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { Factura } from '../../../models/factura/factura';
-
+import { SharedService } from '../../../@core/util-services/sharedService';
 
 @Component({
   selector: 'ngx-invoice-reports',
   templateUrl: './invoice-reports.component.html',
   styleUrls: ['./invoice-reports.component.scss'],
 })
-export class InvoiceReportsComponent implements OnInit {
+export class InvoiceReportsComponent implements OnInit, OnDestroy {
 
   public module: string = 'promotor';
   public statusFlag = false;
@@ -28,11 +28,15 @@ export class InvoiceReportsComponent implements OnInit {
     private userService: UsersData,
     private downloadCsvService: DownloadCsvService,
     private router: Router,
+    private sharedService: SharedService,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+
+    this.filterParams = this.sharedService.getFormData();
+
     const date: Date = new Date();
     this.filterParams.to = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     this.filterParams.since = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -204,5 +208,9 @@ export class InvoiceReportsComponent implements OnInit {
         console.error('Error sending email', error);
         this.loading = false;
       });
+  }
+
+  public ngOnDestroy(): void {
+    this.sharedService.setFormData=this.filterParams.value;
   }
 }
