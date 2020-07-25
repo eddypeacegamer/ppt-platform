@@ -12,6 +12,7 @@
 		},
 		{
 			"title": "Reportes",
-			"link": "/pages/administracion/reportes/A/3"
+			"link": "/pages/administracion/reportes",
+			"queryParams":{"lineaEmisor":"A","status":"3"}
 		}]
   }

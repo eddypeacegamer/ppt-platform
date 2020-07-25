@@ -7,20 +7,19 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { Factura } from '../../../models/factura/factura';
-import { SharedService } from '../../../@core/util-services/sharedService';
 
 @Component({
   selector: 'ngx-invoice-reports',
   templateUrl: './invoice-reports.component.html',
   styleUrls: ['./invoice-reports.component.scss'],
 })
-export class InvoiceReportsComponent implements OnInit, OnDestroy {
+export class InvoiceReportsComponent implements OnInit {
 
   public module: string = 'promotor';
   public statusFlag = false;
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*', since: '', to: '', lineaEmisor: 'A', solicitante: '' };
+  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*',since: '', to: '', lineaEmisor: 'A', solicitante: '', page:0, size:10};
   public userEmail: string;
   public loading = false;
 
@@ -28,62 +27,57 @@ export class InvoiceReportsComponent implements OnInit, OnDestroy {
     private userService: UsersData,
     private downloadCsvService: DownloadCsvService,
     private router: Router,
-    private sharedService: SharedService,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
 
-    this.filterParams = this.sharedService.getFormData();
-
     const date: Date = new Date();
     this.filterParams.to = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     this.filterParams.since = new Date(date.getFullYear(), date.getMonth(), 1);
 
-    const linea = this.route.snapshot.paramMap.get('linea');
-    const status = this.route.snapshot.paramMap.get('status');
-
     this.module = this.router.url.split('/')[2];
 
-    switch (this.module) {
-      case 'promotor':
-        this.userService.getUserInfo().then((user) => {
-          this.userEmail = user.email;
-          this.filterParams.solicitante = user.email;
-          this.filterParams.lineaEmisor = linea || 'A';
-          this.updateDataTable();
-        });
-        break;
-      case 'operaciones':
-        this.filterParams.lineaEmisor = linea || 'A';
-        this.filterParams.status = status;
-        this.statusFlag = this.filterParams.status !== '*';
-        this.updateDataTable();
-        break;
-      case 'contabilidad':
-        this.filterParams.lineaEmisor = linea || 'B';
-        this.filterParams.status = status;
-        this.statusFlag = false;
-        this.updateDataTable();
-        break;
-      case 'administracion':
-        this.filterParams.lineaEmisor = linea || 'A';
-        this.filterParams.status = status;
-        this.statusFlag = false;
-        this.updateDataTable();
-        break;
-      case 'tesoreria':
-        this.filterParams.lineaEmisor = linea || 'A';
-        this.filterParams.status = status;
-        this.statusFlag = false;
-        this.updateDataTable();
-        break;
-      default:
-        this.updateDataTable();
-        break;
-    }
+    this.route.queryParams
+      .subscribe(params => {
+        switch (this.module) {
+          case 'promotor':
+            this.userService.getUserInfo().then((user) => {
+              this.userEmail = user.email;
+              this.filterParams = {...this.filterParams, ...params};
+              this.filterParams.solicitante = user.email;
+              this.updateDataTable(0, 10);
+            });
+            break;
+          case 'operaciones':
+            this.statusFlag = this.filterParams.status !== '*';
+            this.updateDataTable(0, 10);
+            break;
+          case 'contabilidad':
 
+            this.statusFlag = false;
+            this.updateDataTable(0, 10);
+            break;
+          case 'administracion':
+            this.filterParams.status = status;
+            this.statusFlag = false;
+            this.updateDataTable(0, 10);
+            break;
+          case 'tesoreria':
+            this.statusFlag = false;
+            this.updateDataTable(0, 10);
+            break;
+          default:
+            this.userService.getUserInfo().then((user) => {
+              this.userEmail = user.email;
+              this.filterParams = {...this.filterParams, ...params};
+              this.filterParams.solicitante = user.email;
+              this.updateDataTable(0, 10);
+            });
+            break;
+        }
+      });
   }
 
   public onPayStatus(payStatus: string) {
@@ -93,6 +87,58 @@ export class InvoiceReportsComponent implements OnInit, OnDestroy {
   public onValidationStatus(validationStatus: string) {
     this.filterParams.status = validationStatus;
   }
+
+
+  public searchData(currentPage?: number, pageSize?: number) {
+    const params: any = {};
+    const pageValue = currentPage || this.filterParams.page;
+    const sizeValue = pageSize || this.filterParams.size;
+    this.filterParams.page = pageValue;
+    this.filterParams.size = sizeValue;
+
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        let value: string = this.filterParams[key];
+      if ( this.filterParams[key] instanceof Date) {
+        const date: Date = this.filterParams[key] as Date;
+        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      }
+      if ( value !== null && value.length > 0) {
+          params[key] = value;
+        }
+      }
+    }
+    switch (this.module) {
+      case 'promotor':
+        this.router.navigate([`./pages/promotor/reportes`],
+            { queryParams: params , queryParamsHandling: 'merge' });
+        this.updateDataTable();
+        break;
+      case 'tesoreria':
+        this.router.navigate([`./pages/promotor/reportes`]);
+        break;
+      case 'operaciones':
+        if (this.filterParams.lineaEmisor === 'A') {
+          this.router.navigate([`./pages/operaciones/reportes`]);
+        } else if (this.filterParams.lineaEmisor === 'B') {
+          this.router.navigate([`./pages/operaciones/reportes`]);
+        } else if (this.filterParams.lineaEmisor === 'C') {
+          this.router.navigate([`./pages/operaciones/reportes`]);
+        } else {
+          this.router.navigate([`./pages/operaciones/reportes`]);
+        }
+        break;
+      case 'contabilidad':
+        this.router.navigate([`./pages/contabilidad/reportes/B/8`]);
+        break;
+      case 'administracion':
+        this.router.navigate([`./pages/administracion/reportes/A/3`]);
+        break;
+      default:
+        this.router.navigate([`./pages/pages/promotor/reportes/A/*`]);
+    }
+  }
+
 
   public redirectToCfdi(folio: string) {
 
@@ -146,15 +192,14 @@ export class InvoiceReportsComponent implements OnInit, OnDestroy {
     this.router.navigate([`./pages/promotor/precfdi/${folio}/preferencias`]);
   }
 
-  public updateDataTable(currentPage?: number, pageSize?: number) {
-    const pageValue = currentPage || 0;
-    const sizeValue = pageSize || 10;
-    this.invoiceService.getInvoices(pageValue, sizeValue, this.filterParams)
+  public updateDataTable() {
+    console.log('FilterParams :', this.filterParams);
+    this.invoiceService.getInvoices(this.filterParams.page, this.filterParams.size, this.filterParams)
       .subscribe((result: GenericPage<any>) => this.page = result);
   }
 
   public onChangePageSize(pageSize: number) {
-    this.updateDataTable(this.page.number, pageSize);
+    this.searchData(this.page.number, pageSize);
   }
 
   public downloadHandler() {
@@ -210,7 +255,4 @@ export class InvoiceReportsComponent implements OnInit, OnDestroy {
       });
   }
 
-  public ngOnDestroy(): void {
-    this.sharedService.setFormData=this.filterParams.value;
-  }
 }

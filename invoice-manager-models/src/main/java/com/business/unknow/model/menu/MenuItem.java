@@ -4,7 +4,9 @@
 package com.business.unknow.model.menu;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,9 +23,15 @@ public class MenuItem implements Serializable {
 	private String title;
 	private String icon;
 	private String link;
+	private Map<String, String> queryParams;
 	private Boolean group;
 	private List<MenuItem> children;
 	private Boolean home;
+	
+	
+	public MenuItem() {
+		this.queryParams = new HashMap<>();
+	}
 
 	public String getTitle() {
 		return title;
@@ -72,10 +80,19 @@ public class MenuItem implements Serializable {
 	public void setHome(Boolean home) {
 		this.home = home;
 	}
+	
+	public Map<String, String> getQueryParams() {
+		return queryParams;
+	}
+
+	public void setQueryParams(Map<String, String> queryParams) {
+		this.queryParams = queryParams;
+	}
 
 	@Override
 	public String toString() {
-		return "MenuItem [title=" + title + ", icon=" + icon + ", link=" + link + ", group=" + group + ", children="
-				+ children + ", home=" + home + "]";
+		return "MenuItem [title=" + title + ", icon=" + icon + ", link=" + link + ", queryParams=" + queryParams
+				+ ", group=" + group + ", children=" + children + ", home=" + home + "]";
 	}
+
 }

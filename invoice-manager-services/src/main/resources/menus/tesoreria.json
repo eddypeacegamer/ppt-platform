@@ -16,7 +16,8 @@
 		},
 		{
 			"title": "Reportes Facturas",
-			"link": "/pages/tesoreria/reportes/A/*"
+			"link": "/pages/tesoreria/reportes",
+			"queryParams":{"lineaEmisor":"A","status":"*"}
 		}
 	]
 }

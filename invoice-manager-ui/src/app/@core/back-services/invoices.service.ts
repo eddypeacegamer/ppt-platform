@@ -27,7 +27,8 @@ export class InvoicesService {
     this.catalogService.getFormasPago().then(cat => this.formaPagoCat = cat);
   }
 
-  private getHttpParamsFromFilterParams(page: number, size: number,filterParams:any):HttpParams{
+  private getHttpParamsFromFilterParams(page: number, size: number, filterParams: any): HttpParams {
+    console.log('getHttpParamsFromFilterParams',filterParams);
     let pageParams: HttpParams =  new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
@@ -36,7 +37,7 @@ export class InvoicesService {
         const date: Date = filterParams[key] as Date;
         value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
       }
-      if ( value !== null && value.length > 0 && value !== '*') {
+      if ( value !== null && value.length > 0 && value !== '*' && key !== 'page' && key !== 'size') {
           pageParams = pageParams.append(key, value);
         }
       }
@@ -45,7 +46,7 @@ export class InvoicesService {
   }
 
   public getInvoices(page: number, size: number, filterParams?: any): Observable<any> {
-    return this.httpClient.get('../api/facturas', 
+    return this.httpClient.get('../api/facturas',
     {params: this.getHttpParamsFromFilterParams(page, size, filterParams)})
     .pipe(
       map((invPage: GenericPage<any>) => {

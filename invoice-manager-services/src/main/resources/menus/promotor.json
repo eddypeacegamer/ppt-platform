@@ -8,7 +8,8 @@
       },
       {
         "title": "Reportes",
-        "link": "/pages/promotor/reportes/A/*"
+        "link": "/pages/promotor/reportes",
+        "queryParams":{"lineaEmisor":"A","status":"*"}
       },
       {
         "title": "Pre-cfdi",
