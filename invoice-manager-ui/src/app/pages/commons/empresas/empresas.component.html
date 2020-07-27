@@ -17,9 +17,9 @@
           <div class="col-2">
             <label for="inputCompanyType" class="label">Tipo Empresa</label>
             <div class="row form-inline">
-              <select selected="*" id="inputCompanyType" style="display:block;width: 100%;" class="form-control"
+              <select selected="*" id="inputCompanyType" [(ngModel)]="filterParams.linea" style="display:block;width: 100%;" class="form-control"
                 (change)="onCompanySelected($event.target.value)">
-                <option value="*">Seleccionar</option>
+                <option value="">Seleccionar</option>
                 <option value="A">Tipo A</option>
                 <option value="B">Tipo B</option>
                 <option value="C">Tipo C</option>
@@ -28,7 +28,7 @@
             </div>
           </div>
           <div class="col-2">
-            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10,filterParams)">BUSCAR</button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)">BUSCAR</button>
           </div>
           <div class="col-3">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="newCompany()">NUEVA EMPRESA</button>

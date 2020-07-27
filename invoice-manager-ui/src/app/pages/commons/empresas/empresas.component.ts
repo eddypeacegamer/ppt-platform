@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { GenericPage } from '../../../models/generic-page';
 import {DownloadCsvService } from '../../../@core/util-services/download-csv.service'
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Observable } from 'rxjs';
 import { Empresa } from '../../../models/empresa';
@@ -21,21 +21,33 @@ export class EmpresasComponent implements OnInit {
   
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams : any = {razonSocial:'',rfc:'',linea:''};
-
+  public filterParams : any = {razonSocial:'',rfc:'',linea:'', page: '0', size: '10'};
+  public module: string = 'operaciones';
   constructor(private router: Router,
     private companyService: CompaniesData,
+    private route: ActivatedRoute,
     private catalogsService : CatalogsData,
     private donwloadService:DownloadCsvService) {}
 
     ngOnInit() {
-      this.catalogsService.getAllGiros()
+      this.module = this.router.url.split('/')[2];
+      this.route.queryParams
+      .subscribe(params => {
+
+        this.filterParams = { ...this.filterParams, ...params };
+
+        this.catalogsService.getAllGiros()
         .then(cat=>this.girosCat = cat)
         .then(()=>this.updateDataTable())
+      });
+
+    
+
+
     }
   
-    public getCompanyInfo(pageValue, sizeValue,filterParams):Observable<GenericPage<any>>{
-      return this.companyService.getCompanies(pageValue, sizeValue,filterParams).pipe(
+    public getCompanyInfo(filterParams):Observable<GenericPage<any>>{
+      return this.companyService.getCompanies(filterParams.page, filterParams.size,filterParams).pipe(
         map((page: GenericPage<Empresa>) => {
           const records: Empresa[] = page.content.map(r => {
             const record: any = {};
@@ -56,16 +68,46 @@ export class EmpresasComponent implements OnInit {
     }
 
 
-    public updateDataTable(currentPage?: number, pageSize?: number, filterParams?:any) {
-      const pageValue = currentPage || 0;
-      const sizeValue = pageSize || 10;
-      this.getCompanyInfo(pageValue, sizeValue, filterParams).subscribe(result => this.page = result);
+    public updateDataTable(currentPage?: number, pageSize?: number) {
+   
+    const params: any = {};
+
+    /* Parsing logic */
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        let value: string = this.filterParams[key];
+        if (value !== null && value.length > 0 || value == '') {
+          params[key] = value;
+        }          
+      }
+    }
+
+    params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
+    params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
+  
+    switch (this.module) {
+      case 'operaciones':
+        this.router.navigate([`./pages/operaciones/empresas`],
+          { queryParams: params, queryParamsHandling: 'merge' });
+        break;
+      case 'contabilidad':
+        this.router.navigate([`./pages/contabilidad/empresas`],
+          { queryParams: params, queryParamsHandling: 'merge' });
+        break;
+      default:
+        this.router.navigate([`./pages/operaciones/empresas`],
+          { queryParams: params, queryParamsHandling: 'merge' });
+    }
+
+    this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
+  
     }
 
 
     public onChangePageSize(pageSize: number) {
-      this.updateDataTable(this.page.number, pageSize, this.filterParams);
+      this.updateDataTable(this.page.number, pageSize);
     }
+  
   
     public onCompanySelected(tipo:string){
       if(tipo === '*' ){
@@ -80,7 +122,19 @@ export class EmpresasComponent implements OnInit {
     }
   
     public downloadHandler() {
-      this.getCompanyInfo(0, 10000, this.filterParams).subscribe(result => {
+      const params: any = {};
+      /* Parsing logic */
+      for (const key in this.filterParams) {
+        if (this.filterParams[key] !== undefined) {
+          let value: string = this.filterParams[key];
+          if (value !== null && value.length > 0) {
+            params[key] = value;
+          }
+        }
+      }
+      params.page = 0;
+      params.size = 10000;
+      this.getCompanyInfo(params).subscribe(result => {
         this.donwloadService.exportCsv(result.content,'Empresas')
       });
     }

@@ -215,22 +215,25 @@
         </div>
         <div class="clearfix puff_center">
           Resultados
-          <select id="inputunidad" style="display:block;margin-left: 15px;" class="float-right" [(ngModel)]="filterParams.size"
-            *ngIf="page.last==false || page.first==true"
-            (change)="onChangePageSize($event.target.value)">
-            <option value="10">10</option>
-            <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
-            <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
-          </select>
-          <button style="margin-left: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
-            class="btn btn-sm btn-success float-right"><i class="fa fa-download"></i></button>
-          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'"
-            (click)="downloadInvoicesReports()" class="btn btn-sm btn-success float-right"><i
+          <div class="row float-right" style="margin-right: 1px;">
+            <button type="button" style="margin-right: 15px;" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+            <select id="inputunidad" style="display:block;width: 95px; margin-right: 15px;" class="float-right form-control" [(ngModel)]="filterParams.size"
+              *ngIf="page.last==false || page.first==true"
+              (change)="onChangePageSize($event.target.value)">
+              <option value="10">10</option>
+              <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
+              <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
+            </select>
+            
+          <button style="margin-right: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
+            class="btn btn-success float-right"><i class="fa fa-download"></i></button>
+          <button style="margin-right: 15px;" type="button" *ngIf="module !== 'promotor'"
+            (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i
               class="fa fa-download"></i>Facturas</button>
-          <button style="margin-left: 15px;" type="button" *ngIf="module !== 'promotor'"
-            (click)="downloadComplementReports()" class="btn btn-sm btn-success float-right"><i
+          <button  type="button" *ngIf="module !== 'promotor'"
+            (click)="downloadComplementReports()" class="btn  btn-success float-right"><i
               class="fa fa-download"></i>Complementos</button>
-
+          </div>
 
         </div>
         <div class="table-responsive slide_1" *ngIf="page.empty == false">
