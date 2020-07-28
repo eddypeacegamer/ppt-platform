@@ -11,7 +11,7 @@ export class ClientsService {
   constructor(private httpClient:HttpClient) { }
 
   public getClients(filterParams: any): Observable<Object> {
-    let pageParams: HttpParams =  new HttpParams().append('page', filterParams.page).append('size', filterParams.size);
+    let pageParams: HttpParams =  new HttpParams();
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
         const value: string = filterParams[key];

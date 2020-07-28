@@ -19,7 +19,7 @@ export class ClientesComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
 
   public module: string = 'promotor';
-  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', solicitante: '',page: '0', size: '10' };
+  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', page: '0', size: '10' };
 
   constructor(
     private userService: UsersData,
@@ -39,7 +39,7 @@ export class ClientesComponent implements OnInit {
         switch (this.module) {
           case 'promotor':
             this.userService.getUserInfo().then((user) => {
-              this.filterParams.solicitante = user.email;
+              this.filterParams.promotor = user.email;
               this.updateDataTable();
             });
             break;
@@ -61,19 +61,18 @@ export class ClientesComponent implements OnInit {
     /* Parsing logic */
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (value !== null && value.length > 0 || value == '') {
+        const value: string = this.filterParams[key];
+        if (value !== null && value.length > 0) {
           params[key] = value;
-        }          
+        }
       }
     }
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
-  
+
     switch (this.module) {
       case 'promotor':
-        params.promotor = this.filterParams.solicitante;
         this.router.navigate([`./pages/promotor/clientes`],
           { queryParams: params, queryParamsHandling: 'merge' });
         break;
@@ -101,7 +100,7 @@ export class ClientesComponent implements OnInit {
     /* Parsing logic */
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
+        const value: string = this.filterParams[key];
         if (value !== null && value.length > 0) {
           params[key] = value;
         }

@@ -55,7 +55,7 @@
         <div class="clearfix puff_center" *ngIf="page.empty == false">
           <strong class="">Resultados</strong>
           <div class="row float-right">
-          <button type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <button type="button" (click)="downloadHandler()" class="btn btn-sm btn-success float-right">Descarga</button>
           <select id="inputunidad" style="display:block;width: 95px;margin-right: 15px;margin-left: 15px;" class="float-right form-control" [(ngModel)]="filterParams.size"
             *ngIf="page.last==false || page.first==true"
             (change)="onChangePageSize($event.target.value)">
@@ -80,7 +80,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
-                <td scope="row" class="text-center"> <button class="btn btn-outline-primary"
+                <td scope="row" class="text-center"> <button class="btn btn-sm btn-outline-primary"
                     (click)="redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row">{{fila.informacionFiscal.rfc}}</td>
@@ -95,8 +95,9 @@
               </tr>
             </tbody>
           </table>
-
-          <ul class="pagination" *ngIf="page.totalElements > 1">
+        </div>
+        <div class="clearfix" *ngIf="page.empty == false">
+          <ul class="pagination float-right" *ngIf="page.totalElements > 1">
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
                 (click)="updateDataTable(0,page.size,filterParams)"><i class="nb-arrow-left"></i></button></li>
             <li class="page-item" *ngIf="page.first==false"><button class="btn page-link"
@@ -108,6 +109,7 @@
                 (click)="updateDataTable(page.totalPages-1,page.size,filterParams)"><i class="nb-arrow-right"></i></button></li>
           </ul>
         </div>
+        
       </nb-card-body>
     </nb-card>
   </div>

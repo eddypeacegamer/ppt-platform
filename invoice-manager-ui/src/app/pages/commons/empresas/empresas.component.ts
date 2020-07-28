@@ -46,8 +46,8 @@ export class EmpresasComponent implements OnInit {
 
     }
   
-    public getCompanyInfo(filterParams):Observable<GenericPage<any>>{
-      return this.companyService.getCompanies(filterParams.page, filterParams.size,filterParams).pipe(
+    public getCompanyInfo(filterParams): Observable<GenericPage<any>> {
+      return this.companyService.getCompanies(filterParams).pipe(
         map((page: GenericPage<Empresa>) => {
           const records: Empresa[] = page.content.map(r => {
             const record: any = {};
@@ -69,22 +69,22 @@ export class EmpresasComponent implements OnInit {
 
 
     public updateDataTable(currentPage?: number, pageSize?: number) {
-   
+
     const params: any = {};
 
     /* Parsing logic */
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (value !== null && value.length > 0 || value == '') {
+        const value: string = this.filterParams[key];
+        if (value !== null && value.length > 0) {
           params[key] = value;
-        }          
+        }
       }
     }
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
-  
+
     switch (this.module) {
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/empresas`],
@@ -100,19 +100,17 @@ export class EmpresasComponent implements OnInit {
     }
 
     this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
-  
     }
 
 
     public onChangePageSize(pageSize: number) {
       this.updateDataTable(this.page.number, pageSize);
     }
-  
-  
-    public onCompanySelected(tipo:string){
-      if(tipo === '*' ){
+
+    public onCompanySelected(tipo: string) {
+      if (tipo === '*' ) {
         this.filterParams.linea = '';
-      }else{
+      }else {
         this.filterParams.linea = tipo;
       }
     }
@@ -124,14 +122,14 @@ export class EmpresasComponent implements OnInit {
     public downloadHandler() {
       const params: any = {};
       /* Parsing logic */
-      for (const key in this.filterParams) {
-        if (this.filterParams[key] !== undefined) {
-          let value: string = this.filterParams[key];
-          if (value !== null && value.length > 0) {
-            params[key] = value;
-          }
+    for (const key in this.filterParams) {
+      if (this.filterParams[key] !== undefined) {
+        const value: string = this.filterParams[key];
+        if (value !== null && value.length > 0) {
+          params[key] = value;
         }
       }
+    }
       params.page = 0;
       params.size = 10000;
       this.getCompanyInfo(params).subscribe(result => {

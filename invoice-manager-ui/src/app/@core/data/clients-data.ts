@@ -4,16 +4,15 @@ import { Client } from '../../models/client';
 
 export abstract class ClientsData {
 
-    abstract getClients(filterParams:any): Observable<GenericPage<Client>>;
+    abstract getClients(filterParams: any): Observable<GenericPage<Client>>;
 
-    abstract getClientsByPromotor(promotor: string) : Observable<Client[]>;
+    abstract getClientsByPromotor(promotor: string): Observable<Client[]>;
 
-    abstract getClientByRFC(rfc:string) : Observable<Client>;
+    abstract getClientByRFC(rfc: string): Observable<Client>;
 
-    abstract getClientByName(name:string) : Observable<Client[]>;
+    abstract getClientByName(name: string): Observable<Client[]>;
 
-    abstract insertNewClient(client : Client) : Observable<Client>;
+    abstract insertNewClient(client: Client): Observable<Client>;
 
-    abstract updateClient(client : Client) : Observable<Client>;
-  
+    abstract updateClient(client: Client): Observable<Client>;
 }
