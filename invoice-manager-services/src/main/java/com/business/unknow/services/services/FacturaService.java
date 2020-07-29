@@ -247,7 +247,7 @@ public class FacturaService {
 		validator.validatePostFacturaWithDetail(facturaDto);
 		FacturaContext facturaContext = facturaBuilderService.buildFacturaContextCreateFactura(facturaDto);
 		facturaDefaultValues.assignaDefaultsFactura(facturaContext.getFacturaDto(),
-				facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento(facturaDto.getTipoDocumento()));
+				facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
 		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaContext).getFacturaDto();
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);

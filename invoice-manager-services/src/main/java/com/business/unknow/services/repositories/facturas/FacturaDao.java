@@ -58,8 +58,8 @@ public class FacturaDao {
 			+ "p.IMPORTE_PAGADO,p.IMPORTE_SALDO_ANTERIOR,p.IMPORTE_SALDO_INSOLUTO,p.NUM_PARCIALIDAD,p.FECHA_PAGO FROM FACTURAS f INNER JOIN CFDI cfdi ON f.ID_CFDI = cfdi.ID_CFDI INNER JOIN CFDI_PAGOS p ON cfdi.ID_CFDI = p.ID_CFDI "
 			+ "WHERE cfdi.FOLIO IN (%s)";
 
-	private static final String CANTIDAD_FACTURAS = "SELECT count(1) AS CANTIDAD " + "FROM invoice_manager.facturas "
-			+ "WHERE  TIPO_DOCUMENTO=? " + "AND MONTH(fecha_creacion) = MONTH(CURRENT_DATE()) "
+	private static final String CANTIDAD_FACTURAS = "SELECT count(1) AS CANTIDAD " + "FROM FACTURAS "
+			+ "WHERE MONTH(fecha_creacion) = MONTH(CURRENT_DATE()) "
 			+ "AND YEAR(fecha_creacion) = YEAR(CURRENT_DATE())";
 
 	public Optional<FacturaReportDto> getInvoiceDetailByFolio(String folio) {
@@ -116,12 +116,11 @@ public class FacturaDao {
 		}, new PagoReportDtoRowMapper());
 	}
 
-	public Integer getCantidadFacturasOfTheCurrentMonthByTipoDocumento(String tipoDocumento) {
+	public Integer getCantidadFacturasOfTheCurrentMonthByTipoDocumento() {
 		return invoiceManagerTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(CANTIDAD_FACTURAS);
-				ps.setString(1, tipoDocumento);
 				return ps;
 			}
 		}, new FacturaAmountDocument());
