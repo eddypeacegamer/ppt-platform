@@ -8,12 +8,12 @@ import { Empresa } from '../../models/empresa';
 })
 export class CompaniesService {
 
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
 
-  public getCompanies(page: number, size: number, filterParams?: any): Observable<Object> {
-    let pageParams : HttpParams =  new HttpParams().append('page',page.toString()).append('size',size.toString());
-    for (const key in filterParams) {
+  public getCompanies(filterParams: any): Observable<Object> {
+    let pageParams: HttpParams =  new HttpParams();
+    for(const key in filterParams) {
       const value : string = filterParams[key];
       if(value.length>0){
         pageParams = pageParams.append(key, filterParams[key]);

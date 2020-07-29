@@ -477,7 +477,7 @@ onCompanySelected(companyId: string) {
 
 buscarClientInfo( razonSocial: string) {
   if ( razonSocial !== undefined && razonSocial.length > 5) {
-    this.clientsService.getClients(0 , 20, { razonSocial: razonSocial })
+    this.clientsService.getClients({ razonSocial: razonSocial, page: '0', size: '20'  })
         .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
         .subscribe(clients => {
           this.clientsCat = clients;

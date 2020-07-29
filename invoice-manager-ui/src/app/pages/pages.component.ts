@@ -18,6 +18,6 @@ export class PagesComponent implements OnInit {
   public menu = [];
 
   public ngOnInit() {
-    this.userService.getUserInfo().then(user => {this.menu = user.menu; });
+    this.userService.getUserInfo().then(user => {this.menu = user.menu;});
   }
 }

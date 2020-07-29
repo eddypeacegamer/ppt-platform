@@ -4,7 +4,8 @@
 	"children": [
 		{
 			"title": "Reportes",
-			"link": "/pages/operaciones/reportes/C/*"
+			"link": "/pages/operaciones/reportes",
+			"queryParams":{"lineaEmisor":"C","status":"*"}
 		},
 		{
 			"title": "CFDI",

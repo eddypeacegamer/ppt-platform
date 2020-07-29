@@ -83,7 +83,7 @@ export class MulticomplementosComponent implements OnInit {
     this.selectedClient = cliente;
     this.filterParams.remitente = cliente.razonSocial;
     this.invoiceService
-      .getInvoices(0, 10000, {remitente: cliente.razonSocial, solicitante: this.user.email })
+      .getInvoices({remitente: cliente.razonSocial, solicitante: this.user.email, page: 0, size: 10000})
       .pipe(
         map((page: GenericPage<Factura>) => {
           return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
@@ -191,9 +191,11 @@ export class MulticomplementosComponent implements OnInit {
 
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
-    const pageValue = currentPage || 0;
-    const sizeValue = pageSize || 10;
-    this.invoiceService.getInvoices(pageValue, sizeValue, this.filterParams)
+    const params: any = {... this.filterParams};
+    params.page = currentPage || 0;
+    params.size = pageSize || 10;
+
+    this.invoiceService.getInvoices(params)
       .subscribe((result: GenericPage<any>) => this.page = result,
       error=> console.log(error));
   }
