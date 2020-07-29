@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.business.unknow.Constants;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
@@ -38,14 +39,26 @@ public class FacturaCalculator {
 		}
 	}
 
-	public void assignFolioInFacturaDto(FacturaDto dto) throws InvoiceManagerException {
+	public void assignFolioInFacturaDto(FacturaDto dto) {
 		String folio = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_GENERIC_FORMAT);
 		dto.setFolio(folio);
 		if (dto.getCfdi() != null) {
 			dto.getCfdi().setFolio(folio);
 		}
 	}
-	
-	
+
+	public void assignPreFolioInFacturaDto(FacturaDto dto, int amount) {
+		if (dto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+			String amountWithZeros = String.format("%05d", amount+1);
+			String folio = String.format("%s-%s",
+					dateHelper.getStringFromFecha(new Date(), Constants.DATE_PRE_FOLIO_GENERIC_FORMAT),
+					amountWithZeros);
+			dto.setPreFolio(folio);
+		} else {
+			String folio = String.format("%s-%s",
+					dateHelper.getStringFromFecha(new Date(), Constants.DATE_PRE_FOLIO_GENERIC_FORMAT), "00000");
+			dto.setPreFolio(folio);
+		}
+	}
 
 }

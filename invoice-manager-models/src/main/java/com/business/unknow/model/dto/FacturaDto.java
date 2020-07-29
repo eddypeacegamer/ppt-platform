@@ -25,6 +25,7 @@ public class FacturaDto implements Serializable {
 	private String tipoDocumento;
 	private String solicitante;
 	private String folio;
+	private String preFolio;
 	private String uuid;
 	private Integer statusFactura;
 	private String statusDetail;
@@ -288,20 +289,28 @@ public class FacturaDto implements Serializable {
 		this.validacionOper = validacionOper;
 	}
 
+	public String getPreFolio() {
+		return preFolio;
+	}
+
+	public void setPreFolio(String preFolio) {
+		this.preFolio = preFolio;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
-				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio + ", uuid="
-				+ uuid + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail + ", packFacturacion="
-				+ packFacturacion + ", metodoPago=" + metodoPago + ", notas=" + notas + ", fechaCreacion="
-				+ fechaCreacion + ", statusCancelacion=" + statusCancelacion + ", fechaCancelacion=" + fechaCancelacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", fechaTimbrado=" + fechaTimbrado
-				+ ", statusCancelado=" + statusCancelado + ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado
-				+ ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi + ", total=" + total + ", saldoPendiente="
-				+ saldoPendiente + ", cfdi=" + cfdi + ", validacionTeso=" + validacionTeso + ", validacionOper="
-				+ validacionOper + "]";
+				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
+				+ ", preFolio=" + preFolio + ", uuid=" + uuid + ", statusFactura=" + statusFactura + ", statusDetail="
+				+ statusDetail + ", packFacturacion=" + packFacturacion + ", metodoPago=" + metodoPago + ", notas="
+				+ notas + ", fechaCreacion=" + fechaCreacion + ", statusCancelacion=" + statusCancelacion
+				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
+				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
+				+ ", total=" + total + ", saldoPendiente=" + saldoPendiente + ", cfdi=" + cfdi + ", validacionTeso="
+				+ validacionTeso + ", validacionOper=" + validacionOper + "]";
 	}
 
 }

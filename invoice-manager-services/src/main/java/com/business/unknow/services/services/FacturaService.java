@@ -246,7 +246,8 @@ public class FacturaService {
 	public FacturaDto insertNewFacturaWithDetail(FacturaDto facturaDto) throws InvoiceManagerException {
 		validator.validatePostFacturaWithDetail(facturaDto);
 		FacturaContext facturaContext = facturaBuilderService.buildFacturaContextCreateFactura(facturaDto);
-		facturaDefaultValues.assignaDefaultsFactura(facturaContext.getFacturaDto());
+		facturaDefaultValues.assignaDefaultsFactura(facturaContext.getFacturaDto(),
+				facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento(facturaDto.getTipoDocumento()));
 		FacturaDto facturaBuilded = facturaServiceEvaluator.facturaEvaluation(facturaContext).getFacturaDto();
 		CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
 		Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
