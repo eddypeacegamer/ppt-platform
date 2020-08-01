@@ -12,7 +12,6 @@ import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-repo
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
-import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 const routes: Routes = [{
   path: '',
@@ -34,13 +33,7 @@ const routes: Routes = [{
       path: 'empresa/:rfc',
       component: EmpresaComponent,
     }, {
-      path: 'reportes/:linea/:status',
-      component : InvoiceReportsComponent,
-    }, {
-      path: 'validacion/:linea/:status',
-      component : InvoiceReportsComponent,
-    }, {
-      path: 'timbrar-facturas/:linea/:status',
+      path: 'reportes',
       component : InvoiceReportsComponent,
     }, {
       path: 'revision/:folio',

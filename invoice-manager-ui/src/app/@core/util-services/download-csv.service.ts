@@ -14,7 +14,7 @@ export class DownloadCsvService {
 
     if (data == null || data == undefined || data.length < 1) {
       console.error("Donwload service can't generate report from empty or null data.");
-      alert("Donwload service can't generate report from empty or null data.");
+      alert("No se encontro información, imposible generar reporte.");
       return;
     } else {
       let content = this.csvParser.unparse(data);

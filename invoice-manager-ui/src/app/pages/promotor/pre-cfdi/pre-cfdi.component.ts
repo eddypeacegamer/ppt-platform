@@ -150,7 +150,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
   buscarClientInfo(razonSocial: string) {
     if ( razonSocial !== undefined && razonSocial.length >= 5) {
-      this.clientsService.getClients(0 , 20, { promotor: this.user.email, razonSocial: razonSocial })
+      this.clientsService.getClients( { promotor: this.user.email, razonSocial: razonSocial, page: '0', size: '20' })
           .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
           .subscribe(clients => {
             this.clientsCat = clients;

@@ -13,7 +13,6 @@ import {
 
 import { UsersData } from './data/users-data';
 import { UsersService } from './back-services/users.service';
-import { SharedService } from './back-services/sharedService';
 
 
 import { CatalogsData } from './data/catalogs-data';
@@ -50,8 +49,7 @@ const DATA_SERVICES = [
   {provide: DevolutionData, useClass: DevolutionService},
   {provide: TransferData , useClass: TransferService},
   {provide: FilesData, useClass : FilesService},
-  {provide: UsersData, useClass: UsersService },
-  {provide: SharedService, useClass: SharedService }
+  {provide: UsersData, useClass: UsersService }
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {

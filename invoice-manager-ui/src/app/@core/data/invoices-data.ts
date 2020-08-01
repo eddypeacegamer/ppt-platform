@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { Pago } from '../../models/factura/pago';
 
 export abstract class InvoicesData {
-    abstract getInvoices(page: number, size: number, filterParams?: any): Observable<GenericPage<Factura>>;
+    abstract getInvoices(filterParams: any): Observable<GenericPage<Factura>>;
 
-    abstract getInvoicesReports(page: number, size: number, filterParams?: any): Observable<GenericPage<any>>;
-    abstract getComplementReports(page: number, size: number, filterParams?: any): Observable<GenericPage<any>>;
+    abstract getInvoicesReports(filterParams: any): Observable<GenericPage<any>>;
+    abstract getComplementReports(filterParams: any): Observable<GenericPage<any>>;
 
     abstract getInvoiceSaldo(prefolio: string): Observable<number>;
 
