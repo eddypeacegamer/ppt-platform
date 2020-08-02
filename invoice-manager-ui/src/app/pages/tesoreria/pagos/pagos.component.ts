@@ -118,13 +118,23 @@ export class PagosComponent implements OnInit {
   }
 
   //validacion cuadro rojo por fila
-  public cal(fila: any): boolean {
+  public cal(fila: any): any {
 
-    if (Math.floor(new Date(fila.fechaCreacion).getTime() - new Date(fila.fechaPago).getTime()) / 86400000 > 15 || (+(fila.facturas[0].totalFactura) - (+fila.monto) !== 0 && fila.facturas[0].metodoPago == "PUE"))
-      return true;
-    else
-      return false;
+    let condition = (typeof fila.facturas !== 'undefined' && fila.facturas.length > 0);
+    const totalFactura = condition ? fila.facturas.reduce((a, b) => a.totalFactura + b.totalFactura) : 0;
+    const metodoPago = condition ? fila.facturas[0].metodoPago : "PPD";
 
+    if ((+(totalFactura.totalFactura) - (+fila.monto) !== 0 && metodoPago == "PUE")) {
+
+      return '#ff9494';
+    }
+
+    if (Math.abs(new Date(fila.fechaCreacion).getTime() - new Date(fila.fechaPago).getTime()) / 86400000 > 15) {
+
+      return '#ffd982';
+    }
+
+    return 'null';
   }
 
 

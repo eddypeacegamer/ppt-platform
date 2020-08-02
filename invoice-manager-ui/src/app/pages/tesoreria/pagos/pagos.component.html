@@ -151,7 +151,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let fila of page.content" [style.background]="cal(fila) == true ? '#ff9494' : 'null'">
+              <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
                 <td scope="row" *ngIf="vista==='validacion-pagos'">
                   <div class="form-inline" style="width: 150px;">
                     <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
@@ -181,7 +181,7 @@
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>
                 </td>
-                <td scope="row">{{fila.fechaCreacion}}</td>
+                <td scope="row">{{fila.fechaCreacion.split("T", 1)}}</td>
                 <td scope="row">{{fila.acredor}}</td>
                 <td scope="row">{{fila.deudor}}</td>
                 <td scope="row" >{{fila.fechaPago.split("T", 1)}}</td>
