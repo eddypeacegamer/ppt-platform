@@ -74,15 +74,15 @@ export class ClientesComponent implements OnInit {
     switch (this.module) {
       case 'promotor':
         this.router.navigate([`./pages/promotor/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/promotor/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
     }
 
     this.clientService.getClients(params)

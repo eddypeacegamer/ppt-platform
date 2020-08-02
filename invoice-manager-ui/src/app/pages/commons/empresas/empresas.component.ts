@@ -88,15 +88,15 @@ export class EmpresasComponent implements OnInit {
     switch (this.module) {
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
     }
 
     this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
