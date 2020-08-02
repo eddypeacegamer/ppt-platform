@@ -160,8 +160,6 @@ export class InvoiceReportsComponent implements OnInit {
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
 
-    console.log(params);
-
     switch (this.module) {
       case 'promotor':
         this.router.navigate([`./pages/promotor/reportes`],
