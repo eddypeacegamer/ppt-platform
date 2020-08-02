@@ -62,7 +62,7 @@ export class ClientesComponent implements OnInit {
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
         let value: string = this.filterParams[key];
-        if (value !== null && value.length > 0 || value == '') {
+        if (value !== null && value.length > 0 ) {
           params[key] = value;
         }          
       }
@@ -75,15 +75,15 @@ export class ClientesComponent implements OnInit {
       case 'promotor':
         params.promotor = this.filterParams.solicitante;
         this.router.navigate([`./pages/promotor/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/promotor/clientes`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
     }
 
     this.clientService.getClients(params)

@@ -9,10 +9,16 @@
       <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago.</small>
     </div>
   </div>
+  <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
+    <p *ngFor="let message of errors">{{message}}</p>
+  </div>
   <div class="card-footer">
     <button class="btn btn-danger" (click)="onRecahzarPago()" *ngIf="pago.revision1==false || pago.revision2==false">Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-success" (click)="onDownload()">Descargar Imagen</button>
+    &nbsp;&nbsp;&nbsp;
     <button class="btn btn-warning" (click)="cancel()">Salir</button>
+    <a href="comprobanteUrl" download></a>
   </div>
 </div>
 

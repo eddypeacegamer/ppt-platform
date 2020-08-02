@@ -76,7 +76,7 @@ export class EmpresasComponent implements OnInit {
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
         let value: string = this.filterParams[key];
-        if (value !== null && value.length > 0 || value == '') {
+        if (value !== null && value.length > 0 ) {
           params[key] = value;
         }          
       }
@@ -88,15 +88,15 @@ export class EmpresasComponent implements OnInit {
     switch (this.module) {
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params, queryParamsHandling: 'merge' });
+          { queryParams: params });
     }
 
     this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
