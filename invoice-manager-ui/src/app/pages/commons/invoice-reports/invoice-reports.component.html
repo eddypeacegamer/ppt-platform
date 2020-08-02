@@ -213,26 +213,25 @@
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix puff_center">
+        <div class="clearfix puff_center"  *ngIf="page.empty == false">
           Resultados
           <div class="row float-right" style="margin-right: 1px;">
-            <button type="button" style="margin-right: 15px;" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
-            <select id="inputunidad" style="display:block;width: 95px; margin-right: 15px;" class="float-right form-control" [(ngModel)]="filterParams.size"
-              *ngIf="page.last==false || page.first==true"
-              (change)="onChangePageSize($event.target.value)">
+
+            <select id="inputunidad" style="display:block;width: 95px; margin-right: 15px;"
+              class="float-right form-control" [(ngModel)]="filterParams.size"
+              *ngIf="page.last==false || page.first==true" (change)="onChangePageSize($event.target.value)">
               <option value="10">10</option>
               <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
               <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
             </select>
-            
-          <button style="margin-right: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
-            class="btn btn-success float-right"><i class="fa fa-download"></i></button>
-          <button style="margin-right: 15px;" type="button" *ngIf="module !== 'promotor'"
-            (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i
-              class="fa fa-download"></i>Facturas</button>
-          <button  type="button" *ngIf="module !== 'promotor'"
-            (click)="downloadComplementReports()" class="btn  btn-success float-right"><i
-              class="fa fa-download"></i>Complementos</button>
+
+            <button style="margin-right: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
+              class="btn btn-success float-right"><i class="fa fa-download"></i></button>
+            <button style="margin-right: 15px;" type="button" *ngIf="module !== 'promotor'"
+              (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i
+                class="fa fa-download"></i>Facturas</button>
+            <button type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()"
+              class="btn  btn-success float-right"><i class="fa fa-download"></i>Complementos</button>
           </div>
 
         </div>
@@ -243,7 +242,7 @@
               <tr>
                 <th class="text-center" style="width: 190px;">Acciones</th>
                 <th class="text-center">Pre-Folio</th>
-                <th class="text-center">Folio</th>
+                <!--th-- class="text-center">Folio</!--th-->
                 <th class="text-center">Razón Social Empresa</th>
                 <th class="text-center">Razón Social Cliente</th>
                 <th class="text-center">Tipo Documento</th>
@@ -294,7 +293,7 @@
                   </button>
                 </td>
 
-                <td scope="row">{{fila.preFolio}}</td>
+                <!--td-- scope="row">{{fila.preFolio}}</!--td-->
                 <td scope="row">{{fila.idCfdi}}</td>
                 <td scope="row">{{fila.razonSocialEmisor}}</td>
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
