@@ -281,8 +281,9 @@ public class CfdiService {
 			ret.setImporte(ret.getImporte().setScale(6, RoundingMode.DOWN));
 			retencionRepository.save(ret);
 		}
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
+		facturaService.recreatePdf(cfdi);
 		return cfdi;
 	}
 
@@ -309,7 +310,7 @@ public class CfdiService {
 		}
 		conceptoRepository.deleteById(concepto.getId());
 
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
 		facturaService.recreatePdf(cfdi);
 
@@ -348,7 +349,7 @@ public class CfdiService {
 			retencionRepository.save(ret);
 		}
 
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
 		facturaService.recreatePdf(cfdi);
 

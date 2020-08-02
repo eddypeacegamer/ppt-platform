@@ -12,6 +12,7 @@ public class AbstractValidator {
 	protected static final String ATTRIBUTE_REQUIRED = "Attribute required.";
 	protected static final String ATTRIBUTE_REQUIRED_MESSAGE = "Error, el campo [%s] no fue enviado.";
 	protected static final String ATTRIBUTE_INVALID_MESSAGE = "Error, el campo [%s] no es valido.";
+	protected static final String ATRIBUTE_NEGATIVE = "Error, el campo [%s] no puede ser negativo.";
 	private static final String EMAIL_REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 	private static final String CHAR_REGEX = "^[A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+";
 
@@ -24,7 +25,7 @@ public class AbstractValidator {
 	
 	public void checkNotNegative(BigDecimal value, String attribute) throws InvoiceManagerException {
 		if(BigDecimal.ZERO.compareTo(value) > 0) {
-			throw new InvoiceManagerException(String.format(ATTRIBUTE_INVALID_MESSAGE, attribute), ATTRIBUTE_REQUIRED,
+			throw new InvoiceManagerException(String.format(ATRIBUTE_NEGATIVE, attribute), ATTRIBUTE_REQUIRED,
 					Constants.BAD_REQUEST);
 		}
 	}

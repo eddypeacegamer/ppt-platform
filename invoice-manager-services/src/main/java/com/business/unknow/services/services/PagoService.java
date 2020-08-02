@@ -174,8 +174,7 @@ public class PagoService {
 				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
 						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();
 				if (pagoFact.isPresent()) {
-					dto.setSaldoPendiente(dto.getSaldoPendiente().subtract(pagoFact.get().getMonto()));
-					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), dto.getTotal(), dto.getSaldoPendiente());
+					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
 				}
 			}
 		}
@@ -254,7 +253,7 @@ public class PagoService {
 		for (FacturaDto facturaDto : facturas) {
 			Optional<PagoFacturaDto> pagoFactOpt = payment.getFacturas().stream().filter(p->p.getFolio().equals(facturaDto.getFolio())).findAny();
 			if(pagoFactOpt.isPresent()) {
-				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), facturaDto.getTotal(), facturaDto.getSaldoPendiente().add(pagoFactOpt.get().getMonto()));
+				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), Optional.empty(), Optional.of(pagoFactOpt.get().getMonto().negate()));
 			}
 		}
 		for (Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct().collect(Collectors.toList())) {

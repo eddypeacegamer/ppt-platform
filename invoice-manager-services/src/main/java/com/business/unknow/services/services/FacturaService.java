@@ -109,6 +109,9 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
+	
+	@Autowired
+	private PagoService pagoService;
 
 	@Autowired
 	private DateHelper dateHelper;
@@ -260,14 +263,21 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, BigDecimal total, BigDecimal saldo)
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
 			throws InvoiceManagerException {
-		validator.checkNotNegative(saldo, "Saldo pendiente");
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		BigDecimal total  =  newTotal.isPresent()? newTotal.get() : factura.getTotal();
+		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
+				.filter(p->!"CREDITO".equals(p.getFormaPago())).map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
+		
+		if(pago.isPresent()) {
+			montoPagado = montoPagado.add(pago.get());
+		}
+		BigDecimal saldo  = total.subtract(montoPagado);
+		validator.checkNotNegative(saldo, "Saldo pendiente");
 		factura.setTotal(total);
-		// TODO: BUSCAR PAGOS
 		factura.setSaldoPendiente(saldo);
 		return mapper.getFacturaDtoFromEntity(repository.save(factura));
 	}
@@ -432,8 +442,8 @@ public class FacturaService {
 			for (FacturaDto dto : facturas) {
 				Optional<PagoFacturaDto> pfDto = pagoPpd.getFacturas().stream()
 						.filter(a -> a.getFolio().equals(dto.getFolio())).findFirst();
-				updateTotalAndSaldoFactura(dto.getIdCfdi(), dto.getTotal(),
-						dto.getSaldoPendiente().subtract(pfDto.get().getMonto()));
+				updateTotalAndSaldoFactura(dto.getIdCfdi(), Optional.of(dto.getTotal()),
+						Optional.of(pfDto.get().getMonto()));
 			}
 			return mapper.getFacturaDtoFromEntity(repository.save(fact));
 		} else {
@@ -452,8 +462,7 @@ public class FacturaService {
 
 	// RENVIAR CORREOS
 	public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
-		facturaDto = getFacturaByFolio(folio);
-		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, facturaDto);
+		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
 		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
 		return facturaContext;
 	}
