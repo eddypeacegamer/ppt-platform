@@ -13,6 +13,7 @@ export class Factura {
 	public solicitante: string;
 	public metodoPago: string;
 	public folio: string;
+	public preFolio: string;
 	public uuid: string;
 	public notas: string;
 	public statusFactura: string;

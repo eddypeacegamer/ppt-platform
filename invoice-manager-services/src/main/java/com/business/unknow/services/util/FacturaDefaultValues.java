@@ -16,7 +16,7 @@ public class FacturaDefaultValues {
 
 	private FacturaCalculator facturaCalculator = new FacturaCalculator();
 
-	public void assignaDefaultsFactura(FacturaDto facturaDto) throws InvoiceManagerException {
+	public void assignaDefaultsFactura(FacturaDto facturaDto,int amount) throws InvoiceManagerException {
 		facturaDto.setSaldoPendiente(facturaDto.getTotal());
 		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name());
 		facturaDto.getCfdi().setTipoCambio(BigDecimal.ONE);
@@ -24,6 +24,7 @@ public class FacturaDefaultValues {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 		}
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
+		facturaCalculator.assignPreFolioInFacturaDto(facturaDto,amount);
 	}
 
 	public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
@@ -44,6 +45,7 @@ public class FacturaDefaultValues {
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
+		facturaCalculator.assignPreFolioInFacturaDto(facturaDto,0);
 	}
 	
 	

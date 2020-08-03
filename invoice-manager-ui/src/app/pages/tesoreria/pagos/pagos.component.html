@@ -38,12 +38,12 @@
                 <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
                 <option value="DEPOSITO">Depósito bancario</option>
                 <option value="CREDITO">Crédito Despacho</option>
-              </select>             
+              </select>
             </div>
           </div>
-          <div class="col-lg-2"> 
-            <button style="width: 100%; margin-top: 28px; " type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
-            status="primary">BUSCAR</button>
+          <div class="col-lg-2">
+            <button style="width: 100%; margin-top: 28px; " type="button" class="btn btn-primary align-bottom"
+              (click)="updateDataTable()" status="primary">BUSCAR</button>
           </div>
         </div>
         <div class="row slide_1" *ngIf="vista==='historial-pagos'">
@@ -81,26 +81,27 @@
           </div>
           <div class="col-2">
             <label for="inputBank" class="label">Forma de pago</label>
-            
-              <select id="inputPayType" style="display:block; width:90%;" class="form-control" [(ngModel)]="filterParams.formaPago">
-                <option value="*">TODAS</option>
-                <option value="EFECTIVO">Efectivo</option>
-                <option value="CHEQUE">Cheque nominativo</option>
-                <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
-                <option value="DEPOSITO">Depósito bancario</option>
-                <option value="CREDITO">Crédito Despacho</option>
-              </select>         
-            
+
+            <select id="inputPayType" style="display:block; width:90%;" class="form-control"
+              [(ngModel)]="filterParams.formaPago">
+              <option value="*">TODAS</option>
+              <option value="EFECTIVO">Efectivo</option>
+              <option value="CHEQUE">Cheque nominativo</option>
+              <option value="TRANSFERENCIA">Transferencia electrónica de fondos</option>
+              <option value="DEPOSITO">Depósito bancario</option>
+              <option value="CREDITO">Crédito Despacho</option>
+            </select>
+
           </div>
-          <div class="col-lg-1"> 
-            <button style="width: 100%; margin-top: 28px; margin-left: -30px; padding-right: 70px;" type="button" class="btn btn-primary align-bottom" (click)="updateDataTable()"
-            status="primary">BUSCAR</button>
+          <div class="col-lg-1">
+            <button style="width: 100%; margin-top: 28px; margin-left: -30px; padding-right: 70px;" type="button"
+              class="btn btn-primary align-bottom" (click)="updateDataTable()" status="primary">BUSCAR</button>
           </div>
         </div>
 
-  </nb-card-body>
-  </nb-card>
-</div>
+      </nb-card-body>
+    </nb-card>
+  </div>
 </div>
 
 
@@ -115,7 +116,8 @@
         </div>
         <div class="clearfix puff_center" *ngIf="page.empty == false">
           Resultados
-          <button style="margin-left: 15px;" type="button" (click)="downloadHandler()" class="btn btn-success float-right">Descarga</button>
+          <button style="margin-left: 15px;" type="button" (click)="downloadHandler()"
+            class="btn btn-success float-right">Descarga</button>
 
           <nb-select style="margin-left: 15px;" *ngIf="page.last==false || page.first==true" [selected]="pageSize"
             (selectedChange)="onChangePageSize($event)" id="inputPageSize" class="float-right">
@@ -144,21 +146,20 @@
                 <th scope="col">Cuenta</th>
                 <th scope="col">Validador 1</th>
                 <th scope="col">Validador 2</th>
-                
-                
+
+
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let fila of page.content">
+              <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
                 <td scope="row" *ngIf="vista==='validacion-pagos'">
-                  <div class="form-inline" style="width: 150px;" >
+                  <div class="form-inline" style="width: 150px;">
                     <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
                         class="fa fa-search"></i></button>
                     &nbsp;
                     <button class="btn-sm"
                       [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
-                      [disabled]="fila.revision1 && fila.revision2" (click)="openDialog(fila)"><i
-                        class="fa fa-times-circle"></i></button>
+                      (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                     &nbsp;
                     <button class="btn-sm"
                       [ngClass]="{'btn-outline-secondary': fila.revision1, 'btn-outline-success': !fila.revision1}"
@@ -171,18 +172,26 @@
                   </div>
                 </td>
                 <td scope="row" *ngIf="vista==='historial-pagos'">
-                  <div class="form-inline" style="width: 50px;" >
+                  <div class="form-inline" style="width: 50px;">
                     <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
                         class="fa fa-search"></i></button>
+                    &nbsp;
+                    <button class="btn-sm"
+                      [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
+                      (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>
                 </td>
-                <td scope="row">{{fila.fechaCreacion}}</td>
+                <td scope="row">{{fila.fechaCreacion.split("T", 1)}}</td>
                 <td scope="row">{{fila.acredor}}</td>
                 <td scope="row">{{fila.deudor}}</td>
-                <td scope="row">{{fila.fechaPago}}</td>
+                <td scope="row" >{{fila.fechaPago.split("T", 1)}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
-                <td scope="row"><p *ngFor="let fact of fila.facturas">{{fact.totalFactura | currency}}</p></td>
-                <td scope="row"><p *ngFor="let fact of fila.facturas">{{fact.metodoPago}}</p></td>
+                <td scope="row">
+                  <p *ngFor="let fact of fila.facturas">{{fact.totalFactura | currency}}</p>
+                </td>
+                <td scope="row">
+                  <p *ngFor="let fact of fila.facturas">{{fact.metodoPago}}</p>
+                </td>
                 <td scope="row">{{fila.formaPago}}</td>
                 <td scope="row">{{fila.solicitante}}</td>
                 <td scope="row">{{fila.statusPago}}</td>
@@ -190,8 +199,8 @@
                 <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.revisor1}}</td>
                 <td scope="row">{{fila.revisor2}}</td>
-                
-                
+
+
 
               </tr>
             </tbody>
