@@ -163,27 +163,27 @@ export class InvoiceReportsComponent implements OnInit {
     switch (this.module) {
       case 'promotor':
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params });
         break;
       case 'tesoreria':
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params});
         break;
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params });
         break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params });
         break;
       case 'administracion':
         this.router.navigate([`./pages/administracion/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params , queryParamsHandling: 'merge' });
+            { queryParams: params });
     }
 
     this.invoiceService.getInvoices(params)

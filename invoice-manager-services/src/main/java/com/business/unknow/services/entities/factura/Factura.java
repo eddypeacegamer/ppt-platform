@@ -58,6 +58,9 @@ public class Factura implements Serializable {
 	@Column(name = "FOLIO")
 	private String folio;
 
+	@Column(name = "PRE_FOLIO")
+	private String preFolio;
+
 	@Column(name = "METODO_PAGO")
 	private String metodoPago;
 
@@ -318,16 +321,24 @@ public class Factura implements Serializable {
 		this.validacionOper = validacionOper;
 	}
 
+	public String getPreFolio() {
+		return preFolio;
+	}
+
+	public void setPreFolio(String preFolio) {
+		this.preFolio = preFolio;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
 				+ ", razonSocialEmisor=" + razonSocialEmisor + ", lineaEmisor=" + lineaEmisor
 				+ ", razonSocialRemitente=" + razonSocialRemitente + ", lineaRemitente=" + lineaRemitente
 				+ ", tipoDocumento=" + tipoDocumento + ", solicitante=" + solicitante + ", folio=" + folio
-				+ ", metodoPago=" + metodoPago + ", statusFactura=" + statusFactura + ", statusDetail=" + statusDetail
-				+ ", uuid=" + uuid + ", total=" + total + ", saldoPendiente=" + saldoPendiente + ", packFacturacion="
-				+ packFacturacion + ", notas=" + notas + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
+				+ ", preFolio=" + preFolio + ", metodoPago=" + metodoPago + ", statusFactura=" + statusFactura
+				+ ", statusDetail=" + statusDetail + ", uuid=" + uuid + ", total=" + total + ", saldoPendiente="
+				+ saldoPendiente + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
+				+ fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
 				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
 				+ ", validacionTeso=" + validacionTeso + ", validacionOper=" + validacionOper + "]";
 	}

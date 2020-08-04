@@ -143,7 +143,7 @@ export class ConceptosComponent implements OnInit {
             }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error))
             .then(() => {
               this.cfdiService.getCfdiByFolio(this.cfdi.id)
-              .subscribe((cfdi: Cfdi) => this.cfdi = cfdi,
+              .subscribe((cfdi: Cfdi) => {this.cfdi = cfdi; console.log('Updating CFDI', this.cfdi);},
               (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
             }).then(() => this.loading = false);
       }else {

@@ -194,6 +194,15 @@ public class CfdiService {
 
 	@Transactional(rollbackFor = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
 	public CfdiDto updateCfdiBody(Integer id, CfdiDto cfdi) throws InvoiceManagerException {
+		
+		
+		cfdi.setConceptos(mapper.getDtosFromConceptoEntities(conceptoRepository.findByCfdi(cfdi.getId())));
+		if (cfdi.getConceptos() != null && !cfdi.getConceptos().isEmpty()) {
+			for (ConceptoDto conceptoDto : cfdi.getConceptos()) {
+				conceptoDto.setImpuestos(getImpuestosByConcepto(conceptoDto.getId()));
+			}
+		}
+		
 		validateCfdi(cfdi);
 		recalculateCfdiAmmounts(cfdi);
 		repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -212,6 +221,7 @@ public class CfdiService {
 		receptor.setUsoCfdi(cfdi.getReceptor().getUsoCfdi());
 		receptorRepository.save(receptor);
 		repository.save(mapper.getEntityFromCfdiDto(cfdi));
+		
 		facturaService.recreatePdf(cfdi);
 		return cfdi;
 	}
@@ -271,8 +281,9 @@ public class CfdiService {
 			ret.setImporte(ret.getImporte().setScale(6, RoundingMode.DOWN));
 			retencionRepository.save(ret);
 		}
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
+		facturaService.recreatePdf(cfdi);
 		return cfdi;
 	}
 
@@ -299,7 +310,7 @@ public class CfdiService {
 		}
 		conceptoRepository.deleteById(concepto.getId());
 
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
 		facturaService.recreatePdf(cfdi);
 
@@ -338,7 +349,7 @@ public class CfdiService {
 			retencionRepository.save(ret);
 		}
 
-		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), cfdi.getTotal(), cfdi.getTotal());
+		facturaService.updateTotalAndSaldoFactura(cfdi.getId(), Optional.of(cfdi.getTotal()), Optional.empty());
 		// 4.- recalculate pdf
 		facturaService.recreatePdf(cfdi);
 

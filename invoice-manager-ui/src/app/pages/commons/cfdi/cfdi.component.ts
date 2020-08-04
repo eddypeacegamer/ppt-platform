@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { Cfdi } from '../../../models/factura/cfdi';
 import { Pago } from '../../../models/factura/pago';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
@@ -28,11 +28,10 @@ export class CfdiComponent implements OnInit {
   @Input() factura: Factura;
   @Input() module: string = '';
 
-  
-  public errorMessagesCdfi: string[] = [];
- 
+  @Output() cfdiEvent = new EventEmitter<string>();
+
+  public errorMessagesCdfi: string[] = []; 
   public loading: boolean = false;
-  
 
   // auxiliar variables
   public newConcep: Concepto;
@@ -106,6 +105,7 @@ export class CfdiComponent implements OnInit {
         this.cfdi = cfdi;
         this.loading = false;
         this.successMessage = 'CFDI actualizado correctamente';
+        this.cfdiEvent.emit(this.factura.cfdi.id.toString());
       } , (error: HttpErrorResponse) => {
         this.loading = false;
         this.dialogService.open(dialog,
