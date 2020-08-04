@@ -15,7 +15,6 @@ import { User } from '../../../models/user';
 export class ClientesComponent implements OnInit {
 
   public user: User;
-  public paths: string[] = [];
   public page: GenericPage<any> = new GenericPage();
 
   public module: string = 'promotor';
