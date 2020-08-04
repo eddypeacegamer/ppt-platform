@@ -31,7 +31,7 @@
               
               <button class="btn btn-primary" style="margin-left: 15px;" (click)="updateDataTable(0,10)">BUSCAR</button>
               
-              <button class="btn btn-primary" style="margin-left: 15px;" *ngIf="paths[2] === 'promotor'" (click)="redirectToCliente('*')">NUEVO CLIENTE</button>
+              <button class="btn btn-primary" style="margin-left: 15px;" *ngIf="module === 'promotor'" (click)="redirectToCliente('*')">NUEVO CLIENTE</button>
             </div>
           </div>
         </div>
