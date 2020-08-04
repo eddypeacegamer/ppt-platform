@@ -5,11 +5,11 @@
         <div class="clearfix" *ngIf="preFolio !== '*'">
           <p class="h6 float-left puff_center">CFDI Promotor</p> <span class="badge badge-primary" style="margin-left: 10px;" 
           *ngIf="factura" >{{factura.statusFactura}}</span>
-          <!--button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading" class="float-right puff_center"
+          <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading" class="float-right puff_center"
               [disabled]="loading" nbSpinnerStatus="success"  *ngIf="factura.statusFactura.indexOf('Rechazo')===0"
               nbSpinnerSize="small" nbSpinnerMessage="">
                revalidar Factura<i class="fa fa-check" style="margin-left: 10px;"></i>
-          </button-->
+          </button>
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
@@ -66,7 +66,7 @@
           </div>
         </div>
         
-          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'"
+          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'" (cfdiEvent)="getInvoiceInfoByIdCdfi($event)"
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
 

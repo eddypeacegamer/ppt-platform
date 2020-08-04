@@ -60,7 +60,7 @@
         </div>
         <br>
         <div *ngIf="!loading">
-          <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi"
+          <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" (cfdiEvent)="getInvoiceInfoByIdCdfi($event)"
             [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
         </div>
