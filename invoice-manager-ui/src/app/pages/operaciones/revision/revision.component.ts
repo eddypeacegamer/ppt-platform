@@ -42,6 +42,7 @@ export class RevisionComponent implements OnInit {
   public clientsCat: Client[] = [];
   public factura: Factura = new Factura();
   public user: User;
+  public soporte: boolean=false;
   public successMessage: string;
   public errorMessages: string[] = [];
   public formInfo = { clientName: '', clientRfc: '*', companyRfc: '', giro: '*', empresa: '*' };
@@ -65,7 +66,7 @@ export class RevisionComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.userService.getUserInfo().then(user => this.user = user as User);
+    this.userService.getUserInfo().then(user => this.user = user as User).then(()=>this.soporte=this.user.roles.map(a=>a.role).includes('SOPORTE'));
     this.initVariables();
     /* preloaded cats*/
     this.catalogsService.getStatusValidacion().then(cat => this.validationCat = cat);
@@ -290,5 +291,7 @@ export class RevisionComponent implements OnInit {
   isValidCfdi(): boolean {
     return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
 }
+
+
  
 }
