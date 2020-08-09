@@ -5,10 +5,7 @@ import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import {
-  LayoutService,
-  StateService,
-} from './utils';
+import {LayoutService} from './utils/layout.service';
 
 
 import { UsersData } from './data/users-data';
@@ -92,7 +89,6 @@ export const NB_CORE_PROVIDERS = [
     provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
   },
   LayoutService,
-  StateService,
 ];
 
 @NgModule({

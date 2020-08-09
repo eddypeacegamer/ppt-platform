@@ -10,7 +10,7 @@ import { User } from '../../../models/user';
 @Component({
   selector: 'ngx-clientes',
   templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.scss']
+  styleUrls: ['./clientes.component.scss'],
 })
 export class ClientesComponent implements OnInit {
 
@@ -27,30 +27,48 @@ export class ClientesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router) { }
 
+
+  private equals(params: any, filterparams: any): boolean {
+    if (JSON.stringify(params) !== '{}') { // not empty object
+      for (const key in params) {
+        if (params[key] !== filterparams[key]) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   ngOnInit() {
     this.module = this.router.url.split('/')[2];
 
     this.route.queryParams
       .subscribe(params => {
-
-        this.filterParams = { ...this.filterParams, ...params };
-
-        switch (this.module) {
-          case 'promotor':
-            this.userService.getUserInfo().then((user) => {
-              this.filterParams.promotor = user.email;
-              this.updateDataTable();
-            });
-            break;
-          case 'operaciones':
-            this.updateDataTable();
-            break;
-          default:
-            this.updateDataTable();
-            break;
+        if (!this.equals(params, this.filterParams)) {
+          this.filterParams = { ...this.filterParams, ...params };
+          switch (this.module) {
+            case 'promotor':
+              this.userService.getUserInfo().then((user) => {
+                this.filterParams.promotor = user.email;
+                this.updateDataTable(this.filterParams.page, this.filterParams.size);
+              });
+              break;
+            case 'operaciones':
+              this.updateDataTable(this.filterParams.page, this.filterParams.size);
+              break;
+            case 'administracion':
+              this.updateDataTable(this.filterParams.page, this.filterParams.size);
+              break;
+            default:
+              this.updateDataTable(this.filterParams.page, this.filterParams.size);
+              break;
+          }
         }
       });
   }
+
 
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
@@ -77,6 +95,10 @@ export class ClientesComponent implements OnInit {
         break;
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/clientes`],
+          { queryParams: params });
+        break;
+      case 'administracion':
+        this.router.navigate([`./pages/administracion/clientes`],
           { queryParams: params });
         break;
       default:
