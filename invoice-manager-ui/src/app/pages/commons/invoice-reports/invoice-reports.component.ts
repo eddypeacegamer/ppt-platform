@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { Factura } from '../../../models/factura/factura';
+import { UtilsService } from '../../../@core/util-services/utils.service';
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -28,28 +29,9 @@ export class InvoiceReportsComponent implements OnInit {
     private router: Router,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
+    private utilsService: UtilsService,
     private route: ActivatedRoute) { }
 
-
-  private equals(params: any, filterparams: any): boolean {
-    if (JSON.stringify(params) !== '{}') { // not empty object
-      for (const key in params) {
-        if (params[key] !== filterparams[key]) {
-          if (this.filterParams[key] instanceof Date) {
-            const date: Date = this.filterParams[key] as Date;
-            if ( `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` !== params[key]) {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   ngOnInit() {
 
@@ -59,7 +41,7 @@ export class InvoiceReportsComponent implements OnInit {
 
     this.route.queryParams
       .subscribe(params => {
-        if (!this.equals(params, this.filterParams)) {
+        if (!this.utilsService.compareParams(params, this.filterParams)) {
           this.filterParams = { ...this.filterParams, ...params };
 
           this.filterParams.to = this.filterParams.to === undefined ?
@@ -164,20 +146,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
 
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (this.filterParams[key] instanceof Date) {
-          const date: Date = this.filterParams[key] as Date;
-          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        }
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
@@ -240,20 +209,7 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadInvoicesReports() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (this.filterParams[key] instanceof Date) {
-          const date: Date = this.filterParams[key] as Date;
-          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        }
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getInvoicesReports(params).subscribe(result => {
@@ -262,20 +218,7 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadComplementReports() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (this.filterParams[key] instanceof Date) {
-          const date: Date = this.filterParams[key] as Date;
-          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        }
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getComplementReports(params).subscribe(result => {

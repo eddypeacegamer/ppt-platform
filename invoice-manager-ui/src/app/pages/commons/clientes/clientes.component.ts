@@ -6,6 +6,7 @@ import { DownloadCsvService } from '../../../@core/util-services/download-csv.se
 import { Router, ActivatedRoute } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../models/user';
+import { UtilsService } from '../../../@core/util-services/utils.service';
 
 @Component({
   selector: 'ngx-clientes',
@@ -25,28 +26,16 @@ export class ClientesComponent implements OnInit {
     private clientService: ClientsData,
     private donwloadService: DownloadCsvService,
     private route: ActivatedRoute,
+    private utilsService: UtilsService,
     private router: Router) { }
 
-
-  private equals(params: any, filterparams: any): boolean {
-    if (JSON.stringify(params) !== '{}') { // not empty object
-      for (const key in params) {
-        if (params[key] !== filterparams[key]) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   ngOnInit() {
     this.module = this.router.url.split('/')[2];
 
     this.route.queryParams
       .subscribe(params => {
-        if (!this.equals(params, this.filterParams)) {
+        if (!this.utilsService.compareParams(params, this.filterParams)) {
           this.filterParams = { ...this.filterParams, ...params };
           switch (this.module) {
             case 'promotor':
@@ -72,19 +61,7 @@ export class ClientesComponent implements OnInit {
 
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
-
-    const params: any = {};
-
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        const value: string = this.filterParams[key];
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
-
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
 
@@ -117,16 +94,7 @@ export class ClientesComponent implements OnInit {
 
 
   public downloadHandler() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        const value: string = this.filterParams[key];
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
     this.clientService.getClients(params).subscribe((result: GenericPage<Client>) => {
