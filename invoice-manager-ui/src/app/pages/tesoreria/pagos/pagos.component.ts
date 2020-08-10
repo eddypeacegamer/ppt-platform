@@ -120,11 +120,11 @@ export class PagosComponent implements OnInit {
   //validacion cuadro rojo por fila
   public cal(fila: any): any {
 
-    let condition = (typeof fila.facturas !== 'undefined' && fila.facturas.length > 0);
+    const condition = (typeof fila.facturas !== 'undefined' && fila.facturas.length > 0);
     const totalFactura = condition ? fila.facturas.reduce((a, b) => a.totalFactura + b.totalFactura) : 0;
-    const metodoPago = condition ? fila.facturas[0].metodoPago : "PPD";
+    const metodoPago = condition ? fila.facturas[0].metodoPago : 'PPD';
 
-    if ((+(totalFactura.totalFactura) - (+fila.monto) !== 0 && metodoPago == "PUE")) {
+    if ((+(totalFactura.totalFactura) - (+fila.monto) !== 0 && metodoPago === 'PUE')) {
 
       return '#ff9494';
     }

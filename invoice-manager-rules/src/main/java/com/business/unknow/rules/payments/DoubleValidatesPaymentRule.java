@@ -20,7 +20,7 @@ public class DoubleValidatesPaymentRule {
 	public boolean condition(@Fact("payment") PagoDto currentPayment,
 			@Fact("dbPayment") PagoDto dbPayment) {	
 		
-		if(dbPayment.getRevision1() && currentPayment.getRevision1() && currentPayment.getRevision2()) {
+		if(dbPayment.getRevision1() && currentPayment.getRevision1() && currentPayment.getRevision2() && !RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())) {
 			currentPayment.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 			return false;
 		}else {

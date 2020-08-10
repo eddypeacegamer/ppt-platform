@@ -217,10 +217,13 @@ public class PagoService {
 
 		if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+			pagoBuilder.setComentarioPago(pago.getComentarioPago());
 			for (FacturaDto factura : facturas) {
-				factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
-				factura.setStatusDetail(pago.getComentarioPago());
-				facturaService.updateFactura(factura.getIdCfdi(), factura);
+				if(MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
+					factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+					factura.setStatusDetail(pago.getComentarioPago());
+					facturaService.updateFactura(factura.getIdCfdi(), factura);
+				}
 			}
 		} else if (entity.getRevision1() && pago.getRevision2()) {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
