@@ -40,12 +40,12 @@ public class FacturaDefaultValues {
 		
 	}
 
-	public void assignaDefaultsComplemento(FacturaDto facturaDto) throws InvoiceManagerException {
+	public void assignaDefaultsComplemento(FacturaDto facturaDto,int amount) throws InvoiceManagerException {
 		facturaDto.setFechaCreacion(new Date());
 		facturaDto.setFechaActualizacion(new Date());
 		facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
 		facturaCalculator.assignFolioInFacturaDto(facturaDto);
-		facturaCalculator.assignPreFolioInFacturaDto(facturaDto,0);
+		facturaCalculator.assignPreFolioInFacturaDto(facturaDto,amount);
 	}
 	
 	
