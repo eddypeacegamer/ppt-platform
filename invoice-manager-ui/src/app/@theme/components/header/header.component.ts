@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
 import { UsersData } from '../../../@core/data/users-data';
-import { LayoutService } from '../../../@core/utils';
+import { LayoutService } from '../../../@core/utils/layout.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{ title: 'V2.005' }];
+  userMenu = [{ title: 'V2.007' }];
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,

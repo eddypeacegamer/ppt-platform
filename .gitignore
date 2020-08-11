@@ -99,3 +99,4 @@ buildNumber.properties
 .idea/
 *.iml
 invoice-manager-services/.classpath
+invoice-manager-services/.factorypath

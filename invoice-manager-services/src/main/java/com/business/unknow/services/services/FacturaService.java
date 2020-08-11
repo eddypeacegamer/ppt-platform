@@ -109,7 +109,7 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaDefaultValues facturaDefaultValues;
-	
+
 	@Autowired
 	private PagoService pagoService;
 
@@ -263,19 +263,55 @@ public class FacturaService {
 		return saveFactura;
 	}
 
-	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
-			throws InvoiceManagerException {
+	public FacturaDto updateTotalAndSaldoFactura(Integer idCfdi, Optional<BigDecimal> newTotal,
+			Optional<BigDecimal> pago) throws InvoiceManagerException {
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
-		BigDecimal total  =  newTotal.isPresent()? newTotal.get() : factura.getTotal();
+		BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
 		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
-				.filter(p->!"CREDITO".equals(p.getFormaPago())).map(p->p.getMonto()).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
-		
-		if(pago.isPresent()) {
+				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto())
+				.reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
+
+		if (pago.isPresent()) {
 			montoPagado = montoPagado.add(pago.get());
 		}
-		BigDecimal saldo  = total.subtract(montoPagado);
+		BigDecimal saldo = total.subtract(montoPagado);
+		validator.checkNotNegative(saldo, "Saldo pendiente");
+		factura.setTotal(total);
+		factura.setSaldoPendiente(saldo);
+		return mapper.getFacturaDtoFromEntity(repository.save(factura));
+	}
+
+	public FacturaDto updateTotalAndSaldoFacturaComplemento(Integer idCfdi, Optional<BigDecimal> newTotal,
+			Optional<BigDecimal> deuda) throws InvoiceManagerException {
+		Factura factura = repository.findByIdCfdi(idCfdi)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		if (newTotal.isPresent()) {
+			factura.setTotal(newTotal.get());
+		}
+		if (deuda.isPresent()) {
+			validator.checkNotNegative(deuda.get(), "Saldo pendiente");
+			factura.setSaldoPendiente(deuda.get());
+		}
+		return mapper.getFacturaDtoFromEntity(repository.save(factura));
+	}
+
+	public FacturaDto updateTotalAndSaldoComplemento(Integer idCfdi, Optional<BigDecimal> newTotal,
+			Optional<BigDecimal> pago) throws InvoiceManagerException {
+		Factura factura = repository.findByIdCfdi(idCfdi)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
+		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
+				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto())
+				.reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
+
+		if (pago.isPresent()) {
+			montoPagado = montoPagado.add(pago.get());
+		}
+		BigDecimal saldo = total.subtract(montoPagado);
 		validator.checkNotNegative(saldo, "Saldo pendiente");
 		factura.setTotal(total);
 		factura.setSaldoPendiente(saldo);
@@ -440,10 +476,10 @@ public class FacturaService {
 			Factura fact = mapper.getEntityFromFacturaDto(complemento);
 			fact.setIdCfdi(cfdi.getId());
 			for (FacturaDto dto : facturas) {
-				Optional<PagoFacturaDto> pfDto = pagoPpd.getFacturas().stream()
+				Optional<CfdiPagoDto> cfdiPago = complemento.getCfdi().getComplemento().getPagos().stream()
 						.filter(a -> a.getFolio().equals(dto.getFolio())).findFirst();
-				updateTotalAndSaldoFactura(dto.getIdCfdi(), Optional.of(dto.getTotal()),
-						Optional.of(pfDto.get().getMonto()));
+				updateTotalAndSaldoFacturaComplemento(dto.getIdCfdi(), Optional.of(dto.getTotal()),
+						Optional.of(cfdiPago.get().getImporteSaldoInsoluto()));
 			}
 			return mapper.getFacturaDtoFromEntity(repository.save(fact));
 		} else {

@@ -96,9 +96,8 @@
             nbSpinnerSize="small" nbSpinnerMessage="">
             Rechazar
           </button>
-
           <button class="mr" nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-            [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada' && factura.tipoDocumento !== 'Complemento'" nbSpinnerStatus="danger"
+            [disabled]="loading" *ngIf="factura.statusFactura == 'Timbrada' && (factura.tipoDocumento !== 'Complemento'||soporte)" nbSpinnerStatus="danger"
             nbSpinnerSize="small" nbSpinnerMessage="">
             Cancelar
           </button>

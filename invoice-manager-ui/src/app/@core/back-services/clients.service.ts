@@ -10,17 +10,22 @@ export class ClientsService {
 
   constructor(private httpClient:HttpClient) { }
 
-  public getClients(filterParams: any): Observable<Object> {
+
+  private getHttpParams(filterParams: any): HttpParams {
     let pageParams: HttpParams =  new HttpParams();
     for (const key in filterParams) {
       if (filterParams[key] !== undefined) {
-        const value: string = filterParams[key];
-        if (value.length > 0 && value !== '*') {
+      const value: string = filterParams[key].toString();
+      if ( value !== null && value.length > 0 && value !== '*') {
           pageParams = pageParams.append(key, value);
         }
       }
     }
-    return this.httpClient.get('../api/clientes', { params: pageParams});
+    return pageParams;
+  }
+
+  public getClients(filterParams: any): Observable<Object> {
+    return this.httpClient.get('../api/clientes', {params: this.getHttpParams(filterParams)});
   }
 
   public getClientsByPromotor(promotor: string): Observable<any> {

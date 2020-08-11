@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { Factura } from '../../../models/factura/factura';
+import { UtilsService } from '../../../@core/util-services/utils.service';
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -18,7 +19,7 @@ export class InvoiceReportsComponent implements OnInit {
   public module: string = 'promotor';
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*',since: undefined, to: undefined, lineaEmisor: 'A', solicitante: '', page:'0', size:'10'};
+  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*', since: undefined, to: undefined, lineaEmisor: '', solicitante: '', page: '0', size: '10' };
   public userEmail: string;
   public loading = false;
 
@@ -28,7 +29,9 @@ export class InvoiceReportsComponent implements OnInit {
     private router: Router,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
+    private utilsService: UtilsService,
     private route: ActivatedRoute) { }
+
 
   ngOnInit() {
 
@@ -38,43 +41,44 @@ export class InvoiceReportsComponent implements OnInit {
 
     this.route.queryParams
       .subscribe(params => {
+        if (!this.utilsService.compareParams(params, this.filterParams)) {
+          this.filterParams = { ...this.filterParams, ...params };
 
-    this.filterParams = {...this.filterParams, ...params};
+          this.filterParams.to = this.filterParams.to === undefined ?
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(this.filterParams.to);
+          this.filterParams.since = this.filterParams.since === undefined ?
+            new Date(date.getFullYear(), date.getMonth(), 1) : new Date(this.filterParams.since);
 
-    this.filterParams.to = this.filterParams.to === undefined ?
-          new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(this.filterParams.to);
-    this.filterParams.since = this.filterParams.since === undefined ?
-          new Date(date.getFullYear(), date.getMonth(), 1) : new Date(this.filterParams.since);
-
-        switch (this.module) {
-          case 'promotor':
-            this.userService.getUserInfo().then((user) => {
-              this.userEmail = user.email;
-              this.filterParams.solicitante = user.email;
+          switch (this.module) {
+            case 'promotor':
+              this.userService.getUserInfo().then((user) => {
+                this.userEmail = user.email;
+                this.filterParams.solicitante = user.email;
+                this.updateDataTable();
+              });
+              break;
+            case 'operaciones':
               this.updateDataTable();
-            });
-            break;
-          case 'operaciones':
-            this.updateDataTable();
-            break;
-          case 'contabilidad':
-            this.updateDataTable();
-            break;
-          case 'administracion':
-            this.filterParams.status = status;
-            this.updateDataTable();
-            break;
-          case 'tesoreria':
-            this.updateDataTable();
-            break;
-          default:
-            this.userService.getUserInfo().then((user) => {
-              this.userEmail = user.email;
-              this.filterParams = {...this.filterParams, ...params};
-              this.filterParams.solicitante = user.email;
+              break;
+            case 'contabilidad':
               this.updateDataTable();
-            });
-            break;
+              break;
+            case 'administracion':
+              this.filterParams.status = status;
+              this.updateDataTable();
+              break;
+            case 'tesoreria':
+              this.updateDataTable();
+              break;
+            default:
+              this.userService.getUserInfo().then((user) => {
+                this.userEmail = user.email;
+                this.filterParams = { ...this.filterParams, ...params };
+                this.filterParams.solicitante = user.email;
+                this.updateDataTable();
+              });
+              break;
+          }
         }
       });
   }
@@ -142,20 +146,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
 
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-      if ( this.filterParams[key] instanceof Date) {
-        const date: Date = this.filterParams[key] as Date;
-        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-      if ( value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
@@ -163,27 +154,27 @@ export class InvoiceReportsComponent implements OnInit {
     switch (this.module) {
       case 'promotor':
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params });
+          { queryParams: params });
         break;
       case 'tesoreria':
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params});
+          { queryParams: params });
         break;
       case 'operaciones':
         this.router.navigate([`./pages/operaciones/reportes`],
-            { queryParams: params });
+          { queryParams: params });
         break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/reportes`],
-            { queryParams: params });
+          { queryParams: params });
         break;
       case 'administracion':
         this.router.navigate([`./pages/administracion/reportes`],
-            { queryParams: params });
+          { queryParams: params });
         break;
       default:
         this.router.navigate([`./pages/promotor/reportes`],
-            { queryParams: params });
+          { queryParams: params });
     }
 
     this.invoiceService.getInvoices(params)
@@ -201,11 +192,11 @@ export class InvoiceReportsComponent implements OnInit {
     for (const key in this.filterParams) {
       if (this.filterParams[key] !== undefined) {
         let value: string = this.filterParams[key];
-      if ( this.filterParams[key] instanceof Date) {
-        const date: Date = this.filterParams[key] as Date;
-        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-      if ( value !== null && value.length > 0) {
+        if (this.filterParams[key] instanceof Date) {
+          const date: Date = this.filterParams[key] as Date;
+          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        }
+        if (value !== null && value.length > 0) {
           params[key] = value;
         }
       }
@@ -218,20 +209,7 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadInvoicesReports() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-      if ( this.filterParams[key] instanceof Date) {
-        const date: Date = this.filterParams[key] as Date;
-        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-      if ( value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getInvoicesReports(params).subscribe(result => {
@@ -240,20 +218,7 @@ export class InvoiceReportsComponent implements OnInit {
   }
 
   public downloadComplementReports() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-      if ( this.filterParams[key] instanceof Date) {
-        const date: Date = this.filterParams[key] as Date;
-        value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-      if ( value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
     this.invoiceService.getComplementReports(params).subscribe(result => {
@@ -287,7 +252,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   public reSendEmail(folio: string) {
     this.loading = true;
-    this.invoiceService.reSendEmail(folio,new Factura).subscribe(
+    this.invoiceService.reSendEmail(folio, new Factura).subscribe(
       factura => {
         this.loading = false;
       }, error => {
