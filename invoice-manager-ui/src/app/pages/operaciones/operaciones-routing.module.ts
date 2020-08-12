@@ -13,6 +13,8 @@ import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devo
 import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
+import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
+
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
@@ -51,7 +53,12 @@ const routes: Routes = [{
     {
       path: 'facturas/:folio/devoluciones',
       component: DevolutionsDetailsComponent,
-    }]}];
+    }, {
+      path: 'pago-facturas',
+      component: PagosFacturaComponent,
+    },
+  
+  ]}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

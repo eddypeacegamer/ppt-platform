@@ -30,6 +30,11 @@
 		{
 			"title": "Devoluciones",
 			"link": "/pages/operaciones/devoluciones"
-		}
+		},
+		{
+	        "title": "Complementos Multipago",
+	        "link": "/pages/operaciones/pago-facturas"
+     	}
+		
 	]
 }
