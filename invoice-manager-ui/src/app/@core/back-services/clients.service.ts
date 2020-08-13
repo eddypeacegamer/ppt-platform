@@ -24,10 +24,6 @@ export class ClientsService {
     return pageParams;
   }
 
-  public getClientsAll(filterParams: any): Observable<any> {
-    return this.httpClient.get('../api/clientes', {params: this.getHttpParams(filterParams)});
-  }
-
   public getClients(filterParams: any): Observable<Object> {
     return this.httpClient.get('../api/clientes', {params: this.getHttpParams(filterParams)});
   }

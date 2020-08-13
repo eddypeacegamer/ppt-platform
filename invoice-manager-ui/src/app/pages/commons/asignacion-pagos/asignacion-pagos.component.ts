@@ -186,7 +186,6 @@ this.userService.getUserInfo().then(user => {this.user = user;});
       this.loading = true;
       payment.acredor = this.selectedCompany.razonSocial;
       payment.deudor = this.selectedClient.razonSocial;
-      console.log('Validating2 :',payment);
       this.paymentsService.insertNewPayment(payment).subscribe(
         result => {
           const resourceFile = new ResourceFile();
