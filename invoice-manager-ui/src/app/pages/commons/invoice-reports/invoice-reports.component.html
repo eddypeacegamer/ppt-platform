@@ -137,6 +137,13 @@
       <nb-card-body *ngIf="module === 'contabilidad'">
         <div class="row slide_1">
 
+          <div class="col-3">
+            <label for="inputFolio" class="label">Pre-folio</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
+              [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
+              placeholder="Folio PreCFDI">
+          </div>
+
           <div class="col-4">
             <label for="inputLinea" class="label">Línea Emisora</label>
             <select id="inputLinea" style="display:block;" class="form-control" [(ngModel)]="filterParams.lineaEmisor">
