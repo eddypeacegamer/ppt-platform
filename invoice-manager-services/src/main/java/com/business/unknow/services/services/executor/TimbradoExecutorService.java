@@ -59,7 +59,7 @@ public class TimbradoExecutorService {
 
 	public void sentEmail(FacturaContext context, TipoEmail tipoEmail) throws InvoiceManagerException {
 		if (context.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
-			Client client = clientRepository.findByRfc(context.getFacturaDto().getRfcRemitente())
+			Client client = clientRepository.findByCorreoPromotorAndClient(context.getFacturaDto().getSolicitante(),context.getFacturaDto().getRfcRemitente())
 					.orElseThrow(() -> new InvoiceManagerException("Error sending the email",
 							String.format("The client %s does not exists", context.getFacturaDto().getRfcEmisor()),
 							HttpStatus.SC_CONFLICT));
