@@ -119,7 +119,7 @@ public class FacturaService {
 	private FacturaValidator validator = new FacturaValidator();
 
 	// FACTURAS
-	public Page<FacturaDto> getFacturasByParametros(Optional<Integer> prefolio, Optional<String> solicitante,
+	public Page<FacturaDto> getFacturasByParametros(Optional<String> prefolio, Optional<String> solicitante,
 			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
 			int size) {
 		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
@@ -127,7 +127,7 @@ public class FacturaService {
 		end = dateHelper.setMidNigthDate(end);
 		Page<Factura> result;
 		if (prefolio.isPresent()) {
-			result = repository.findByIdCfdi(prefolio.get(), PageRequest.of(0, 10));
+			result = repository.findByPreFolio(prefolio.get(), PageRequest.of(0, 10));
 		} else if (solicitante.isPresent()) {
 			if (status.isPresent() && status.get().length() > 0) {
 				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), lineaEmisor, status.get(),
@@ -471,7 +471,8 @@ public class FacturaService {
 			cfdiDto.setComplemento(new ComplementoDto());
 			cfdiDto.getComplemento().setPagos(cfdiPagos);
 			complemento.setCfdi(cfdiDto);
-			facturaDefaultValues.assignaDefaultsComplemento(complemento);
+			facturaDefaultValues.assignaDefaultsComplemento(complemento,
+					facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
 			CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
 			Factura fact = mapper.getEntityFromFacturaDto(complemento);
 			fact.setIdCfdi(cfdi.getId());

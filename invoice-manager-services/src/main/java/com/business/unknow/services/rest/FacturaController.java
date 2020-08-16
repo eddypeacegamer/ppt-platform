@@ -50,7 +50,7 @@ public class FacturaController {
 	// FACTRURAS
 	@GetMapping
 	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
-			@RequestParam(name = "prefolio", required = false) Optional<Integer> prefolio,
+			@RequestParam(name = "prefolio", required = false) Optional<String> prefolio,
 			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante, // linea A by default
 			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
 			@RequestParam(name = "emisor", defaultValue = "") String emisor,

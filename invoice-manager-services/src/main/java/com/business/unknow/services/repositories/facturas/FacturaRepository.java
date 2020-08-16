@@ -26,6 +26,8 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	
 	public Page<Factura> findByIdCfdi(Integer prefolio, Pageable pageable);
 	
+	public Page<Factura> findByPreFolio(String prefolio, Pageable pageable);
+	
 	
 	//@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor=:lineaEmisor and  and f.metodoPago='PPD' and f.tipoDocumento='Factura' and upper(f.razonSocialEmisor) = upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) = upper(:razonSocialRemitente)")
 	@Query("select f from Factura f where f.solicitante=:solicitante and f.statusFactura = 3 and f.saldoPendiente>0.01 and f.lineaEmisor=:lineaEmisor and f.metodoPago='PPD' and f.tipoDocumento='Factura' and upper(f.razonSocialEmisor) = upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) = upper(:razonSocialRemitente)")
