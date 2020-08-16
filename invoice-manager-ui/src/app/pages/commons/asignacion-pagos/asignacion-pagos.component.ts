@@ -180,7 +180,7 @@ this.userService.getUserInfo().then(user => {this.user = user;});
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
       }
     }
-    payment.solicitante = this.user.email; 
+    payment.solicitante = this.module !== 'promotor' ? payment.solicitante = this.page.content[0].solicitante : this.user.email;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;
