@@ -151,11 +151,12 @@ export class MulticomplementosComponent implements OnInit {
     this.successMesagge = '';
     this.payErrorMessages = [];
     const payment  = {... this.newPayment};
-    for (const f  of this.page.content){
+    for (const f  of this.page.content) {
       if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
       }
     }
+    // if( operador) {payment.solicitante = this.page.content[0].solicitante}
     payment.solicitante = this.user.email;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
