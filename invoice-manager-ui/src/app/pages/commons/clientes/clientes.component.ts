@@ -102,8 +102,8 @@ export class ClientesComponent implements OnInit {
     });
   }
 
-  public redirectToCliente(rfc: string) {
-    this.router.navigate([`./pages/${this.module}/cliente/${rfc}`]);
+  public redirectToCliente(rfc: string,promotor:string) {
+    this.router.navigate([`./pages/${this.module}/cliente/${rfc}/${promotor}`]);
   }
 
 }

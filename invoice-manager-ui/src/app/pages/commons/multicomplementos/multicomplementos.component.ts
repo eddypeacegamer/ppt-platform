@@ -27,7 +27,7 @@ import { Factura } from '../../../models/factura/factura';
 })
 export class MulticomplementosComponent implements OnInit {
 
-
+  public module: string = 'promotor';
   public page: GenericPage<any>;
   public user: User;
   public fileInput: any;
@@ -59,6 +59,7 @@ export class MulticomplementosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.module = this.router.url.split('/')[2];
     this.successMesagge = '';
     this.newPayment.moneda = 'MXN';
     this.loading = false;
@@ -157,7 +158,7 @@ export class MulticomplementosComponent implements OnInit {
       }
     }
     // if( operador) {payment.solicitante = this.page.content[0].solicitante}
-    payment.solicitante = this.user.email;
+    payment.solicitante = this.module !== 'promotor' ? payment.solicitante = this.page.content[0].solicitante : this.user.email;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;

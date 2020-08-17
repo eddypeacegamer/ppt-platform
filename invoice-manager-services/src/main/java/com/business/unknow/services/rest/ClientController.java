@@ -56,6 +56,12 @@ public class ClientController {
 	public ResponseEntity<List<ClientDto>> clinetesPorPromotor(@PathVariable String promotor) {
 		return new ResponseEntity<>(service.getClientsByPromotor(promotor), HttpStatus.OK);
 	}
+	
+	@GetMapping("/promotores/{promotor}/clientes/{rfc}")
+	public ResponseEntity<ClientDto> clinetePorPromotorYRfc(@PathVariable String promotor,@PathVariable String rfc) {
+		return new ResponseEntity<>(service.getClientsByPromotorAndClient(promotor, rfc), HttpStatus.OK);
+	}
+	
 	@PostMapping("/clientes")
 	public ResponseEntity<ClientDto> insertClient(@RequestBody @Valid ClientDto client) throws InvoiceManagerException {
 		return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
