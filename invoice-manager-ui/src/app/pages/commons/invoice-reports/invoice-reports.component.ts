@@ -19,7 +19,8 @@ export class InvoiceReportsComponent implements OnInit {
   public module: string = 'promotor';
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*', since: undefined, to: undefined, lineaEmisor: '', solicitante: '', page: '0', size: '10' };
+  public filterParams: any = { emisor: '', remitente: '', prefolio: '', status: '*', since: undefined, to: undefined,
+        tipoDocumento: '*', metodoPago: '*', saldoPendiente: '0' , lineaEmisor: '', solicitante: '', page: '0', size: '10' };
   public userEmail: string;
   public loading = false;
 
@@ -36,18 +37,17 @@ export class InvoiceReportsComponent implements OnInit {
   ngOnInit() {
 
     const date: Date = new Date();
-
+    const offsetHrs = date.getTimezoneOffset() / 60;
     this.module = this.router.url.split('/')[2];
 
     this.route.queryParams
       .subscribe(params => {
         if (!this.utilsService.compareParams(params, this.filterParams)) {
           this.filterParams = { ...this.filterParams, ...params };
-
-          this.filterParams.to = this.filterParams.to === undefined ?
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(this.filterParams.to);
-          this.filterParams.since = this.filterParams.since === undefined ?
-            new Date(date.getFullYear(), date.getMonth(), 1) : new Date(this.filterParams.since);
+          this.filterParams.to = params.to === undefined ?
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(`${this.filterParams.to}T00:00:00-0${offsetHrs}:00`);
+          this.filterParams.since = params.since === undefined ?
+            new Date(date.getFullYear(), date.getMonth(), 1) : new Date(`${this.filterParams.since}T00:00:00-0${offsetHrs}:00`);
 
           switch (this.module) {
             case 'promotor':
@@ -147,7 +147,6 @@ export class InvoiceReportsComponent implements OnInit {
   public updateDataTable(currentPage?: number, pageSize?: number) {
 
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
-
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
     params.size = pageSize !== undefined ? pageSize : this.filterParams.size;
 
