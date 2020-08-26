@@ -15,6 +15,10 @@
 			"link": "/pages/tesoreria/devoluciones"
 		},
 		{
+			"title": "Cuentas Bancarias",
+			"link": "/pages/tesoreria/cuentas-bancarias"
+		},
+		{
 			"title": "Reportes Facturas",
 			"link": "/pages/tesoreria/reportes",
 			"queryParams":{"lineaEmisor":"A","status":"*"}

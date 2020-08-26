@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-md-12">
+      <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+        <nb-card-header class="puff_center">Cuenta Bancaria
+          <!--div-- class="float-right">
+            <button class="btn btn-primary" *ngIf="user.id === undefined" (click)="clearInput()"><nb-icon icon="file-remove"></nb-icon></button>
+          </!--div-->
+         </nb-card-header>
+        
+        <nb-card-body>
+       
+          <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+            <p *ngFor="let message of errorMessages">{{message}}</p>
+          </div>
+          <p class="alert alert-success" *ngIf="Params.success.length > 0" role="alert">{{Params.success}}</p>
+          <div class="row slide_1">
+                <div class="col-6">
+                    <label for="banco" class="label">Banco</label>
+                    <input id="banco" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.banco"
+                        fullWidth placeholder="Banco">
+                    </div>
+                <div class="col-6">
+                <label for="empresa" class="label">Empresa</label>
+                <input id="empresa" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.empresa"
+                    fullWidth placeholder="RFC Empresa">
+                </div>
+             
+          </div>
+          <div class="row slide_1">
+            <div class="col-6">
+                <label for="cuenta" class="label">N° Cuenta</label>
+                <input id="cuenta" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.cuenta"
+                   fullWidth placeholder="Numero de cuenta">
+              </div>
+              <div class="col-6">
+                <label for="clave" class="label">Clave</label>
+                <input id="clave" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.clabe"
+                   fullWidth placeholder="Clave Bancaria">
+              </div>
+          </div>
+          <br>
+  
+          <div class="float-right slide_2">
+  
+            <button class="btn btn-primary" *ngIf="cuenta.id === undefined" [disabled]="this.Params.success !== ''" (click)="registry()"> Registrar</button>
+            <button class="btn btn-primary" *ngIf="cuenta.id !== undefined" [disabled]="this.actualizando == true" 
+            [nbSpinner]="this.loading" nbSpinnerStatus="info" (click)="update()"> Actualizar</button>
+  
+          </div>
+  
+       
+        </nb-card-body>
+  
+      </nb-card>
+  
+  
+    </div>
+  </div>

@@ -41,12 +41,18 @@ public class CuentaBancariaController {
 			@RequestParam(name = "to", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getCuentasBancariasByfilters(banco, empresa, clabe, since, to, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(service.getCuentasBancariasByfilters(banco, empresa, clabe, cuenta, since, to, page, size), HttpStatus.OK);
 	}
 	
 	@GetMapping("/empresas/{empresa}/cuentas")
 	public ResponseEntity<List<CuentaBancariaDto>> getCuentasBancariasByfilters(@PathVariable(name = "empresa") String empresa) {
 		return new ResponseEntity<>(service.getCuentasPorEmpresa(empresa), HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/cuenta/{empresa}/{cuenta}")
+	public ResponseEntity<CuentaBancariaDto> infoCuentaBancaria(@PathVariable(name = "empresa") String empresa,@PathVariable(name = "cuenta") String cuenta) {
+		return new ResponseEntity<>(service.infoCuentaBancaria(empresa,cuenta), HttpStatus.OK);
 	}
 	
 	@PostMapping("/cuentas")
