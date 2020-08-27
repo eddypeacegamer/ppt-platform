@@ -3,6 +3,11 @@ import { GenericPage } from '../../../models/generic-page';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 import { CuentasData } from '../../../@core/data/cuentas-data';
+import { Catalogo } from '../../../models/catalogos/catalogo';
+import { Empresa } from '../../../models/empresa';
+import { CompaniesData } from '../../../@core/data/companies-data';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CatalogsData } from '../../../@core/data/catalogs-data';
 
 @Component({
   selector: 'ngx-cuentas-bancarias',
@@ -13,14 +18,25 @@ export class CuentasBancariasComponent implements OnInit {
 
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
+  public currentPage = '0';
   public filterParams: any = { banco: '', empresa: '', cuenta: '',clave:'', page: '0', size: '10' };
+  public formInfo = { giro: '*', linea: 'B' };
+
   public module: string = 'tesoreria';
- 
+  public girosCat: Catalogo[] = [];
+  public emisoresCat: Empresa[] = [];
+  public banksCat: Catalogo[] = [];
+
+  public companyInfo: Empresa;
+  
+  public errorMessages: string[] = [];
   constructor(
     private router: Router,
     private utilsService: UtilsService,
     private route: ActivatedRoute,
-    private accountsService: CuentasData
+    private accountsService: CuentasData,
+    private companiesService: CompaniesData,
+    private catalogsService: CatalogsData,
     ) {
     
    }
@@ -33,14 +49,15 @@ export class CuentasBancariasComponent implements OnInit {
 
         if (!this.utilsService.compareParams(params, this.filterParams)) {
           this.filterParams = { ...this.filterParams, ...params };
-
+          this.catalogsService.getAllGiros().then(cat => this.girosCat = cat);
+          this.catalogsService.getBancos().then(banks => this.banksCat = banks);
         this.updateDataTable();
         }
       });
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
-    console.log("aaaa");
+   
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
@@ -48,19 +65,6 @@ export class CuentasBancariasComponent implements OnInit {
 
     this.router.navigate([`./pages/tesoreria/cuentas-bancarias`],
     { queryParams: params });
- /*    switch (this.module) {
-      case 'operaciones':
-        this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params });
-        break;
-      case 'contabilidad':
-        this.router.navigate([`./pages/contabilidad/empresas`],
-          { queryParams: params });
-        break;
-      default:
-        this.router.navigate([`./pages/operaciones/empresas`],
-          { queryParams: params });
-    } */
 
   this.accountsService.getAllCuentas(params.page,params.size,params).subscribe((result: GenericPage<any>) => this.page = result);
   }
@@ -71,5 +75,35 @@ export class CuentasBancariasComponent implements OnInit {
   public redirectToEmpresaRegistry() {
     this.router.navigate([`./pages/tesoreria/cuenta-bancaria/*/*`])
   }
+
+  //Giros
+
+  public valueGeneral: number;
+  onGiroSelection(giroId: string) {
+    const value = +giroId;
+    this.valueGeneral = value;
+    if (isNaN(value)) {
+      this.emisoresCat = [];
+    } else {
+      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(giroId))
+        .subscribe(companies => this.emisoresCat = companies,
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+    
+  }
+
+  onLineaSelect() {
+    
+    if (isNaN(this.valueGeneral)) {
+      this.emisoresCat = [];
+    } else {
+      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea,this.valueGeneral)
+        .subscribe(companies => this.emisoresCat = companies,
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
+  }
+
 
 }

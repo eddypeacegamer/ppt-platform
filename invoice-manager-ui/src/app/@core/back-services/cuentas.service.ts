@@ -43,4 +43,10 @@ export class CuentasService {
   public insertCuenta(cuenta: Cuenta): Observable<Object> {
     return this.httpClient.post('../api/cuentas', cuenta);
   }
+
+  public deleteCuenta(cuenta: Cuenta): Observable<Object> {
+    return this.httpClient.delete(`../api/cuentas/${cuenta.id}`);
+  }
+
+
 }
