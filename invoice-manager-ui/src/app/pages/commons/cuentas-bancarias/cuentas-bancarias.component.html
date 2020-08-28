@@ -9,39 +9,25 @@
             <label for="inputBanco" class="label">Banco</label>
             <select id="inputBanco" style="display:block;" class="form-control" [(ngModel)]="filterParams.banco"
               name="banco">
-              <option value="">No Aplica</option>
+              <option value="">General</option>
               <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
             </select>
           </div>
           <div class="col-2">
-            <label for="inputGiro" class="label">Línea Emisor</label>
-            <select id="inputGiro" fullWidth class="form-control" style="display:block;" (change)="onLineaSelect()"
-              [(ngModel)]="formInfo.linea">
-              <option value="*">Seleccionar</option>
-              <option value="A">Línea A</option>
-              <option value="B">Línea B</option>
-              <option value="C">Línea C</option>
-            </select>
+            <label for="inputName" class="label">Empresa RFC</label>
+            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.empresa" fullWidth
+              placeholder="Empresa RFC">
           </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label for="inputGiro" class="label">Giro Empresa</label>
-              <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
-                style="display:block;" [(ngModel)]="formInfo.giro">
-                <option value="*">Seleccionar</option>
-                <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-2">
-            <label for="inputEmpresa" class="label">Empresa</label>
-            <select id="inputEmpresa" class="form-control" [(ngModel)]="filterParams.empresa" style="display:block;"
-              fullWidth>
-              <option value="">Seleccionar</option>
-              <option *ngFor="let company of emisoresCat" [(value)]="company.informacionFiscal.rfc">
-                {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
-              </option>
-            </select>
+
+          <div class="col-4">
+
+            <label for="inputEmpresa" class="label">Empresa razon social</label>
+            <input type="text" class="form-control" (keyup)="getSelector($event)" [ngModel]="filterParams.empresarazon"
+             id="empresasId" list="dynmicList" placeholder="Razon social"/>
+            <datalist id="dynmicList">
+              <option *ngFor="let item of listEmpresasMatch" [value]="item">{{item}}</option>
+            </datalist>
+
           </div>
           <div class="col-4">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"
@@ -103,13 +89,13 @@
           <table class="table table-sm">
             <thead class="thead-dark">
               <tr>
-                <th class="text-center">Acciones</th>
+                <th class="text-center">ACCIONES</th>
                 <th scope="col">BANCO</th>
                 <th scope="col">EMPRESA</th>
-                <th scope="col">NO_CUENTA</th>
+                <th scope="col">NUMERO DE CUENTA</th>
                 <th scope="col">CLABE</th>
-                <th scope="col">fechaCreacion</th>
-                <th scope="col">fechaActualizacion</th>
+                <th scope="col">FECHA DE Creacion</th>
+                <th scope="col">FECHA DE ACTUALIZACION</th>
 
               </tr>
             </thead>

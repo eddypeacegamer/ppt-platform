@@ -22,7 +22,7 @@ export class EmpresasComponent implements OnInit {
 
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { razonSocial: '', rfc: '', linea: '', page: '0', size: '10' };
+  public filterParams: any = { razonSocial: '', rfc: '', linea: '', page: '', size: '10' };
   public module: string = 'operaciones';
   constructor(private router: Router,
     private companyService: CompaniesData,

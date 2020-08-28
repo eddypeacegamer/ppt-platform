@@ -19,7 +19,7 @@ export class ClientesComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
 
   public module: string = 'promotor';
-  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', page: '0', size: '10' };
+  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', page: '', size: '10' };
 
   constructor(
     private userService: UsersData,
