@@ -54,7 +54,9 @@
           </div>
         </div>
         <br>
-
+        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
+          <p *ngFor="let message of errorMessages">{{message}}</p>
+        </div>
       </nb-card-body>
     </nb-card>
   </div>

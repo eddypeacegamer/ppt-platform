@@ -121,14 +121,17 @@ export class CuentaBancariaComponent implements OnInit {
   getSelector($event) {
     let inputValue = (<HTMLInputElement>document.getElementById('empresasId')).value;
     this.listEmpresasMatch = [];
-
+    this.errorMessages = [];
     if (inputValue.length > 2) {
-      if ($event.timeStamp - this.lastkeydown1 > 200) {
+    
         this.listEmpresasMatch = this.BuscarMatch(this.empresasRazonSocial, inputValue);
-        
+        let index = this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0]);
+        this.cuenta.empresa = this.empresasRfc[index];
+
+        if(index == -1)
+           this.errorMessages.push("No hay empresas registradas con esa razon social.");
       }
-    }
-   this.cuenta.empresa = this.empresasRfc[this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0])];
+    
   }  
 
 

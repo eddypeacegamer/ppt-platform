@@ -29,7 +29,6 @@ export class CuentasBancariasComponent implements OnInit {
 
   public companyInfo: Empresa;
 
-  lastkeydown1: number = 0;
   listEmpresasMatch: any[];
   empresasRfc: any[];
   empresasRazonSocial: any[];
@@ -47,7 +46,7 @@ export class CuentasBancariasComponent implements OnInit {
    }
 
   ngOnInit() {
-
+    this.errorMessages = [];
     this.module = this.router.url.split('/')[2];
     this.route.queryParams
       .subscribe(params => {
@@ -89,14 +88,16 @@ export class CuentasBancariasComponent implements OnInit {
   getSelector($event) {
     let inputValue = (<HTMLInputElement>document.getElementById('empresasId')).value;
     this.listEmpresasMatch = [];
-
-    if (inputValue.length > 2) {
-      if ($event.timeStamp - this.lastkeydown1 > 200) {
+    this.errorMessages = [];
+    if (inputValue.length > 1) {
         this.listEmpresasMatch = this.BuscarMatch(this.empresasRazonSocial, inputValue);
-        
-      }
+        let index = this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0]);
+        this.filterParams.empresa = this.empresasRfc[index];
+
+        if(index == -1)
+           this.errorMessages.push("No hay empresas registradas con esa razon social.");
     }
-   this.filterParams.empresa = this.empresasRfc[this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0])];
+  
   }  
 
 
