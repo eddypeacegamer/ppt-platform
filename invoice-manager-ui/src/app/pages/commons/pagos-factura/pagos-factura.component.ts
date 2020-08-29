@@ -54,7 +54,7 @@ export class PagosFacturaComponent implements OnInit {
   public user: User;
   
   customColumn = 'ACCIONES';
-  defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
+  defaultColumns = [ 'Monto', 'Status del Pago','Moneda', 'Banco', 'Fecha de Pago', 'Acredor', 'Deudor', 'Folio' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<PagoFacturaModel>;
