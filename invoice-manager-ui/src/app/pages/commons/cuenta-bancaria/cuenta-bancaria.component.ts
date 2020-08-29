@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Cuenta } from '../../../models/cuenta';
-import { Router, ActivatedRoute } from '@angular/router';
-import { UtilsService } from '../../../@core/util-services/utils.service';
+import { ActivatedRoute } from '@angular/router';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Empresa } from '../../../models/empresa';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UsersData } from '../../../@core/data/users-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { map } from 'rxjs/operators';
 import { GenericPage } from '../../../models/generic-page';
+import { Contribuyente } from '../../../models/contribuyente';
 
 @Component({
   selector: 'ngx-cuenta-bancaria',
@@ -22,11 +21,13 @@ export class CuentaBancariaComponent implements OnInit {
   public cuenta: Cuenta;
   public page: GenericPage<any> = new GenericPage();
   public girosCat: Catalogo[] = [];
-  public emisoresCat: Empresa[] = [];
+  public empresas: Contribuyente[] = [];
   public banksCat: Catalogo[] = [];
 
-  public filterParams: any = { banco: '', empresa: '', cuenta: '',clave:'', empresarazon:''};
+  public filterParams: any = { banco: '', empresa: '', cuenta: '', clave:'', empresarazon:''};
   public Params: any = { success: '', message: ''};
+
+  public formInfo = { giro: '*', linea: 'A', empresa: '*'};
 
 
   public module: string = 'tesoreria';
@@ -34,7 +35,6 @@ export class CuentaBancariaComponent implements OnInit {
   public errorMessages: string[] = [];
   public loading = true;
   public clear = false;
-  
 
   lastkeydown1: number = 0;
   listEmpresasMatch: any[];
@@ -42,9 +42,6 @@ export class CuentaBancariaComponent implements OnInit {
   empresasRazonSocial: any[];
 
   constructor(
-    private router: Router,
-    private utilsService: UtilsService,
-    private userService: UsersData,
     private route: ActivatedRoute,
     private accountsService: CuentasData,
     private companiesService: CompaniesData,
@@ -55,18 +52,16 @@ export class CuentaBancariaComponent implements OnInit {
     this.cuenta = new Cuenta();
     this.loading = true;
     this.errorMessages = [];
-    this.getEmpresas();
       this.route.paramMap.subscribe(route => {
-        let empresa = route.get('empresa');
-        let cuenta = route.get('cuenta');
-
+        const empresa = route.get('empresa');
+        const cuenta = route.get('cuenta');
         if (empresa !== '*') {
-
-            this.companiesService.getCompanyByRFC(empresa) .subscribe((company: Empresa) => { this.filterParams.empresarazon = company.informacionFiscal.razonSocial;});      
-            this.updatecuentaInfo(empresa,cuenta);
-  
-        }
-        else{
+            this.companiesService.getCompanyByRFC(empresa)
+              .subscribe((company: Empresa) => {
+                this.filterParams.empresarazon = company.informacionFiscal.razonSocial;
+              });
+            this.updatecuentaInfo(empresa, cuenta);
+        } else {
           this.catalogsService.getAllGiros().then(cat => this.girosCat = cat);
           this.catalogsService.getBancos().then(banks => this.banksCat = banks);
           this.loading = false;
@@ -74,27 +69,21 @@ export class CuentaBancariaComponent implements OnInit {
     });
   }
 
-  public update(){
+  public update() {
     this.accountsService.updateCuenta(this.cuenta).subscribe(
       createdUser => {
         this.Params.success = 'Se actualizado la cuenta satisfactoriamente.';
       }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));
-    
   }
 
-  public updatecuentaInfo(empresa: string,cuenta:string) {
-  
+  public updatecuentaInfo(empresa: string, cuenta: string) {
     this.errorMessages = [];
-    this.accountsService.getCuentaInfo(empresa,cuenta).subscribe(
+    this.accountsService.getCuentaInfo(empresa, cuenta).subscribe(
       cuentadata => {
         this.cuenta = cuentadata;
-        this.catalogsService.getAllGiros().then(cat => this.girosCat = cat);
-        this.catalogsService.getBancos().then(banks => this.banksCat = banks);
-      
         this.loading = false;
-      },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
+      }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`));
   }
 
@@ -107,7 +96,6 @@ export class CuentaBancariaComponent implements OnInit {
   }
 
   public delete() {
-   
     this.accountsService.deleteCuenta(this.cuenta)
       .subscribe((data: any) => {this.Params.success = 'La cuenta fue borrada exitosamente'
       this.clear = true;
@@ -115,46 +103,20 @@ export class CuentaBancariaComponent implements OnInit {
         (error: HttpErrorResponse) => { this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`); });
   }
 
-
-  //giros
-
-  getSelector($event) {
-    let inputValue = (<HTMLInputElement>document.getElementById('empresasId')).value;
-    this.listEmpresasMatch = [];
-    this.errorMessages = [];
-    if (inputValue.length > 2) {
-    
-        this.listEmpresasMatch = this.BuscarMatch(this.empresasRazonSocial, inputValue);
-        let index = this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0]);
-        this.cuenta.empresa = this.empresasRfc[index];
-
-        if(index == -1)
-           this.errorMessages.push("No hay empresas registradas con esa razon social.");
-      }
-    
-  }  
-
-
-  getEmpresas(){
-    this.companiesService.getCompanies({ page: 0, size: 10000})
-      .pipe(map((Page: GenericPage<Empresa>) => Page.content))   
-      .subscribe(companies => {        
-            this.empresasRfc = companies.map(c => c.informacionFiscal.rfc);   
-            this.empresasRazonSocial = companies.map(c => c.informacionFiscal.razonSocial).map(function(x){ return x.toUpperCase(); });         
-      },
-        (error: HttpErrorResponse) =>
-          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-      
+  onGiroSelection(giroId: string) {
+    const value = +giroId;
+    if (isNaN(value)) {
+      this.empresas = [];
+    } else {
+      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(giroId))
+        .pipe(map((empresas: Empresa[]) => empresas.map(e => e.informacionFiscal)))
+        .subscribe(companies => this.empresas = companies,
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+    }
   }
 
-  BuscarMatch(arr, regex) {
-    let matches = [], i;
-    regex = regex.toUpperCase();
-    for (i = 0; i < arr.length; i++) {
-      if (arr[i].match(regex)) {
-        matches.push(arr[i]);
-      }
-    }
-    return matches;
-  };
+  onEmpresaSelected(rfc: string) {
+    this.cuenta.empresa = rfc;
+  }
 }

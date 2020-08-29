@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{ title: 'V2.008' }];
+  userMenu = [{ title: 'V2.010' }];
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -71,6 +71,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+
+
+      this.changeTheme('corporate');
   }
 
   ngOnDestroy() {

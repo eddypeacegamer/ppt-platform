@@ -9,7 +9,7 @@ export class Cuenta {
     public fechaActualizacion: Date;
     constructor(id?: string, banco?: string, cuenta?: string) {
         this.id = id;
-        this.banco = banco;
+        this.banco = banco || '*';
         this.cuenta = cuenta;
     }
 }

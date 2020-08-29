@@ -16,25 +16,43 @@
           <div class="row slide_1" >
            
 
-            <div class="col-6">
+            <div class="col-2">
               <label for="inputBanco" class="label">Banco</label>
               <select id="inputBanco" style="display:block;" class="form-control" [(ngModel)]="cuenta.banco"
                 name="banco">
-                <option value="undefined">General</option>
+                <option value="*">Seleccionar</option>
                 <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
               </select>
             </div>
- 
-  
-            <div class="col-6">
-  
-              <label for="inputEmpresa" class="label">Empresa razon social</label>
-              <input type="text" class="form-control" (keyup)="getSelector($event)" [ngModel]="filterParams.empresarazon"
-               id="empresasId" list="dynmicList" placeholder="Razon social"  [disabled]="cuenta.id !== undefined"/>
-              <datalist id="dynmicList">
-                <option *ngFor="let item of listEmpresasMatch" [value]="item">{{item}}</option>
-              </datalist>
-  
+            <div class="col-md-2">
+              <label for="inputGiro" class="label">Línea Emisor</label>
+              <select id="inputGiro" fullWidth class="form-control" style="display:block;"
+                [(ngModel)]="formInfo.linea">
+                <option value="A">Línea A</option>
+                <option value="B">Línea B</option>
+                <option value="C">Línea C</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="inputGiro" class="label">Giro Empresa</label>
+                <select id="inputGiro" fullWidth class="form-control"
+                  (change)="onGiroSelection($event.target.value)" style="display:block;"
+                  [(ngModel)]="formInfo.giro">
+                  <option value="*">Seleccionar</option>
+                  <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="inputEmpresa" class="label">Empresa</label>
+              <select id="inputEmpresa" class="form-control" (change)="onEmpresaSelected($event.target.value)"
+                [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let company of empresas" [(value)]="company.rfc">
+                  {{company.rfc}}-{{company.razonSocial}}
+                </option>
+              </select>
             </div>
                
         </div>

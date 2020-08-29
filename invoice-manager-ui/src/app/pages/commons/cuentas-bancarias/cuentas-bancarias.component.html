@@ -13,15 +13,9 @@
               <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
             </select>
           </div>
-          <div class="col-2">
-            <label for="inputName" class="label">Empresa RFC</label>
-            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.empresa" fullWidth
-              placeholder="Empresa RFC">
-          </div>
+          <div class="col-6">
 
-          <div class="col-4">
-
-            <label for="inputEmpresa" class="label">Empresa razon social</label>
+            <label for="inputEmpresa" class="label">Razon social empresa</label>
             <input type="text" class="form-control" (keyup)="getSelector($event)" [ngModel]="filterParams.empresarazon"
              id="empresasId" list="dynmicList" placeholder="Razon social"/>
             <datalist id="dynmicList">
@@ -42,15 +36,15 @@
               placeholder="Numero de cuenta">
           </div>
           <div class="col-4">
-            <label for="inputRfc" class="label">Clave</label>
-            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clave" fullWidth
-              placeholder="Clave Bancaria">
+            <label for="inputRfc" class="label">CLABE</label>
+            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clabe" fullWidth
+              placeholder="Clabe Interbancaria">
           </div>
 
 
           <div class="col-4">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"
-              (click)="redirectToEmpresaRegistry()">NUEVA EMPRESA</button>
+              (click)="redirectToEmpresaRegistry()">NUEVA CUENTA</button>
           </div>
         </div>
         <br>
