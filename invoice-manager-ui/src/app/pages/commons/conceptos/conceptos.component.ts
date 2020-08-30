@@ -132,7 +132,7 @@ export class ConceptosComponent implements OnInit {
         let promise;
         if (id === undefined) {
           promise = this.cfdiService.insertConcepto(this.cfdi.id, concepto).toPromise();
-        }else {
+        } else {
           promise = this.cfdiService.updateConcepto(this.cfdi.id, id, concepto).toPromise();
         }
         this.loading = true;
@@ -143,17 +143,17 @@ export class ConceptosComponent implements OnInit {
             }, (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error))
             .then(() => {
               this.cfdiService.getCfdiByFolio(this.cfdi.id)
-              .subscribe((cfdi: Cfdi) => {this.cfdi = cfdi; console.log('Updating CFDI', this.cfdi);},
+              .subscribe((cfdi: Cfdi) => {this.cfdi = cfdi; },
               (error: HttpErrorResponse) => this.showAlertHttpError(dialog, error));
             }).then(() => this.loading = false);
-      }else {
+      } else {
         this.cfdi.conceptos.push(concepto);
         this.cfdi = this.cfdiValidator.calcularImportes(this.cfdi);
         this.formInfo.prodServ = '*';
         this.formInfo.unidad = '*';
         this.concepto = new Concepto();
       }
-    }else {
+    } else {
       this.showAlert(dialog, errors);
       this.formInfo.prodServ = '*';
       this.formInfo.unidad = '*';

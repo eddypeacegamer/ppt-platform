@@ -89,17 +89,17 @@ export class CfdiComponent implements OnInit {
     this.successMessage = undefined;
     this.errorMessagesCdfi = [];
     //validacion direccion
-    if(this.cfdi.emisor.direccion === undefined || this.cfdi.emisor.direccion === ""){
+    if(this.cfdi.emisor.direccion === undefined || this.cfdi.emisor.direccion === '') {
       this.errorMessagesCdfi.push('La direccion del emisor es un valor solicitado');
       this.loading = false;
       return;
     }
-    if(this.cfdi.receptor.direccion === undefined || this.cfdi.receptor.direccion === ""){
+    if(this.cfdi.receptor.direccion === undefined || this.cfdi.receptor.direccion === '') {
       this.errorMessagesCdfi.push('La direccion del receptor es un valor solicitado');
       this.loading = false;
       return;
     }
-     
+
     this.cfdiservice.updateCfdi(this.cfdi)
       .subscribe(cfdi => {
         this.cfdi = cfdi;
@@ -136,9 +136,7 @@ export class CfdiComponent implements OnInit {
     this.cfdiservice.getChildrenCfdi(folio,+parcialidad).subscribe(factura => {
       this.invoiceService.getInvoiceByFolio(factura.folio)
       .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
-    
     });
-   
   }
 
   public validacionDireccion(){}
