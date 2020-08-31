@@ -308,9 +308,6 @@ export class LineaCComponent implements OnInit {
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    this.clientsService.getClientsByPromotorAndRfc(this.factura.solicitante,this.factura.cfdi.receptor.rfc)
-    .subscribe((client: Client) => {
-    if (client.activo) {
       this.dialogService.open(dialog, { context: fact })
       .onClose.subscribe(invoice => {
         this.loading = true;
@@ -324,10 +321,6 @@ export class LineaCComponent implements OnInit {
                 this.loading = false;
                 this.errorMessages.push((error.error != null && error.error != undefined) ?
                 error.error.message : `${error.statusText} : ${error.message}`);});
-        }else {
-          this.loading = false;
-        }
-      });
     } else {
       this.loading = false;
       this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
