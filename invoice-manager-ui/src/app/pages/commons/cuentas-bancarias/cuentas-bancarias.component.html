@@ -13,9 +13,15 @@
               <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
             </select>
           </div>
-          <div class="col-6">
+          <div class="col-2">
+            <label for="inputName" class="label">Empresa RFC</label>
+            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.empresa" fullWidth
+              placeholder="Empresa RFC">
+          </div>
 
-            <label for="inputEmpresa" class="label">Razon social empresa</label>
+          <div class="col-4">
+
+            <label for="inputEmpresa" class="label">Empresa razon social</label>
             <input type="text" class="form-control" (keyup)="getSelector($event)" [ngModel]="filterParams.empresarazon"
              id="empresasId" list="dynmicList" placeholder="Razon social"/>
             <datalist id="dynmicList">
@@ -36,15 +42,15 @@
               placeholder="Numero de cuenta">
           </div>
           <div class="col-4">
-            <label for="inputRfc" class="label">CLABE</label>
-            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clabe" fullWidth
-              placeholder="Clabe Interbancaria">
+            <label for="inputRfc" class="label">Clave</label>
+            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clave" fullWidth
+              placeholder="Clave Bancaria">
           </div>
 
 
           <div class="col-4">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"
-              (click)="redirectToEmpresaRegistry()">NUEVA CUENTA</button>
+              (click)="redirectToEmpresaRegistry()">NUEVA EMPRESA</button>
           </div>
         </div>
         <br>
@@ -69,9 +75,10 @@
           No se encontraron resultados
         </div>
 
-        <!--   <div class="clearfix puff_center" *ngIf="page.empty == false">
+          <div class="clearfix puff_center" *ngIf="page.empty == false">
               <strong>Resultados</strong>
-              <button type="button" (click)="downloadHandler()" class="btn btn-sm btn-success float-right">Descarga</button>
+              <button type="button" (click)="downloadHandler()" class="btn btn-success float-right"><i
+                class="fa fa-download"></i></button>
               <select id="inputunidad" style="display:block;width: 95px;margin-right: 15px;margin-left: 15px;" class="float-right form-control" [(ngModel)]="filterParams.size"
               *ngIf="page.last==false || page.first==true"
               (change)="onChangePageSize($event.target.value)">
@@ -79,7 +86,7 @@
               <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
               <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
             </select>
-            </div> -->
+            </div>
 
         <div class="table-responsive slide_1" *ngIf="page.empty == false">
           <table class="table table-sm">
