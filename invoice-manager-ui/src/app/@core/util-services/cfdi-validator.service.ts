@@ -7,6 +7,7 @@ import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { Contribuyente } from '../../models/contribuyente';
 import { add, subtract, bignumber, multiply, number } from 'mathjs';
+import { CfdiService } from '../back-services/cfdi.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,9 @@ export class CfdiValidatorService {
   private unidadCat: string[]  = [];
   private usoCfdiCat: string[] = [];
 
-  constructor(private catService: CatalogsData) {
+  constructor(
+    private catService: CatalogsData,
+    private cfdiService: CfdiService ) {
     this.catService.getAllUsoCfdis().then((cat: UsoCfdi[]) =>this.usoCfdiCat = cat.map(c => c.clave));
     this.catService.getClaveUnidadByName('').then((cat: ClaveUnidad[]) => this.unidadCat = cat.map(c => c.clave));
   }
@@ -64,8 +67,12 @@ export class CfdiValidatorService {
     return messages;
   }
 
-  public calcularImportes(cfdi: Cfdi): Cfdi {
-    let total: number = 0.0;
+  public calcularImportes(cfdi: Cfdi): Promise<Cfdi> {
+
+    return this.cfdiService.calcularMontosCfdi(cfdi).toPromise();
+
+
+    /* let total: number = 0.0;
     let subtotal: number  = 0.0;
     for (const concepto of cfdi.conceptos) {
       let impuesto = bignumber(0.0);
@@ -84,7 +91,7 @@ export class CfdiValidatorService {
     }
     cfdi.total = number(total);
     cfdi.subtotal = number(subtotal);
-    return cfdi;
+    return cfdi; */
   }
 
   public generateAddress(contribuyente: Contribuyente) {

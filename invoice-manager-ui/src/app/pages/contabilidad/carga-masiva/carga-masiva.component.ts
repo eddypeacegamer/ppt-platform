@@ -86,7 +86,7 @@ export class CargaMasivaComponent implements OnInit {
   }
 
 
-  validarInformacion() {
+   public async validarInformacion() {
     this.loading = true;
     this.params.successMessage = undefined;
     this.params.dataValid = true;
@@ -109,7 +109,7 @@ export class CargaMasivaComponent implements OnInit {
           transfer.observaciones.push(`${transfer.RFC_RECEPTOR} no se encuentra activa`);
         }
         if (transfer.observaciones.length === 0) {
-          const fact = this.buildFacturaFromTransfer(transfer,
+          const fact = await this.buildFacturaFromTransfer(transfer,
             this.companies[transfer.RFC_EMISOR], this.companies[transfer.RFC_RECEPTOR]);
           transfer.observaciones.push(... this.cfdiValidator.validarConcepto(fact.cfdi.conceptos[0]));
           transfer.observaciones.push(... this.cfdiValidator.validarCfdi(fact.cfdi));
@@ -134,19 +134,19 @@ export class CargaMasivaComponent implements OnInit {
     this.loadfactura(this.invoices);
   }
 
-  private async loadfactura(invoices:any){
+  private async loadfactura(invoices: any) {
     for (const invoice of invoices) {
-      const factura = this.buildFacturaFromTransfer(invoice,
+      const factura = await this.buildFacturaFromTransfer(invoice,
         this.companies[invoice.RFC_EMISOR], this.companies[invoice.RFC_RECEPTOR]);
       const claveProdServ = +invoice.CLAVE_PROD_SERVICIO;
       if (!isNaN(claveProdServ)) {
-        try{
+        try {
           const claves = await this.catalogsData.getProductoServiciosByClave(claveProdServ.toString());
           factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
-          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion; 
+          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
           await this.invoiceService.insertNewInvoice(factura).toPromise();
           invoice.observaciones = 'CARGADA';
-        }catch(error){
+        } catch (error) {
           invoice.observaciones = error.error.message || 'Error desconocido';
         }
       } else {
@@ -173,7 +173,7 @@ export class CargaMasivaComponent implements OnInit {
     this.loading = false;
   }
 
-  private buildFacturaFromTransfer(transfer: any, emisorCompany: Empresa, receptorCompany: Empresa): Factura {
+  private async buildFacturaFromTransfer(transfer: any, emisorCompany: Empresa, receptorCompany: Empresa): Promise<Factura> {
     const factura = new Factura();
     factura.rfcEmisor = transfer.RFC_EMISOR;
     factura.razonSocialEmisor = emisorCompany.informacionFiscal.razonSocial;
@@ -211,7 +211,7 @@ export class CargaMasivaComponent implements OnInit {
     concepto.iva = true;
     this.cfdiValidator.validarConcepto(concepto);
     cfdi.conceptos.push(this.cfdiValidator.buildConcepto(concepto));
-    factura.cfdi = this.cfdiValidator.calcularImportes(cfdi);
+    factura.cfdi = await this.cfdiValidator.calcularImportes(cfdi);
     return factura;
   }
 

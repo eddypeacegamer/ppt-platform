@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FilesData } from '../../../@core/data/files-data';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
+import { Router } from '@angular/router';
 
 
 interface TreeNode<T> {
@@ -52,9 +53,9 @@ interface PagoFacturaModel {
 export class PagosFacturaComponent implements OnInit {
 
   public user: User;
-  
   customColumn = 'ACCIONES';
-  defaultColumns = [ 'MONTO', 'statusPago','moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
+  defaultHeaders = [ 'MONTO', 'ESTATUS PAGO', 'MONEDA', 'BANCO', 'FECHA PAGO', 'ACREDOR', 'DEUDOR', 'FOLIO' ];
+  defaultColumns = [ 'MONTO', 'statusPago', 'moneda', 'banco', 'fechaPago', 'acredor', 'deudor', 'folio' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<PagoFacturaModel>;
@@ -66,10 +67,13 @@ export class PagosFacturaComponent implements OnInit {
   public errorMessages: string[] = [];
   public filterParams: any = {};
 
+  public module: string = 'promotor';
+
   constructor(
     private dialogService: NbDialogService,
     private filesService: FilesData,
     private paymentsService: PaymentsData,
+    private router: Router,
     private usersService: UsersData,
     private downloadService: DonwloadFileService,
     private downloadCsvService: DownloadCsvService,
@@ -77,10 +81,14 @@ export class PagosFacturaComponent implements OnInit {
 
   ngOnInit() {
     this.errorMessages = [];
+    this.module = this.router.url.split('/')[2];
+
     this.usersService.getUserInfo()
       .then(user => {
         this.user = user;
-        this.filterParams.solicitante = user.email;
+        if (this.module === 'promotor') {
+          this.filterParams.solicitante = user.email;
+        }
       }).then(() => this.updateDataTable());
   }
 

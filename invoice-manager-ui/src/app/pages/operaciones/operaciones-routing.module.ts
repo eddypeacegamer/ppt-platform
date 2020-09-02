@@ -60,7 +60,6 @@ const routes: Routes = [{
       path: 'pago-facturas',
       component: PagosFacturaComponent,
     },
-  
   ]}];
 
 @NgModule({

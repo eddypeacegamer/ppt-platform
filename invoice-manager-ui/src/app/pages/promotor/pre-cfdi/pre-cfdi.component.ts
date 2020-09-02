@@ -201,7 +201,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     this.factura.cfdi = new Cfdi();
     this.factura.cfdi.conceptos = [];
     this.errorMessages = [];
-    
   }
 
   isValidCfdi(): boolean {

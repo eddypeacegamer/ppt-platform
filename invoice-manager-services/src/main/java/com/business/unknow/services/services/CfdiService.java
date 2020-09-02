@@ -355,6 +355,7 @@ public class CfdiService {
 
 		return cfdi;
 	}
+	
 
 	public void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
 
@@ -420,7 +421,7 @@ public class CfdiService {
 	 * 
 	 * @param cfdi
 	 */
-	private void recalculateCfdiAmmounts(CfdiDto cfdi) {
+	public CfdiDto recalculateCfdiAmmounts(CfdiDto cfdi) {
 
 		// Importes, retenciones y traslados recalculo
 		cfdi.getConceptos().forEach(a -> {
@@ -452,6 +453,8 @@ public class CfdiService {
 		cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));
 		cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_HALF_UP));
 		cfdi.setDescuento(BigDecimal.ZERO);// los descuentos no estan soportados
+		
+		return cfdi;
 	}
 
 }
