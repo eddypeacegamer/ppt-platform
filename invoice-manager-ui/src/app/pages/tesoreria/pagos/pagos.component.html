@@ -176,8 +176,8 @@
                     <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
                         class="fa fa-search"></i></button>
                     &nbsp;
-                    <button class="btn-sm"
-                      [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
+                    <button class="btn-sm" [disabled]="fila.statusPago === 'RECHAZADO'"
+                      [ngClass]="{'btn-outline-secondary': fila.statusPago === 'RECHAZADO', 'btn-outline-danger': fila.statusPago !== 'RECHAZADO' }"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>
                 </td>

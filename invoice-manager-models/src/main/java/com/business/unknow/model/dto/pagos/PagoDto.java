@@ -222,8 +222,4 @@ public class PagoDto implements Serializable {
 				+ ", comprobante=" + comprobante + "]";
 	}	
 	
-	public static void main(String[] args) {
-		BigDecimal b= new BigDecimal(500);
-		System.out.println(b.setScale(2));
-	}
 }

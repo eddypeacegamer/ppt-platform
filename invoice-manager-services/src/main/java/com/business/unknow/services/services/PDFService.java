@@ -48,7 +48,7 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.pdf.PDFGenerator;
 
 /**
- * @author hha0009
+ * @author ralfdemoledor
  *
  */
 @Service
