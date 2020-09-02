@@ -2,26 +2,32 @@ package com.business.unknow.services.services;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -64,6 +70,7 @@ public class FacturaService {
 
 	@Autowired
 	private FacturaRepository repository;
+
 
 	@Autowired
 	private CfdiPagoRepository cfdiPagoRepository;
@@ -113,65 +120,88 @@ public class FacturaService {
 	@Autowired
 	private PagoService pagoService;
 
-	@Autowired
-	private DateHelper dateHelper;
-
 	private FacturaValidator validator = new FacturaValidator();
+	
+	
+	private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
 
+	
+	
+	private Specification<Factura> buildSearchFilters(Map<String, String> parameters){
+		String linea = (parameters.get("lineaEmisor")==null)?"A":parameters.get("lineaEmisor");
+		
+		log.info("Finding facturas by {}", parameters);
+		
+		return new Specification<Factura>() {
+			
+			private static final long serialVersionUID = -7435096122716669730L;
+
+			@Override
+			public Predicate toPredicate(Root<Factura> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				 List<Predicate> predicates = new ArrayList<>();
+				 
+				 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("lineaEmisor"),linea)));
+				 // TODO move this logic into a enum class that handles all this logic
+				 if(parameters.get("solicitante")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("solicitante"),"%"+parameters.get("solicitante")+"%")));
+				 }
+				 if(parameters.get("emisor")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("razonSocialEmisor"),"%"+parameters.get("emisor")+"%")));
+				 }
+				 if(parameters.get("remitente")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("razonSocialRemitente"),"%"+parameters.get("remitente")+"%")));
+				 }
+				 
+				 if(parameters.get("status")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("statusFactura"),parameters.get("status"))));
+				 }
+				 
+				 if(parameters.get("tipoDocumento")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("tipoDocumento"),parameters.get("tipoDocumento"))));
+				 }
+				 
+				 if(parameters.get("metodoPago")!=null) {
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("metodoPago"),parameters.get("metodoPago"))));
+				 }
+				 
+				 if(parameters.get("saldoPendiente")!=null) {
+					 BigDecimal saldo = new BigDecimal(parameters.get("saldoPendiente"));
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("saldoPendiente"), saldo)));
+				 }
+				 
+				 if(parameters.get("since")!=null && parameters.get("to")!=null) {
+					 java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
+					 java.sql.Date end = java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
+					 predicates.add(criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"),start,end)));
+				 }
+				
+				  
+				 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+	}
+	
+	
 	// FACTURAS
-	public Page<FacturaDto> getFacturasByParametros(Optional<Integer> prefolio, Optional<String> solicitante,
-			String lineaEmisor, Optional<String> status, Date since, Date to, String emisor, String receptor, int page,
-			int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		end = dateHelper.setMidNigthDate(end);
+	public Page<FacturaDto> getFacturasByParametros(Map<String, String> parameters) {
+		
 		Page<Factura> result;
-		if (prefolio.isPresent()) {
-			result = repository.findByIdCfdi(prefolio.get(), PageRequest.of(0, 10));
-		} else if (solicitante.isPresent()) {
-			if (status.isPresent() && status.get().length() > 0) {
-				result = repository.findBySolicitanteAndStatusWithParams(solicitante.get(), lineaEmisor, status.get(),
-						start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-			} else if (emisor != null && emisor.length() > 5 && receptor != null && receptor.length() > 5) {
-				result = repository.findFacturasPPD(solicitante.get(), lineaEmisor, emisor, receptor,
-						PageRequest.of(page, size, Sort.by("saldoPendiente").descending()));
-			} else {
-				result = repository.findBySolicitanteWithParams(solicitante.get(), lineaEmisor, start, end,
-						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-			}
-		} else {
-			if (status.isPresent() && status.get().length() > 0) {
-				result = repository.findByLineaEmisorAndStatusWithParams(lineaEmisor, status.get(), start, end,
-						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-			} else {
-				result = repository.findByLineaEmisorWithParams(lineaEmisor, start, end,
-						String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-						PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-			}
+		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
+		if(parameters.get("prefolio")!=null) {
+			result = repository.findByPreFolio(parameters.get("prefolio"), PageRequest.of(0, 10));
+		}else {
+			result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
-	public Page<FacturaReportDto> getFacturaReportsByParams(Optional<String> status, String lineaEmisor, String emisor,
-			String receptor, Date since, Date to, int page, int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		end = dateHelper.setMidNigthDate(end);
-		Page<Factura> result;
-		if (status.isPresent()) {
-			result = repository.findReportsByLineaAndStatusEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
-					status.get(), lineaEmisor, start, end, String.format("%%%s%%", emisor),
-					String.format("%%%s%%", receptor),
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		} else {
-			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.FACTURA.getDescripcion(),
-					lineaEmisor, start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		}
+	public Page<FacturaReportDto> getFacturaReportsByParams(Map<String, String> parameters) {
+		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
+		Page<Factura> result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
+		
 		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
 		if (folios.isEmpty()) {
 			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
@@ -181,22 +211,10 @@ public class FacturaService {
 		}
 	}
 
-	public Page<PagoReportDto> getComplementoReportsByParams(Optional<String> status, String lineaEmisor, String emisor,
-			String receptor, Date since, Date to, int page, int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		end = dateHelper.setMidNigthDate(end);
-		Page<Factura> result;
-		if (status.isPresent()) {
-			result = repository.findReportsByLineaAndStatusEmisorWithParams(
-					TipoDocumentoEnum.COMPLEMENTO.getDescripcion(), status.get(), lineaEmisor, start, end,
-					String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		} else {
-			result = repository.findReportsByLineaEmisorWithParams(TipoDocumentoEnum.COMPLEMENTO.getDescripcion(),
-					lineaEmisor, start, end, String.format("%%%s%%", emisor), String.format("%%%s%%", receptor),
-					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
-		}
+	public Page<PagoReportDto> getComplementoReportsByParams(Map<String, String> parameters) {
+		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
+		Page<Factura> result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
 		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
 		if (folios.isEmpty()) {
 			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
@@ -471,7 +489,8 @@ public class FacturaService {
 			cfdiDto.setComplemento(new ComplementoDto());
 			cfdiDto.getComplemento().setPagos(cfdiPagos);
 			complemento.setCfdi(cfdiDto);
-			facturaDefaultValues.assignaDefaultsComplemento(complemento);
+			facturaDefaultValues.assignaDefaultsComplemento(complemento,
+					facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
 			CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
 			Factura fact = mapper.getEntityFromFacturaDto(complemento);
 			fact.setIdCfdi(cfdi.getId());

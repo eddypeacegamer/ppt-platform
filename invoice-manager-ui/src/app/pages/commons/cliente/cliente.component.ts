@@ -36,8 +36,10 @@ export class ClienteComponent implements OnInit {
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
       const rfc = route.get('rfc');
+      const promotor = route.get('promotor');
+      console.log(promotor);
       if (rfc !== '*') {
-        this.clientService.getClientByRFC(rfc)
+        this.clientService.getClientsByPromotorAndRfc(promotor,rfc)
         .subscribe((client: Client) => {
           this.clientInfo = client;
           this.formInfo.rfc = rfc;

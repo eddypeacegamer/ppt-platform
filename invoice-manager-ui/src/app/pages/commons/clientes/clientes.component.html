@@ -31,7 +31,7 @@
               
               <button class="btn btn-primary" style="margin-left: 15px;" (click)="updateDataTable(0,10)">BUSCAR</button>
               
-              <button class="btn btn-primary" style="margin-left: 15px;" *ngIf="module === 'promotor'" (click)="redirectToCliente('*')">NUEVO CLIENTE</button>
+              <button class="btn btn-primary" style="margin-left: 15px;" *ngIf="module === 'promotor'" (click)="redirectToCliente('*','')">NUEVO CLIENTE</button>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center"> <button class="btn btn-sm btn-outline-primary"
-                    (click)="redirectToCliente(fila.informacionFiscal.rfc)"><i class="fa fa-edit"></i></button>
+                    (click)="redirectToCliente(fila.informacionFiscal.rfc,fila.correoPromotor)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row">{{fila.informacionFiscal.rfc}}</td>
                 <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>

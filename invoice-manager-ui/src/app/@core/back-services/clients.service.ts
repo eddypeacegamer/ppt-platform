@@ -32,6 +32,10 @@ export class ClientsService {
     return this.httpClient.get(`../api/promotores/${promotor}/clientes`);
   }
 
+  public getClientsByPromotorAndRfc(promotor: string,rfc:string): Observable<any> {
+    return this.httpClient.get(`../api/promotores/${promotor}/clientes/${rfc}`);
+  }
+
   public getClientByRFC(rfc:string) : Observable<Object>{
     return this.httpClient.get(`../api/clientes/${rfc}`);
   }

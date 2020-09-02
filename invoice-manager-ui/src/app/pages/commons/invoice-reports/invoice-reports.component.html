@@ -4,8 +4,8 @@
       <nb-card-header class="puff_center">Reportes</nb-card-header>
       <!--  PROMOTOR  -->
       <nb-card-body *ngIf="module === 'promotor'">
-        <div class="row slide_1">
 
+        <div class="row slide_1 my-1">
           <div class="col-4">
             <label for="inputFolio" class="label">Pre-folio</label>
             <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
@@ -14,25 +14,19 @@
           </div>
 
           <div class="col-4">
-            <label for="inputEmisor" class="label">Emisor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
-              placeholder="Razón Social Emisor">
+            <label for="inputTypoDoc" class="label">Tipo Documento</label>
+            <select id="inputTypoDoc" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.tipoDocumento" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="Factura">Factura</option>
+              <option value="Complemento">Complemento</option>
+            </select>
           </div>
 
           <div class="col-4">
-            <label for="InputReceptor" class="label">Receptor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
-              placeholder="Razón Social Receptor">
-          </div>
-        </div>
-        <br>
-        <div class="row slide_2">
-
-          <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
+              [disabled]="filterParams.prefolio.length > 0">
               <option value="*">Todos</option>
               <option value="1">Validacion operaciones</option>
               <option value="2">Validacion tesoreria</option>
@@ -43,32 +37,75 @@
               <option value="7">Cancelada</option>
             </select>
           </div>
+
+        </div>
+
+        <div class="row slide_2 my-1">
+
+          <div class="col-3">
+            <label for="inputPayMethod" class="label">Metodo Pago</label>
+            <select id="inputPayMethod" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.metodoPago" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="PUE">Pago Unica Exibición(PUE)</option>
+              <option value="PPD">Pago en Parcialidades(PPD)</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="inputSaldo" class="label">Saldo pendiente</label>
+            <select id="inputSaldo" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.saldoPendiente" [disabled]="filterParams.prefolio.length > 0">
+              <option value="0">Todas</option>
+              <option value="10000"> Mas de $10000</option>
+              <option value="50000">Mas de $50000</option>
+              <option value="100000">Mas de $100000</option>
+              <option value="250000">Mas de $250000</option>
+              <option value="500000">Mas de $500000</option>
+            </select>
+          </div>
+
           <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
-              [(ngModel)]="filterParams.since">
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
 
           <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
-            <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block; width: 100%;"
-              [(ngModel)]="filterParams.to">
+            <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-3">
+        </div>
+        
+        <div class="row slide_3 my-1">
+
+          <div class="col-4">
+            <label for="inputEmisor" class="label">Emisor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
+              [disabled]="filterParams.prefolio.length > 0" id="inputEmisor" placeholder="Razón Social Emisor">
+          </div>
+
+          <div class="col-4">
+            <label for="InputReceptor" class="label">Receptor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
+              [disabled]="filterParams.prefolio.length > 0" id="InputReceptor" placeholder="Razón Social Receptor">
+          </div>
+
+          <div class="col-4">
             <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
               status="primary">BUSCAR</button>
           </div>
         </div>
 
 
-
       </nb-card-body>
 
       <!--  OPERACIONES  -->
       <nb-card-body *ngIf="module === 'operaciones' || module === 'administracion' ||  module === 'tesoreria' ">
-        <div class="row slide_1">
+        <div class="row slide_1 my-1">
 
           <div class="col-3">
             <label for="inputFolio" class="label">Pre-folio</label>
@@ -78,22 +115,25 @@
           </div>
 
           <div class="col-3">
-            <label for="inputEmisor" class="label">Emisor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
-              placeholder="Razón Social Emisor">
+            <label for="inputPromotor" class="label">Promotor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.solicitante" id="inputPromotor" [disabled]="filterParams.prefolio.length > 0"
+              placeholder="Correo promotor">
           </div>
 
           <div class="col-3">
-            <label for="InputReceptor" class="label">Receptor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
-              placeholder="Razón Social Receptor">
+            <label for="inputTypoDoc" class="label">Tipo Documento</label>
+            <select id="inputTypoDoc" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.tipoDocumento" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="Factura">Factura</option>
+              <option value="Complemento">Complemento</option>
+            </select>
           </div>
 
           <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
+              [disabled]="filterParams.prefolio.length > 0">
               <option value="*">Todos</option>
               <option value="1">Validacion operaciones</option>
               <option value="2">Validacion tesoreria</option>
@@ -104,29 +144,64 @@
               <option value="7">Cancelada</option>
             </select>
           </div>
+
         </div>
-        <br>
-        <div class="row slide_2">
+      
+        <div class="row slide_2 my-1">
 
           <div class="col-3">
-            <label for="inputPromotor" class="label">Promotor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.solicitante" id="inputPromotor"
-              placeholder="Correo promotor">
+            <label for="inputPayMethod" class="label">Metodo Pago</label>
+            <select id="inputPayMethod" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.metodoPago" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="PUE">Pago Unica Exibición(PUE)</option>
+              <option value="PPD">Pago en Parcialidades(PPD)</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="inputSaldo" class="label">Saldo pendiente</label>
+            <select id="inputSaldo" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.saldoPendiente" [disabled]="filterParams.prefolio.length > 0">
+              <option value="0">Todas</option>
+              <option value="10000"> Mas de $10000</option>
+              <option value="50000">Mas de $50000</option>
+              <option value="100000">Mas de $100000</option>
+              <option value="250000">Mas de $250000</option>
+              <option value="500000">Mas de $500000</option>
+            </select>
           </div>
 
           <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
-              [(ngModel)]="filterParams.since">
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
+
           <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
-              [(ngModel)]="filterParams.to">
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-3">
+        </div>
+
+        <div class="row slide_3 my-1">
+
+          <div class="col-4">
+            <label for="inputEmisor" class="label">Emisor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
+              [disabled]="filterParams.prefolio.length > 0" id="inputEmisor" placeholder="Razón Social Emisor">
+          </div>
+
+          <div class="col-4">
+            <label for="InputReceptor" class="label">Receptor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
+              [disabled]="filterParams.prefolio.length > 0" id="InputReceptor" placeholder="Razón Social Receptor">
+          </div>
+
+          <div class="col-4">
             <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
               status="primary">BUSCAR</button>
           </div>
@@ -135,11 +210,19 @@
 
       <!--  CONTABILIDAD  -->
       <nb-card-body *ngIf="module === 'contabilidad'">
-        <div class="row slide_1">
+        <div class="row slide_1 my-1">
 
-          <div class="col-4">
+          <div class="col-3">
+            <label for="inputFolio" class="label">Pre-folio</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.prefolio"
+              [disabled]="filterParams.emisor.length > 0 || filterParams.remitente.length > 0" id="inputFolio"
+              placeholder="Folio PreCFDI">
+          </div>
+
+          <div class="col-3">
             <label for="inputLinea" class="label">Línea Emisora</label>
-            <select id="inputLinea" style="display:block;" class="form-control" [(ngModel)]="filterParams.lineaEmisor">
+            <select id="inputLinea" style="display:block;" class="form-control" [(ngModel)]="filterParams.lineaEmisor"
+              [disabled]="filterParams.prefolio.length > 0">
               <option value="A">Línea A</option>
               <option value="B">Línea B</option>
               <option value="C">Línea C</option>
@@ -147,51 +230,86 @@
             </select>
           </div>
 
-          <div class="col-4">
-            <label for="inputEmisor" class="label">Emisor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.remitente.length > 0" id="inputEmisor"
-              placeholder="Razón Social Emisor">
+          <div class="col-3">
+            <label for="inputTypoDoc" class="label">Tipo Documento</label>
+            <select id="inputTypoDoc" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.tipoDocumento" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="Factura">Factura</option>
+              <option value="Complemento">Complemento</option>
+            </select>
           </div>
-
-          <div class="col-4">
-            <label for="InputReceptor" class="label">Receptor</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
-              [disabled]="filterParams.prefolio.length > 0 || filterParams.emisor.length > 0" id="InputReceptor"
-              placeholder="Razón Social Receptor">
-          </div>
-
-        </div>
-
-        <div class="row slide_2" style=" margin-top: 5px;">
 
           <div class="col-3">
             <label for="inputStatus" class="label">Estatus factura</label>
-            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
+            <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
+              [disabled]="filterParams.prefolio.length > 0">
               <option value="8">Por timbrar</option>
               <option value="3">Timbrada</option>
               <option value="7">Cancelada</option>
               <option value="9">Rechazada contabilidad</option>
               <option value="5">Rechazada tesoreria</option>
               <option value="6">Rechazada operaciones</option>
+            </select>
+          </div>
 
+        </div>
+
+        <div class="row slide_2 my-1">
+
+          <div class="col-3">
+            <label for="inputPayMethod" class="label">Metodo Pago</label>
+            <select id="inputPayMethod" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.metodoPago" [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
+              <option value="PUE">Pago Unica Exibición(PUE)</option>
+              <option value="PPD">Pago en Parcialidades(PPD)</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="inputSaldo" class="label">Saldo pendiente</label>
+            <select id="inputSaldo" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.saldoPendiente" [disabled]="filterParams.prefolio.length > 0">
+              <option value="0">Todas</option>
+              <option value="10000"> Mas de $10000</option>
+              <option value="50000">Mas de $50000</option>
+              <option value="100000">Mas de $100000</option>
+              <option value="250000">Mas de $250000</option>
+              <option value="500000">Mas de $500000</option>
             </select>
           </div>
 
           <div class="col-3">
             <label for="inputTimbrado" class="label">Desde</label>
             <input nbInput placeholder="Desde" [nbDatepicker]="sincepicker" fullWidth style="display:block;"
-              [(ngModel)]="filterParams.since">
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.since">
             <nb-datepicker #sincepicker></nb-datepicker>
           </div>
 
           <div class="col-3">
             <label for="inputTimbrado" class="label">Hasta</label>
             <input nbInput placeholder="Hasta" [nbDatepicker]="topicker" fullWidth style="display:block;"
-              [(ngModel)]="filterParams.to">
+              [disabled]="filterParams.prefolio.length > 0" [(ngModel)]="filterParams.to">
             <nb-datepicker #topicker></nb-datepicker>
           </div>
-          <div class="col-3">
+        </div>
+
+        <div class="row slide_3 my-1">
+
+          <div class="col-4">
+            <label for="inputEmisor" class="label">Emisor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.emisor"
+              [disabled]="filterParams.prefolio.length > 0" id="inputEmisor" placeholder="Razón Social Emisor">
+          </div>
+
+          <div class="col-4">
+            <label for="InputReceptor" class="label">Receptor</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.remitente"
+              [disabled]="filterParams.prefolio.length > 0" id="InputReceptor" placeholder="Razón Social Receptor">
+          </div>
+
+          <div class="col-4">
             <button type="button" style="width: 100%; margin-top: 28px;" (click)="updateDataTable(0,10)" nbButton
               status="primary">BUSCAR</button>
           </div>
@@ -213,7 +331,7 @@
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
-        <div class="clearfix puff_center"  *ngIf="page.empty == false">
+        <div class="clearfix puff_center" *ngIf="page.empty == false">
           Resultados
           <div class="row float-right" style="margin-right: 1px;">
 
@@ -242,7 +360,7 @@
               <tr>
                 <th class="text-center" style="width: 190px;">Acciones</th>
                 <th class="text-center">Pre-Folio</th>
-                <!--th-- class="text-center">Folio</!--th-->
+                <th class="text-center">Folio</th>
                 <th class="text-center">Razón Social Empresa</th>
                 <th class="text-center">Razón Social Cliente</th>
                 <th class="text-center">Tipo Documento</th>
@@ -293,8 +411,8 @@
                   </button>
                 </td>
 
-                <!--td-- scope="row">{{fila.preFolio}}</!--td-->
-                <td scope="row">{{fila.idCfdi}}</td>
+                <td scope="row">{{fila.preFolio}}</td>
+                <td scope="row">{{fila.folio}}</td>
                 <td scope="row">{{fila.razonSocialEmisor}}</td>
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.tipoDocumento}}</td>

@@ -9,7 +9,7 @@ import { DownloadCsvService } from '../../@core/util-services/download-csv.servi
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
-
+import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 
 
 @NgModule({
@@ -24,7 +24,7 @@ import { LineaCComponent } from './linea-c/linea-c.component';
     OperacionesRoutingModule,
     CommonsModule,
   ],
-  entryComponents: [ValidacionDevolucionComponent],
+  entryComponents: [ValidacionDevolucionComponent,AsignacionPagosComponent],
   providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class OperacionesModule { }

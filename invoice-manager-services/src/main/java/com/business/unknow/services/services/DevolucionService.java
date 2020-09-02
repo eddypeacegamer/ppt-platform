@@ -150,7 +150,8 @@ public class DevolucionService {
 	}
 
 	public void generarDevoluciones(FacturaDto facturaDto) throws InvoiceManagerException {
-		Client client = clientRepository.findByRfc(facturaDto.getRfcRemitente())
+		Client client = clientRepository
+				.findByCorreoPromotorAndClient(facturaDto.getSolicitante(), facturaDto.getRfcRemitente())
 				.orElseThrow(() -> new InvoiceManagerException("El cliente no existe",
 						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
 						HttpStatus.BAD_REQUEST.value()));
