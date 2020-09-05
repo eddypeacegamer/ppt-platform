@@ -27,16 +27,16 @@ public class CuentasBanncariasRepositoryDto {
 	
 	 private static final String FILTER_CUENTAS_BANCARIAS = "select count(*) OVER() AS TOTAL, "
 	 		+ "cb.ID_CUENTA_BANCARIA, cb.BANCO , e.LINEA, cg.NOMBRE as GIRO ,c2.RAZON_SOCIAL ,e.RFC ,"
-				+ " cb.NO_CUENTA ,cb.CLABE ,cb.FECHA_CREACION ,cb.FECHA_ACTUALIZACION \r\n" + 
+				+ " cb.NO_CUENTA ,cb.CLABE ,cb.FECHA_CREACION ,cb.FECHA_ACTUALIZACION " + 
 				"from cuentas_bancarias cb INNER join empresas e on e.RFC = cb.EMPRESA INNER join cat_giros cg on"
 				+ " cg.ID_GIRO = e.GIRO_ID INNER join contribuyentes c2 on c2.RFC = e.RFC WHERE cb.BANCO like upper(?)"
-				+ " and e.RFC like upper(?) and cb.CLABE like upper(?) and cb.NO_CUENTA like upper(?)  \r\n" + 
-				"and cb.FECHA_CREACION between ? and ?  ORDER BY cb.FECHA_CREACION DESC LIMIT ? OFFSET ?";
+				+ " and e.RFC like upper(?) and cb.CLABE like upper(?) and cb.NO_CUENTA like upper(?) " 
+				+ "and cb.FECHA_CREACION between ? and ?  ORDER BY cb.FECHA_CREACION DESC LIMIT ? OFFSET ?";
 	
-	 Logger logger = LoggerFactory.getLogger(CuentasBanncariasRepositoryDto.class);
+	 
 	 
 	 public List<CuentaBancariaDto> resultQry (String banco, String empresa, String clabe, String cuenta, Date start,Date end, int offset, int size) { 
-		 logger.debug("A DEBUG clave"+clabe);
+		
 		 return invoiceManagerTemplate.query(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
