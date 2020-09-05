@@ -2,17 +2,20 @@ package com.business.unknow.services.services;
 
 import java.util.Date;
 import java.util.List;
+
 import java.util.Optional;
 
 import org.joda.time.DateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,6 +23,8 @@ import com.business.unknow.model.dto.services.CuentaBancariaDto;
 import com.business.unknow.services.entities.CuentaBancaria;
 import com.business.unknow.services.mapper.CuentaBancariaMapper;
 import com.business.unknow.services.repositories.CuentaBancariaRepository;
+import com.business.unknow.services.repositories.CuentasBanncariasRepositoryDto;
+
 
 @Service
 public class CuentaBancariaService {
@@ -29,19 +34,22 @@ public class CuentaBancariaService {
 
 	@Autowired
 	private CuentaBancariaMapper mapper;
+	
+	@Autowired
+	private CuentasBanncariasRepositoryDto jdbcrepo;
 
+	
 	public Page<CuentaBancariaDto> getCuentasBancariasByfilters(String banco, String empresa, String clabe, String cuenta, Date since,
 			Date to, int page, int size) {
-		Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
-		Date end = (to == null) ? new Date() : to;
-		Page<CuentaBancaria> result = repository.findCuentasByFilterParams(String.format("%%%s%%", banco),
-				String.format("%%%s%%", empresa), String.format("%%%s%%", clabe), String.format("%%%s%%", cuenta), start, end,
-				PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
-
-		return new PageImpl<>(mapper.getCuentaBancariaDtosFromEntities(result.getContent()), result.getPageable(),
-				result.getTotalElements());
+			Date start = (since == null) ? new DateTime().minusYears(1).toDate() : since;
+			Date end = (to == null) ? new Date() : to;
+			int offset = ((size * (page+1)) - size) ;	
+			List<CuentaBancariaDto> resultqry = jdbcrepo.resultQry(banco,empresa,clabe,cuenta,start,end,offset,size);	
+			Page<CuentaBancariaDto> result = new PageImpl<CuentaBancariaDto>(resultqry); 
+			Pageable pageable = PageRequest.of(page, size, Sort.by("fechaCreacion").descending());
+			int pages = resultqry.size() > 0 ? resultqry.get(0).getTotal() :0;
+		return new PageImpl<>(result.getContent(), pageable,pages);
 	}
-	
 	
 	public List<CuentaBancariaDto> getCuentasPorEmpresa(String empresa){
 		return mapper.getCuentaBancariaDtosFromEntities(repository.findByEmpresa(empresa));

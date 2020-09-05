@@ -13,7 +13,27 @@
           </div>
           <p class="alert alert-success" *ngIf="Params.success.length > 0" role="alert">{{Params.success}}</p>
 
-          <div class="row slide_1" >
+        <div class="row slide_1" *ngIf="cuenta.id !== undefined" >
+           
+
+            <div class="col-6">
+              <label for="inputBanco" class="label">Banco</label>
+              <select id="inputBanco" style="display:block;" class="form-control" [(ngModel)]="cuenta.banco"
+                name="banco">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label for="inputempresa" class="label">RFC</label>
+              <input id="inputempresa" class="form-control" fullWidth [disabled]="true" type="text" [(ngModel)]="cuenta.empresa"
+              fullWidth placeholder="Numero de cuenta">
+            </div>
+           
+            
+               
+        </div>
+        <div class="row slide_1" *ngIf="cuenta.id === undefined">
            
 
             <div class="col-2">
@@ -25,9 +45,9 @@
               </select>
             </div>
             <div class="col-md-2">
-              <label for="inputGiro" class="label">Línea Emisor</label>
-              <select id="inputGiro" fullWidth class="form-control" style="display:block;"
-                [(ngModel)]="formInfo.linea">
+              <label for="inputEmisor" class="label">Línea Emisor</label>
+              <select id="inputEmisor" fullWidth class="form-control" style="display:block;"
+              (change)="onLineaSelection($event)" [(ngModel)]="formInfo.linea">
                 <option value="A">Línea A</option>
                 <option value="B">Línea B</option>
                 <option value="C">Línea C</option>
@@ -47,8 +67,8 @@
             <div class="col-md-4">
               <label for="inputEmpresa" class="label">Empresa</label>
               <select id="inputEmpresa" class="form-control" (change)="onEmpresaSelected($event.target.value)"
-                [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
-                <option value="*">Seleccionar</option>
+                [(ngModel)]="filterParams.empresa" style="display:block;" fullWidth>
+                <option value="">Seleccionar</option>
                 <option *ngFor="let company of empresas" [(value)]="company.rfc">
                   {{company.rfc}}-{{company.razonSocial}}
                 </option>

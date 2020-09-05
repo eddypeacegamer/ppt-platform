@@ -24,10 +24,10 @@ export class CuentaBancariaComponent implements OnInit {
   public empresas: Contribuyente[] = [];
   public banksCat: Catalogo[] = [];
 
-  public filterParams: any = { banco: '', empresa: '', cuenta: '', clave:'', empresarazon:''};
+  public filterParams: any = { banco: '', empresa: '', cuenta: '', clabe:'', empresarazon:''};
   public Params: any = { success: '', message: ''};
 
-  public formInfo = { giro: '*', linea: 'A', empresa: '*'};
+  public formInfo = { giro: '*', linea: 'A'};
 
 
   public module: string = 'tesoreria';
@@ -60,6 +60,7 @@ export class CuentaBancariaComponent implements OnInit {
               .subscribe((company: Empresa) => {
                 this.filterParams.empresarazon = company.informacionFiscal.razonSocial;
               });
+              this.catalogsService.getBancos().then(banks => this.banksCat = banks);
             this.updatecuentaInfo(empresa, cuenta);
         } else {
           this.catalogsService.getAllGiros().then(cat => this.girosCat = cat);
@@ -105,6 +106,7 @@ export class CuentaBancariaComponent implements OnInit {
 
   onGiroSelection(giroId: string) {
     const value = +giroId;
+    this.formInfo.giro = giroId;
     if (isNaN(value)) {
       this.empresas = [];
     } else {
@@ -114,6 +116,20 @@ export class CuentaBancariaComponent implements OnInit {
           (error: HttpErrorResponse) =>
             this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
+  }
+  onLineaSelection() {
+  
+  this.empresas = [];
+  if (this.formInfo.giro === '*') {
+    this.empresas = [];
+  } else {
+    
+      this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(this.formInfo.giro))
+        .pipe(map((empresas: Empresa[]) => empresas.map(e => e.informacionFiscal)))
+        .subscribe(companies => this.empresas = companies,
+          (error: HttpErrorResponse) =>
+            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
+        }
   }
 
   onEmpresaSelected(rfc: string) {
