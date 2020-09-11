@@ -129,8 +129,11 @@ public class FacturaTranslator {
 			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
 				ComplementoDocRelacionado complementoRelacionado = facturaCfdiTranslatorMapper
 						.complementoComponente(cfdiPago);
+				if(!cfdiPago.getMoneda().equals(cfdiPago.getMonedaDr())) {
+					complementoRelacionado.setTipoCambioDR(cfdiPago.getTipoCambioDr());
+				}
 				complementosRelacionados.add(complementoRelacionado);
-				montoTotal = montoTotal.add(new BigDecimal(complementoRelacionado.getImpPagado()));
+				montoTotal = montoTotal.add(cfdiPago.getMonto());
 			}
 			complementoPago.setMonto(montoTotal.toString());
 			cfdi.setComplemento(complemento);
