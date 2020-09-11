@@ -114,6 +114,9 @@ public class FacturaTranslator {
 			ComplementoPago complementoPago = new ComplementoPago();
 			complementoPago.setFechaPago(dateHelper.getStringFromFecha(primerPago.get().getFechaPago(),
 					FacturaConstants.FACTURA_DATE_FORMAT));
+			if(!primerPago.get().getMoneda().equals("MXN")) {
+				complementoPago.setTipoCambioP(primerPago.get().getTipoCambio());
+			}
 			complementoPago.setFormaDePago(primerPago.get().getFormaPago());
 			complementoPago.setMoneda(primerPago.get().getMoneda());
 			complemento.setComplemntoPago(complementoPagos);

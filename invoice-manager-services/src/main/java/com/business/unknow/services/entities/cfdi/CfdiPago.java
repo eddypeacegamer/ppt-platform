@@ -51,6 +51,12 @@ public class CfdiPago implements Serializable {
 	private int numeroParcialidad;
 	@Column(name = "SERIE")
 	private String serie;
+	@Column(name = "TIPO_CAMBIO_DR")
+	private BigDecimal tipoCambioDr;
+	@Column(name = "TIPO_CAMBIO")
+	private BigDecimal tipoCambio;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
@@ -193,13 +199,31 @@ public class CfdiPago implements Serializable {
 		this.cfdi = cfdi;
 	}
 
+	
+	public BigDecimal getTipoCambioDr() {
+		return tipoCambioDr;
+	}
+
+	public void setTipoCambioDr(BigDecimal tipoCambioDr) {
+		this.tipoCambioDr = tipoCambioDr;
+	}
+
+	public BigDecimal getTipoCambio() {
+		return tipoCambio;
+	}
+
+	public void setTipoCambio(BigDecimal tipoCambio) {
+		this.tipoCambio = tipoCambio;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiPago [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago=" + formaPago
 				+ ", moneda=" + moneda + ", monto=" + monto + ", folio=" + folio + ", idDocumento=" + idDocumento
 				+ ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
-				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", cfdi=" + cfdi + "]";
+				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", tipoCambioDr="
+				+ tipoCambioDr + ", tipoCambio=" + tipoCambio + ", cfdi=" + cfdi + "]";
 	}
 
 }
