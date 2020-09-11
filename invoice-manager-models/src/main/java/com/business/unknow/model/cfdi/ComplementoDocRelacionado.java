@@ -1,5 +1,7 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,6 +27,8 @@ public class ComplementoDocRelacionado {
 	private String monedaDR;
 	@XmlAttribute(name = "NumParcialidad")
 	private int numParcialidad;
+	@XmlAttribute(name = "TipoCambioDR")
+	private BigDecimal tipoCambioDR;
 	@XmlAttribute(name = "Serie")
 	private String serie;
 
@@ -100,12 +104,20 @@ public class ComplementoDocRelacionado {
 		this.serie = serie;
 	}
 
+	public BigDecimal getTipoCambioDR() {
+		return tipoCambioDR;
+	}
+
+	public void setTipoCambioDR(BigDecimal tipoCambioDR) {
+		this.tipoCambioDR = tipoCambioDR;
+	}
+
 	@Override
 	public String toString() {
 		return "ComplementoDocRelacionado [folio=" + folio + ", idDocumento=" + idDocumento + ", impPagado=" + impPagado
 				+ ", impSaldoAnt=" + impSaldoAnt + ", impSaldoInsoluto=" + impSaldoInsoluto + ", metodoDePagoDR="
-				+ metodoDePagoDR + ", monedaDR=" + monedaDR + ", numParcialidad=" + numParcialidad + ", serie=" + serie
-				+ "]";
+				+ metodoDePagoDR + ", monedaDR=" + monedaDR + ", numParcialidad=" + numParcialidad + ", tipoCambioDR="
+				+ tipoCambioDR + ", serie=" + serie + "]";
 	}
 
 }
