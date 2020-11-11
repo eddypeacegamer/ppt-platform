@@ -133,7 +133,7 @@ public class FacturaTranslator {
 					complementoRelacionado.setTipoCambioDR(cfdiPago.getTipoCambioDr());
 				}
 				complementosRelacionados.add(complementoRelacionado);
-				montoTotal = montoTotal.add(cfdiPago.getMonto());
+				montoTotal = montoTotal.add(cfdiPago.getImportePagado());
 			}
 			complementoPago.setMonto(montoTotal.toString());
 			cfdi.setComplemento(complemento);

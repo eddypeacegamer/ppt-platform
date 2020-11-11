@@ -71,7 +71,6 @@ public class FacturaService {
 	@Autowired
 	private FacturaRepository repository;
 
-
 	@Autowired
 	private CfdiPagoRepository cfdiPagoRepository;
 
