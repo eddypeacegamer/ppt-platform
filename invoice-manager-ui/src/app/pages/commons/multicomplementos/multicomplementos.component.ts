@@ -115,7 +115,7 @@ export class MulticomplementosComponent implements OnInit {
       this.paymentForm.bankAccount = 'N/A';
       this.newPayment.banco = 'No aplica';
             this.newPayment.cuenta = 'Sin especificar';
-    }else {
+    } else {
       this.accountsService.getCuentasByCompany(this.selectedCompany.rfc)
           .subscribe(cuentas => {
             this.cuentas = cuentas;

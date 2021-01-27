@@ -152,7 +152,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
 						.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(pagoDto.getFechaPago())
 						.setFormaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
-						.setMoneda(pagoDto.getMoneda()).setMonto(dto.getTotal()).setFolio(dto.getFolio())
+						.setMoneda(pagoDto.getMoneda()).setMonto(pagoDto.getMonto()).setFolio(dto.getFolio())
 						.setIdDocumento(dto.getUuid()).setImportePagado(pagoFactura.get().getMonto())
 						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda())
 						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)

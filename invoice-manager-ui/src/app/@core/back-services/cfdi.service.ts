@@ -15,6 +15,10 @@ export class CfdiService {
     return this.httpClient.get(`../api/cfdis/${prefolio}`);
   }
 
+  public calcularMontosCfdi(cfdi: Cfdi): Observable<any> {
+    return this.httpClient.post('../api/cfdis/calcular/montos', cfdi);
+  }
+
   public updateCfdi(cfdi: Cfdi): Observable<any> {
     return this.httpClient.put(`../api/cfdis/${cfdi.id}`, cfdi);
   }

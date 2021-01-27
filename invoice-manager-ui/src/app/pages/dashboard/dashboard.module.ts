@@ -10,8 +10,6 @@ import {
   NbListModule,
   NbIconModule,
 } from '@nebular/theme';
-import { NgxEchartsModule } from 'ngx-echarts';
-
 import { ThemeModule } from '../../@theme/theme.module';
 import { DashboardComponent } from './dashboard.component';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +29,6 @@ import { StatusCardComponent } from './status-card/status-card.component';
     NbListModule,
     NbIconModule,
     NbButtonModule,
-    NgxEchartsModule,
   ],
   declarations: [
     DashboardComponent,

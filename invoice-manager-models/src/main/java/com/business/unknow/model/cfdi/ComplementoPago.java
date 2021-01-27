@@ -1,5 +1,6 @@
 package com.business.unknow.model.cfdi;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,6 +23,17 @@ public class ComplementoPago {
 	private String moneda;
 	@XmlAttribute(name = "Monto")
 	private String monto;
+	@XmlAttribute(name = "TipoCambioP")
+	private BigDecimal tipoCambioP;
+
+	public BigDecimal getTipoCambioP() {
+		return tipoCambioP;
+	}
+
+	public void setTipoCambioP(BigDecimal tipoCambioP) {
+		this.tipoCambioP = tipoCambioP;
+	}
+
 	@XmlElement(name = "DoctoRelacionado", namespace = "http://www.sat.gob.mx/Pagos")
 	private List<ComplementoDocRelacionado> complementoDocRelacionado;
 
@@ -75,8 +87,9 @@ public class ComplementoPago {
 
 	@Override
 	public String toString() {
-		return "ComplementoPago [fechaPago=" + fechaPago + ", formaDePago=" + formaDePago + ", moneda=" + moneda
-				+ ", monto=" + monto + ", complementoDocRelacionado=" + complementoDocRelacionado + "]";
+		return "ComplementoPago [fechaPago=" + fechaPago + ", formaDePago=" + formaDePago + ", formaDePagoDesc="
+				+ formaDePagoDesc + ", moneda=" + moneda + ", monto=" + monto + ", complementoDocRelacionado="
+				+ complementoDocRelacionado + "]";
 	}
 
 }

@@ -9,6 +9,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesValidatorService } from '../../../@core/util-services/companies-validator.service';
 import { FilesData } from '../../../@core/data/files-data';
+import { CuentasData } from '../../../@core/data/cuentas-data';
+import { Cuenta } from '../../../models/cuenta';
+import { GenericPage } from '../../../models/generic-page';
 
 @Component({
   selector: 'ngx-empresa',
@@ -26,6 +29,7 @@ export class EmpresaComponent implements OnInit {
   public logo: string = '';
   public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
+  public cuentas: Cuenta[];
 
   constructor(private router: Router,
     private catalogsService: CatalogsData,
@@ -33,6 +37,7 @@ export class EmpresaComponent implements OnInit {
     private resourcesService: FilesData,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private accountsService: CuentasData,
     private companiesValidatorService: CompaniesValidatorService) { }
 
   ngOnInit() {
@@ -53,6 +58,10 @@ export class EmpresaComponent implements OnInit {
           .subscribe((company: Empresa) => {
             this.companyInfo = company;
             this.formInfo.rfc = rfc;
+            this.accountsService.getCuentasByCompany(company.informacionFiscal.rfc)
+            .subscribe(c => {
+              this.cuentas = c;
+            });
             this.catalogsService.getZipCodeInfo(company.informacionFiscal.cp).then(
               (data: ZipCodeInfo) => {
                 this.colonias = data.colonias;

@@ -4,12 +4,12 @@ export class Cuenta {
     public empresa: string;
     public banco: string;
     public cuenta: string;
-    public clave: string;
+    public clabe: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     constructor(id?: string, banco?: string, cuenta?: string) {
         this.id = id;
-        this.banco = banco;
+        this.banco = banco || '*';
         this.cuenta = cuenta;
     }
 }
