@@ -47,6 +47,12 @@ public class CfdiController {
 		cfdiService.validateCfdi(cfdi);
 		return new ResponseEntity<>("VALIDA", HttpStatus.OK);
 	}
+	
+	@PostMapping("/calcular/montos")
+	public ResponseEntity<CfdiDto> calculateMontosCfdi(@RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
+		cfdiService.validateCfdi(cfdi);
+		return new ResponseEntity<>(cfdiService.recalculateCfdiAmmounts(cfdi), HttpStatus.OK);
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable Integer id) {

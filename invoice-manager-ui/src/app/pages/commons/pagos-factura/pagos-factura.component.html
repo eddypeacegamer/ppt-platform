@@ -57,7 +57,7 @@
             <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column"
               [showOn]="getShowOn(index)">
               <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-                {{column}}
+                {{defaultHeaders[index]}}
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
                 <div *ngIf="column !== 'MONTO'">

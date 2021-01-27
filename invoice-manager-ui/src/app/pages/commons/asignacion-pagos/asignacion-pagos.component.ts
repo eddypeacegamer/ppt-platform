@@ -70,16 +70,30 @@ export class AsignacionPagosComponent implements OnInit {
     this.filterParams = {solicitante: '', emisor: '', remitente: ''};
     this.paymentsService.getFormasPago()
         .subscribe(payTypes => this.payTypeCat = payTypes);
-    this.userService.getUserInfo().then(user => {
-      this.user = user;
-      this.filterParams.solicitante = user.email;
-      this.clientsService.getClientsByPromotor(user.email)
-        .pipe(
-          map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
-        ).subscribe(clients => {
-          this.clientsCat = clients;
-        });
-    });
+this.userService.getUserInfo().then(user => {this.user = user;});
+        if(this.module === 'promotor')
+        {
+          this.userService.getUserInfo().then(user => {
+            this.user = user;
+            this.filterParams.solicitante = user.email;
+            this.clientsService.getClientsByPromotor(this.filterParams.solicitante)
+              .pipe(
+                map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
+              ).subscribe(clients => {
+                this.clientsCat = clients;
+              });
+          });
+        }
+        else
+        {
+          this.clientsService.getClients( { page: '0', size: '1000' })
+          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+          .pipe(
+            map((clients: Client[]) => clients.map(c => c.informacionFiscal)),
+          ).subscribe(clients => {
+            this.clientsCat = clients;
+          });      
+        }
   }
 
   exit() {
@@ -90,19 +104,20 @@ export class AsignacionPagosComponent implements OnInit {
   selectClient(cliente: Contribuyente) {
     this.selectedClient = cliente;
     this.filterParams.remitente = cliente.razonSocial;
-    this.invoiceService
-      .getInvoices({remitente: cliente.razonSocial, solicitante: this.user.email, page: 0, size: 10000})
-      .pipe(
-        map((page: GenericPage<Factura>) => {
-          return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
-        })).subscribe(companies =>{ 
-          // removing duplicted records
-          const rfcs = companies.map(c => c.rfc);
-          this.companiesCat = [];
-          for (const rfc of rfcs.filter((item, index) => rfcs.indexOf(item) === index)) {
-            this.companiesCat.push(companies.find(c=>c.rfc === rfc));
-          }
-        });
+   
+      this.invoiceService
+        .getInvoices({remitente: cliente.razonSocial, page: 0, size: 10000})
+        .pipe(
+          map((page: GenericPage<Factura>) => {
+            return page.content.map(f => new Contribuyente(f.rfcEmisor, f.razonSocialEmisor));
+          })).subscribe(companies =>{ 
+            // removing duplicted records
+            const rfcs = companies.map(c => c.rfc);
+            this.companiesCat = [];
+            for (const rfc of rfcs.filter((item, index) => rfcs.indexOf(item) === index)) {
+              this.companiesCat.push(companies.find(c=>c.rfc === rfc));
+            }
+          }); 
   }
 
   onCompanySelected(company: any) {
@@ -165,7 +180,7 @@ export class AsignacionPagosComponent implements OnInit {
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
       }
     }
-    payment.solicitante = this.user.email;
+    payment.solicitante = this.module !== 'promotor' ? payment.solicitante = this.page.content[0].solicitante : this.user.email;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;

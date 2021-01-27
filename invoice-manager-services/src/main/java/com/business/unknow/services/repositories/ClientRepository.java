@@ -31,4 +31,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 	public Optional<Client> findByRazonSocial( @Param("razonSocial") String razonSocial);
 	
 	public List<Client> findByCorreoPromotor(String promotor);
+	
+	@Query("select c from Client c where lower(c.informacionFiscal.rfc) = lower(:rfc) and c.correoPromotor = :promotor")
+	public Optional<Client> findByCorreoPromotorAndClient(@Param("promotor")String promotor,@Param("rfc")String rfc);
 }

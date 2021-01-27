@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.business.unknow.services.entities.factura.Factura;
 
 @Repository
-public interface FacturaRepository extends JpaRepository<Factura, Integer> {
+public interface FacturaRepository extends JpaRepository<Factura, Integer>,JpaSpecificationExecutor<Factura> {
 
 	public Page<Factura> findAll(Pageable pageable);
 
@@ -25,6 +26,8 @@ public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 	public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
 	
 	public Page<Factura> findByIdCfdi(Integer prefolio, Pageable pageable);
+	
+	public Page<Factura> findByPreFolio(String prefolio, Pageable pageable);
 	
 	
 	//@Query("select f from Factura f where f.solicitante=:solicitante and f.lineaEmisor=:lineaEmisor and  and f.metodoPago='PPD' and f.tipoDocumento='Factura' and upper(f.razonSocialEmisor) = upper(:razonSocialEmisor) and upper(f.razonSocialRemitente) = upper(:razonSocialRemitente)")

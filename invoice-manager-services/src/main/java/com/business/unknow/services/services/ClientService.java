@@ -41,7 +41,6 @@ public class ClientService {
 	@Autowired
 	private SwSapinsExecutorService swSapinsExecutorService;
 
-
 	private ClienteValidator clientValidator = new ClienteValidator();
 
 	private ContactoHelper contactoHelper = new ContactoHelper();
@@ -73,26 +72,42 @@ public class ClientService {
 		return mapper.getClientDtosFromEntities(repository.findByCorreoPromotor(promotor));
 	}
 
+	public ClientDto getClientsByPromotorAndClient(String promotor, String rfc) {
+		Optional<Client> entity = repository.findByCorreoPromotorAndClient(promotor, rfc);
+		if (entity.isPresent()) {
+			return mapper.getClientDtoFromEntity(entity.get());
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El promotor no tiene el rfc selecionado");
+		}
+	}
+
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
 		try {
 			clientValidator.validatePostCliente(cliente);
-			//catalogsService.getCodigosPostaleByCode(cliente.getInformacionFiscal().getCp()); Allow include postal codes not registered in the platform
 			Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
-			if (entity.isPresent()) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String
-						.format("El rfc  %s ya esta creado en el sistema", cliente.getInformacionFiscal().getRfc()));
-			}
+			Optional<Client> client = repository.findByCorreoPromotorAndClient(cliente.getCorreoPromotor(),
+					cliente.getInformacionFiscal().getRfc());
+			cliente.setCorreoContacto(contactoHelper.translateContacto(cliente.getInformacionFiscal().getRfc(),
+					cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
+			Client clientEntity=mapper.getEntityFromClientDto(cliente);
 			SwSapiensConfig config = swSapinsExecutorService
 					.validateRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			if (!config.getStatus().equals(Constants.SUCCESS)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
 			}
-			cliente.setCorreoContacto(contactoHelper.translateContacto(cliente.getInformacionFiscal().getRfc(),
-					cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
-			cliente.setActivo(false);
-			cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
-			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(cliente)));
+			if (!entity.isPresent() && !client.isPresent()) {
+				cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
+			} else if (entity.isPresent() && client.isPresent()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+						String.format("El RFC %s  para  el promotor %s ya existe en el sistema",
+								cliente.getInformacionFiscal().getRfc(),
+								cliente.getCorreoPromotor()));
+			}else if(entity.isPresent()&&!client.isPresent()) {
+				clientEntity.setInformacionFiscal(entity.get());
+			}
+			clientEntity.setActivo(false);
+			return mapper.getClientDtoFromEntity(repository.save(clientEntity));
 		} catch (SwSapiensClientException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					String.format("El RFC %s no esta dado de alta en el SAT", cliente.getInformacionFiscal().getRfc()));
@@ -101,10 +116,9 @@ public class ClientService {
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
 		clientValidator.validatePostCliente(client);
-		client.setCorreoContacto(
-				contactoHelper.translateContacto(client.getInformacionFiscal().getRfc(),
-						client.getCorreoPromotor(), client.getPorcentajeContacto()));
-		if (repository.findByRfc(rfc).isPresent()) {
+		client.setCorreoContacto(contactoHelper.translateContacto(client.getInformacionFiscal().getRfc(),
+				client.getCorreoPromotor(), client.getPorcentajeContacto()));
+		if (repository.findByCorreoPromotorAndClient(client.getCorreoPromotor(), rfc).isPresent()) {
 			return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,

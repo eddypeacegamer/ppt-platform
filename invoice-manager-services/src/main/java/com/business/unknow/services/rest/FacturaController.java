@@ -1,14 +1,12 @@
 package com.business.unknow.services.rest;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,49 +47,20 @@ public class FacturaController {
 
 	// FACTRURAS
 	@GetMapping
-	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(
-			@RequestParam(name = "prefolio", required = false) Optional<Integer> prefolio,
-			@RequestParam(name = "solicitante", required = false) Optional<String> solicitante, // linea A by default
-			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
-			@RequestParam(name = "emisor", defaultValue = "") String emisor,
-			@RequestParam(name = "remitente", defaultValue = "") String receptor,
-			@RequestParam(name = "status") Optional<String> status,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getFacturasByParametros(prefolio, solicitante, lineaEmisor, status, since,
-				to, emisor, receptor, page, size), HttpStatus.OK);
+	public ResponseEntity<Page<FacturaDto>> getAllFacturasByParametros(@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getFacturasByParametros(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/factura-reports")
-	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(
-			@RequestParam(name = "status") Optional<String> status,
-			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
-			@RequestParam(name = "emisor", defaultValue = "") String emisor,
-			@RequestParam(name = "remitente", defaultValue = "") String receptor,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "100") int size) {
+	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(
-				service.getFacturaReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size),
-				HttpStatus.OK);
+				service.getFacturaReportsByParams(parameters),HttpStatus.OK);
 	}
 
 	@GetMapping("/complemento-reports")
-	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(
-			@RequestParam(name = "status") Optional<String> status,
-			@RequestParam(name = "lineaEmisor", defaultValue = "A") String lineaEmisor,
-			@RequestParam(name = "emisor", defaultValue = "") String emisor,
-			@RequestParam(name = "remitente", defaultValue = "") String receptor,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "100") int size) {
+	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(@RequestParam Map<String, String> parameters) {
 		return new ResponseEntity<>(
-				service.getComplementoReportsByParams(status, lineaEmisor, emisor, receptor, since, to, page, size),
-				HttpStatus.OK);
+				service.getComplementoReportsByParams(parameters),HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")

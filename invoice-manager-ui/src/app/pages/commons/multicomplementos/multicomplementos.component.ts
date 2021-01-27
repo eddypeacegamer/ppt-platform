@@ -27,7 +27,7 @@ import { Factura } from '../../../models/factura/factura';
 })
 export class MulticomplementosComponent implements OnInit {
 
-
+  public module: string = 'promotor';
   public page: GenericPage<any>;
   public user: User;
   public fileInput: any;
@@ -59,6 +59,7 @@ export class MulticomplementosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.module = this.router.url.split('/')[2];
     this.successMesagge = '';
     this.newPayment.moneda = 'MXN';
     this.loading = false;
@@ -114,7 +115,7 @@ export class MulticomplementosComponent implements OnInit {
       this.paymentForm.bankAccount = 'N/A';
       this.newPayment.banco = 'No aplica';
             this.newPayment.cuenta = 'Sin especificar';
-    }else {
+    } else {
       this.accountsService.getCuentasByCompany(this.selectedCompany.rfc)
           .subscribe(cuentas => {
             this.cuentas = cuentas;
@@ -151,12 +152,13 @@ export class MulticomplementosComponent implements OnInit {
     this.successMesagge = '';
     this.payErrorMessages = [];
     const payment  = {... this.newPayment};
-    for (const f  of this.page.content){
+    for (const f  of this.page.content) {
       if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
         payment.facturas.push(new PagoFactura(f.pagoMonto, f.folio, f.razonSocialEmisor, f.razonSocialRemitente ));
       }
     }
-    payment.solicitante = this.user.email;
+    // if( operador) {payment.solicitante = this.page.content[0].solicitante}
+    payment.solicitante = this.module !== 'promotor' ? payment.solicitante = this.page.content[0].solicitante : this.user.email;
     this.payErrorMessages = this.paymentValidator.validatePagoSimple(payment);
     if (this.payErrorMessages.length === 0) {
       this.loading = true;

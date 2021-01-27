@@ -18,7 +18,7 @@ export class UtilsService {
         let value: string = filterParams[key];
         if (filterParams[key] instanceof Date) {
           const date: Date = filterParams[key] as Date;
-          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+          value = `${date.getFullYear()}-${this.zeroPad(date.getMonth() + 1, 2)}-${this.zeroPad(date.getDate(), 2)}`;
         }
         if (value !== null && value.length > 0) {
           params[key] = value;
@@ -48,5 +48,10 @@ export class UtilsService {
     } else {
       return false;
     }
+  }
+
+  private zeroPad(num: number, places: number) {
+    const zero = places - num.toString().length + 1;
+    return Array(+(zero > 0 && zero)).join('0') + num;
   }
 }

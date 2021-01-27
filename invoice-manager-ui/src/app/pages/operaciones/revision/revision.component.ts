@@ -245,7 +245,7 @@ export class RevisionComponent implements OnInit {
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    this.clientsService.getClientByRFC(this.factura.cfdi.receptor.rfc)
+    this.clientsService.getClientsByPromotorAndRfc(this.factura.solicitante,this.factura.cfdi.receptor.rfc)
     .subscribe((client: Client) => {
     if (client.activo) {
       this.dialogService.open(dialog, { context: fact })

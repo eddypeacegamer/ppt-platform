@@ -2,7 +2,6 @@ package com.business.unknow.commons.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.business.unknow.Constants;
@@ -23,27 +22,13 @@ public class DateHelper {
 			throw new InvoiceCommonException(e.getMessage());
 		}
 	}
-
+	
 	public Date dateMinusDays(Date date, int days) {
 		return new Date(date.getTime() - (Constants.MILISECONDS_PER_DAY * days));
 	}
-
+	
 	public boolean isMyDateAfterDaysInPast(Date date, int days) {
 		Date newDate = dateMinusDays(new Date(), days);
 		return date.after(newDate);
 	}
-
-	public Date epochTimeToDate(int date) {
-		return new Date(new Long(date) * Constants.MILISECONDS);
-	}
-
-	public Date setMidNigthDate(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 23);
-		cal.set(Calendar.MINUTE, 59);
-		cal.set(Calendar.SECOND, 59);
-		return cal.getTime();
-	}
-	
 }

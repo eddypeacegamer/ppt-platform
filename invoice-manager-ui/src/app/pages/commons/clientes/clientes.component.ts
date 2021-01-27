@@ -19,7 +19,7 @@ export class ClientesComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
 
   public module: string = 'promotor';
-  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', page: '0', size: '10' };
+  public filterParams: any = { razonSocial: '', rfc: '', status: '*', promotor: '', page: '', size: '10' };
 
   constructor(
     private userService: UsersData,
@@ -102,8 +102,8 @@ export class ClientesComponent implements OnInit {
     });
   }
 
-  public redirectToCliente(rfc: string) {
-    this.router.navigate([`./pages/${this.module}/cliente/${rfc}`]);
+  public redirectToCliente(rfc: string,promotor:string) {
+    this.router.navigate([`./pages/${this.module}/cliente/${rfc}/${promotor}`]);
   }
 
 }
