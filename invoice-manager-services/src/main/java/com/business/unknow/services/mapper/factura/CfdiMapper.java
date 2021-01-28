@@ -12,6 +12,7 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.EmisorDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.cfdi.ReceptorDto;
+import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.services.entities.cfdi.Cfdi;
@@ -20,6 +21,7 @@ import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
+import com.business.unknow.services.entities.cfdi.Relacionado;
 import com.business.unknow.services.entities.cfdi.Retencion;
 import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 
@@ -73,4 +75,7 @@ public interface CfdiMapper {
 
 	List<Retencion> getEntitiesFromRetencionDtos(List<RetencionDto> dto);
 	
+	RelacionadoDto getRelacionadoDtoFromEntity(Relacionado entity);
+
+	Relacionado getEntityFromRelacionadoDto(RelacionadoDto dto);
 }

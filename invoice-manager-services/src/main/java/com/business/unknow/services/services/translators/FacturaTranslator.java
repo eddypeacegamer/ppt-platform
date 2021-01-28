@@ -18,7 +18,9 @@ import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
+import com.business.unknow.model.cfdi.CFdiRelacionados;
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.cfdi.CfdiRelacionado;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
 import com.business.unknow.model.cfdi.ComplementoPago;
@@ -31,6 +33,7 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
@@ -62,6 +65,12 @@ public class FacturaTranslator {
 			BigDecimal totalRetenciones = new BigDecimal(0);
 			List<Translado> impuestos = new ArrayList<>();
 			List<Retencion> retenciones = new ArrayList<>();
+			if(context.getFacturaDto().getCfdi().getRelacionado()!=null) {
+				RelacionadoDto relacionadoDto=context.getFacturaDto().getCfdi().getRelacionado();
+				cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
+				cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+				cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+			}
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
 				Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
 				cfdi.getConceptos().add(concepto);

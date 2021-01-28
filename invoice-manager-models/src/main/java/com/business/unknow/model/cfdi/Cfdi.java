@@ -49,6 +49,8 @@ public class Cfdi {
 	private String metodoPago;
 	@XmlAttribute(name = "LugarExpedicion")
 	private String lugarExpedicion;
+	@XmlElement(name = "CfdiRelacionados", namespace = "http://www.sat.gob.mx/cfd/3")
+	private CFdiRelacionados cFdiRelacionados;
 	@XmlElement(name = "Emisor", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Emisor emisor;
 	@XmlElement(name = "Receptor", namespace = "http://www.sat.gob.mx/cfd/3")
@@ -60,7 +62,7 @@ public class Cfdi {
 	private Impuesto impuestos;
 	@XmlElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
 	private Complemento complemento;
-
+	
 	public Cfdi() {
 		this.conceptos = new ArrayList<>();
 		this.impuestos = new Impuesto();
@@ -233,16 +235,24 @@ public class Cfdi {
 	public void setComplemento(Complemento complemento) {
 		this.complemento = complemento;
 	}
-	
+
+	public CFdiRelacionados getcFdiRelacionados() {
+		return cFdiRelacionados;
+	}
+
+	public void setcFdiRelacionados(CFdiRelacionados cFdiRelacionados) {
+		this.cFdiRelacionados = cFdiRelacionados;
+	}
 
 	@Override
 	public String toString() {
 		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha + ", sello="
 				+ sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado + ", certificado="
-				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", moneda=" + moneda
-				+ ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago
-				+ ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor + ", receptor=" + receptor
-				+ ", conceptos=" + conceptos + ", impuestos=" + impuestos + ", complemento=" + complemento + "]";
+				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", tipoCambio=" + tipoCambio
+				+ ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante
+				+ ", metodoPago=" + metodoPago + ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor
+				+ ", receptor=" + receptor + ", conceptos=" + conceptos + ", impuestos=" + impuestos + ", complemento="
+				+ complemento + ", cFdiRelacionados=" + cFdiRelacionados + "]";
 	}
-	
+
 }
