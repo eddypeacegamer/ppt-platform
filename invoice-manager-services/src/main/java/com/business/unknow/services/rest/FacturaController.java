@@ -52,15 +52,15 @@ public class FacturaController {
 	}
 
 	@GetMapping("/factura-reports")
-	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(@RequestParam Map<String, String> parameters) {
-		return new ResponseEntity<>(
-				service.getFacturaReportsByParams(parameters),HttpStatus.OK);
+	public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(
+			@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getFacturaReportsByParams(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/complemento-reports")
-	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(@RequestParam Map<String, String> parameters) {
-		return new ResponseEntity<>(
-				service.getComplementoReportsByParams(parameters),HttpStatus.OK);
+	public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(
+			@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getComplementoReportsByParams(parameters), HttpStatus.OK);
 	}
 
 	@GetMapping("/{folio}")
@@ -125,10 +125,10 @@ public class FacturaController {
 		return new ResponseEntity<>(service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(),
 				HttpStatus.OK);
 	}
-	
-	
+
 	@PostMapping("/{folio}/sustitucion")
-	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto factura) {
+	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto factura)
+			throws InvoiceManagerException {
 		return new ResponseEntity<>(service.sustitucion(factura), HttpStatus.OK);
 	}
 }

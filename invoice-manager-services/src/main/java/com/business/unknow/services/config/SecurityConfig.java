@@ -21,7 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();// TODO create local profile to protect everything in higher environments
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
 		.authorizeRequests()
          .anyRequest().authenticated().and().oauth2Login()
