@@ -125,4 +125,10 @@ public class FacturaController {
 		return new ResponseEntity<>(service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(),
 				HttpStatus.OK);
 	}
+	
+	
+	@PostMapping("/{folio}/sustitucion")
+	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto factura) {
+		return new ResponseEntity<>(service.sustitucion(factura), HttpStatus.OK);
+	}
 }

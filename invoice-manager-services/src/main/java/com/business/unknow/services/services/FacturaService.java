@@ -520,5 +520,9 @@ public class FacturaService {
 		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
 		return facturaContext;
 	}
+	
+	public FacturaDto sustitucion(FacturaDto dto) {
+		return dto;
+	}
 
 }
