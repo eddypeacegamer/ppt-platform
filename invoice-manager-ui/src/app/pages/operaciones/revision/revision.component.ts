@@ -99,7 +99,7 @@ export class RevisionComponent implements OnInit {
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
     this.errorMessages = [];
-    this.successMessage = '';
+    this.successMessage = undefined;
   }
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
