@@ -534,16 +534,20 @@ public class FacturaService {
 		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
 		case FACTURA:
-			sustitucionTranslator.sustitucionFactura();
+			sustitucionTranslator.sustitucionFactura(facturaDto);
+			facturaDto=insertNewFacturaWithDetail(facturaDto);
 			break;
 		case COMPLEMENTO:
-			sustitucionTranslator.sustitucionComplemento();
+			sustitucionTranslator.sustitucionComplemento(facturaDto);
 			break;
 		default:
 			throw new InvoiceManagerException("The type of document not supported",
 					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
 					HttpStatus.BAD_REQUEST.value());
 		}
+		FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
+		facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
+		repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
 		return dto;
 	}
 

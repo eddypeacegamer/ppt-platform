@@ -19,7 +19,7 @@ public class Relacionado implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CFDI")
+	@Column(name = "ID_CFDI_RELACIONADO")
 	private int id;
 
 	@Column(name = "TIPO_RELACION")
@@ -56,9 +56,18 @@ public class Relacionado implements Serializable {
 		this.relacion = relacion;
 	}
 
+	public Cfdi getCfdi() {
+		return cfdi;
+	}
+
+	public void setCfdi(Cfdi cfdi) {
+		this.cfdi = cfdi;
+	}
+
 	@Override
 	public String toString() {
-		return "Relacionado [id=" + id + ", tipoRelacion=" + tipoRelacion + ", relacion=" + relacion + "]";
+		return "Relacionado [id=" + id + ", tipoRelacion=" + tipoRelacion + ", relacion=" + relacion + ", cfdi=" + cfdi
+				+ "]";
 	}
 
 }

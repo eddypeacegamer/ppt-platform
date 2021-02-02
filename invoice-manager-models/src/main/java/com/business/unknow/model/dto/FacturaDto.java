@@ -43,6 +43,7 @@ public class FacturaDto implements Serializable {
 	private String cadenaOriginalTimbrado;
 	private String selloCfd;
 	private Integer idCfdi;
+	private Integer idCfdiRelacionado;
 	private BigDecimal total;
 	private BigDecimal saldoPendiente;
 	private CfdiDto cfdi;
@@ -297,6 +298,14 @@ public class FacturaDto implements Serializable {
 		this.preFolio = preFolio;
 	}
 
+	public Integer getIdCfdiRelacionado() {
+		return idCfdiRelacionado;
+	}
+
+	public void setIdCfdiRelacionado(Integer idCfdiRelacionado) {
+		this.idCfdiRelacionado = idCfdiRelacionado;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaDto [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -309,8 +318,8 @@ public class FacturaDto implements Serializable {
 				+ ", fechaCancelacion=" + fechaCancelacion + ", fechaActualizacion=" + fechaActualizacion
 				+ ", fechaTimbrado=" + fechaTimbrado + ", statusCancelado=" + statusCancelado
 				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ ", total=" + total + ", saldoPendiente=" + saldoPendiente + ", cfdi=" + cfdi + ", validacionTeso="
-				+ validacionTeso + ", validacionOper=" + validacionOper + "]";
+				+ ", idCfdiRelacionado=" + idCfdiRelacionado + ", total=" + total + ", saldoPendiente=" + saldoPendiente
+				+ ", cfdi=" + cfdi + ", validacionTeso=" + validacionTeso + ", validacionOper=" + validacionOper + "]";
 	}
 
 }

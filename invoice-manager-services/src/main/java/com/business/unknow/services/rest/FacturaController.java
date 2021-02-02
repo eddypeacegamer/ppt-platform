@@ -127,8 +127,8 @@ public class FacturaController {
 	}
 
 	@PostMapping("/{folio}/sustitucion")
-	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto factura)
+	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto facturaDto)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.sustitucion(factura), HttpStatus.OK);
+		return new ResponseEntity<>(service.sustitucion(facturaDto), HttpStatus.OK);
 	}
 }
