@@ -6,6 +6,10 @@
           <p class="h6 float-left puff_center">Validación CFDI {{preFolio}}</p> 
           <span class="badge badge-primary" style="margin-left: 10px;" 
            *ngIf="factura" >{{factura.statusFactura}}</span>
+           <button type="button" class="btn btn-sm btn-outline-success float-right" (click)="linkInvoice(factura)">
+            <i class="fa fa-link"></i>
+          </button>
+          &nbsp;&nbsp;
           <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
