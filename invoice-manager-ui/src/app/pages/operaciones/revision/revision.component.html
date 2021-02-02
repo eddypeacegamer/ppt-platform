@@ -15,6 +15,11 @@
             <i class="fa fa-code"></i>
           </button>
           &nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" *ngIf="factura.idCfdiRelacionado"
+            class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="goToRelacionado(factura.idCfdiRelacionado)">
+            <i class="fa fa-link"></i>
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <span class="badge badge-secondary ml-1 mr-1 float-right"  
            *ngIf="factura.cfdi" > 
            <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO : {{factura.cfdi.relacionado.relacion}}</strong>
@@ -107,7 +112,6 @@
             nbSpinnerSize="small" nbSpinnerMessage="">
             Cancelar
           </button>
-          {{factura.idCfdiRelacionado}}
           <button class="mr" nbButton status="warning" size="medium" (click)="linkInvoice(factura)" [nbSpinner]="loading"
             [disabled]="loading || factura.idCfdiRelacionado"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
             *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )">
