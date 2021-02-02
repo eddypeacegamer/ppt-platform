@@ -2,6 +2,7 @@ import {Concepto} from './concepto';
 import { Emisor } from './emisor';
 import { Receptor } from './receptor';
 import { Complemento } from './complemento';
+import { Relacionado } from './relacionado';
 
 export class Cfdi {
 
@@ -32,6 +33,7 @@ export class Cfdi {
     emisor: Emisor;
     receptor: Receptor;
     conceptos: Concepto[];
+    relacionado: Relacionado;
     complemento: Complemento;
 
     constructor() {
@@ -41,6 +43,7 @@ export class Cfdi {
         this.emisor = new Emisor();
         this.receptor = new Receptor();
         this.complemento = new Complemento();
+        this.relacionado = new Relacionado();
         this.total = 0;
         this.subtotal = 0;
         this.descuento = 0;

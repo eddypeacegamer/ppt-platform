@@ -99,6 +99,7 @@ export class RevisionComponent implements OnInit {
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
     this.errorMessages = [];
+    this.successMessage = '';
   }
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
@@ -204,6 +205,18 @@ export class RevisionComponent implements OnInit {
       file => this.downloadService.downloadFile(file.data,
         `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`, 'text/xml;charset=utf8;')
     );
+  }
+
+  public linkInvoice(factura: Factura){
+
+    const fact = { ...factura };
+    fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
+      console.log(result);
+      this.successMessage = 'El documento relacionado se ha generado exitosamente';
+    });
   }
 
   public aceptarFactura() {
