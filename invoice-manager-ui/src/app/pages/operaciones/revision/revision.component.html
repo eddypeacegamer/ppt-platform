@@ -15,7 +15,7 @@
             <i class="fa fa-code"></i>
           </button>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <button type="button" *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura'"
+          <button type="button" *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )"
             class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="linkInvoice(factura)">
             <i class="fa fa-link"></i>
           </button>
