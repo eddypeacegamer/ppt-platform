@@ -208,14 +208,19 @@ export class RevisionComponent implements OnInit {
   }
 
   public linkInvoice(factura: Factura){
-
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
     const fact = { ...factura };
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
 
     this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
-      console.log(result);
       this.successMessage = 'El documento relacionado se ha generado exitosamente';
+      this.loading = false;
+    },(error: HttpErrorResponse) => {
+      this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+      this.loading = false;
     });
   }
 
