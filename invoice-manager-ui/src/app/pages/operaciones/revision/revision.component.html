@@ -107,13 +107,14 @@
             nbSpinnerSize="small" nbSpinnerMessage="">
             Cancelar
           </button>
+          {{factura.idCfdiRelacionado}}
           <button class="mr" nbButton status="warning" size="medium" (click)="linkInvoice(factura)" [nbSpinner]="loading"
-            [disabled]="loading"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
+            [disabled]="loading || factura.idCfdiRelacionado"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
             *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )">
             Sustituir Factura
           </button>
         </div>
-
+        <br/>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
           <p *ngFor="let message of errorMessages">{{message}}</p>
         </div>
