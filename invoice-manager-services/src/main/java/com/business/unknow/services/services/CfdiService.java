@@ -35,9 +35,11 @@ import com.business.unknow.services.entities.cfdi.Concepto;
 import com.business.unknow.services.entities.cfdi.Emisor;
 import com.business.unknow.services.entities.cfdi.Impuesto;
 import com.business.unknow.services.entities.cfdi.Receptor;
+import com.business.unknow.services.entities.cfdi.Relacionado;
 import com.business.unknow.services.entities.cfdi.Retencion;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
+import com.business.unknow.services.repositories.facturas.CfdiRelacionadoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.ConceptoRepository;
 import com.business.unknow.services.repositories.facturas.EmisorRepository;
@@ -69,6 +71,9 @@ public class CfdiService {
 
 	@Autowired
 	private ImpuestoRepository impuestoRepository;
+	
+	@Autowired
+	private CfdiRelacionadoRepository cfdiRelacionadoRepository;
 
 	@Autowired
 	private RetencionRepository retencionRepository;
@@ -178,6 +183,11 @@ public class CfdiService {
 				retencionRepository.save(reten);
 			}
 
+		}
+		if(cfdi.getRelacionado()!=null) {
+			Relacionado relacionado=mapper.getEntityFromRelacionadoDto(cfdi.getRelacionado());
+			relacionado.setCfdi(entity);
+			cfdiRelacionadoRepository.save(relacionado);
 		}
 		if (cfdi.getComplemento() != null && cfdi.getComplemento().getPagos() != null
 				&& !cfdi.getComplemento().getPagos().isEmpty()) {

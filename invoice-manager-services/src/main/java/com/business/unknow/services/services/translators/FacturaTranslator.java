@@ -116,6 +116,12 @@ public class FacturaTranslator {
 			for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
 				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
 			}
+			if(context.getFacturaDto().getCfdi().getRelacionado()!=null) {
+				RelacionadoDto relacionadoDto=context.getFacturaDto().getCfdi().getRelacionado();
+				cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
+				cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+				cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+			}
 			Optional<CfdiPagoDto> primerPago = context.getFacturaDto().getCfdi().getComplemento().getPagos().stream()
 					.findFirst();
 			Complemento complemento = new Complemento();

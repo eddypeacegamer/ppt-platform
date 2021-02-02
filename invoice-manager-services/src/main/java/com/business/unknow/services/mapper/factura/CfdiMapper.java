@@ -29,17 +29,16 @@ import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 public interface CfdiMapper {
 
 	CfdiDto getCfdiDtoFromEntity(Cfdi entity);
-	
-	@Mappings({ @Mapping(target = "conceptos", ignore = true),
-		@Mapping(target = "emisor", ignore = true), @Mapping(target = "receptor", ignore = true) })
+
+	@Mappings({ @Mapping(target = "conceptos", ignore = true), @Mapping(target = "emisor", ignore = true),
+			@Mapping(target = "receptor", ignore = true), @Mapping(target = "relacionado", ignore = true) })
 	Cfdi getEntityFromCfdiDto(CfdiDto dto);
 
 	List<CfdiPago> getEntityFromCdfiPagosDtos(List<CfdiPagoDto> dtos);
-	
+
 	CfdiPago getEntityFromCdfiPagosDto(CfdiPagoDto dtos);
-	
+
 	List<CfdiPagoDto> getCfdiPagosDtoFromEntities(List<CfdiPago> entities);
-	
 
 	EmisorDto getEmisorDtoFromEntity(Emisor entity);
 
@@ -56,7 +55,7 @@ public interface CfdiMapper {
 	List<ClientDto> getconceptoDtosFromEntities(List<Concepto> entities);
 
 	List<Concepto> getEntitiesFromConceptoDtos(List<ConceptoDto> dto);
-	
+
 	List<ConceptoDto> getDtosFromConceptoEntities(List<Concepto> dto);
 
 	ImpuestoDto getImpuestoDtoFromEntity(Impuesto entity);
@@ -74,7 +73,7 @@ public interface CfdiMapper {
 	List<RetencionDto> getRetencionDtosFromEntities(List<Retencion> entities);
 
 	List<Retencion> getEntitiesFromRetencionDtos(List<RetencionDto> dto);
-	
+
 	RelacionadoDto getRelacionadoDtoFromEntity(Relacionado entity);
 
 	Relacionado getEntityFromRelacionadoDto(RelacionadoDto dto);
