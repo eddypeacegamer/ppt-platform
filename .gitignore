@@ -21,6 +21,7 @@
 *.DS_Store
 *.project
 *.classpath
+*.factorypath
 */.settings
 */target
 

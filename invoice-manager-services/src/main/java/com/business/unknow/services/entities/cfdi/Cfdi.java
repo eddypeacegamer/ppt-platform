@@ -45,13 +45,13 @@ public class Cfdi implements Serializable {
 
 	@Column(name = "MONEDA")
 	private String moneda;
-	
+
 	@Column(name = "TIPO_CAMBIO")
 	private BigDecimal tipoCambio;
-	
+
 	@Column(name = "IMP_TRASLADADOS")
 	private BigDecimal impuestosTrasladados;
-	
+
 	@Column(name = "IMP_RETENIDOS")
 	private BigDecimal impuestosRetenidos;
 
@@ -87,6 +87,9 @@ public class Cfdi implements Serializable {
 
 	@OneToOne(mappedBy = "cfdi")
 	private Emisor emisor;
+
+	@OneToOne(mappedBy = "cfdi")
+	private Relacionado relacionado;
 
 	@OneToMany(mappedBy = "cfdi")
 	private List<CfdiPago> pagos;
@@ -150,7 +153,7 @@ public class Cfdi implements Serializable {
 	public void setCertificado(String certificado) {
 		this.certificado = certificado;
 	}
-	
+
 	public BigDecimal getImpuestosTrasladados() {
 		return impuestosTrasladados;
 	}
@@ -190,7 +193,7 @@ public class Cfdi implements Serializable {
 	public void setMoneda(String moneda) {
 		this.moneda = moneda;
 	}
-	
+
 	public BigDecimal getTipoCambio() {
 		return tipoCambio;
 	}
@@ -279,14 +282,24 @@ public class Cfdi implements Serializable {
 		this.pagos = pagos;
 	}
 
+	public Relacionado getRelacionado() {
+		return relacionado;
+	}
+
+	public void setRelacionado(Relacionado relacionado) {
+		this.relacionado = relacionado;
+	}
+
 	@Override
 	public String toString() {
 		return "Cfdi [id=" + id + ", version=" + version + ", serie=" + serie + ", folio=" + folio + ", sello=" + sello
 				+ ", noCertificado=" + noCertificado + ", certificado=" + certificado + ", moneda=" + moneda
-				+ ", subtotal=" + subtotal + ", descuento=" + descuento + ", total=" + total + ", tipoDeComprobante="
-				+ tipoDeComprobante + ", metodoPago=" + metodoPago + ", formaPago=" + formaPago + ", condicionesDePago="
-				+ condicionesDePago + ", lugarExpedicion=" + lugarExpedicion + ", conceptos=" + conceptos
-				+ ", receptor=" + receptor + ", emisor=" + emisor + ", pagos=" + pagos + "]";
+				+ ", tipoCambio=" + tipoCambio + ", impuestosTrasladados=" + impuestosTrasladados
+				+ ", impuestosRetenidos=" + impuestosRetenidos + ", subtotal=" + subtotal + ", descuento=" + descuento
+				+ ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante + ", metodoPago=" + metodoPago
+				+ ", formaPago=" + formaPago + ", condicionesDePago=" + condicionesDePago + ", lugarExpedicion="
+				+ lugarExpedicion + ", conceptos=" + conceptos + ", receptor=" + receptor + ", emisor=" + emisor
+				+ ", relacionado=" + relacionado + ", pagos=" + pagos + "]";
 	}
 
 }

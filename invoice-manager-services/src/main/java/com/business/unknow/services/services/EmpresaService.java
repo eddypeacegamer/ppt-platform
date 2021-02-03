@@ -31,7 +31,7 @@ public class EmpresaService {
 
 	@Autowired
 	private EmpresaRepository repository;
-
+	
 	@Autowired
 	private EmpresaMapper mapper;
 
@@ -90,7 +90,6 @@ public class EmpresaService {
 	}
 
 	public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {
-
 		Empresa empresa = repository.findByRfc(rfc).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				String.format("El empresa con el rfc %s no existe", rfc)));
 		empresa.setTipo(empresaDto.getTipo());

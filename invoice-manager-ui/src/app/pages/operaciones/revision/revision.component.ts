@@ -9,7 +9,7 @@ import { Empresa } from '../../../models/empresa';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
@@ -62,7 +62,8 @@ export class RevisionComponent implements OnInit {
     private filesService: FilesData,
     private downloadService: DonwloadFileService,
     private dialogService: NbDialogService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.loading = true;
@@ -99,6 +100,7 @@ export class RevisionComponent implements OnInit {
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
     this.errorMessages = [];
+    this.successMessage = undefined;
   }
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
@@ -206,6 +208,28 @@ export class RevisionComponent implements OnInit {
     );
   }
 
+  public goToRelacionado(idCfdi:number){
+    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+  }
+
+  public linkInvoice(factura: Factura){
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    const fact = { ...factura };
+    fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
+      this.successMessage = 'El documento relacionado se ha generado exitosamente';
+      this.getInvoiceInfoByPreFolio(this.preFolio);
+      this.loading = false;
+    },(error: HttpErrorResponse) => {
+      this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+      this.loading = false;
+    });
+  }
+
   public aceptarFactura() {
     this.successMessage = undefined;
     this.errorMessages = [];
@@ -280,7 +304,6 @@ export class RevisionComponent implements OnInit {
     this.invoiceService.cancelarFactura(fact.folio, fact)
       .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada';
       this.getInvoiceInfoByPreFolio(this.preFolio);
-      this.loading = false;
     }, (error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error != undefined) ?
           error.error.message : `${error.statusText} : ${error.message}`); 

@@ -187,7 +187,7 @@
                 <td scope="row" >{{fila.fechaPago.split("T", 1)}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
                 <td scope="row">
-                  <p *ngFor="let fact of fila.facturas">{{fact.totalFactura | currency}}</p>
+                  <p *ngFor="let fact of fila.facturas">{{fact.monto | currency}} de {{fact.totalFactura | currency}}</p>
                 </td>
                 <td scope="row">
                   <p *ngFor="let fact of fila.facturas">{{fact.metodoPago}}</p>

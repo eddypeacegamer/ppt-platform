@@ -19,8 +19,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
-
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "FACTURAS")
@@ -108,6 +106,9 @@ public class Factura implements Serializable {
 
 	@Column(name = "ID_CFDI")
 	private Integer idCfdi;
+
+	@Column(name = "ID_CFDI_RELACIONADO")
+	private Integer idCfdiRelacionado;
 
 	@Column(name = "VALIDACION_TESO", columnDefinition = "TINYINT")
 	private Boolean validacionTeso;
@@ -331,6 +332,14 @@ public class Factura implements Serializable {
 		this.preFolio = preFolio;
 	}
 
+	public Integer getIdCfdiRelacionado() {
+		return idCfdiRelacionado;
+	}
+
+	public void setIdCfdiRelacionado(Integer idCfdiRelacionado) {
+		this.idCfdiRelacionado = idCfdiRelacionado;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -342,7 +351,8 @@ public class Factura implements Serializable {
 				+ saldoPendiente + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
 				+ fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
 				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ ", validacionTeso=" + validacionTeso + ", validacionOper=" + validacionOper + "]";
+				+ ", idCfdiRelacionado=" + idCfdiRelacionado + ", validacionTeso=" + validacionTeso
+				+ ", validacionOper=" + validacionOper + "]";
 	}
 
 }

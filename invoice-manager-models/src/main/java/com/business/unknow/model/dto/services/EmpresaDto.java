@@ -235,8 +235,9 @@ public class EmpresaDto implements Serializable {
 				+ lugarExpedicion + ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado="
 				+ certificado + ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo
 				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
-				+ activo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal=" + informacionFiscal + "]";
+				+ activo + ", dominioCorreo=" + dominioCorreo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion="
+				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
+				+ informacionFiscal + "]";
 	}
 
 }
