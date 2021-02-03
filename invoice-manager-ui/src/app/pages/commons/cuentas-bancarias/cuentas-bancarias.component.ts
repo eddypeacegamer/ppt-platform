@@ -20,7 +20,7 @@ export class CuentasBancariasComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public currentPage = '0';
-  public filterParams: any = { banco: '', empresa: '', cuenta: '',clave:'', page: '', size: '10', empresarazon:'' };
+  public filterParams: any = { banco: '', empresa: '', cuenta: '',clabe:'', page: '', size: '10', empresarazon:'' };
 
   public module: string = 'tesoreria';
   public girosCat: Catalogo[] = [];
