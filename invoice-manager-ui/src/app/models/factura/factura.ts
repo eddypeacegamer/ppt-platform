@@ -27,6 +27,7 @@ export class Factura {
 	public saldoPendiente: number;
 	public total: number;
 	public cfdi: Cfdi;
+	public idCfdiRelacionado: number;
 	public validacionTeso:boolean;
 	public validacionOper:boolean;
 	public complementos: Factura[];
