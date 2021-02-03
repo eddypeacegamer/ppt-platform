@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -28,8 +26,8 @@ public class CuentasBanncariasRepositoryDto {
 	 private static final String FILTER_CUENTAS_BANCARIAS = "select count(*) OVER() AS TOTAL, "
 	 		+ "cb.ID_CUENTA_BANCARIA, cb.BANCO , e.LINEA, cg.NOMBRE as GIRO ,c2.RAZON_SOCIAL ,e.RFC ,"
 				+ " cb.NO_CUENTA ,cb.CLABE ,cb.FECHA_CREACION ,cb.FECHA_ACTUALIZACION " + 
-				"from cuentas_bancarias cb INNER join empresas e on e.RFC = cb.EMPRESA INNER join cat_giros cg on"
-				+ " cg.ID_GIRO = e.GIRO_ID INNER join contribuyentes c2 on c2.RFC = e.RFC WHERE cb.BANCO like upper(?)"
+				"from CUENTAS_BANCARIAS cb INNER join EMPRESAS e on e.RFC = cb.EMPRESA INNER join CAT_GIROS cg on"
+				+ " cg.ID_GIRO = e.GIRO_ID INNER join CONTRIBUYENTES c2 on c2.RFC = e.RFC WHERE cb.BANCO like upper(?)"
 				+ " and e.RFC like upper(?) and cb.CLABE like upper(?) and cb.NO_CUENTA like upper(?) " 
 				+ "and cb.FECHA_CREACION between ? and ?  ORDER BY cb.FECHA_CREACION DESC LIMIT ? OFFSET ?";
 	
