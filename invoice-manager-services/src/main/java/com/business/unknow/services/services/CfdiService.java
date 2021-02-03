@@ -184,7 +184,7 @@ public class CfdiService {
 			}
 
 		}
-		if(cfdi.getRelacionado()!=null) {
+		if(cfdi.getRelacionado()!=null&&cfdi.getRelacionado().getRelacion()!=null) {
 			Relacionado relacionado=mapper.getEntityFromRelacionadoDto(cfdi.getRelacionado());
 			relacionado.setCfdi(entity);
 			cfdiRelacionadoRepository.save(relacionado);
