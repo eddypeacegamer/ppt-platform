@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
 import com.business.unknow.model.dto.cfdi.RelacionadoDto;
@@ -14,47 +15,71 @@ import com.business.unknow.model.dto.cfdi.RetencionDto;
 @Service
 public class SustitucionTranslator {
 
-	public void sustitucionComplemento(FacturaDto facturaDto) {
-		//TODO: LOGICA DE CLONACION EN SUSTITUCION DE COMPLEMENTOS
+	public FacturaDto sustitucionComplemento(FacturaDto facturaDto) {
+		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
+							facturaDto.getPreFolio()));
+		}
+		updateBaseInfo(facturaDto);
+		facturaDto.setValidacionTeso(true);
+		return facturaDto;
 	}
 
 	public FacturaDto sustitucionFactura(FacturaDto facturaDto) {
-		if(!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir", facturaDto.getPreFolio()));
+					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
+							facturaDto.getPreFolio()));
 		}
+		updateBaseInfo(facturaDto);
+		return facturaDto;
+	}
+
+	
+	private FacturaDto updateBaseInfo(FacturaDto facturaDto) {
 		facturaDto.setCadenaOriginalTimbrado(null);
 		facturaDto.setFechaTimbrado(null);
 		facturaDto.setFolio(null);
+		facturaDto.setValidacionOper(false);
+		facturaDto.setValidacionTeso(false);
 		facturaDto.setNotas("");
 		facturaDto.setPreFolio("");
 		facturaDto.setSelloCfd(null);
 		facturaDto.setStatusFactura(1);
 		facturaDto.setId(0);
-		if(facturaDto.getCfdi()!=null) {
+		if (facturaDto.getCfdi() != null) {
 			facturaDto.getCfdi().setId(null);
-			if(facturaDto.getCfdi().getEmisor()!=null) {
+			if (facturaDto.getCfdi().getEmisor() != null) {
 				facturaDto.getCfdi().getEmisor().setId(null);
 			}
-			if(facturaDto.getCfdi().getReceptor()!=null) {
+			if (facturaDto.getCfdi().getReceptor() != null) {
 				facturaDto.getCfdi().getReceptor().setId(null);
 			}
-			if(facturaDto.getCfdi().getConceptos()!=null) {
-				for(ConceptoDto conceptoDto:facturaDto.getCfdi().getConceptos()) {
+			if (facturaDto.getCfdi().getConceptos() != null) {
+				for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
 					conceptoDto.setId(null);
-					if(conceptoDto.getImpuestos()!=null) {
-						for(ImpuestoDto impuestoDto:conceptoDto.getImpuestos()) {
+
+					if (conceptoDto.getImpuestos() != null) {
+						for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
 							impuestoDto.setId(null);
 						}
 					}
-					if(conceptoDto.getRetenciones()!=null) {
-						for(RetencionDto retencionDto:conceptoDto.getRetenciones()) {
+					if (conceptoDto.getRetenciones() != null) {
+						for (RetencionDto retencionDto : conceptoDto.getRetenciones()) {
 							retencionDto.setId(null);
 						}
 					}
 				}
 			}
-			RelacionadoDto relacionadoDto= new RelacionadoDto();
+			if (facturaDto.getCfdi().getComplemento() != null
+					&& facturaDto.getCfdi().getComplemento().getPagos() != null) {
+				for (CfdiPagoDto cfdiPagoDto : facturaDto.getCfdi().getComplemento().getPagos()) {
+					cfdiPagoDto.setId(0);
+				}
+			}
+
+			RelacionadoDto relacionadoDto = new RelacionadoDto();
 			relacionadoDto.setRelacion(facturaDto.getUuid());
 			relacionadoDto.setTipoRelacion("04");
 			facturaDto.getCfdi().setRelacionado(relacionadoDto);
@@ -62,5 +87,4 @@ public class SustitucionTranslator {
 		}
 		return facturaDto;
 	}
-
 }

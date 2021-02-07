@@ -466,5 +466,9 @@ public class CfdiService {
 		
 		return cfdi;
 	}
+	
+	public CfdiDto updateCfdi(CfdiDto cfdiDto) {
+		return mapper.getCfdiDtoFromEntity(repository.save(mapper.getEntityFromCfdiDto(cfdiDto)));
+	}
 
 }

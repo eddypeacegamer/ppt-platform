@@ -119,7 +119,7 @@ public class FacturaService {
 
 	@Autowired
 	private PagoService pagoService;
-
+	
 	@Autowired
 	private SustitucionTranslator sustitucionTranslator;
 
@@ -284,7 +284,9 @@ public class FacturaService {
 		entity.setTotal(cfdi.getTotal());
 		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA)) {
+			pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
+		}
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
@@ -535,10 +537,7 @@ public class FacturaService {
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
 		case FACTURA:
 			sustitucionTranslator.sustitucionFactura(facturaDto);
-			facturaDto=insertNewFacturaWithDetail(facturaDto);
-			break;
-		case COMPLEMENTO:
-			sustitucionTranslator.sustitucionComplemento(facturaDto);
+			facturaDto = insertNewFacturaWithDetail(facturaDto);
 			break;
 		default:
 			throw new InvoiceManagerException("The type of document not supported",

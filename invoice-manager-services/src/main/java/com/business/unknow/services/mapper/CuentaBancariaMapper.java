@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import com.business.unknow.model.dto.services.CuentaBancariaDto;
 import com.business.unknow.services.entities.CuentaBancaria;
 
-@Mapper
+@Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface CuentaBancariaMapper {
 
 	CuentaBancariaDto getCuentaBancariaToFromEntity(CuentaBancaria entity);

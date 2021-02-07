@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +90,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 	}
 
 	public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
-		return new FacturaBuilder()
-				.setTotal(pago.getMonto())
-				.setPackFacturacion(factura.getPackFacturacion())
+		return new FacturaBuilder().setTotal(pago.getMonto()).setPackFacturacion(factura.getPackFacturacion())
 				.setSaldoPendiente(BigDecimal.ZERO).setLineaEmisor(factura.getLineaEmisor())
 				.setRfcEmisor(factura.getRfcEmisor()).setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
 				.setRfcRemitente(factura.getRfcRemitente()).setLineaRemitente(factura.getLineaRemitente())
@@ -137,7 +136,8 @@ public class FacturaBuilderService extends AbstractBuilderService {
 			List<FacturaDto> dtos) throws InvoiceManagerException {
 		List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
 		for (FacturaDto dto : dtos) {
-			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByFolio(dto.getFolio());
+			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByFolio(dto.getFolio()).stream()
+					.filter(a -> a.getValido()).collect(Collectors.toList());
 			Optional<PagoFacturaDto> pagoFactura = pagoDto.getFacturas().stream()
 					.filter(a -> a.getFolio().endsWith(dto.getFolio())).findFirst();
 			Optional<CfdiPago> cfdipago = cfdiPAgos.stream()
@@ -154,7 +154,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 						.setFormaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
 						.setMoneda(pagoDto.getMoneda()).setMonto(pagoDto.getMonto()).setFolio(dto.getFolio())
 						.setIdDocumento(dto.getUuid()).setImportePagado(pagoFactura.get().getMonto())
-						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda())
+						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda()).setValido(true)
 						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
 						.setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
 						.setImporteSaldoAnterior(dto.getSaldoPendiente())

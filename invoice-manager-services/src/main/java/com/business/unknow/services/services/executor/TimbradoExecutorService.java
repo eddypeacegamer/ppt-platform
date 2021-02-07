@@ -1,5 +1,8 @@
 package com.business.unknow.services.services.executor;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,16 +11,21 @@ import com.business.unknow.commons.builder.EmailConfigBuilder;
 import com.business.unknow.commons.util.MailHelper;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.config.FileConfig;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.cfdi.CfdiPago;
+import com.business.unknow.services.entities.factura.Factura;
 import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FilesService;
@@ -32,6 +40,9 @@ public class TimbradoExecutorService {
 	private CfdiRepository cfdiRepository;
 
 	@Autowired
+	private CfdiPagoRepository cfdiPagoRepository;
+
+	@Autowired
 	private ClientRepository clientRepository;
 
 	@Autowired
@@ -42,12 +53,12 @@ public class TimbradoExecutorService {
 
 	@Autowired
 	private MailHelper mailHelper;
-	
+
 	@Autowired
 	private FilesService filesService;
 
 	public void updateFacturaAndCfdiValues(FacturaContext context) {
-		
+
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
 		cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
 		for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
@@ -59,7 +70,9 @@ public class TimbradoExecutorService {
 
 	public void sentEmail(FacturaContext context, TipoEmail tipoEmail) throws InvoiceManagerException {
 		if (context.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
-			Client client = clientRepository.findByCorreoPromotorAndClient(context.getFacturaDto().getSolicitante(),context.getFacturaDto().getRfcRemitente())
+			Client client = clientRepository
+					.findByCorreoPromotorAndClient(context.getFacturaDto().getSolicitante(),
+							context.getFacturaDto().getRfcRemitente())
 					.orElseThrow(() -> new InvoiceManagerException("Error sending the email",
 							String.format("The client %s does not exists", context.getFacturaDto().getRfcEmisor()),
 							HttpStatus.SC_CONFLICT));
@@ -98,5 +111,25 @@ public class TimbradoExecutorService {
 
 	public void updateCanceladoValues(FacturaContext context) {
 		repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
+		if (context.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+
+			if (context.getFacturaDto().getCfdi() != null && context.getFacturaDto().getCfdi().getComplemento() != null
+					&& context.getFacturaDto().getCfdi().getComplemento().getPagos() != null) {
+				for (CfdiPagoDto cfdiPagoDto : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
+					CfdiPago cfdiPago = cfdiMapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
+					cfdiPago.setValido(false);
+					cfdiPagoRepository.save(cfdiPago);
+					if (cfdiPagoDto.getImporteSaldoAnterior().compareTo(BigDecimal.ZERO) > 0) {
+						Optional<Factura> factura = repository.findByFolio(cfdiPagoDto.getFolio());
+						if (factura.isPresent()) {
+							factura.get().setSaldoPendiente(cfdiPagoDto.getImporteSaldoAnterior());
+							repository.save(factura.get());
+						}
+					}
+				}
+
+			}
+
+		}
 	}
 }

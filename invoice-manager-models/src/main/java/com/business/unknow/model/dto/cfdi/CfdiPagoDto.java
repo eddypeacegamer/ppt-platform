@@ -39,6 +39,7 @@ public class CfdiPagoDto implements Serializable {
 	@XmlAttribute(name = "Serie")
 	private String serie;
 	private String montoDesc;
+	private boolean valido;
 	private CfdiDto cfdi;
 	private BigDecimal tipoCambioDr;
 	private BigDecimal tipoCambio;
@@ -195,6 +196,14 @@ public class CfdiPagoDto implements Serializable {
 		this.tipoCambio = tipoCambio;
 	}
 
+	public boolean isValido() {
+		return valido;
+	}
+
+	public void setValido(boolean valido) {
+		this.valido = valido;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiPagoDto [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago="
@@ -202,7 +211,8 @@ public class CfdiPagoDto implements Serializable {
 				+ idDocumento + ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
 				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", montoDesc="
-				+ montoDesc + ", cfdi=" + cfdi + ", tipoCambioDr=" + tipoCambioDr + ", tipoCambio=" + tipoCambio + "]";
+				+ montoDesc + ", valido=" + valido + ", cfdi=" + cfdi + ", tipoCambioDr=" + tipoCambioDr
+				+ ", tipoCambio=" + tipoCambio + "]";
 	}
 
 }

@@ -47,7 +47,7 @@ public class CfdiPago implements Serializable {
 	private String metodoPago;
 	@Column(name = "MONEDA_DR")
 	private String monedaDr;
-	@Column(name = "NUM_PARCIALIDAD",columnDefinition = "TINYINT")
+	@Column(name = "NUM_PARCIALIDAD", columnDefinition = "TINYINT")
 	private int numeroParcialidad;
 	@Column(name = "SERIE")
 	private String serie;
@@ -55,12 +55,12 @@ public class CfdiPago implements Serializable {
 	private BigDecimal tipoCambioDr;
 	@Column(name = "TIPO_CAMBIO")
 	private BigDecimal tipoCambio;
-	
-	
+	@Column(name = "VALIDO", columnDefinition = "TINYINT")
+	private Boolean valido;
 	@ManyToOne
 	@JoinColumn(name = "ID_CFDI", nullable = false)
 	private Cfdi cfdi;
-	
+
 	public CfdiPago(BigDecimal importeSaldoInsoluto, int numeroParcialidad) {
 		super();
 		this.importeSaldoInsoluto = importeSaldoInsoluto;
@@ -199,7 +199,6 @@ public class CfdiPago implements Serializable {
 		this.cfdi = cfdi;
 	}
 
-	
 	public BigDecimal getTipoCambioDr() {
 		return tipoCambioDr;
 	}
@@ -216,6 +215,14 @@ public class CfdiPago implements Serializable {
 		this.tipoCambio = tipoCambio;
 	}
 
+	public Boolean getValido() {
+		return valido;
+	}
+
+	public void setValido(Boolean valido) {
+		this.valido = valido;
+	}
+
 	@Override
 	public String toString() {
 		return "CfdiPago [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago=" + formaPago
@@ -223,7 +230,7 @@ public class CfdiPago implements Serializable {
 				+ ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
 				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
 				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", tipoCambioDr="
-				+ tipoCambioDr + ", tipoCambio=" + tipoCambio + ", cfdi=" + cfdi + "]";
+				+ tipoCambioDr + ", tipoCambio=" + tipoCambio + ", valido=" + valido + ", cfdi=" + cfdi + "]";
 	}
 
 }
