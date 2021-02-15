@@ -22,13 +22,13 @@ public class EmpresaExecutorService {
 
 	@Autowired
 	private EmpresaRepository empresaRepository;
-	
+
 	@Autowired
 	private ContribuyenteRepository contribuyenteRepository;
 
 	@Autowired
 	private EmpresaMapper empresaMapper;
-	
+
 	@Autowired
 	private ContribuyenteMapper contribuyenteMapper;
 
@@ -39,18 +39,20 @@ public class EmpresaExecutorService {
 		empresaDto.getInformacionFiscal().setFechaActualizacion(new Date());
 		empresaDto.getInformacionFiscal().setFechaCreacion(new Date());
 		String logo = empresaDto.getLogotipo();
-		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
-				empresaDto.getInformacionFiscal().getRfc(), ResourceFileEnum.CERT.name(), empresaDto.getCertificado()));
-		filesService.upsertResourceFile(new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(),
-				empresaDto.getInformacionFiscal().getRfc(), ResourceFileEnum.KEY.name(), empresaDto.getLlavePrivada()));
 		filesService.upsertResourceFile(
-				new ResourceFileDto(TipoRecursoEnum.EMPRESA.name(), empresaDto.getInformacionFiscal().getRfc(),
-						ResourceFileEnum.LOGO.name(), logo.substring(logo.indexOf("base64") + 7)));
-		Contribuyente contribuyente=contribuyenteRepository.save(contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
-		Empresa empresa=empresaMapper.getEntityFromEmpresaDto(empresaDto);
+				new ResourceFileDto(ResourceFileEnum.CERT.name(), empresaDto.getInformacionFiscal().getRfc(),
+						TipoRecursoEnum.EMPRESA.name(), empresaDto.getCertificado()));
+		filesService.upsertResourceFile(
+				new ResourceFileDto(ResourceFileEnum.KEY.name(), empresaDto.getInformacionFiscal().getRfc(),
+						TipoRecursoEnum.EMPRESA.name(), empresaDto.getLlavePrivada()));
+		filesService.upsertResourceFile(
+				new ResourceFileDto(ResourceFileEnum.LOGO.name(), empresaDto.getInformacionFiscal().getRfc(),
+						TipoRecursoEnum.EMPRESA.name(), logo.substring(logo.indexOf("base64") + 7)));
+		Contribuyente contribuyente = contribuyenteRepository
+				.save(contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
+		Empresa empresa = empresaMapper.getEntityFromEmpresaDto(empresaDto);
 		empresa.setInformacionFiscal(contribuyente);
-		return empresaMapper
-				.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
+		return empresaMapper.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
 	}
 
 	public void updateLogo(String rfc, String data) {
