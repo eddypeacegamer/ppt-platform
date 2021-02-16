@@ -114,6 +114,9 @@
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
+        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
+          <p *ngFor="let message of errors">{{message}}</p>
+        </div>
         <div class="clearfix puff_center" *ngIf="page.empty == false">
           Resultados
           <button style="margin-left: 15px;" type="button" (click)="downloadHandler()"
@@ -220,9 +223,7 @@
         </div>
 
         <br>
-        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
-          <p *ngFor="let message of errors">{{message}}</p>
-        </div>
+        
 
       </nb-card-body>
     </nb-card>
