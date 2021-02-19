@@ -319,7 +319,7 @@ export class PreCfdiComponent implements OnInit {
   }
 
   public goToRelacionado(idCfdi:number){
-    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+    this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
   }
 
   public linkInvoice(factura: Factura){
