@@ -66,6 +66,11 @@ public class CfdiComplementoPagoBuilder extends AbstractBuilder<CfdiPagoDto> {
 		return this;
 	}
 	
+	public CfdiComplementoPagoBuilder setValido(Boolean valido) {
+		instance.setValido(valido);
+		return this;
+	}
+	
 	
 	public CfdiComplementoPagoBuilder setMonedaDr(String monedaDr) {
 		instance.setMonedaDr(monedaDr);

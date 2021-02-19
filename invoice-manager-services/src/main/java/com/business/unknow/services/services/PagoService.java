@@ -67,8 +67,6 @@ public class PagoService {
 	@Autowired
 	private FacturaService facturaService;
 
-
-
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
 	public Page<PagoDto> getPaginatedPayments(Optional<String> solicitante, Optional<String> acredor,
@@ -102,7 +100,7 @@ public class PagoService {
 	public List<PagoDto> findPagosByFolio(String folio) {
 		return mapper.getPagosDtoFromEntities(repository.findPagosByFolio(folio));
 	}
-	
+
 	public List<PagoFacturaDto> findPagosFacturaByFolio(String folio) {
 		return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
 	}
@@ -174,14 +172,14 @@ public class PagoService {
 				Optional<PagoFacturaDto> pagoFact = pagoDto.getFacturas().stream()
 						.filter(p -> p.getFolio().equals(dto.getFolio())).findAny();
 				if (pagoFact.isPresent()) {
-					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
+					facturaService.updateTotalAndSaldoFactura(dto.getIdCfdi(), Optional.empty(),
+							Optional.of(pagoFact.get().getMonto()));
 				}
 			}
 		}
-		if (FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
-				&&facturas.size()==1){
-			Optional<FacturaDto> currentFactura= facturas.stream().findFirst();
-			if(currentFactura.isPresent()&&currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+		if (FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago()) && facturas.size() == 1) {
+			Optional<FacturaDto> currentFactura = facturas.stream().findFirst();
+			if (currentFactura.isPresent() && currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
 				currentFactura.get().setValidacionTeso(true);
 				facturaService.updateFactura(currentFactura.get().getIdCfdi(), currentFactura.get());
 				pagoDto.setStatusPago("ACEPTADO");
@@ -196,6 +194,10 @@ public class PagoService {
 			payment.addFactura(facturaPagosRepository.save(pagoFact));
 		}
 		return mapper.getPagoDtoFromEntity(payment);
+	}
+
+	public List<PagoFacturaDto> getPAgoFacturaByIdCfdi(int idCfdi) {
+		return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByIdCfdi(idCfdi));
 	}
 
 	@Transactional(rollbackOn = { InvoiceManagerException.class, DataAccessException.class, SQLException.class })
@@ -219,7 +221,7 @@ public class PagoService {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
 			pagoBuilder.setComentarioPago(pago.getComentarioPago());
 			for (FacturaDto factura : facturas) {
-				if(MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
+				if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
 					factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
 					factura.setStatusDetail(pago.getComentarioPago());
 					facturaService.updateFactura(factura.getIdCfdi(), factura);
@@ -227,15 +229,16 @@ public class PagoService {
 			}
 		} else if (entity.getRevision1() && pago.getRevision2()) {
 			pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
-			
-			List<Integer> idFacts = pago.getFacturas().stream().map(f-> f.getIdCfdi()).distinct().collect(Collectors.toList());
-			
+
+			List<Integer> idFacts = pago.getFacturas().stream().map(f -> f.getIdCfdi()).distinct()
+					.collect(Collectors.toList());
+
 			for (Integer idCfdi : idFacts) {
-					FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
-					fact.setValidacionTeso(true);
-					facturaService.updateFactura(idCfdi, fact);
+				FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
+				fact.setValidacionTeso(true);
+				facturaService.updateFactura(idCfdi, fact);
 			}
-			
+
 		}
 		return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
 	}
@@ -251,22 +254,24 @@ public class PagoService {
 			facturas.add(factura);
 		}
 		pagoEvaluatorService.deletepaymentValidation(payment, facturas);
-		
-		
+
 		for (FacturaDto facturaDto : facturas) {
-			Optional<PagoFacturaDto> pagoFactOpt = payment.getFacturas().stream().filter(p->p.getFolio().equals(facturaDto.getFolio())).findAny();
-			if(pagoFactOpt.isPresent()) {
-				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), Optional.empty(), Optional.of(pagoFactOpt.get().getMonto().negate()));
+			Optional<PagoFacturaDto> pagoFactOpt = payment.getFacturas().stream()
+					.filter(p -> p.getFolio().equals(facturaDto.getFolio())).findAny();
+			if (pagoFactOpt.isPresent()) {
+				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), Optional.empty(),
+						Optional.of(pagoFactOpt.get().getMonto().negate()));
 			}
 		}
-		for (Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct().collect(Collectors.toList())) {
+		for (Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct()
+				.collect(Collectors.toList())) {
 			FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
 			if (TipoDocumentoEnum.COMPLEMENTO.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
 				facturaService.deleteFactura(fact.getFolio());
 				filesService.deleteFacturaFileByFolioAndType(fact.getFolio(), "PDF");
 			}
 		}
-		for(PagoFactura pagoFactura:facturaPagosRepository.findByPagoId(payment.getId())) {
+		for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {
 			facturaPagosRepository.delete(pagoFactura);
 		}
 		filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");

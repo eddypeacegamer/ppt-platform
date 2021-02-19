@@ -132,11 +132,8 @@ export class CfdiComponent implements OnInit {
       .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
   }
 
-  public redirectToChildCfdi(folio: string,parcialidad:string){
-    this.cfdiservice.getChildrenCfdi(folio,+parcialidad).subscribe(factura => {
-      this.invoiceService.getInvoiceByFolio(factura.folio)
-      .toPromise().then((fact)=>this.router.navigate([`./pages/promotor/precfdi/${fact.idCfdi}`]));
-    });
+  public redirectToChildCfdi(id: number){
+   this.router.navigate([`./pages/promotor/precfdi/${id}`]);
   }
 
   public validacionDireccion(){}

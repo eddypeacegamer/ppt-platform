@@ -18,7 +18,9 @@ import com.business.unknow.commons.factura.CdfiHelper;
 import com.business.unknow.commons.factura.SignHelper;
 import com.business.unknow.commons.util.DateHelper;
 import com.business.unknow.commons.util.FacturaHelper;
+import com.business.unknow.model.cfdi.CFdiRelacionados;
 import com.business.unknow.model.cfdi.Cfdi;
+import com.business.unknow.model.cfdi.CfdiRelacionado;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
 import com.business.unknow.model.cfdi.ComplementoPago;
@@ -31,6 +33,7 @@ import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
+import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
@@ -62,6 +65,12 @@ public class FacturaTranslator {
 			BigDecimal totalRetenciones = new BigDecimal(0);
 			List<Translado> impuestos = new ArrayList<>();
 			List<Retencion> retenciones = new ArrayList<>();
+			if (context.getFacturaDto().getCfdi().getRelacionado() != null) {
+				RelacionadoDto relacionadoDto = context.getFacturaDto().getCfdi().getRelacionado();
+				cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
+				cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+				cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+			}
 			for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
 				Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
 				cfdi.getConceptos().add(concepto);
@@ -107,6 +116,12 @@ public class FacturaTranslator {
 			for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
 				cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
 			}
+			if (context.getFacturaDto().getCfdi().getRelacionado() != null) {
+				RelacionadoDto relacionadoDto = context.getFacturaDto().getCfdi().getRelacionado();
+				cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
+				cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+				cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+			}
 			Optional<CfdiPagoDto> primerPago = context.getFacturaDto().getCfdi().getComplemento().getPagos().stream()
 					.findFirst();
 			Complemento complemento = new Complemento();
@@ -114,7 +129,7 @@ public class FacturaTranslator {
 			ComplementoPago complementoPago = new ComplementoPago();
 			complementoPago.setFechaPago(dateHelper.getStringFromFecha(primerPago.get().getFechaPago(),
 					FacturaConstants.FACTURA_DATE_FORMAT));
-			if(!primerPago.get().getMoneda().equals("MXN")) {
+			if (!primerPago.get().getMoneda().equals("MXN")) {
 				complementoPago.setTipoCambioP(primerPago.get().getTipoCambio());
 			}
 			complementoPago.setFormaDePago(primerPago.get().getFormaPago());
@@ -129,7 +144,7 @@ public class FacturaTranslator {
 			for (CfdiPagoDto cfdiPago : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
 				ComplementoDocRelacionado complementoRelacionado = facturaCfdiTranslatorMapper
 						.complementoComponente(cfdiPago);
-				if(!cfdiPago.getMoneda().equals(cfdiPago.getMonedaDr())) {
+				if (!cfdiPago.getMoneda().equals(cfdiPago.getMonedaDr())) {
 					complementoRelacionado.setTipoCambioDR(cfdiPago.getTipoCambioDr());
 				}
 				complementosRelacionados.add(complementoRelacionado);
@@ -160,7 +175,7 @@ public class FacturaTranslator {
 		String sello = signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getPwSat(),
 				context.getEmpresaDto().getLlavePrivada());
 		context.setXml(cdfiHelper.putsSign(xml, sello));
-		if(context.getFacturaDto().getCfdi().getComplemento()==null) {
+		if (context.getFacturaDto().getCfdi().getComplemento() == null) {
 			context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
 		}
 	}
@@ -209,7 +224,7 @@ public class FacturaTranslator {
 
 		return totalRetenciones;
 	}
-	
+
 	public BigDecimal calculaImpuestos(FacturaDto facturaDto) {
 		BigDecimal totalImpuestos = new BigDecimal(0);
 		List<Translado> traslados = new ArrayList<>();

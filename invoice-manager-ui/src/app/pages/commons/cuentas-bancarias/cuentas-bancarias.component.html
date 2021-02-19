@@ -14,8 +14,8 @@
             </select>
           </div>
           <div class="col-2">
-            <label for="inputName" class="label">Empresa RFC</label>
-            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.empresa" fullWidth
+            <label for="inputEmpresaRFC" class="label">Empresa RFC</label>
+            <input id="inputEmpresaRFC" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.empresa" fullWidth
               placeholder="Empresa RFC">
           </div>
 
@@ -37,20 +37,20 @@
         </div>
         <div class="row slide_1">
           <div class="col-4">
-            <label for="inputName" class="label">N° Cuenta</label>
-            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.cuenta" fullWidth
+            <label for="inputCuenta" class="label">N° Cuenta</label>
+            <input id="inputCuenta" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.cuenta" fullWidth
               placeholder="Numero de cuenta">
           </div>
           <div class="col-4">
             <label for="inputRfc" class="label">Clave</label>
-            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clave" fullWidth
+            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.clabe" fullWidth
               placeholder="Clave Bancaria">
           </div>
 
 
           <div class="col-4">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"
-              (click)="redirectToEmpresaRegistry()">NUEVA EMPRESA</button>
+              (click)="redirectToEmpresaRegistry()">NUEVA CUENTA</button>
           </div>
         </div>
         <br>
@@ -94,10 +94,13 @@
               <tr>
                 <th class="text-center">ACCIONES</th>
                 <th scope="col">BANCO</th>
-                <th scope="col">EMPRESA</th>
+                <th scope="col">LINEA</th>
+                <th scope="col">GIRO</th>
+                <th scope="col">RAZON SOCIAL</th>
+                <th scope="col">RFC EMPRESA</th>
                 <th scope="col">NUMERO DE CUENTA</th>
                 <th scope="col">CLABE</th>
-                <th scope="col">FECHA DE Creacion</th>
+                <th scope="col">FECHA DE CREACION</th>
                 <th scope="col">FECHA DE ACTUALIZACION</th>
 
               </tr>
@@ -108,6 +111,9 @@
                     (click)="redirectToEmpresa(fila.empresa,fila.cuenta)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row">{{fila.banco}}</td>
+                <td scope="row">{{fila.linea}}</td>
+                <td scope="row">{{fila.giro}}</td>
+                <td scope="row">{{fila.razonSocial}}</td>
                 <td scope="row">{{fila.empresa}}</td>
                 <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.clabe}}</td>

@@ -8,12 +8,26 @@ public class CuentaBancariaDto implements Serializable {
 	private static final long serialVersionUID = 8643631228668299142L;
 
 	private int id;
+	private int total;
 	private String empresa;
+	private String linea;
+	private String giro;
+	private String razonSocial;
 	private String banco;
 	private String cuenta;
 	private String clabe;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	
+	
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
 
 	public int getId() {
 		return id;
@@ -69,6 +83,32 @@ public class CuentaBancariaDto implements Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+	
+	
+
+	public String getLinea() {
+		return linea;
+	}
+
+	public void setLinea(String linea) {
+		this.linea = linea;
+	}
+
+	public String getGiro() {
+		return giro;
+	}
+
+	public void setGiro(String giro) {
+		this.giro = giro;
+	}
+
+	public String getRazonSocial() {
+		return razonSocial;
+	}
+
+	public void setRazonSocial(String razonSocial) {
+		this.razonSocial = razonSocial;
 	}
 
 	@Override

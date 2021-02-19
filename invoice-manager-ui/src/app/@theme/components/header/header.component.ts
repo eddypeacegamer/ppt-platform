@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{ title: 'V2.010' }];
+  userMenu = [{ title: 'V2.011' }];
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,

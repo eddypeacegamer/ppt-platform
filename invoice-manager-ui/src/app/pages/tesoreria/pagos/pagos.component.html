@@ -114,6 +114,9 @@
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
           No se encontraron resultados
         </div>
+        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
+          <p *ngFor="let message of errors">{{message}}</p>
+        </div>
         <div class="clearfix puff_center" *ngIf="page.empty == false">
           Resultados
           <button style="margin-left: 15px;" type="button" (click)="downloadHandler()"
@@ -181,13 +184,13 @@
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>
                 </td>
-                <td scope="row">{{fila.fechaCreacion.split("T", 1)}}</td>
+                <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.acredor}}</td>
                 <td scope="row">{{fila.deudor}}</td>
                 <td scope="row" >{{fila.fechaPago.split("T", 1)}}</td>
                 <td scope="row">{{fila.monto | currency}}</td>
                 <td scope="row">
-                  <p *ngFor="let fact of fila.facturas">{{fact.totalFactura | currency}}</p>
+                  <p *ngFor="let fact of fila.facturas">{{fact.monto | currency}} de {{fact.totalFactura | currency}}</p>
                 </td>
                 <td scope="row">
                   <p *ngFor="let fact of fila.facturas">{{fact.metodoPago}}</p>
@@ -220,9 +223,7 @@
         </div>
 
         <br>
-        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
-          <p *ngFor="let message of errors">{{message}}</p>
-        </div>
+        
 
       </nb-card-body>
     </nb-card>
