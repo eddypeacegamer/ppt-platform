@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.services.services.translators.SustitucionTranslator;
+import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -121,7 +121,7 @@ public class FacturaService {
 	private PagoService pagoService;
 	
 	@Autowired
-	private SustitucionTranslator sustitucionTranslator;
+	private RelacionadosTranslator sustitucionTranslator;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -525,25 +525,28 @@ public class FacturaService {
 		pdfService.generateInvoicePDF(factura, null);
 	}
 
-	// RENVIAR CORREOS
 	public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
 		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
 		return facturaContext;
 	}
 
-	public FacturaDto sustitucion(FacturaDto dto) throws InvoiceManagerException {
+	public FacturaDto postRelacion(FacturaDto dto,TipoDocumentoEnum tipoDocumento) throws InvoiceManagerException {
 		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
 		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
 		case FACTURA:
 			sustitucionTranslator.sustitucionFactura(facturaDto);
-			facturaDto = insertNewFacturaWithDetail(facturaDto);
+			break;
+		case NOTA_CREDITO:
+			sustitucionTranslator.notaCreditoFactura(facturaDto);
 			break;
 		default:
 			throw new InvoiceManagerException("The type of document not supported",
 					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
 					HttpStatus.BAD_REQUEST.value());
 		}
+		facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
+		facturaDto = insertNewFacturaWithDetail(facturaDto);
 		FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
 		facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
 		repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));

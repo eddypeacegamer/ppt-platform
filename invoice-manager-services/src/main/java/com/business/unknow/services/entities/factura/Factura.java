@@ -110,6 +110,9 @@ public class Factura implements Serializable {
 	@Column(name = "ID_CFDI_RELACIONADO")
 	private Integer idCfdiRelacionado;
 
+	@Column(name = "ID_CFDI_RELACIONADO_PADRE")
+	private Integer idCfdiRelacionadoPadre;
+
 	@Column(name = "VALIDACION_TESO", columnDefinition = "TINYINT")
 	private Boolean validacionTeso;
 
@@ -340,6 +343,14 @@ public class Factura implements Serializable {
 		this.idCfdiRelacionado = idCfdiRelacionado;
 	}
 
+	public Integer getIdCfdiRelacionadoPadre() {
+		return idCfdiRelacionadoPadre;
+	}
+
+	public void setIdCfdiRelacionadoPadre(Integer idCfdiRelacionadoPadre) {
+		this.idCfdiRelacionadoPadre = idCfdiRelacionadoPadre;
+	}
+
 	@Override
 	public String toString() {
 		return "Factura [id=" + id + ", rfcEmisor=" + rfcEmisor + ", rfcRemitente=" + rfcRemitente
@@ -351,8 +362,8 @@ public class Factura implements Serializable {
 				+ saldoPendiente + ", packFacturacion=" + packFacturacion + ", notas=" + notas + ", fechaActualizacion="
 				+ fechaActualizacion + ", fechaCancelacion=" + fechaCancelacion + ", fechaCreacion=" + fechaCreacion
 				+ ", cadenaOriginalTimbrado=" + cadenaOriginalTimbrado + ", selloCfd=" + selloCfd + ", idCfdi=" + idCfdi
-				+ ", idCfdiRelacionado=" + idCfdiRelacionado + ", validacionTeso=" + validacionTeso
-				+ ", validacionOper=" + validacionOper + "]";
+				+ ", idCfdiRelacionado=" + idCfdiRelacionado + ", idCfdiRelacionadoPadre=" + idCfdiRelacionadoPadre
+				+ ", validacionTeso=" + validacionTeso + ", validacionOper=" + validacionOper + "]";
 	}
 
 }

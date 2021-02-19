@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaReportDto;
@@ -127,8 +128,15 @@ public class FacturaController {
 	}
 
 	@PostMapping("/{folio}/sustitucion")
-	public ResponseEntity<FacturaDto> createFacturaRelacionada(@RequestBody @Valid FacturaDto facturaDto)
+	public ResponseEntity<FacturaDto> postSustitucion(@RequestBody @Valid FacturaDto facturaDto)
 			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.sustitucion(facturaDto), HttpStatus.OK);
+		return new ResponseEntity<>(service.postRelacion(facturaDto, TipoDocumentoEnum.FACTURA), HttpStatus.OK);
 	}
+
+	@PostMapping("/{folio}/nota-credito")
+	public ResponseEntity<FacturaDto> postNotaCredito(@RequestBody @Valid FacturaDto facturaDto)
+			throws InvoiceManagerException {
+		return new ResponseEntity<>(service.postRelacion(facturaDto, TipoDocumentoEnum.NOTA_CREDITO), HttpStatus.OK);
+	}
+
 }

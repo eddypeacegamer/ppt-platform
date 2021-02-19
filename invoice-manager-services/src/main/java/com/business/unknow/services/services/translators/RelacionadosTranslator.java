@@ -1,10 +1,14 @@
 package com.business.unknow.services.services.translators;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
@@ -13,7 +17,7 @@ import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.dto.cfdi.RetencionDto;
 
 @Service
-public class SustitucionTranslator {
+public class RelacionadosTranslator {
 
 	public FacturaDto sustitucionComplemento(FacturaDto facturaDto) {
 		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
@@ -21,7 +25,7 @@ public class SustitucionTranslator {
 					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
 							facturaDto.getPreFolio()));
 		}
-		updateBaseInfo(facturaDto);
+		updateBaseInfoSustitucion(facturaDto);
 		facturaDto.setValidacionTeso(true);
 		return facturaDto;
 	}
@@ -32,12 +36,11 @@ public class SustitucionTranslator {
 					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
 							facturaDto.getPreFolio()));
 		}
-		updateBaseInfo(facturaDto);
+		updateBaseInfoSustitucion(facturaDto);
 		return facturaDto;
 	}
 
-	
-	private FacturaDto updateBaseInfo(FacturaDto facturaDto) {
+	private FacturaDto updateBaseInfoSustitucion(FacturaDto facturaDto) {
 		facturaDto.setCadenaOriginalTimbrado(null);
 		facturaDto.setFechaTimbrado(null);
 		facturaDto.setFolio(null);
@@ -87,4 +90,53 @@ public class SustitucionTranslator {
 		}
 		return facturaDto;
 	}
+
+	public FacturaDto notaCreditoFactura(FacturaDto facturaDto) {
+		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					String.format("La factura con el pre-folio %s no esta timbrada y no puede tener nota de credito",
+							facturaDto.getPreFolio()));
+		}
+		updateBaseInfoNotaCredito(facturaDto);
+		return facturaDto;
+	}
+
+	private FacturaDto updateBaseInfoNotaCredito(FacturaDto facturaDto) {
+		facturaDto.setCadenaOriginalTimbrado(null);
+		facturaDto.setFechaTimbrado(null);
+		facturaDto.setFolio(null);
+		facturaDto.setTipoDocumento(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion());
+		facturaDto.setTotal(BigDecimal.ZERO);
+		facturaDto.setSaldoPendiente(BigDecimal.ZERO);
+		facturaDto.setValidacionOper(false);
+		facturaDto.setValidacionTeso(true);
+		facturaDto.setNotas("");
+		facturaDto.setPreFolio("");
+		facturaDto.setSelloCfd(null);
+		facturaDto.setStatusFactura(1);
+		facturaDto.setId(0);
+		if (facturaDto.getCfdi() != null) {
+			facturaDto.getCfdi().setId(null);
+			facturaDto.getCfdi().setImpuestosRetenidos(BigDecimal.ZERO);
+			facturaDto.getCfdi().setImpuestosTrasladados(BigDecimal.ZERO);
+			facturaDto.getCfdi().setSubtotal(BigDecimal.ZERO);
+			facturaDto.getCfdi().setTotal(BigDecimal.ZERO);
+			facturaDto.getCfdi().setTipoDeComprobante("E");
+			if (facturaDto.getCfdi().getEmisor() != null) {
+				facturaDto.getCfdi().getEmisor().setId(null);
+			}
+			if (facturaDto.getCfdi().getReceptor() != null) {
+				facturaDto.getCfdi().getReceptor().setId(null);
+			}
+			facturaDto.getCfdi().setConceptos(new ArrayList<>());
+			facturaDto.getCfdi().setComplemento(null);
+		}
+		RelacionadoDto relacionadoDto = new RelacionadoDto();
+		relacionadoDto.setRelacion(facturaDto.getUuid());
+		relacionadoDto.setTipoRelacion("01");
+		facturaDto.getCfdi().setRelacionado(relacionadoDto);
+		facturaDto.setUuid(null);
+		return facturaDto;
+	}
+
 }
