@@ -48,7 +48,6 @@ export class CfdiComponent implements OnInit {
     private cfdiservice: CfdiData,
     private invoiceService : InvoicesData,
     private router: Router,
-
     private dialogService: NbDialogService) {
     }
 
