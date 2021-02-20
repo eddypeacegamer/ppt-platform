@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.LineaEmpresaEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;

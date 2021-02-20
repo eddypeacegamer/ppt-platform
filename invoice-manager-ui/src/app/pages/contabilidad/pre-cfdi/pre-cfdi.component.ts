@@ -12,7 +12,7 @@ import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PagoBase } from '../../../models/pago-base';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
@@ -96,7 +96,8 @@ export class PreCfdiComponent implements OnInit {
     private paymentsService: PaymentsData,
 
     private downloadService: DonwloadFileService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -315,6 +316,28 @@ export class PreCfdiComponent implements OnInit {
     } else {
       this.loading = false;
     }
+  }
+
+  public goToRelacionado(idCfdi:number){
+    this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
+  }
+
+  public linkInvoice(factura: Factura){
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    const fact = { ...factura };
+    fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
+      this.successMessage = 'El documento relacionado se ha generado exitosamente';
+      this.getInvoiceByIdCdfi(this.preFolio);
+      this.loading = false;
+    },(error: HttpErrorResponse) => {
+      this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+      this.loading = false;
+    });
   }
 
   public rechazarFactura() {
