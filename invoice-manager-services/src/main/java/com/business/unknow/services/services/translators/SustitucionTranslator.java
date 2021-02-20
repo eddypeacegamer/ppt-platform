@@ -48,7 +48,7 @@ public class SustitucionTranslator {
 		facturaDto.setPreFolio("");
 		facturaDto.setSelloCfd(null);
 		if(facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
-			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
 		}else {
 			facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor());
 		}
