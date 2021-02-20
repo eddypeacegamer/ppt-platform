@@ -12,7 +12,7 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Contribuyente } from '../../../models/contribuyente';
@@ -93,7 +93,8 @@ export class LineaBComponent implements OnInit {
     private cfdiValidator: CfdiValidatorService,
     private paymentsService: PaymentsData,
     private downloadService: DonwloadFileService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.loading = true;
@@ -284,6 +285,28 @@ export class LineaBComponent implements OnInit {
     }else {
       this.loading = false;
     }
+  }
+
+  public goToRelacionado(idCfdi:number){
+    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+  }
+
+  public linkInvoice(factura: Factura){
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    const fact = { ...factura };
+    fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
+      this.successMessage = 'El documento relacionado se ha generado exitosamente';
+      this.getInvoiceInfoByPreFolio(this.preFolio);
+      this.loading = false;
+    },(error: HttpErrorResponse) => {
+      this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+      this.loading = false;
+    });
   }
 
   public rechazarFactura() {

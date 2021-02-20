@@ -244,6 +244,7 @@
             <label for="inputStatus" class="label">Estatus factura</label>
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
               [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
               <option value="8">Por timbrar</option>
               <option value="3">Timbrada</option>
               <option value="7">Cancelada</option>
