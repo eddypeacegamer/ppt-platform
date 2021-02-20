@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
@@ -49,7 +50,11 @@ public class RelacionadosTranslator {
 		facturaDto.setNotas("");
 		facturaDto.setPreFolio("");
 		facturaDto.setSelloCfd(null);
-		facturaDto.setStatusFactura(1);
+		if(facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
+			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+		}else {
+			facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor());
+		}
 		facturaDto.setId(0);
 		if (facturaDto.getCfdi() != null) {
 			facturaDto.getCfdi().setId(null);
