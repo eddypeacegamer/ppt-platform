@@ -33,7 +33,7 @@ public class RelacionadosTranslator {
 
 	public FacturaDto sustitucionFactura(FacturaDto facturaDto) {
 		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					String.format("La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
 							facturaDto.getPreFolio()));
 		}
@@ -97,13 +97,15 @@ public class RelacionadosTranslator {
 	}
 
 	public FacturaDto notaCreditoFactura(FacturaDto facturaDto) {
-		if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+		if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+			updateBaseInfoNotaCredito(facturaDto);
+			return facturaDto;	
+		}else {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					String.format("La factura con el pre-folio %s no esta timbrada y no puede tener nota de credito",
 							facturaDto.getPreFolio()));
 		}
-		updateBaseInfoNotaCredito(facturaDto);
-		return facturaDto;
+		
 	}
 
 	private FacturaDto updateBaseInfoNotaCredito(FacturaDto facturaDto) {

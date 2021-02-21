@@ -117,6 +117,12 @@
             *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )">
             Sustituir Factura
           </button>
+
+          <button class="mr" nbButton status="warning" size="medium" (click)="generateCreditNoteInvoice(factura)" [nbSpinner]="loading"
+            [disabled]="loading || factura.idCfdiRelacionado"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
+            *ngIf="factura.statusFactura === 'Timbrada' && factura.tipoDocumento === 'Factura'">
+            Nota de crédito
+          </button>
         </div>
         <br/>
         <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">

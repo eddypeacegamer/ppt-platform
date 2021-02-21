@@ -230,6 +230,24 @@ export class RevisionComponent implements OnInit {
     });
   }
 
+  public generateCreditNoteInvoice(factura: Factura){
+    this.loading = true;
+    this.errorMessages = [];
+    this.successMessage = undefined;
+    const fact = { ...factura };
+    fact.cfdi = null;
+    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+    this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(result =>{
+      this.successMessage = 'La nota de credito se ha generado exitosamente';
+      this.getInvoiceInfoByPreFolio(this.preFolio);
+      this.loading = false;
+    },(error: HttpErrorResponse) => {
+      this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+      this.loading = false;
+    });
+  }
+
   public aceptarFactura() {
     this.successMessage = undefined;
     this.errorMessages = [];

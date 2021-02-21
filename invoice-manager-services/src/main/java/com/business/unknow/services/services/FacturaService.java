@@ -534,7 +534,7 @@ public class FacturaService {
 	public FacturaDto postRelacion(FacturaDto dto,TipoDocumentoEnum tipoDocumento) throws InvoiceManagerException {
 		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
 		if(TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())){
-			switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
+			switch (tipoDocumento) {
 			case FACTURA:
 				sustitucionTranslator.sustitucionFactura(facturaDto);
 				break;
