@@ -533,24 +533,29 @@ public class FacturaService {
 
 	public FacturaDto postRelacion(FacturaDto dto,TipoDocumentoEnum tipoDocumento) throws InvoiceManagerException {
 		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
-		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
-		case FACTURA:
-			sustitucionTranslator.sustitucionFactura(facturaDto);
-			break;
-		case NOTA_CREDITO:
-			sustitucionTranslator.notaCreditoFactura(facturaDto);
-			break;
-		default:
-			throw new InvoiceManagerException("The type of document not supported",
-					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
-					HttpStatus.BAD_REQUEST.value());
+		if(TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())){
+			switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
+			case FACTURA:
+				sustitucionTranslator.sustitucionFactura(facturaDto);
+				break;
+			case NOTA_CREDITO:
+				sustitucionTranslator.notaCreditoFactura(facturaDto);
+				break;
+			default:
+				throw new InvoiceManagerException("The type of document not supported",
+						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+						HttpStatus.BAD_REQUEST.value());
+			}
+			facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
+			facturaDto = insertNewFacturaWithDetail(facturaDto);
+			FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
+			facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
+			repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
+			return dto;
+		}else {
+			throw new InvoiceManagerException("El tipo de documento en la relacion no es de tipo factura", HttpStatus.BAD_REQUEST.value());
 		}
-		facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
-		facturaDto = insertNewFacturaWithDetail(facturaDto);
-		FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
-		facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
-		repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
-		return dto;
+		
 	}
 
 }

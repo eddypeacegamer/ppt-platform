@@ -118,6 +118,10 @@ export class InvoicesService {
     return this.httpClient.post(`../api/facturas/${folioFact}/sustitucion`, factura);
   }
 
+  public generateCreditNote(folioFact: string,factura: Factura): Observable <any> {
+    return this.httpClient.post(`../api/facturas/${folioFact}/nota-credito`, factura);
+  }
+
   public getInvoiceSaldo(folio: string): Observable<any>{
     return this.httpClient.get(`../api/facturas/${folio}/saldos`);
   }
