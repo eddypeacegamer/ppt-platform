@@ -288,7 +288,8 @@ public class PDFService {
 	}
 
 	private String getXSLFOTemplate(FacturaDto facturaDto) {
-		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())) {
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				|| facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion())) {
 			if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
 				return "factura-timbrada.xml";
 			} else {

@@ -367,6 +367,24 @@
                                 </block>
                             </inline-container>
                         </block>
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                    <block>
+                                        <inline padding-right="3mm" font-weight="bold">Tipo Relacion</inline>
+                                        <inline>
+                                            <xsl:value-of select="TipoRelacion" />
+                                        </inline>
+                                    </block>
+                            </inline-container>
+                             <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Relacion</inline>
+                                    <inline>
+                                        <xsl:value-of select="Relacion" />
+                                    </inline>
+                                </block>
+                            </inline-container>
+                        </block>
                     </block-container>
 
                     <!-- Timbrado -->
