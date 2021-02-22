@@ -208,6 +208,11 @@ export class RevisionComponent implements OnInit {
     );
   }
 
+  public returnToSourceFact(idCfdi:number){
+    this.successMessage = undefined;
+    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+  }
+
   public goToRelacionado(idCfdi: number) {
     this.successMessage = undefined;
     this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
