@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.Constants.FacturaSustitucionConstants;
+import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
@@ -50,9 +52,9 @@ public class RelacionadosTranslator {
 		facturaDto.setNotas("");
 		facturaDto.setPreFolio("");
 		facturaDto.setSelloCfd(null);
-		if(facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
+		if (facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
 			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
-		}else {
+		} else {
 			facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor());
 		}
 		facturaDto.setId(0);
@@ -99,13 +101,13 @@ public class RelacionadosTranslator {
 	public FacturaDto notaCreditoFactura(FacturaDto facturaDto) {
 		if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
 			updateBaseInfoNotaCredito(facturaDto);
-			return facturaDto;	
-		}else {
+			return facturaDto;
+		} else {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					String.format("La factura con el pre-folio %s no esta timbrada y no puede tener nota de credito",
 							facturaDto.getPreFolio()));
 		}
-		
+
 	}
 
 	private FacturaDto updateBaseInfoNotaCredito(FacturaDto facturaDto) {
@@ -134,8 +136,17 @@ public class RelacionadosTranslator {
 			}
 			if (facturaDto.getCfdi().getReceptor() != null) {
 				facturaDto.getCfdi().getReceptor().setId(null);
+				facturaDto.getCfdi().getReceptor().setUsoCfdi(FacturaSustitucionConstants.NOTA_CREDITO_USO_CFDI);
 			}
+			ConceptoDtoBuilder concepto = new ConceptoDtoBuilder();
+			concepto.setCantidad(new BigDecimal(1))
+					.setClaveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
+					.setDescripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
+					.setClaveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
+					.setDescripcionCUPS(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO_DESC)
+					.setValorUnitario(BigDecimal.ZERO).setImporte(BigDecimal.ZERO);
 			facturaDto.getCfdi().setConceptos(new ArrayList<>());
+			facturaDto.getCfdi().getConceptos().add(concepto.build());
 			facturaDto.getCfdi().setComplemento(null);
 		}
 		RelacionadoDto relacionadoDto = new RelacionadoDto();

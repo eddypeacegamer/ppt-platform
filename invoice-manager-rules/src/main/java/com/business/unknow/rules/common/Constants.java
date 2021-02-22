@@ -48,6 +48,9 @@ public class Constants {
 		
 		public static final String FACTURA_VALIDATION_COMP_RULE = "ValidacionFacturaComplementoRule";
 		public static final String FACTURA_VALIDATION_COMP_RULE_DESC = "Validar estado del complemento";
+	
+		public static final String FACTURA_VALIDATION_NOTA_CREDITO_RULE = "ValidacionNotaCreditoRule";
+		public static final String FACTURA_VALIDATION_NOTA_CREDITO_RULE_DESC = "Validar estado de la Nota de Credito";
 	}
 	
 	public class PaymentsSuite {
