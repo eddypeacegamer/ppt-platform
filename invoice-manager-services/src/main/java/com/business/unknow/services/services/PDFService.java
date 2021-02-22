@@ -32,6 +32,7 @@ import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoRecursoEnum;
+import com.business.unknow.enums.TipoRelacionEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.context.FacturaContext;
@@ -218,6 +219,12 @@ public class PDFService {
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			model.getFactura().getImpuestos().setTotalImpuestosTrasladados(impuestos);
+			if (factura.getCfdi() != null
+					&&factura.getCfdi().getRelacionado() != null) {
+				model.setTipoRelacion(TipoRelacionEnum
+						.findById(factura.getCfdi().getRelacionado().getTipoRelacion()).getValor());
+				model.setRelacion(factura.getCfdi().getRelacionado().getRelacion());
+			}
 			String xmlContent = new FacturaHelper().facturaPdfToXml(model);
 			String xslfoTemplate = getXSLFOTemplate(factura);
 			InputStreamReader templateReader = new InputStreamReader(
@@ -245,6 +252,12 @@ public class PDFService {
 
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
+			if (context.getFacturaDto().getCfdi() != null
+					&& context.getFacturaDto().getCfdi().getRelacionado() != null) {
+				model.setTipoRelacion(TipoRelacionEnum
+						.findById(context.getFacturaDto().getCfdi().getRelacionado().getTipoRelacion()).getValor());
+				model.setRelacion(context.getFacturaDto().getCfdi().getRelacionado().getRelacion());
+			}
 			if (context.getFacturaDto().getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 				BigDecimal montoTotal = new BigDecimal(0);
 				Optional<ComplementoPago> compLo = context.getCfdi().getComplemento().getComplemntoPago()
