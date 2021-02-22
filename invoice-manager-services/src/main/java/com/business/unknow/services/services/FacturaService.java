@@ -284,7 +284,8 @@ public class FacturaService {
 		entity.setTotal(cfdi.getTotal());
 		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA)) {
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				|| facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion())) {
 			pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
 		}
 		saveFactura.setCfdi(cfdi);
