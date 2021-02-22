@@ -25,7 +25,7 @@ export class CfdiComponent implements OnInit {
   @Input() cfdi: Cfdi;
   @Input() pagos: Pago[];
   @Input() allowEdit: Boolean;
-  @Input() factura: Factura;
+  
   @Input() module: string = '';
 
   @Output() cfdiEvent = new EventEmitter<string>();
@@ -104,7 +104,7 @@ export class CfdiComponent implements OnInit {
         this.cfdi = cfdi;
         this.loading = false;
         this.successMessage = 'CFDI actualizado correctamente';
-        this.cfdiEvent.emit(this.factura.cfdi.id.toString());
+        this.cfdiEvent.emit(this.cfdi.id.toString());
       } , (error: HttpErrorResponse) => {
         this.loading = false;
         this.dialogService.open(dialog,

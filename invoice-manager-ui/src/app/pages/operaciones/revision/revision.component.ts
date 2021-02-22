@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef} from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -9,7 +9,7 @@ import { Empresa } from '../../../models/empresa';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
@@ -27,7 +27,7 @@ import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validato
   selector: 'ngx-revision',
   templateUrl: './revision.component.html',
   styleUrls: ['./revision.component.scss'],
- 
+
 })
 
 export class RevisionComponent implements OnInit {
@@ -42,7 +42,7 @@ export class RevisionComponent implements OnInit {
   public clientsCat: Client[] = [];
   public factura: Factura = new Factura();
   public user: User;
-  public soporte: boolean=false;
+  public soporte: boolean = false;
   public successMessage: string;
   public errorMessages: string[] = [];
   public formInfo = { clientName: '', clientRfc: '*', companyRfc: '', giro: '*', empresa: '*' };
@@ -67,21 +67,21 @@ export class RevisionComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.userService.getUserInfo().then(user => this.user = user as User).then(()=>this.soporte=this.user.roles.map(a=>a.role).includes('SOPORTE'));
+    this.userService.getUserInfo().then(user => this.user = user as User).then(() => this.soporte = this.user.roles.map(a => a.role).includes('SOPORTE'));
     this.initVariables();
     /* preloaded cats*/
     this.catalogsService.getStatusValidacion().then(cat => this.validationCat = cat);
     this.catalogsService.getAllGiros().then(cat => this.girosCat = cat)
-    .then(() => {
+      .then(() => {
         this.route.paramMap.subscribe(route => {
           this.preFolio = route.get('folio');
           if (this.preFolio !== '*') {
             this.getInvoiceInfoByPreFolio(this.preFolio);
-           
+
           } else {
             this.initVariables();
           }
-        
+
         });
       });
   }
@@ -114,17 +114,17 @@ export class RevisionComponent implements OnInit {
       })).subscribe(invoice => {
         this.factura = invoice;
         this.cfdiService.getCfdiByFolio(idCfdi)
-            .subscribe(cfdi => {
+          .subscribe(cfdi => {
             this.factura.cfdi = cfdi;
             if (cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P') {
               this.pagosCfdi = cfdi.complemento.pagos;
             }
           });
-          if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
-            this.cfdiService.findPagosPPD(idCfdi)
-              .subscribe(pagos => {this.pagosCfdi = pagos; });
-          }
-          setTimeout(() => { this.loading = false; }, 1000);
+        if (invoice.metodoPago === 'PPD' && invoice.tipoDocumento === 'Factura') {
+          this.cfdiService.findPagosPPD(idCfdi)
+            .subscribe(pagos => { this.pagosCfdi = pagos; });
+        }
+        setTimeout(() => { this.loading = false; }, 1000);
       },
         error => {
           console.error('Info cant found, creating a new invoice:', error);
@@ -156,22 +156,22 @@ export class RevisionComponent implements OnInit {
     this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
   }
 
-  buscarClientInfo( razonSocial: string) {
-    if ( razonSocial !== undefined && razonSocial.length > 5) {
+  buscarClientInfo(razonSocial: string) {
+    if (razonSocial !== undefined && razonSocial.length > 5) {
       this.clientsService.getClients({ promotor: this.user.email, razonSocial: razonSocial, page: '0', size: '20' })
-          .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
-          .subscribe(clients => {
-            this.clientsCat = clients;
-            if ( clients.length > 0) {
-              this.formInfo.clientRfc = clients[0].id.toString();
-              this.onClientSelected(this.formInfo.clientRfc);
-            }
-          }, (error: HttpErrorResponse) => {
-            this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-          });
-    }else {
+        .pipe(map((clientsPage: GenericPage<Client>) => clientsPage.content))
+        .subscribe(clients => {
+          this.clientsCat = clients;
+          if (clients.length > 0) {
+            this.formInfo.clientRfc = clients[0].id.toString();
+            this.onClientSelected(this.formInfo.clientRfc);
+          }
+        }, (error: HttpErrorResponse) => {
+          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
+          this.clientsCat = [];
+          this.clientInfo = undefined;
+        });
+    } else {
       this.clientsCat = [];
       this.clientInfo = undefined;
     }
@@ -208,11 +208,11 @@ export class RevisionComponent implements OnInit {
     );
   }
 
-  public goToRelacionado(idCfdi:number){
+  public goToRelacionado(idCfdi: number) {
     this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
   }
 
-  public linkInvoice(factura: Factura){
+  public linkInvoice(factura: Factura) {
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
@@ -220,17 +220,17 @@ export class RevisionComponent implements OnInit {
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
 
-    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result =>{
+    this.invoiceService.generateReplacement(factura.folio, fact).subscribe(result => {
       this.successMessage = 'El documento relacionado se ha generado exitosamente';
       this.getInvoiceInfoByPreFolio(this.preFolio);
       this.loading = false;
-    },(error: HttpErrorResponse) => {
+    }, (error: HttpErrorResponse) => {
       this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
       this.loading = false;
     });
   }
 
-  public generateCreditNoteInvoice(factura: Factura){
+  public generateCreditNoteInvoice(factura: Factura) {
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
@@ -238,11 +238,11 @@ export class RevisionComponent implements OnInit {
     fact.cfdi = null;
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
 
-    this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(result =>{
+    this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(result => {
       this.successMessage = 'La nota de credito se ha generado exitosamente';
       this.getInvoiceInfoByPreFolio(this.preFolio);
       this.loading = false;
-    },(error: HttpErrorResponse) => {
+    }, (error: HttpErrorResponse) => {
       this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`);
       this.loading = false;
     });
@@ -258,11 +258,11 @@ export class RevisionComponent implements OnInit {
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
       this.getInvoiceInfoByPreFolio(this.preFolio);
-      }, (error: HttpErrorResponse) => {
-        this.loading = false;
-        this.errorMessages.push((error.error != null && error.error !== undefined) ?
-          error.error.message : `${error.statusText} : ${error.message}`);
-      });
+    }, (error: HttpErrorResponse) => {
+      this.loading = false;
+      this.errorMessages.push((error.error != null && error.error !== undefined) ?
+        error.error.message : `${error.statusText} : ${error.message}`);
+    });
   }
 
   public rechazarFactura() {
@@ -274,42 +274,57 @@ export class RevisionComponent implements OnInit {
     this.invoiceService.updateInvoice(fact).subscribe(result => {
       this.loading = false;
       this.getInvoiceInfoByPreFolio(this.preFolio);
-      }, (error: HttpErrorResponse) => {
-        this.loading = false;
-        this.errorMessages.push((error.error != null && error.error !== undefined) ?
-          error.error.message : `${error.statusText} : ${error.message}`);
-      });
+    }, (error: HttpErrorResponse) => {
+      this.loading = false;
+      this.errorMessages.push((error.error != null && error.error !== undefined) ?
+        error.error.message : `${error.statusText} : ${error.message}`);
+    });
   }
 
-  public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
+  public async timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
     this.successMessage = undefined;
     this.errorMessages = [];
-    const fact = { ...factura };
-    fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    this.clientsService.getClientsByPromotorAndRfc(this.factura.solicitante,this.factura.cfdi.receptor.rfc)
-    .subscribe((client: Client) => {
-    if (client.activo) {
-      this.dialogService.open(dialog, { context: fact })
-      .onClose.subscribe(invoice => {
-        this.loading = true;
-        if (invoice !== undefined) {
-          this.invoiceService.timbrarFactura(fact.folio, invoice)
-            .subscribe(result => {
-              this.loading = false;
-              this.getInvoiceInfoByPreFolio(this.preFolio);
-            }, (error: HttpErrorResponse) => {
-                this.loading = false;
-                this.errorMessages.push((error.error != null && error.error != undefined) ?
-                error.error.message : `${error.statusText} : ${error.message}`);});
-        }else {
-          this.loading = false;
+
+    try {
+      if (factura.tipoDocumento === 'NotaDeCredito') {
+        let sourceFact:Factura = await this.cfdiService.getFacturaInfo(factura.idCfdiRelacionadoPadre).toPromise();
+        if(sourceFact.total<= factura.total){
+          this.errorMessages.push('El total de la nota de credito no puede ser superior al total de la factura original');
         }
-      });
-    } else {
-      this.loading = false;
-      this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
-    }});
+      }
+      const fact = { ...factura };
+      fact.cfdi = null;
+      fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+      let client: Client = await this.clientsService.getClientsByPromotorAndRfc(this.factura.solicitante, this.factura.cfdi.receptor.rfc).toPromise();
+
+      if (client.activo) {
+        this.dialogService.open(dialog, { context: fact })
+          .onClose.subscribe(invoice => {
+            this.loading = true;
+            if (invoice !== undefined) {
+              this.invoiceService.timbrarFactura(fact.folio, invoice)
+                .subscribe(result => {
+                  this.loading = false;
+                  this.getInvoiceInfoByPreFolio(this.preFolio);
+                }, (error: HttpErrorResponse) => {
+                  this.loading = false;
+                  this.errorMessages.push((error.error != null && error.error != undefined) ?
+                    error.error.message : `${error.statusText} : ${error.message}`);
+                });
+            } else {
+              this.loading = false;
+            }
+          });
+      } else {
+        this.loading = false;
+        this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
+      }
+
+    } catch (error) {
+      this.errorMessages.push((error.error != null && error.error != undefined) ?
+        error.error.message : `${error.statusText} : ${error.message}`);
+    }
   }
 
 
@@ -320,19 +335,19 @@ export class RevisionComponent implements OnInit {
     let fact = { ...factura };
     fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
     this.invoiceService.cancelarFactura(fact.folio, fact)
-      .subscribe(success =>{this.successMessage = 'Factura correctamente cancelada';
-      this.getInvoiceInfoByPreFolio(this.preFolio);
-    }, (error: HttpErrorResponse) => {
-          this.errorMessages.push((error.error != null && error.error != undefined) ?
-          error.error.message : `${error.statusText} : ${error.message}`); 
-          this.loading = false;
-          console.error(this.errorMessages); });
+      .subscribe(success => {
+        this.successMessage = 'Factura correctamente cancelada';
+        this.getInvoiceInfoByPreFolio(this.preFolio);
+      }, (error: HttpErrorResponse) => {
+        this.errorMessages.push((error.error != null && error.error != undefined) ?
+          error.error.message : `${error.statusText} : ${error.message}`);
+        this.loading = false;
+        console.error(this.errorMessages);
+      });
   }
 
   isValidCfdi(): boolean {
     return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
-}
+  }
 
-
- 
 }

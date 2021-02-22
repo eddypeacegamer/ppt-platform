@@ -126,12 +126,13 @@
             [(ngModel)]="cfdi.tipoDeComprobante">
             <option value="*">Seleccionar</option>
             <option value="I">Factura Ingreso</option>
+            <option value="E">Factura Egreso(Nota credito)</option>
             <option value="P">Complemento(pago)</option>
           </select>
         </div>
         <div class="col-md-2"  *ngIf="cfdi.receptor">
           <label for="inputPaytype" class="label">Uso CFDI</label>
-          <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="!allowEdit"
+          <select selected="1" id="inputPaytype" style="display:block;" class="form-control" [disabled]="!allowEdit || cfdi.tipoDeComprobante === 'E'"
             [(ngModel)]="cfdi.receptor.usoCfdi">
             <option value="*">Seleccionar</option>
             <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">{{clave.clave}}-{{clave.descripcion}}</option>
@@ -170,9 +171,8 @@
           
         </div>
       </div>
-    
-   <p>{{errorMessages}}</p>
 
+   <p>{{errorMessages}}</p>
     <br>
     <div class="slide_3" *ngIf="cfdi.tipoDeComprobante !== 'P'">
       <ngx-conceptos [(cfdi)]="cfdi" [concepto]= "newConcep" [allowEdit]= "allowEdit"></ngx-conceptos>
@@ -206,19 +206,7 @@
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P'"
                     (click)="redirectToCfdi(complemento.folio)"><i class="fa fa-search"></i>
-                  </button> &nbsp;&nbsp;
-<!--                 <button type="button" [disabled]="complemento.idDocumento === undefined" class="btn btn-sm"
-                  [ngClass]="{'btn-outline-secondary': complemento.idDocumento === undefined, 'btn-outline-primary':complemento.idDocumento !== undefined}"
-                  (click)="downloadPdf(complemento.folio)">
-                  <i class="fa fa-file-pdf"></i> 
-                </button>&nbsp;&nbsp;
-                <button type="button" [disabled]="complemento.idDocumento === undefined" class="btn btn-sm"
-                [ngClass]="{'btn-outline-secondary': complemento.idDocumento === undefined, 'btn-outline-primary':complemento.idDocumento !== undefined}"
-                  (click)="downloadXml(complemento.folio)">
-                  <i class="fa fa-code"></i>
                 </button>
-                &nbsp;&nbsp; -->
-               
               </td>
               <td scope="row" class="text-center">{{complemento.folio}}</td>
               <td scope="row" class="text-center">{{complemento.idDocumento}}</td>
