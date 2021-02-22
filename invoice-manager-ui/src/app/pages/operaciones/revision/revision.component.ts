@@ -213,6 +213,7 @@ export class RevisionComponent implements OnInit {
   }
 
   public linkInvoice(factura: Factura) {
+    this.successMessage = undefined;
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
@@ -231,6 +232,7 @@ export class RevisionComponent implements OnInit {
   }
 
   public generateCreditNoteInvoice(factura: Factura) {
+    this.successMessage = undefined;
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
@@ -289,40 +291,31 @@ export class RevisionComponent implements OnInit {
       const fact = { ...factura };
       fact.cfdi = null;
       fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-      let sourceFact:Factura;
-      if (factura.tipoDocumento === 'NotaDeCredito') {
-        let sourceFact = await this.cfdiService.getFacturaInfo(factura.idCfdiRelacionadoPadre).toPromise();
-      }
+
       let client: Client = await this.clientsService.getClientsByPromotorAndRfc(this.factura.solicitante, this.factura.cfdi.receptor.rfc).toPromise();
 
       if (client.activo) {
         this.dialogService.open(dialog, { context: fact })
           .onClose.subscribe(invoice => {
             this.loading = true;
-
-            if( sourceFact!== undefined && sourceFact.total<= factura.total){
-              this.errorMessages.push('El total de la nota de credito no puede ser superior al total de la factura original');
-            }else{
-              if (invoice !== undefined) {
-                this.invoiceService.timbrarFactura(fact.folio, invoice)
-                  .subscribe(result => {
-                    this.loading = false;
-                    this.getInvoiceInfoByPreFolio(this.preFolio);
-                  }, (error: HttpErrorResponse) => {
-                    this.loading = false;
-                    this.errorMessages.push((error.error != null && error.error != undefined) ?
-                      error.error.message : `${error.statusText} : ${error.message}`);
-                  });
-              } else {
-                this.loading = false;
-              }
+            if (invoice !== undefined) {
+              this.invoiceService.timbrarFactura(fact.folio, invoice)
+                .subscribe(result => {
+                  this.loading = false;
+                  this.getInvoiceInfoByPreFolio(this.preFolio);
+                }, (error: HttpErrorResponse) => {
+                  this.loading = false;
+                  this.errorMessages.push((error.error != null && error.error != undefined) ?
+                    error.error.message : `${error.statusText} : ${error.message}`);
+                });
+            } else {
+              this.loading = false;
             }
           });
       } else {
         this.loading = false;
         this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
       }
-
     } catch (error) {
       this.errorMessages.push((error.error != null && error.error != undefined) ?
         error.error.message : `${error.statusText} : ${error.message}`);
