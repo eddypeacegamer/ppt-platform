@@ -144,7 +144,7 @@ public class RelacionadosTranslator {
 					.setDescripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
 					.setClaveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
 					.setDescripcionCUPS(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO_DESC)
-					.setValorUnitario(BigDecimal.ZERO).setImporte(BigDecimal.ZERO);
+					.setValorUnitario(BigDecimal.ZERO).setImporte(BigDecimal.ZERO).setDescuento(BigDecimal.ZERO);
 			facturaDto.getCfdi().setConceptos(new ArrayList<>());
 			facturaDto.getCfdi().getConceptos().add(concepto.build());
 			facturaDto.getCfdi().setComplemento(null);

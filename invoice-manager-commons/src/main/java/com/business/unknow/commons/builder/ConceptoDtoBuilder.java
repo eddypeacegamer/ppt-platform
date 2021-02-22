@@ -44,5 +44,10 @@ public class ConceptoDtoBuilder extends AbstractBuilder<ConceptoDto> {
 		instance.setValorUnitario(valorUnitario);
 		return this;
 	}
+	
+	public ConceptoDtoBuilder setDescuento(BigDecimal descuento) {
+		instance.setDescuento(descuento);
+		return this;
+	}
 
 }
