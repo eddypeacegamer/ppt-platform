@@ -16,6 +16,13 @@ public class Constants {
 	public static final Long MILISECONDS_PER_DAY = 86400000L;
 	public static final int DEFAULT_SCALE = 2;
 
+	public class FacturaSustitucionConstants {
+		public static final String NOTA_CREDITO_USO_CFDI = "G02";
+		public static final String NOTA_CREDITO_CLAVE_CONCEPTO="84111506";
+		public static final String NOTA_CREDITO_CLAVE_UNIDAD="ACT";
+		public static final String NOTA_CREDITO_DESC_CONCEPTO="Devolucion";
+		public static final String NOTA_CREDITO_CLAVE_CONCEPTO_DESC="Servicios de facturación";
+	}
 	public class FacturaConstants {
 		public static final String FACTURA_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 		public static final String REPLACE_CHARACTER = "-";
