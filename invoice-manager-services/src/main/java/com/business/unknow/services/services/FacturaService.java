@@ -398,8 +398,19 @@ public class FacturaService {
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
-		case FACTURA:
 		case NOTA_CREDITO:
+			if (facturaDto.getIdCfdiRelacionadoPadre() != null) {
+				FacturaDto facturaPadre = getFacturaBaseByPrefolio(facturaDto.getIdCfdiRelacionadoPadre());
+				if (facturaDto.getTotal().compareTo(facturaPadre.getTotal()) > 0
+						|| facturaDto.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+					throw new InvoiceManagerException("El monto total de la nota credito es invalido",
+							"Nota de credito invalida", HttpStatus.CONFLICT.value());
+				}
+			} else {
+				throw new InvoiceManagerException("Nota de credito invalida", "No esta correctamente referenciada",
+						HttpStatus.CONFLICT.value());
+			}
+		case FACTURA:
 			facturaContext = facturaTranslator.translateFactura(facturaContext);
 			break;
 		case COMPLEMENTO:
