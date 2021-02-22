@@ -209,11 +209,11 @@ export class RevisionComponent implements OnInit {
   }
 
   public goToRelacionado(idCfdi: number) {
+    this.successMessage = undefined;
     this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
   }
 
   public linkInvoice(factura: Factura) {
-    this.successMessage = undefined;
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
@@ -232,7 +232,6 @@ export class RevisionComponent implements OnInit {
   }
 
   public generateCreditNoteInvoice(factura: Factura) {
-    this.successMessage = undefined;
     this.loading = true;
     this.errorMessages = [];
     this.successMessage = undefined;
