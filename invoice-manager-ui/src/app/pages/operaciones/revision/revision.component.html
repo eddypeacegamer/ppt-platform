@@ -72,8 +72,6 @@
           </div>
         </div>
         <br>
-      
-      
         <div  *ngIf="!loading"> 
           <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
             [allowEdit]="factura.tipoDocumento !== 'Complemento' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
