@@ -219,6 +219,9 @@ public class PDFService {
 			FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
 			model.getFactura().getImpuestos().setTotalImpuestosTrasladados(impuestos);
+			if(factura.getUuid()!=null) {
+				model.setUuid(factura.getUuid());
+			}
 			if (factura.getCfdi() != null
 					&&factura.getCfdi().getRelacionado() != null) {
 				model.setTipoRelacion(TipoRelacionEnum
@@ -252,6 +255,9 @@ public class PDFService {
 
 			FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
 			model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
+			if(context.getFacturaDto().getUuid()!=null) {
+				model.setUuid(context.getFacturaDto().getUuid());
+			}
 			if (context.getFacturaDto().getCfdi() != null
 					&& context.getFacturaDto().getCfdi().getRelacionado() != null) {
 				model.setTipoRelacion(TipoRelacionEnum

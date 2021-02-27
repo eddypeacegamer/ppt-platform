@@ -82,7 +82,7 @@
                                         FOLIO FISCAL
                                     </block>
                                     <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
-                                        <xsl:value-of select="factura/cfdi:Complemento/@UUID" />
+                                        <xsl:value-of select="UUID" />
                                     </block>
                                 </block-container>
                             </inline-container>

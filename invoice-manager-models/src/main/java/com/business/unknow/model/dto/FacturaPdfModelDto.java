@@ -51,6 +51,8 @@ public class FacturaPdfModelDto implements Serializable {
 	private String tipoRelacion;
 	@XmlElement(name = "Relacion")
 	private String relacion;
+	@XmlElement(name = "UUID")
+	private String uuid;
 
 	public FacturaPdfModelDto() {
 		super();
@@ -207,6 +209,14 @@ public class FacturaPdfModelDto implements Serializable {
 		this.relacion = relacion;
 	}
 
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 	@Override
 	public String toString() {
 		return "FacturaPdfModelDto [qr=" + qr + ", cadenaOriginal=" + cadenaOriginal + ", folioPadre=" + folioPadre
@@ -215,7 +225,7 @@ public class FacturaPdfModelDto implements Serializable {
 				+ metodoPagoDesc + ", direccionEmisor=" + direccionEmisor + ", direccionReceptor=" + direccionReceptor
 				+ ", tipoDeComprobanteDesc=" + tipoDeComprobanteDesc + ", logotipo=" + logotipo + ", factura=" + factura
 				+ ", montoTotalDesc=" + montoTotalDesc + ", montoTotal=" + montoTotal + ", tipoRelacion=" + tipoRelacion
-				+ ", relacion=" + relacion + "]";
+				+ ", relacion=" + relacion + ", uuid=" + uuid + "]";
 	}
 
 }

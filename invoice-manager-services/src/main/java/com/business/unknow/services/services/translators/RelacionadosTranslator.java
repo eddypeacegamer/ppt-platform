@@ -11,6 +11,7 @@ import com.business.unknow.Constants.FacturaSustitucionConstants;
 import com.business.unknow.commons.builder.ConceptoDtoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.LineaEmpresaEnum;
+import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
@@ -53,7 +54,12 @@ public class RelacionadosTranslator {
 		facturaDto.setPreFolio("");
 		facturaDto.setSelloCfd(null);
 		if (facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
-			facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+			if (facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
+				facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+			}else {
+				facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+			}
+			
 		} else {
 			facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor());
 		}
