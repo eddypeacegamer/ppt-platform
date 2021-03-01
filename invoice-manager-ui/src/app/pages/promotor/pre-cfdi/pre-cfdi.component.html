@@ -67,7 +67,7 @@
         </div>
       
           <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'" (cfdiEvent)="getInvoiceInfoByIdCdfi($event)"
-            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
+            [allowEdit]="factura.tipoDocumento !== 'Complemento' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
           </ngx-cfdi>
           
           <div class="row" *ngIf="factura.cfdi && factura.statusDetail && factura.statusDetail.length > 0">

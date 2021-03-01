@@ -4,6 +4,7 @@ import { PagoBase } from '../../../../models/pago-base';
 import { FilesData } from '../../../../@core/data/files-data';
 import { DomSanitizer, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
 import { DonwloadFileService } from '../../../../@core/util-services/download-file-service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'ngx-validacion-pago',
   templateUrl: './validacion-pago.component.html',
@@ -16,16 +17,19 @@ export class ValidacionPagoComponent implements OnInit {
   public comprobanteUrl: SafeUrl;
   public updatedPayment: PagoBase;
   public errors: string[] = [];
+  public module : string = 'operaciones';
 
   public cosa: string;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
     private filesService: FilesData,
+    private router: Router,
     private downloadService: DonwloadFileService,
     private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.errors = [];
+    this.module = this.router.url.split('/')[2];
     this.mostrarComprobante(this.pago);
     this.updatedPayment = { ... this.pago };
   }
@@ -71,40 +75,8 @@ export class ValidacionPagoComponent implements OnInit {
 
   //TODO talvez mover a servicio de descarga de imagenes
   onDownload() {
-    const blobData = this.convertBase64ToBlobData(this.cosa.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
-    let filename = `${this.pago.fechaPago}.jpeg`;
-    let contentType = 'image/jpeg';
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blobData, filename);
-    } else {
-      const blob = new Blob([blobData], { type: contentType });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      link.click();
-    }
+    let dataType = this.cosa.split(';base64,')[0].replace('data:',''); 
+    console.log('Downloading file : ', dataType);
+    this.downloadService.downloadFile(this.cosa.split(';base64,')[1],`${this.pago.banco}-${this.pago.acredor}-${this.pago.fechaPago}.${dataType.split('/')[1]}`,dataType);
   }
-
-  convertBase64ToBlobData(base64Data: string, contentType: string = 'image/png', sliceSize = 512) {
-    const byteCharacters = atob(base64Data);
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-
-      byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays, { type: contentType });
-    return blob;
-  }
-
 }

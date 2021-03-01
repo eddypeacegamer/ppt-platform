@@ -5,6 +5,7 @@ public enum TipoDocumentoEnum {
 	FACTURA(1,"Factura"),
 	COMPLEMENTO(2,"Complemento"),
 	PREGUNTAR(3,"PREGUNTAR"),
+	NOTA_CREDITO(4,"NotaDeCredito"),
 	NOT_VALID(0,"NOT_VALID");
 
 	private Integer valor;

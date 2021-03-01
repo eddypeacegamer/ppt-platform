@@ -20,5 +20,6 @@ export abstract class InvoicesData {
     abstract updateInvoice(invoice: Factura): Observable<Factura>;
     abstract generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable<Factura>;
     abstract generateReplacement(folioFact: string,factura: Factura): Observable<Factura>;
+    abstract generateCreditNote(folioFact: string,factura: Factura): Observable<Factura>;
     abstract reSendEmail(folio: string, factura: Factura): Observable<any>;
 }

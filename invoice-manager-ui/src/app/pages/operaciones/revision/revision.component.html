@@ -20,6 +20,11 @@
             <i class="fa fa-link"></i>
           </button>
           &nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
+            class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="returnToSourceFact(factura.idCfdiRelacionadoPadre)">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <span class="badge badge-secondary ml-1 mr-1 float-right"  
            *ngIf="factura.cfdi" > 
            <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO : {{factura.cfdi.relacionado.relacion}}</strong>
@@ -72,11 +77,9 @@
           </div>
         </div>
         <br>
-      
-      
         <div  *ngIf="!loading"> 
           <ngx-cfdi class="slide_1" [cfdi]="factura.cfdi" [pagos]="pagosCfdi" 
-            [allowEdit]="factura.tipoDocumento === 'Factura' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
+            [allowEdit]="factura.tipoDocumento !== 'Complemento' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria' || factura.statusFactura=='Por Timbrar')">
           </ngx-cfdi>
         </div>
 
@@ -116,6 +119,12 @@
             [disabled]="loading || factura.idCfdiRelacionado"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
             *ngIf="factura.statusFactura === 'Cancelada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )">
             Sustituir Factura
+          </button>
+
+          <button class="mr" nbButton status="warning" size="medium" (click)="generateCreditNoteInvoice(factura)" [nbSpinner]="loading"
+            [disabled]="loading || factura.idCfdiRelacionado"  nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage=""
+            *ngIf="factura.statusFactura === 'Timbrada' && factura.tipoDocumento === 'Factura'">
+            Nota de crédito
           </button>
         </div>
         <br/>

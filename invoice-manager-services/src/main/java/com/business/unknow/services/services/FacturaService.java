@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.services.services.translators.SustitucionTranslator;
+import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -119,9 +119,9 @@ public class FacturaService {
 
 	@Autowired
 	private PagoService pagoService;
-	
+
 	@Autowired
-	private SustitucionTranslator sustitucionTranslator;
+	private RelacionadosTranslator sustitucionTranslator;
 
 	private FacturaValidator validator = new FacturaValidator();
 
@@ -284,7 +284,8 @@ public class FacturaService {
 		entity.setTotal(cfdi.getTotal());
 		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA)) {
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				|| facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion())) {
 			pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
 		}
 		saveFactura.setCfdi(cfdi);
@@ -397,6 +398,18 @@ public class FacturaService {
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
+		case NOTA_CREDITO:
+			if (facturaDto.getIdCfdiRelacionadoPadre() != null) {
+				FacturaDto facturaPadre = getFacturaBaseByPrefolio(facturaDto.getIdCfdiRelacionadoPadre());
+				if (facturaDto.getTotal().compareTo(facturaPadre.getTotal()) > 0
+						|| facturaDto.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+					throw new InvoiceManagerException("El monto total de la nota credito es invalido",
+							"Nota de credito invalida", HttpStatus.CONFLICT.value());
+				}
+			} else {
+				throw new InvoiceManagerException("Nota de credito invalida", "No esta correctamente referenciada",
+						HttpStatus.CONFLICT.value());
+			}
 		case FACTURA:
 			facturaContext = facturaTranslator.translateFactura(facturaContext);
 			break;
@@ -525,29 +538,38 @@ public class FacturaService {
 		pdfService.generateInvoicePDF(factura, null);
 	}
 
-	// RENVIAR CORREOS
 	public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
 		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
 		return facturaContext;
 	}
 
-	public FacturaDto sustitucion(FacturaDto dto) throws InvoiceManagerException {
+	public FacturaDto postRelacion(FacturaDto dto, TipoDocumentoEnum tipoDocumento) throws InvoiceManagerException {
 		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
-		switch (TipoDocumentoEnum.findByDesc(facturaDto.getTipoDocumento())) {
-		case FACTURA:
-			sustitucionTranslator.sustitucionFactura(facturaDto);
+		if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
+			switch (tipoDocumento) {
+			case FACTURA:
+				sustitucionTranslator.sustitucionFactura(facturaDto);
+				break;
+			case NOTA_CREDITO:
+				sustitucionTranslator.notaCreditoFactura(facturaDto);
+				break;
+			default:
+				throw new InvoiceManagerException("The type of document not supported",
+						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+						HttpStatus.BAD_REQUEST.value());
+			}
+			facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
 			facturaDto = insertNewFacturaWithDetail(facturaDto);
-			break;
-		default:
-			throw new InvoiceManagerException("The type of document not supported",
-					String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+			FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
+			facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
+			repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
+			return dto;
+		} else {
+			throw new InvoiceManagerException("El tipo de documento en la relacion no es de tipo factura",
 					HttpStatus.BAD_REQUEST.value());
 		}
-		FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
-		facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
-		repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
-		return dto;
+
 	}
 
 }

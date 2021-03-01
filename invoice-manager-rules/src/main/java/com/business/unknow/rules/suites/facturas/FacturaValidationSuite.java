@@ -5,6 +5,7 @@ import org.jeasy.rules.api.Rules;
 import com.business.unknow.rules.factura.ValidacionFacturaComplementoRule;
 import com.business.unknow.rules.factura.ValidacionFacturaPpdRule;
 import com.business.unknow.rules.factura.ValidacionFacturaPueRule;
+import com.business.unknow.rules.factura.ValidacionNotaCreditoRule;
 import com.business.unknow.rules.suites.InvoiceManagerSuite;
 
 public class FacturaValidationSuite implements InvoiceManagerSuite {
@@ -15,6 +16,7 @@ public class FacturaValidationSuite implements InvoiceManagerSuite {
 		rules.register(new ValidacionFacturaComplementoRule());
 		rules.register(new ValidacionFacturaPueRule());
 		rules.register(new ValidacionFacturaPpdRule());
+		rules.register(new ValidacionNotaCreditoRule());
 	}
 
 	@Override

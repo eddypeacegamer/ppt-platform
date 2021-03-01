@@ -20,6 +20,7 @@ export class PagosComponent implements OnInit {
 
   public user: User;
   public vista: string = 'validacion-pagos';
+  public module: string = 'operaciones';
   public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
   public errors: string[] = [];
   public page: GenericPage<any> = new GenericPage();
@@ -37,6 +38,7 @@ export class PagosComponent implements OnInit {
 
 
     this.vista = this.router.url.split('/')[3];
+    this.module = this.router.url.split('/')[2];
     if (this.vista === 'validacion-pagos') {
       this.filterParams.status = 'VALIDACION';
     }
@@ -73,6 +75,7 @@ export class PagosComponent implements OnInit {
         .subscribe(updatedPayment => pago = updatedPayment,
           (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
     } else {
+      alert('El solicitante del pago no puede validar el pago.');
       this.errors.push('El solicitante del pago no puede validar el pago.');
     }
   }
@@ -86,6 +89,7 @@ export class PagosComponent implements OnInit {
         .subscribe(updatedPayment => pago = updatedPayment,
           (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
     } else {
+      alert('El segundo revisor, no puede ser ni el solicitante ni el primer revisor.');
       this.errors.push('El segundo revisor, no puede ser ni el solicitante ni el primer revisor.');
     }
   }

@@ -47,6 +47,12 @@ public class FacturaPdfModelDto implements Serializable {
 	private String montoTotalDesc;
 	@XmlElement(name = "montoTotal")
 	private BigDecimal montoTotal;
+	@XmlElement(name = "TipoRelacion")
+	private String tipoRelacion;
+	@XmlElement(name = "Relacion")
+	private String relacion;
+	@XmlElement(name = "UUID")
+	private String uuid;
 
 	public FacturaPdfModelDto() {
 		super();
@@ -187,13 +193,39 @@ public class FacturaPdfModelDto implements Serializable {
 		this.montoTotal = montoTotal;
 	}
 
+	public String getTipoRelacion() {
+		return tipoRelacion;
+	}
+
+	public void setTipoRelacion(String tipoRelacion) {
+		this.tipoRelacion = tipoRelacion;
+	}
+
+	public String getRelacion() {
+		return relacion;
+	}
+
+	public void setRelacion(String relacion) {
+		this.relacion = relacion;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 	@Override
 	public String toString() {
-		return "FacturaPdfModelDto [qr=" + qr + ", cadenaOriginal=" + cadenaOriginal + ", totalDesc=" + totalDesc
-				+ ", subTotalDesc=" + subTotalDesc + ", usoCfdiDesc=" + usoCfdiDesc + ", regimenFiscalDesc="
-				+ regimenFiscalDesc + ", formaPagoDesc=" + formaPagoDesc + ", metodoPagoDesc=" + metodoPagoDesc
+		return "FacturaPdfModelDto [qr=" + qr + ", cadenaOriginal=" + cadenaOriginal + ", folioPadre=" + folioPadre
+				+ ", totalDesc=" + totalDesc + ", subTotalDesc=" + subTotalDesc + ", usoCfdiDesc=" + usoCfdiDesc
+				+ ", regimenFiscalDesc=" + regimenFiscalDesc + ", formaPagoDesc=" + formaPagoDesc + ", metodoPagoDesc="
+				+ metodoPagoDesc + ", direccionEmisor=" + direccionEmisor + ", direccionReceptor=" + direccionReceptor
 				+ ", tipoDeComprobanteDesc=" + tipoDeComprobanteDesc + ", logotipo=" + logotipo + ", factura=" + factura
-				+ "]";
+				+ ", montoTotalDesc=" + montoTotalDesc + ", montoTotal=" + montoTotal + ", tipoRelacion=" + tipoRelacion
+				+ ", relacion=" + relacion + ", uuid=" + uuid + "]";
 	}
 
 }

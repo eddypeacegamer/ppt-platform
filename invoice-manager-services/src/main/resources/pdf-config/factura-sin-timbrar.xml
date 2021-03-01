@@ -83,7 +83,7 @@
                                         FOLIO FISCAL
                                     </block>
                                     <block text-align="center" padding-bottom="0.5mm" padding-top="0.5mm">
-                                        <xsl:value-of select="factura/cfdi:Complemento/@UUID" />
+                                        <xsl:value-of select="UUID" />
                                     </block>
                                 </block-container>
                             </inline-container>
@@ -363,6 +363,24 @@
                                     <inline padding-right="3mm" font-weight="bold">Moneda</inline>
                                     <inline>
                                         <xsl:value-of select="factura/@Moneda" />
+                                    </inline>
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block text-align="left">
+                            <inline-container margin-left="3mm" width="122mm">
+                                    <block>
+                                        <inline padding-right="3mm" font-weight="bold">Tipo Relacion</inline>
+                                        <inline>
+                                            <xsl:value-of select="TipoRelacion" />
+                                        </inline>
+                                    </block>
+                            </inline-container>
+                             <inline-container width="75mm">
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Relacion</inline>
+                                    <inline>
+                                        <xsl:value-of select="Relacion" />
                                     </inline>
                                 </block>
                             </inline-container>

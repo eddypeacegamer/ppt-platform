@@ -25,6 +25,11 @@ public class ConceptoDtoBuilder extends AbstractBuilder<ConceptoDto> {
 		return this;
 	}
 	
+	public ConceptoDtoBuilder setDescripcionCUPS(String descripcionCUPS) {
+		instance.setDescripcionCUPS(descripcionCUPS);
+		return this;
+	}
+	
 	public ConceptoDtoBuilder setDescripcion(String descripcion) {
 		instance.setDescripcion(descripcion);
 		return this;
@@ -37,6 +42,11 @@ public class ConceptoDtoBuilder extends AbstractBuilder<ConceptoDto> {
 	
 	public ConceptoDtoBuilder setValorUnitario(BigDecimal valorUnitario) {
 		instance.setValorUnitario(valorUnitario);
+		return this;
+	}
+	
+	public ConceptoDtoBuilder setDescuento(BigDecimal descuento) {
+		instance.setDescuento(descuento);
 		return this;
 	}
 

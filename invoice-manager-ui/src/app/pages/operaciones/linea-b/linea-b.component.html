@@ -20,6 +20,11 @@
           <i class="fa fa-link"></i>
         </button>
         &nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
+            class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="returnToSourceFact(factura.idCfdiRelacionadoPadre)">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <span class="badge badge-secondary ml-1 mr-1 float-right" *ngIf="factura.cfdi">
           <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO : {{factura.cfdi.relacionado.relacion}}</strong>
         </span>

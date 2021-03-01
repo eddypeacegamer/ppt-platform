@@ -318,7 +318,13 @@ export class PreCfdiComponent implements OnInit {
     }
   }
 
+  public returnToSourceFact(idCfdi:number){
+    this.successMessage = undefined;
+    this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
+  }
+
   public goToRelacionado(idCfdi:number){
+    this.successMessage = undefined;
     this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
   }
 

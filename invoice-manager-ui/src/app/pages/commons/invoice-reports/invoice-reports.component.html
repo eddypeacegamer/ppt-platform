@@ -388,12 +388,12 @@
                     [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                     (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-primary"
+                  <!--button type="button" class="btn btn-sm btn-outline-primary"
                     *ngIf="module !== 'promotor' && module !== 'contabilidad'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
-                  </button>
+                  </button-->
                   <button type="button" class="btn btn-sm btn-outline-primary"
                     (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-file-pdf"></i>
