@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [{ title: 'V2.013' }];
+  userMenu = [{ title: 'V2.014' }];
 
   constructor(private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -53,7 +53,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.currentTheme = this.themeService.currentTheme;
 
     this.userService.getUserInfo()
-      //.pipe(takeUntil(this.destroy$))
       .then((user: any) => this.user = user,
       (error:HttpErrorResponse) => {console.log(error.status); if(error.status==401){ this.logout()}});
 

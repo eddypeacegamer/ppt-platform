@@ -3,7 +3,7 @@
     <nb-card class="inline-form-card">
       <nb-card-header class="puff_center">Validación de pagos</nb-card-header>
       <nb-card-body>
-        <div class="row slide_1" *ngIf="vista==='validacion-pagos'">
+        <div class="row slide_1" *ngIf="vista==='validacion-pagos' || vista === 'pagos'">
           <div class="col-md-2">
             <label for="acredor" class="label">Razon Social Empresa</label>
             <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
@@ -155,20 +155,20 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
-                <td scope="row" *ngIf="vista==='validacion-pagos'">
+                <td scope="row" *ngIf="vista==='validacion-pagos' || vista === 'pagos'">
                   <div class="form-inline" style="width: 150px;">
-                    <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
-                        class="fa fa-search"></i></button>
+                    <button type="button" (click)="openDialog(fila)"
+                    class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
                     &nbsp;
-                    <button class="btn-sm"
+                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
                       [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                     &nbsp;
-                    <button class="btn-sm"
+                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
                       [ngClass]="{'btn-outline-secondary': fila.revision1, 'btn-outline-success': !fila.revision1}"
                       (click)="validar1(fila)" [disabled]="fila.revision1"><i class="fa fa-check-circle"></i></button>
                     &nbsp;
-                    <button class="btn-sm"
+                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
                       [ngClass]="{'btn-outline-secondary': !fila.revision1 || fila.revision2, 'btn-outline-success': fila.revision1 && !fila.revision2}"
                       (click)="validar2(fila)" [disabled]="!fila.revision1 || fila.revision2"><i
                         class="fa fa-check-circle"></i></button>

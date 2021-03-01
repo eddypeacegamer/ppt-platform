@@ -2,7 +2,7 @@
 <div class="card mb-9">
   <img class="card-img-top" [src]="comprobanteUrl" style="height: 60vh;width: 80vw;"  alt="Card image cap" *ngIf = "comprobanteUrl!== undefined">
   <h5 class="card-header" *ngIf = "comprobanteUrl! === undefined" >Sin imagen de Pago</h5>
-  <div class="card-body">
+  <div class="card-body" *ngIf="module === 'tesoreria'">
     <div class="form-group">
       <label for="comments">Razon de rechazo</label>
       <input type="text" class="form-control" id="comments" placeholder="Comentarios" [(ngModel)]="updatedPayment.comentarioPago" fullWidth  [ngModelOptions]="{standalone: true}">
@@ -13,9 +13,9 @@
     <p *ngFor="let message of errors">{{message}}</p>
   </div>
   <div class="card-footer">
-    <button class="btn btn-danger" (click)="onRecahzarPago()" >Rechazar Pago</button>
+    <button class="btn btn-danger" *ngIf="module === 'tesoreria'" (click)="onRecahzarPago()" >Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn btn-success" (click)="onDownload()">Descargar Imagen</button>
+    <button class="btn btn-success" (click)="onDownload()" [disabled]="comprobanteUrl! === undefined">Descargar Imagen</button>
     &nbsp;&nbsp;&nbsp;
     <button class="btn btn-warning" (click)="cancel()">Salir</button>
     <a href="comprobanteUrl" download></a>

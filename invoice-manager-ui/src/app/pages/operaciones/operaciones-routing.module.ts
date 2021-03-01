@@ -14,6 +14,7 @@ import { LineaBComponent } from './linea-b/linea-b.component';
 import { LineaCComponent } from './linea-c/linea-c.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
+import { PagosComponent } from '../commons/pagos/pagos.component';
 
 const routes: Routes = [{
   path: '',
@@ -59,6 +60,10 @@ const routes: Routes = [{
     }, {
       path: 'pago-facturas',
       component: PagosFacturaComponent,
+    },
+    {
+      path: 'pagos',
+      component: PagosComponent,
     },
   ]}];
 

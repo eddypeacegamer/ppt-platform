@@ -23,6 +23,8 @@ import { ClienteComponent } from './cliente/cliente.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { EmpresasComponent } from './empresas/empresas.component';
 import { PagosFacturaComponent } from './pagos-factura/pagos-factura.component';
+import { PagosComponent } from './pagos/pagos.component';
+import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago.component';
 import { ConceptosComponent } from './conceptos/conceptos.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
 import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-details.component';
@@ -42,6 +44,8 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     EmpresaComponent,
     EmpresasComponent,
     PagosFacturaComponent,
+    PagosComponent,
+    ValidacionPagoComponent,
     ConceptosComponent,
     InvoiceReportsComponent,
     DevolutionsDetailsComponent,
@@ -81,6 +85,8 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     InvoiceReportsComponent,
     DevolutionsDetailsComponent,
     PagosFacturaComponent,
+    PagosComponent,
+    ValidacionPagoComponent,
     PagoFacturaComponent,
     GenerarComplementoComponent,
     MulticomplementosComponent,

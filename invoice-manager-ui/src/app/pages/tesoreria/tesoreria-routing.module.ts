@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TesoreriaComponent } from './tesoreria.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
-import { PagosComponent } from './pagos/pagos.component';
+import { PagosComponent } from '../commons/pagos/pagos.component';
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
