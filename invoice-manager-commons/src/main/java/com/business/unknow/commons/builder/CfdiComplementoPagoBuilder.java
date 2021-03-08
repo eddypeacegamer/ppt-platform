@@ -86,6 +86,16 @@ public class CfdiComplementoPagoBuilder extends AbstractBuilder<CfdiPagoDto> {
 		instance.setSerie(serie);
 		return this;
 	}
+
+	public CfdiComplementoPagoBuilder setTipoCambio(BigDecimal tipoCambio) {
+		instance.setTipoCambio(tipoCambio);
+		return this;
+	}
+	
+	public CfdiComplementoPagoBuilder setTipoCambioDr(BigDecimal tipoCambioDr) {
+		instance.setTipoCambioDr(tipoCambioDr);
+		return this;
+	}
 	
 
 }

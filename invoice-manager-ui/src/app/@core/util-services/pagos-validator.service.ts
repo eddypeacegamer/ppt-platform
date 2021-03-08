@@ -43,7 +43,7 @@ export class PagosValidatorService {
       messages.push('Para pagos en una unica exibicion,' +
       'el monto del pago debe coincidir con el monto total de la factura.');
     }*/
-    if (factura.saldoPendiente - pago.monto < -0.01) {
+    if (factura.saldoPendiente - pago.monto < -0.01&&pago.moneda===factura.cfdi.moneda) {
       messages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
     if(pago.facturas === undefined || pago.facturas.length === 0){
@@ -53,9 +53,14 @@ export class PagosValidatorService {
       for( const fact of pago.facturas){
         total = add(bignumber(fact.monto),total);
       }
-      if(unequal(bignumber(pago.monto),total)){
+      if(unequal(bignumber(pago.monto),total)&&pago.moneda===factura.cfdi.moneda){
         messages.push('La suma de los pagos a las facturas individuales no es igual al monto del pago.');
       }
+    }
+    console.log(factura.cfdi.moneda!==pago.moneda);
+    console.log(factura.saldoPendiente-(pago.monto/pago.tipoDeCambio));
+    if (factura.cfdi.moneda!==pago.moneda&&factura.saldoPendiente-(pago.monto/pago.tipoDeCambio)< -0.01) {
+      messages.push('La suma de los pagos no puede ser superior al monto total de la factura.');
     }
 
     return messages;

@@ -148,7 +148,7 @@ public class FacturaTranslator {
 					complementoRelacionado.setTipoCambioDR(cfdiPago.getTipoCambioDr());
 				}
 				complementosRelacionados.add(complementoRelacionado);
-				montoTotal = montoTotal.add(cfdiPago.getImportePagado());
+				montoTotal = montoTotal.add(cfdiPago.getImportePagado().multiply(cfdiPago.getTipoCambioDr()).setScale(2, BigDecimal.ROUND_DOWN));
 			}
 			complementoPago.setMonto(montoTotal.toString());
 			cfdi.setComplemento(complemento);
@@ -251,5 +251,4 @@ public class FacturaTranslator {
 		}
 		return totalRetenciones;
 	}
-
 }

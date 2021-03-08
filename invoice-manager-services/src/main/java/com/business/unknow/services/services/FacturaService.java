@@ -299,7 +299,7 @@ public class FacturaService {
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
 		BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
 		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
-				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto())
+				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto().divide(p.getTipoDeCambio()).setScale(2, BigDecimal.ROUND_HALF_UP))
 				.reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
 
 		if (pago.isPresent()) {

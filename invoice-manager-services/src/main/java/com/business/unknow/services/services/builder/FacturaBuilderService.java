@@ -35,12 +35,14 @@ import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
+import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
+import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.services.FilesService;
 
 @Service
@@ -54,6 +56,9 @@ public class FacturaBuilderService extends AbstractBuilderService {
 
 	@Autowired
 	private CfdiPagoRepository cfdiPagoRepository;
+	
+	@Autowired
+	private CfdiRepository cfdiRepository;
 
 	@Autowired
 	private EmpresaMapper empresaMapper;
@@ -138,6 +143,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 		for (FacturaDto dto : dtos) {
 			List<CfdiPago> cfdiPAgos = cfdiPagoRepository.findByFolio(dto.getFolio()).stream()
 					.filter(a -> a.getValido()).collect(Collectors.toList());
+			Optional<Cfdi> cfdi=cfdiRepository.findById(dto.getIdCfdi());
 			Optional<PagoFacturaDto> pagoFactura = pagoDto.getFacturas().stream()
 					.filter(a -> a.getFolio().endsWith(dto.getFolio())).findFirst();
 			Optional<CfdiPago> cfdipago = cfdiPAgos.stream()
@@ -149,16 +155,26 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				cfdipago = Optional.of(new CfdiPago(pagoDto.getMonto(), 0));
 			}
 			if (pagoFactura.isPresent()) {
+				BigDecimal montoPagado;
+				if(cfdi.get().getMoneda().equals(pagoDto.getMoneda())){
+					montoPagado=pagoFactura.get().getMonto();
+				}else {
+					montoPagado=pagoFactura.get().getMonto().divide(pagoDto.getTipoDeCambio());
+				}
 				CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
 						.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(pagoDto.getFechaPago())
 						.setFormaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
 						.setMoneda(pagoDto.getMoneda()).setMonto(pagoDto.getMonto()).setFolio(dto.getFolio())
-						.setIdDocumento(dto.getUuid()).setImportePagado(pagoFactura.get().getMonto())
-						.setMonedaDr(pagoDto.getMoneda()).setMoneda(pagoDto.getMoneda()).setValido(true)
+						.setIdDocumento(dto.getUuid())
+						.setImportePagado(montoPagado)
+						.setMonedaDr(cfdi.get().getMoneda())
+						.setMoneda(pagoDto.getMoneda()).setValido(true)
 						.setMetodoPago(ComplementoPpdDefaults.METODO_PAGO).setSerie(ComplementoPpdDefaults.SERIE_PAGO)
 						.setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
 						.setImporteSaldoAnterior(dto.getSaldoPendiente())
-						.setImporteSaldoInsoluto(dto.getSaldoPendiente().subtract(pagoFactura.get().getMonto()));
+						.setTipoCambio(cfdi.get().getMoneda().equals(pagoDto.getMoneda())?pagoDto.getTipoDeCambio():new BigDecimal(1))
+						.setTipoCambioDr(!cfdi.get().getMoneda().equals(pagoDto.getMoneda())?pagoDto.getTipoDeCambio():new BigDecimal(1))
+						.setImporteSaldoInsoluto(dto.getSaldoPendiente().subtract(montoPagado));
 				cfdiPagos.add(cfdiComplementoPagoBuilder.build());
 			} else {
 				throw new InvoiceManagerException("No tiene relacion de pago la factura",

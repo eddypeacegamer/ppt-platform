@@ -164,8 +164,9 @@
               <option value="*">Seleccionar</option>
               <option value="XXX">N/A</option>
               <option value="MXN">Peso MX</option>
-              <!--option-- value="USD">Dolar US</!--option-->
+              <option value="USD">Dolar US</option>
             </select>
+            <label for="payChangeType" class="label">Tipo de Cambio</label>
             <input id="inputChangeType" style=" margin-top: 15px;" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" *ngIf="cfdi.moneda==='USD'">
           </div>
           

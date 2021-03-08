@@ -6,6 +6,7 @@
       <select id="inputPayCoin" style="display:block;" class="form-control"
         [(ngModel)]="newPayment.moneda">
         <option value="MXN">Peso MX</option>
+        <option value="USD">Dolar USD</option>
       </select>
     </div>
     <div class="col-sm-3">
@@ -24,12 +25,12 @@
         <option *ngFor="let cuenta of cuentas" [value]="cuenta.id"> {{cuenta.banco}} -- {{cuenta.cuenta}} -- {{cuenta.clabe}}</option>
       </select>
     </div>
-    
-    <!--div class="col-sm-2" *ngIf="newPayment.moneda == 'USD'">
+
+    <div class="col-sm-2" *ngIf="factura.cfdi&&factura.cfdi.moneda == 'USD'">
         <label for="payChangeType" class="label">Tipo de Cambio</label>
         <input id="payChangeType" class="form-control" fullWidth type="number" min="0" placeholder="Tipo de cambio"
           [(ngModel)]="newPayment.tipoDeCambio">
-    </div-->
+    </div>
   </div>
 
 <div class="row" *ngIf="factura.saldoPendiente > 0.005">
