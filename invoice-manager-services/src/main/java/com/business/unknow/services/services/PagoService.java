@@ -31,6 +31,7 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -66,6 +67,9 @@ public class PagoService {
 
 	@Autowired
 	private FacturaService facturaService;
+	
+	@Autowired
+	private CfdiService cfdiService;
 
 	private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
@@ -259,11 +263,16 @@ public class PagoService {
 			Optional<PagoFacturaDto> pagoFactOpt = payment.getFacturas().stream()
 					.filter(p -> p.getFolio().equals(facturaDto.getFolio())).findAny();
 			if (pagoFactOpt.isPresent()) {
+				CfdiDto cfdi=cfdiService.getCfdiByFolio(facturaDto.getFolio());
 				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), Optional.empty(),
-						Optional.of(pagoFactOpt.get().getMonto().negate()));
+						Optional.of(cfdi.getMoneda().equals(payment.getMoneda())
+								? pagoFactOpt.get().getMonto().negate()
+								: pagoFactOpt.get().getMonto().divide(payment.getTipoDeCambio()).negate()));
 			}
 		}
-		for (Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct()
+		for (
+
+		Integer idCfdi : payment.getFacturas().stream().map(f -> f.getIdCfdi()).distinct()
 				.collect(Collectors.toList())) {
 			FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
 			if (TipoDocumentoEnum.COMPLEMENTO.equals(TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {

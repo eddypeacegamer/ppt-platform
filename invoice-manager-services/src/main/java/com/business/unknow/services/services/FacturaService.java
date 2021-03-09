@@ -102,7 +102,7 @@ public class FacturaService {
 	@Autowired
 	private FacturacionModernaExecutor facturacionModernaExecutor;
 
-	@Autowired
+	@Autowired 
 	private NtinkExecutorService ntinkExecutorService;
 
 	@Autowired
@@ -297,9 +297,12 @@ public class FacturaService {
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		CfdiDto cfdi = cfdiService.getCfdiById(idCfdi);
 		BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
 		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
-				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto().divide(p.getTipoDeCambio()).setScale(2, BigDecimal.ROUND_HALF_UP))
+				.filter(p -> !"CREDITO".equals(p.getFormaPago()))
+				.map(p -> cfdi.getMoneda().equals(p.getMoneda()) ? p.getMonto()
+						: p.getMonto().divide(p.getTipoDeCambio()).setScale(2, BigDecimal.ROUND_HALF_UP))
 				.reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
 
 		if (pago.isPresent()) {
