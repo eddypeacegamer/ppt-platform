@@ -3,6 +3,7 @@
  */
 package com.business.unknow.services.services;
 
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -267,7 +268,7 @@ public class PagoService {
 				facturaService.updateTotalAndSaldoFactura(facturaDto.getIdCfdi(), Optional.empty(),
 						Optional.of(cfdi.getMoneda().equals(payment.getMoneda())
 								? pagoFactOpt.get().getMonto().negate()
-								: pagoFactOpt.get().getMonto().divide(payment.getTipoDeCambio()).negate()));
+								: pagoFactOpt.get().getMonto().divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP).negate())); 
 			}
 		}
 		for (

@@ -1,6 +1,7 @@
 package com.business.unknow.services.services.builder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -159,7 +160,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
 				if(cfdi.get().getMoneda().equals(pagoDto.getMoneda())){
 					montoPagado=pagoFactura.get().getMonto();
 				}else {
-					montoPagado=pagoFactura.get().getMonto().divide(pagoDto.getTipoDeCambio());
+					montoPagado=pagoFactura.get().getMonto().divide(pagoDto.getTipoDeCambio(), 2, RoundingMode.HALF_UP);
 				}
 				CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder = new CfdiComplementoPagoBuilder()
 						.setVersion(ComplementoPpdDefaults.VERSION).setFechaPago(pagoDto.getFechaPago())
